@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Tauchplaetze.AppHost/Tauchplaetze.AppHost.csproj" />
+  <Project Path="Tauchplaetze.ServiceDefaults/Tauchplaetze.ServiceDefaults.csproj" />
+  <Folder Name="/spikes/">
+    <Project Path="spikes/Tauchplaetze.Spike.DataSources/Tauchplaetze.Spike.DataSources.csproj" />
+    <Project Path="spikes/Tauchplaetze.Spike.DataSources.Tests/Tauchplaetze.Spike.DataSources.Tests.csproj" />
+  </Folder>
+</Solution>

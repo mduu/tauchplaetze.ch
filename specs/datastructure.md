@@ -141,7 +141,10 @@ Eine Zeile pro Platz und Tag. PK: (`DiveSiteId`, `Date`).
 | `VisibilityIndicator` | enum | `Unknown`, `Poor`, `Moderate`, `Good`, `VeryGood` |
 | `VisibilityGoodBelow` | decimal(4,1), optional | ab dieser Tiefe besser (meist unter der Sprungschicht) |
 | `WindBeaufort` | int, optional | Maximum im Tauchfenster 08–16 Uhr |
+| `WindSpeedKmh` | decimal(4,1), optional | dasselbe Maximum in km/h |
+| `WindGustsKmh` | decimal(4,1), optional | stärkste Böe im Tauchfenster, km/h |
 | `WindDirection` | int, optional | Grad |
+| `WeatherModel` | string(40), optional | Wettermodell, aus dem die Werte stammen (z.B. `meteoswiss_icon_ch2`, `ecmwf_ifs025`) |
 | `PrecipitationLast72h` | decimal(5,1), optional | mm |
 | `InflowDischargeRatio` | decimal(5,2), optional | aktueller Abfluss geteilt durch Median |
 | `AlgaeLevel` | enum | `Unknown`, `Low`, `Medium`, `High` |

@@ -1,0 +1,15 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.1">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- Dashboard and DCP come as NuGet packages, so "dotnet run" works without the Aspire CLI. -->
+    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
+    <UserSecretsId>7d0f3a52-3c4e-4b8a-9a43-1f0f2b8f9d11</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Aspire 13.6.1 brings MessagePack 2.5.302 (GHSA-qhrr-8q5h-9q3h). Pin the patched version. -->
+    <PackageReference Include="MessagePack" Version="2.5.307" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../spikes/Tauchplaetze.Spike.DataSources/Tauchplaetze.Spike.DataSources.csproj" />
+  </ItemGroup>
+</Project>
