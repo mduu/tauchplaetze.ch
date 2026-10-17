@@ -18,15 +18,15 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 /{lang}/prognose                (Alias der Startseite, Ziel von sichtweiten.ch)
 /{lang}/tauchplaetze            Verzeichnis (Liste + Karte, Filter)
 /{lang}/tauchplaetze/{slug}     Tauchplatzseite
-/{lang}/seen                    Seen-Übersicht
-/{lang}/seen/{lake}             Seeseite
+/{lang}/gewaesser               Gewässer-Übersicht (Seen und Flüsse)
+/{lang}/gewaesser/{slug}        Gewässerseite
 /{lang}/ueber                   Über, Datenquellen, Impressum, Datenschutz
 /admin/…                        Redaktion (ohne Sprachpräfix)
 ```
 
 Pfadsegmente pro Sprache: siehe `i18n.md`.
 
-Hauptnavigation: Prognose · Tauchplätze · Seen · Buddy-Gruppen. Rechts: Sprachwahl (DE · EN · FR · IT).
+Hauptnavigation: Prognose · Tauchplätze · Gewässer · Buddy-Gruppen. Rechts: Sprachwahl (DE · EN · FR · IT).
 
 ## Seiten
 
@@ -79,7 +79,7 @@ Alle Angaben in den Abschnitten 3 bis 6 sind optional (siehe `dive-site.md`). Ei
 - Filter: See, Datenstufe, Schwierigkeit (Einsteiger, Fortgeschrittene, Erfahrene), Zugang, Eigenschaften (Wand und Wrack ab Bewertung 3, Fluss …).
 - Jede Zeile zeigt den heutigen Index als kleinen Wert.
 
-### Seeseite
+### Gewässerseite
 
 - Kopf mit See-Name und aktueller Oberflächentemperatur.
 - Temperaturverlauf und Klarheitstrend.
@@ -104,7 +104,7 @@ Alle Angaben in den Abschnitten 3 bis 6 sind optional (siehe `dive-site.md`). Ei
 | Keine Plätze im Umkreis | Vorschlag, den Umkreis zu vergrössern |
 | Text nur auf Deutsch | dezenter Hinweis über dem Text |
 | Automatisch übersetzt | dezenter Hinweis «automatisch übersetzt» |
-| Platz archiviert | 410 oder Weiterleitung zur Seeseite |
+| Platz archiviert | 410 oder Weiterleitung zur Gewässerseite |
 
 ## Barrierefreiheit
 

@@ -36,7 +36,7 @@ Der Code der API ist öffentlich: `github.com/eawag-surface-waters-research/alpl
 | Satellit Sentinel-3 (`Zsd_lee`, `chla`) | alle grossen Seen |
 | Satellit Sentinel-2 | viele Seen gelistet, Daten oft veraltet (Zürichsee: letztes Bild November 2023) |
 
-Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulations/1d/metadata`. Die Zuordnung eines Gewässers zu den Modellen steht in `Lake` (`datastructure.md`).
+Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulations/1d/metadata`. Die Zuordnung eines Gewässers zu den Modellen steht in `WaterBody` (`datastructure.md`).
 
 ### Endpunkte
 
@@ -114,7 +114,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
 - **Seen:** Jedes Gewässer hat eine Liste relevanter Stationen (Hauptzuflüsse). Ein Platz kann die Zuordnung überschreiben (z.B. nahe einer Mündung). Der Abfluss geteilt durch den Median der letzten 30 Tage ergibt `InflowDischargeRatio`.
 - **Flüsse:** Die Station des Flusses liefert Abfluss, Wassertemperatur und, wo vorhanden, Trübung am Platz. Das ist die Datenstufe «Gewässer» für Flussplätze (`forecast.md`).
-- **Seepegel:** Information auf der Seeseite und bei Einstiegen, kein Teil des Index.
+- **Seepegel:** Information auf der Gewässerseite und bei Einstiegen, kein Teil des Index.
 
 ### Phase 1: Vorhersagen des BAFU
 
@@ -147,10 +147,10 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
 | Quelle | Grund |
 |---|---|
-| MeteoSchweiz ICON direkt (GRIB2) | Aufwendig in .NET. Open-Meteo liefert dieselben Modelle als JSON (ADR-007). |
+| MeteoSchweiz ICON direkt (GRIB2) | Open-Meteo liefert dieselben Modelle als JSON (ADR-007). Direkt heisst: grosse Dateien für die ganze Schweiz laden, um wenige Punkte zu lesen. Mehrwert erst mit dem **Ensemble** (11 bzw. 21 Läufe): Es zeigt, wie sicher die Windprognose ist. Kandidat für Phase 2 («Prognose unsicher»). |
 | MeteoSchweiz `ogd-local-forecasting` (CSV-Punktprognose) | Später möglich als Ersatz für Open-Meteo, falls dessen Bedingungen nicht mehr passen. |
 | MeteoSchweiz CombiPrecip (Radar) | Regen im ganzen Einzugsgebiet wäre genauer. HDF5, Aufwand M. Später. |
-| Copernicus Sentinel-2 direkt | Ufernahe Trübung in 10–20 m. Eigene Auswertung, Wolken, Kalibrierung. Aufwand L. Später. |
+| Copernicus Sentinel-2 direkt | Ufernahe Trübung und Algen in 10–20 m statt 300 m. Der Code ist nicht das Problem. Schwierig sind die Wissenschaft und der Betrieb: Atmosphärenkorrektur über Wasser, Streulicht vom Ufer, Wolken, Kalibrierung gegen echte Sichttiefen. Eine Szene hat rund 1 GB. Die Auswertung muss darum serverseitig laufen (openEO im Copernicus Data Space). Kandidat für Phase 2, als Experiment mit Marcs Tauchgängen als Vergleich. |
 | Kantonale Seeberichte (AWEL, IGKB, CIPEL, CIPAIS) | Secchi-Tiefen meist monatlich, nur als PDF oder auf Bestellung. Später einmalig für die Saisonwerte. |
 | Wasserversorgung Zürich | Laborwerte ohne Sichttiefe, einmal pro Jahr. |
 | BAFU Badewasserqualität | E. coli, kein Bezug zur Sicht. |

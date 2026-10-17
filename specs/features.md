@@ -32,9 +32,9 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 - Ein Platz mit Datenstufe 0 (Prognose ausgeschaltet) zeigt nur die Dokumentation.
 - Karte mit Tiefenlinien (swissBATHY3D), wo vorhanden.
 
-### Seen – Slice `Lakes`
+### Gewässer – Slice `WaterBodies`
 
-- Seeseite mit allen Plätzen des Sees, Temperaturverlauf und Übersichtskarte.
+- Gewässerseite (See oder Fluss) mit allen Plätzen, Temperaturverlauf und Übersichtskarte.
 
 ### Redaktion (CMS) – Slice `Editorial`
 
@@ -60,7 +60,7 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 
 - **Meldungen (Slice `Reports`):** Sicht nach dem Tauchgang mit einem Klick melden (Sicht pro Tiefenband, optional Kommentar). Ohne Konto, mit Schutz gegen Missbrauch (Rate Limit, Captcha-freie Honeypot-Lösung).
 - **Füllstationen (Slice `DiveShops`):** Tauchshops und Füllstationen. Die Platzseite zeigt die nächste Füllstation nach Distanz. Kostenlos, ohne Hervorhebung. Verwaltung im CMS.
-- **Buddy-Gruppen (Slice `BuddyGroups`):** WhatsApp-Gruppen pro Region verwalten und auf Platz- und Seeseiten verlinken.
+- **Buddy-Gruppen (Slice `BuddyGroups`):** WhatsApp-Gruppen pro Region verwalten und auf Platz- und Gewässerseiten verlinken.
 - **Weitere Redaktoren:** Rollen «Redaktor» und «Admin». Einladung per E-Mail.
 - **Videos:** Einbindung aus tauchvideos.ch.
 

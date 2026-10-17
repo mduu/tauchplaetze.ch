@@ -1,6 +1,6 @@
 # SEO und Domains
 
-Organischer Traffic ist der wichtigste Kanal. Es gibt keine Werbung und keine Akquise. Jede Tauchplatzseite und jede Seeseite ist eine eigene Landingpage.
+Organischer Traffic ist der wichtigste Kanal. Es gibt keine Werbung und keine Akquise. Jede Tauchplatzseite und jede Gewässerseite ist eine eigene Landingpage.
 
 ## Domains
 
@@ -9,7 +9,7 @@ Organischer Traffic ist der wichtigste Kanal. Es gibt keine Werbung und keine Ak
 | `tauchplaetze.ch` | Hauptdomain, alle Inhalte |
 | `www.tauchplaetze.ch` | 301 auf `tauchplaetze.ch` |
 | `sichtweiten.ch`, `www.sichtweiten.ch` | 301 auf `https://tauchplaetze.ch/de/prognose` |
-| `sichtweiten.ch/{see}` | 301 auf die Seeseite (z.B. `/de/seen/zuerichsee`), Liste der Kurzpfade in der Konfiguration |
+| `sichtweiten.ch/{see}` | 301 auf die Gewässerseite (z.B. `/de/gewaesser/zuerichsee`), Liste der Kurzpfade in der Konfiguration |
 
 `sichtweiten.ch` ist ein Einstieg für Suchen wie «Sichtweite Zürichsee». Es gibt keinen doppelten Inhalt. Darum nur Redirects, keine zweite Website.
 
@@ -37,7 +37,7 @@ Siehe `i18n.md`. Grundsätze:
 ## Strukturierte Daten (JSON-LD)
 
 - Tauchplatz: `TouristAttraction` (bzw. `Place`) mit `geo` (`GeoCoordinates`), `containedInPlace` (der See), `image`.
-- See: `LakeBodyOfWater`.
+- Gewässer: `LakeBodyOfWater` (See) bzw. `RiverBodyOfWater` (Fluss).
 - Breadcrumbs: `BreadcrumbList`.
 - Organisation: `Organization` auf der Startseite.
 
@@ -56,6 +56,6 @@ Siehe `i18n.md`. Grundsätze:
 
 ## Inhalte als SEO-Hebel
 
-- Seeseiten mit Liste der Plätze, aktueller Temperatur und Text zum See.
+- Gewässerseiten mit Liste der Plätze, aktueller Temperatur und Text zum See.
 - Jede Platzseite enthält immer Prognose und Karte, auch in Ausbaustufe 0. So hat jede Seite eigenen, täglich aktuellen Inhalt.
 - Fotos mit sprechenden Dateinamen und Alternativtexten in vier Sprachen.

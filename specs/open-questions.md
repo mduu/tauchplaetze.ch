@@ -16,6 +16,7 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 - #7 und #8 (Flüsse, Bergseen ohne Modell): Datenstufen in `forecast.md`.
 - #11 (Kartenkacheln): swisstopo, `data-sources.md`.
 - #14 (MeteoSchweiz über Alplakes): Alplakes hat keinen Proxy mehr. ADR-007.
+- #22 (Name der Entität): `WaterBody`, URL `/gewaesser/{slug}`, `datastructure.md`, `i18n.md`.
 - #15 (Sprache der Kommentare): Deutsch, `architecture.md`.
 
 ## Fachlich
@@ -31,7 +32,6 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 
 | # | Frage | Vorschlag |
 |---|---|---|
-| 22 | Heisst die Entität weiter `Lake`, obwohl sie auch Flüsse enthält? Und welche URL hat ein Fluss (`/seen/…`)? | Vor dem ersten Code entscheiden: Entität `WaterBody`, URL `/gewaesser/{slug}` für Seen und Flüsse. |
 | 12 | Bilder direkt aus Blob (öffentlicher Container hinter Cloudflare) oder über einen Endpunkt der App? | Öffentlicher Container mit Cloudflare davor. Einfacher und günstiger. |
 | 13 | Maschinelle Übersetzung redaktioneller Inhalte: welcher Dienst? | Claude API mit dem Glossar aus `ubiquitous-language.md` als Kontext. Kosten pro Platz sehr gering. Erst in Phase 1. |
 | 16 | Status des Azure SQL Free Offer (GA oder Preview)? | In der FAQ von Microsoft Learn prüfen. Für das Projekt nicht entscheidend. |

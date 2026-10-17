@@ -5,7 +5,7 @@ Diese Spec beschreibt die Entitäten in Azure SQL. Entitäten und Felder heissen
 ## Grundregeln
 
 - **Geodaten** mit NetTopologySuite (`UseNetTopologySuite()`), SQL-Typ `geography`, SRID 4326 (WGS84). Die Umkreissuche läuft in der Datenbank (`Location.IsWithinDistance(...)`).
-- **IDs:** `Guid` (Version 7, sortierbar) für fachliche Entitäten. `int` für kleine Stammdaten (`Lake`).
+- **IDs:** `Guid` (Version 7, sortierbar) für fachliche Entitäten. `int` für kleine Stammdaten (`WaterBody`).
 - **Zeit:** `DateTimeOffset` in UTC für Zeitpunkte. `DateOnly` für Prognosetage (Schweizer Lokalzeit, `Europe/Zurich`).
 - **Optimistische Sperre:** `rowversion` auf allen Entitäten, die im CMS bearbeitet werden.
 - **Slugs:** eindeutig, aus dem deutschen Namen gebildet, ohne Umlaute (`riff-williams-herrliberg`). Ein geänderter Slug erzeugt einen 301-Redirect (Tabelle `SlugRedirects`).
@@ -14,9 +14,9 @@ Diese Spec beschreibt die Entitäten in Azure SQL. Entitäten und Felder heissen
 
 ## Entitäten
 
-### Lake
+### WaterBody
 
-Stammdaten der Gewässer, schweizweit. Ein Fluss ist ebenfalls ein `Lake` mit `WaterBodyType = River`. Der Seed kommt aus dem Gewässernetz von swisstopo (swissTLM3D, `data-sources.md`).
+Stammdaten der Gewässer, schweizweit: Seen und Flüsse (Entscheid Marc, 17.10.2026). Tabelle `WaterBodies`. Der Seed kommt aus dem Gewässernetz von swisstopo (swissTLM3D, `data-sources.md`).
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
@@ -33,9 +33,9 @@ Stammdaten der Gewässer, schweizweit. Ein Fluss ist ebenfalls ein `Lake` mit `W
 | `SatellitePoint` | geography (Point), optional | Standardpunkt seewärts für Satellitenwerte |
 | `IsActive` | bool | |
 
-### LakeHydroStation
+### WaterBodyHydroStation
 
-Zuordnung der BAFU-Stationen zu einem Gewässer. PK: (`LakeId`, `StationId`).
+Zuordnung der BAFU-Stationen zu einem Gewässer. PK: (`WaterBodyId`, `StationId`).
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
@@ -44,20 +44,20 @@ Zuordnung der BAFU-Stationen zu einem Gewässer. PK: (`LakeId`, `StationId`).
 | `Role` | enum | `Inflow` (Zufluss eines Sees), `River` (Station am Fluss selbst, für Flussplätze) |
 | `Weight` | decimal, optional | Anteil am Teilwert «Zuflüsse», nur bei `Inflow` |
 
-### LakeWeatherStation
+### WaterBodyWeatherStation
 
-Zuordnung der SwissMetNet-Stationen zu einem Gewässer. PK: (`LakeId`, `StationId`). Felder: `StationId` (string(10), z.B. `WAE`), `Name`, `SortOrder` (erste Station mit Daten gilt).
+Zuordnung der SwissMetNet-Stationen zu einem Gewässer. PK: (`WaterBodyId`, `StationId`). Felder: `StationId` (string(10), z.B. `WAE`), `Name`, `SortOrder` (erste Station mit Daten gilt).
 
 ### DiveSite
 
-Der Tauchplatz. Nur `Name`, `Location` und `LakeId` sind Pflicht (Ausbaustufe 0). Ausbaustufe (Dokumentation) und Datenstufe (Prognose) sind unabhängig voneinander (`cms.md`, `forecast.md`). Bedeutung der Bewertungen und Abschnitte: siehe `dive-site.md`.
+Der Tauchplatz. Nur `Name`, `Location` und `WaterBodyId` sind Pflicht (Ausbaustufe 0). Ausbaustufe (Dokumentation) und Datenstufe (Prognose) sind unabhängig voneinander (`cms.md`, `forecast.md`). Bedeutung der Bewertungen und Abschnitte: siehe `dive-site.md`.
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
 | `Id` | Guid | |
 | `Slug` | string(120) | eindeutig |
 | `Name` | string(120) | Eigenname, wird nicht übersetzt |
-| `LakeId` | int | FK `Lake` |
+| `WaterBodyId` | int | FK `WaterBody` |
 | `Location` | geography (Point) | Position des Platzes (für Prognose und Karte) |
 | `Municipality` | string(80), optional | Gemeinde |
 | `Canton` | string(2), optional | Kürzel, z.B. `ZH` |
@@ -72,7 +72,7 @@ Der Tauchplatz. Nur `Name`, `Location` und `LakeId` sind Pflicht (Ausbaustufe 0)
 | `Features` | flags enum | `Plateau`, `Cave`, `River`, `IceDiving`, `Training` (Wand und Wrack kommen aus den Bewertungen) |
 | `HasDivingBan` | bool | Tauchverbot (dauernd oder zeitweise) |
 | `InflowStationOverride` | string(20), optional | BAFU-Station, falls der Platz nahe einer Mündung liegt (überschreibt die Stationen des Sees) |
-| `SatellitePoint` | geography (Point), optional | eigener Punkt seewärts für Satellitenwerte. Ohne ihn gilt `Lake.SatellitePoint`. |
+| `SatellitePoint` | geography (Point), optional | eigener Punkt seewärts für Satellitenwerte. Ohne ihn gilt `WaterBody.SatellitePoint`. |
 | `ForecastDisabled` | bool | Prognose für den Platz ausgeschaltet (Datenstufe 0) |
 | `DataLevel` | tinyint (0–3) | vom Job berechnet, Stand des letzten Laufs, siehe `forecast.md`. Nicht Teil der Revision. |
 | `Status` | enum | `Draft`, `Published`, `Archived` |
@@ -140,7 +140,7 @@ Jede Speicherung im CMS erzeugt eine Revision. Details in `cms.md`.
 |---|---|---|
 | `Id` | Guid | |
 | `DiveSiteId` | Guid, optional | ein Bild kann auch zu einem See gehören |
-| `LakeId` | int, optional | |
+| `WaterBodyId` | int, optional | |
 | `Section` | enum, optional | `Underwater`, `Surroundings`, `Approach`, `EntryPoint`, `Hazards`; nur bei Bildern eines Platzes, siehe `dive-site.md` |
 | `EntryPointId` | Guid, optional | FK `DiveSiteEntryPoint`, nur bei `Section = EntryPoint` |
 | `Kind` | enum | `Photo`, `Video`, `Sketch` |
@@ -200,9 +200,9 @@ Eine Zeile pro Platz und Tag. PK: (`DiveSiteId`, `Date`).
 | `ForecastRunId` | Guid | |
 | `ComputedAt` | DateTimeOffset | |
 
-### LakeConditions
+### WaterBodyConditions
 
-Eine Zeile pro See und Tag für die Seen-Übersicht. PK: (`LakeId`, `Date`). Felder: `SurfaceTemperature`, `ClarityTrend` (enum `Rising`, `Stable`, `Falling`, `Unknown`), `LatestSecchiDepth` und `LatestSecchiDate` (aus dem Satellit am `Lake.SatellitePoint`), `WaterLevel` (Pegel in m ü. M., optional).
+Eine Zeile pro Gewässer und Tag für die Gewässerseite und die Seen-Übersicht. PK: (`WaterBodyId`, `Date`). Felder: `SurfaceTemperature`, `ClarityTrend` (enum `Rising`, `Stable`, `Falling`, `Unknown`), `LatestSecchiDepth` und `LatestSecchiDate` (aus dem Satellit am `WaterBody.SatellitePoint`), `WaterLevel` (Pegel in m ü. M., optional).
 
 ### Report (Phase 1)
 
@@ -225,7 +225,7 @@ Eine Zeile pro See und Tag für die Seen-Übersicht. PK: (`LakeId`, `Date`). Fel
 
 ### BuddyGroup (Phase 1)
 
-`Id`, `NameDe/En/Fr/It`, `WhatsAppUrl`, Zuordnung zu Seen (n:m `BuddyGroupLakes`).
+`Id`, `NameDe/En/Fr/It`, `WhatsAppUrl`, Zuordnung zu Gewässern (n:m `BuddyGroupWaterBodies`).
 
 ### Benutzer
 
@@ -234,7 +234,7 @@ ASP.NET Core Identity im selben `DbContext`. Rollen: `Editor`, `Admin`. Keine Be
 ## Indizes
 
 - `DiveSites.Location`: Spatial Index.
-- `DiveSites (LakeId, Status)`.
+- `DiveSites (WaterBodyId, Status)`.
 - `DiveSiteEntryPoints (DiveSiteId, SortOrder)`.
 - `MediaItems (DiveSiteId, Section, SortOrder)`.
 - `DailyForecasts (Date, DiveIndex DESC)` für die Rangliste.

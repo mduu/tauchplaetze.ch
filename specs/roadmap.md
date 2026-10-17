@@ -8,7 +8,7 @@ Ziel: lauffähiges Gerüst, alle Konventionen verankert.
 
 - Solution `src/Tauchplaetze.slnx` mit `Core`, `Web`, `ServiceDefaults`, `AppHost`, `Core.Tests`, `Web.Tests`.
 - Handler-Contracts, `HandlerRegistration`, `ICoreModule` mit Assembly-Scan.
-- `TauchplaetzeDbContext` mit NetTopologySuite, erste Migration (`Lakes`, `DiveSites`, Übersetzungen, Revisionen, Medien, Identity).
+- `TauchplaetzeDbContext` mit NetTopologySuite, erste Migration (`WaterBodies`, `DiveSites`, Übersetzungen, Revisionen, Medien, Identity).
 - ArchitectureTests (Fassadengrenze, `internal` Handler, Queries ohne `SaveChanges`).
 - Lokalisierung: Request Localization mit Sprachpräfix, vier `.resx`-Sätze, Test auf gleiche Schlüssel.
 - Layouts `PublicLayout` und `AdminLayout` mit Design Tokens, selbst gehostete Schriften.
@@ -34,7 +34,7 @@ Ziel: Reaktion der Szene testen.
 
 - Gewässer-Stammdaten schweizweit, Seen und Flüsse aus swissTLM3D (Seed). Zuordnung zu Alplakes, BAFU-Stationen und SwissMetNet für die grossen Seen.
 - Redaktion: Platz erfassen (Schnellerfassung mit Karte), bearbeiten, Revisionen, Medien-Upload mit Bildgrössen.
-- Öffentliche Seiten: Start «Wo tauchen?», Tauchplatzseite, Verzeichnis mit Karte, Seeseite, Über/Impressum/Datenschutz.
+- Öffentliche Seiten: Start «Wo tauchen?», Tauchplatzseite, Verzeichnis mit Karte, Gewässerseite, Über/Impressum/Datenschutz.
 - Prognose-Job mit `rules-1.0` und Datenstufen, Rohdaten in Blob Storage, Status im Admin. Quellen: Alplakes, Open-Meteo, SwissMetNet, BAFU (ADR-007).
 - SEO-Grundlagen: Titel, Meta, `hreflang`, Sitemap, JSON-LD.
 - Deploy auf Azure (Bicep, GitHub Actions, Cloudflare, Redirect `sichtweiten.ch`).

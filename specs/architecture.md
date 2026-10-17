@@ -89,7 +89,7 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 | Slice | Core (Handler, internal) | Web (Fassade) |
 |---|---|---|
 | `DiveSites` | Queries `GetDiveSites`, `GetDiveSite`, `GetDiveSitesNearby`, `ResolveSlug` | Seiten Verzeichnis, Tauchplatz, Karte |
-| `Lakes` | Queries `GetLakes`, `GetLake`, `GetLakeConditions` | Seeseite, Seen-Übersicht |
+| `WaterBodies` | Queries `GetWaterBodies`, `GetWaterBody`, `GetWaterBodyConditions` | Gewässerseite, Gewässer-Übersicht |
 | `Forecasts` | Commands `RunForecast`, `RecalculateForecast`; Queries `GetBestSites`, `GetSiteForecast`, `GetForecastStatus`; Rechenkern `DiveIndexCalculator`, `ThermoclineDetector`, `DataLevelRule`; Clients `AlplakesClient`, `OpenMeteoClient`, `SwissMetNetClient`, `HydroClient` | Startseite «Wo tauchen?», `ForecastWorker` (BackgroundService, ruft `RunForecast`) |
 | `Editorial` | Commands `CreateDiveSite`, `UpdateDiveSite`, `PublishDiveSite`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`, `UpdateMedia`, `ReorderMedia`, `DeleteMedia`; Queries `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetRevisions`, `CompareRevisions` | Admin-Seiten unter `/admin` |
 | `Media` | Queries `GetMediaVariant`; Bildverarbeitung | Endpunkt für Bildauslieferung (falls nicht direkt aus Blob) |
@@ -154,7 +154,7 @@ Ein Command (`Features/Editorial/Commands/CreateDiveSite.cs`):
 ```csharp
 namespace Tauchplaetze.Core.Features.Editorial.Commands;
 
-public record CreateDiveSiteCommand(string Name, int LakeId, double Latitude, double Longitude, string EditorId);
+public record CreateDiveSiteCommand(string Name, int WaterBodyId, double Latitude, double Longitude, string EditorId);
 
 public record CreateDiveSiteResult(Guid Id, string Slug);
 
@@ -195,8 +195,8 @@ Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, ko
 
 ## Caching
 
-- **Output Cache** für öffentliche Seiten: Standard 15 Minuten. Tags `forecast`, `site:{id}`, `lake:{id}`.
-- Der Prognose-Lauf invalidiert `forecast`. Eine Speicherung im CMS invalidiert `site:{id}` und `lake:{id}`.
+- **Output Cache** für öffentliche Seiten: Standard 15 Minuten. Tags `forecast`, `site:{id}`, `water:{id}`.
+- Der Prognose-Lauf invalidiert `forecast`. Eine Speicherung im CMS invalidiert `site:{id}` und `water:{id}`.
 - Variation nach Kultur und Query-Parametern (Tag, Umkreis).
 - Bilder: lange Cache-Dauer (`immutable`), Dateiname enthält die Version. Cloudflare cacht vor dem App Service.
 - Nebeneffekt: Die Datenbank bekommt wenig Anfragen. Das schont das Free Offer (vCore-Sekunden) und erlaubt Auto-Pause.

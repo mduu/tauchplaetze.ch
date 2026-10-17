@@ -31,7 +31,7 @@ Jeder Platz hat eine **Datenstufe** (`DataLevel`). Sie sagt, wie genau die Daten
 - Die Redaktion bestimmt die Datenstufe nicht. Sie kann nur die Prognose ausschalten (`DiveSite.ForecastDisabled`) und den Satellitenpunkt setzen.
 - Wetter gibt es für jeden Punkt der Schweiz. Ein veröffentlichter Platz hat darum mindestens Stufe 1, ausser die Prognose ist ausgeschaltet.
 - Die Datenstufe kann pro Tag sinken, wenn eine Quelle ausfällt.
-- Die Rangliste «Wo tauchen?» zeigt nur Plätze mit Index. Plätze ohne Index erscheinen im Verzeichnis und auf der Seeseite.
+- Die Rangliste «Wo tauchen?» zeigt nur Plätze mit Index. Plätze ohne Index erscheinen im Verzeichnis und auf der Gewässerseite.
 
 ## Eingaben pro Platz und Tag
 
@@ -71,7 +71,7 @@ Die Endpunkte stehen in `data-sources.md`.
 
 Gemessene Secchi-Tiefen gibt es über Alplakes nicht mehr (Spike 17.10.2026). Die Klarheit stützt sich auf den Satellit. Sie ist **keine Prognose**, sondern der letzte beobachtete Wert, korrigiert um das, was seither geschah.
 
-- **Satellitenpunkt:** Der Job fragt den Satellit an einem Punkt seewärts ab. Der Platz kann einen eigenen Punkt haben (`DiveSite.SatellitePoint`). Sonst gilt der Standardpunkt des Gewässers (`Lake.SatellitePoint`). Grund: Am Ufer fehlen die Pixel.
+- **Satellitenpunkt:** Der Job fragt den Satellit an einem Punkt seewärts ab. Der Platz kann einen eigenen Punkt haben (`DiveSite.SatellitePoint`). Sonst gilt der Standardpunkt des Gewässers (`WaterBody.SatellitePoint`). Grund: Am Ufer fehlen die Pixel.
 - **Höchstalter 14 Tage:** Ein Satellitenwert gilt höchstens 14 Tage (konfigurierbar). Älter: Die Klarheit ist unbekannt.
 - **Korrektur:** Fällt seit dem Bild viel Regen oder steigt der Abfluss stark, sinkt die geschätzte Klarheit. Die Stützpunkte stehen in `Forecast:Rules`.
 - **Ohne Wert:** Die Klarheit ist unbekannt. Ihr Gewicht geht auf die anderen Teilwerte.
@@ -120,7 +120,7 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   5. Pro Gitterpunkt: Wetterprognose (Open-Meteo). Plätze im selben Gitterpunkt teilen sich den Call. Pro zugeordneter Station: gemessener Wind und Regen (SwissMetNet).
   6. Pro Gewässer: Abfluss, Wassertemperatur und Trübung der zugeordneten BAFU-Stationen.
   7. Rohdaten als JSON in Blob Storage ablegen (`forecast-raw/{date}/{runId}/{source}/{key}.json`).
-  8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `LakeConditions` schreiben (Upsert).
+  8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert).
   9. Output Cache der öffentlichen Seiten invalidieren (Tag `forecast`).
   10. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.

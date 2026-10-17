@@ -7,8 +7,9 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Deutsch (UI) | Code | English (UI) | Français (UI) | Italiano (UI) | Bedeutung |
 |---|---|---|---|---|---|
 | Tauchplatz | `DiveSite` | dive site | site de plongée | sito d'immersione | Ein Ort, an dem man taucht. Kann See oder Fluss sein. |
-| See | `Lake` | lake | lac | lago | Gewässer, dem ein Tauchplatz angehört. Flüsse sind ebenfalls `Lake` mit `WaterBodyType = River`. |
-| Gewässer | `WaterBody` | water body | plan d'eau | specchio d'acqua | Oberbegriff für See und Fluss (nur in Texten, im Code `Lake`). |
+| Gewässer | `WaterBody` | water | eaux | acque | Oberbegriff für See und Fluss. Jeder Tauchplatz gehört zu einem Gewässer. |
+| See | `WaterBodyType.Lake` | lake | lac | lago | Gewässer der Art See. |
+| Fluss | `WaterBodyType.River` | river | rivière | fiume | Gewässer der Art Fluss. |
 | Tauchgang | `Dive` | dive | plongée | immersione | Ein einzelner Tauchgang. |
 | Prognose | `Forecast` | forecast | prévision | previsione | Berechnete Bedingungen pro Platz und Tag. |
 | Tauch-Index | `DiveIndex` | dive index | indice de plongée | indice d'immersione | Zahl von 0 bis 10. Fasst die Bedingungen zusammen. |
@@ -87,7 +88,7 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Lago Maggiore | Lake Maggiore | lac Majeur | Lago Maggiore |
 | Luganersee | Lake Lugano | lac de Lugano | Ceresio (lago di Lugano) |
 
-Seenamen sind Daten in der Tabelle `Lakes` (eine Spalte pro Sprache), keine Ressourcen.
+Seenamen sind Daten in der Tabelle `WaterBodies` (eine Spalte pro Sprache), keine Ressourcen.
 
 ## Schreibregeln für Übersetzungen
 
