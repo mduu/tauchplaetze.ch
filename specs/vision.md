@@ -20,7 +20,7 @@ Taucherinnen und Taucher in der Schweiz stellen vor jedem Wochenende dieselbe Fr
 1. **Verzeichnis zuerst, schweizweit.** Die Plattform kennt alle Schweizer Gewässer, Seen und Flüsse. Jeder Tauchplatz wird mit Name, Koordinate und Gewässer erfasst. Beschreibung, Fotos und Skizze kommen nach und nach.
 2. **Jeder Platz so gut, wie die Daten es erlauben.** Ein Platz kann genaue Daten und eine Prognose haben, einfachere Daten oder gar keine. Dafür hat er vielleicht eine gute Dokumentation. Die **Datenstufe** und die **Ausbaustufe** zeigen das getrennt. Im Idealfall hat ein Platz beides: gute Daten mit Prognose und eine gute Dokumentation.
 3. **Prognose aus Daten, nicht aus Meldungen.** Seemodelle der Eawag liefern die Temperatur in jeder Tiefe und damit die Sprungschicht. Satellitendaten zeigen Klarheit und Algen. MeteoSchweiz liefert Wind und Regen. Das BAFU liefert den Abfluss der Zuflüsse. Daraus entsteht ein **Tauch-Index** pro Platz und Tag.
-4. **Community als Bonus.** Wer meldet, verbessert das spätere Modell. Niemand muss melden.
+4. **Community als Bonus.** Wer meldet, verbessert das spätere Modell. Niemand muss melden. Wer einen Platz kennt, kann Texte, Fotos und neue Plätze beisteuern. Moderatoren geben die Beiträge frei.
 4. **Wow durch Bilder.** Marc besitzt ein grosses Archiv an Unterwasserfotos und -videos aus Schweizer Seen (tauchfotos.ch, tauchvideos.ch).
 
 ## Zielgruppe

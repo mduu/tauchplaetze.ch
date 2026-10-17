@@ -50,7 +50,7 @@ Ziel: Reaktion der Szene testen.
 - Meldungen (ein Klick nach dem Tauchgang).
 - Tauchshops und Füllstationen (kostenlos, ohne Hervorhebung).
 - Buddy-Gruppen (WhatsApp) pro Region.
-- Weitere Redaktoren mit Einladung.
+- Registrierung für alle öffnen: Mitwirkende schlagen vor, Moderatoren geben frei (`cms.md`).
 - Optional: maschineller Übersetzungsvorschlag für redaktionelle Inhalte.
 - Videos aus tauchvideos.ch.
 - Neue Fotos der Ein- und Ausstiege, nach und nach.

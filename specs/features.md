@@ -39,7 +39,8 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 
 ### Redaktion (CMS) – Slice `Editorial`
 
-- Anmeldung für Redaktoren.
+- Mitwirken mit Freigabe: Alle mit Konto schlagen Änderungen und neue Plätze vor. Moderatoren oder Admins geben frei. Erst dann ist der Inhalt online (`cms.md`). Im MVP mit ausgeschalteter Registrierung, ab Phase 1 offen.
+- Versionen wie in einem Wiki, mit Autor und Approver. Öffentliche History pro Platz, ohne Namen ausser mit Einwilligung.
 - Tauchplatz erfassen mit Pflichtfeldern Name, Koordinate (Pin auf Karte), See.
 - Weitere Felder nach und nach ergänzen. Ausbaustufe wird automatisch berechnet.
 - Revisionen pro Platz mit Vergleich und Wiederherstellen.
@@ -62,7 +63,7 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 - **Meldungen (Slice `Reports`):** Sicht nach dem Tauchgang mit einem Klick melden (Sicht pro Tiefenband, optional Kommentar). Ohne Konto, mit Schutz gegen Missbrauch (Rate Limit, Captcha-freie Honeypot-Lösung).
 - **Füllstationen (Slice `DiveShops`):** Tauchshops und Füllstationen. Die Platzseite zeigt die nächste Füllstation nach Distanz. Kostenlos, ohne Hervorhebung. Verwaltung im CMS.
 - **Buddy-Gruppen (Slice `BuddyGroups`):** WhatsApp-Gruppen pro Region verwalten und auf Platz- und Gewässerseiten verlinken.
-- **Weitere Redaktoren:** Rollen «Redaktor» und «Admin». Einladung per E-Mail.
+- **Registrierung für alle:** Selbstregistrierung für Mitwirkende. Admins ernennen Moderatoren. Mails bei Freigabe oder Ablehnung.
 - **Videos:** Einbindung aus tauchvideos.ch.
 
 ## Phase 2
@@ -75,4 +76,4 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 ## Bewusst nicht geplant
 
 - Forum, Chat, Logbuch, Kommentare unter Plätzen.
-- Konten für Besucher. Nur Redaktoren haben ein Konto.
+- Konten für Besucher. Ein Konto braucht nur, wer beiträgt.

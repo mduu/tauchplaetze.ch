@@ -30,7 +30,11 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Ausblick | `Outlook` | outlook | tendance | tendenza | Prognosetag ohne Wasserdaten: nur Wind und Regen, kein Index. |
 | Satellitenpunkt | `SatellitePoint` | satellite point | point satellite | punto satellitare | Punkt seewärts, an dem der Job die Satellitenwerte abfragt. |
 | Messstation | `Station` | gauging station | station de mesure | stazione di misura | Station von BAFU oder MeteoSchweiz, die misst. |
-| Revision | `Revision` | revision | révision | revisione | Gespeicherte Version eines Tauchplatzes. |
+| Version | `Revision` | version | version | versione | Gespeicherter Stand eines Tauchplatzes, wie in einem Wiki. |
+| Änderungsvorschlag | `PendingRevision` | suggested change | modification proposée | modifica proposta | Version, die auf Freigabe wartet. |
+| Freigabe | `Approval` | approval | validation | approvazione | Entscheid eines Moderators, dass eine Version online geht. |
+| Mitwirkende | `Contributor` | contributor | contributeur, contributrice | collaboratore, collaboratrice | Person mit Konto, die Änderungen vorschlägt. |
+| Moderation | `Moderator` | moderator | modérateur, modératrice | moderatore, moderatrice | Person, die Vorschläge prüft und freigibt. |
 | Füllstation | `FillingStation` | filling station | station de gonflage | stazione di ricarica | Ort, an dem man Flaschen füllen lässt (meist ein Tauchshop). |
 | Buddy-Gruppe | `BuddyGroup` | buddy group | groupe de binômes | gruppo buddy | Verlinkte WhatsApp-Gruppe einer Region. |
 

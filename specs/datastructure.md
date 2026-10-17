@@ -116,16 +116,31 @@ Der Einstieg gehört zum Aggregat `DiveSite`. Er wird nur über den Platz gespei
 
 ### DiveSiteRevision
 
-Jede Speicherung im CMS erzeugt eine Revision. Details in `cms.md`.
+Eine Version eines Platzes. Jede Speicherung im CMS erzeugt eine. Ablauf und Datenschutz in `cms.md`, Entscheid in ADR-008.
+
+Die Row in SQL enthält nur die Metadaten. Der Inhalt liegt als JSON in Blob Storage (`revisions/{diveSiteId}/{number}.json`, privat). So bleibt die Datenbank klein. Die aktuelle freigegebene Version steht zusätzlich in den Tabellen `DiveSites`, `DiveSiteTranslations`, `DiveSiteEntryPoints` und `MediaItems`. Nur sie lesen die öffentlichen Seiten.
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
 | `Id` | Guid | |
 | `DiveSiteId` | Guid | |
-| `Number` | int | fortlaufend pro Platz |
-| `Snapshot` | nvarchar(max) | JSON des ganzen Platzes inkl. Übersetzungen, Einstiege und Zuordnung der Medien zu Abschnitten |
-| `Comment` | string(500), optional | Änderungsnotiz |
-| `CreatedAt`, `CreatedBy` | | |
+| `Number` | int | fortlaufend pro Platz, eindeutig mit `DiveSiteId` |
+| `BaseNumber` | int, optional | freigegebene Version, auf der die Änderung aufbaut. `null` beim ersten Vorschlag eines neuen Platzes |
+| `Status` | enum | `Pending`, `Approved`, `Rejected`, `Withdrawn` |
+| `SnapshotPath` | string(300) | Blob-Pfad des Inhalts |
+| `SnapshotHash` | string(64) | SHA-256 des Inhalts. Erkennt eine Speicherung ohne Änderung und prüft die Integrität. |
+| `SnapshotVersion` | int | Format des JSON. Ein neuer Code liest alle alten Formate. |
+| `Comment` | string(500), optional | Änderungsnotiz der Autorin oder des Autors |
+| `AuthorId` | string, optional | Konto. `null` nach Löschung des Kontos |
+| `CreatedAt` | DateTimeOffset | |
+| `ReviewerId` | string, optional | Konto, das freigegeben oder abgelehnt hat |
+| `ReviewedAt` | DateTimeOffset, optional | |
+| `ReviewComment` | string(500), optional | Begründung bei Ablehnung |
+| `RedactedAt`, `RedactedBy` | optional | gesetzt, wenn der Inhalt nachträglich geschwärzt wurde |
+
+- Index `(DiveSiteId, Status)` für die Liste der offenen Vorschläge.
+- Reihenfolge beim Speichern: zuerst den Blob schreiben, dann die Row. Ein Blob ohne Row ist harmlos und wird aufgeräumt. Eine Row ohne Blob darf es nicht geben.
+- Gleicher `SnapshotHash` wie die Basis: keine neue Version (idempotent).
 
 ### SlugRedirect
 
@@ -152,6 +167,10 @@ Jede Speicherung im CMS erzeugt eine Revision. Details in `cms.md`.
 | `PhotographerUrl` | string(300), optional | |
 | `SourceUrl` | string(300), optional | z.B. Seite auf tauchfotos.ch |
 | `SortOrder` | int | innerhalb des Abschnitts |
+| `UploadedBy` | string, optional | Konto. `null` nach Löschung |
+| `UploadedAt` | DateTimeOffset | |
+| `RightsConfirmed` | bool | Person hat die Rechte und die Nutzung mit Namensnennung bestätigt |
+| `IsPublic` | bool | `true`, sobald eine freigegebene Version das Bild verwendet. Vorher liegt das Bild im privaten Container `media-pending`. |
 
 Bildlegende und Alternativtext pro Sprache in `MediaItemTranslation` (`Caption`, `AltText`).
 
@@ -229,7 +248,16 @@ Eine Zeile pro Gewässer und Tag für die Gewässerseite und die Seen-Übersicht
 
 ### Benutzer
 
-ASP.NET Core Identity im selben `DbContext`. Rollen: `Editor`, `Admin`. Keine Besucherkonten.
+ASP.NET Core Identity im selben `DbContext`. Rollen: `Contributor`, `Moderator`, `Admin` (`cms.md`). Besucher brauchen kein Konto. Ein Konto braucht nur, wer beiträgt.
+
+Zusätzliche Felder am Benutzer:
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `DisplayName` | string(60) | Pseudonym erlaubt, eindeutig |
+| `ShowNamePublicly` | bool | Einwilligung, den Anzeigenamen öffentlich in der History zu zeigen. Standard `false` |
+| `PreferredCulture` | string(2) | Sprache des CMS und der Mails |
+| `BlockedAt`, `BlockedBy` | optional | Konto gesperrt |
 
 ## Indizes
 

@@ -44,11 +44,13 @@ Quelle: Microsoft Learn, «Azure SQL Database free offer».
 | Container | Inhalt | Zugriff |
 |---|---|---|
 | `media` | Originale und Bildgrössen | öffentlich lesbar, Cloudflare davor (Entscheid 17.10.2026: einfacher und günstiger als ein Endpunkt der App) |
+| `media-pending` | Fotos von Mitwirkenden bis zur Freigabe | privat |
+| `revisions` | Inhalt aller Versionen der Plätze als JSON (`{diveSiteId}/{number}.json`) | privat |
 | `forecast-raw` | Rohdaten der Läufe als JSON | privat |
 | `models` | ML-Modelle (Phase 2) | privat |
 | `locks` | Blob Leases für Job-Sperren | privat |
 
-Lifecycle-Regel: `forecast-raw` nach 90 Tagen in die Cool-Stufe.
+Lifecycle-Regel: `forecast-raw` nach 90 Tagen in die Cool-Stufe. `revisions` bleibt in der Hot-Stufe (kleine Dateien, selten gelesen, aber die History soll schnell laden).
 
 ## Kosten (Schätzung, vor dem Start im Azure Pricing Calculator prüfen)
 

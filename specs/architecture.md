@@ -88,12 +88,12 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 
 | Slice | Core (Handler, internal) | Web (Fassade) |
 |---|---|---|
-| `DiveSites` | Queries `GetDiveSites`, `GetDiveSite`, `GetDiveSitesNearby`, `ResolveSlug` | Seiten Verzeichnis, Tauchplatz, Karte |
+| `DiveSites` | Queries `GetDiveSites`, `GetDiveSite`, `GetDiveSitesNearby`, `ResolveSlug`, `GetPublicRevisions`, `ComparePublicRevisions` | Seiten Verzeichnis, Tauchplatz, Karte |
 | `WaterBodies` | Queries `GetWaterBodies`, `GetWaterBody`, `GetWaterBodyConditions` | Gewässerseite, Gewässer-Übersicht |
 | `Forecasts` | Commands `RunForecast`, `RecalculateForecast`; Queries `GetBestSites`, `GetSiteForecast`, `GetForecastStatus`; Rechenkern `DiveIndexCalculator`, `ThermoclineDetector`, `DataLevelRule`; Clients `AlplakesClient`, `OpenMeteoClient`, `SwissMetNetClient`, `HydroClient` | Startseite «Wo tauchen?», `ForecastWorker` (BackgroundService, ruft `RunForecast`) |
-| `Editorial` | Commands `CreateDiveSite`, `UpdateDiveSite`, `PublishDiveSite`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`, `UpdateMedia`, `ReorderMedia`, `DeleteMedia`; Queries `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetRevisions`, `CompareRevisions` | Admin-Seiten unter `/admin` |
+| `Editorial` | Commands `ProposeDiveSite`, `ProposeChange`, `WithdrawRevision`, `ApproveRevision`, `RejectRevision`, `RedactRevision`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`; Queries `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetPendingRevisions`, `GetRevisions`, `CompareRevisions`, `GetMyContributions`; Speicher der Versionen in Blob Storage (`IRevisionStore`) | CMS unter `/admin` für Mitwirkende, Moderatoren und Admins |
 | `Media` | Queries `GetMediaVariant`; Bildverarbeitung | Endpunkt für Bildauslieferung (falls nicht direkt aus Blob) |
-| `Accounts` | Identity-Store, Commands `InviteEditor`, `EnsureAdmins` | Login, Passkeys, Einladung |
+| `Accounts` | Identity-Store, Commands `Register`, `ConfirmEmail`, `UpdateProfile`, `AssignRole`, `BlockAccount`, `DeleteAccount`, `EnsureAdmins` | Login, Registrierung, Passkeys, Profil |
 | `Reports` (Phase 1) | Commands `SubmitReport`, `HideReport`; Queries `GetReports` | Meldeformular, Admin-Liste |
 | `DiveShops` (Phase 1) | Commands, Queries für Tauchshops und Füllstationen | Admin-Seiten, Anzeige auf Platzseite |
 | `BuddyGroups` (Phase 1) | Commands, Queries | Admin-Seiten, Links |
@@ -188,7 +188,7 @@ Logik, die mehrere Handler eines Slice brauchen, liegt als `internal` Klasse im 
 | Öffentliche Seiten | Static SSR, Enhanced Navigation, Streaming Rendering | SEO, schnell, cachebar, keine Verbindung pro Besucher |
 | Tagesauswahl, Filter | Links mit Query-Parametern (`?date=2026-10-18`) | bleibt SSR, jede Variante ist cachebar und teilbar |
 | Karten, Galerie | kleines JavaScript-Modul, progressiv | kein WASM nötig |
-| Admin `/admin` | Interactive Server | reiche Editoren ohne JS-Framework, wenige Benutzer |
+| CMS `/admin` | Interactive Server | reiche Editoren ohne JS-Framework. Auch Mitwirkende arbeiten hier. Es bleiben wenige gleichzeitige Verbindungen. |
 | Login | Static SSR mit Formular | Identity-Standard |
 
 Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, kommt ein Projekt `Tauchplaetze.Web.Client` dazu.

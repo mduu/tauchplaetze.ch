@@ -46,6 +46,7 @@ Siehe `i18n.md`. Grundsätze:
 - `/sitemap.xml` als Index, darunter eine Sitemap pro Sprache. Nur veröffentlichte Plätze.
 - `lastmod` aus `DiveSite.UpdatedAt` (nicht aus der täglichen Prognose, sonst ändert sich jede Seite täglich).
 - `/robots.txt`: `/admin` und Query-Varianten ausschliessen.
+- Die Seiten der Versionen (`…/versionen`) haben `noindex` und stehen nicht in der Sitemap (Datenschutz, `cms.md`).
 
 ## Performance
 

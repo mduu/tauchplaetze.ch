@@ -68,3 +68,7 @@ Wir entscheiden uns für **eine Blazor Web App mit gemischten Render-Modi**:
 ## Referenzen
 
 - `architecture.md`, Abschnitt «Render-Modi»
+
+## Nachtrag 17.10.2026
+
+Seit ADR-008 arbeiten auch Mitwirkende im CMS (Interactive Server). Es bleiben wenige gleichzeitige Verbindungen. Steigt die Zahl stark, prüfen wir das Formular für Vorschläge als Static SSR.

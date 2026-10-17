@@ -9,7 +9,7 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 - **Ehrlich.** Prognose als Indikator kennzeichnen. Datenalter zeigen. Quellen nennen.
 - **Bilder tragen.** Unterwasserfotos sind das stärkste Element. Platzhalter nur, solange keine Fotos da sind.
 - **Sicherheit sichtbar.** Notfallnummern und Hinweise (Schiffsverkehr, Verbote) auf jeder Platzseite.
-- **Keine Konten für Besucher.** Favoriten und Standort bleiben im Browser.
+- **Keine Konten für Besucher.** Favoriten und Standort bleiben im Browser. Ein Konto braucht nur, wer beiträgt.
 
 ## Informationsarchitektur
 
@@ -18,6 +18,7 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 /{lang}/prognose                (Alias der Startseite, Ziel von sichtweiten.ch)
 /{lang}/tauchplaetze            Verzeichnis (Liste + Karte, Filter)
 /{lang}/tauchplaetze/{slug}     Tauchplatzseite
+/{lang}/tauchplaetze/{slug}/versionen   Versionen des Platzes (noindex)
 /{lang}/gewaesser               Gewässer-Übersicht (Seen und Flüsse)
 /{lang}/gewaesser/{slug}        Gewässerseite
 /{lang}/ueber                   Über, Datenquellen, Impressum, Datenschutz
@@ -69,7 +70,7 @@ Mockup: `design/tauchplatz.dc.html`.
 6. **Praktisch:** Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation, Notfall.
 7. **Letzte Meldungen** (Phase 1, falls vorhanden) mit Button «Sicht melden».
 8. Buddy-Block für die Region.
-9. Fuss mit Quellen.
+9. Fuss mit Quellen, «Zuletzt geändert am …», Links «Versionen» und «Platz bearbeiten» (führt zur Anmeldung).
 
 Alle Angaben in den Abschnitten 3 bis 6 sind optional (siehe `dive-site.md`). Ein Abschnitt ohne Inhalt fehlt. Fehlen die Abschnitte 3 bis 6 ganz, erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
 
