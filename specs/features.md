@@ -21,8 +21,11 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
   - Hero mit Foto oder Unterwasser-Illustration, Name, See, Tags.
   - Tauchbedingungen heute: Index, Temperaturprofil mit Sprungschicht, Sicht-Indikator, Wind, Algen.
   - 5-Tage-Verlauf des Index.
-  - Beschreibung, Fotos, Tauchskizze (je nach Ausbaustufe).
-  - Praktisch: Parkierung, Einstieg, Hinweise, nächste Füllstation (Partnerplatz), Notfallnummern.
+  - Bewertungen 1–5: Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung (siehe `dive-site.md`).
+  - Unter Wasser (Text, Fotos), Gefahren (Text, Bilder), Tauchskizze.
+  - Einstiege: einer oder mehrere, mit Pin auf der Karte, Text und Bildern.
+  - Praktisch: Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten, nächste Füllstation (Partnerplatz), Notfallnummern.
+  - Alle Angaben sind optional. Abschnitte ohne Inhalt fehlen.
   - Link zur Buddy-Gruppe der Region.
 - Ein Platz der Ausbaustufe 0 zeigt Prognose und Karte. Dazu den Hinweis «Dieser Platz ist erst im Verzeichnis».
 

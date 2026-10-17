@@ -12,6 +12,7 @@ This file gives the short rules that always apply. The specs give the details. B
 | Domain terms (DE/EN/FR/IT) | `specs/ubiquitous-language.md` |
 | Architecture, coding guidelines, testing | `specs/architecture.md` |
 | Entities, EF configuration | `specs/datastructure.md` |
+| Dive site content, rating scales | `specs/dive-site.md` |
 | Admin area, content levels, revisions | `specs/cms.md` |
 | Forecast, dive index, jobs | `specs/forecast.md` |
 | External data (Alplakes, MeteoSwiss, BAFU) | `specs/data-sources.md` |

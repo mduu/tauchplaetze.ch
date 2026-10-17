@@ -37,7 +37,7 @@ Zuordnung der BAFU-Stationen (Hauptzuflüsse) zu einem See. PK: (`LakeId`, `Stat
 
 ### DiveSite
 
-Der Tauchplatz. Nur `Name`, `Location` und `LakeId` sind Pflicht (Ausbaustufe 0).
+Der Tauchplatz. Nur `Name`, `Location` und `LakeId` sind Pflicht (Ausbaustufe 0). Bedeutung der Bewertungen und Abschnitte: siehe `dive-site.md`.
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
@@ -46,13 +46,17 @@ Der Tauchplatz. Nur `Name`, `Location` und `LakeId` sind Pflicht (Ausbaustufe 0)
 | `Name` | string(120) | Eigenname, wird nicht übersetzt |
 | `LakeId` | int | FK `Lake` |
 | `Location` | geography (Point) | Position des Platzes (für Prognose und Karte) |
-| `EntryLocation` | geography (Point), optional | genauer Einstieg, falls abweichend |
 | `Municipality` | string(80), optional | Gemeinde |
 | `Canton` | string(2), optional | Kürzel, z.B. `ZH` |
 | `MaxDepth` | int, optional | Meter |
-| `Difficulty` | enum, optional | `Beginner`, `Advanced`, `Expert` |
+| `DifficultyRating` | tinyint, optional | 1–5, Stufe |
+| `WallRating` | tinyint, optional | 1–5, Steilwand |
+| `MarineLifeRating` | tinyint, optional | 1–5, UW-Leben |
+| `WrecksRating` | tinyint, optional | 1–5, Wracks und Gegenstände |
+| `CurrentRating` | tinyint, optional | 1–5, Stufe |
+| `SurroundingsRating` | tinyint, optional | 1–5, Umgebung ausserhalb des Wassers |
 | `Access` | enum, optional | `Shore`, `Boat`, `ShoreAndBoat` |
-| `Features` | flags enum | `Wall`, `Wreck`, `Statues`, `Plateau`, `Cave`, `River`, `IceDiving`, `Training` |
+| `Features` | flags enum | `Plateau`, `Cave`, `River`, `IceDiving`, `Training` (Wand und Wrack kommen aus den Bewertungen) |
 | `HasDivingBan` | bool | Tauchverbot (dauernd oder zeitweise) |
 | `InflowStationOverride` | string(20), optional | BAFU-Station, falls der Platz nahe einer Mündung liegt (überschreibt die Stationen des Sees) |
 | `Status` | enum | `Draft`, `Published`, `Archived` |
@@ -62,18 +66,37 @@ Der Tauchplatz. Nur `Name`, `Location` und `LakeId` sind Pflicht (Ausbaustufe 0)
 | `CreatedBy`, `UpdatedBy` | string | Benutzer-ID |
 | `RowVersion` | rowversion | |
 
+Alle `…Rating`-Felder haben einen Check Constraint `BETWEEN 1 AND 5`. Im Code sind sie ein Value Object `Rating` (`byte`, validiert 1–5).
+
 ### DiveSiteTranslation
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
 | `DiveSiteId` | Guid | PK-Teil |
 | `Culture` | string(2) | PK-Teil |
-| `Description` | nvarchar(max) | Markdown, eingeschränkt (Absätze, Listen, Fett) |
-| `EntryInfo` | string(1000) | Einstieg und Ausstieg |
-| `ParkingInfo` | string(1000) | Parkierung und Gebühren |
-| `Hints` | string(1000) | Gefahren, Schiffsverkehr, Verbote |
+| `UnderwaterDescription` | nvarchar(max), optional | Unter Wasser. Markdown, eingeschränkt (Absätze, Listen, Fett) |
+| `SurroundingsInfo` | string(2000), optional | Umgebung ausserhalb des Wassers |
+| `ApproachInfo` | string(2000), optional | Anfahrt und Parkplatz, Gebühren |
+| `HazardsInfo` | string(2000), optional | Gefahren, Schiffsverkehr, Verbote |
+| `FacilitiesInfo` | string(1000), optional | Restaurants und Toiletten |
 | `DivingBanNote` | string(500) | Erklärung zum Tauchverbot |
 | `IsMachineTranslated` | bool | `true`, wenn automatisch übersetzt und noch nicht geprüft |
+
+### DiveSiteEntryPoint
+
+Einstieg oder Ausstieg eines Platzes. Ein Platz hat null bis viele Einstiege.
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `Id` | Guid | |
+| `DiveSiteId` | Guid | FK `DiveSite`, Cascade Delete |
+| `Location` | geography (Point) | Pin auf der Karte |
+| `Kind` | enum | `EntryAndExit` (Standard), `Entry`, `Exit` |
+| `SortOrder` | int | erster Eintrag = Hauptzugang |
+
+Übersetzbar in `DiveSiteEntryPointTranslation` (`EntryPointId`, `Culture`, `Name` string(80) optional, `Description` string(1000) optional).
+
+Der Einstieg gehört zum Aggregat `DiveSite`. Er wird nur über den Platz gespeichert und ist Teil der Revision.
 
 ### DiveSiteRevision
 
@@ -84,7 +107,7 @@ Jede Speicherung im CMS erzeugt eine Revision. Details in `cms.md`.
 | `Id` | Guid | |
 | `DiveSiteId` | Guid | |
 | `Number` | int | fortlaufend pro Platz |
-| `Snapshot` | nvarchar(max) | JSON des ganzen Platzes inkl. Übersetzungen |
+| `Snapshot` | nvarchar(max) | JSON des ganzen Platzes inkl. Übersetzungen, Einstiege und Zuordnung der Medien zu Abschnitten |
 | `Comment` | string(500), optional | Änderungsnotiz |
 | `CreatedAt`, `CreatedBy` | | |
 
@@ -102,6 +125,8 @@ Jede Speicherung im CMS erzeugt eine Revision. Details in `cms.md`.
 | `Id` | Guid | |
 | `DiveSiteId` | Guid, optional | ein Bild kann auch zu einem See gehören |
 | `LakeId` | int, optional | |
+| `Section` | enum, optional | `Underwater`, `Surroundings`, `Approach`, `EntryPoint`, `Hazards`; nur bei Bildern eines Platzes, siehe `dive-site.md` |
+| `EntryPointId` | Guid, optional | FK `DiveSiteEntryPoint`, nur bei `Section = EntryPoint` |
 | `Kind` | enum | `Photo`, `Video`, `Sketch` |
 | `BlobPath` | string(300) | Original in Blob Storage |
 | `Width`, `Height` | int | |
@@ -110,7 +135,7 @@ Jede Speicherung im CMS erzeugt eine Revision. Details in `cms.md`.
 | `Photographer` | string(120) | Namensnennung, Pflicht |
 | `PhotographerUrl` | string(300), optional | |
 | `SourceUrl` | string(300), optional | z.B. Seite auf tauchfotos.ch |
-| `SortOrder` | int | |
+| `SortOrder` | int | innerhalb des Abschnitts |
 
 Bildlegende und Alternativtext pro Sprache in `MediaItemTranslation` (`Caption`, `AltText`).
 
@@ -189,6 +214,8 @@ ASP.NET Core Identity im selben `DbContext`. Rollen: `Editor`, `Admin`. Keine Be
 
 - `DiveSites.Location`: Spatial Index.
 - `DiveSites (LakeId, Status)`.
+- `DiveSiteEntryPoints (DiveSiteId, SortOrder)`.
+- `MediaItems (DiveSiteId, Section, SortOrder)`.
 - `DailyForecasts (Date, DiveIndex DESC)` für die Rangliste.
 - `Reports (DiveSiteId, DiveDate)`.
 

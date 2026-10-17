@@ -42,9 +42,18 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Flusstauchgang | `RiverDive` | river dive | plongée en rivière | immersione in fiume |
 | Maximaltiefe | `MaxDepth` | maximum depth | profondeur maximale | profondità massima |
 | Schwierigkeit | `Difficulty` | difficulty | difficulté | difficoltà |
-| Einsteiger | `Beginner` | beginner | débutant | principiante |
-| Fortgeschrittene | `Advanced` | advanced | avancé | avanzato |
-| Erfahrene | `Expert` | experienced | expérimenté | esperto |
+| Einsteiger (Schwierigkeit 1–2) | `Beginner` | beginner | débutant | principiante |
+| Fortgeschrittene (Schwierigkeit 3) | `Advanced` | advanced | avancé | avanzato |
+| Erfahrene (Schwierigkeit 4–5) | `Expert` | experienced | expérimenté | esperto |
+| Bewertung | `Rating` | rating | évaluation | valutazione |
+| UW-Leben | `MarineLife` | underwater life | vie aquatique | vita subacquea |
+| Wracks und Gegenstände | `Wrecks` | wrecks and objects | épaves et objets | relitti e oggetti |
+| Strömung | `Current` | current | courant | corrente |
+| Umgebung | `Surroundings` | surroundings | environs | dintorni |
+| Anfahrt | `Approach` | getting there | accès | come arrivare |
+| Unter Wasser | `Underwater` | underwater | sous l'eau | sott'acqua |
+| Gefahren | `Hazards` | hazards | dangers | pericoli |
+| Restaurants und Toiletten | `Facilities` | restaurants and toilets | restaurants et toilettes | ristoranti e servizi igienici |
 | Parkierung | `Parking` | parking | parking | parcheggio |
 | Tauchverbot | `DivingBan` | diving ban | interdiction de plongée | divieto d'immersione |
 | Schiffsverkehr | `BoatTraffic` | boat traffic | trafic de bateaux | traffico di battelli |

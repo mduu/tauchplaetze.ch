@@ -57,24 +57,25 @@ Tagesauswahl und Umkreis ändern die URL (`?date=`, `?lat=&lng=&r=`). Die Seite 
 
 Mockup: `design/tauchplatz.dc.html`.
 
-1. Hero: Foto (oder Unterwasser-Illustration), Brotkrumen «See › Gemeinde», Name gross, Tags (Wand, Tiefe, Zugang, Schwierigkeit, ganzjährig).
+1. Hero: Foto (oder Unterwasser-Illustration), Brotkrumen «See › Gemeinde», Name gross, Tags (Wand, Wrack, Tiefe, Zugang, Schwierigkeit, ganzjährig).
 2. **Tauchbedingungen:** Satz («Heute ein guter Tag.») und Index gross.
    - Temperaturprofil als Diagramm (Temperatur über Tiefe) mit markierter Sprungschicht.
    - Kacheln: Sicht-Indikator («Gut ab 16 m»), Anzug-Hinweis, Wind, Algen.
    - 5-Tage-Verlauf des Index.
-3. **Der Platz:** Beschreibung, Fotos (Galerie), Fotograf mit Link.
-4. **Tauchplatzskizze:** Einstieg, Tiefenlinien, Highlights. Hinweis «Skizze, nicht zur Navigation».
-5. **Praktisch:** Parkierung, Einstieg, Achtung (Schiffsverkehr, Verbote), nächste Füllstation (Partner), Notfall.
-6. **Letzte Meldungen** (Phase 1, falls vorhanden) mit Button «Sicht melden».
-7. Buddy-Block für die Region.
-8. Fuss mit Quellen.
+3. **Der Platz:** Bewertungen als kompakter Block (Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung; nur bewertete Skalen, Wert immer auch als Zahl und Kurztext). Darunter «Unter Wasser»: Text, Fotos (Galerie), Fotograf mit Link.
+4. **Gefahren:** Text und Bilder. Gut sichtbar, nicht eingeklappt.
+5. **Einstiege und Tauchplatzskizze:** Karte mit allen Einstiegen, pro Einstieg Name, Text und Bilder. Skizze mit Tiefenlinien und Highlights. Hinweis «Skizze, nicht zur Navigation».
+6. **Praktisch:** Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation (Partner), Notfall.
+7. **Letzte Meldungen** (Phase 1, falls vorhanden) mit Button «Sicht melden».
+8. Buddy-Block für die Region.
+9. Fuss mit Quellen.
 
-Je nach Ausbaustufe (siehe `cms.md`) fehlen Abschnitte 3 bis 5. Dann erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
+Alle Angaben in den Abschnitten 3 bis 6 sind optional (siehe `dive-site.md`). Ein Abschnitt ohne Inhalt fehlt. Fehlen die Abschnitte 3 bis 6 ganz, erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
 
 ### Verzeichnis
 
 - Liste und Karte nebeneinander (Desktop), umschaltbar (Handy).
-- Filter: See, Schwierigkeit, Zugang, Eigenschaften (Wand, Wrack, Fluss …).
+- Filter: See, Schwierigkeit (Einsteiger, Fortgeschrittene, Erfahrene), Zugang, Eigenschaften (Wand und Wrack ab Bewertung 3, Fluss …).
 - Jede Zeile zeigt den heutigen Index als kleinen Wert.
 
 ### Seeseite

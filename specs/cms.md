@@ -13,8 +13,8 @@ Der Core berechnet die Ausbaustufe bei jeder Speicherung (`DiveSite.CalculateCon
 | Stufe | Bedingung | Sichtbar auf der Platzseite |
 |---|---|---|
 | 0 – Verzeichnis | Name, Koordinate, See | Prognose, Karte, Hinweis «erst im Verzeichnis» |
-| 1 – Basis | Stufe 0 plus `MaxDepth`, `Difficulty`, `Access`, `EntryInfo` (DE) und `ParkingInfo` (DE) | zusätzlich Praktisch-Block und Tags |
-| 2 – Vollständig | Stufe 1 plus `Description` (DE) und ein Hero-Foto | zusätzlich Beschreibung, Galerie, Skizze (falls vorhanden) |
+| 1 – Basis | Stufe 0 plus `MaxDepth`, `DifficultyRating`, `Access`, ein Einstieg mit Beschreibung (DE) und `ApproachInfo` (DE) | zusätzlich Praktisch-Block, Bewertungen und Tags |
+| 2 – Vollständig | Stufe 1 plus `UnderwaterDescription` (DE) und ein Hero-Foto | zusätzlich Unter Wasser, Galerie, Skizze (falls vorhanden) |
 
 Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit wartet.
 
@@ -34,7 +34,10 @@ Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit
 
 ### Platz bearbeiten
 
-- Abschnitte: Grunddaten, Lage (Karte mit verschiebbarem Pin für Platz und Einstieg), Eigenschaften, Texte pro Sprache (Tabs DE, EN, FR, IT), Medien, Vorschau.
+- Abschnitte: Grunddaten, Lage (Karte mit verschiebbarem Pin für den Platz), Einstiege, Bewertungen, Eigenschaften, Texte pro Sprache (Tabs DE, EN, FR, IT), Medien, Vorschau.
+- Einstiege: Liste mit Hinzufügen, Entfernen und Reihenfolge. Pro Einstieg ein Pin auf derselben Karte, Art, Name und Beschreibung pro Sprache.
+- Bewertungen: pro Skala eine Auswahl 1–5 mit Kurztext der Stufe und «nicht bewertet». Skalen in `dive-site.md`.
+- Texte pro Sprache: Unter Wasser, Gefahren, Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten.
 - Texte: Deutsch ist Pflicht. EN/FR/IT sind optional.
 - Button «Fehlende Sprachen übersetzen» (Phase 1, optional): erzeugt einen Vorschlag per LLM und setzt `IsMachineTranslated = true`. Ein Redaktor prüft und speichert. Siehe `open-questions.md`.
 - Optimistische Sperre über `RowVersion`. Hat jemand anders zwischenzeitlich gespeichert, erscheint ein Hinweis mit Vergleich.
@@ -52,7 +55,8 @@ Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit
 - Der Core liest EXIF (Datum, falls vorhanden) und erzeugt Bildgrössen (z.B. 480, 960, 1600, 2400 px Breite) als WebP und JPEG.
 - Original und Grössen liegen in Blob Storage (`media/{mediaId}/{size}.webp`).
 - Pflicht: Fotograf. Optional: Legende und Alternativtext pro Sprache, Aufnahmetiefe.
-- Reihenfolge per Drag and Drop. Ein Foto als Hero wählen.
+- Jedes Bild eines Platzes einem Abschnitt zuordnen (Unter Wasser, Umgebung, Anfahrt, Einstieg, Gefahren). Bei «Einstieg» zusätzlich den Einstieg wählen.
+- Reihenfolge per Drag and Drop innerhalb des Abschnitts. Ein Foto als Hero wählen.
 - Import aus tauchfotos.ch: Marc lädt die Originale hoch. Kein automatischer Abzug von der alten Website.
 
 ### Seen, Shops, Buddy-Gruppen
