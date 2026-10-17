@@ -12,7 +12,7 @@ Ziel: Betrieb unter **CHF 20 pro Monat**. Region: **Switzerland North**.
 | SQL Server (logisch) | `sql-tauchplaetze-prod` | – | nur Entra-Authentifizierung |
 | SQL Database | `sqldb-tauchplaetze` | General Purpose Serverless, **Free Offer** | siehe unten |
 | Storage Account | `sttauchplaetzeprod` | Standard LRS | Container `media`, `forecast-raw`, `models`, `locks` |
-| Log Analytics + Application Insights | `appi-tauchplaetze-prod` | Pay-as-you-go | tägliches Limit setzen, Sampling aktiv |
+| Log Analytics + Application Insights | `appi-tauchplaetze-prod` | Pay-as-you-go | tägliches Limit setzen, Sampling aktiv, Aufbewahrung 30 Tage, IP-Adressen nicht speichern (Standard von Application Insights, nicht ändern) |
 
 Ausserhalb von Azure:
 

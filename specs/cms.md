@@ -79,6 +79,20 @@ Namen in einer öffentlichen History sind Personendaten (nDSG). Darum gilt **Dat
 - **Personendaten im Inhalt:** Texte und Fotos können selbst Personendaten enthalten (z.B. Telefonnummern, erkennbare Personen). Moderatoren prüfen das vor der Freigabe. Eine Version mit solchen Daten lässt sich im Inhalt nachträglich schwärzen. Das ist die einzige Ausnahme von «Versionen sind unveränderlich». Die Schwärzung selbst steht in der History.
 - Die Datenschutzerklärung beschreibt Konto, Anzeigename, History und Aufbewahrung.
 
+### Auskunft und Herausgabe der eigenen Daten
+
+Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer Daten (Art. 28). Das Konto bietet beides selbst an, ohne Anfrage an uns. Grundlage sind die Seiten von ASP.NET Core Identity unter «Konto verwalten» (`Manage/PersonalData`), erweitert um die Beiträge.
+
+- **Seite «Meine Daten»:** zeigt alle gespeicherten Daten zum Konto:
+  - Konto: E-Mail, Anzeigename, Einwilligung zur öffentlichen Anzeige, Sprache, Rollen, registriert am, letzte Anmeldung, Passkeys (Name, angelegt am), Sperre.
+  - **Beiträge:** alle Versionen, die die Person geschrieben hat, mit Platz, Datum, Status und Notiz. Jede Zeile hat einen Link auf die Version bzw. den Vergleich.
+  - **Freigaben:** alle Versionen, die die Person freigegeben oder abgelehnt hat (nur Moderatoren und Admins), mit Link.
+  - **Fotos:** alle hochgeladenen Fotos mit Platz, Status und Link.
+- **Download:** «Meine Daten herunterladen» liefert alles als JSON. Die Datei enthält die Links auf die Beiträge und die Texte der eigenen Notizen und Begründungen. Den Inhalt der Versionen liefert sie als Link, nicht als Kopie. Felder am Benutzer tragen dafür `[PersonalData]`.
+- **Konto löschen:** wie oben unter «Konto löschen». Die Seite sagt vorher, was bleibt (Versionen ohne Namen) und was gelöscht wird (Konto, E-Mail, Passkeys, Anzeigename, Fotos im Status `Pending`).
+- **Anfrage per E-Mail:** Kommt eine Anfrage ohne Konto oder per Post, erzeugt ein Admin denselben Bericht im CMS (Konto suchen, «Auskunft erstellen»). Antwort innerhalb von 30 Tagen. Jede erstellte Auskunft steht im Log des Kontos.
+- **Logs:** Application Insights speichert IP-Adressen nicht. Die Aufbewahrung der Logs steht in `infrastructure.md`.
+
 ### Was Mitwirkende dürfen
 
 - Texte, Bewertungen, Einstiege und Lage eines bestehenden Platzes ändern.
@@ -165,6 +179,7 @@ Namen in einer öffentlichen History sind Personendaten (nDSG). Darum gilt **Dat
 
 - `Features/Editorial/Commands`: `ProposeDiveSite`, `ProposeChange`, `WithdrawRevision`, `ApproveRevision`, `RejectRevision`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`.
 - `Features/Editorial/Queries`: `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetPendingRevisions`, `GetRevisions`, `CompareRevisions`, `GetMyContributions`.
+- `Features/Accounts/Queries`: `GetPersonalData` (Seite «Meine Daten», Download und Auskunft durch einen Admin). Eine Query für alle drei Wege.
 - `Features/DiveSites/Queries`: `GetPublicRevisions`, `ComparePublicRevisions` für die öffentliche History.
 - `ProposeChange` eines Moderators ruft intern dieselbe Regel wie `ApproveRevision`. Die Regel steht an einer Stelle.
 - Die öffentlichen Abfragen liegen im Slice `DiveSites` (`GetDiveSite`, `GetDiveSites`), nicht im Slice `Editorial`.

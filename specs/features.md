@@ -40,6 +40,7 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 ### Redaktion (CMS) – Slice `Editorial`
 
 - Mitwirken mit Freigabe: Alle mit Konto schlagen Änderungen und neue Plätze vor. Moderatoren oder Admins geben frei. Erst dann ist der Inhalt online (`cms.md`). Im MVP mit ausgeschalteter Registrierung, ab Phase 1 offen.
+- «Meine Daten» im Konto: alle gespeicherten Daten mit Links zu den eigenen Beiträgen und als JSON-Download (Auskunft nach nDSG).
 - Versionen wie in einem Wiki, mit Autor und Approver. Öffentliche History pro Platz, ohne Namen ausser mit Einwilligung.
 - Tauchplatz erfassen mit Pflichtfeldern Name, Koordinate (Pin auf Karte), See.
 - Weitere Felder nach und nach ergänzen. Ausbaustufe wird automatisch berechnet.
