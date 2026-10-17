@@ -6,8 +6,8 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 
 | # | Frage | Nächster Schritt |
 |---|---|---|
-| 1 | **Dürfen wir die Daten der Alplakes API nutzen?** Unter welchen Bedingungen (Quellenangabe, Frequenz)? | Mail an Eawag (Kontakt in der API-Beschreibung: Eawag (Alplakes)). Vorhaben kurz erklären, Abfragemenge nennen (ca. ein Call pro Platz und Tag), nicht kommerziell, Quellenangabe zusichern. |
-| 21 | Dürfen wir die Abfluss- und Seepegelvorhersagen des BAFU nutzen? Es gibt nur ein JSON der Grafiken, keine API. | Mail an `BAFU (Hydrologie)`. Blockiert nur die Flussprognose in Phase 1. |
+| 1 | **Dürfen wir die Daten der Alplakes API nutzen?** Unter welchen Bedingungen (Quellenangabe, Frequenz)? | Mail an Eawag (Alplakes) am 17.10.2026 gesendet (`doc/mails/2026-10-17-eawag-alplakes.md`). Antwort ausstehend. |
+| 21 | Dürfen wir die Abfluss- und Seepegelvorhersagen des BAFU nutzen? Es gibt nur ein JSON der Grafiken, keine API. | Mail an `BAFU (Hydrologie)` am 17.10.2026 gesendet (`doc/mails/2026-10-17-bafu-hydrologie.md`). Antwort ausstehend. Blockiert nur die Flussprognose in Phase 1. |
 
 ## Erledigt am 17.10.2026
 
