@@ -12,9 +12,15 @@
 .brand {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     color: var(--color-text);
     text-decoration: none;
+}
+
+.brand-mark {
+    display: block;
+    width: 43px;
+    height: 44px;
 }
 
 .brand-name {

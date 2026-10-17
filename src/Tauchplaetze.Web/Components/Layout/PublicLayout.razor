@@ -5,11 +5,10 @@
 
 <header class="site-header">
     <a class="brand" href="/@CurrentLanguage" aria-label="@L["Brand_Home"]">
-        <svg class="brand-mark" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
-            <circle cx="15" cy="15" r="13" fill="none" stroke="var(--color-primary)" stroke-width="2" />
-            <path d="M5 15 Q10 11 15 15 T25 15" fill="none" stroke="var(--color-primary)" stroke-width="2" />
-            <circle cx="15" cy="21" r="1.8" fill="var(--color-signal)" />
-        </svg>
+        <picture>
+            <source srcset="@Assets["img/logo-88.webp"]" type="image/webp" />
+            <img class="brand-mark" src="@Assets["img/logo-88.png"]" width="43" height="44" alt="" />
+        </picture>
         <span class="brand-name">@L["Brand"]</span>
     </a>
     <LanguageSwitch />

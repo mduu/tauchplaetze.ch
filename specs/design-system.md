@@ -51,6 +51,18 @@ Die Stufen unterscheiden sich in der **Helligkeit**, nicht nur im Farbton. Der I
 | `--color-rock` | `#05161A` | Felswand, Seegrund |
 | `--color-wood` | `#B88A5A` | Baumstamm in Skizzen |
 
+## Logo und Favicon
+
+Entwurf vom 17.10.2026, generiert mit Gemini. Die Quellen liegen in `assets/logo/` (PNG und Pixelmator).
+
+| Datei | Verwendung |
+|---|---|
+| `logo_large2.png` | Logo ohne Text: Berge, Seeschichten, Flosse, oranger Punkt. Im Kopf der Seite neben der Wortmarke (`wwwroot/img/logo-88.webp`, 44 px hoch). |
+| `favicon.png` | Vereinfachte Form für kleine Grössen: Welle und Flosse im Kreis. Daraus `favicon.ico` (16, 32, 48 px), `icons/favicon-32.png` und `icons/apple-touch-icon.png` (180 px). |
+| `logo_large_preview.jpg` | Idee für Kopf und Wortmarke. Kein Asset für die Seite. |
+
+- Das Logo ist ein Rasterbild. Für scharfe Darstellung in jeder Grösse soll später eine SVG-Fassung entstehen.
+
 ## Typografie
 
 | Rolle | Schrift | Gewicht | Grösse |
@@ -83,7 +95,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 
 | Komponente | Beschreibung |
 |---|---|
-| `SiteHeader` | Logo (Kreis mit Welle und orangem Punkt), Wortmarke, Navigation, Sprachwahl |
+| `SiteHeader` | Logo (Kreis mit Bergen, Seeschichten und Flosse, oranger Punkt), Wortmarke «tauchplaetze.ch» in Bricolage Grotesque, Navigation, Sprachwahl |
 | `DayPills` | Tagesauswahl. Aktiv: Cyan gefüllt, dunkler Text. Inaktiv: Rahmen `--color-border-strong`. Höhe ≥ 46 px. |
 | `BestPickCard` | Seequerschnitt-Illustration oben, darunter Name, Index, Kacheln, Begründung, Aktionen |
 | `LakeCrossSection` | SVG: Schichten, Wellenlinie, gestrichelte Sprungschicht in Orange, Temperaturen, Felswand, Tiefenskala |
