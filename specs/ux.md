@@ -37,7 +37,7 @@ Mockup: `design/start.dc.html`.
 1. Kopf: Logo, Navigation, Sprachwahl.
 2. Titel als Frage, abhängig vom gewählten Tag («… heute?», «… am Sonntag?»).
 3. Kurzer Satz, woher die Prognose kommt.
-4. Tagesauswahl als Pillen (heute plus folgende Tage). Umkreis-Auswahl («60 km ab Zürich · ändern»).
+4. Tagesauswahl als Pillen (heute plus 4 Tage). Tage ohne Index tragen den Zusatz «Ausblick». Umkreis-Auswahl («60 km ab Zürich · ändern»).
 5. **Beste Wahl** (grosse Karte):
    - Seequerschnitt als Illustration mit Oberflächentemperatur, Temperatur auf 20 m und Sprungschicht.
    - Name, Ort, See, Tauch-Index gross.
@@ -60,12 +60,13 @@ Mockup: `design/tauchplatz.dc.html`.
 1. Hero: Foto (oder Unterwasser-Illustration), Brotkrumen «See › Gemeinde», Name gross, Tags (Wand, Wrack, Tiefe, Zugang, Schwierigkeit, ganzjährig).
 2. **Tauchbedingungen:** Satz («Heute ein guter Tag.») und Index gross.
    - Temperaturprofil als Diagramm (Temperatur über Tiefe) mit markierter Sprungschicht.
-   - Kacheln: Sicht-Indikator («Gut ab 16 m»), Anzug-Hinweis, Wind, Algen.
-   - 5-Tage-Verlauf des Index.
+   - Kacheln: Sicht-Indikator («Gut ab 16 m», mit Datum des Satellitenbilds), Anzug-Hinweis, Wind, Algen.
+   - 5-Tage-Verlauf: Index, wo vorhanden. Tage im Ausblick zeigen Wind und Regen.
+   - Datenstufe als kurzer Hinweis: «Profil am Platz», «für den ganzen See», «Messstation {Name}» oder «nur Wetter».
 3. **Der Platz:** Bewertungen als kompakter Block (Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung; nur bewertete Skalen, Wert immer auch als Zahl und Kurztext). Darunter «Unter Wasser»: Text, Fotos (Galerie), Fotograf mit Link.
 4. **Gefahren:** Text und Bilder. Gut sichtbar, nicht eingeklappt.
 5. **Einstiege und Tauchplatzskizze:** Karte mit allen Einstiegen, pro Einstieg Name, Text und Bilder. Skizze mit Tiefenlinien und Highlights. Hinweis «Skizze, nicht zur Navigation».
-6. **Praktisch:** Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation (Partner), Notfall.
+6. **Praktisch:** Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation, Notfall.
 7. **Letzte Meldungen** (Phase 1, falls vorhanden) mit Button «Sicht melden».
 8. Buddy-Block für die Region.
 9. Fuss mit Quellen.
@@ -75,7 +76,7 @@ Alle Angaben in den Abschnitten 3 bis 6 sind optional (siehe `dive-site.md`). Ei
 ### Verzeichnis
 
 - Liste und Karte nebeneinander (Desktop), umschaltbar (Handy).
-- Filter: See, Schwierigkeit (Einsteiger, Fortgeschrittene, Erfahrene), Zugang, Eigenschaften (Wand und Wrack ab Bewertung 3, Fluss …).
+- Filter: See, Datenstufe, Schwierigkeit (Einsteiger, Fortgeschrittene, Erfahrene), Zugang, Eigenschaften (Wand und Wrack ab Bewertung 3, Fluss …).
 - Jede Zeile zeigt den heutigen Index als kleinen Wert.
 
 ### Seeseite
@@ -96,7 +97,10 @@ Alle Angaben in den Abschnitten 3 bis 6 sind optional (siehe `dive-site.md`). Ei
 | Zustand | Darstellung |
 |---|---|
 | Prognose veraltet (> 30 h) | Hinweis mit Datenalter über der Rangliste |
-| Keine Prognose für einen Platz | «Keine Prognose» statt Index, Begründung (z.B. See ohne Modell) |
+| Kein Index für einen Platz (Datenstufe 1 ohne Satellit) | Wind und Regen ohne Index, Hinweis «nur Wetterdaten» |
+| Tag im Ausblick | Wind und Regen ohne Index, Zusatz «Ausblick» |
+| Satellitenwert älter als 14 Tage | Klarheit «unbekannt», Datum des letzten Bilds |
+| Prognose ausgeschaltet (Datenstufe 0) | kein Bedingungsblock, nur Dokumentation |
 | Keine Plätze im Umkreis | Vorschlag, den Umkreis zu vergrössern |
 | Text nur auf Deutsch | dezenter Hinweis über dem Text |
 | Automatisch übersetzt | dezenter Hinweis «automatisch übersetzt» |

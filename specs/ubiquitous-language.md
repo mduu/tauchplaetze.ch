@@ -16,7 +16,7 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Sprungschicht | `Thermocline` | thermocline | thermocline | termoclino | Schicht mit starkem Temperaturabfall. Darunter ist die Sicht oft besser. |
 | Sichtweite | `Visibility` | visibility | visibilité | visibilità | Wie weit man unter Wasser sieht. |
 | Sicht-Indikator | `VisibilityIndicator` | visibility indicator | indicateur de visibilité | indicatore di visibilità | Geschätzte Sicht aus Daten. Keine Messung. |
-| Secchi-Tiefe | `SecchiDepth` | Secchi depth | profondeur de Secchi | profondità di Secchi | Gemessene Sichttiefe mit Secchi-Scheibe. |
+| Secchi-Tiefe | `SecchiDepth` | Secchi depth | profondeur de Secchi | profondità di Secchi | Sichttiefe mit Secchi-Scheibe. Bei uns meist aus dem Satellit geschätzt. |
 | Oberflächentemperatur | `SurfaceTemperature` | surface temperature | température de surface | temperatura superficiale | Wassertemperatur bei 0 m. |
 | Temperatur auf X m | `TemperatureAtDepth` | temperature at X m | température à X m | temperatura a X m | Wassertemperatur in einer Tiefe. |
 | Temperaturprofil | `TemperatureProfile` | temperature profile | profil de température | profilo di temperatura | Temperatur über alle Tiefen. |
@@ -24,9 +24,13 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Zufluss | `Inflow` | inflow | affluent | immissario | Fluss, der in den See mündet. |
 | Abfluss (Menge) | `Discharge` | discharge | débit | portata | Wassermenge eines Flusses (BAFU). |
 | Meldung | `Report` | report | signalement | segnalazione | Beobachtung einer Person nach einem Tauchgang. |
-| Ausbaustufe | `ContentLevel` | completeness | niveau de détail | livello di dettaglio | Wie vollständig ein Tauchplatz erfasst ist (0 bis 2). |
+| Ausbaustufe | `ContentLevel` | completeness | niveau de détail | livello di dettaglio | Wie vollständig ein Tauchplatz dokumentiert ist (0 bis 2). |
+| Datenstufe | `DataLevel` | data quality | qualité des données | qualità dei dati | Wie genau die Daten der Prognose für einen Platz sind (0 bis 3). |
+| Ausblick | `Outlook` | outlook | tendance | tendenza | Prognosetag ohne Wasserdaten: nur Wind und Regen, kein Index. |
+| Satellitenpunkt | `SatellitePoint` | satellite point | point satellite | punto satellitare | Punkt seewärts, an dem der Job die Satellitenwerte abfragt. |
+| Messstation | `Station` | gauging station | station de mesure | stazione di misura | Station von BAFU oder MeteoSchweiz, die misst. |
 | Revision | `Revision` | revision | révision | revisione | Gespeicherte Version eines Tauchplatzes. |
-| Partnerplatz | `PartnerListing` | partner | partenaire | partner | Bezahlter Eintrag eines Tauchshops bei einem Platz. |
+| Füllstation | `FillingStation` | filling station | station de gonflage | stazione di ricarica | Ort, an dem man Flaschen füllen lässt (meist ein Tauchshop). |
 | Buddy-Gruppe | `BuddyGroup` | buddy group | groupe de binômes | gruppo buddy | Verlinkte WhatsApp-Gruppe einer Region. |
 
 ## Tauchplatz-Details

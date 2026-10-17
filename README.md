@@ -11,9 +11,9 @@ tauchplaetze.ch ist ein digitaler Tauchplatzführer für die Schweizer Seen. Er 
 Dazu verbindet die Plattform zwei Dinge:
 
 1. **Ein Verzeichnis aller Tauchplätze.** Ein Platz ist schon mit Name, Koordinate und See erfasst. Details kommen nach und nach dazu.
-2. **Eine tägliche Tauchprognose für jeden Platz.** Sie stammt aus offenen Daten: Seemodelle und Satellit (Eawag Alplakes), Wetter (MeteoSchweiz) und Abfluss (BAFU). Sie braucht keine Meldungen aus der Community. Meldungen verbessern sie nur.
+2. **Eine tägliche Tauchprognose für jeden Platz**, so genau, wie die Daten es erlauben (Datenstufe). Sie stammt aus offenen Daten: Seemodelle und Satellit (Eawag Alplakes), Wetter (MeteoSchweiz über Open-Meteo) und Abfluss (BAFU). Sie braucht keine Meldungen aus der Community. Meldungen verbessern sie nur.
 
-Die Plattform ist ein Leidenschaftsprojekt. Sie soll ihre Kosten selbst decken (Ziel: unter CHF 20 pro Monat Betrieb).
+Die Plattform ist ein Leidenschaftsprojekt und nicht kommerziell. Der Betrieb soll unter CHF 20 pro Monat kosten.
 
 ## Domains
 
@@ -67,6 +67,7 @@ specs/
 | Prognose | Zuerst regelbasierter Tauch-Index, ML-Modell erst mit Labels | [004](specs/adrs/004-prognose-regelbasiert-zuerst.md) |
 | Sprachen | Deutsch Standard, dazu EN, FR, IT ab dem ersten Release | [005](specs/adrs/005-mehrsprachigkeit.md) |
 | Hosting | Azure App Service (Linux B1), Background Worker im selben Host | [006](specs/adrs/006-app-service-mit-worker.md) |
+| Wetter und Abfluss | Open-Meteo (Prognose), MeteoSchweiz SwissMetNet (Messung), BAFU über existenz.ch | [007](specs/adrs/007-wetter-und-abflussquellen.md) |
 | Design | Dunkles Farbschema («Kaltwasser-Nacht») | [design-system.md](specs/design-system.md) |
 
 ## Bezug zu bestehenden Projekten

@@ -9,19 +9,47 @@ Die Prognose ist ein **Indikator**. Die Oberfläche sagt das klar. Sie misst die
 1. **Phase 1: regelbasierter Index** (`rules-1.0`). Transparent, erklärbar, ohne Trainingsdaten (ADR-004).
 2. **Phase 2: eigenes ML-Modell**, sobald genug Labels vorliegen. Es ersetzt die Regeln nur, wenn es im Rückblick besser trifft.
 
+## Prognosetage
+
+- Die Prognose zeigt **5 Tage**: heute und die 4 folgenden Tage (Entscheid Marc, 17.10.2026).
+- **Mit Index:** Tage, für die Wasserdaten vorliegen. Beim 3D- und 1D-Modell sind das heute und die 3 folgenden Tage.
+- **Ausblick:** Die übrigen Tage zeigen Wind und Regen, aber keinen Index. Die Oberfläche nennt sie «Ausblick».
+- Der Job liest das Ende der Wasserdaten aus der Antwort der Quelle, nicht aus deren Metadaten (`data-sources.md`).
+
+## Datenstufe
+
+Jeder Platz hat eine **Datenstufe** (`DataLevel`). Sie sagt, wie genau die Daten für den Platz sind. Sie ist unabhängig von der **Ausbaustufe** (`ContentLevel`, `cms.md`). Die Ausbaustufe sagt, wie gut der Platz dokumentiert ist. Ein Platz kann eine hohe Datenstufe und keine Dokumentation haben, oder umgekehrt.
+
+| Stufe | Name | Bedingung | Was die Platzseite zeigt |
+|---|---|---|---|
+| 3 | Genau | Temperaturprofil am Platz (3D-Modell, nächster Gitterpunkt höchstens 500 m vom Platz, konfigurierbar) | Index, Profil mit Sprungschicht am Platz, Wind, Klarheit |
+| 2 | Gewässer | Werte für das ganze Gewässer: Profil aus dem 1D-Modell (See) oder Wassertemperatur und Abfluss einer BAFU-Station (Fluss) | Index, Werte mit Hinweis «für den ganzen See» bzw. «Messstation {Name}» |
+| 1 | Wetter | nur Wetter am Punkt, dazu Satellit, falls vorhanden | Index nur mit Satellitenwert, sonst Wind und Regen ohne Index |
+| 0 | Keine | Prognose für den Platz ausgeschaltet (z.B. Hallenbad, Stausee mit Zutrittsverbot) | nur Dokumentation |
+
+- Der Job bestimmt die Datenstufe bei jedem Lauf und speichert sie pro Tag (`DailyForecast.DataLevel`) und am Platz (`DiveSite.DataLevel`, letzter Lauf).
+- Die Redaktion bestimmt die Datenstufe nicht. Sie kann nur die Prognose ausschalten (`DiveSite.ForecastDisabled`) und den Satellitenpunkt setzen.
+- Wetter gibt es für jeden Punkt der Schweiz. Ein veröffentlichter Platz hat darum mindestens Stufe 1, ausser die Prognose ist ausgeschaltet.
+- Die Datenstufe kann pro Tag sinken, wenn eine Quelle ausfällt.
+- Die Rangliste «Wo tauchen?» zeigt nur Plätze mit Index. Plätze ohne Index erscheinen im Verzeichnis und auf der Seeseite.
+
 ## Eingaben pro Platz und Tag
 
 Das Tauchfenster ist 08:00 bis 16:00 Uhr Lokalzeit.
 
-| Eingabe | Quelle | Verwendung |
-|---|---|---|
-| Temperaturprofil (0 bis 40 m) | Alplakes 3D-Simulation an der Koordinate des Platzes | Temperatur auf 0/10/20/30 m, Sprungschicht |
-| Oberflächenklarheit | Alplakes Remote Sensing (Satellit), falls für den See verfügbar | Klarheit |
-| Gemessene Secchi-Tiefe | Alplakes In-situ (`/insitu/secchi/{lake}`) | Basiswert Klarheit, Kalibrierung |
-| Algen (Chlorophyll) | Alplakes Remote Sensing | Abzug bei Klarheit |
-| Wind (Stärke, Richtung) | MeteoSchweiz ICON-Prognose am Punkt | Oberfläche, Ufer aufgewühlt |
-| Niederschlag der letzten 72 h | MeteoSchweiz (Messung oder Reanalyse) | Trübung durch Zuflüsse |
-| Abfluss der Zuflüsse | BAFU Hydrodaten (Station pro See, optional pro Platz) | Trübung durch Zuflüsse |
+| Eingabe | Quelle | Verwendung | Phase |
+|---|---|---|---|
+| Temperaturprofil am Platz | Alplakes 3D (`depthtime` an der Koordinate) | Temperatur auf 0/10/20/30 m, Sprungschicht | MVP |
+| Temperaturprofil des Sees | Alplakes 1D Simstrat (Rückfall ohne 3D) | dito, seeweit | MVP |
+| Wassertemperatur des Flusses | BAFU-Station des Flusses | Temperatur, Anzug-Hinweis | MVP |
+| Klarheit (Secchi-Schätzung) | Alplakes Satellit Sentinel-3 `Zsd_lee` am Satellitenpunkt | Klarheit | MVP |
+| Algen (Chlorophyll) | Alplakes Satellit Sentinel-3 `chla` am Satellitenpunkt | Abzug bei Klarheit | MVP |
+| Wind (Mittel, Böen, Richtung) | Open-Meteo (ICON-CH1, ICON-CH2) | Wind | MVP |
+| Regen der letzten 72 h | SwissMetNet gemessen (vergangene Stunden), Open-Meteo (künftige Stunden) | Zuflüsse | MVP |
+| Abfluss der Zuflüsse bzw. des Flusses | BAFU | Zuflüsse | MVP |
+| Trübung des Flusses | BAFU, wo gemessen | Klarheit im Fluss | MVP |
+| Gemessenes Temperaturprofil | Eawag Datalakes | ersetzt das Modell für heute, wo eine Messstation nah ist | Phase 1 |
+| Abflussprognose | BAFU-Vorhersagen | Zuflüsse an künftigen Tagen | Phase 1, nach Klärung |
 
 Die Endpunkte stehen in `data-sources.md`.
 
@@ -32,10 +60,27 @@ Die Endpunkte stehen in `data-sources.md`.
 - Aus dem Temperaturprofil die Schicht mit dem stärksten Temperaturabfall bestimmen.
 - `ThermoclineTop` und `ThermoclineBottom`: Grenzen, an denen der Gradient den Schwellwert überschreitet (Standard 0.5 °C pro m, konfigurierbar).
 - Kein Gradient über dem Schwellwert (typisch im Winter): keine Sprungschicht. Der See ist durchmischt.
+- Das 1D-Modell liefert die Sprungschicht als eigene Variable (`Thermocline`). Der Job bestimmt sie trotzdem selbst aus dem Profil. So gilt für beide Modelle dieselbe Regel.
+
+### Regen der letzten 72 h
+
+- Summe der 72 Stunden **vor** dem Prognosetag, ohne den Tag selbst.
+- Vergangene Stunden aus der Messung (SwissMetNet), künftige aus der Prognose.
+
+### Klarheit
+
+Gemessene Secchi-Tiefen gibt es über Alplakes nicht mehr (Spike 17.10.2026). Die Klarheit stützt sich auf den Satellit. Sie ist **keine Prognose**, sondern der letzte beobachtete Wert, korrigiert um das, was seither geschah.
+
+- **Satellitenpunkt:** Der Job fragt den Satellit an einem Punkt seewärts ab. Der Platz kann einen eigenen Punkt haben (`DiveSite.SatellitePoint`). Sonst gilt der Standardpunkt des Gewässers (`Lake.SatellitePoint`). Grund: Am Ufer fehlen die Pixel.
+- **Höchstalter 14 Tage:** Ein Satellitenwert gilt höchstens 14 Tage (konfigurierbar). Älter: Die Klarheit ist unbekannt.
+- **Korrektur:** Fällt seit dem Bild viel Regen oder steigt der Abfluss stark, sinkt die geschätzte Klarheit. Die Stützpunkte stehen in `Forecast:Rules`.
+- **Ohne Wert:** Die Klarheit ist unbekannt. Ihr Gewicht geht auf die anderen Teilwerte.
+- **Anzeige:** Die Seite zeigt immer das Datum des Satellitenbilds («Satellit vom 05.10.: ca. 6 m»).
+- **Flüsse:** Wo eine BAFU-Station Trübung misst, ersetzt die Trübung den Satellitenwert.
 
 ### Sicht-Indikator
 
-- Grundlage: geschätzte Klarheit (Secchi-Schätzung aus Satellit, sonst letzte Messung).
+- Grundlage: die Klarheit.
 - Unter der Sprungschicht ist die Sicht im Sommer meist besser. Dann setzt der Algorithmus `VisibilityGoodBelow = ThermoclineBottom`.
 - Ergebnis als Stufe: `Poor`, `Moderate`, `Good`, `VeryGood`, `Unknown`.
 
@@ -52,7 +97,9 @@ Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 
 Zwischenwerte linear interpolieren. Die Stützpunkte und Gewichte stehen in `appsettings.json` (`Forecast:Rules`). So lassen sie sich ohne Code anpassen. Jede Änderung erhöht die `ModelVersion` (`rules-1.1`, …).
 
-**Fehlende Daten:** Fehlt ein Teilwert, verteilt der Algorithmus sein Gewicht auf die anderen. Fehlen Klarheit **und** Wind, ist der Index `null`. Die Seite zeigt dann «Keine Prognose».
+Für Flussplätze gilt dieselbe Formel. Die Schichtung fällt weg (Fluss ist durchmischt). Der Abfluss zählt doppelt: einmal als Zufluss, einmal als Strömung (über 1.5 × Median gibt es Abzug). Die Werte stehen ebenfalls in `Forecast:Rules`.
+
+**Fehlende Daten:** Fehlt ein Teilwert, verteilt der Algorithmus sein Gewicht auf die anderen. Der Index braucht den Wind **und** Wasserdaten (Klarheit, Profil oder Flussstation). Fehlt eines davon, ist der Index `null`. Die Seite zeigt dann die vorhandenen Werte ohne Index. An Tagen ohne Wasserdaten heisst das «Ausblick».
 
 **Begründung:** Der Algorithmus speichert `ReasonCodes` (z.B. `CalmLake`, `ClearBelowThermocline`, `TurbidAfterRain`, `WindAfternoon`). Die Oberfläche bildet daraus einen Satz aus den `.resx`-Ressourcen. So ist die Begründung in allen vier Sprachen verfügbar.
 
@@ -62,17 +109,18 @@ Zwischenwerte linear interpolieren. Die Stützpunkte und Gewichte stehen in `app
 
 Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handler des Core.
 
-- **Zeitplan:** täglich 04:30 Lokalzeit (vollständiger Lauf) und 13:00 Lokalzeit (nur Wetter neu). Konfigurierbar.
+- **Zeitplan:** täglich 04:30 Lokalzeit (vollständiger Lauf) und 13:00 Lokalzeit (nur Wetter und Messwerte neu). Konfigurierbar.
+- **Dauer:** Alplakes braucht 5–30 s pro Call. Bei 100 Plätzen mit 3D-Abdeckung dauert ein Lauf darum einige Minuten. Das ist für einen Job am frühen Morgen genug.
 - **Sperre:** nur ein Lauf gleichzeitig (Blob Lease oder SQL-Lock). Wichtig, falls später mehrere Instanzen laufen.
 - **Ablauf (Command `RunForecast`):**
   1. `ForecastRun` mit Status `Running` anlegen.
-  2. Pro aktivem See: Metadaten der Alplakes-Modelle laden (verfügbarer Zeitraum).
-  3. Pro veröffentlichtem Platz: Temperatur über Tiefe und Zeit mit **einem** Aufruf holen (`/simulations/depthtime/...` für den ganzen Prognosezeitraum).
-  4. Pro See: Secchi (in situ), Remote-Sensing-Werte.
-  5. Pro Platz: Wetterprognose MeteoSchweiz am Punkt. Plätze im selben Gitterpunkt teilen sich die Abfrage.
-  6. Pro See: Abfluss der zugeordneten BAFU-Stationen.
+  2. Pro aktivem Gewässer: Abdeckung der Alplakes-Modelle laden (3D und 1D).
+  3. Pro Platz mit 3D-Abdeckung: Temperatur über Tiefe und Zeit mit **einem** Call holen (`depthtime`, ganzer Prognosezeitraum). Pro See ohne 3D: ein Call auf das 1D-Modell.
+  4. Pro Satellitenpunkt: Secchi und Chlorophyll der letzten 14 Tage.
+  5. Pro Gitterpunkt: Wetterprognose (Open-Meteo). Plätze im selben Gitterpunkt teilen sich den Call. Pro zugeordneter Station: gemessener Wind und Regen (SwissMetNet).
+  6. Pro Gewässer: Abfluss, Wassertemperatur und Trübung der zugeordneten BAFU-Stationen.
   7. Rohdaten als JSON in Blob Storage ablegen (`forecast-raw/{date}/{runId}/{source}/{key}.json`).
-  8. Index pro Platz und Tag berechnen. `DailyForecast` und `LakeConditions` schreiben (Upsert).
+  8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `LakeConditions` schreiben (Upsert).
   9. Output Cache der öffentlichen Seiten invalidieren (Tag `forecast`).
   10. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.
@@ -83,12 +131,12 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
 ### Labels
 
 - **Meldungen** der Community (Sicht pro Tiefenband).
-- **Gemessene Secchi-Tiefen** (Alplakes in situ).
+- **Gemessene Secchi-Tiefen** (Datalakes LéXPLORE, später kantonale Messungen).
 - **Historische Labels von Marc:** Tauchlogs sowie Datum und Ort aus den EXIF-Daten der Fotos (tauchfotos.ch). Dazu eine Sichtbewertung von Marc pro Tauchgang.
 
 ### Features
 
-Dieselben Eingaben wie oben. Für historische Labels liefert Alplakes Reanalyse- bzw. Vergangenheitsdaten. So lassen sich auch alte Tauchgänge mit Features versehen.
+Dieselben Eingaben wie oben. Für historische Labels liefert Alplakes Vergangenheitsdaten (1D-Modelle ab 1981). So lassen sich auch alte Tauchgänge mit Features versehen.
 
 ### Modell
 
@@ -99,12 +147,12 @@ Dieselben Eingaben wie oben. Für historische Labels liefert Alplakes Reanalyse-
 
 ### Wechsel von Regeln zu Modell
 
-- Backtesting über die letzten Monate: Trefferquote gegenüber Meldungen und Secchi-Messungen.
+- Backtesting über die letzten Monate: Trefferquote gegenüber Meldungen und gemessenen Secchi-Tiefen.
 - Das Modell ersetzt die Regeln erst, wenn es klar besser ist. Bis dahin läuft es im Schatten mit (beide Werte speichern, nur Regeln anzeigen).
 - Die Teilwerte für die Begründung bleiben auch mit Modell erhalten (Feature-Beiträge oder weiter die Regeln für den Text).
 
 ## Tests
 
-- Unit Tests für Sprungschicht-Erkennung, Teilwerte, Interpolation, fehlende Daten, Gewichtsverteilung.
-- Feste Beispielprofile (Sommer mit Sprungschicht, Winter durchmischt, nach Starkregen) als Testdaten.
+- Unit Tests für Sprungschicht-Erkennung, Teilwerte, Interpolation, fehlende Daten, Gewichtsverteilung, Datenstufe, Alter des Satellitenwerts, Ausblick ohne Index.
+- Feste Beispielprofile (Sommer mit Sprungschicht, Winter durchmischt, nach Starkregen) als Testdaten. Dazu die echten Antworten aus dem Spike 0.5.
 - Kein Test gegen die echte API in der CI. Ein manueller Smoke Test (`dotnet run -- forecast smoke`) prüft die Anbindung.

@@ -16,7 +16,7 @@ Diese Spec beschreibt die Entitäten in Azure SQL. Entitäten und Felder heissen
 
 ### Lake
 
-Stammdaten der Gewässer. Ein Fluss ist ebenfalls ein `Lake` mit `WaterBodyType = River`.
+Stammdaten der Gewässer, schweizweit. Ein Fluss ist ebenfalls ein `Lake` mit `WaterBodyType = River`. Der Seed kommt aus dem Gewässernetz von swisstopo (swissTLM3D, `data-sources.md`).
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
@@ -26,18 +26,31 @@ Stammdaten der Gewässer. Ein Fluss ist ebenfalls ein `Lake` mit `WaterBodyType 
 | `WaterBodyType` | enum | `Lake`, `River` |
 | `Outline` | geography (optional) | Umriss für die Karte |
 | `Centroid` | geography | Mittelpunkt |
-| `AlplakesLakeKey` | string(50), optional | Schlüssel des Sees in der Alplakes API (z.B. `zurich`) |
-| `AlplakesModel3d` | string(50), optional | Modellname für 3D-Simulationen (z.B. `delft3d-flow`) |
-| `AlplakesModel1d` | string(50), optional | Modellname für 1D-Simulationen (Rückfall) |
+| `SwissTlmId` | string(40), optional | Kennung im Gewässernetz von swisstopo |
+| `AlplakesLakeKey` | string(50), optional | Schlüssel des Sees für 3D-Modell und Satellit (z.B. `zurich`) |
+| `AlplakesModel3d` | string(50), optional | Modellname für 3D-Simulationen (z.B. `delft3d-flow`, `mitgcm`) |
+| `AlplakesSimstratKey` | string(50), optional | Schlüssel im 1D-Modell Simstrat (z.B. `lowerzurich`). Weicht oft vom 3D-Schlüssel ab. |
+| `SatellitePoint` | geography (Point), optional | Standardpunkt seewärts für Satellitenwerte |
 | `IsActive` | bool | |
 
-### LakeInflowStation
+### LakeHydroStation
 
-Zuordnung der BAFU-Stationen (Hauptzuflüsse) zu einem See. PK: (`LakeId`, `StationId`). Felder: `StationId` (string(20)), `Name`, `Weight` (decimal, Anteil am Teilwert «Zuflüsse»).
+Zuordnung der BAFU-Stationen zu einem Gewässer. PK: (`LakeId`, `StationId`).
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `StationId` | string(20) | BAFU-Stationsnummer |
+| `Name` | string(100) | |
+| `Role` | enum | `Inflow` (Zufluss eines Sees), `River` (Station am Fluss selbst, für Flussplätze) |
+| `Weight` | decimal, optional | Anteil am Teilwert «Zuflüsse», nur bei `Inflow` |
+
+### LakeWeatherStation
+
+Zuordnung der SwissMetNet-Stationen zu einem Gewässer. PK: (`LakeId`, `StationId`). Felder: `StationId` (string(10), z.B. `WAE`), `Name`, `SortOrder` (erste Station mit Daten gilt).
 
 ### DiveSite
 
-Der Tauchplatz. Nur `Name`, `Location` und `LakeId` sind Pflicht (Ausbaustufe 0). Bedeutung der Bewertungen und Abschnitte: siehe `dive-site.md`.
+Der Tauchplatz. Nur `Name`, `Location` und `LakeId` sind Pflicht (Ausbaustufe 0). Ausbaustufe (Dokumentation) und Datenstufe (Prognose) sind unabhängig voneinander (`cms.md`, `forecast.md`). Bedeutung der Bewertungen und Abschnitte: siehe `dive-site.md`.
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
@@ -59,6 +72,9 @@ Der Tauchplatz. Nur `Name`, `Location` und `LakeId` sind Pflicht (Ausbaustufe 0)
 | `Features` | flags enum | `Plateau`, `Cave`, `River`, `IceDiving`, `Training` (Wand und Wrack kommen aus den Bewertungen) |
 | `HasDivingBan` | bool | Tauchverbot (dauernd oder zeitweise) |
 | `InflowStationOverride` | string(20), optional | BAFU-Station, falls der Platz nahe einer Mündung liegt (überschreibt die Stationen des Sees) |
+| `SatellitePoint` | geography (Point), optional | eigener Punkt seewärts für Satellitenwerte. Ohne ihn gilt `Lake.SatellitePoint`. |
+| `ForecastDisabled` | bool | Prognose für den Platz ausgeschaltet (Datenstufe 0) |
+| `DataLevel` | tinyint (0–3) | vom Job berechnet, Stand des letzten Laufs, siehe `forecast.md`. Nicht Teil der Revision. |
 | `Status` | enum | `Draft`, `Published`, `Archived` |
 | `ContentLevel` | int (0–2) | berechnet und gespeichert, siehe `cms.md` |
 | `HeroMediaId` | Guid, optional | FK `MediaItem` |
@@ -159,19 +175,25 @@ Eine Zeile pro Platz und Tag. PK: (`DiveSiteId`, `Date`).
 |---|---|---|
 | `DiveSiteId` | Guid | |
 | `Date` | DateOnly | Lokaltag |
-| `DiveIndex` | decimal(3,1) | 0.0–10.0 |
+| `DataLevel` | tinyint (0–3) | Datenstufe an diesem Tag |
+| `DiveIndex` | decimal(3,1), optional | 0.0–10.0. `null` ohne Wasserdaten (Ausblick) oder ohne Wind |
+| `ProfileSource` | enum, optional | `Model3d`, `Model1d`, `RiverStation`, `InSitu` (Phase 1) |
 | `SurfaceTemperature` | decimal(4,1), optional | °C |
 | `TemperatureAt10m`, `TemperatureAt20m`, `TemperatureAt30m` | decimal(4,1), optional | °C |
 | `ThermoclineTop`, `ThermoclineBottom` | decimal(4,1), optional | m |
+| `SecchiDepth` | decimal(4,1), optional | geschätzte Sichttiefe aus dem Satellit, m |
+| `SecchiObservedAt` | DateOnly, optional | Datum des Satellitenbilds |
 | `VisibilityIndicator` | enum | `Unknown`, `Poor`, `Moderate`, `Good`, `VeryGood` |
 | `VisibilityGoodBelow` | decimal(4,1), optional | ab dieser Tiefe besser (meist unter der Sprungschicht) |
 | `WindBeaufort` | int, optional | Maximum im Tauchfenster 08–16 Uhr |
 | `WindSpeedKmh` | decimal(4,1), optional | dasselbe Maximum in km/h |
 | `WindGustsKmh` | decimal(4,1), optional | stärkste Böe im Tauchfenster, km/h |
 | `WindDirection` | int, optional | Grad |
-| `WeatherModel` | string(40), optional | Wettermodell, aus dem die Werte stammen (z.B. `meteoswiss_icon_ch2`, `ecmwf_ifs025`) |
-| `PrecipitationLast72h` | decimal(5,1), optional | mm |
-| `InflowDischargeRatio` | decimal(5,2), optional | aktueller Abfluss geteilt durch Median |
+| `WeatherModel` | string(40), optional | Wettermodell, aus dem die Werte stammen (z.B. `meteoswiss_icon_ch1`, `meteoswiss_icon_ch2`) |
+| `PrecipitationLast72h` | decimal(5,1), optional | mm, die 72 h vor dem Tag, ohne den Tag selbst |
+| `PrecipitationOnDay` | decimal(5,1), optional | mm im Tauchfenster |
+| `InflowDischargeRatio` | decimal(5,2), optional | aktueller Abfluss geteilt durch Median der letzten 30 Tage |
+| `Turbidity` | decimal(6,1), optional | Trübung an der Flussstation, nur bei Flussplätzen |
 | `AlgaeLevel` | enum | `Unknown`, `Low`, `Medium`, `High` |
 | `ReasonCodes` | string(200) | z.B. `CalmLake,ClearBelowThermocline` (für Begründungstexte aus `.resx`) |
 | `ModelVersion` | string(20) | z.B. `rules-1.0` |
@@ -180,7 +202,7 @@ Eine Zeile pro Platz und Tag. PK: (`DiveSiteId`, `Date`).
 
 ### LakeConditions
 
-Eine Zeile pro See und Tag für die Seen-Übersicht. PK: (`LakeId`, `Date`). Felder: `SurfaceTemperature`, `ClarityTrend` (enum `Rising`, `Stable`, `Falling`, `Unknown`), `LatestSecchiDepth`, `LatestSecchiDate`.
+Eine Zeile pro See und Tag für die Seen-Übersicht. PK: (`LakeId`, `Date`). Felder: `SurfaceTemperature`, `ClarityTrend` (enum `Rising`, `Stable`, `Falling`, `Unknown`), `LatestSecchiDepth` und `LatestSecchiDate` (aus dem Satellit am `Lake.SatellitePoint`), `WaterLevel` (Pegel in m ü. M., optional).
 
 ### Report (Phase 1)
 
@@ -197,10 +219,9 @@ Eine Zeile pro See und Tag für die Seen-Übersicht. PK: (`LakeId`, `Date`). Fel
 | `Status` | enum | `Visible`, `Hidden` |
 | `CreatedAt` | DateTimeOffset | |
 
-### DiveShop und PartnerListing (Phase 1)
+### DiveShop (Phase 1)
 
-`DiveShop`: `Id`, `Name`, `WebsiteUrl`, `Address`, `Location` (geography), `Phone`, `HasFillingStation`.
-`PartnerListing`: `Id`, `DiveShopId`, `DiveSiteId`, `ValidFrom`, `ValidTo`. Ohne gültigen Partner zeigt die Seite die nächste Füllstation aus der Liste der Shops (ohne Hervorhebung).
+`DiveShop`: `Id`, `Name`, `WebsiteUrl`, `Address`, `Location` (geography), `Phone`, `HasFillingStation`. Die Platzseite zeigt die nächste Füllstation nach Distanz. Es gibt keine bezahlten Einträge (`vision.md`, «Finanzierung»).
 
 ### BuddyGroup (Phase 1)
 

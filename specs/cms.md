@@ -4,7 +4,9 @@ Der Redaktionsbereich liegt unter `/admin`. Er ist ein Teil der Blazor Web App m
 
 ## Grundsatz: Verzeichnis zuerst
 
-Ein Tauchplatz ist mit **Name, Koordinate und See** erfasst. Ab dann nimmt er an der Prognose teil. Alle anderen Felder sind optional. So kann Marc zuerst alle bekannten Plätze schnell anlegen und sie danach in Ruhe ausbauen.
+Ein Tauchplatz ist mit **Name, Koordinate und Gewässer** erfasst. Ab dann nimmt er an der Prognose teil, so genau, wie die Daten es erlauben. Alle anderen Felder sind optional. So kann Marc zuerst alle bekannten Plätze schnell anlegen und sie danach in Ruhe ausbauen.
+
+Die **Ausbaustufe** misst die Dokumentation. Die **Datenstufe** misst die Daten der Prognose (`forecast.md`). Der Job berechnet sie. Die Redaktion kann die Prognose nur ausschalten und den Satellitenpunkt setzen.
 
 ## Ausbaustufen
 
@@ -28,13 +30,13 @@ Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit
 
 ### Platzliste
 
-- Tabelle mit Name, See, Stufe, Status, letzter Änderung.
+- Tabelle mit Name, See, Ausbaustufe, Datenstufe, Status, letzter Änderung.
 - Filter nach See, Stufe und Status. Suche nach Name.
 - Schnellerfassung: Name, See, Pin auf der Karte, Speichern. Unter 30 Sekunden pro Platz.
 
 ### Platz bearbeiten
 
-- Abschnitte: Grunddaten, Lage (Karte mit verschiebbarem Pin für den Platz), Einstiege, Bewertungen, Eigenschaften, Texte pro Sprache (Tabs DE, EN, FR, IT), Medien, Vorschau.
+- Abschnitte: Grunddaten, Lage (Karte mit verschiebbarem Pin für den Platz, optional ein zweiter Pin für den Satellitenpunkt seewärts, Schalter «Prognose ausschalten»), Einstiege, Bewertungen, Eigenschaften, Texte pro Sprache (Tabs DE, EN, FR, IT), Medien, Vorschau.
 - Einstiege: Liste mit Hinzufügen, Entfernen und Reihenfolge. Pro Einstieg ein Pin auf derselben Karte, Art, Name und Beschreibung pro Sprache.
 - Bewertungen: pro Skala eine Auswahl 1–5 mit Kurztext der Stufe und «nicht bewertet». Skalen in `dive-site.md`.
 - Texte pro Sprache: Unter Wasser, Gefahren, Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten.

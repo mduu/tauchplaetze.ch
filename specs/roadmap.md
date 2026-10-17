@@ -16,11 +16,13 @@ Ziel: lauffähiges Gerüst, alle Konventionen verankert.
 - CI-Workflow (Build, Tests).
 - `CLAUDE.md` und `specs/` im Repository.
 
-## Phase 0.5 – Spike Datenquellen
+## Phase 0.5 – Spike Datenquellen ✅
+
+Erledigt am 17.10.2026. Ergebnis: `doc/spikes/0.5-datenquellen.md`.
 
 Ziel: Gewissheit, dass die Prognose mit echten Daten trägt.
 
-- `AlplakesClient` für `simulations/metadata`, `simulations/depthtime`, `insitu/secchi`.
+- `AlplakesClient` für `simulations/metadata`, `simulations/depthtime` und Remote Sensing.
 - Smoke Test: Temperaturprofil für «Riff Williams» (Zürichsee) für die nächsten Tage holen. Sprungschicht berechnen.
 - Prüfen: Welche Seen haben 3D-Modelle, welche nur 1D? Welche Remote-Sensing-Daten gibt es pro See?
 - **Parallel:** Eawag anschreiben (Nutzung, Quellenangabe, Abfragefrequenz).
@@ -30,10 +32,10 @@ Ziel: Gewissheit, dass die Prognose mit echten Daten trägt.
 
 Ziel: Reaktion der Szene testen.
 
-- Seen-Stammdaten der grossen Seen mit Alplakes-Zuordnung (Seed).
+- Gewässer-Stammdaten schweizweit, Seen und Flüsse aus swissTLM3D (Seed). Zuordnung zu Alplakes, BAFU-Stationen und SwissMetNet für die grossen Seen.
 - Redaktion: Platz erfassen (Schnellerfassung mit Karte), bearbeiten, Revisionen, Medien-Upload mit Bildgrössen.
 - Öffentliche Seiten: Start «Wo tauchen?», Tauchplatzseite, Verzeichnis mit Karte, Seeseite, Über/Impressum/Datenschutz.
-- Prognose-Job mit `rules-1.0`, Rohdaten in Blob Storage, Status im Admin.
+- Prognose-Job mit `rules-1.0` und Datenstufen, Rohdaten in Blob Storage, Status im Admin. Quellen: Alplakes, Open-Meteo, SwissMetNet, BAFU (ADR-007).
 - SEO-Grundlagen: Titel, Meta, `hreflang`, Sitemap, JSON-LD.
 - Deploy auf Azure (Bicep, GitHub Actions, Cloudflare, Redirect `sichtweiten.ch`).
 - **Inhalt:** ein See vollständig (8 bis 12 Plätze auf Stufe 2 mit Fotos aus tauchfotos.ch). Alle weiteren bekannten Plätze als Stufe 0.
@@ -41,9 +43,10 @@ Ziel: Reaktion der Szene testen.
 
 ## Phase 1 – alle grossen Seen
 
-- Alle grossen Seen mit Plätzen auf Stufe 1 bis 2.
+- Alle grossen Seen mit Plätzen auf Stufe 1 bis 2. Flussplätze mit BAFU-Stationen.
+- In-situ-Messungen aus Eawag Datalakes. BAFU-Abflussprognosen, falls die Nutzung geklärt ist.
 - Meldungen (ein Klick nach dem Tauchgang).
-- Partnerplätze für Tauchshops.
+- Tauchshops und Füllstationen (kostenlos, ohne Hervorhebung).
 - Buddy-Gruppen (WhatsApp) pro Region.
 - Weitere Redaktoren mit Einladung.
 - Optional: maschineller Übersetzungsvorschlag für redaktionelle Inhalte.

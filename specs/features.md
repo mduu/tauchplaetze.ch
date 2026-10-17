@@ -7,11 +7,12 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 ### Prognose («Wo tauchen?») – Slice `Forecasts`
 
 - Startseite mit der Frage «Wo tauchen wir heute?».
-- Tagesauswahl: heute plus die nächsten 2 bis 4 Tage (so weit die Daten reichen).
+- Tagesauswahl: heute plus die 4 folgenden Tage. Tage ohne Wasserdaten sind ein «Ausblick» mit Wind und Regen, ohne Index (`forecast.md`).
 - «Beste Wahl»: der Platz mit dem höchsten Tauch-Index im Umkreis.
 - Rangliste der Plätze im Umkreis mit Index, Balken und Begründung in einem Satz.
 - Umkreis: Standardort plus Radius. Der Ort kommt aus der Auswahl der Person oder (mit Zustimmung) aus dem Browser. Gespeichert nur im Browser.
 - Seen-Übersicht: Oberflächentemperatur und Klarheitstrend pro See.
+- Die Rangliste zeigt nur Plätze mit Index. Jeder Platz zeigt seine Datenstufe (genau, Gewässer, Wetter).
 
 ### Tauchplatz-Verzeichnis – Slice `DiveSites`
 
@@ -24,10 +25,12 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
   - Bewertungen 1–5: Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung (siehe `dive-site.md`).
   - Unter Wasser (Text, Fotos), Gefahren (Text, Bilder), Tauchskizze.
   - Einstiege: einer oder mehrere, mit Pin auf der Karte, Text und Bildern.
-  - Praktisch: Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten, nächste Füllstation (Partnerplatz), Notfallnummern.
+  - Praktisch: Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten, nächste Füllstation, Notfallnummern.
   - Alle Angaben sind optional. Abschnitte ohne Inhalt fehlen.
   - Link zur Buddy-Gruppe der Region.
 - Ein Platz der Ausbaustufe 0 zeigt Prognose und Karte. Dazu den Hinweis «Dieser Platz ist erst im Verzeichnis».
+- Ein Platz mit Datenstufe 0 (Prognose ausgeschaltet) zeigt nur die Dokumentation.
+- Karte mit Tiefenlinien (swissBATHY3D), wo vorhanden.
 
 ### Seen – Slice `Lakes`
 
@@ -56,7 +59,7 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 ## Phase 1
 
 - **Meldungen (Slice `Reports`):** Sicht nach dem Tauchgang mit einem Klick melden (Sicht pro Tiefenband, optional Kommentar). Ohne Konto, mit Schutz gegen Missbrauch (Rate Limit, Captcha-freie Honeypot-Lösung).
-- **Partnerplätze (Slice `Partners`):** Tauchshops als «nächste Füllstation» pro Platz. Verwaltung im CMS.
+- **Füllstationen (Slice `DiveShops`):** Tauchshops und Füllstationen. Die Platzseite zeigt die nächste Füllstation nach Distanz. Kostenlos, ohne Hervorhebung. Verwaltung im CMS.
 - **Buddy-Gruppen (Slice `BuddyGroups`):** WhatsApp-Gruppen pro Region verwalten und auf Platz- und Seeseiten verlinken.
 - **Weitere Redaktoren:** Rollen «Redaktor» und «Admin». Einladung per E-Mail.
 - **Videos:** Einbindung aus tauchvideos.ch.

@@ -19,7 +19,9 @@ flowchart LR
     web -- "Commands, Queries" --> core["Tauchplaetze.Core<br/>Domäne · Handler · EF Core<br/>Clients für Datenquellen"]
     core --> sql[("Azure SQL<br/>Free Offer")]
     core --> blob[("Azure Blob Storage<br/>Medien, Rohdaten, Modelle")]
-    core -- "täglicher Import" --> alplakes["Eawag Alplakes API<br/>(inkl. MeteoSchweiz, BAFU)"]
+    core -- "täglicher Import" --> alplakes["Eawag Alplakes API<br/>Seemodelle, Satellit"]
+    core -- "täglicher Import" --> meteo["Open-Meteo, MeteoSchweiz<br/>Wetter"]
+    core -- "täglicher Import" --> bafu["BAFU (existenz.ch)<br/>Abfluss, Wassertemperatur"]
 ```
 
 ## Stack
@@ -88,12 +90,12 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 |---|---|---|
 | `DiveSites` | Queries `GetDiveSites`, `GetDiveSite`, `GetDiveSitesNearby`, `ResolveSlug` | Seiten Verzeichnis, Tauchplatz, Karte |
 | `Lakes` | Queries `GetLakes`, `GetLake`, `GetLakeConditions` | Seeseite, Seen-Übersicht |
-| `Forecasts` | Commands `RunForecast`, `RecalculateForecast`; Queries `GetBestSites`, `GetSiteForecast`, `GetForecastStatus`; Rechenkern `DiveIndexCalculator`, `ThermoclineDetector`; Clients `AlplakesClient` | Startseite «Wo tauchen?», `ForecastWorker` (BackgroundService, ruft `RunForecast`) |
+| `Forecasts` | Commands `RunForecast`, `RecalculateForecast`; Queries `GetBestSites`, `GetSiteForecast`, `GetForecastStatus`; Rechenkern `DiveIndexCalculator`, `ThermoclineDetector`, `DataLevelRule`; Clients `AlplakesClient`, `OpenMeteoClient`, `SwissMetNetClient`, `HydroClient` | Startseite «Wo tauchen?», `ForecastWorker` (BackgroundService, ruft `RunForecast`) |
 | `Editorial` | Commands `CreateDiveSite`, `UpdateDiveSite`, `PublishDiveSite`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`, `UpdateMedia`, `ReorderMedia`, `DeleteMedia`; Queries `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetRevisions`, `CompareRevisions` | Admin-Seiten unter `/admin` |
 | `Media` | Queries `GetMediaVariant`; Bildverarbeitung | Endpunkt für Bildauslieferung (falls nicht direkt aus Blob) |
 | `Accounts` | Identity-Store, Commands `InviteEditor`, `EnsureAdmins` | Login, Passkeys, Einladung |
 | `Reports` (Phase 1) | Commands `SubmitReport`, `HideReport`; Queries `GetReports` | Meldeformular, Admin-Liste |
-| `Partners` (Phase 1) | Commands, Queries für Shops und Partnerplätze | Admin-Seiten, Anzeige auf Platzseite |
+| `DiveShops` (Phase 1) | Commands, Queries für Tauchshops und Füllstationen | Admin-Seiten, Anzeige auf Platzseite |
 | `BuddyGroups` (Phase 1) | Commands, Queries | Admin-Seiten, Links |
 | `Seo` | Queries `GetSitemapEntries` | `sitemap.xml`, `robots.txt`, Redirects |
 
