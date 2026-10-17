@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MetaDescription" xml:space="preserve"><value>{0}, {1} : site de plongée et prévision de plongée.</value></data>
+  <data name="Breadcrumb" xml:space="preserve"><value>Fil d'Ariane</value></data>
+  <data name="DirectoryOnly" xml:space="preserve"><value>Ce site ne figure pour l'instant que dans l'annuaire. Description, photos et points d'entrée suivront.</value></data>
+  <data name="ForecastSoon" xml:space="preserve"><value>La prévision de plongée pour ce site arrive bientôt.</value></data>
+  <data name="Conditions" xml:space="preserve"><value>Conditions de plongée</value></data>
+  <data name="Location" xml:space="preserve"><value>Emplacement</value></data>
+  <data name="Coordinates" xml:space="preserve"><value>Coordonnées</value></data>
+  <data name="Gone_Title" xml:space="preserve"><value>Site de plongée retiré de l'annuaire</value></data>
+  <data name="Gone_Text" xml:space="preserve"><value>Ce site de plongée n'est plus public.</value></data>
+</root>

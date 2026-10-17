@@ -3,7 +3,7 @@ namespace Tauchplaetze.Web.CrossCutting.Localization;
 internal static class LanguagePaths
 {
     /// <summary>Dieselbe Seite in einer anderen Sprache. Ohne Sprachpräfix führt der Link auf die Startseite der Sprache.</summary>
-    /// <remarks>Übersetzte Pfadsegmente (`i18n.md`) kommen mit den ersten Seiten dazu, die sie brauchen.</remarks>
+    /// <remarks>Das Segment nach der Sprache wird übersetzt (`/de/tauchplaetze/x` → `/fr/sites-de-plongee/x`). Der Slug bleibt.</remarks>
     public static string Switch(string relativePath, string language)
     {
         var path = relativePath.Split('?', '#')[0];
@@ -14,6 +14,12 @@ internal static class LanguagePaths
             return $"/{language}";
         }
 
-        return "/" + string.Join('/', [language, .. segments[1..]]);
+        var rest = segments[1..];
+        if (rest.Length > 0)
+        {
+            rest[0] = PublicRoutes.TranslateSection(rest[0], language);
+        }
+
+        return "/" + string.Join('/', [language, .. rest]);
     }
 }

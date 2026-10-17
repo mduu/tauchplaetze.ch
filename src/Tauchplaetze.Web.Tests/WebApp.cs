@@ -2,16 +2,26 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Tauchplaetze.Core.CrossCutting.UseCases;
+using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.DiveSites.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
-/// <summary>Die Web-App im Speicher. Die Datenbank zeigt auf einen toten Port: Die öffentlichen Seiten dieser Tests lesen keine Daten.</summary>
+/// <summary>Die Web-App im Speicher. Die Datenbank zeigt auf einen toten Port. Die Queries der Seiten kommen aus Test Doubles: Die Tests prüfen die Fassade, nicht den Core.</summary>
 public sealed class WebApp : WebApplicationFactory<Program>
 {
+    public FakeDiveSites DiveSites { get; } = new();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("ConnectionStrings:tauchplaetze", "Server=127.0.0.1,1;Database=tauchplaetze;User Id=test;Password=test;TrustServerCertificate=true");
         builder.UseSetting("ConnectionStrings:blobs", "UseDevelopmentStorage=true");
+        builder.ConfigureTestServices(services =>
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites)));
     }
 
     public HttpClient Browser() => CreateClient(new WebApplicationFactoryClientOptions
@@ -42,4 +52,15 @@ internal static partial class VisibleText
 
     [GeneratedRegex(@"\s+")]
     private static partial Regex WhitespacePattern();
+}
+
+/// <summary>Plätze nach Slug. Unbekannte Slugs ergeben «nicht gefunden».</summary>
+public sealed class FakeDiveSites : IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>
+{
+    private readonly Dictionary<string, DiveSiteLookup> lookups = [];
+
+    public void Add(string slug, DiveSiteLookup lookup) => lookups[slug] = lookup;
+
+    public Task<DiveSiteLookup> Handle(GetDiveSiteQuery query, CancellationToken ct = default) =>
+        Task.FromResult(lookups.GetValueOrDefault(query.Slug) ?? new DiveSiteLookup.NotFound());
 }

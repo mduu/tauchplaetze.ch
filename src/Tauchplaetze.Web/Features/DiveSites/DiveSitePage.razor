@@ -1,0 +1,111 @@
+@page "/de/tauchplaetze/{Slug}"
+@page "/en/dive-sites/{Slug}"
+@page "/fr/sites-de-plongee/{Slug}"
+@page "/it/siti-di-immersione/{Slug}"
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.DiveSites.Queries
+@inject IQueryHandler<GetDiveSiteQuery, DiveSiteLookup> DiveSites
+@inject IStringLocalizer<SharedStrings> Shared
+@inject IStringLocalizer<DiveSiteStrings> L
+@inject NavigationManager Navigation
+
+@switch (lookup)
+{
+    case DiveSiteLookup.Found { Site: var site }:
+        <PageTitle>@site.Name · @site.WaterBodyName · @Shared["Brand"]</PageTitle>
+        <HeadContent>
+            <meta name="description" content="@L["MetaDescription", site.Name, site.WaterBodyName]" />
+        </HeadContent>
+        <HreflangLinks />
+
+        <article class="dive-site">
+            <header class="hero">
+                <nav aria-label="@L["Breadcrumb"]">
+                    <ol class="breadcrumb label">
+                        <li>@site.WaterBodyName</li>
+                        @if (site.Municipality is not null)
+                        {
+                            <li>@site.Municipality @site.Canton</li>
+                        }
+                    </ol>
+                </nav>
+                <h1>@site.Name</h1>
+            </header>
+
+            <section class="panel" aria-labelledby="conditions">
+                <h2 id="conditions">@L["Conditions"]</h2>
+                <p>@L["ForecastSoon"]</p>
+            </section>
+
+            <section class="panel" aria-labelledby="location">
+                <h2 id="location">@L["Location"]</h2>
+                <dl>
+                    <dt class="label">@L["Coordinates"]</dt>
+                    <dd data-coordinates>@Coordinates(site)</dd>
+                </dl>
+            </section>
+
+            @if (site.ContentLevel == 0)
+            {
+                <p class="directory-only" data-content-level="0">@L["DirectoryOnly"]</p>
+            }
+        </article>
+        break;
+
+    case DiveSiteLookup.Gone:
+        <PageTitle>@L["Gone_Title"] · @Shared["Brand"]</PageTitle>
+        <HeadContent>
+            <meta name="robots" content="noindex" />
+        </HeadContent>
+        <h1 class="status-title">@L["Gone_Title"]</h1>
+        <p>@L["Gone_Text"]</p>
+        break;
+}
+
+@code {
+    private DiveSiteLookup? lookup;
+
+    [Parameter]
+    public string Slug { get; set; } = "";
+
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        lookup = await DiveSites.Handle(new GetDiveSiteQuery(Slug, Language));
+
+        switch (lookup)
+        {
+            case DiveSiteLookup.Moved moved:
+                RedirectPermanently(PublicRoutes.DiveSite(Language, moved.Slug));
+                break;
+            case DiveSiteLookup.Gone:
+                SetStatusCode(StatusCodes.Status410Gone);
+                break;
+            case DiveSiteLookup.NotFound:
+                Navigation.NotFound();
+                break;
+        }
+    }
+
+    private void RedirectPermanently(string location)
+    {
+        SetStatusCode(StatusCodes.Status301MovedPermanently);
+        HttpContext?.Response.Headers.Location = location;
+    }
+
+    private void SetStatusCode(int statusCode)
+    {
+        if (HttpContext is not null)
+        {
+            HttpContext.Response.StatusCode = statusCode;
+        }
+    }
+
+    private static string Coordinates(DiveSiteDetails site) =>
+        $"{site.Latitude.ToString("0.0000", CultureInfo.CurrentCulture)}° N, {site.Longitude.ToString("0.0000", CultureInfo.CurrentCulture)}° E";
+}

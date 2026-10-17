@@ -88,7 +88,8 @@ public class LanguageTests(WebApp app) : IClassFixture<WebApp>
     [Theory]
     [InlineData("de", "en", "/en")]
     [InlineData("", "fr", "/fr")]
-    [InlineData("de/gewaesser/zuerichsee?tag=2026-10-18", "it", "/it/gewaesser/zuerichsee")]
+    [InlineData("de/gewaesser/zuerichsee?tag=2026-10-18", "it", "/it/acque/zuerichsee")]
+    [InlineData("fr/sites-de-plongee/riff-williams-herrliberg", "de", "/de/tauchplaetze/riff-williams-herrliberg")]
     [InlineData("admin", "en", "/en")]
     public void Der_Sprachwechsel_behaelt_die_Seite(string relativePath, string language, string expected)
     {

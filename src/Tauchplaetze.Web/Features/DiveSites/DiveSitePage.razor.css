@@ -1,0 +1,55 @@
+.dive-site {
+    display: grid;
+    gap: 32px;
+}
+
+.hero {
+    display: grid;
+    gap: 16px;
+    padding-block: 4vh 2vh;
+}
+
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.breadcrumb li + li::before {
+    content: "›";
+    margin-right: 8px;
+}
+
+.panel {
+    display: grid;
+    gap: 12px;
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+}
+
+.panel h2 {
+    font-size: 28px;
+    letter-spacing: -0.02em;
+}
+
+.panel p,
+.panel dl {
+    margin: 0;
+}
+
+.panel dd {
+    margin: 4px 0 0;
+    font-family: var(--font-mono);
+}
+
+.directory-only {
+    margin: 0;
+    padding: 16px 20px;
+    border-left: 3px solid var(--color-signal);
+    color: var(--color-text-muted);
+}
