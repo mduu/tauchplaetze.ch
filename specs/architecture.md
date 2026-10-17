@@ -89,7 +89,7 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 | Slice | Core (Handler, internal) | Web (Fassade) |
 |---|---|---|
 | `DiveSites` | Queries `GetDiveSites`, `GetDiveSite`, `GetDiveSitesNearby`, `ResolveSlug`, `GetPublicRevisions`, `ComparePublicRevisions` | Seiten Verzeichnis, Tauchplatz, Karte |
-| `WaterBodies` | Queries `GetWaterBodies`, `GetWaterBody`, `GetWaterBodyConditions` | Gewässerseite, Gewässer-Übersicht |
+| `WaterBodies` | Command `SeedWaterBodies`; Queries `GetWaterBodies`, `GetWaterBody`, `GetWaterBodyConditions` | Gewässerseite, Gewässer-Übersicht |
 | `Forecasts` | Commands `RunForecast`, `RecalculateForecast`; Queries `GetBestSites`, `GetSiteForecast`, `GetForecastStatus`; Rechenkern `DiveIndexCalculator`, `ThermoclineDetector`, `DataLevelRule`; Clients `AlplakesClient`, `OpenMeteoClient`, `SwissMetNetClient`, `HydroClient` | Startseite «Wo tauchen?», `ForecastWorker` (BackgroundService, ruft `RunForecast`) |
 | `Editorial` | Commands `ProposeDiveSite`, `ProposeChange`, `WithdrawRevision`, `ApproveRevision`, `RejectRevision`, `RedactRevision`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`; Queries `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetPendingRevisions`, `GetRevisions`, `CompareRevisions`, `GetMyContributions`; Speicher der Versionen in Blob Storage (`IRevisionStore`) | CMS unter `/admin` für Mitwirkende, Moderatoren und Admins |
 | `Media` | Queries `GetMediaVariant`; Bildverarbeitung | Endpunkt für Bildauslieferung (falls nicht direkt aus Blob) |
@@ -98,7 +98,7 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 | `DiveShops` (Phase 1) | Commands, Queries für Tauchshops und Füllstationen | Admin-Seiten, Anzeige auf Platzseite |
 | `BuddyGroups` (Phase 1) | Commands, Queries | Admin-Seiten, Links |
 | `Seo` | Queries `GetSitemapEntries` | `sitemap.xml`, `robots.txt`, Redirects |
-| `Operations` | Command `MigrateDatabase` | Start der Web-App (`Database:MigrateOnStartup`, lokal mit Aspire) |
+| `Operations` | Command `MigrateDatabase` | Start der Web-App (`Database:PrepareOnStartup`, lokal mit Aspire) |
 
 Derselbe Slice-Name in Core und Web meint dasselbe Thema.
 

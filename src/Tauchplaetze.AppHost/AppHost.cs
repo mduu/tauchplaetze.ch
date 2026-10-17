@@ -17,7 +17,7 @@ builder.AddProject<Projects.Tauchplaetze_Web>("web")
     .WithReference(database)
     .WaitFor(database)
     .WithReference(blobs)
-    .WithEnvironment("Database__MigrateOnStartup", "true")
+    .WithEnvironment("Database__PrepareOnStartup", "true")
     .WithExternalHttpEndpoints();
 
 builder.AddProject<Projects.Tauchplaetze_Spike_DataSources>("spike-datasources")

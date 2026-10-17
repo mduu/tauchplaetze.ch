@@ -1,7 +1,6 @@
 using Tauchplaetze.Core;
-using Tauchplaetze.Core.CrossCutting.UseCases;
-using Tauchplaetze.Core.Features.Operations.Commands;
 using Tauchplaetze.Web.Components;
+using Tauchplaetze.Web.CrossCutting.Database;
 using Tauchplaetze.Web.CrossCutting.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,11 +13,7 @@ builder.Services.AddRazorComponents();
 
 var app = builder.Build();
 
-if (app.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
-{
-    await using var scope = app.Services.CreateAsyncScope();
-    await scope.ServiceProvider.GetRequiredService<ICommandHandler<MigrateDatabaseCommand, Unit>>().Handle(new MigrateDatabaseCommand());
-}
+await app.PrepareDatabase();
 
 if (!app.Environment.IsDevelopment())
 {
