@@ -6,6 +6,7 @@ Diese Spec beschreibt die Entitäten in Azure SQL. Entitäten und Felder heissen
 
 - **Geodaten** mit NetTopologySuite (`UseNetTopologySuite()`), SQL-Typ `geography`, SRID 4326 (WGS84). Die Umkreissuche läuft in der Datenbank (`Location.IsWithinDistance(...)`).
 - **IDs:** `Guid` (Version 7, sortierbar) für fachliche Entitäten. `int` für kleine Stammdaten (`WaterBody`).
+- **Enums** stehen als Text in der Datenbank (`nvarchar(20)`). So bleibt eine Row lesbar, auch wenn sich die Reihenfolge der Werte ändert. Flags-Enums (`Features`) stehen als `int`.
 - **Zeit:** `DateTimeOffset` in UTC für Zeitpunkte. `DateOnly` für Prognosetage (Schweizer Lokalzeit, `Europe/Zurich`).
 - **Optimistische Sperre:** `rowversion` auf allen Entitäten, die im CMS bearbeitet werden.
 - **Slugs:** eindeutig, aus dem deutschen Namen gebildet, ohne Umlaute (`riff-williams-herrliberg`). Ein geänderter Slug erzeugt einen 301-Redirect (Tabelle `SlugRedirects`).
@@ -22,7 +23,8 @@ Stammdaten der Gewässer, schweizweit: Seen und Flüsse (Entscheid Marc, 17.10.2
 |---|---|---|
 | `Id` | int | |
 | `Slug` | string(80) | eindeutig, z.B. `zuerichsee` |
-| `NameDe`, `NameEn`, `NameFr`, `NameIt` | string(100) | amtliche Namen, siehe `ubiquitous-language.md` |
+| `NameDe` | string(100) | amtlicher Name, Pflicht |
+| `NameEn`, `NameFr`, `NameIt` | string(100), optional | Übersetzung, siehe `ubiquitous-language.md`. Fehlt sie, gilt der deutsche Name. Kleine Gewässer haben meist keine. |
 | `WaterBodyType` | enum | `Lake`, `River` |
 | `Outline` | geography (optional) | Umriss für die Karte |
 | `Centroid` | geography | Mittelpunkt |
@@ -74,7 +76,7 @@ Der Tauchplatz. Nur `Name`, `Location` und `WaterBodyId` sind Pflicht (Ausbaustu
 | `InflowStationOverride` | string(20), optional | BAFU-Station, falls der Platz nahe einer Mündung liegt (überschreibt die Stationen des Sees) |
 | `SatellitePoint` | geography (Point), optional | eigener Punkt seewärts für Satellitenwerte. Ohne ihn gilt `WaterBody.SatellitePoint`. |
 | `ForecastDisabled` | bool | Prognose für den Platz ausgeschaltet (Datenstufe 0) |
-| `DataLevel` | tinyint (0–3) | vom Job berechnet, Stand des letzten Laufs, siehe `forecast.md`. Nicht Teil der Revision. |
+| `DataLevel` | tinyint (0–3), optional | vom Job berechnet, Stand des letzten Laufs, siehe `forecast.md`. `null` bis zum ersten Lauf (noch nicht berechnet). Nicht Teil der Revision. |
 | `Status` | enum | `Draft`, `Published`, `Archived` |
 | `ContentLevel` | int (0–2) | berechnet und gespeichert, siehe `cms.md` |
 | `HeroMediaId` | Guid, optional | FK `MediaItem` |
@@ -95,7 +97,7 @@ Alle `…Rating`-Felder haben einen Check Constraint `BETWEEN 1 AND 5`. Im Code 
 | `ApproachInfo` | string(2000), optional | Anfahrt und Parkplatz, Gebühren |
 | `HazardsInfo` | string(2000), optional | Gefahren, Schiffsverkehr, Verbote |
 | `FacilitiesInfo` | string(1000), optional | Restaurants und Toiletten |
-| `DivingBanNote` | string(500) | Erklärung zum Tauchverbot |
+| `DivingBanNote` | string(500), optional | Erklärung zum Tauchverbot |
 | `IsMachineTranslated` | bool | `true`, wenn automatisch übersetzt und noch nicht geprüft |
 
 ### DiveSiteEntryPoint

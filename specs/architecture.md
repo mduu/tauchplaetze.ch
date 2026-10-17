@@ -43,7 +43,7 @@ flowchart LR
 | Lokale Entwicklung | .NET Aspire (`Tauchplaetze.AppHost`) mit SQL Server und Azurite im Container |
 | Observability | OpenTelemetry über `ServiceDefaults`, Application Insights in Produktion |
 | ML (Phase 2) | ML.NET mit LightGBM |
-| Tests | xUnit, Testcontainers (MsSql), ArchUnitNET, Roslyn (Regeltests) |
+| Tests | xUnit v3 (Microsoft Testing Platform), Testcontainers (MsSql), Mono.Cecil und Roslyn (Regeltests) |
 
 ## Projektstruktur
 
@@ -98,6 +98,7 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 | `DiveShops` (Phase 1) | Commands, Queries für Tauchshops und Füllstationen | Admin-Seiten, Anzeige auf Platzseite |
 | `BuddyGroups` (Phase 1) | Commands, Queries | Admin-Seiten, Links |
 | `Seo` | Queries `GetSitemapEntries` | `sitemap.xml`, `robots.txt`, Redirects |
+| `Operations` | Command `MigrateDatabase` | Start der Web-App (`Database:MigrateOnStartup`, lokal mit Aspire) |
 
 Derselbe Slice-Name in Core und Web meint dasselbe Thema.
 
@@ -313,12 +314,11 @@ Gilt für Kommentare, Specs, ADRs, README und Commit-Nachrichten.
 - **Ohne Docker** werden die SQL-Tests lokal sichtbar **übersprungen** (mit Grund), nicht still grün. In der CI (`CI=true`) wird nie übersprungen.
 - **Integration Tests** der Fassade starten die App In-Memory (`Microsoft.AspNetCore.Mvc.Testing`) und prüfen über HTTP: Routing, Sprachpräfix, gerendertes HTML, Anmeldung.
 - **Datenquellen:** Contract Tests mit gespeicherten echten Antworten (`TestData/{quelle}/*.json`). Kein Test ruft eine echte externe Quelle auf.
-- **ArchitectureTests** (ArchUnitNET, jede Regel mit Gegenbeispiel):
-  - `Tauchplaetze.Web` hängt nicht von Infrastruktur ab, erkannt am **Assembly** (EF Core, `Microsoft.Data.SqlClient`, `Azure.*`), und nicht von Typen aus `Tauchplaetze.Core.Data`.
-  - Handler sind `internal` und liegen nur im Core, in `Commands/` oder `Queries/`.
-  - Query-Handler schreiben nicht (`SaveChanges` nur in Command-Handlern).
-  - Jede Datei in `Commands/` enthält genau einen `ICommandHandler`, jede in `Queries/` genau einen `IQueryHandler`.
-  - ArchUnitNET sieht Zugriffe in `async`-Lambdas nicht zuverlässig (Erfahrung aus bau-ticker). Für Methodenrümpfe kommt bei Bedarf eine Regel mit Mono.Cecil dazu.
+- **ArchitectureTests** (jede Regel mit Gegenbeispiel, das anschlagen muss), in drei Schichten:
+  1. **Compiler:** Entitäten, `DbContext` und Handler sind `internal`. Ein Test prüft, dass nichts in `Tauchplaetze.Core.Data` öffentlich ist (ausser Migrationen).
+  2. **Mono.Cecil:** `Tauchplaetze.Web` referenziert kein Assembly der Infrastruktur (EF Core, `Microsoft.Data.SqlClient`, `Azure.*`, NetTopologySuite). Query-Handler rufen kein `SaveChanges`, `ExecuteUpdate` oder `ExecuteDelete`, auch nicht im vom Compiler erzeugten Typ eines `async`-Handlers.
+  3. **Reflection und Roslyn:** Handler liegen in `Commands/` bzw. `Queries/`. Jede Datei dort enthält genau einen passenden Handler.
+  - Entscheid 17.10.2026: kein ArchUnitNET. Die Regeln oben brauchen es nicht. ArchUnitNET sieht Zugriffe in `async`-Methoden nicht zuverlässig (Erfahrung aus bau-ticker).
 - **Regeltests im Code:** keine Kommentare in Method Bodies (Roslyn), `// Arrange` `// Act` `// Assert` in jeder Testmethode, gleiche Keys in allen vier `.resx`-Sätzen, Defaults im Code gleich wie in `appsettings.json`.
 
 ### Bibliotheken
@@ -328,7 +328,7 @@ Gilt für Kommentare, Specs, ADRs, README und Commit-Nachrichten.
 | xUnit | Test-Framework und Assertions |
 | Testcontainers.MsSql | echte Datenbank in Tests |
 | Microsoft.AspNetCore.Mvc.Testing | Integration Tests der Fassade |
-| ArchUnitNET | Architekturregeln |
+| Mono.Cecil | Architekturregeln (Assembly-Referenzen, Methodenrümpfe) |
 | Microsoft.CodeAnalysis (Roslyn) | Regeltests im Code |
 | bUnit | Komponenten-Tests der Fassade (sparsam) |
 

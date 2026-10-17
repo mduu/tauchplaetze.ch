@@ -67,7 +67,8 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 
 ## Umgebungen
 
-- **Lokal:** Aspire (`Tauchplaetze.AppHost`) startet SQL Server und Azurite im Container.
+- **Lokal:** Aspire (`Tauchplaetze.AppHost`) startet SQL Server und Azurite im Container. Beide behalten ihre Daten in einem Volume. Die Web-App migriert die Datenbank beim Start (`Database__MigrateOnStartup`).
+- **Speicher für Docker:** SQL Server braucht rund 2 GB im Container. Laufen SQL Server anderer Projekte, stirbt der Container mit Fehler 17138 (17.10.2026). Dann andere SQL-Container stoppen oder Docker mehr Speicher geben.
 - **PROD:** einzige Cloud-Umgebung (wie feldnah). Keine Test-Umgebung in Azure. Ein Health Check nach dem Deploy ist das Sicherheitsnetz.
 
 ## IaC
