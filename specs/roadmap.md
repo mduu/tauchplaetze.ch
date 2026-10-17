@@ -14,7 +14,7 @@ Ziel: lauffähiges Gerüst, alle Konventionen verankert.
 - Layouts `PublicLayout` und `AdminLayout` mit Design Tokens, selbst gehostete Schriften.
 - Aspire mit SQL Server und Azurite.
 - CI-Workflow (Build, Tests).
-- `CLAUDE.md` und `specs/` im Repository.
+- `AGENTS.md` (mit `CLAUDE.md` als Verweis) und `specs/` im Repository.
 
 ## Phase 0.5 – Spike Datenquellen ✅
 

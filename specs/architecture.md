@@ -233,7 +233,8 @@ Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, ko
 | Bezeichner, Typen, Felder, API, Log-Meldungen | Englisch |
 | Kommentare, Specs, ADRs, README, Commit-Nachrichten | Deutsch (Schweizer Schreibweise, «ss»), IT-Begriffe englisch |
 | Oberfläche | aus `.resx` in DE, EN, FR, IT (siehe `i18n.md`) |
-| `CLAUDE.md` | Englisch in ASD-STE100 |
+| `AGENTS.md` | Englisch in ASD-STE100 |
+| Gespräch mit Marc im Chat | Deutsch |
 
 Entscheid Marc, 17.10.2026: Kommentare und Commits deutsch wie bei bau-ticker (offener Punkt #15 erledigt).
 

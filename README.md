@@ -29,7 +29,7 @@ Die Plattform ist ein Leidenschaftsprojekt und nicht kommerziell. Der Betrieb so
 
 ```
 README.md                 dieses Dokument
-CLAUDE.md                 Vorlage für das Repository (Regeln für Claude Code)
+AGENTS.md                 Regeln für Coding Agents (CLAUDE.md verweist darauf)
 specs/
 ├── vision.md             Produkt, Zielgruppe, Abgrenzung, Erfolgskriterien
 ├── ubiquitous-language.md  Fachbegriffe mit Übersetzungen DE/EN/FR/IT
