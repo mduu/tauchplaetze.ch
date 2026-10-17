@@ -13,13 +13,33 @@
   <data name="Language_fr" xml:space="preserve"><value>Français</value></data>
   <data name="Language_it" xml:space="preserve"><value>Italiano</value></data>
   <data name="Start_Title" xml:space="preserve"><value>Wo tauchen wir heute?</value></data>
-  <data name="Start_Lead" xml:space="preserve"><value>Die tägliche Tauchprognose für die Schweizer Seen und Flüsse. Bald hier.</value></data>
+  <data name="Start_Lead" xml:space="preserve"><value>Für jeden Tauchplatz gerechnet aus Seemodellen, Satellitendaten und Wetter: wo es sich lohnt, wie kalt es in der Tiefe ist und wo die Sprungschicht liegt.</value></data>
   <data name="Start_MetaDescription" xml:space="preserve"><value>Tauchplatzführer für die Schweizer Seen und Flüsse mit täglicher Tauchprognose aus offenen Daten.</value></data>
-  <data name="Footer_NeverDiveAlone" xml:space="preserve"><value>Tauche nie allein.</value></data>
-  <data name="Footer_Indicator" xml:space="preserve"><value>Die Prognose ist ein Indikator, keine Garantie für die Sicht.</value></data>
   <data name="NotFound_Title" xml:space="preserve"><value>Seite nicht gefunden</value></data>
   <data name="NotFound_Text" xml:space="preserve"><value>Diese Seite gibt es nicht. Vielleicht hilft die Startseite weiter.</value></data>
   <data name="NotFound_Home" xml:space="preserve"><value>Zur Startseite</value></data>
   <data name="Error_Title" xml:space="preserve"><value>Etwas ist schiefgelaufen</value></data>
   <data name="Error_Text" xml:space="preserve"><value>Bitte versuche es in ein paar Minuten noch einmal.</value></data>
+  <data name="Start_Eyebrow" xml:space="preserve"><value>Tauchprognose · Schweizer Seen und Flüsse</value></data>
+  <data name="Start_ComingSoon_Label" xml:space="preserve"><value>Bald hier</value></data>
+  <data name="Start_ComingSoon_Title" xml:space="preserve"><value>Die beste Wahl für heute</value></data>
+  <data name="Start_ComingSoon_Text" xml:space="preserve"><value>Die Prognose ist im Aufbau. Bald steht hier, wo es sich heute am meisten lohnt, mit Rangliste für deinen Umkreis.</value></data>
+  <data name="Start_CrossSection_Label" xml:space="preserve"><value>Querschnitt durch einen See: wärmere Oberflächenschicht, Sprungschicht, darunter kälteres und klareres Wasser</value></data>
+  <data name="Start_CrossSection_Thermocline" xml:space="preserve"><value>Sprungschicht</value></data>
+  <data name="Start_CrossSection_Clearer" xml:space="preserve"><value>darunter oft klarer</value></data>
+  <data name="How_Title" xml:space="preserve"><value>Keine Meldungen nötig. Der See verrät es selbst.</value></data>
+  <data name="How_Model_Label" xml:space="preserve"><value>01 · Seemodell</value></data>
+  <data name="How_Model_Title" xml:space="preserve"><value>Temperatur in jeder Tiefe</value></data>
+  <data name="How_Model_Text" xml:space="preserve"><value>Seemodelle der Eawag rechnen bis vier Tage voraus, wie warm es auf 0, 10, 20 und 30 m ist und wo die Sprungschicht liegt.</value></data>
+  <data name="How_Satellite_Label" xml:space="preserve"><value>02 · Satellit</value></data>
+  <data name="How_Satellite_Title" xml:space="preserve"><value>Klarheit und Algen</value></data>
+  <data name="How_Satellite_Text" xml:space="preserve"><value>Satellitenbilder zeigen ein- bis zweimal pro Woche, wie klar die Oberfläche ist und ob sich Algen ausbreiten.</value></data>
+  <data name="How_Weather_Label" xml:space="preserve"><value>03 · Wetter und Zuflüsse</value></data>
+  <data name="How_Weather_Title" xml:space="preserve"><value>Wind, Regen, Abfluss</value></data>
+  <data name="How_Weather_Text" xml:space="preserve"><value>Starker Regen trübt die Zuflüsse, Wind wühlt das Ufer auf. Beides fliesst in den Index ein.</value></data>
+  <data name="How_Community_Label" xml:space="preserve"><value>04 · Community (Bonus)</value></data>
+  <data name="How_Community_Title" xml:space="preserve"><value>Meldungen schärfen das Modell</value></data>
+  <data name="How_Community_Text" xml:space="preserve"><value>Wer nach dem Tauchgang die Sicht meldet, verbessert die Prognose. Nötig ist es nicht.</value></data>
+  <data name="Footer_Note" xml:space="preserve"><value>Prognosen sind Indikatoren, Angaben ohne Gewähr. Tauche nie allein und innerhalb deiner Ausbildung.</value></data>
+  <data name="Footer_Emergency" xml:space="preserve"><value>Notfall: Sanität 144 · Rega 1414</value></data>
 </root>

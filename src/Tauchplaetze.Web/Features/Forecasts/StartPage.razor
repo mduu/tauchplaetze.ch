@@ -8,12 +8,40 @@
 </HeadContent>
 <HreflangLinks />
 
-<section class="start">
+<section class="intro">
+    <p class="eyebrow">@L["Start_Eyebrow"]</p>
     <h1>@L["Start_Title"]</h1>
     <p class="lead">@L["Start_Lead"]</p>
 </section>
 
+<section class="page-section">
+    <article class="coming-soon">
+        <LakeCrossSection />
+        <div class="coming-soon-text">
+            <p class="eyebrow signal">@L["Start_ComingSoon_Label"]</p>
+            <h2>@L["Start_ComingSoon_Title"]</h2>
+            <p>@L["Start_ComingSoon_Text"]</p>
+        </div>
+    </article>
+</section>
+
+<section class="page-section how" aria-labelledby="how">
+    <h2 id="how" class="how-title">@L["How_Title"]</h2>
+    <div class="how-steps">
+        @foreach (var step in Steps)
+        {
+            <div class="how-step">
+                <div class="tile-label">@L[$"How_{step}_Label"]</div>
+                <h3>@L[$"How_{step}_Title"]</h3>
+                <p>@L[$"How_{step}_Text"]</p>
+            </div>
+        }
+    </div>
+</section>
+
 @code {
+    private static readonly string[] Steps = ["Model", "Satellite", "Weather", "Community"];
+
     [Parameter]
     public string? Lang { get; set; }
 

@@ -85,3 +85,64 @@ a:hover {
   font-size: clamp(36px, 5vw, 64px);
   margin-bottom: 16px;
 }
+
+.page-section {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 48px var(--space-gutter) 24px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.section-title {
+  margin: 10px 0 0;
+  font-size: clamp(32px, 4.4vw, 52px);
+  letter-spacing: -0.02em;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 24px;
+}
+
+.tile {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-tile);
+  padding: 20px;
+}
+
+.tile-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.tile p {
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.callout {
+  background: var(--color-signal);
+  color: var(--color-bg);
+  border-radius: var(--radius-card);
+  padding: 30px;
+}
+
+.callout h2,
+.callout h3 {
+  color: var(--color-bg);
+}

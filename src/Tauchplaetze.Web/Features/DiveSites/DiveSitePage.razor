@@ -19,38 +19,49 @@
         </HeadContent>
         <HreflangLinks />
 
-        <article class="dive-site">
-            <header class="hero">
-                <nav aria-label="@L["Breadcrumb"]">
-                    <ol class="breadcrumb label">
-                        <li>@site.WaterBodyName</li>
-                        @if (site.Municipality is not null)
-                        {
-                            <li>@site.Municipality @site.Canton</li>
-                        }
-                    </ol>
-                </nav>
-                <h1>@site.Name</h1>
-            </header>
+        <UnderwaterHero>
+            <nav aria-label="@L["Breadcrumb"]">
+                <ol class="breadcrumb">
+                    <li>@site.WaterBodyName</li>
+                    @if (site.Municipality is not null)
+                    {
+                        <li>@site.Municipality @site.Canton</li>
+                    }
+                </ol>
+            </nav>
+            <h1 class="site-name">@site.Name</h1>
+        </UnderwaterHero>
 
-            <section class="panel" aria-labelledby="conditions">
-                <h2 id="conditions">@L["Conditions"]</h2>
-                <p>@L["ForecastSoon"]</p>
-            </section>
+        <section class="page-section" aria-labelledby="conditions">
+            <p class="eyebrow">@L["Conditions_Eyebrow"]</p>
+            <h2 id="conditions" class="section-title">@L["Conditions_Soon_Title"]</h2>
+            <div class="card pending">
+                <p>@L["Conditions_Soon_Text"]</p>
+            </div>
+        </section>
 
-            <section class="panel" aria-labelledby="location">
-                <h2 id="location">@L["Location"]</h2>
-                <dl>
-                    <dt class="label">@L["Coordinates"]</dt>
-                    <dd data-coordinates>@Coordinates(site)</dd>
-                </dl>
-            </section>
+        <section class="page-section" aria-labelledby="practical">
+            <h2 id="practical" class="practical-title">@L["Practical"]</h2>
+            <div class="tiles">
+                <div class="tile">
+                    <div class="tile-label">@L["Coordinates"]</div>
+                    <p data-coordinates>@Coordinates(site)</p>
+                    <p><a href="@MapLink(site)" rel="noopener" target="_blank">@L["Map_Open"]</a></p>
+                </div>
+                <div class="tile">
+                    <div class="tile-label">@L["Emergency"]</div>
+                    <p>@L["Emergency_Numbers"]</p>
+                </div>
+            </div>
 
             @if (site.ContentLevel == 0)
             {
-                <p class="directory-only" data-content-level="0">@L["DirectoryOnly"]</p>
+                <div class="callout directory-only" data-content-level="0">
+                    <h3>@L["DirectoryOnly_Title"]</h3>
+                    <p>@L["DirectoryOnly"]</p>
+                </div>
             }
-        </article>
+        </section>
         break;
 
     case DiveSiteLookup.Gone:
@@ -105,6 +116,9 @@
             HttpContext.Response.StatusCode = statusCode;
         }
     }
+
+    private static string MapLink(DiveSiteDetails site) =>
+        string.Create(CultureInfo.InvariantCulture, $"https://map.geo.admin.ch/?lang={Language}&swisssearch={site.Latitude:0.0000},{site.Longitude:0.0000}");
 
     private static string Coordinates(DiveSiteDetails site) =>
         $"{site.Latitude.ToString("0.0000", CultureInfo.CurrentCulture)}° N, {site.Longitude.ToString("0.0000", CultureInfo.CurrentCulture)}° E";

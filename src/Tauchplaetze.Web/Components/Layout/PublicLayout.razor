@@ -5,22 +5,25 @@
 
 <header class="site-header">
     <a class="brand" href="/@CurrentLanguage" aria-label="@L["Brand_Home"]">
-        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-            <circle cx="16" cy="16" r="15" fill="none" stroke="currentColor" stroke-width="2" />
-            <path d="M6 18c3-3 6-3 10 0s7 3 10 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-            <circle cx="21" cy="10" r="2.5" fill="var(--color-signal)" />
+        <svg class="brand-mark" width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+            <circle cx="15" cy="15" r="13" fill="none" stroke="var(--color-primary)" stroke-width="2" />
+            <path d="M5 15 Q10 11 15 15 T25 15" fill="none" stroke="var(--color-primary)" stroke-width="2" />
+            <circle cx="15" cy="21" r="1.8" fill="var(--color-signal)" />
         </svg>
         <span class="brand-name">@L["Brand"]</span>
     </a>
     <LanguageSwitch />
 </header>
 
-<main id="main" class="site-main">
+<main id="main">
     @Body
 </main>
 
 <footer class="site-footer">
-    <p>@L["Footer_NeverDiveAlone"] @L["Footer_Indicator"]</p>
+    <div class="footer-inner">
+        <p>@L["Footer_Note"]</p>
+        <p>@L["Footer_Emergency"]</p>
+    </div>
 </footer>
 
 @code {

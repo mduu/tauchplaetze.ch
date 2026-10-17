@@ -7,10 +7,16 @@
   <data name="MetaDescription" xml:space="preserve"><value>{0}, {1}: dive site and dive forecast.</value></data>
   <data name="Breadcrumb" xml:space="preserve"><value>Breadcrumb</value></data>
   <data name="DirectoryOnly" xml:space="preserve"><value>This site is only in the directory so far. Description, photos and entry points will follow.</value></data>
-  <data name="ForecastSoon" xml:space="preserve"><value>The dive forecast for this site is coming soon.</value></data>
   <data name="Conditions" xml:space="preserve"><value>Dive conditions</value></data>
-  <data name="Location" xml:space="preserve"><value>Location</value></data>
   <data name="Coordinates" xml:space="preserve"><value>Coordinates</value></data>
   <data name="Gone_Title" xml:space="preserve"><value>Dive site no longer listed</value></data>
   <data name="Gone_Text" xml:space="preserve"><value>This dive site is no longer public.</value></data>
+  <data name="Conditions_Eyebrow" xml:space="preserve"><value>Dive conditions · forecast</value></data>
+  <data name="Conditions_Soon_Title" xml:space="preserve"><value>The forecast is coming soon.</value></data>
+  <data name="Conditions_Soon_Text" xml:space="preserve"><value>Temperature by depth, thermocline, visibility, wind and the next five days will appear here soon.</value></data>
+  <data name="Practical" xml:space="preserve"><value>Practical</value></data>
+  <data name="Map_Open" xml:space="preserve"><value>Open on the national map</value></data>
+  <data name="Emergency" xml:space="preserve"><value>Emergency</value></data>
+  <data name="Emergency_Numbers" xml:space="preserve"><value>Ambulance 144 · Rega 1414 · Police 117</value></data>
+  <data name="DirectoryOnly_Title" xml:space="preserve"><value>Do you know this site?</value></data>
 </root>

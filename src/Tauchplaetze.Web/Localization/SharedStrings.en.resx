@@ -13,13 +13,33 @@
   <data name="Language_fr" xml:space="preserve"><value>Français</value></data>
   <data name="Language_it" xml:space="preserve"><value>Italiano</value></data>
   <data name="Start_Title" xml:space="preserve"><value>Where shall we dive today?</value></data>
-  <data name="Start_Lead" xml:space="preserve"><value>The daily dive forecast for Swiss lakes and rivers. Coming soon.</value></data>
+  <data name="Start_Lead" xml:space="preserve"><value>Calculated for every dive site from lake models, satellite data and weather: where it is worth it, how cold it is at depth and where the thermocline lies.</value></data>
   <data name="Start_MetaDescription" xml:space="preserve"><value>Dive site guide for Swiss lakes and rivers with a daily dive forecast from open data.</value></data>
-  <data name="Footer_NeverDiveAlone" xml:space="preserve"><value>Never dive alone.</value></data>
-  <data name="Footer_Indicator" xml:space="preserve"><value>The forecast is an indicator, not a guarantee of visibility.</value></data>
   <data name="NotFound_Title" xml:space="preserve"><value>Page not found</value></data>
   <data name="NotFound_Text" xml:space="preserve"><value>This page does not exist. The home page may help.</value></data>
   <data name="NotFound_Home" xml:space="preserve"><value>Go to the home page</value></data>
   <data name="Error_Title" xml:space="preserve"><value>Something went wrong</value></data>
   <data name="Error_Text" xml:space="preserve"><value>Please try again in a few minutes.</value></data>
+  <data name="Start_Eyebrow" xml:space="preserve"><value>Dive forecast · Swiss lakes and rivers</value></data>
+  <data name="Start_ComingSoon_Label" xml:space="preserve"><value>Coming soon</value></data>
+  <data name="Start_ComingSoon_Title" xml:space="preserve"><value>Today's best choice</value></data>
+  <data name="Start_ComingSoon_Text" xml:space="preserve"><value>The forecast is being built. Soon you will see here where diving is best today, with a ranking for your area.</value></data>
+  <data name="Start_CrossSection_Label" xml:space="preserve"><value>Cross-section of a lake: warmer surface layer, thermocline, colder and clearer water below</value></data>
+  <data name="Start_CrossSection_Thermocline" xml:space="preserve"><value>Thermocline</value></data>
+  <data name="Start_CrossSection_Clearer" xml:space="preserve"><value>often clearer below</value></data>
+  <data name="How_Title" xml:space="preserve"><value>No reports needed. The lake tells us itself.</value></data>
+  <data name="How_Model_Label" xml:space="preserve"><value>01 · Lake model</value></data>
+  <data name="How_Model_Title" xml:space="preserve"><value>Temperature at every depth</value></data>
+  <data name="How_Model_Text" xml:space="preserve"><value>Eawag lake models calculate up to four days ahead how warm it is at 0, 10, 20 and 30 m and where the thermocline lies.</value></data>
+  <data name="How_Satellite_Label" xml:space="preserve"><value>02 · Satellite</value></data>
+  <data name="How_Satellite_Title" xml:space="preserve"><value>Clarity and algae</value></data>
+  <data name="How_Satellite_Text" xml:space="preserve"><value>Once or twice a week, satellite images show how clear the surface is and whether algae are spreading.</value></data>
+  <data name="How_Weather_Label" xml:space="preserve"><value>03 · Weather and inflows</value></data>
+  <data name="How_Weather_Title" xml:space="preserve"><value>Wind, rain, discharge</value></data>
+  <data name="How_Weather_Text" xml:space="preserve"><value>Heavy rain makes inflows murky, wind stirs up the shore. Both go into the index.</value></data>
+  <data name="How_Community_Label" xml:space="preserve"><value>04 · Community (bonus)</value></data>
+  <data name="How_Community_Title" xml:space="preserve"><value>Reports sharpen the model</value></data>
+  <data name="How_Community_Text" xml:space="preserve"><value>Reporting the visibility after a dive improves the forecast. It is not required.</value></data>
+  <data name="Footer_Note" xml:space="preserve"><value>Forecasts are indicators, without guarantee. Never dive alone and stay within your training.</value></data>
+  <data name="Footer_Emergency" xml:space="preserve"><value>Emergency: ambulance 144 · Rega 1414</value></data>
 </root>

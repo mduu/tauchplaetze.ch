@@ -13,13 +13,33 @@
   <data name="Language_fr" xml:space="preserve"><value>Français</value></data>
   <data name="Language_it" xml:space="preserve"><value>Italiano</value></data>
   <data name="Start_Title" xml:space="preserve"><value>Où plonger aujourd'hui ?</value></data>
-  <data name="Start_Lead" xml:space="preserve"><value>La prévision de plongée quotidienne pour les lacs et rivières de Suisse. Bientôt ici.</value></data>
+  <data name="Start_Lead" xml:space="preserve"><value>Calculée pour chaque site à partir de modèles de lac, de données satellite et de la météo : où cela vaut la peine, quelle est la température en profondeur et où se trouve la thermocline.</value></data>
   <data name="Start_MetaDescription" xml:space="preserve"><value>Guide des sites de plongée des lacs et rivières de Suisse, avec une prévision quotidienne issue de données ouvertes.</value></data>
-  <data name="Footer_NeverDiveAlone" xml:space="preserve"><value>Ne plonge jamais seul.</value></data>
-  <data name="Footer_Indicator" xml:space="preserve"><value>La prévision est un indicateur, pas une garantie de visibilité.</value></data>
   <data name="NotFound_Title" xml:space="preserve"><value>Page introuvable</value></data>
   <data name="NotFound_Text" xml:space="preserve"><value>Cette page n'existe pas. La page d'accueil peut t'aider.</value></data>
   <data name="NotFound_Home" xml:space="preserve"><value>Aller à la page d'accueil</value></data>
   <data name="Error_Title" xml:space="preserve"><value>Une erreur s'est produite</value></data>
   <data name="Error_Text" xml:space="preserve"><value>Merci de réessayer dans quelques minutes.</value></data>
+  <data name="Start_Eyebrow" xml:space="preserve"><value>Prévision de plongée · lacs et rivières de Suisse</value></data>
+  <data name="Start_ComingSoon_Label" xml:space="preserve"><value>Bientôt ici</value></data>
+  <data name="Start_ComingSoon_Title" xml:space="preserve"><value>Le meilleur choix du jour</value></data>
+  <data name="Start_ComingSoon_Text" xml:space="preserve"><value>La prévision est en construction. Bientôt, tu verras ici où plonger aujourd'hui, avec un classement autour de toi.</value></data>
+  <data name="Start_CrossSection_Label" xml:space="preserve"><value>Coupe d'un lac : couche de surface plus chaude, thermocline, eau plus froide et plus claire en dessous</value></data>
+  <data name="Start_CrossSection_Thermocline" xml:space="preserve"><value>Thermocline</value></data>
+  <data name="Start_CrossSection_Clearer" xml:space="preserve"><value>souvent plus clair en dessous</value></data>
+  <data name="How_Title" xml:space="preserve"><value>Pas besoin de signalements. Le lac le dit lui-même.</value></data>
+  <data name="How_Model_Label" xml:space="preserve"><value>01 · Modèle de lac</value></data>
+  <data name="How_Model_Title" xml:space="preserve"><value>La température à chaque profondeur</value></data>
+  <data name="How_Model_Text" xml:space="preserve"><value>Les modèles de lac de l'Eawag calculent jusqu'à quatre jours à l'avance la température à 0, 10, 20 et 30 m et la position de la thermocline.</value></data>
+  <data name="How_Satellite_Label" xml:space="preserve"><value>02 · Satellite</value></data>
+  <data name="How_Satellite_Title" xml:space="preserve"><value>Clarté et algues</value></data>
+  <data name="How_Satellite_Text" xml:space="preserve"><value>Une à deux fois par semaine, les images satellite montrent la clarté de la surface et si les algues se développent.</value></data>
+  <data name="How_Weather_Label" xml:space="preserve"><value>03 · Météo et affluents</value></data>
+  <data name="How_Weather_Title" xml:space="preserve"><value>Vent, pluie, débit</value></data>
+  <data name="How_Weather_Text" xml:space="preserve"><value>La forte pluie trouble les affluents, le vent remue le bord. Les deux entrent dans l'indice.</value></data>
+  <data name="How_Community_Label" xml:space="preserve"><value>04 · Communauté (bonus)</value></data>
+  <data name="How_Community_Title" xml:space="preserve"><value>Les signalements affinent le modèle</value></data>
+  <data name="How_Community_Text" xml:space="preserve"><value>Signaler la visibilité après la plongée améliore la prévision. Ce n'est pas obligatoire.</value></data>
+  <data name="Footer_Note" xml:space="preserve"><value>Les prévisions sont des indicateurs, sans garantie. Ne plonge jamais seul et reste dans les limites de ta formation.</value></data>
+  <data name="Footer_Emergency" xml:space="preserve"><value>Urgence : ambulance 144 · Rega 1414</value></data>
 </root>

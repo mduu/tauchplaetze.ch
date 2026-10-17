@@ -7,10 +7,16 @@
   <data name="MetaDescription" xml:space="preserve"><value>{0}, {1} : site de plongée et prévision de plongée.</value></data>
   <data name="Breadcrumb" xml:space="preserve"><value>Fil d'Ariane</value></data>
   <data name="DirectoryOnly" xml:space="preserve"><value>Ce site ne figure pour l'instant que dans l'annuaire. Description, photos et points d'entrée suivront.</value></data>
-  <data name="ForecastSoon" xml:space="preserve"><value>La prévision de plongée pour ce site arrive bientôt.</value></data>
   <data name="Conditions" xml:space="preserve"><value>Conditions de plongée</value></data>
-  <data name="Location" xml:space="preserve"><value>Emplacement</value></data>
   <data name="Coordinates" xml:space="preserve"><value>Coordonnées</value></data>
   <data name="Gone_Title" xml:space="preserve"><value>Site de plongée retiré de l'annuaire</value></data>
   <data name="Gone_Text" xml:space="preserve"><value>Ce site de plongée n'est plus public.</value></data>
+  <data name="Conditions_Eyebrow" xml:space="preserve"><value>Conditions de plongée · prévision</value></data>
+  <data name="Conditions_Soon_Title" xml:space="preserve"><value>La prévision arrive bientôt.</value></data>
+  <data name="Conditions_Soon_Text" xml:space="preserve"><value>Bientôt ici : température selon la profondeur, thermocline, visibilité, vent et les cinq prochains jours.</value></data>
+  <data name="Practical" xml:space="preserve"><value>Infos pratiques</value></data>
+  <data name="Map_Open" xml:space="preserve"><value>Ouvrir sur la carte nationale</value></data>
+  <data name="Emergency" xml:space="preserve"><value>Urgence</value></data>
+  <data name="Emergency_Numbers" xml:space="preserve"><value>Ambulance 144 · Rega 1414 · Police 117</value></data>
+  <data name="DirectoryOnly_Title" xml:space="preserve"><value>Tu connais ce site ?</value></data>
 </root>

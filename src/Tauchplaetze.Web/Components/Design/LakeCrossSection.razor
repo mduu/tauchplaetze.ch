@@ -1,0 +1,19 @@
+@inject IStringLocalizer<SharedStrings> L
+
+@* Querschnitt durch einen See aus dem Entwurf (design/start.html), ohne Messwerte. *@
+<svg class="cross-section" viewBox="0 0 600 300" role="img" aria-label="@L["Start_CrossSection_Label"]">
+    <rect x="0" y="0" width="600" height="34" fill="var(--color-surface-raised)" />
+    <rect x="0" y="34" width="600" height="106" fill="var(--color-lake-epilimnion)" />
+    <rect x="0" y="140" width="600" height="26" fill="var(--color-lake-thermocline)" />
+    <rect x="0" y="166" width="600" height="134" fill="var(--color-lake-hypolimnion)" />
+    <path d="M0 34 Q25 28 50 34 T100 34 T150 34 T200 34 T250 34 T300 34 T350 34 T400 34 T450 34 T500 34 T550 34 T600 34" fill="none" stroke="var(--color-primary)" stroke-width="2" />
+    <line x1="0" y1="140" x2="470" y2="140" stroke="var(--color-signal)" stroke-width="2" stroke-dasharray="7 6" />
+    <text x="20" y="132" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13">@L["Start_CrossSection_Thermocline"]</text>
+    <text x="20" y="192" fill="var(--color-bubble)" font-family="IBM Plex Mono, monospace" font-size="13">@L["Start_CrossSection_Clearer"]</text>
+    <circle cx="420" cy="214" r="3.2" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+    <circle cx="426" cy="190" r="2.6" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+    <circle cx="419" cy="168" r="2.2" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+    <circle cx="425" cy="120" r="1.8" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+    <circle cx="420" cy="80" r="1.5" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+    <polygon points="600,34 600,300 468,300 486,252 474,212 494,170 480,124 500,78 522,34" fill="var(--color-rock)" />
+</svg>

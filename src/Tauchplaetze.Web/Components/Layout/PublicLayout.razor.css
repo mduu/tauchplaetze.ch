@@ -1,5 +1,6 @@
 .site-header {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
@@ -16,30 +17,31 @@
     text-decoration: none;
 }
 
-.brand-mark {
-    width: 32px;
-    height: 32px;
-    color: var(--color-primary);
-}
-
 .brand-name {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 20px;
+    font-size: 23px;
     letter-spacing: -0.02em;
 }
 
-.site-main {
-    max-width: var(--content-max);
-    margin: 0 auto;
-    padding: var(--space-section) var(--space-gutter);
+.site-footer {
+    border-top: 1px solid var(--color-divider);
 }
 
-.site-footer {
+.footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: 32px var(--space-gutter) 48px;
-    border-top: 1px solid var(--color-divider);
+    padding: 28px var(--space-gutter) 40px;
     color: var(--color-text-subtle);
     font-size: 14px;
+    line-height: 1.6;
+}
+
+.footer-inner p {
+    margin: 0;
+    max-width: 70ch;
 }

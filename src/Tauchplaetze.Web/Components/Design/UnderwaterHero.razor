@@ -1,0 +1,25 @@
+@* Hero mit Unterwasser-Silhouette aus dem Entwurf (design/tauchplatz.html). Die Grafik ist Dekoration. *@
+<section class="underwater-hero">
+    <svg class="scene" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+        <rect x="0" y="0" width="1440" height="420" fill="#0B2427" />
+        <rect x="0" y="0" width="1440" height="150" fill="#14413F" />
+        <rect x="0" y="150" width="1440" height="110" fill="#0F3335" />
+        <rect x="0" y="260" width="1440" height="160" fill="#092427" />
+        <line x1="0" y1="150" x2="1440" y2="150" stroke="var(--color-signal)" stroke-width="1.5" stroke-dasharray="8 8" opacity="0.6" />
+        <polygon points="1440,0 1440,420 980,420 1010,360 990,318 1030,270 1012,226 1046,180 1030,130 1064,84 1050,40 1080,0" fill="var(--color-rock)" />
+        <polygon points="1010,360 1040,372 1080,358 1060,346" fill="#0E2D30" />
+        <circle cx="640" cy="240" r="4" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+        <circle cx="646" cy="206" r="3" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+        <circle cx="638" cy="172" r="2.5" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+        <circle cx="644" cy="120" r="2" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+        <circle cx="640" cy="70" r="1.6" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
+    </svg>
+    <div class="content">
+        @ChildContent
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public RenderFragment ChildContent { get; set; } = default!;
+}

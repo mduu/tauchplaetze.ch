@@ -13,13 +13,33 @@
   <data name="Language_fr" xml:space="preserve"><value>Français</value></data>
   <data name="Language_it" xml:space="preserve"><value>Italiano</value></data>
   <data name="Start_Title" xml:space="preserve"><value>Dove ci immergiamo oggi?</value></data>
-  <data name="Start_Lead" xml:space="preserve"><value>La previsione d'immersione giornaliera per i laghi e i fiumi svizzeri. Presto qui.</value></data>
+  <data name="Start_Lead" xml:space="preserve"><value>Calcolata per ogni sito da modelli dei laghi, dati satellitari e meteo: dove ne vale la pena, quanto fa freddo in profondità e dove si trova il termoclino.</value></data>
   <data name="Start_MetaDescription" xml:space="preserve"><value>Guida ai siti d'immersione dei laghi e fiumi svizzeri, con una previsione giornaliera da dati aperti.</value></data>
-  <data name="Footer_NeverDiveAlone" xml:space="preserve"><value>Non immergerti mai da solo.</value></data>
-  <data name="Footer_Indicator" xml:space="preserve"><value>La previsione è un indicatore, non una garanzia di visibilità.</value></data>
   <data name="NotFound_Title" xml:space="preserve"><value>Pagina non trovata</value></data>
   <data name="NotFound_Text" xml:space="preserve"><value>Questa pagina non esiste. La pagina iniziale può aiutarti.</value></data>
   <data name="NotFound_Home" xml:space="preserve"><value>Vai alla pagina iniziale</value></data>
   <data name="Error_Title" xml:space="preserve"><value>Qualcosa è andato storto</value></data>
   <data name="Error_Text" xml:space="preserve"><value>Riprova tra qualche minuto.</value></data>
+  <data name="Start_Eyebrow" xml:space="preserve"><value>Previsione d'immersione · laghi e fiumi svizzeri</value></data>
+  <data name="Start_ComingSoon_Label" xml:space="preserve"><value>Presto qui</value></data>
+  <data name="Start_ComingSoon_Title" xml:space="preserve"><value>La scelta migliore di oggi</value></data>
+  <data name="Start_ComingSoon_Text" xml:space="preserve"><value>La previsione è in costruzione. Presto qui vedrai dove conviene immergersi oggi, con una classifica nei dintorni.</value></data>
+  <data name="Start_CrossSection_Label" xml:space="preserve"><value>Sezione di un lago: strato superficiale più caldo, termoclino, sotto acqua più fredda e più limpida</value></data>
+  <data name="Start_CrossSection_Thermocline" xml:space="preserve"><value>Termoclino</value></data>
+  <data name="Start_CrossSection_Clearer" xml:space="preserve"><value>spesso più limpido sotto</value></data>
+  <data name="How_Title" xml:space="preserve"><value>Nessuna segnalazione necessaria. Il lago lo dice da sé.</value></data>
+  <data name="How_Model_Label" xml:space="preserve"><value>01 · Modello del lago</value></data>
+  <data name="How_Model_Title" xml:space="preserve"><value>La temperatura a ogni profondità</value></data>
+  <data name="How_Model_Text" xml:space="preserve"><value>I modelli dei laghi dell'Eawag calcolano fino a quattro giorni prima la temperatura a 0, 10, 20 e 30 m e dove si trova il termoclino.</value></data>
+  <data name="How_Satellite_Label" xml:space="preserve"><value>02 · Satellite</value></data>
+  <data name="How_Satellite_Title" xml:space="preserve"><value>Limpidezza e alghe</value></data>
+  <data name="How_Satellite_Text" xml:space="preserve"><value>Una o due volte alla settimana le immagini satellitari mostrano quanto è limpida la superficie e se le alghe si diffondono.</value></data>
+  <data name="How_Weather_Label" xml:space="preserve"><value>03 · Meteo e immissari</value></data>
+  <data name="How_Weather_Title" xml:space="preserve"><value>Vento, pioggia, portata</value></data>
+  <data name="How_Weather_Text" xml:space="preserve"><value>La pioggia forte intorbida gli immissari, il vento smuove la riva. Entrambi entrano nell'indice.</value></data>
+  <data name="How_Community_Label" xml:space="preserve"><value>04 · Community (bonus)</value></data>
+  <data name="How_Community_Title" xml:space="preserve"><value>Le segnalazioni affinano il modello</value></data>
+  <data name="How_Community_Text" xml:space="preserve"><value>Segnalare la visibilità dopo l'immersione migliora la previsione. Non è obbligatorio.</value></data>
+  <data name="Footer_Note" xml:space="preserve"><value>Le previsioni sono indicatori, senza garanzia. Non immergerti mai da solo e resta nei limiti della tua formazione.</value></data>
+  <data name="Footer_Emergency" xml:space="preserve"><value>Emergenza: ambulanza 144 · Rega 1414</value></data>
 </root>
