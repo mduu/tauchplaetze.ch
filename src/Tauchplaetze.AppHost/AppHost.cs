@@ -1,12 +1,16 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var sql = builder.AddSqlServer("sql")
-    .WithDataVolume()
+    .WithContainerName("tauchplaetze-sqlserver")
+    .WithDataVolume("tauchplaetze-sqlserver-data")
     .WithLifetime(ContainerLifetime.Persistent);
 var database = sql.AddDatabase("tauchplaetze");
 
 var storage = builder.AddAzureStorage("storage")
-    .RunAsEmulator(emulator => emulator.WithDataVolume().WithLifetime(ContainerLifetime.Persistent));
+    .RunAsEmulator(emulator => emulator
+        .WithContainerName("tauchplaetze-azurite")
+        .WithDataVolume("tauchplaetze-azurite-data")
+        .WithLifetime(ContainerLifetime.Persistent));
 var blobs = storage.AddBlobs("blobs");
 
 builder.AddProject<Projects.Tauchplaetze_Web>("web")

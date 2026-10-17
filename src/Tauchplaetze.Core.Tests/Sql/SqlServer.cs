@@ -34,7 +34,7 @@ public sealed class SqlServer : IAsyncLifetime
             return;
         }
 
-        container = new MsSqlBuilder(Image).Build();
+        container = new MsSqlBuilder(Image).WithName($"tauchplaetze-tests-sqlserver-{Guid.NewGuid().ToString("N")[..8]}").Build();
         await container.StartAsync();
 
         var builder = Host.CreateApplicationBuilder();
