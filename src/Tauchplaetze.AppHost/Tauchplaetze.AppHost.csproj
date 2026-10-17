@@ -7,7 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Aspire 13.6.1 brings MessagePack 2.5.302 (GHSA-qhrr-8q5h-9q3h). Pin the patched version. -->
-    <PackageReference Include="MessagePack" Version="2.5.307" />
+    <PackageReference Include="MessagePack" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../spikes/Tauchplaetze.Spike.DataSources/Tauchplaetze.Spike.DataSources.csproj" />

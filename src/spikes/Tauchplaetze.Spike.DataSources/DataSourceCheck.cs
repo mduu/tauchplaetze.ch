@@ -26,14 +26,14 @@ internal class DataSourceCheck(
     private const int PrecipitationDays = 3;
     private const int MinDiveWindowHours = 7;
 
-    private static readonly TimeZoneInfo swissTime = TimeZoneInfo.FindSystemTimeZoneById("Europe/Zurich");
+    private static readonly TimeZoneInfo SwissTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Zurich");
 
     private readonly SpikeOptions settings = options.Value;
 
     public async Task<SpikeReport> Run(SpikeSite site, CancellationToken ct)
     {
         var now = time.GetUtcNow();
-        var today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(now, swissTime).DateTime);
+        var today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(now, SwissTimeZone).DateTime);
         var dayCount = Math.Max(settings.ForecastDays, settings.WeatherModels.Select(m => m.ForecastDays).DefaultIfEmpty(0).Max());
         var days = Enumerable.Range(0, dayCount).Select(today.AddDays).ToList();
 
@@ -223,7 +223,7 @@ internal class DataSourceCheck(
             var status = withWind.Count == 0 ? CategoryStatus.Missing : nullHours == 0 ? CategoryStatus.Ok : CategoryStatus.Partial;
             var summary = $"{model.Model}: {result.Hours.Count} hours, wind until {lastHour:yyyy-MM-dd HH:mm} local, "
                           + $"{nullHours} hours without wind, grid point {result.GridLatitude:0.000}/{result.GridLongitude:0.000}, elevation {result.Elevation:0} m";
-            DateTimeOffset? latest = lastHour is { } local ? new DateTimeOffset(local, swissTime.GetUtcOffset(local)) : null;
+            DateTimeOffset? latest = lastHour is { } local ? new DateTimeOffset(local, SwissTimeZone.GetUtcOffset(local)) : null;
 
             categories.Add(new CategoryResult(category, status, summary, latest, [CallInfo.From(response)]));
             models.Add(new ModelWeather(model.Model, result.Hours));
@@ -327,7 +327,7 @@ internal class DataSourceCheck(
     private static Dictionary<DateOnly, TemperatureProfile> ProfilesAtNoon(DepthTimeSeries series)
     {
         var localDays = series.Times
-            .Select(t => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(t, swissTime).DateTime))
+            .Select(t => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(t, SwissTimeZone).DateTime))
             .Distinct();
 
         return localDays
@@ -375,7 +375,7 @@ internal class DataSourceCheck(
     private static DateTimeOffset ToUtc(DateOnly day, int localHour)
     {
         var local = day.ToDateTime(new TimeOnly(localHour, 0));
-        return new DateTimeOffset(local, swissTime.GetUtcOffset(local)).ToUniversalTime();
+        return new DateTimeOffset(local, SwissTimeZone.GetUtcOffset(local)).ToUniversalTime();
     }
 
     private static double? Round(double? value) => value is null ? null : Math.Round(value.Value, 1);

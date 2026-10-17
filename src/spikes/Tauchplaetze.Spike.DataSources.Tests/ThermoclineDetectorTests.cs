@@ -5,7 +5,7 @@ namespace Tauchplaetze.Spike.DataSources.Tests;
 public class ThermoclineDetectorTests
 {
     // Delft3D-FLOW profile at Riff Williams, 2026-10-17 00:00 UTC (subset of the levels).
-    private static readonly TemperatureProfile autumnProfile = Profile(
+    private static readonly TemperatureProfile AutumnProfile = Profile(
         (0.05, 18.76), (2.25, 18.83), (5.5, 18.69), (8.125, 18.60), (10.125, 18.56), (11.125, 18.51), (12.125, 18.36),
         (12.75, 18.16), (13.75, 17.64), (14.75, 16.98), (15.875, 16.17), (16.875, 15.47), (17.875, 14.76),
         (18.5, 14.39), (19.5, 13.74), (20.5, 13.11), (21.5, 12.49), (22.5, 11.89), (23.5, 11.31), (24.5, 10.74),
@@ -18,7 +18,7 @@ public class ThermoclineDetectorTests
         const double threshold = 0.5;
 
         // Act
-        var thermocline = ThermoclineDetector.Detect(autumnProfile, threshold);
+        var thermocline = ThermoclineDetector.Detect(AutumnProfile, threshold);
 
         // Assert
         thermocline.ShouldNotBeNull();
@@ -44,10 +44,10 @@ public class ThermoclineDetectorTests
     public void Detect_HigherThreshold_GivesThinnerLayer()
     {
         // Arrange
-        var lowThreshold = ThermoclineDetector.Detect(autumnProfile, 0.5)!;
+        var lowThreshold = ThermoclineDetector.Detect(AutumnProfile, 0.5)!;
 
         // Act
-        var highThreshold = ThermoclineDetector.Detect(autumnProfile, 0.6)!;
+        var highThreshold = ThermoclineDetector.Detect(AutumnProfile, 0.6)!;
 
         // Assert
         highThreshold.Top.ShouldBeGreaterThanOrEqualTo(lowThreshold.Top);
@@ -61,7 +61,7 @@ public class ThermoclineDetectorTests
     public void TemperatureAt_DepthBetweenLevels_InterpolatesLinearly(double depth, double expected)
     {
         // Act
-        var temperature = autumnProfile.TemperatureAt(depth);
+        var temperature = AutumnProfile.TemperatureAt(depth);
 
         // Assert
         temperature.ShouldNotBeNull();
@@ -72,7 +72,7 @@ public class ThermoclineDetectorTests
     public void TemperatureAt_BelowDeepestLevel_ReturnsNull()
     {
         // Act
-        var temperature = autumnProfile.TemperatureAt(60);
+        var temperature = AutumnProfile.TemperatureAt(60);
 
         // Assert
         temperature.ShouldBeNull();
