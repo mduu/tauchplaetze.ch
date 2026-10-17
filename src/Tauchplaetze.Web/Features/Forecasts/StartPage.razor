@@ -1,0 +1,27 @@
+@page "/{Lang}"
+@inject IStringLocalizer<SharedStrings> L
+@inject NavigationManager Navigation
+
+<PageTitle>@L["Start_Title"] · @L["Brand"]</PageTitle>
+<HeadContent>
+    <meta name="description" content="@L["Start_MetaDescription"]" />
+</HeadContent>
+<HreflangLinks />
+
+<section class="start">
+    <h1>@L["Start_Title"]</h1>
+    <p class="lead">@L["Start_Lead"]</p>
+</section>
+
+@code {
+    [Parameter]
+    public string? Lang { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (!Languages.IsSupported(Lang))
+        {
+            Navigation.NotFound();
+        }
+    }
+}

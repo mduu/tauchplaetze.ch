@@ -1,0 +1,11 @@
+.start {
+    display: grid;
+    gap: 24px;
+    padding-block: 8vh;
+}
+
+.lead {
+    margin: 0;
+    font-size: 19px;
+    color: var(--color-text-muted);
+}

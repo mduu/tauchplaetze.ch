@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Brand" xml:space="preserve"><value>tauchplaetze.ch</value></data>
+  <data name="Brand_Home" xml:space="preserve"><value>Aller à la page d'accueil de tauchplaetze.ch</value></data>
+  <data name="SkipToContent" xml:space="preserve"><value>Aller au contenu</value></data>
+  <data name="Language_Choose" xml:space="preserve"><value>Choisir la langue</value></data>
+  <data name="Language_de" xml:space="preserve"><value>Deutsch</value></data>
+  <data name="Language_en" xml:space="preserve"><value>English</value></data>
+  <data name="Language_fr" xml:space="preserve"><value>Français</value></data>
+  <data name="Language_it" xml:space="preserve"><value>Italiano</value></data>
+  <data name="Start_Title" xml:space="preserve"><value>Où plonger aujourd'hui ?</value></data>
+  <data name="Start_Lead" xml:space="preserve"><value>La prévision de plongée quotidienne pour les lacs et rivières de Suisse. Bientôt ici.</value></data>
+  <data name="Start_MetaDescription" xml:space="preserve"><value>Guide des sites de plongée des lacs et rivières de Suisse, avec une prévision quotidienne issue de données ouvertes.</value></data>
+  <data name="Footer_NeverDiveAlone" xml:space="preserve"><value>Ne plonge jamais seul.</value></data>
+  <data name="Footer_Indicator" xml:space="preserve"><value>La prévision est un indicateur, pas une garantie de visibilité.</value></data>
+  <data name="NotFound_Title" xml:space="preserve"><value>Page introuvable</value></data>
+  <data name="NotFound_Text" xml:space="preserve"><value>Cette page n'existe pas. La page d'accueil peut t'aider.</value></data>
+  <data name="NotFound_Home" xml:space="preserve"><value>Aller à la page d'accueil</value></data>
+  <data name="Error_Title" xml:space="preserve"><value>Une erreur s'est produite</value></data>
+  <data name="Error_Text" xml:space="preserve"><value>Merci de réessayer dans quelques minutes.</value></data>
+</root>

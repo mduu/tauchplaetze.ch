@@ -1,0 +1,31 @@
+.language-switch ul {
+    display: flex;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.language-switch a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: var(--radius-pill);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+}
+
+.language-switch a:hover {
+    color: var(--color-text);
+}
+
+.language-switch a[aria-current="true"] {
+    background: var(--color-primary);
+    color: var(--color-bg);
+}

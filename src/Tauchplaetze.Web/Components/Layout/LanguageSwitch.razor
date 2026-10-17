@@ -1,0 +1,23 @@
+@inject IStringLocalizer<SharedStrings> L
+@inject NavigationManager Navigation
+
+<nav class="language-switch" aria-label="@L["Language_Choose"]">
+    <ul>
+        @foreach (var language in Languages.All)
+        {
+            <li>
+                <a href="@LinkFor(language)"
+                   hreflang="@language"
+                   lang="@language"
+                   aria-label="@L[$"Language_{language}"]"
+                   aria-current="@(language == Current ? "true" : null)">@language.ToUpperInvariant()</a>
+            </li>
+        }
+    </ul>
+</nav>
+
+@code {
+    private static string Current => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string LinkFor(string language) => LanguagePaths.Switch(Navigation.ToBaseRelativePath(Navigation.Uri), language);
+}

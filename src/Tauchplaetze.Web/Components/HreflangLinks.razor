@@ -1,0 +1,14 @@
+@inject NavigationManager Navigation
+
+<HeadContent>
+    @foreach (var language in Languages.All)
+    {
+        <link rel="alternate" hreflang="@language" href="@Absolute(language)" />
+    }
+    <link rel="alternate" hreflang="x-default" href="@Absolute(Languages.Default)" />
+</HeadContent>
+
+@code {
+    private string Absolute(string language) =>
+        Navigation.ToAbsoluteUri(LanguagePaths.Switch(Navigation.ToBaseRelativePath(Navigation.Uri), language)).ToString();
+}

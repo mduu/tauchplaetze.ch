@@ -1,0 +1,11 @@
+@page "/not-found"
+@inject IStringLocalizer<SharedStrings> L
+
+<PageTitle>@L["NotFound_Title"] · @L["Brand"]</PageTitle>
+<HeadContent>
+    <meta name="robots" content="noindex" />
+</HeadContent>
+
+<h1 class="status-title">@L["NotFound_Title"]</h1>
+<p>@L["NotFound_Text"]</p>
+<p><a href="/@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">@L["NotFound_Home"]</a></p>

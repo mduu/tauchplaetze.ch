@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <UserSecretsId>3e1c9a4d-6b2f-4f7e-8d5a-2c9b7e4f1a10</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Tauchplaetze.Core/Tauchplaetze.Core.csproj" />
+    <ProjectReference Include="../Tauchplaetze.ServiceDefaults/Tauchplaetze.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Tauchplaetze.Web.Tests" />
+  </ItemGroup>
+
+</Project>

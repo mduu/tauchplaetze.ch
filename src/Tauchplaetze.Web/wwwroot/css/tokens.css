@@ -1,0 +1,38 @@
+/* Design Tokens «Kaltwasser-Nacht» (design-system.md). */
+:root {
+  --color-bg: #071417;
+  --color-surface: #0A1D20;
+  --color-surface-raised: #0D2427;
+  --color-border: #1D3E41;
+  --color-divider: #16312F;
+  --color-border-strong: #2E5552;
+  --color-text: #E4EFEC;
+  --color-text-body: #CFE0DC;
+  --color-text-muted: #A9C2BE;
+  --color-text-subtle: #8FAAA6;
+  --color-primary: #7FE3D6;
+  --color-primary-hover: #B8F2EA;
+  --color-signal: #FF9A4D;
+  --color-bubble: #9FE9DF;
+  --color-index-high: #7FE3D6;
+  --color-index-mid: #4FB3A9;
+  --color-index-low: #2F6B66;
+  --color-index-low-text: #5E9C96;
+  --color-lake-epilimnion: #1A5053;
+  --color-lake-thermocline: #13393C;
+  --color-lake-hypolimnion: #0B272A;
+  --color-rock: #05161A;
+  --color-wood: #B88A5A;
+
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --radius-card: 28px;
+  --radius-tile: 20px;
+  --radius-tile-sm: 14px;
+  --radius-pill: 999px;
+  --space-gutter: 24px;
+  --space-section: 52px;
+  --content-max: 1240px;
+}

@@ -1,0 +1,10 @@
+@page "/error"
+@inject IStringLocalizer<SharedStrings> L
+
+<PageTitle>@L["Error_Title"] · @L["Brand"]</PageTitle>
+<HeadContent>
+    <meta name="robots" content="noindex" />
+</HeadContent>
+
+<h1 class="status-title">@L["Error_Title"]</h1>
+<p>@L["Error_Text"]</p>
