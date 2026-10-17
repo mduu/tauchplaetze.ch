@@ -43,7 +43,7 @@ Quelle: Microsoft Learn, «Azure SQL Database free offer».
 
 | Container | Inhalt | Zugriff |
 |---|---|---|
-| `media` | Originale und Bildgrössen | öffentlich lesbar über Cloudflare oder über Endpunkt der App (Entscheid in `open-questions.md`) |
+| `media` | Originale und Bildgrössen | öffentlich lesbar, Cloudflare davor (Entscheid 17.10.2026: einfacher und günstiger als ein Endpunkt der App) |
 | `forecast-raw` | Rohdaten der Läufe als JSON | privat |
 | `models` | ML-Modelle (Phase 2) | privat |
 | `locks` | Blob Leases für Job-Sperren | privat |

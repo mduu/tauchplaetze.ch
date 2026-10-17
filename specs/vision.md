@@ -42,7 +42,7 @@ Taucherinnen und Taucher in der Schweiz stellen vor jedem Wochenende dieselbe Fr
 
 ## Erfolgskriterien
 
-Phase MVP (ein See, 8 bis 12 Plätze):
+Phase MVP (Zürichsee, Zugersee und Rhein, je 8 bis 12 Plätze):
 
 - Leute aus der Szene reagieren mit «endlich!» und fragen nach weiteren Seen.
 - Shops und Clubs wollen als Füllstation eingetragen werden.

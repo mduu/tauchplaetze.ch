@@ -41,7 +41,7 @@ Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit
 - Bewertungen: pro Skala eine Auswahl 1–5 mit Kurztext der Stufe und «nicht bewertet». Skalen in `dive-site.md`.
 - Texte pro Sprache: Unter Wasser, Gefahren, Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten.
 - Texte: Deutsch ist Pflicht. EN/FR/IT sind optional.
-- Button «Fehlende Sprachen übersetzen» (Phase 1, optional): erzeugt einen Vorschlag per LLM und setzt `IsMachineTranslated = true`. Ein Redaktor prüft und speichert. Siehe `open-questions.md`.
+- Button «Fehlende Sprachen übersetzen» (Phase 1, optional): erzeugt einen Vorschlag per LLM und setzt `IsMachineTranslated = true`. Ein Redaktor prüft und speichert. Dienst: Claude API mit dem Glossar aus `ubiquitous-language.md` als Kontext (Entscheid 17.10.2026).
 - Optimistische Sperre über `RowVersion`. Hat jemand anders zwischenzeitlich gespeichert, erscheint ein Hinweis mit Vergleich.
 
 ### Revisionen

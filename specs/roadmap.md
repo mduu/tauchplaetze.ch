@@ -1,6 +1,6 @@
 # Roadmap
 
-Grundsatz: früh etwas Echtes zeigen. Zuerst **ein See richtig schön**, dann skalieren.
+Grundsatz: früh etwas Echtes zeigen. Zuerst **zwei Seen und ein Fluss richtig schön**, dann skalieren.
 
 ## Phase 0 – Fundament
 
@@ -28,7 +28,7 @@ Ziel: Gewissheit, dass die Prognose mit echten Daten trägt.
 - **Parallel:** Eawag anschreiben (Nutzung, Quellenangabe, Abfragefrequenz).
 - **Go/No-Go:** Ohne geklärten Datenzugang keine öffentliche Prognose.
 
-## Phase MVP – ein See, richtig schön
+## Phase MVP – zwei Seen und ein Fluss, richtig schön
 
 Ziel: Reaktion der Szene testen.
 
@@ -38,7 +38,9 @@ Ziel: Reaktion der Szene testen.
 - Prognose-Job mit `rules-1.0` und Datenstufen, Rohdaten in Blob Storage, Status im Admin. Quellen: Alplakes, Open-Meteo, SwissMetNet, BAFU (ADR-007).
 - SEO-Grundlagen: Titel, Meta, `hreflang`, Sitemap, JSON-LD.
 - Deploy auf Azure (Bicep, GitHub Actions, Cloudflare, Redirect `sichtweiten.ch`).
-- **Inhalt:** ein See vollständig (8 bis 12 Plätze auf Stufe 2 mit Fotos aus tauchfotos.ch). Alle weiteren bekannten Plätze als Stufe 0.
+- **Inhalt:** Zürichsee und Zugersee vollständig (je 8 bis 12 Plätze auf Stufe 2 mit Fotos aus tauchfotos.ch). Dazu der Rhein als erster Fluss. Alle weiteren bekannten Plätze als Stufe 0. Entscheid Marc, 17.10.2026: Marc taucht dort am meisten und kann die Prognose am besten beurteilen. Beide Seen haben ein 3D-Modell (Datenstufe 3).
+- **Inhalt pro Platz:** 3–6 starke Fotos aus den Originalen von tauchfotos.ch. Fotos der Ein- und Ausstiege nach und nach bei eigenen Tauchgängen.
+- **Rechtliches vor dem Go-Live:** Impressum, Datenschutz (nDSG), Haftungshinweis zur Prognose.
 - **Validierung:** Link an alte Kontakte, Clubs, Shops, Facebook- und WhatsApp-Gruppen. Erfolgskriterien in `vision.md`.
 
 ## Phase 1 – alle grossen Seen
