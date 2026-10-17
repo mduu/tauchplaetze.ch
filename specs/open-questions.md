@@ -30,7 +30,6 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 | 12 | Bilder direkt aus Blob (öffentlicher Container hinter Cloudflare) oder über einen Endpunkt der App? | Öffentlicher Container mit Cloudflare davor. Einfacher und günstiger. |
 | 13 | Maschinelle Übersetzung redaktioneller Inhalte: welcher Dienst? | Claude API mit dem Glossar aus `ubiquitous-language.md` als Kontext. Kosten pro Platz sehr gering. Erst in Phase 1. |
 | 14 | MeteoSchweiz direkt (Open Data) oder über die Alplakes API? | Zuerst Alplakes (ein Client). Direkt nur, falls Alplakes etwas fehlt. |
-| 15 | Sprache der Code-Kommentare: Englisch (wie feldnah) oder Deutsch (wie bau-ticker)? | Im Dossier gesetzt: Englisch in ASD-STE100. Bei Bedarf in `CLAUDE.md` umstellen. |
 | 16 | Status des Azure SQL Free Offer (GA oder Preview)? | In der FAQ von Microsoft Learn prüfen. Für das Projekt nicht entscheidend. |
 
 ## Inhaltlich

@@ -41,7 +41,7 @@ flowchart LR
 | Lokale Entwicklung | .NET Aspire (`Tauchplaetze.AppHost`) mit SQL Server und Azurite im Container |
 | Observability | OpenTelemetry über `ServiceDefaults`, Application Insights in Produktion |
 | ML (Phase 2) | ML.NET mit LightGBM |
-| Tests | xUnit, Shouldly, NSubstitute, Testcontainers (MsSql), ArchUnitNET |
+| Tests | xUnit, Testcontainers (MsSql), ArchUnitNET, Roslyn (Regeltests) |
 
 ## Projektstruktur
 
@@ -209,78 +209,124 @@ Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, ko
 
 - Lokal: User Secrets und Aspire.
 - Produktion: App-Service-Einstellungen. Zugriff auf SQL und Blob über **Managed Identity** (Entra-Authentifizierung), keine Passwörter im Connection String.
+- Secrets nie im Repository.
 - Optionen typisiert (`IOptions<T>`) und beim Start validiert (`ValidateOnStart`).
+- Settings mit Defaults im Code **und** in `appsettings.json`. Ein Test hält beide gleich. Im Betrieb überschreibbar als App Setting (`Section__Key`).
 
-## Fehler und Randfälle
+## Fehler und Edge Cases
 
 - Ein Command validiert seine Eingabe selbst. Ungültige Eingabe ergibt ein Ergebnis mit Fehlern, keine Exception.
-- Externe Quelle nicht erreichbar: Der Lauf schreibt einen Teilerfolg. Die Seite zeigt das Datenalter.
+- **Leer ist nicht dasselbe wie unbekannt.** Ein fehlender Wert (`null`) heisst «nicht erhoben» oder «keine Daten». Eine leere Liste heisst «keins». Beides wird unterschieden, gespeichert und getestet. Bei der Prognose ist ein fehlender Messwert nie `0`.
+- **Nicht raten.** Lässt sich ein Wert nicht zuverlässig bestimmen, bleibt er leer. Lieber eine Lücke als eine falsche Angabe.
+- **Datenalter zeigen.** Ein alter Wert erscheint nie als aktueller.
+- Failures externer Services halten den Betrieb nicht an, werden aber sichtbar (Log, Status des Laufs im Admin). Der Lauf schreibt einen Teilerfolg. Die Seite zeigt das Datenalter.
 - Unbekannter Slug: zuerst `SlugRedirects` prüfen (301), sonst 404.
 
 ## Coding Guidelines
 
 ### Sprache
 
-- Identifier, Typen, API-Felder, Log-Meldungen: Englisch.
-- Kommentare und Commits: Englisch in ASD-STE100.
-- Specs und ADRs: Deutsch.
-- Oberfläche: aus `.resx` (siehe `i18n.md`).
+| Ebene | Sprache |
+| :-- | :-- |
+| Bezeichner, Typen, Felder, API, Log-Meldungen | Englisch |
+| Kommentare, Specs, ADRs, README, Commit-Nachrichten | Deutsch (Schweizer Schreibweise, «ss»), IT-Begriffe englisch |
+| Oberfläche | aus `.resx` in DE, EN, FR, IT (siehe `i18n.md`) |
+| `CLAUDE.md` | Englisch in ASD-STE100 |
+
+Entscheid Marc, 17.10.2026: Kommentare und Commits deutsch wie bei bau-ticker (offener Punkt #15 erledigt).
+
+Fachbegriffe übersetzt man nicht frei, sondern nach [ubiquitous-language.md](ubiquitous-language.md).
+
+**IT-Begriffe englisch im Original.** Im deutschen Fliesstext von Kommentaren, Specs, ADRs, README und Commit-Nachrichten stehen IT-Begriffe so, wie die Fachwelt sie nennt, nicht eingedeutscht. Also Storage (bzw. konkret Blob, Container), Cache, Queue, Lock, Run, Query, API bzw. Interface, Timestamp, Raw Data, Retry, Backfill, Call, Key, Row, Column, Deployment, Contract und Contract Test, Background Service, Output Cache. Nicht «Ablage», «Zwischenspeicher», «Warteschlange», «Sperre», «Abfrage», «Schnittstelle», «Zeitstempel», «Rohdaten», «Wiederholung» (eines Calls), «Aufruf», «Schlüssel», «Zeile», «Spalte», «Vertrag», «Hintergrunddienst». **Deutsch bleiben** die eingebürgerten Wörter Domäne, Datensatz, Datenbank, Verbindung, Dienst, Abruf, Lauf (des Prognose-Jobs) und alle Fachbegriffe aus `ubiquitous-language.md` (Tauchplatz, Sprungschicht, Tauch-Index, Ausbaustufe, Datenstufe …). Was Oberfläche ist, folgt `i18n.md` und `ux.md`.
+
+Razor-Komponenten und Seiten heissen englisch (`DiveSitePage`, `ForecastRanking`). Die **URLs** folgen `seo.md`.
 
 ### C#
 
-- Microsoft Best Practices. Moderne C#-Features (Primary Constructors, Records, Collection Expressions, Pattern Matching).
-- Felder in camelCase, kein `_`-Präfix.
-- Kein `Async`-Suffix (`GetAll()` statt `GetAllAsync()`).
-- **Geschweifte Klammern bei jedem `if`/`else`**, auch bei Einzeilern.
-- `Nullable` aktiv. Warnungen als Fehler (`TreatWarningsAsErrors`).
-- `CancellationToken` durchreichen.
+- Microsoft-Konventionen, moderne C#-Features (Records, Primary Constructors, Collection Expressions, Pattern Matching).
+- **Kein `Async`-Suffix:** `GetAll()`, nicht `GetAllAsync()`. Ausgenommen sind Framework Contracts, die den Namen vorgeben.
+- Felder in camelCase ohne `_`-Präfix, statische Felder und Konstanten PascalCase (IDE1006, im Build erzwungen).
+- **Geschweifte Klammern bei `if`/`else` immer**, auch bei Einzeilern (IDE0011, im Build erzwungen).
+- `TreatWarningsAsErrors`, `Nullable` und Code-Stil im Build sind an (`Directory.Build.props`, `.editorconfig`). Ein überflüssiges `using` ist ein Fehler.
+- Package Versions zentral in `Directory.Packages.props`.
+- `CancellationToken ct` wird durchgereicht.
 
 ### Code-Dokumentation
 
-- Zuerst den Code klarer machen (Extract Method, sprechende Namen).
-- Nur kommentieren, was der Code nicht zeigt. So kurz wie möglich.
-- Kommentare zu Members als XML-Doc (`///`). Klassen, Interfaces, Enums (jeder Wert), öffentliche Methoden und Properties tragen `<summary>`.
-- Private Members in der Regel nicht kommentieren.
+- **Der Code ist die Dokumentation.** Namen, Typen und kleine Methoden sagen, was geschieht. Was sich aus dem Code lesen lässt, wird nicht noch einmal beschrieben.
+- **Im Zweifel «Extract Method» statt Kommentar.** Braucht ein Block eine Erklärung, wird er zu einer Methode, deren Name sagt, *was* sie tut – nicht *wie*: `IsStale(observation)` statt eines Kommentars «prüft, ob der Satellitenwert älter als 14 Tage ist» über drei Zeilen Datumsrechnung.
+- **Wenn dokumentiert wird, dann mit XML-Doc** (`///` mit `<summary>`, wo sinnvoll `<param>`, `<returns>`, `<remarks>`, `<see cref="…"/>`), damit es in der Code Completion erscheint. Nicht wiederholen, was der Name sagt, sondern das Warum, nicht offensichtliche Randbedingungen und verwandte Typen.
 
-### Schreiben (Specs)
+  | Element | XML-Doc |
+  | :-- | :-- |
+  | Interfaces und ihre Members | **Pflicht** – dort gibt es keinen Code, der erklärt |
+  | `public` und `protected` | optional – wo der Name allein nicht reicht |
+  | `private` und `internal` | nicht erwartet – der Code ist die Erklärung |
+- **Kommentare sind die Ausnahme.** Im Zweifel kein Kommentar. Design, Geschichte und Alternativen gehören in Specs und ADRs, nicht in den Code.
+- **Nur mit echtem Mehrwert, so kurz wie möglich.** Ein Kommentar sagt, was der Code nicht zeigen kann: eine Eigenheit einer externen API, ein Fall aus dem Betrieb, eine bewusst verworfene Alternative. In der Regel ein Satz, bevorzugt im `<remarks>` des Members.
+- Belege mit Datum, wo eine Regel aus einem echten Fall stammt («Spike 17.10.2026: …»), und Verweise auf ADR oder Spec-Abschnitt statt sie zu wiederholen.
+- **Keine Kommentare in Method Bodies** im Produktivcode. Ausgenommen sind Tests (`// Arrange` …), Migrations, erzeugter Code und Anweisungen an Werkzeuge (`// language=regex`, `// ReSharper disable`). Ein Regeltest (Roslyn) prüft es.
 
-Kurze Sätze. Eine Aussage pro Satz. Aktiv. Keine Füllwörter.
+### Schreiben
+
+Gilt für Kommentare, Specs, ADRs, README und Commit-Nachrichten.
+
+- **Deutsch nach den Grundsätzen von ASD-STE100:** kurze Sätze, eine Aussage pro Satz, Aktiv statt Passiv, keine Füllwörter. Keine Gedankenstriche oder Semikolons, die zwei Aussagen verbinden: zwei Sätze schreiben.
+- **Die Stärke einer Anforderung bleibt:** «muss», «soll» und «kann» nicht gegeneinander tauschen.
+- **Englischen Text in ASD-STE100** (Simplified Technical English) schreiben, mit dem Skill in [`.claude/skills/asd-ste100/`](../.claude/skills/asd-ste100/SKILL.md).
+- Oberflächentexte folgen `ux.md` und `i18n.md`, nicht diesem Abschnitt.
 
 ### Commits und Pull Requests
 
-- Conventional Commits: `type(scope): description`, z.B. `feat(forecasts): detect thermocline from profile`.
-- Scope ist der Slice-Name in Kleinbuchstaben.
-- PR-Beschreibung kurz. Sie wird die Squash-Commit-Nachricht.
+- **Format nach [Conventional Commits](https://www.conventionalcommits.org/):** `typ(bereich): Beschreibung`, etwa `feat(forecasts): Sprungschicht aus dem Profil bestimmen`. Typen: `feat`, `fix`, `docs`, `refactor`, `test`, `build`, `ci`, `chore`. Der Bereich ist der Slice-Name in Kleinbuchstaben (`forecasts`, `divesites`, `editorial` …) oder ein Querschnitt (`specs`, `agents`, `infra`).
+- **Der PR-Titel folgt demselben Format.** Beim Squash-Merge wird er zum Commit-Titel auf `main`.
+- **Die Beschreibung des PR wird zur Commit-Nachricht.** Darum kurz: wenige Sätze, was sich ändert und warum. Kein HTML, keine Links oder Verweise auf Claude, keine Sitzungs-IDs, kein `Co-Authored-By`. Einzelheiten gehören in die Specs.
+- Die Sprache folgt dem Abschnitt «Schreiben»: Deutsch, IT-Begriffe englisch.
+- Vor jedem Push läuft der Review (`.claude/skills/review/`).
 
 ## Testing
 
-### Was getestet wird (verbindlich)
+### Was getestet wird
 
-- **Verhalten, nicht Mapping.** Keine Tests, die Properties durchreichen und zurücklesen.
-- **Keine Mock-Aufruf-Tests auf dünnen Wrappern** (z.B. um das Blob-SDK).
-- **Lohnt sich:** Tauch-Index und Teilwerte, Sprungschicht-Erkennung, Ausbaustufen, Revisionen und Wiederherstellen, Slug-Redirects, Umkreissuche, Fallback der Sprachen, Verhalten bei fehlenden Daten.
-- **AAA-Kommentare:** `// Arrange`, `// Act`, `// Assert`.
+- **Ein Test muss sich lohnen.** Getestet wird, wo das Prüfen von Logik einen echten Nutzen bringt: Er fängt einen Fehler, den man sonst erst im Betrieb sähe, oder hält eine Regel fest, die leicht unbemerkt bricht. Coverage ist kein Ziel.
+- **Kein Test doppelt.** Vor einem neuen Test prüfen, ob die Regel schon getestet ist. Derselbe Fall nicht auf mehreren Ebenen (Handler, HTTP), ausser die Ebene zeigt etwas Eigenes (HTTP: Anmeldung, Routing, Sprachpräfix, Output Cache). Varianten derselben Regel als Theory. Asserts auf sichtbaren Text oder `data-`-Attribute, nicht auf CSS-Klassen und Markup.
+- **Black-Box-Tests.** Das System under Test (SUT) wird über seine öffentliche API getestet. Für die erwarteten Fälle wird der Input gegeben und der erwartete Output geprüft. Keine Prüfung interner Zustände, privater Members oder der Reihenfolge interner Calls. So überlebt ein Test jedes Refactoring, das das Verhalten nicht ändert.
+- **Was ist das SUT?** Getestet wird, was die Regel trägt: ein Use Case oder ein einzelner Baustein.
+  - **Ein Use Case** wird über seinen Handler oder über HTTP getestet.
+  - **Eine `internal` Klasse darf direkt getestet werden, wenn sie selbst das SUT ist**, etwa `DiveIndexCalculator`, `ThermoclineDetector`, `ContentLevelRule` oder ein Parser einer Datenquelle. Dafür gibt es `InternalsVisibleTo`. Auch dann gilt Black-Box.
+  - **Arrange und Assert dürfen die Datenbank direkt nutzen**, wenn die Regel den gespeicherten Zustand betrifft (Idempotenz: «ein zweiter Lauf schreibt keine zweite Row», Revisionen) oder wenn sich die Ausgangslage über keinen Command herstellen lässt (ein Prognose-Lauf von gestern, ein alter Snapshot).
+  - **Sonst über Commands und Queries.**
+- **Verhalten, nicht Mapping.** Keine Tests, die nur Eigenschaften durchreichen oder einen Mock Call zählen. Getestet wird ein Mapping erst, wenn es entscheidet (Fallbacks, Umrechnungen wie m/s in Bft, Regeln wie «leer ist nicht unbekannt»).
+- **Lohnt sich:** Tauch-Index und Teilwerte, Sprungschicht-Erkennung, Datenstufe und Ausbaustufe, Revisionen und Wiederherstellen, Slug-Redirects, Umkreissuche, Fallback der Sprachen, Verhalten bei fehlenden oder alten Daten, Parser mit **echten Antworten** der Quellen als Fixtures.
+- **Ein Fehler, der einmal vorkam, bekommt einen Test**, der ihn beim Namen nennt.
+- **Arrange / Act / Assert** als Kommentare (`// Arrange`, `// Act`, `// Assert`) trennen die drei Phasen jeder Testmethode. Tests ohne Setup dürfen `// Arrange` weglassen. Ist die erwartete Exception die Assertion, ist `// Act & Assert` zulässig. Prüft ein Test eine Abfolge, dürfen sich `// Act` und `// Assert` wiederholen. Eine Begründung steht über `// Arrange`, nicht im Phasenkommentar.
+- **Test-Namen sind deutsche Sätze**, die die Regel aussprechen: `Ohne_Satellitenwert_der_letzten_14_Tage_ist_die_Klarheit_unbekannt` (Umlaute als ae/oe/ue).
 
 ### Aufbau
 
-- Reine Logik (Rechner, Regeln): Unit Tests ohne Datenbank.
-- Handler mit Datenbank: Testcontainers mit SQL Server. Grund: Geodaten (`geography`) laufen nicht im InMemory-Provider.
-- Datenquellen: Contract Tests mit gespeicherten Beispielantworten (`TestData/alplakes/*.json`).
-- **ArchitectureTests** (ArchUnitNET):
-  - `Tauchplaetze.Web` referenziert keine Typen aus `Tauchplaetze.Core.Data`.
-  - Handler sind `internal`.
+- **xUnit** mit `Assert`. **Keine Mocking Library.** Stattdessen kleine handgeschriebene Test Doubles (z.B. ein `HttpMessageHandler`, der gespeicherte Antworten liefert, ein fester `TimeProvider`).
+- Reine Logik (Rechner, Regeln, Parser): Unit Tests ohne Datenbank.
+- **Handler mit Datenbank: Testcontainers mit SQL Server.** Grund: Geodaten (`geography`) und die Umkreissuche laufen nicht im InMemory-Provider. Ein Container je Testlauf (Collection Fixture). Das Schema entsteht über die echten **Migrationen**. Vor jedem Test leert ein Reset alle Tabellen. Ein Test prüft, dass das Modell dem letzten Migrations-Snapshot entspricht (`HasPendingModelChanges`).
+- **Ohne Docker** werden die SQL-Tests lokal sichtbar **übersprungen** (mit Grund), nicht still grün. In der CI (`CI=true`) wird nie übersprungen.
+- **Integration Tests** der Fassade starten die App In-Memory (`Microsoft.AspNetCore.Mvc.Testing`) und prüfen über HTTP: Routing, Sprachpräfix, gerendertes HTML, Anmeldung.
+- **Datenquellen:** Contract Tests mit gespeicherten echten Antworten (`TestData/{quelle}/*.json`). Kein Test ruft eine echte externe Quelle auf.
+- **ArchitectureTests** (ArchUnitNET, jede Regel mit Gegenbeispiel):
+  - `Tauchplaetze.Web` hängt nicht von Infrastruktur ab, erkannt am **Assembly** (EF Core, `Microsoft.Data.SqlClient`, `Azure.*`), und nicht von Typen aus `Tauchplaetze.Core.Data`.
+  - Handler sind `internal` und liegen nur im Core, in `Commands/` oder `Queries/`.
   - Query-Handler schreiben nicht (`SaveChanges` nur in Command-Handlern).
   - Jede Datei in `Commands/` enthält genau einen `ICommandHandler`, jede in `Queries/` genau einen `IQueryHandler`.
+  - ArchUnitNET sieht Zugriffe in `async`-Lambdas nicht zuverlässig (Erfahrung aus bau-ticker). Für Methodenrümpfe kommt bei Bedarf eine Regel mit Mono.Cecil dazu.
+- **Regeltests im Code:** keine Kommentare in Method Bodies (Roslyn), `// Arrange` `// Act` `// Assert` in jeder Testmethode, gleiche Keys in allen vier `.resx`-Sätzen, Defaults im Code gleich wie in `appsettings.json`.
 
 ### Bibliotheken
 
 | Bibliothek | Zweck |
 |---|---|
-| xUnit | Test-Framework |
-| Shouldly | Assertions |
-| NSubstitute | Mocking |
+| xUnit | Test-Framework und Assertions |
 | Testcontainers.MsSql | echte Datenbank in Tests |
+| Microsoft.AspNetCore.Mvc.Testing | Integration Tests der Fassade |
 | ArchUnitNET | Architekturregeln |
+| Microsoft.CodeAnalysis (Roslyn) | Regeltests im Code |
 | bUnit | Komponenten-Tests der Fassade (sparsam) |
 
 ### Ausführen
@@ -290,3 +336,8 @@ cd src
 dotnet build
 dotnet test --no-build
 ```
+
+### Build vor dem Prüfen
+
+- Vor einem Push **sauber bauen**: `find . -maxdepth 3 -type d \( -name obj -o -name bin \) -exec rm -rf {} + && dotnet build` in `src`. Ein inkrementeller Build kann Razor-Fehler verdecken (Erfahrung aus bau-ticker, 03.10.2026).
+- Aspire baut die Web-App beim Neustart nicht neu. Erst `dotnet build`, dann neu starten.

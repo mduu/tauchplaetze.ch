@@ -77,7 +77,7 @@ Die Konventionen folgen **feldnah** und **bau-ticker** (beide private Repositori
 - Ein Use Case pro Datei: Record plus Handler mit der Methode `Handle`.
 - Eigene Contracts `ICommandHandler<TCommand, TResult>` und `IQueryHandler<TQuery, TResult>`, kein MediatR.
 - Core-Projekt als einziger Zugang zu Datenbank, Storage und externen Diensten. Web und Worker sind Fassaden.
-- xUnit, Shouldly, NSubstitute. Verhalten testen, nicht Mapping.
+- xUnit ohne Mocking Library, Testcontainers. Verhalten als Black-Box testen, nicht Mapping.
 
 Details stehen in `specs/architecture.md`.
 
