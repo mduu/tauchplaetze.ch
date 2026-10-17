@@ -12,21 +12,21 @@
 .brand {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     color: var(--color-text);
     text-decoration: none;
 }
 
 .brand-mark {
     display: block;
-    width: 43px;
-    height: 44px;
+    width: 62px;
+    height: 64px;
 }
 
 .brand-name {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 23px;
+    font-size: 26px;
     letter-spacing: -0.02em;
 }
 

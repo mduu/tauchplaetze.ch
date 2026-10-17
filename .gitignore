@@ -62,3 +62,6 @@ spike-output/
 
 # Claude Code (lokal)
 .claude/settings.local.json
+
+# Obsidian (lokale Einstellungen des Editors)
+.obsidian/

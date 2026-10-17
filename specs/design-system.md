@@ -57,7 +57,7 @@ Entwurf vom 17.10.2026, generiert mit Gemini. Die Quellen liegen in `assets/logo
 
 | Datei | Verwendung |
 |---|---|
-| `logo_large2.png` | Logo ohne Text: Berge, Seeschichten, Flosse, oranger Punkt. Im Kopf der Seite neben der Wortmarke (`wwwroot/img/logo-88.webp`, 44 px hoch). |
+| `logo_large2.png` | Logo ohne Text: Berge, Seeschichten, Flosse, oranger Punkt. Im Kopf der Seite neben der Wortmarke (`wwwroot/img/logo-128.webp`, 64 px hoch). |
 | `favicon.png` | Vereinfachte Form für kleine Grössen: Welle und Flosse im Kreis. Daraus `favicon.ico` (16, 32, 48 px), `icons/favicon-32.png` und `icons/apple-touch-icon.png` (180 px). |
 | `logo_large_preview.jpg` | Idee für Kopf und Wortmarke. Kein Asset für die Seite. |
 
