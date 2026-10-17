@@ -1,0 +1,71 @@
+# Features
+
+Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der Slice-Name entspricht dem Ordner unter `Features/`.
+
+## Phase MVP
+
+### Prognose («Wo tauchen?») – Slice `Forecasts`
+
+- Startseite mit der Frage «Wo tauchen wir heute?».
+- Tagesauswahl: heute plus die nächsten 2 bis 4 Tage (so weit die Daten reichen).
+- «Beste Wahl»: der Platz mit dem höchsten Tauch-Index im Umkreis.
+- Rangliste der Plätze im Umkreis mit Index, Balken und Begründung in einem Satz.
+- Umkreis: Standardort plus Radius. Der Ort kommt aus der Auswahl der Person oder (mit Zustimmung) aus dem Browser. Gespeichert nur im Browser.
+- Seen-Übersicht: Oberflächentemperatur und Klarheitstrend pro See.
+
+### Tauchplatz-Verzeichnis – Slice `DiveSites`
+
+- Liste aller Plätze, filterbar nach See, Schwierigkeit und Zugang.
+- Karte mit allen Plätzen (Leaflet mit swisstopo- oder OSM-Kacheln, siehe `open-questions.md`).
+- Tauchplatzseite:
+  - Hero mit Foto oder Unterwasser-Illustration, Name, See, Tags.
+  - Tauchbedingungen heute: Index, Temperaturprofil mit Sprungschicht, Sicht-Indikator, Wind, Algen.
+  - 5-Tage-Verlauf des Index.
+  - Beschreibung, Fotos, Tauchskizze (je nach Ausbaustufe).
+  - Praktisch: Parkierung, Einstieg, Hinweise, nächste Füllstation (Partnerplatz), Notfallnummern.
+  - Link zur Buddy-Gruppe der Region.
+- Ein Platz der Ausbaustufe 0 zeigt Prognose und Karte. Dazu den Hinweis «Dieser Platz ist erst im Verzeichnis».
+
+### Seen – Slice `Lakes`
+
+- Seeseite mit allen Plätzen des Sees, Temperaturverlauf und Übersichtskarte.
+
+### Redaktion (CMS) – Slice `Editorial`
+
+- Anmeldung für Redaktoren.
+- Tauchplatz erfassen mit Pflichtfeldern Name, Koordinate (Pin auf Karte), See.
+- Weitere Felder nach und nach ergänzen. Ausbaustufe wird automatisch berechnet.
+- Revisionen pro Platz mit Vergleich und Wiederherstellen.
+- Medien hochladen (Fotos), Bildlegende und Fotograf pro Sprache.
+- Details in `cms.md`.
+
+### Prognose-Import – Slice `Forecasts` (Worker)
+
+- Täglicher Job: Daten von Alplakes, MeteoSchweiz und BAFU holen.
+- Tauch-Index pro Platz und Tag berechnen und speichern.
+- Bei Ausfall einer Quelle: letzte Werte behalten, Datenalter anzeigen.
+- Details in `forecast.md` und `data-sources.md`.
+
+### Mehrsprachigkeit – querschnittlich
+
+- DE (Standard), EN, FR, IT ab dem ersten Release. Details in `i18n.md`.
+
+## Phase 1
+
+- **Meldungen (Slice `Reports`):** Sicht nach dem Tauchgang mit einem Klick melden (Sicht pro Tiefenband, optional Kommentar). Ohne Konto, mit Schutz gegen Missbrauch (Rate Limit, Captcha-freie Honeypot-Lösung).
+- **Partnerplätze (Slice `Partners`):** Tauchshops als «nächste Füllstation» pro Platz. Verwaltung im CMS.
+- **Buddy-Gruppen (Slice `BuddyGroups`):** WhatsApp-Gruppen pro Region verwalten und auf Platz- und Seeseiten verlinken.
+- **Weitere Redaktoren:** Rollen «Redaktor» und «Admin». Einladung per E-Mail.
+- **Videos:** Einbindung aus tauchvideos.ch.
+
+## Phase 2
+
+- **Eigenes Prognosemodell (Slice `Forecasts`):** ML-Modell mit Meldungen als Labels (siehe `forecast.md`).
+- **Benachrichtigungen:** «Sag mir, wenn am Walensee gute Bedingungen sind» (E-Mail oder Push über PWA).
+- **PWA:** installierbar, Favoriten offline.
+- **Native Apps:** später möglich, falls die Web-App trägt.
+
+## Bewusst nicht geplant
+
+- Forum, Chat, Logbuch, Kommentare unter Plätzen.
+- Konten für Besucher. Nur Redaktoren haben ein Konto.

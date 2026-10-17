@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Wo tauchen? – Tauchprognose Schweizer Seen</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#071417}
+a{color:#7FE3D6}a:hover{color:#B8F2EA}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #071417; color: #E4EFEC; font-family: 'IBM Plex Sans', system-ui, sans-serif">
+
+<header style="max-width: 1240px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="start.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #E4EFEC">
+<svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="#7FE3D6" stroke-width="2"></circle><path d="M5 15 Q10 11 15 15 T25 15" fill="none" stroke="#7FE3D6" stroke-width="2"></path><circle cx="15" cy="21" r="1.8" fill="#FF9A4D"></circle></svg>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 23px; letter-spacing: -0.02em">seegrund</span>
+</a>
+<nav aria-label="Hauptnavigation" style="display: flex; flex-wrap: wrap; gap: 6px">
+<a href="start.dc.html" aria-current="page" style="padding: 12px 14px; text-decoration: none; color: #E4EFEC; font-weight: 600; border-bottom: 2px solid #7FE3D6">Prognose</a>
+<a href="tauchplatz.dc.html" style="padding: 12px 14px; text-decoration: none; color: #A9C2BE">Tauchplätze</a>
+<a href="#seen" style="padding: 12px 14px; text-decoration: none; color: #A9C2BE">Seen</a>
+<a href="#buddy" style="padding: 12px 14px; text-decoration: none; color: #A9C2BE">Buddy-Gruppen</a>
+</nav>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #071417; background: #FF9A4D; padding: 5px 12px; border-radius: 999px">Entwurf · Beispieldaten</span>
+</header>
+
+<section style="max-width: 1240px; margin: 0 auto; padding: 48px 24px 8px">
+<p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #7FE3D6">Tauchprognose · Schweizer Seen</p>
+<h1 style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(46px, 7.5vw, 104px); line-height: 0.94; letter-spacing: -0.035em; margin: 14px 0 0; max-width: 13ch">{{headline}}</h1>
+<p style="font-size: 19px; line-height: 1.55; color: #A9C2BE; max-width: 58ch; margin: 22px 0 0">Für jeden Tauchplatz gerechnet aus Seemodellen, Satellitendaten und Wetter: wo es sich lohnt, wie kalt es in der Tiefe ist und wo die Sprungschicht liegt.</p>
+<div role="group" aria-label="Tag wählen" style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 30px">
+<sc-for list="{{days}}" as="d" hint-placeholder-count="3">
+<sc-if value="{{d.active}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{d.pick}}" aria-pressed="true" style="min-height: 46px; padding: 0 22px; border-radius: 999px; border: 1px solid #7FE3D6; background: #7FE3D6; color: #071417; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer">{{d.label}}</button>
+</sc-if>
+<sc-if value="{{d.inactive}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{d.pick}}" aria-pressed="false" style="min-height: 46px; padding: 0 22px; border-radius: 999px; border: 1px solid #2E5552; background: transparent; color: #E4EFEC; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer">{{d.label}}</button>
+</sc-if>
+</sc-for>
+<button type="button" style="min-height: 46px; padding: 0 18px; border-radius: 999px; border: 1px dashed #2E5552; background: transparent; color: #A9C2BE; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; cursor: pointer">Umkreis: 60 km ab Zürich · ändern</button>
+</div>
+</section>
+
+<section aria-label="Empfehlungen" style="max-width: 1240px; margin: 0 auto; padding: 32px 24px 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 24px; align-items: start">
+
+<article style="background: #0D2427; border: 1px solid #1D3E41; border-radius: 28px; overflow: hidden">
+<svg viewBox="0 0 600 300" width="100%" role="img" aria-label="Querschnitt durch den See: wärmere Oberflächenschicht, Sprungschicht, darunter kälteres und klareres Wasser" style="display: block">
+<rect x="0" y="0" width="600" height="34" fill="#0D2427"></rect>
+<rect x="0" y="34" width="600" height="106" fill="#1A5053"></rect>
+<rect x="0" y="140" width="600" height="26" fill="#13393C"></rect>
+<rect x="0" y="166" width="600" height="134" fill="#0B272A"></rect>
+<path d="M0 34 Q25 28 50 34 T100 34 T150 34 T200 34 T250 34 T300 34 T350 34 T400 34 T450 34 T500 34 T550 34 T600 34" fill="none" stroke="#7FE3D6" stroke-width="2"></path>
+<line x1="0" y1="140" x2="470" y2="140" stroke="{{accent}}" stroke-width="2" stroke-dasharray="7 6"></line>
+<text x="20" y="132" fill="{{accent}}" font-family="IBM Plex Mono, monospace" font-size="13">Sprungschicht bei {{top.thermo}}</text>
+<text x="20" y="192" fill="#9FE9DF" font-family="IBM Plex Mono, monospace" font-size="13">darunter klarer</text>
+<text x="210" y="80" fill="#E4EFEC" font-family="Bricolage Grotesque, sans-serif" font-size="30" font-weight="700">{{top.tSurf}}</text>
+<text x="210" y="100" fill="#A9C2BE" font-family="IBM Plex Mono, monospace" font-size="12">an der Oberfläche</text>
+<text x="210" y="232" fill="#E4EFEC" font-family="Bricolage Grotesque, sans-serif" font-size="30" font-weight="700">{{top.t20}}</text>
+<text x="210" y="252" fill="#A9C2BE" font-family="IBM Plex Mono, monospace" font-size="12">auf 20 m</text>
+<circle cx="420" cy="214" r="3.2" fill="none" stroke="#9FE9DF" stroke-width="1.5"></circle>
+<circle cx="426" cy="190" r="2.6" fill="none" stroke="#9FE9DF" stroke-width="1.5"></circle>
+<circle cx="419" cy="168" r="2.2" fill="none" stroke="#9FE9DF" stroke-width="1.5"></circle>
+<circle cx="425" cy="120" r="1.8" fill="none" stroke="#9FE9DF" stroke-width="1.5"></circle>
+<circle cx="420" cy="80" r="1.5" fill="none" stroke="#9FE9DF" stroke-width="1.5"></circle>
+<polygon points="600,34 600,300 468,300 486,252 474,212 494,170 480,124 500,78 522,34" fill="#05161A"></polygon>
+<line x1="556" y1="100" x2="568" y2="100" stroke="#4E7774" stroke-width="1"></line>
+<line x1="556" y1="166" x2="568" y2="166" stroke="#4E7774" stroke-width="1"></line>
+<line x1="556" y1="232" x2="568" y2="232" stroke="#4E7774" stroke-width="1"></line>
+<text x="588" y="104" fill="#8FAAA6" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="end">10</text>
+<text x="588" y="170" fill="#8FAAA6" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="end">20</text>
+<text x="588" y="236" fill="#8FAAA6" font-family="IBM Plex Mono, monospace" font-size="11" text-anchor="end">30 m</text>
+</svg>
+<div style="padding: 28px 30px 32px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div>
+<p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: {{accent}}">Beste Wahl</p>
+<h2 style="margin: 8px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 44px; line-height: 1; letter-spacing: -0.02em">{{top.name}}</h2>
+<p style="margin: 8px 0 0; font-size: 17px; color: #A9C2BE">{{top.place}} · {{top.lake}}</p>
+</div>
+<div style="text-align: right">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 64px; font-weight: 800; line-height: 0.9; color: #7FE3D6">{{top.scoreText}}</div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8FAAA6; margin-top: 6px">Tauch-Index / 10</div>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 10px">
+<div style="background: #0A1D20; border-radius: 14px; padding: 14px 16px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8FAAA6">Oberfläche</div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; margin-top: 4px">{{top.tSurf}}</div></div>
+<div style="background: #0A1D20; border-radius: 14px; padding: 14px 16px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8FAAA6">Auf 20 m</div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; margin-top: 4px">{{top.t20}}</div></div>
+<div style="background: #0A1D20; border-radius: 14px; padding: 14px 16px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8FAAA6">Sprungschicht</div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; margin-top: 4px">{{top.thermo}}</div></div>
+<div style="background: #0A1D20; border-radius: 14px; padding: 14px 16px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8FAAA6">Wind</div><div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; margin-top: 4px">{{top.wind}}</div></div>
+</div>
+<p style="margin: 0; font-size: 17px; line-height: 1.5; color: #CFE0DC">{{top.note}}</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<sc-if value="{{top.link}}" hint-placeholder-val="{{true}}">
+<a href="tauchplatz.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: #7FE3D6; color: #071417; font-weight: 600; text-decoration: none">Zum Tauchplatz</a>
+</sc-if>
+<sc-if value="{{top.nolink}}" hint-placeholder-val="{{false}}">
+<a href="tauchplatz.dc.html" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: #7FE3D6; color: #071417; font-weight: 600; text-decoration: none">Zum Tauchplatz (Beispielseite)</a>
+</sc-if>
+<a href="#buddy" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 1px solid #2E5552; color: #E4EFEC; text-decoration: none">Buddy für {{top.lake}} finden</a>
+</div>
+</div>
+</article>
+
+<article style="background: #0A1D20; border: 1px solid #1D3E41; border-radius: 28px; padding: 30px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; letter-spacing: -0.01em">Rangliste im Umkreis</h2>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8FAAA6">Tauch-Index 0–10</span>
+</div>
+<ol style="list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{sites}}" as="s" hint-placeholder-count="5">
+<li style="display: grid; grid-template-columns: 34px minmax(0, 1fr) 56px; gap: 14px; align-items: center; padding: 16px 4px; border-top: 1px solid #16312F">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #8FAAA6">{{s.rank}}</span>
+<div style="min-width: 0">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px">
+<sc-if value="{{s.link}}" hint-placeholder-val="{{false}}">
+<a href="tauchplatz.dc.html" style="font-size: 18px; font-weight: 600; color: #E4EFEC">{{s.name}}</a>
+</sc-if>
+<sc-if value="{{s.nolink}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 18px; font-weight: 600">{{s.name}}</span>
+</sc-if>
+<span style="font-size: 14px; color: #8FAAA6">{{s.place}} · {{s.lake}}</span>
+</div>
+<div style="height: 6px; background: #16312F; border-radius: 999px; margin-top: 10px; overflow: hidden">
+<div style="height: 100%; border-radius: 999px; width: {{s.barW}}; background: {{s.barC}}"></div>
+</div>
+<div style="font-size: 14px; color: #A9C2BE; margin-top: 8px">{{s.note}}</div>
+</div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700; text-align: right">{{s.scoreText}}</span>
+</li>
+</sc-for>
+</ol>
+<p style="margin: 18px 0 0; font-size: 13px; line-height: 1.5; color: #8FAAA6">Der Index ist ein Indikator aus Modell- und Wetterdaten, keine Garantie für die Sicht unter Wasser.</p>
+</article>
+</section>
+
+<section aria-labelledby="wie" style="max-width: 1240px; margin: 0 auto; padding: 56px 24px">
+<h2 id="wie" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(30px, 4vw, 44px); letter-spacing: -0.02em; max-width: 22ch">Keine Meldungen nötig. Der See verrät es selbst.</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 30px">
+<div style="border-top: 2px solid #7FE3D6; padding-top: 18px">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #7FE3D6">01 · Seemodell</div>
+<h3 style="margin: 10px 0 0; font-size: 20px">Temperatur in jeder Tiefe</h3>
+<p style="margin: 8px 0 0; font-size: 16px; line-height: 1.55; color: #A9C2BE">3D-Seemodelle prognostizieren fünf Tage voraus, wie warm es auf 0, 10, 20 und 30 m ist – und wo die Sprungschicht liegt.</p>
+</div>
+<div style="border-top: 2px solid #4FB3A9; padding-top: 18px">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #7FE3D6">02 · Satellit</div>
+<h3 style="margin: 10px 0 0; font-size: 20px">Klarheit und Algen</h3>
+<p style="margin: 8px 0 0; font-size: 16px; line-height: 1.55; color: #A9C2BE">Satellitendaten zeigen, wie trüb die Oberfläche ist und ob sich Algen ausbreiten.</p>
+</div>
+<div style="border-top: 2px solid #2F6B66; padding-top: 18px">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #7FE3D6">03 · Wetter und Zuflüsse</div>
+<h3 style="margin: 10px 0 0; font-size: 20px">Wind, Regen, Pegel</h3>
+<p style="margin: 8px 0 0; font-size: 16px; line-height: 1.55; color: #A9C2BE">Starker Regen trübt Zuflüsse, Wind wühlt das Ufer auf. Beides fliesst in den Index ein.</p>
+</div>
+<div style="border-top: 2px solid {{accent}}; padding-top: 18px">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: {{accent}}">04 · Community (Bonus)</div>
+<h3 style="margin: 10px 0 0; font-size: 20px">Meldungen schärfen das Modell</h3>
+<p style="margin: 8px 0 0; font-size: 16px; line-height: 1.55; color: #A9C2BE">Wer nach dem Tauchgang mit einem Klick die Sicht meldet, verbessert die Prognose. Nötig ist es nicht.</p>
+</div>
+</div>
+</section>
+
+<section id="seen" aria-labelledby="seen-titel" style="max-width: 1240px; margin: 0 auto; padding: 8px 24px 56px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px">
+<h2 id="seen-titel" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 32px; letter-spacing: -0.01em">Seen im Überblick</h2>
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8FAAA6">Oberflächentemperatur · Klarheit (Trend 7 Tage)</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 22px">
+<sc-for list="{{lakes}}" as="l" hint-placeholder-count="6">
+<div style="background: #0A1D20; border: 1px solid #1D3E41; border-radius: 20px; padding: 18px">
+<div style="font-weight: 600; font-size: 17px">{{l.name}}</div>
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 34px; font-weight: 700; margin-top: 10px">{{l.temp}}</div>
+<svg viewBox="0 0 140 36" width="100%" height="36" aria-hidden="true" style="display: block; margin-top: 8px"><polyline points="{{l.spark}}" fill="none" stroke="#7FE3D6" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline></svg>
+<div style="font-size: 14px; color: #A9C2BE; margin-top: 6px">{{l.trend}}</div>
+</div>
+</sc-for>
+</div>
+</section>
+
+<section id="buddy" aria-labelledby="buddy-titel" style="max-width: 1240px; margin: 0 auto; padding: 0 24px 64px">
+<div style="background: #FF9A4D; color: #071417; border-radius: 28px; padding: 36px 32px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px">
+<div style="max-width: 60ch">
+<h2 id="buddy-titel" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(28px, 3.6vw, 40px); letter-spacing: -0.02em">Gute Bedingungen, aber kein Buddy?</h2>
+<p style="margin: 10px 0 0; font-size: 17px; line-height: 1.5">Pro See eine WhatsApp-Gruppe. Kurz schreiben, wann du wo tauchen willst – fertig.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a href="#buddy" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border-radius: 999px; background: #071417; color: #E4EFEC; font-weight: 600; text-decoration: none">Gruppe Zürichsee</a>
+<a href="#buddy" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border-radius: 999px; border: 2px solid #071417; color: #071417; font-weight: 600; text-decoration: none">Gruppe Thunersee</a>
+<a href="#buddy" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border-radius: 999px; border: 2px solid #071417; color: #071417; font-weight: 600; text-decoration: none">Alle Gruppen</a>
+</div>
+</div>
+</section>
+
+<footer style="border-top: 1px solid #16312F">
+<div style="max-width: 1240px; margin: 0 auto; padding: 28px 24px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 14px; color: #8FAAA6; line-height: 1.6">
+<div style="max-width: 70ch">Daten: Eawag Alplakes (Seemodelle und Satellit), MeteoSchweiz, BAFU Hydrodaten. Prognosen sind Indikatoren. Tauche nie allein und innerhalb deiner Ausbildung.</div>
+<div>Notfall: 144 · Rega 1414</div>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF9A4D","options":["#FF9A4D","#FFC24D","#FF7A7A"]},"$preview":{"width":1440,"height":2400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var day = (this.state && this.state.day) || 0;
+    var accent = this.props.accent ?? '#FF9A4D';
+    var D = [
+      { label: 'Heute · Sa 17.', head: 'Wo tauchen wir heute?', sites: [
+        { name: 'Riff Williams', place: 'Herrliberg', lake: 'Zürichsee', score: 8.4, tSurf: '14.2 °C', t20: '8.1 °C', thermo: '16 m', wind: '2 Bft', note: 'Ruhiger See, unter der Sprungschicht deutlich klarer.', link: true },
+        { name: 'Gunten Bad', place: 'Gunten', lake: 'Thunersee', score: 8.1, tSurf: '13.1 °C', t20: '7.4 °C', thermo: '14 m', wind: '1 Bft', note: 'Satellit zeigt eine klare Oberfläche.', link: false },
+        { name: 'Beatenbucht', place: 'Beatenberg', lake: 'Thunersee', score: 7.6, tSurf: '13.0 °C', t20: '7.3 °C', thermo: '14 m', wind: '3 Bft', note: 'Etwas Wind am Nachmittag, morgens gehen.', link: false },
+        { name: 'Pflegeheim am See', place: 'Küsnacht', lake: 'Zürichsee', score: 7.2, tSurf: '14.3 °C', t20: '8.2 °C', thermo: '16 m', wind: '2 Bft', note: 'Gute Bedingungen, viel Bootsverkehr.', link: false },
+        { name: 'Riedsort', place: 'Weggis', lake: 'Vierwaldstättersee', score: 6.5, tSurf: '13.8 °C', t20: '7.9 °C', thermo: '15 m', wind: '2 Bft', note: 'Zuflüsse nach Regen noch trüb.', link: false }
+      ]},
+      { label: 'So 18.', head: 'Wo tauchen wir am Sonntag?', sites: [
+        { name: 'Gunten Bad', place: 'Gunten', lake: 'Thunersee', score: 8.7, tSurf: '13.0 °C', t20: '7.4 °C', thermo: '14 m', wind: '1 Bft', note: 'Windstill und klare Oberfläche, ideal für die Wand.', link: false },
+        { name: 'Beatenbucht', place: 'Beatenberg', lake: 'Thunersee', score: 8.2, tSurf: '13.0 °C', t20: '7.3 °C', thermo: '14 m', wind: '1 Bft', note: 'Ruhig, gute Sicht erwartet.', link: false },
+        { name: 'Riff Williams', place: 'Herrliberg', lake: 'Zürichsee', score: 7.0, tSurf: '14.0 °C', t20: '8.1 °C', thermo: '16 m', wind: '4 Bft', note: 'Westwind ab Mittag, am Morgen tauchen.', link: true },
+        { name: 'Riedsort', place: 'Weggis', lake: 'Vierwaldstättersee', score: 6.8, tSurf: '13.7 °C', t20: '7.9 °C', thermo: '15 m', wind: '2 Bft', note: 'Zuflüsse klären sich langsam.', link: false },
+        { name: 'Pflegeheim am See', place: 'Küsnacht', lake: 'Zürichsee', score: 6.1, tSurf: '14.1 °C', t20: '8.2 °C', thermo: '16 m', wind: '4 Bft', note: 'Sonntags viel Schiffsverkehr.', link: false }
+      ]},
+      { label: 'Mo 19.', head: 'Wo tauchen wir am Montag?', sites: [
+        { name: 'Riedsort', place: 'Weggis', lake: 'Vierwaldstättersee', score: 7.4, tSurf: '13.6 °C', t20: '7.8 °C', thermo: '15 m', wind: '1 Bft', note: 'Zuflüsse wieder klar, ruhiger Wochentag.', link: false },
+        { name: 'Gunten Bad', place: 'Gunten', lake: 'Thunersee', score: 7.3, tSurf: '12.9 °C', t20: '7.4 °C', thermo: '14 m', wind: '2 Bft', note: 'Leicht bewölkt, Sicht weiterhin gut.', link: false },
+        { name: 'Riff Williams', place: 'Herrliberg', lake: 'Zürichsee', score: 6.9, tSurf: '13.9 °C', t20: '8.0 °C', thermo: '17 m', wind: '2 Bft', note: 'Oberfläche nach dem Wind etwas aufgewühlt.', link: true },
+        { name: 'Beatenbucht', place: 'Beatenberg', lake: 'Thunersee', score: 6.6, tSurf: '12.9 °C', t20: '7.3 °C', thermo: '14 m', wind: '2 Bft', note: 'Regen am Morgen.', link: false },
+        { name: 'Pflegeheim am See', place: 'Küsnacht', lake: 'Zürichsee', score: 6.0, tSurf: '13.9 °C', t20: '8.1 °C', thermo: '17 m', wind: '2 Bft', note: 'Durchschnittliche Bedingungen.', link: false }
+      ]}
+    ];
+    var color = function (s) { return s >= 8 ? '#7FE3D6' : (s >= 7 ? '#4FB3A9' : '#2F6B66'); };
+    var cur = D[day];
+    var sites = cur.sites.map(function (s, i) {
+      return Object.assign({}, s, {
+        rank: String(i + 1),
+        nolink: !s.link,
+        scoreText: s.score.toFixed(1),
+        barW: Math.round(s.score * 10) + '%',
+        barC: color(s.score)
+      });
+    });
+    var self = this;
+    var days = D.map(function (d, i) {
+      return { label: d.label, active: i === day, inactive: i !== day, pick: function () { self.setState({ day: i }); } };
+    });
+    var lakes = [
+      { name: 'Zürichsee', temp: '14.2 °C', trend: 'Klarheit steigend', spark: '2,28 25,26 48,27 71,22 94,18 117,14 138,10' },
+      { name: 'Thunersee', temp: '13.1 °C', trend: 'Sehr klar, stabil', spark: '2,12 25,11 48,12 71,10 94,10 117,9 138,9' },
+      { name: 'Vierwaldstättersee', temp: '13.8 °C', trend: 'Nach Regen erholend', spark: '2,10 25,14 48,26 71,30 94,24 117,18 138,15' },
+      { name: 'Walensee', temp: '12.4 °C', trend: 'Klarheit stabil', spark: '2,16 25,15 48,17 71,16 94,15 117,16 138,15' },
+      { name: 'Zugersee', temp: '14.0 °C', trend: 'Leichte Algenaktivität', spark: '2,14 25,15 48,18 71,20 94,22 117,23 138,24' },
+      { name: 'Bodensee', temp: '14.6 °C', trend: 'Klarheit steigend', spark: '2,26 25,25 48,22 71,20 94,19 117,16 138,14' }
+    ];
+    return { accent: accent, headline: cur.head, days: days, top: sites[0], sites: sites, lakes: lakes };
+  }
+}
+</script>
+</body>
+</html>
