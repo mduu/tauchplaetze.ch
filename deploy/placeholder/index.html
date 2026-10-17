@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>tauchplaetze.ch – im Aufbau</title>
+  <meta name="description" content="Tauchplatzführer für die Schweizer Seen und Flüsse mit täglicher Tauchprognose. Im Aufbau.">
+  <meta name="robots" content="noindex">
+  <style>
+    :root {
+      --color-bg: #071417;
+      --color-surface: #0A1D20;
+      --color-border: #1D3E41;
+      --color-text: #E4EFEC;
+      --color-text-body: #CFE0DC;
+      --color-text-subtle: #8FAAA6;
+      --color-primary: #7FE3D6;
+      --color-signal: #FF9A4D;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px 16px;
+      background: linear-gradient(180deg, #0B272A 0%, var(--color-bg) 60%);
+      color: var(--color-text-body);
+      font: 17px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    main { max-width: 560px; width: 100%; }
+    h1 { margin: 0 0 4px; color: var(--color-text); font-size: 2rem; letter-spacing: -0.01em; }
+    .tag { margin: 0 0 28px; color: var(--color-signal); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    p { margin: 0 0 16px; }
+    .card { margin-top: 28px; padding: 16px 20px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; }
+    .card p { margin: 0 0 8px; color: var(--color-text-subtle); font-size: 0.95rem; }
+    .card p:last-child { margin: 0; }
+    a { color: var(--color-primary); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>tauchplaetze.ch</h1>
+    <p class="tag">Im Aufbau</p>
+    <p>Ein Tauchplatzführer für die Schweizer Seen und Flüsse. Für jeden Platz eine tägliche Tauchprognose aus offenen Daten: Seemodelle, Satellit, Wetter und Abfluss.</p>
+    <p>Die Frage dahinter: <strong>Wo soll ich heute tauchen gehen?</strong></p>
+    <p>Ein nicht-kommerzielles Projekt von Tauchern für Taucher.</p>
+    <div class="card">
+      <p lang="en">A dive site guide for Swiss lakes and rivers with a daily dive forecast. Coming soon.</p>
+      <p lang="fr">Un guide des sites de plongée des lacs et rivières de Suisse, avec une prévision quotidienne. Bientôt en ligne.</p>
+      <p lang="it">Una guida ai siti d'immersione dei laghi e fiumi svizzeri, con una previsione giornaliera. Presto online.</p>
+    </div>
+  </main>
+</body>
+</html>
