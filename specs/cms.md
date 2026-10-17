@@ -126,6 +126,13 @@ Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer D
 - Speichern ergibt eine neue Version (siehe «Mitwirken und Freigabe»). Bei Moderatoren und Admins ist sie sofort freigegeben.
 - Optimistische Sperre über `RowVersion`. Hat jemand anders zwischenzeitlich eine Version freigegeben, erscheint ein Hinweis mit Vergleich.
 
+### Erstimport
+
+- Die ersten Plätze stehen in `Features/Editorial/Seed/dive-sites.json` (Name, Gewässer, Koordinate, Gemeinde, Kanton).
+- `ImportDiveSites` legt fehlende Plätze an. Jeder bekommt eine freigegebene Version 1 mit der Notiz «Erstimport». Autor und Approver ist der erste Admin aus `Accounts:Admins`.
+- Der Slug kommt aus Name und Gemeinde (`riff-williams-herrliberg`). Ein Platz mit vorhandenem Slug bleibt unverändert. Ein zweiter Lauf ändert nichts.
+- Lokal läuft der Import beim Start der Web-App (`Database:PrepareOnStartup`).
+
 ### Vorschläge prüfen (Moderatoren)
 
 - Liste der offenen Vorschläge, älteste zuerst, mit Platz, Autor, Notiz und Alter der Basis.

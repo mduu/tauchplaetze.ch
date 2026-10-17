@@ -4,9 +4,11 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Operations.Commands;
 using Testcontainers.MsSql;
 
@@ -25,6 +27,9 @@ public sealed class SqlServer : IAsyncLifetime
 
     private IHost? host;
 
+    /// <summary>Der Inhalt der Versionen liegt in den Tests im Speicher. Die Datenbank ist echt.</summary>
+    internal InMemoryRevisionStore Revisions { get; } = new();
+
     public IServiceProvider Services => host?.Services ?? throw new InvalidOperationException("SQL Server läuft nicht. Test ohne [SqlFact]?");
 
     public async ValueTask InitializeAsync()
@@ -41,8 +46,10 @@ public sealed class SqlServer : IAsyncLifetime
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
         {
             [$"ConnectionStrings:{CoreRegistration.DatabaseConnectionName}"] = ConnectionString(),
+            [$"ConnectionStrings:{CoreRegistration.BlobsConnectionName}"] = "UseDevelopmentStorage=true",
         });
         builder.AddTauchplaetzeCore();
+        builder.Services.Replace(ServiceDescriptor.Singleton<IRevisionStore>(Revisions));
         host = builder.Build();
 
         await using var scope = Services.CreateAsyncScope();
@@ -83,6 +90,7 @@ public sealed class SqlServer : IAsyncLifetime
                   + string.Concat(tables.Select(t => $"DELETE FROM {t};"))
                   + string.Concat(tables.Select(t => $"ALTER TABLE {t} WITH CHECK CHECK CONSTRAINT ALL;"));
         await dbContext.Database.ExecuteSqlRawAsync(sql);
+        Revisions.Clear();
     }
 
     private string ConnectionString() =>
@@ -107,6 +115,12 @@ public abstract class SqlTest(SqlServer sql) : IAsyncLifetime
     }
 
     public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+
+    protected async Task<TResult> Command<TCommand, TResult>(TCommand command)
+    {
+        await using var scope = sql.Services.CreateAsyncScope();
+        return await scope.ServiceProvider.GetRequiredService<ICommandHandler<TCommand, TResult>>().Handle(command, TestContext.Current.CancellationToken);
+    }
 
     protected async Task<TResult> Query<TQuery, TResult>(TQuery query)
     {

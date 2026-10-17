@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Commands;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
@@ -24,10 +22,6 @@ public class SeedWaterBodiesTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(WaterBodyType.River, waterBodies.Single(w => w.Slug == "rhein").Type);
     }
 
-    private async Task<SeedWaterBodiesResult> Seed()
-    {
-        await using var scope = Sql.Services.CreateAsyncScope();
-        return await scope.ServiceProvider.GetRequiredService<ICommandHandler<SeedWaterBodiesCommand, SeedWaterBodiesResult>>()
-            .Handle(new SeedWaterBodiesCommand(), TestContext.Current.CancellationToken);
-    }
+    private Task<SeedWaterBodiesResult> Seed() =>
+        Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
 }

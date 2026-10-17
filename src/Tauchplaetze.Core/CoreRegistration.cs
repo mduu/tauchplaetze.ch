@@ -14,6 +14,9 @@ public static class CoreRegistration
     /// <summary>Name des Connection Strings der Datenbank (Aspire-Ressource).</summary>
     public const string DatabaseConnectionName = "tauchplaetze";
 
+    /// <summary>Name des Connection Strings von Blob Storage (Aspire-Ressource).</summary>
+    public const string BlobsConnectionName = "blobs";
+
     /// <summary>Meldet Datenbank, Handler und die Module aller Slices an.</summary>
     public static IHostApplicationBuilder AddTauchplaetzeCore(this IHostApplicationBuilder builder)
     {
@@ -22,6 +25,7 @@ public static class CoreRegistration
 
         builder.Services.AddDbContext<TauchplaetzeDbContext>(options => options.UseTauchplaetzeSqlServer(connectionString));
         builder.EnrichSqlServerDbContext<TauchplaetzeDbContext>();
+        builder.AddAzureBlobServiceClient(BlobsConnectionName);
 
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddHandlers(typeof(CoreRegistration).Assembly);

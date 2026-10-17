@@ -8,8 +8,11 @@ namespace Tauchplaetze.Web.Tests;
 /// <summary>Die Web-App im Speicher. Die Datenbank zeigt auf einen toten Port: Die öffentlichen Seiten dieser Tests lesen keine Daten.</summary>
 public sealed class WebApp : WebApplicationFactory<Program>
 {
-    protected override void ConfigureWebHost(IWebHostBuilder builder) =>
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
         builder.UseSetting("ConnectionStrings:tauchplaetze", "Server=127.0.0.1,1;Database=tauchplaetze;User Id=test;Password=test;TrustServerCertificate=true");
+        builder.UseSetting("ConnectionStrings:blobs", "UseDevelopmentStorage=true");
+    }
 
     public HttpClient Browser() => CreateClient(new WebApplicationFactoryClientOptions
     {
