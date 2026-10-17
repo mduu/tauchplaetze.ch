@@ -10,7 +10,8 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 - Tagesauswahl: heute plus die 4 folgenden Tage. Tage ohne Wasserdaten sind ein «Ausblick» mit Wind und Regen, ohne Index (`forecast.md`).
 - «Beste Wahl»: der Platz mit dem höchsten Tauch-Index im Umkreis.
 - Rangliste der Plätze im Umkreis mit Index, Balken und Begründung in einem Satz.
-- Umkreis: Standardort plus Radius. Der Ort kommt aus der Auswahl der Person oder (mit Zustimmung) aus dem Browser. Gespeichert nur im Browser.
+- Umkreis: Ort plus Radius. Der Ort kommt aus der Auswahl der Person oder (mit Zustimmung) aus dem Browser. Gespeichert nur im Browser.
+- Ohne gewählten Ort gibt es keinen Umkreis: «Beste Wahl» und Rangliste gelten für die ganze Schweiz (Entscheid Marc, 17.10.2026).
 - Seen-Übersicht: Oberflächentemperatur und Klarheitstrend pro See.
 - Die Rangliste zeigt nur Plätze mit Index. Jeder Platz zeigt seine Datenstufe (genau, Gewässer, Wetter).
 

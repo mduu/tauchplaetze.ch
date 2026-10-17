@@ -11,6 +11,7 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 
 ## Erledigt am 17.10.2026
 
+- #6 (Umkreis ohne gewählten Ort): ganze Schweiz, `features.md`.
 - #4 (Marke): «tauchplaetze.ch».
 - #9 (eine bestehende Plattform): vorerst keine Zusammenarbeit. Dort gibt es nur vereinzelte Daten.
 - #10 (Swiss Dive): vorerst nicht anschreiben.
@@ -26,9 +27,3 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 - #14 (MeteoSchweiz über Alplakes): Alplakes hat keinen Proxy mehr. ADR-007.
 - #22 (Name der Entität): `WaterBody`, URL `/gewaesser/{slug}`, `datastructure.md`, `i18n.md`.
 - #15 (Sprache der Kommentare): Deutsch, `architecture.md`.
-
-## Fachlich
-
-| #   | Frage                                                               | Vorschlag                                                                                                  |
-| --- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| 6   | Standard-Standort für den Umkreis, wenn die Person keinen wählt?    | Kein Umkreis: Rangliste aller Plätze der Schweiz. Mit Auswahl: Umkreis.                                    |

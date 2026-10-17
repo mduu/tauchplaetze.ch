@@ -37,7 +37,7 @@ Mockup: `design/start.dc.html`.
 1. Kopf: Logo, Navigation, Sprachwahl.
 2. Titel als Frage, abhängig vom gewählten Tag («… heute?», «… am Sonntag?»).
 3. Kurzer Satz, woher die Prognose kommt.
-4. Tagesauswahl als Pillen (heute plus 4 Tage). Tage ohne Index tragen den Zusatz «Ausblick». Umkreis-Auswahl («60 km ab Zürich · ändern»).
+4. Tagesauswahl als Pillen (heute plus 4 Tage). Tage ohne Index tragen den Zusatz «Ausblick». Umkreis-Auswahl («60 km ab Zürich · ändern»). Ohne gewählten Ort: «ganze Schweiz · Ort wählen».
 5. **Beste Wahl** (grosse Karte):
    - Seequerschnitt als Illustration mit Oberflächentemperatur, Temperatur auf 20 m und Sprungschicht.
    - Name, Ort, See, Tauch-Index gross.
