@@ -29,12 +29,6 @@
   <data name="Visibility_Satellite" xml:space="preserve"><value>Satellite du {0} : env. {1} m</value></data>
   <data name="Visibility_SatelliteOld" xml:space="preserve"><value>Dernière image satellite du {0}</value></data>
   <data name="Visibility_NoSatellite" xml:space="preserve"><value>Pas d'image satellite</value></data>
-  <data name="Tile_Suit" xml:space="preserve"><value>Combinaison</value></data>
-  <data name="Suit_DrySuit" xml:space="preserve"><value>Étanche</value></data>
-  <data name="Suit_WetSuit7" xml:space="preserve"><value>Humide 7 mm</value></data>
-  <data name="Suit_WetSuit5" xml:space="preserve"><value>Humide 5 mm</value></data>
-  <data name="Suit_At20m" xml:space="preserve"><value>{0} °C à 20 m</value></data>
-  <data name="Suit_Surface" xml:space="preserve"><value>eau {0} °C</value></data>
   <data name="Tile_Wind" xml:space="preserve"><value>Vent</value></data>
   <data name="Wind_Value" xml:space="preserve"><value>{0} Bft</value></data>
   <data name="Wind_Detail" xml:space="preserve"><value>{0} km/h, rafales {1} km/h</value></data>

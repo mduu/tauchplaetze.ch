@@ -27,13 +27,4 @@ public record ForecastDay(
     IReadOnlyList<ReasonCode> Reasons)
 {
     public bool IsOutlook => DiveIndex is null;
-
-    /// <summary>Anzug nach der Temperatur auf 20 m, sonst an der Oberfläche (`forecast.md`, «Anzug»).</summary>
-    public SuitAdvice? Suit => (TemperatureAt20m ?? SurfaceTemperature) switch
-    {
-        null => null,
-        < 14 => SuitAdvice.DrySuit,
-        < 20 => SuitAdvice.WetSuit7,
-        _ => SuitAdvice.WetSuit5,
-    };
 }

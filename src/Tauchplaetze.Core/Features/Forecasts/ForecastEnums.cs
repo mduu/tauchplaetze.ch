@@ -98,15 +98,3 @@ public enum ForecastRunStatus
     Failed,
 }
 
-/// <summary>Empfohlener Anzug nach der Temperatur auf 20 m.</summary>
-public enum SuitAdvice
-{
-    /// <summary>Trockentauchanzug, unter 14 °C.</summary>
-    DrySuit,
-
-    /// <summary>Nasstauchanzug 7 mm, 14 bis 20 °C.</summary>
-    WetSuit7,
-
-    /// <summary>Nasstauchanzug 5 mm, ab 20 °C.</summary>
-    WetSuit5,
-}

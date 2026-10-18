@@ -21,4 +21,4 @@ Entwurf vom 17.10.2026. Zwei Seiten im dunklen Schema «Kaltwasser-Nacht». Alle
 
 **Startseite:** Frage als Titel, Tagesauswahl, «Beste Wahl» mit Seequerschnitt (Oberflächentemperatur, 20 m, Sprungschicht), Rangliste im Umkreis, Erklärung der Datenquellen, Seen-Übersicht, Buddy-Block, Fuss mit Quellen.
 
-**Tauchplatzseite:** Hero mit Unterwasser-Silhouette, Tags, Tauchbedingungen mit Temperaturprofil und Sprungschicht, Kacheln (Sicht-Indikator, Anzug, Wind, Algen), 5-Tage-Verlauf, Beschreibung mit Foto-Platzhaltern, Tauchplatzskizze, Praktisch-Block mit Partnerplatz, Meldungen, Buddy-Block.
+**Tauchplatzseite:** Hero mit Unterwasser-Silhouette, Tags, Tauchbedingungen mit Temperaturprofil und Sprungschicht, Kacheln (Sicht-Indikator, Wind, Algen; der Anzug aus dem Mockup entfällt), 5-Tage-Verlauf, Beschreibung mit Foto-Platzhaltern, Tauchplatzskizze, Praktisch-Block mit Partnerplatz, Meldungen, Buddy-Block.

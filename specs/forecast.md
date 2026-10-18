@@ -42,7 +42,7 @@ Das Tauchfenster ist 08:00 bis 16:00 Uhr Lokalzeit.
 |---|---|---|---|
 | Temperaturprofil am Platz | Alplakes 3D (`depthtime` an der Koordinate) | Temperatur auf 0/10/20/30 m, Sprungschicht | MVP |
 | Temperaturprofil des Sees | Alplakes 1D Simstrat (Rückfall ohne 3D) | dito, seeweit | MVP |
-| Wassertemperatur des Flusses | BAFU-Station des Flusses | Temperatur, Anzug-Hinweis | MVP |
+| Wassertemperatur des Flusses | BAFU-Station des Flusses | Temperatur | MVP |
 | Klarheit (Secchi-Schätzung) | Alplakes Satellit Sentinel-3 `Zsd_lee` am Satellitenpunkt | Klarheit | MVP |
 | Algen (Chlorophyll) | Alplakes Satellit Sentinel-3 `chla` am Satellitenpunkt | Abzug bei Klarheit | MVP |
 | Wind (Mittel, Böen, Richtung) | Open-Meteo (ICON-CH1, ICON-CH2) | Wind | MVP |
@@ -85,12 +85,6 @@ Gemessene Secchi-Tiefen gibt es über Alplakes nicht mehr (Spike 17.10.2026). Di
 - Unter der Sprungschicht ist die Sicht im Sommer meist besser. Dann setzt der Algorithmus `VisibilityGoodBelow = ThermoclineBottom`.
 - Ergebnis als Stufe: `Poor`, `Moderate`, `Good`, `VeryGood`, `Unknown`.
 
-### Anzug
-
-- Grundlage: Temperatur auf 20 m, ohne Profil die Oberflächentemperatur (Fluss).
-- Unter 14 °C Trockentauchanzug, 14 bis 20 °C Nass 7 mm, ab 20 °C Nass 5 mm. Startwerte vom 18.10.2026.
-- Ein Hinweis, keine Vorschrift. Die Oberfläche sagt das.
-
 ## Der regelbasierte Index (`rules-1.0`)
 
 Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
@@ -123,7 +117,7 @@ Für Flussplätze gilt dieselbe Formel. Die Schichtung fällt weg (Fluss ist dur
 
 **Begründung:** Der Algorithmus speichert `ReasonCodes` (z.B. `CalmLake`, `ClearBelowThermocline`, `TurbidAfterRain`, `WindAfternoon`). Die Oberfläche bildet daraus einen Satz aus den `.resx`-Ressourcen. So ist die Begründung in allen vier Sprachen verfügbar.
 
-**Temperatur ist kein Abzug.** Kaltes Wasser ist in der Schweiz normal. Die Temperatur in der Tiefe erscheint als Information (und als Anzug-Hinweis), nicht im Index.
+**Temperatur ist kein Abzug.** Kaltes Wasser ist in der Schweiz normal. Die Temperatur in der Tiefe erscheint als Information, nicht im Index.
 
 ## Der Job
 

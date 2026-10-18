@@ -32,14 +32,6 @@
                 <div class="stat-value">@L[$"Visibility_{Today.VisibilityIndicator}"]</div>
                 <div class="stat-note">@VisibilityNote</div>
             </div>
-            @if (Today.Suit is { } suit)
-            {
-                <div class="stat">
-                    <div class="label">@L["Tile_Suit"]</div>
-                    <div class="stat-value">@L[$"Suit_{suit}"]</div>
-                    <div class="stat-note">@SuitNote</div>
-                </div>
-            }
             <div class="stat">
                 <div class="label">@L["Tile_Wind"]</div>
                 @if (Today.WindBeaufort is { } bft)
@@ -103,10 +95,6 @@
         { SecchiObservedAt: { } old } => L["Visibility_SatelliteOld", ForecastFormat.Date(old)],
         _ => L["Visibility_NoSatellite"],
     };
-
-    private string SuitNote => Today.TemperatureAt20m is { } at20m
-        ? L["Suit_At20m", ForecastFormat.Number(at20m)]
-        : L["Suit_Surface", ForecastFormat.Number(Today.SurfaceTemperature ?? 0)];
 
     private string DayWord(ForecastDay day) => day.IsOutlook
         ? L["Day_Outlook"]
