@@ -38,6 +38,22 @@ public class ImportDiveSitesTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Der_Import_uebernimmt_Tiefe_Schwierigkeit_Steilwand_und_Zugang_als_Startwerte()
+    {
+        // Arrange
+        var editorId = await PrepareWaterBodiesAndAdmin();
+
+        // Act
+        await Command<ImportDiveSitesCommand, ImportDiveSitesResult>(new ImportDiveSitesCommand(editorId));
+
+        // Assert
+        await using var scope = Sql.Services.CreateAsyncScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<TauchplaetzeDbContext>();
+        var site = await dbContext.DiveSites.SingleAsync(d => d.Slug == "chappeli-oberaegeri", TestContext.Current.CancellationToken);
+        Assert.Equal((30, (byte?)2, (byte?)4, DiveSiteAccess.Shore), (site.MaxDepth, site.DifficultyRating, site.WallRating, site.Access));
+    }
+
+    [SqlFact]
     public async Task Ein_umbenannter_Platz_kommt_beim_naechsten_Import_nicht_wieder()
     {
         // Arrange

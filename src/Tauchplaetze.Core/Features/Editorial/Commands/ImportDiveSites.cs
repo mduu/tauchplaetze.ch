@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.Text;
 using Tauchplaetze.Core.CrossCutting.UseCases;
@@ -23,7 +24,7 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
 
     private const string ResourceName = "Tauchplaetze.Core.Features.Editorial.Seed.dive-sites.json";
 
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
 
     public async Task<ImportDiveSitesResult> Handle(ImportDiveSitesCommand command, CancellationToken ct = default)
     {
@@ -65,15 +66,15 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
         Longitude: seed.Longitude,
         Municipality: seed.Municipality,
         Canton: seed.Canton,
-        MaxDepth: null,
-        DifficultyRating: null,
-        WallRating: null,
+        MaxDepth: seed.MaxDepth,
+        DifficultyRating: (byte?)seed.DifficultyRating,
+        WallRating: (byte?)seed.WallRating,
         MarineLifeRating: null,
-        WrecksRating: null,
+        WrecksRating: (byte?)seed.WrecksRating,
         CurrentRating: null,
         SurroundingsRating: null,
-        Access: null,
-        Features: DiveSiteFeatures.None,
+        Access: seed.Access,
+        Features: (seed.Features ?? []).Aggregate(DiveSiteFeatures.None, (all, f) => all | f),
         HasDivingBan: false,
         InflowStationOverride: null,
         SatelliteLatitude: null,
@@ -96,7 +97,13 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
         double Longitude,
         string? Municipality,
         string? Canton,
-        IReadOnlyList<EntryPointSeed>? EntryPoints);
+        IReadOnlyList<EntryPointSeed>? EntryPoints,
+        int? MaxDepth,
+        int? DifficultyRating,
+        int? WallRating,
+        int? WrecksRating,
+        DiveSiteAccess? Access,
+        IReadOnlyList<DiveSiteFeatures>? Features);
 
     private sealed record EntryPointSeed(string Kind, string? Name, double Latitude, double Longitude);
 }

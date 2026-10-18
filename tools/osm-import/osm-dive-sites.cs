@@ -213,7 +213,7 @@ static IEnumerable<Candidate> Candidates(JsonArray elements)
             }
 
             var (latitude, longitude) = Osm.Position(element);
-            current = new Candidate($"{type}/{element["id"]}", Osm.Tag(tags, "name"), latitude, longitude, Osm.Tag(tags, "source"), null, null, null);
+            current = new Candidate($"{type}/{element["id"]}", Osm.Tag(tags, "name"), latitude, longitude, Osm.Tag(tags, "source"), null, null, null, Facts.From(tags!));
             waters = [];
         }
         else if (current is null)
@@ -249,7 +249,7 @@ static List<Site> Group(List<Candidate> candidates, Review review)
 {
     var parkings = candidates.Where(c => Patterns.Parking.IsMatch(c.Name!)).ToList();
     var entries = candidates.Where(c => Patterns.EntryPoint.IsMatch(c.Name!)).Except(parkings).ToList();
-    var sites = candidates.Except(entries).Except(parkings).Select(c => new Site(c.Name!, c.Latitude, c.Longitude, c.Water!, c.Municipality, c.Canton, [c.OsmId], [])).ToList();
+    var sites = candidates.Except(entries).Except(parkings).Select(c => new Site(c.Name!, c.Latitude, c.Longitude, c.Water!, c.Municipality, c.Canton, [c.OsmId], [], c.Facts)).ToList();
 
     foreach (var entry in entries.OrderBy(e => e.Name))
     {
@@ -312,6 +312,24 @@ static JsonObject ToSeed(Site site, string waterSlug)
         ["canton"] = site.Canton,
         ["osm"] = new JsonArray([.. site.OsmIds.Select(id => JsonValue.Create(id))]),
     };
+
+    if (site.Facts is { IsEmpty: false } facts)
+    {
+        seed["maxDepth"] = facts.MaxDepth;
+        seed["difficultyRating"] = facts.Difficulty;
+        seed["wallRating"] = facts.Wall;
+        seed["wrecksRating"] = facts.Wrecks;
+        seed["access"] = facts.Access;
+        if (facts.Features.Count > 0)
+        {
+            seed["features"] = new JsonArray([.. facts.Features.Select(f => JsonValue.Create(f))]);
+        }
+
+        foreach (var key in seed.Where(p => p.Value is null).Select(p => p.Key).ToList())
+        {
+            seed.Remove(key);
+        }
+    }
 
     if (site.EntryPoints.Count > 0)
     {
@@ -391,11 +409,57 @@ static class Patterns
     public static readonly Regex Parking = new(@"\b(Parkplatz|Parking|Parcheggio)\b", RegexOptions.IgnoreCase);
 }
 
-sealed record Candidate(string OsmId, string? Name, double Latitude, double Longitude, string? Source, Water? Water, string? Municipality, string? Canton);
+sealed record Candidate(string OsmId, string? Name, double Latitude, double Longitude, string? Source, Water? Water, string? Municipality, string? Canton, Facts? Facts = null);
+
+/// <summary>Startwerte aus den OSM-Tags `scuba_diving:*` (Entscheid Marc, 18.10.2026). Alles optional.</summary>
+sealed record Facts(int? MaxDepth, int? Difficulty, int? Wall, int? Wrecks, string? Access, List<string> Features)
+{
+    public bool IsEmpty => MaxDepth is null && Difficulty is null && Wall is null && Wrecks is null && Access is null && Features.Count == 0;
+
+    // OSM-Schwierigkeit 1 bis 3 (leicht, mittel, schwer) auf unsere Skala 1 bis 5: 2, 3, 4.
+    // Typ «wall» heisst Wand über eine längere Strecke (4), «wreck» ein Wrack oder einige Gegenstände (3).
+    public static Facts From(JsonObject tags)
+    {
+        var types = (Osm.Tag(tags, "scuba_diving:type") ?? "").Split([';', ','], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToHashSet();
+        var wall = types.Contains("wall") || Osm.Tag(tags, "scuba_diving:type:wall") == "yes";
+        var wreck = types.Contains("wreck") || Osm.Tag(tags, "scuba_diving:type:wreck") == "yes";
+        var difficulty = Osm.Tag(tags, "scuba_diving:difficulty") switch { "1" => 2, "2" => 3, "3" => 4, _ => (int?)null };
+        var entry = Osm.Tag(tags, "scuba_diving:entry");
+        var access = entry switch
+        {
+            null => null,
+            "boat" => "Boat",
+            _ => "Shore",
+        };
+        var features = new List<string>();
+        if (types.Contains("cave"))
+        {
+            features.Add("Cave");
+        }
+
+        if (types.Contains("training"))
+        {
+            features.Add("Training");
+        }
+
+        return new Facts(Depth(tags), difficulty, wall ? 4 : null, wreck ? 3 : null, access, features);
+    }
+
+    // `maxdepth` gilt vor `depth`. «>50» zählt als 50, «20;40» als 40. Über 200 m ist ein Tippfehler.
+    private static int? Depth(JsonObject tags)
+    {
+        var raw = Osm.Tag(tags, "scuba_diving:maxdepth") ?? Osm.Tag(tags, "maxdepth") ?? Osm.Tag(tags, "scuba_diving:depth");
+        var values = (raw ?? "").Split([';', ',', '-'], StringSplitOptions.TrimEntries)
+            .Select(v => int.TryParse(v.TrimStart('>', '<', '~').Replace("m", "").Trim(), out var depth) ? depth : (int?)null)
+            .OfType<int>()
+            .ToList();
+        return values.Count > 0 && values.Max() is > 0 and <= 200 and var max ? max : null;
+    }
+}
 
 sealed record EntryPoint(string Kind, string? Name, double Latitude, double Longitude);
 
-sealed record Site(string Name, double Latitude, double Longitude, Water Water, string? Municipality, string? Canton, List<string> OsmIds, List<EntryPoint> EntryPoints);
+sealed record Site(string Name, double Latitude, double Longitude, Water Water, string? Municipality, string? Canton, List<string> OsmIds, List<EntryPoint> EntryPoints, Facts? Facts = null);
 
 sealed record Water(string NameDe, string? NameEn, string? NameFr, string? NameIt, string Type, double Latitude, double Longitude)
 {

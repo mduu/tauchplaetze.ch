@@ -163,7 +163,19 @@ Das Skript `tools/bathymetry/contours.cs` rechnet einmalig Tiefenlinien. Die App
 
 Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schweiz (Stand 18.10.2026: 340). Das Skript `tools/osm-import/osm-dive-sites.cs` holt sie einmalig über die Overpass API und ergänzt die Seeds. Die App selbst ruft OSM nie auf.
 
-- **Übernommen:** Name, Koordinate, Gewässer, Gemeinde (`admin_level=8`), Kanton (`ISO3166-2`). Keine Beschreibungen, Tiefen oder Bewertungen aus OSM.
+- **Übernommen:** Name, Koordinate, Gewässer, Gemeinde (`admin_level=8`), Kanton (`ISO3166-2`). Keine Beschreibungen.
+- **Startwerte** (Entscheid Marc, 18.10.2026), damit die Filter im Verzeichnis sofort greifen. Die Redaktion korrigiert sie wie jeden Inhalt.
+
+  | OSM-Tag | Wert bei uns |
+  |---|---|
+  | `scuba_diving:type` enthält `wall` oder `scuba_diving:type:wall=yes` | `WallRating` 4 (Wand) |
+  | `scuba_diving:type` enthält `wreck` oder `scuba_diving:type:wreck=yes` | `WrecksRating` 3 (einige) |
+  | `scuba_diving:difficulty` 1, 2, 3 | `DifficultyRating` 2, 3, 4 |
+  | `scuba_diving:maxdepth`, sonst `maxdepth`, sonst `scuba_diving:depth` (grösster Wert, «>50» = 50, über 200 m verworfen) | `MaxDepth` |
+  | `scuba_diving:entry` `boat` / sonst | `Access` Boat / Shore |
+  | `scuba_diving:type` enthält `cave` bzw. `training` | Eigenschaft Höhle bzw. Ausbildung |
+
+  Stand 18.10.2026: Tiefe bei 38, Schwierigkeit bei 45, Steilwand bei 39, Wrack bei 6, Zugang bei 62 Plätzen.
 - **Gewässer:** benanntes `natural=water` oder `waterway=river|canal` im Umkreis von 300 m oder als Fläche um den Punkt. Steht der Name des Gewässers im Namen des Platzes, gilt dieses. Sonst geht ein See einem Fluss vor (Platz an einer Mündung). Häfen und Becken zählen nicht. Neue Gewässer kommen mit Namen in vier Sprachen (`name:de|fr|it|en`) in den Seed, ohne Alplakes-Zuordnung (Datenstufe «nur Wetter», bis jemand sie ergänzt).
 - **Einstiege:** Punkte mit «Einstieg», «Ausstieg», «Entrée», «Sortie», «Ingresso» oder «Uscita» im Namen werden Einstiege des Platzes mit demselben Namensanfang in höchstens 400 m. Fehlt er, entsteht ein Platz mit diesem Namen.
 - **Parkplätze:** Punkte mit «Parkplatz», «Parking» oder «Parcheggio» im Namen werden Ort `Parking` des nächsten Platzes in höchstens 400 m.

@@ -170,7 +170,9 @@
     "canton": "ZG",
     "osm": [
       "node/663870289"
-    ]
+    ],
+    "maxDepth": 35,
+    "difficultyRating": 2
   },
   {
     "name": "Chappeli",
@@ -181,7 +183,11 @@
     "canton": "ZG",
     "osm": [
       "node/663870290"
-    ]
+    ],
+    "maxDepth": 30,
+    "difficultyRating": 2,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Eierhals",
@@ -384,22 +390,24 @@
     "waterBody": "bielersee",
     "latitude": 47.113853,
     "longitude": 7.196172,
-    "municipality": null,
     "canton": "BE",
     "osm": [
       "node/663870098"
-    ]
+    ],
+    "maxDepth": 40,
+    "difficultyRating": 2
   },
   {
     "name": "Twann",
     "waterBody": "bielersee",
     "latitude": 47.093144,
     "longitude": 7.157211,
-    "municipality": null,
     "canton": "BE",
     "osm": [
       "node/1469369626"
-    ]
+    ],
+    "maxDepth": 40,
+    "difficultyRating": 3
   },
   {
     "name": "Blausee",
@@ -619,7 +627,8 @@
     "canton": "VD",
     "osm": [
       "node/663869978"
-    ]
+    ],
+    "wrecksRating": 3
   },
   {
     "name": "Lac Léman-Crépine",
@@ -751,7 +760,10 @@
     "canton": "VD",
     "osm": [
       "node/663869979"
-    ]
+    ],
+    "maxDepth": 48,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Les Gonelles",
@@ -1224,7 +1236,8 @@
     "canton": "TI",
     "osm": [
       "node/663870141"
-    ]
+    ],
+    "maxDepth": 9
   },
   {
     "name": "Lago di Lugano-Acquedetto",
@@ -1389,7 +1402,8 @@
     "canton": "TI",
     "osm": [
       "node/663870163"
-    ]
+    ],
+    "maxDepth": 9
   },
   {
     "name": "Alte Julierbrücke",
@@ -1945,7 +1959,10 @@
     "canton": "BE",
     "osm": [
       "node/845663251"
-    ]
+    ],
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Boat"
   },
   {
     "name": "Bäregg",
@@ -1956,7 +1973,10 @@
     "canton": "BE",
     "osm": [
       "node/845655443"
-    ]
+    ],
+    "maxDepth": 35,
+    "difficultyRating": 3,
+    "access": "Shore"
   },
   {
     "name": "Bätterichhöhle",
@@ -1967,6 +1987,12 @@
     "canton": "BE",
     "osm": [
       "node/663870047"
+    ],
+    "maxDepth": 85,
+    "difficultyRating": 4,
+    "access": "Boat",
+    "features": [
+      "Cave"
     ]
   },
   {
@@ -1978,7 +2004,9 @@
     "canton": "BE",
     "osm": [
       "node/663870016"
-    ]
+    ],
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Crazy Divers",
@@ -2000,7 +2028,9 @@
     "canton": "BE",
     "osm": [
       "node/845666079"
-    ]
+    ],
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Divecenter Thun",
@@ -2022,7 +2052,11 @@
     "canton": "BE",
     "osm": [
       "node/845650875"
-    ]
+    ],
+    "maxDepth": 60,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Fischbalme",
@@ -2033,7 +2067,11 @@
     "canton": "BE",
     "osm": [
       "node/845657674"
-    ]
+    ],
+    "maxDepth": 150,
+    "difficultyRating": 4,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Frankenstein",
@@ -2044,7 +2082,11 @@
     "canton": "BE",
     "osm": [
       "node/845803384"
-    ]
+    ],
+    "maxDepth": 25,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Boat"
   },
   {
     "name": "Frau Tschanz",
@@ -2055,7 +2097,11 @@
     "canton": "BE",
     "osm": [
       "node/845661554"
-    ]
+    ],
+    "maxDepth": 100,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Gipsunion",
@@ -2066,7 +2112,9 @@
     "canton": "BE",
     "osm": [
       "node/845693543"
-    ]
+    ],
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Grosse gelbe Wand",
@@ -2077,7 +2125,10 @@
     "canton": "BE",
     "osm": [
       "node/663870048"
-    ]
+    ],
+    "difficultyRating": 4,
+    "wallRating": 4,
+    "access": "Boat"
   },
   {
     "name": "Gunten Bad",
@@ -2088,7 +2139,11 @@
     "canton": "BE",
     "osm": [
       "node/845649408"
-    ]
+    ],
+    "maxDepth": 60,
+    "difficultyRating": 4,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Hotel Bellevue",
@@ -2099,7 +2154,9 @@
     "canton": "BE",
     "osm": [
       "node/845633679"
-    ]
+    ],
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Kleine gelbe Wand",
@@ -2110,7 +2167,10 @@
     "canton": "BE",
     "osm": [
       "node/663870050"
-    ]
+    ],
+    "difficultyRating": 4,
+    "wallRating": 4,
+    "access": "Boat"
   },
   {
     "name": "Längenschachen",
@@ -2121,6 +2181,12 @@
     "canton": "BE",
     "osm": [
       "node/845643676"
+    ],
+    "maxDepth": 30,
+    "difficultyRating": 2,
+    "access": "Shore",
+    "features": [
+      "Training"
     ]
   },
   {
@@ -2132,7 +2198,11 @@
     "canton": "BE",
     "osm": [
       "node/845652257"
-    ]
+    ],
+    "maxDepth": 60,
+    "difficultyRating": 4,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Nastel",
@@ -2143,7 +2213,10 @@
     "canton": "BE",
     "osm": [
       "node/845664368"
-    ]
+    ],
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Boat"
   },
   {
     "name": "Niesen",
@@ -2154,7 +2227,11 @@
     "canton": "BE",
     "osm": [
       "node/845659873"
-    ]
+    ],
+    "maxDepth": 100,
+    "difficultyRating": 4,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Reefballs",
@@ -2165,7 +2242,10 @@
     "canton": "BE",
     "osm": [
       "node/845978217"
-    ]
+    ],
+    "maxDepth": 10,
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Ruedi-Walter Platz",
@@ -2176,7 +2256,11 @@
     "canton": "BE",
     "osm": [
       "node/845656495"
-    ]
+    ],
+    "maxDepth": 50,
+    "difficultyRating": 4,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Schönörtli",
@@ -2187,7 +2271,9 @@
     "canton": "BE",
     "osm": [
       "node/845646152"
-    ]
+    ],
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Seezeichen",
@@ -2198,7 +2284,10 @@
     "canton": "BE",
     "osm": [
       "node/845803389"
-    ]
+    ],
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Boat"
   },
   {
     "name": "Stampach",
@@ -2209,7 +2298,11 @@
     "canton": "BE",
     "osm": [
       "node/845653375"
-    ]
+    ],
+    "maxDepth": 90,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Wasserfall",
@@ -2220,7 +2313,10 @@
     "canton": "BE",
     "osm": [
       "node/663870055"
-    ]
+    ],
+    "difficultyRating": 4,
+    "wallRating": 4,
+    "access": "Boat"
   },
   {
     "name": "Tössegg-Eglisau",
@@ -2286,7 +2382,8 @@
     "canton": "TI",
     "osm": [
       "node/663870187"
-    ]
+    ],
+    "maxDepth": 12
   },
   {
     "name": "Posse 2",
@@ -2367,7 +2464,8 @@
     "canton": "LU",
     "osm": [
       "node/6054028416"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Cholplatz",
@@ -2378,7 +2476,9 @@
     "canton": "SZ",
     "osm": [
       "node/9565629828"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Chrüztrichter",
@@ -2400,7 +2500,9 @@
     "canton": "SZ",
     "osm": [
       "node/663870214"
-    ]
+    ],
+    "wrecksRating": 3,
+    "access": "Shore"
   },
   {
     "name": "Elefäntli",
@@ -2433,7 +2535,9 @@
     "canton": "UR",
     "osm": [
       "node/6409596484"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Boat"
   },
   {
     "name": "Holzlager",
@@ -2466,7 +2570,9 @@
     "canton": "SZ",
     "osm": [
       "node/663870212"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Lido",
@@ -2477,7 +2583,8 @@
     "canton": "LU",
     "osm": [
       "node/5377272894"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Lopper 1",
@@ -2488,7 +2595,11 @@
     "canton": "NW",
     "osm": [
       "node/476791890"
-    ]
+    ],
+    "maxDepth": 30,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Lopper Acheregg",
@@ -2532,7 +2643,8 @@
     "canton": "SZ",
     "osm": [
       "node/663870210"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Obermatt",
@@ -2543,7 +2655,9 @@
     "canton": "NW",
     "osm": [
       "node/6409596483"
-    ]
+    ],
+    "wrecksRating": 3,
+    "access": "Boat"
   },
   {
     "name": "Riedsort",
@@ -2554,7 +2668,9 @@
     "canton": "LU",
     "osm": [
       "node/663870233"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Schiefernegg",
@@ -2565,7 +2681,8 @@
     "canton": "SZ",
     "osm": [
       "node/663870234"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Schiessüberwachung",
@@ -2598,7 +2715,9 @@
     "canton": "UR",
     "osm": [
       "node/6410022596"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Boat"
   },
   {
     "name": "Seegarten",
@@ -2774,7 +2893,8 @@
     "canton": "SG",
     "osm": [
       "node/663870404"
-    ]
+    ],
+    "wrecksRating": 3
   },
   {
     "name": "Rastplatz",
@@ -2840,7 +2960,8 @@
     "canton": "SZ",
     "osm": [
       "node/663452014"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Chlausenegg",
@@ -2851,7 +2972,11 @@
     "canton": "SZ",
     "osm": [
       "node/663870231"
-    ]
+    ],
+    "maxDepth": 35,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Egg",
@@ -2862,7 +2987,8 @@
     "canton": "SZ",
     "osm": [
       "node/663870230"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Einbaum",
@@ -2873,7 +2999,8 @@
     "canton": "ZG",
     "osm": [
       "node/6054028414"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Fischchratte",
@@ -2895,7 +3022,9 @@
     "canton": "ZG",
     "osm": [
       "node/8306377525"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Grafstatt",
@@ -2906,7 +3035,9 @@
     "canton": "ZG",
     "osm": [
       "node/5377272892"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Lido",
@@ -2917,7 +3048,9 @@
     "canton": "ZG",
     "osm": [
       "node/663870228"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Lothenbach",
@@ -2939,7 +3072,9 @@
     "canton": "ZG",
     "osm": [
       "node/663870270"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Rabenmättli",
@@ -2961,7 +3096,8 @@
     "canton": "ZG",
     "osm": [
       "node/663870268"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Rossblatten",
@@ -2972,7 +3108,8 @@
     "canton": "ZG",
     "osm": [
       "node/663870227"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Strick",
@@ -2983,7 +3120,8 @@
     "canton": "SZ",
     "osm": [
       "node/1436951153"
-    ]
+    ],
+    "access": "Shore"
   },
   {
     "name": "Tellenörtli",
@@ -3027,7 +3165,9 @@
     "canton": "ZG",
     "osm": [
       "node/6054028415"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Zigeunerplätzli",
@@ -3038,7 +3178,9 @@
     "canton": "ZG",
     "osm": [
       "node/663452016"
-    ]
+    ],
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Alte Badanstalt",
@@ -3078,12 +3220,15 @@
     "waterBody": "zuerichsee",
     "latitude": 47.293211,
     "longitude": 8.598912,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/344403290",
       "node/107474583"
     ],
+    "maxDepth": 35,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Shore",
     "entryPoints": [
       {
         "kind": "Parking",
@@ -3098,11 +3243,13 @@
     "waterBody": "zuerichsee",
     "latitude": 47.322077,
     "longitude": 8.576804,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/207937370"
-    ]
+    ],
+    "maxDepth": 30,
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Hafen Küsnacht",
@@ -3153,22 +3300,27 @@
     "waterBody": "zuerichsee",
     "latitude": 47.23375,
     "longitude": 8.739045,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/663870312"
-    ]
+    ],
+    "maxDepth": 15,
+    "difficultyRating": 2,
+    "wrecksRating": 3,
+    "access": "Shore"
   },
   {
     "name": "Key West",
     "waterBody": "zuerichsee",
     "latitude": 47.278585,
     "longitude": 8.581917,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/663870284"
-    ]
+    ],
+    "maxDepth": 21,
+    "difficultyRating": 3,
+    "wallRating": 4
   },
   {
     "name": "Kleiner Hafen Küsnacht",
@@ -3212,18 +3364,23 @@
     "canton": "ZH",
     "osm": [
       "node/1103969942"
-    ]
+    ],
+    "maxDepth": 5,
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Matterhorn",
     "waterBody": "zuerichsee",
     "latitude": 47.287938,
     "longitude": 8.605428,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/663870323"
-    ]
+    ],
+    "maxDepth": 25,
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Meilibach",
@@ -3274,11 +3431,14 @@
     "waterBody": "zuerichsee",
     "latitude": 47.308657,
     "longitude": 8.583918,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/663870333"
-    ]
+    ],
+    "maxDepth": 35,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Pumpwerk Meilen",
@@ -3300,7 +3460,10 @@
     "canton": "ZH",
     "osm": [
       "node/471207418"
-    ]
+    ],
+    "maxDepth": 32,
+    "difficultyRating": 2,
+    "access": "Shore"
   },
   {
     "name": "Restaurant Bellevue",
@@ -3340,11 +3503,14 @@
     "waterBody": "zuerichsee",
     "latitude": 47.31974,
     "longitude": 8.55306,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/663452069"
-    ]
+    ],
+    "maxDepth": 40,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Seebad Rüschlikon",
@@ -3406,11 +3572,14 @@
     "waterBody": "zuerichsee",
     "latitude": 47.291418,
     "longitude": 8.600592,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/107455894"
-    ]
+    ],
+    "maxDepth": 36,
+    "difficultyRating": 3,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Strandbad Erlenbach",
@@ -3476,7 +3645,11 @@
     "canton": "ZH",
     "osm": [
       "node/371470562"
-    ]
+    ],
+    "maxDepth": 40,
+    "difficultyRating": 4,
+    "wallRating": 4,
+    "access": "Shore"
   },
   {
     "name": "Vordere Au",
@@ -3498,6 +3671,13 @@
     "canton": "ZH",
     "osm": [
       "node/76474160"
+    ],
+    "maxDepth": 24,
+    "difficultyRating": 2,
+    "wrecksRating": 3,
+    "access": "Shore",
+    "features": [
+      "Training"
     ]
   },
   {
@@ -3516,11 +3696,13 @@
     "waterBody": "zuerichsee",
     "latitude": 47.279707,
     "longitude": 8.581594,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/663870274"
-    ]
+    ],
+    "maxDepth": 21,
+    "difficultyRating": 2,
+    "wallRating": 4
   },
   {
     "name": "WZT;Luftverbund",
@@ -3549,21 +3731,25 @@
     "waterBody": "zuerichsee",
     "latitude": 47.30123,
     "longitude": 8.591456,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/663870300"
-    ]
+    ],
+    "maxDepth": 50,
+    "difficultyRating": 3,
+    "wallRating": 4
   },
   {
     "name": "Zollerbucht (Boot)",
     "waterBody": "zuerichsee",
     "latitude": 47.30044,
     "longitude": 8.591634,
-    "municipality": null,
     "canton": "ZH",
     "osm": [
       "node/1786644406"
-    ]
+    ],
+    "maxDepth": 50,
+    "difficultyRating": 3,
+    "wallRating": 4
   }
 ]
