@@ -1,0 +1,20 @@
+@using System.Text.Json
+@using Tauchplaetze.Core.Features.WaterBodies
+@inject IStringLocalizer<DiveSiteStrings> L
+
+<div class="water-map" data-map data-waters="@Json" data-max-zoom="10" role="region" aria-label="@L["WaterBodies_Map_Label"]"></div>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<WaterBodySummary> Waters { get; set; } = [];
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string Json => JsonSerializer.Serialize(Waters.Select(w => new
+    {
+        lat = w.Latitude,
+        lng = w.Longitude,
+        name = w.Name,
+        url = $"/{Language}/{PublicRoutes.WaterBodies[Language]}/{w.Slug}",
+    }));
+}

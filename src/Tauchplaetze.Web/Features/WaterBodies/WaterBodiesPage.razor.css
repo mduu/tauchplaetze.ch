@@ -1,13 +1,30 @@
-.water-grid {
+.waters {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 28px;
+}
+
+@media (min-width: 960px) {
+    .waters {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: start;
+    }
+}
+
+.water-panels {
+    display: flex;
+    flex-wrap: wrap;
     gap: 14px;
-    margin: 28px 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.water-grid a {
+.water-panels li {
+    flex: 1 1 200px;
+}
+
+.water-panels a {
     display: block;
     margin-top: 8px;
     color: var(--color-text);
@@ -15,4 +32,9 @@
     font-size: 28px;
     font-weight: 700;
     text-decoration: none;
+}
+
+.water-count {
+    margin-top: 6px;
+    color: var(--color-text-muted);
 }

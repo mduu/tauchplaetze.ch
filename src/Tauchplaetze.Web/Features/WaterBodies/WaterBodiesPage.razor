@@ -18,15 +18,19 @@
 <section class="page-section">
     <h1 class="page-title">@L["WaterBodies_Title"]</h1>
     <p class="lead">@L["WaterBodies_Lead"]</p>
-    <ul class="water-grid">
-        @foreach (var water in waterBodies)
-        {
-            <li class="tile">
-                <div class="tile-label">@L[$"WaterBody_{water.Type}"]</div>
-                <a href="/@Language/@PublicRoutes.WaterBodies[Language]/@water.Slug">@water.Name</a>
-            </li>
-        }
-    </ul>
+    <div class="waters">
+        <ul class="water-panels">
+            @foreach (var water in waterBodies)
+            {
+                <li class="tile">
+                    <div class="tile-label">@L[$"WaterBody_{water.Type}"]</div>
+                    <a href="/@Language/@PublicRoutes.WaterBodies[Language]/@water.Slug">@water.Name</a>
+                    <p class="water-count">@SiteCount(water.SiteCount)</p>
+                </li>
+            }
+        </ul>
+        <WaterMap Waters="waterBodies" />
+    </div>
 </section>
 
 @code {
@@ -36,4 +40,11 @@
 
     protected override async Task OnInitializedAsync() =>
         waterBodies = await WaterBodies.Handle(new GetWaterBodiesQuery(Language));
+
+    private string SiteCount(int count) => count switch
+    {
+        0 => L["WaterBodies_Sites_None"],
+        1 => L["WaterBodies_Sites_One"],
+        _ => L["WaterBodies_Sites_Many", count],
+    };
 }

@@ -12,7 +12,7 @@ public class DirectoryPageTests : IClassFixture<WebApp>
     public DirectoryPageTests(WebApp app)
     {
         this.app = app;
-        app.WaterBodyList.Answer = _ => [new WaterBodySummary(1, "zuerichsee", "Zürichsee", WaterBodyType.Lake), new WaterBodySummary(3, "rhein", "Rhein", WaterBodyType.River)];
+        app.WaterBodyList.Answer = _ => [new WaterBodySummary(1, "zuerichsee", "Zürichsee", WaterBodyType.Lake, 47.26, 8.68, 1), new WaterBodySummary(3, "rhein", "Rhein", WaterBodyType.River, 47.56, 7.59, 0)];
         app.SiteList.Answer = query => query.WaterBodySlug is null or "zuerichsee"
             ? [new DiveSiteListItem("riff-williams-herrliberg", "Riff Williams", "Herrliberg", "zuerichsee", "Zürichsee", WaterBodyType.Lake, 47.2849, 8.6085, 0, 3, 6.5m)]
             : [];

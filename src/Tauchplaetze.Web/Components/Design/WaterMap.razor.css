@@ -1,0 +1,15 @@
+.water-map {
+    height: 480px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+@media (min-width: 960px) {
+    .water-map {
+        position: sticky;
+        top: 24px;
+        height: min(680px, calc(100vh - 48px));
+    }
+}

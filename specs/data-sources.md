@@ -143,6 +143,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
 - Bedingungen: Open Government Data. Quellenangabe «© swisstopo».
 - Damit ist offener Punkt #11 (Kartenkacheln) entschieden: swisstopo.
+- Google Maps und Apple Karten sind nur Links für die Route (`google.com/maps/dir/?api=1&destination=…`, `maps.apple.com/?daddr=…`). Kein API-Key, keine Kosten. Erst der Klick schickt die Koordinate an den Anbieter.
 
 ## Geprüft und nicht genutzt
 

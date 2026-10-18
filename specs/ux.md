@@ -68,7 +68,7 @@ Mockup: `design/tauchplatz.dc.html`.
 3. **Der Platz:** Bewertungen als kompakter Block (Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung; nur bewertete Skalen, Wert immer auch als Zahl und Kurztext). Darunter «Unter Wasser»: Text, Fotos (Galerie), Fotograf mit Link.
 4. **Gefahren:** Text und Bilder. Gut sichtbar, nicht eingeklappt.
 5. **Einstiege und Tauchplatzskizze:** Karte mit allen Einstiegen, pro Einstieg Name, Text und Bilder. Skizze mit Tiefenlinien und Highlights. Hinweis «Skizze, nicht zur Navigation».
-6. **Praktisch:** Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation, Notfall.
+6. **Praktisch:** Koordinaten mit Link auf die Landeskarte, «Hinfahren» mit Routenlinks zu Google Maps und Apple Karten (die meisten navigieren damit zum Platz), Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation, Notfall.
 7. **Letzte Meldungen** (Phase 1, falls vorhanden) mit Button «Sicht melden».
 8. Buddy-Block für die Region.
 9. Fuss mit Quellen, «Zuletzt geändert am …», Links «Versionen» und «Platz bearbeiten» (führt zur Anmeldung).
@@ -80,6 +80,12 @@ Alle Angaben in den Abschnitten 3 bis 6 sind optional (siehe `dive-site.md`). Ei
 - Liste und Karte nebeneinander (Desktop), umschaltbar (Handy).
 - Filter: See, Datenstufe, Schwierigkeit (Einsteiger, Fortgeschrittene, Erfahrene), Zugang, Eigenschaften (Wand und Wrack ab Bewertung 3, Fluss …).
 - Jede Zeile zeigt den heutigen Index als kleinen Wert.
+
+### Gewässer-Übersicht
+
+- Zwei Spalten ab 960 px: links die Gewässer als Kacheln (Art, Name, Zahl der Tauchplätze, Umbruch nach Breite), rechts die Karte mit beschrifteten Gewässern. Die Karte bleibt beim Scrollen sichtbar.
+- Schmal: zuerst die Kacheln, darunter die Karte.
+- Ein Klick auf eine Beschriftung öffnet die Gewässerseite.
 
 ### Gewässerseite
 

@@ -48,6 +48,20 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains(directoryOnly, text);
     }
 
+    [Fact]
+    public async Task Die_Routenlinks_fuehren_mit_Dezimalpunkt_zum_Platz_auch_auf_Franzoesisch()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/fr/sites-de-plongee/" + Slug, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("https://www.google.com/maps/dir/?api=1&amp;destination=47.28490,8.60850", html);
+        Assert.Contains("https://maps.apple.com/?daddr=47.28490,8.60850&amp;dirflg=d", html);
+    }
+
     [Theory]
     [InlineData("/de/tauchplaetze/", "Ein guter Tag.", "Gut", "Ausblick")]
     [InlineData("/fr/sites-de-plongee/", "Une bonne journée.", "Bonne", "Tendance")]

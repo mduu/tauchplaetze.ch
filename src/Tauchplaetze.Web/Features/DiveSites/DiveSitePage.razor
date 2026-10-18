@@ -60,6 +60,13 @@
                     <p><a href="@MapLink(site)" rel="noopener" target="_blank">@L["Map_Open"]</a></p>
                 </div>
                 <div class="tile">
+                    <div class="tile-label">@L["Navigate"]</div>
+                    <ul class="route-links">
+                        <li><a href="@GoogleRoute(site)" rel="noopener" target="_blank" data-route="google">@L["Navigate_Google"]</a></li>
+                        <li><a href="@AppleRoute(site)" rel="noopener" target="_blank" data-route="apple">@L["Navigate_Apple"]</a></li>
+                    </ul>
+                </div>
+                <div class="tile">
                     <div class="tile-label">@L["Emergency"]</div>
                     <p>@L["Emergency_Numbers"]</p>
                 </div>
@@ -140,6 +147,12 @@
 
     private static string MapLink(DiveSiteDetails site) =>
         string.Create(CultureInfo.InvariantCulture, $"https://map.geo.admin.ch/?lang={Language}&swisssearch={site.Latitude:0.0000},{site.Longitude:0.0000}");
+
+    private static string GoogleRoute(DiveSiteDetails site) =>
+        string.Create(CultureInfo.InvariantCulture, $"https://www.google.com/maps/dir/?api=1&destination={site.Latitude:0.00000},{site.Longitude:0.00000}");
+
+    private static string AppleRoute(DiveSiteDetails site) =>
+        string.Create(CultureInfo.InvariantCulture, $"https://maps.apple.com/?daddr={site.Latitude:0.00000},{site.Longitude:0.00000}&dirflg=d");
 
     private static string Coordinates(DiveSiteDetails site) =>
         $"{site.Latitude.ToString("0.0000", CultureInfo.CurrentCulture)}° N, {site.Longitude.ToString("0.0000", CultureInfo.CurrentCulture)}° E";

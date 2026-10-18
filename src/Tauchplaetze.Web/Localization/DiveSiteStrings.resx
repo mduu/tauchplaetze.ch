@@ -49,4 +49,11 @@
   <data name="History_Back" xml:space="preserve"><value>Zurück zum Platz</value></data>
   <data name="Link_Versions" xml:space="preserve"><value>Versionen</value></data>
   <data name="Link_Edit" xml:space="preserve"><value>Platz bearbeiten</value></data>
+  <data name="Navigate" xml:space="preserve"><value>Hinfahren</value></data>
+  <data name="Navigate_Google" xml:space="preserve"><value>Route in Google Maps</value></data>
+  <data name="Navigate_Apple" xml:space="preserve"><value>Route in Apple Karten</value></data>
+  <data name="WaterBodies_Map_Label" xml:space="preserve"><value>Karte der Gewässer</value></data>
+  <data name="WaterBodies_Sites_None" xml:space="preserve"><value>noch keine Tauchplätze</value></data>
+  <data name="WaterBodies_Sites_One" xml:space="preserve"><value>1 Tauchplatz</value></data>
+  <data name="WaterBodies_Sites_Many" xml:space="preserve"><value>{0} Tauchplätze</value></data>
 </root>

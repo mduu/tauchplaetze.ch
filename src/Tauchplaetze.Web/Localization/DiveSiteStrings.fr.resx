@@ -49,4 +49,11 @@
   <data name="History_Back" xml:space="preserve"><value>Retour au site</value></data>
   <data name="Link_Versions" xml:space="preserve"><value>Versions</value></data>
   <data name="Link_Edit" xml:space="preserve"><value>Modifier le site</value></data>
+  <data name="Navigate" xml:space="preserve"><value>S'y rendre</value></data>
+  <data name="Navigate_Google" xml:space="preserve"><value>Itinéraire dans Google Maps</value></data>
+  <data name="Navigate_Apple" xml:space="preserve"><value>Itinéraire dans Plans d'Apple</value></data>
+  <data name="WaterBodies_Map_Label" xml:space="preserve"><value>Carte des lacs et rivières</value></data>
+  <data name="WaterBodies_Sites_None" xml:space="preserve"><value>pas encore de site de plongée</value></data>
+  <data name="WaterBodies_Sites_One" xml:space="preserve"><value>1 site de plongée</value></data>
+  <data name="WaterBodies_Sites_Many" xml:space="preserve"><value>{0} sites de plongée</value></data>
 </root>

@@ -332,3 +332,21 @@ a:hover {
   flex-wrap: wrap;
   gap: 16px;
 }
+
+.leaflet-tooltip.water-label {
+  padding: 2px 8px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  box-shadow: none;
+  font-weight: 600;
+}
+
+.leaflet-tooltip.water-label::before {
+  display: none;
+}
+
+.leaflet-tooltip.water-label a {
+  color: var(--color-text);
+  text-decoration: none;
+}
