@@ -19,6 +19,7 @@ internal static class FieldLabels
             ["Notice", var index, var culture, "Text"] => $"{l["Field_Notice", index]} · {l["Field_NoticeText"]} ({culture.ToUpperInvariant()})",
             ["Sketch", var index, var name] => $"{l["Field_Sketch", index]} · {l[$"Field_Sketch{name}"]}",
             ["Sketch", var index, var culture, "Label"] => $"{l["Field_Sketch", index]} · {l["Field_SketchLabel"]} ({culture.ToUpperInvariant()})",
+            ["Media", var index, var name] => $"{l["Field_Media", index]} · {l[$"Field_Media{name}"]}",
             _ => l[$"Field_{field}"],
         };
     }

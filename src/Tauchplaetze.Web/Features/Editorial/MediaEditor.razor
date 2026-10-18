@@ -1,0 +1,251 @@
+@inherits AdminPage
+@using Microsoft.AspNetCore.Components.Forms
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Core.Features.Media
+@using Tauchplaetze.Core.Features.Media.Commands
+@using Tauchplaetze.Core.Features.Media.Queries
+@using Tauchplaetze.Web.Features.Media
+
+<MudStack Spacing="4">
+    <MudText Typo="Typo.body2">@L["Media_Help"]</MudText>
+
+    <MudPaper Outlined="true" Class="pa-4">
+        <MudText Typo="Typo.h6">@L["Media_Upload"]</MudText>
+        <MudStack Row="true" Wrap="Wrap.Wrap" Class="mt-2">
+            <MudTextField @bind-Value="photographer" Label="@L["Media_Photographer"]" MaxLength="120" Required="true" Style="min-width: 220px" />
+            <MudTextField @bind-Value="photographerUrl" Label="@L["Media_PhotographerUrl"]" MaxLength="300" Style="min-width: 220px" />
+            <MudSelect T="MediaSection" @bind-Value="section" Label="@L["Media_Section"]" Style="min-width: 200px">
+                @foreach (var value in Enum.GetValues<MediaSection>())
+                {
+                    <MudSelectItem T="MediaSection" Value="value">@L[$"MediaSection_{value}"]</MudSelectItem>
+                }
+            </MudSelect>
+            <MudNumericField T="int?" @bind-Value="depth" Label="@L["Media_Depth"]" Min="0" Max="200" Clearable="true" Style="max-width: 160px" />
+        </MudStack>
+        <MudCheckBox T="bool" @bind-Value="rightsConfirmed" Class="mt-2" Label="@L["Media_Rights"]" />
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="Upload" Accept=".jpg,.jpeg,.png,.webp" MaximumFileCount="20" MaxFileSize="MediaFiles.MaxBytes" Disabled="@(!rightsConfirmed || uploading)">
+            <CustomContent>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" Disabled="@(!rightsConfirmed || uploading)"
+                           OnClick="@context.OpenFilePickerAsync">
+                    @(uploading ? L["Media_Uploading"] : L["Media_Choose"])
+                </MudButton>
+            </CustomContent>
+        </MudFileUpload>
+        @if (uploadMessage is not null)
+        {
+            <MudAlert Severity="Severity.Info" Dense="true" Class="mt-2">@uploadMessage</MudAlert>
+        }
+        @foreach (var error in uploadErrors)
+        {
+            <MudAlert Severity="Severity.Error" Dense="true" Class="mt-2">@error</MudAlert>
+        }
+    </MudPaper>
+
+    <MudText Typo="Typo.h6">@L["Media_InVersion"]</MudText>
+    @if (Uses.Count == 0)
+    {
+        <MudText Typo="Typo.body2">@L["Media_None"]</MudText>
+    }
+    @foreach (var (use, index) in Uses.Select((u, i) => (u, i)).ToList())
+    {
+        var item = media.FirstOrDefault(m => m.Id == use.MediaId);
+        <MudPaper Outlined="true" Class="pa-3 media-row">
+            <div class="d-flex gap-3 align-start flex-wrap">
+                @if (item is not null)
+                {
+                    <img class="media-thumb" src="@item.Renditions[0].Url" alt="@AltOf(item)" width="160" height="@(item.Height * 160 / Math.Max(1, item.Width))" />
+                }
+                <MudStack Spacing="1" Style="flex: 1; min-width: 240px">
+                    <div class="d-flex align-center gap-2 flex-wrap">
+                        <MudButton Size="Size.Small" Color="@(Hero == use.MediaId ? Color.Primary : Color.Default)" OnClick="@(() => SetHero(use.MediaId))"
+                                   StartIcon="@(Hero == use.MediaId ? Icons.Material.Filled.Star : Icons.Material.Outlined.StarBorder)">@L["Media_Hero"]</MudButton>
+                        @if (item is { IsPublic: false })
+                        {
+                            <MudChip T="string" Size="Size.Small" Color="Color.Warning">@L["Media_Private"]</MudChip>
+                        }
+                        @if (item is not null)
+                        {
+                            <MudText Typo="Typo.caption">@item.Photographer</MudText>
+                        }
+                    </div>
+                    <MudStack Row="true" Wrap="Wrap.Wrap">
+                        <MudSelect T="MediaSection" @bind-Value="use.Section" Label="@L["Media_Section"]" Style="min-width: 180px">
+                            @foreach (var value in Enum.GetValues<MediaSection>())
+                            {
+                                <MudSelectItem T="MediaSection" Value="value">@L[$"MediaSection_{value}"]</MudSelectItem>
+                            }
+                        </MudSelect>
+                        @if (use.Section == MediaSection.EntryPoint)
+                        {
+                            <MudSelect T="Guid?" @bind-Value="use.EntryPointId" Label="@L["Media_EntryPoint"]" Style="min-width: 200px">
+                                @foreach (var (id, label) in EntryPoints)
+                                {
+                                    <MudSelectItem T="Guid?" Value="id">@label</MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
+                    </MudStack>
+                    <div class="d-flex gap-1 flex-wrap">
+                        <MudIconButton Icon="@Icons.Material.Filled.ArrowUpward" Size="Size.Small" Disabled="@(index == 0)" OnClick="@(() => Move(index, -1))" aria-label="@L["Media_Up"]" />
+                        <MudIconButton Icon="@Icons.Material.Filled.ArrowDownward" Size="Size.Small" Disabled="@(index == Uses.Count - 1)" OnClick="@(() => Move(index, 1))" aria-label="@L["Media_Down"]" />
+                        @if (item is not null && (IsModerator || item is { IsPublic: false, IsOwn: true }))
+                        {
+                            <MudButton Size="Size.Small" OnClick="@(() => ToggleDetails(item))">@L["Media_Details"]</MudButton>
+                        }
+                        <MudButton Size="Size.Small" Color="Color.Secondary" OnClick="@(() => RemoveUse(use))">@L["Media_RemoveFromVersion"]</MudButton>
+                    </div>
+                    @if (item is not null && details?.Id == item.Id)
+                    {
+                        <MediaDetailsForm Details="details" Saved="@(() => SaveDetails(item.Id))" />
+                    }
+                </MudStack>
+            </div>
+        </MudPaper>
+    }
+
+    @if (Available.Count > 0)
+    {
+        <MudText Typo="Typo.h6">@L["Media_Available"]</MudText>
+        <div class="d-flex gap-3 flex-wrap">
+            @foreach (var item in Available)
+            {
+                <MudPaper Outlined="true" Class="pa-2">
+                    <img class="media-thumb" src="@item.Renditions[0].Url" alt="@AltOf(item)" width="160" height="@(item.Height * 160 / Math.Max(1, item.Width))" />
+                    <div class="d-flex justify-space-between align-center mt-1">
+                        <MudText Typo="Typo.caption">@item.Photographer</MudText>
+                        <MudButton Size="Size.Small" OnClick="@(() => AddUse(item))">@L["Media_Add"]</MudButton>
+                    </div>
+                </MudPaper>
+            }
+        </div>
+    }
+</MudStack>
+
+@code {
+    private IReadOnlyList<SiteMediaItem> media = [];
+
+    private MediaSection section = MediaSection.Underwater;
+
+    private string photographer = "";
+
+    private string? photographerUrl;
+
+    private int? depth;
+
+    private bool rightsConfirmed;
+
+    private bool uploading;
+
+    private string? uploadMessage;
+
+    private List<string> uploadErrors = [];
+
+    private MediaDetails? details;
+
+    [Parameter, EditorRequired]
+    public Guid SiteId { get; set; }
+
+    [Parameter, EditorRequired]
+    public List<MediaUseForm> Uses { get; set; } = [];
+
+    [Parameter]
+    public Guid? Hero { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid?> HeroChanged { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<(Guid Id, string Label)> EntryPoints { get; set; } = [];
+
+    private List<SiteMediaItem> Available => [.. media.Where(m => Uses.All(u => u.MediaId != m.Id))];
+
+    protected override async Task Load()
+    {
+        photographer = User.Identity?.Name ?? "";
+        await Reload();
+    }
+
+    private async Task Reload() =>
+        media = await Query<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>(new GetSiteMediaQuery(UserId, SiteId, MediaEndpoints.PendingPathTemplate));
+
+    private async Task Upload(IReadOnlyList<IBrowserFile>? files)
+    {
+        if (files is null || files.Count == 0)
+        {
+            return;
+        }
+
+        uploading = true;
+        uploadErrors = [];
+        uploadMessage = null;
+        StateHasChanged();
+
+        var uploaded = 0;
+        foreach (var file in files)
+        {
+            if (file.Size > MediaFiles.MaxBytes)
+            {
+                uploadErrors.Add($"{file.Name}: {L["Error_InvalidImage"]}");
+                continue;
+            }
+
+            using var buffer = new MemoryStream();
+            await using (var stream = file.OpenReadStream(MediaFiles.MaxBytes))
+            {
+                await stream.CopyToAsync(buffer);
+            }
+
+            var result = await Command<UploadMediaCommand, UploadMediaResult>(new UploadMediaCommand(
+                UserId, SiteId, buffer.ToArray(), file.ContentType, photographer, photographerUrl, section, depth, rightsConfirmed, []));
+            if (result.MediaId is { } id)
+            {
+                Uses.Add(new MediaUseForm { MediaId = id, Section = section });
+                uploaded++;
+            }
+            else
+            {
+                uploadErrors.AddRange(result.Errors.Select(e => $"{file.Name}: {L[$"Error_{e}"]}"));
+            }
+        }
+
+        uploading = false;
+        uploadMessage = uploaded > 0 ? L["Media_Uploaded", uploaded].Value : null;
+        await Reload();
+    }
+
+    private async Task SetHero(Guid id)
+    {
+        Hero = Hero == id ? null : id;
+        await HeroChanged.InvokeAsync(Hero);
+    }
+
+    private void Move(int index, int step) => (Uses[index], Uses[index + step]) = (Uses[index + step], Uses[index]);
+
+    private async Task RemoveUse(MediaUseForm use)
+    {
+        Uses.Remove(use);
+        if (Hero == use.MediaId)
+        {
+            await SetHero(use.MediaId);
+        }
+    }
+
+    private void AddUse(SiteMediaItem item) => Uses.Add(new MediaUseForm { MediaId = item.Id, Section = item.Section });
+
+    private void ToggleDetails(SiteMediaItem item) => details = details?.Id == item.Id ? null : MediaDetails.From(item);
+
+    private async Task SaveDetails(Guid id)
+    {
+        var result = await Command<UpdateMediaCommand, UploadMediaResult>(new UpdateMediaCommand(
+            UserId, id, details!.Photographer, details.PhotographerUrl, details.Depth, details.ToTexts()));
+        details.Errors = [.. result.Errors.Select(e => L[$"Error_{e}"].Value)];
+        if (result.Succeeded)
+        {
+            details = null;
+            await Reload();
+        }
+    }
+
+    private static string AltOf(SiteMediaItem item) =>
+        item.Texts.FirstOrDefault(t => t.Culture == "de")?.AltText ?? item.Photographer;
+}

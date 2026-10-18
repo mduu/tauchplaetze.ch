@@ -197,4 +197,43 @@
   <data name="Field_SketchDepth" xml:space="preserve"><value>Depth</value></data>
   <data name="Field_SketchLabel" xml:space="preserve"><value>Label</value></data>
   <data name="Error_InvalidSketch" xml:space="preserve"><value>The sketch is invalid: at most 200 elements, all points within 2 km of the site, depth up to 200 m, labels up to 80 characters.</value></data>
+  <data name="Edit_Tab_Media" xml:space="preserve"><value>Photos</value></data>
+  <data name="Media_Help" xml:space="preserve"><value>Upload photos above and below water. A photo becomes public only once an approved version uses it. Location and camera data are removed from published images.</value></data>
+  <data name="Media_Upload" xml:space="preserve"><value>Upload photos</value></data>
+  <data name="Media_Choose" xml:space="preserve"><value>Choose photos</value></data>
+  <data name="Media_Uploading" xml:space="preserve"><value>Uploading …</value></data>
+  <data name="Media_Uploaded" xml:space="preserve"><value>{0} photo(s) uploaded. Save the site to add them to the version.</value></data>
+  <data name="Media_Rights" xml:space="preserve"><value>I took these photos myself or own the rights to them and allow tauchplaetze.ch to show them with attribution.</value></data>
+  <data name="Media_Photographer" xml:space="preserve"><value>Photographer</value></data>
+  <data name="Media_PhotographerUrl" xml:space="preserve"><value>Photographer link</value></data>
+  <data name="Media_Section" xml:space="preserve"><value>Section</value></data>
+  <data name="Media_Depth" xml:space="preserve"><value>Depth taken (m)</value></data>
+  <data name="Media_Caption" xml:space="preserve"><value>Caption</value></data>
+  <data name="Media_AltText" xml:space="preserve"><value>Alt text</value></data>
+  <data name="Media_InVersion" xml:space="preserve"><value>Photos in this version</value></data>
+  <data name="Media_None" xml:space="preserve"><value>No photos yet.</value></data>
+  <data name="Media_Available" xml:space="preserve"><value>More photos of this site</value></data>
+  <data name="Media_Add" xml:space="preserve"><value>Add</value></data>
+  <data name="Media_RemoveFromVersion" xml:space="preserve"><value>Remove from version</value></data>
+  <data name="Media_Hero" xml:space="preserve"><value>Cover photo</value></data>
+  <data name="Media_Private" xml:space="preserve"><value>Private until approval</value></data>
+  <data name="Media_Up" xml:space="preserve"><value>Move up</value></data>
+  <data name="Media_Down" xml:space="preserve"><value>Move down</value></data>
+  <data name="Media_Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Media_SaveDetails" xml:space="preserve"><value>Save details</value></data>
+  <data name="Media_EntryPoint" xml:space="preserve"><value>Entry point</value></data>
+  <data name="MediaSection_Underwater" xml:space="preserve"><value>Underwater</value></data>
+  <data name="MediaSection_Surroundings" xml:space="preserve"><value>Surroundings (above water)</value></data>
+  <data name="MediaSection_Approach" xml:space="preserve"><value>Getting there and parking</value></data>
+  <data name="MediaSection_EntryPoint" xml:space="preserve"><value>Entry point</value></data>
+  <data name="MediaSection_Hazards" xml:space="preserve"><value>Hazards</value></data>
+  <data name="Field_Media" xml:space="preserve"><value>Photo {0}</value></data>
+  <data name="Field_MediaPhoto" xml:space="preserve"><value>File</value></data>
+  <data name="Field_MediaSection" xml:space="preserve"><value>Section</value></data>
+  <data name="Field_HeroMediaId" xml:space="preserve"><value>Cover photo</value></data>
+  <data name="Error_InvalidMedia" xml:space="preserve"><value>A photo does not fit: it belongs to another site, appears twice, the cover photo is missing from the list, the entry point is missing or a text is too long.</value></data>
+  <data name="Error_RightsNotConfirmed" xml:space="preserve"><value>Please confirm that you own the rights to the photos.</value></data>
+  <data name="Error_InvalidPhotographer" xml:space="preserve"><value>The photographer is missing or too long (120 characters at most).</value></data>
+  <data name="Error_InvalidImage" xml:space="preserve"><value>Only JPEG, PNG or WebP up to 25 MB. Please export iPhone photos (HEIC) as JPEG.</value></data>
+  <data name="Error_TooManyUploads" xml:space="preserve"><value>Too many photos in the last hour. Please continue later.</value></data>
 </root>

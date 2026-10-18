@@ -13,6 +13,7 @@
     @if (!deleted)
     {
         <AccountNav />
+        <p>@L["Delete_Photos"]</p>
         <EditForm Model="Input" FormName="delete" OnSubmit="Submit" class="form">
             <label class="check"><InputCheckbox @bind-Value="Input!.Confirmed" required /> @L["Delete_Confirm"]</label>
             <button type="submit" class="button danger">@L["Delete_Submit"]</button>

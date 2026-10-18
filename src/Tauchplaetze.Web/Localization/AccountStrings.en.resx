@@ -75,4 +75,8 @@
   <data name="Error_LastAdmin" xml:space="preserve"><value>This is the last active admin account. Appoint another admin first.</value></data>
   <data name="Error_Other" xml:space="preserve"><value>Something went wrong. Please try again.</value></data>
   <data name="Meta_NoIndex" xml:space="preserve"><value>Account</value></data>
+  <data name="MyData_Photos" xml:space="preserve"><value>Photos</value></data>
+  <data name="MyData_PhotoPublic" xml:space="preserve"><value>public</value></data>
+  <data name="MyData_PhotoPrivate" xml:space="preserve"><value>private until approval</value></data>
+  <data name="Delete_Photos" xml:space="preserve"><value>Photos that are still private are deleted. Public photos remain with the photographer’s name, without a link to your account.</value></data>
 </root>

@@ -1,0 +1,52 @@
+@using Tauchplaetze.Core.Features.Media
+@inject IStringLocalizer<DiveSiteStrings> L
+
+@if (Photos.Count > 0)
+{
+    <section class="page-section" aria-labelledby="photos">
+        <h2 id="photos" class="photos-title">@L["Photos_Title"]</h2>
+        @foreach (var group in Photos.GroupBy(p => p.Section).OrderBy(g => g.Key))
+        {
+            <h3 class="photos-section">@L[$"PhotoSection_{group.Key}"]</h3>
+            <div class="photos">
+                @foreach (var photo in group)
+                {
+                    <figure class="photo">
+                        <a href="@photo.Renditions[^1].Url" target="_blank" rel="noopener">
+                            <img src="@Rendition(photo, 960)" srcset="@PhotoMarkup.SrcSet(photo.Renditions)" sizes="(min-width: 960px) 30vw, 90vw"
+                                 width="@photo.Width" height="@photo.Height" loading="lazy" decoding="async" alt="@(photo.AltText ?? photo.Caption ?? "")" />
+                        </a>
+                        <figcaption>
+                            @if (photo.Caption is not null)
+                            {
+                                <span class="photo-caption">@photo.Caption</span>
+                            }
+                            <span class="photo-credit">
+                                @if (photo.PhotographerUrl is not null)
+                                {
+                                    <a href="@photo.PhotographerUrl" rel="noopener nofollow" target="_blank">@L["Photo_Credit", photo.Photographer]</a>
+                                }
+                                else
+                                {
+                                    @L["Photo_Credit", photo.Photographer]
+                                }
+                                @if (photo.Depth is { } depth)
+                                {
+                                    <text> · @L["Photo_Depth", depth]</text>
+                                }
+                            </span>
+                        </figcaption>
+                    </figure>
+                }
+            </div>
+        }
+    </section>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<PublicPhoto> Photos { get; set; } = [];
+
+    private static string Rendition(PublicPhoto photo, int width) =>
+        (photo.Renditions.FirstOrDefault(r => r.Width >= width) ?? photo.Renditions[^1]).Url;
+}

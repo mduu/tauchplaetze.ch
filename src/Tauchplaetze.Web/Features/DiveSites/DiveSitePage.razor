@@ -23,7 +23,7 @@
         </HeadContent>
         <HreflangLinks />
 
-        <UnderwaterHero>
+        <UnderwaterHero Photo="site.Hero" Credit="@(site.Hero is { } hero ? L["Hero_Credit", hero.Photographer].Value : null)">
             <nav aria-label="@L["Breadcrumb"]">
                 <ol class="breadcrumb">
                     <li>@site.WaterBodyName</li>
@@ -63,6 +63,8 @@
         }
 
         <SiteRatingsBlock Ratings="site.Ratings" />
+
+        <SitePhotos Photos="site.PhotoList" />
 
         <section class="page-section" aria-labelledby="practical">
             <h2 id="practical" class="practical-title">@L["Practical"]</h2>

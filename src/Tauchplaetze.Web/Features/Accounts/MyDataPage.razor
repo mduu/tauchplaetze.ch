@@ -26,6 +26,25 @@
         <h2 class="subtitle">@L["MyData_Reviews"]</h2>
         <RevisionReferences Items="data.Reviews" />
 
+        <h2 class="subtitle">@L["MyData_Photos"]</h2>
+        @if (data.PhotoList.Count == 0)
+        {
+            <p>@L["MyData_None"]</p>
+        }
+        else
+        {
+            <ul class="references">
+                @foreach (var photo in data.PhotoList)
+                {
+                    <li>
+                        <a href="@PublicRoutes.DiveSite(Language, photo.SiteSlug)">@photo.SiteName</a>
+                        · @photo.Photographer · @photo.UploadedAt.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
+                        · @(photo.IsPublic ? L["MyData_PhotoPublic"] : L["MyData_PhotoPrivate"])
+                    </li>
+                }
+            </ul>
+        }
+
         <p><a class="button" href="/@Language/account/my-data.json" download>@L["MyData_Download"]</a></p>
     }
 </AccountLayout>

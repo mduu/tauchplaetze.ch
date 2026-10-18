@@ -1,5 +1,14 @@
-@* Hero mit Unterwasser-Silhouette aus dem Entwurf (design/tauchplatz.html). Die Grafik ist Dekoration. *@
-<section class="underwater-hero">
+@* Hero mit Titelbild oder, ohne Foto, der Unterwasser-Silhouette aus dem Entwurf (design/tauchplatz.html). Die Grafik ist Dekoration. *@
+@using Tauchplaetze.Web.Features.DiveSites
+<section class="underwater-hero @(Photo is null ? "" : "has-photo")">
+    @if (Photo is { } photo)
+    {
+        <img class="hero-photo" src="@photo.Renditions[^1].Url" srcset="@PhotoMarkup.SrcSet(photo.Renditions)" sizes="100vw"
+             width="@photo.Width" height="@photo.Height" fetchpriority="high" alt="@(photo.AltText ?? photo.Caption ?? "")" />
+        <p class="hero-credit">@Credit</p>
+    }
+    else
+    {
     <svg class="scene" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
         <rect x="0" y="0" width="1440" height="420" fill="#0B2427" />
         <rect x="0" y="0" width="1440" height="150" fill="#14413F" />
@@ -14,6 +23,7 @@
         <circle cx="644" cy="120" r="2" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
         <circle cx="640" cy="70" r="1.6" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
     </svg>
+    }
     <div class="content">
         @ChildContent
     </div>
@@ -22,4 +32,12 @@
 @code {
     [Parameter, EditorRequired]
     public RenderFragment ChildContent { get; set; } = default!;
+
+    /// <summary>Titelbild statt der Illustration.</summary>
+    [Parameter]
+    public Tauchplaetze.Core.Features.Media.PublicPhoto? Photo { get; set; }
+
+    /// <summary>Namensnennung des Titelbilds.</summary>
+    [Parameter]
+    public string? Credit { get; set; }
 }

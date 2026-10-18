@@ -155,4 +155,13 @@
   <data name="SketchKind_Route" xml:space="preserve"><value>Dive route</value></data>
   <data name="SketchKind_Line" xml:space="preserve"><value>Guide line</value></data>
   <data name="SketchKind_PlantField" xml:space="preserve"><value>Plant field</value></data>
+  <data name="Photos_Title" xml:space="preserve"><value>Photos</value></data>
+  <data name="PhotoSection_Underwater" xml:space="preserve"><value>Underwater</value></data>
+  <data name="PhotoSection_Surroundings" xml:space="preserve"><value>Above water</value></data>
+  <data name="PhotoSection_Approach" xml:space="preserve"><value>Getting there and parking</value></data>
+  <data name="PhotoSection_EntryPoint" xml:space="preserve"><value>Entry points</value></data>
+  <data name="PhotoSection_Hazards" xml:space="preserve"><value>Hazards</value></data>
+  <data name="Photo_Credit" xml:space="preserve"><value>Photo: {0}</value></data>
+  <data name="Photo_Depth" xml:space="preserve"><value>at {0} m</value></data>
+  <data name="Hero_Credit" xml:space="preserve"><value>Cover photo: {0}</value></data>
 </root>

@@ -155,4 +155,13 @@
   <data name="SketchKind_Route" xml:space="preserve"><value>Percorso</value></data>
   <data name="SketchKind_Line" xml:space="preserve"><value>Sagola</value></data>
   <data name="SketchKind_PlantField" xml:space="preserve"><value>Prateria</value></data>
+  <data name="Photos_Title" xml:space="preserve"><value>Fotografie</value></data>
+  <data name="PhotoSection_Underwater" xml:space="preserve"><value>Sott'acqua</value></data>
+  <data name="PhotoSection_Surroundings" xml:space="preserve"><value>Fuori dall'acqua</value></data>
+  <data name="PhotoSection_Approach" xml:space="preserve"><value>Accesso e parcheggio</value></data>
+  <data name="PhotoSection_EntryPoint" xml:space="preserve"><value>Punti d'entrata</value></data>
+  <data name="PhotoSection_Hazards" xml:space="preserve"><value>Pericoli</value></data>
+  <data name="Photo_Credit" xml:space="preserve"><value>Foto di {0}</value></data>
+  <data name="Photo_Depth" xml:space="preserve"><value>a {0} m</value></data>
+  <data name="Hero_Credit" xml:space="preserve"><value>Foto di copertina: {0}</value></data>
 </root>

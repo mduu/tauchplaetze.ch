@@ -147,6 +147,12 @@ else
             </MudStack>
         </MudTabPanel>
 
+        <MudTabPanel Text="@L["Edit_Tab_Media"]">
+            <div class="pt-4">
+                <MediaEditor SiteId="Id" Uses="form.Media" @bind-Hero="form.HeroMediaId" EntryPoints="EntryPointLabels" />
+            </div>
+        </MudTabPanel>
+
         <MudTabPanel Text="@L["Edit_Tab_Sketch"]">
             <div class="pt-4">
                 <SketchEditor Id="@($"sketch-map-{Id}")" Items="form.Sketch" Latitude="form.Latitude" Longitude="form.Longitude" />
@@ -242,6 +248,9 @@ else
             form!.Features.Remove(feature);
         }
     }
+
+    private IReadOnlyList<(Guid Id, string Label)> EntryPointLabels =>
+        [.. form!.EntryPoints.Select((e, i) => (e.Id, e.Texts["de"].Name is { Length: > 0 } name ? name : L["Field_EntryPoint", i + 1].Value))];
 
     private void AddEntryPoint() => form!.EntryPoints.Add(new EntryForm { Latitude = form.Latitude, Longitude = form.Longitude });
 

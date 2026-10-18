@@ -155,4 +155,13 @@
   <data name="SketchKind_Route" xml:space="preserve"><value>Parcours</value></data>
   <data name="SketchKind_Line" xml:space="preserve"><value>Fil d’Ariane</value></data>
   <data name="SketchKind_PlantField" xml:space="preserve"><value>Herbier</value></data>
+  <data name="Photos_Title" xml:space="preserve"><value>Photos</value></data>
+  <data name="PhotoSection_Underwater" xml:space="preserve"><value>Sous l’eau</value></data>
+  <data name="PhotoSection_Surroundings" xml:space="preserve"><value>Hors de l'eau</value></data>
+  <data name="PhotoSection_Approach" xml:space="preserve"><value>Accès et parking</value></data>
+  <data name="PhotoSection_EntryPoint" xml:space="preserve"><value>Points d'entrée</value></data>
+  <data name="PhotoSection_Hazards" xml:space="preserve"><value>Dangers</value></data>
+  <data name="Photo_Credit" xml:space="preserve"><value>Photo : {0}</value></data>
+  <data name="Photo_Depth" xml:space="preserve"><value>à {0} m</value></data>
+  <data name="Hero_Credit" xml:space="preserve"><value>Photo de couverture : {0}</value></data>
 </root>

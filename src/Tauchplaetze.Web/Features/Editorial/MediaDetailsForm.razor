@@ -1,0 +1,35 @@
+@using Tauchplaetze.Core.Features.Media
+@inject IStringLocalizer<AdminStrings> L
+
+<MudStack Spacing="1" Class="mt-2">
+    <MudStack Row="true" Wrap="Wrap.Wrap">
+        <MudTextField @bind-Value="Details.Photographer" Label="@L["Media_Photographer"]" MaxLength="120" Required="true" Style="min-width: 200px" />
+        <MudTextField @bind-Value="Details.PhotographerUrl" Label="@L["Media_PhotographerUrl"]" MaxLength="300" Style="min-width: 200px" />
+        <MudNumericField T="int?" @bind-Value="Details.Depth" Label="@L["Media_Depth"]" Min="0" Max="200" Clearable="true" Style="max-width: 160px" />
+    </MudStack>
+    @foreach (var language in Languages.All)
+    {
+        var key = language;
+        <MudStack Row="true" Wrap="Wrap.Wrap">
+            <MudTextField T="string" Value="Details.Texts[key].Caption" ValueChanged="@(v => Details.Texts[key] = (v, Details.Texts[key].AltText))"
+                          Label="@($"{L["Media_Caption"]} ({key.ToUpperInvariant()})")" MaxLength="300" Style="min-width: 220px" />
+            <MudTextField T="string" Value="Details.Texts[key].AltText" ValueChanged="@(v => Details.Texts[key] = (Details.Texts[key].Caption, v))"
+                          Label="@($"{L["Media_AltText"]} ({key.ToUpperInvariant()})")" MaxLength="300" Style="min-width: 220px" />
+        </MudStack>
+    }
+    @foreach (var error in Details.Errors)
+    {
+        <MudAlert Severity="Severity.Error" Dense="true">@error</MudAlert>
+    }
+    <div>
+        <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" OnClick="Saved">@L["Media_SaveDetails"]</MudButton>
+    </div>
+</MudStack>
+
+@code {
+    [Parameter, EditorRequired]
+    public MediaDetails Details { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback Saved { get; set; }
+}

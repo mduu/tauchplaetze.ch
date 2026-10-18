@@ -197,4 +197,43 @@
   <data name="Field_SketchDepth" xml:space="preserve"><value>Profondeur</value></data>
   <data name="Field_SketchLabel" xml:space="preserve"><value>Libellé</value></data>
   <data name="Error_InvalidSketch" xml:space="preserve"><value>Le croquis est invalide : 200 éléments au plus, tous les points à 2 km au plus du site, profondeur jusqu’à 200 m, libellés de 80 caractères au plus.</value></data>
+  <data name="Edit_Tab_Media" xml:space="preserve"><value>Photos</value></data>
+  <data name="Media_Help" xml:space="preserve"><value>Téléverse des photos au-dessus et sous l'eau. Une photo n'est publique que lorsqu'une version validée l'utilise. La position et les données de l'appareil sont retirées des images publiées.</value></data>
+  <data name="Media_Upload" xml:space="preserve"><value>Téléverser des photos</value></data>
+  <data name="Media_Choose" xml:space="preserve"><value>Choisir des photos</value></data>
+  <data name="Media_Uploading" xml:space="preserve"><value>Téléversement …</value></data>
+  <data name="Media_Uploaded" xml:space="preserve"><value>{0} photo(s) téléversée(s). Enregistre le site pour les ajouter à la version.</value></data>
+  <data name="Media_Rights" xml:space="preserve"><value>J'ai pris ces photos moi-même ou j'en détiens les droits et j'autorise tauchplaetze.ch à les montrer avec mention de l'auteur.</value></data>
+  <data name="Media_Photographer" xml:space="preserve"><value>Photographe</value></data>
+  <data name="Media_PhotographerUrl" xml:space="preserve"><value>Lien du photographe</value></data>
+  <data name="Media_Section" xml:space="preserve"><value>Section</value></data>
+  <data name="Media_Depth" xml:space="preserve"><value>Profondeur de prise de vue (m)</value></data>
+  <data name="Media_Caption" xml:space="preserve"><value>Légende</value></data>
+  <data name="Media_AltText" xml:space="preserve"><value>Texte alternatif</value></data>
+  <data name="Media_InVersion" xml:space="preserve"><value>Photos de cette version</value></data>
+  <data name="Media_None" xml:space="preserve"><value>Pas encore de photos.</value></data>
+  <data name="Media_Available" xml:space="preserve"><value>Autres photos de ce site</value></data>
+  <data name="Media_Add" xml:space="preserve"><value>Ajouter</value></data>
+  <data name="Media_RemoveFromVersion" xml:space="preserve"><value>Retirer de la version</value></data>
+  <data name="Media_Hero" xml:space="preserve"><value>Photo de couverture</value></data>
+  <data name="Media_Private" xml:space="preserve"><value>Privée jusqu'à la validation</value></data>
+  <data name="Media_Up" xml:space="preserve"><value>Monter</value></data>
+  <data name="Media_Down" xml:space="preserve"><value>Descendre</value></data>
+  <data name="Media_Details" xml:space="preserve"><value>Détails</value></data>
+  <data name="Media_SaveDetails" xml:space="preserve"><value>Enregistrer les détails</value></data>
+  <data name="Media_EntryPoint" xml:space="preserve"><value>Point d'entrée</value></data>
+  <data name="MediaSection_Underwater" xml:space="preserve"><value>Sous l’eau</value></data>
+  <data name="MediaSection_Surroundings" xml:space="preserve"><value>Environs (hors de l'eau)</value></data>
+  <data name="MediaSection_Approach" xml:space="preserve"><value>Accès et parking</value></data>
+  <data name="MediaSection_EntryPoint" xml:space="preserve"><value>Point d'entrée</value></data>
+  <data name="MediaSection_Hazards" xml:space="preserve"><value>Dangers</value></data>
+  <data name="Field_Media" xml:space="preserve"><value>Photo {0}</value></data>
+  <data name="Field_MediaPhoto" xml:space="preserve"><value>Fichier</value></data>
+  <data name="Field_MediaSection" xml:space="preserve"><value>Section</value></data>
+  <data name="Field_HeroMediaId" xml:space="preserve"><value>Photo de couverture</value></data>
+  <data name="Error_InvalidMedia" xml:space="preserve"><value>Une photo ne convient pas : elle appartient à un autre site, apparaît deux fois, la photo de couverture manque dans la liste, le point d'entrée manque ou un texte est trop long.</value></data>
+  <data name="Error_RightsNotConfirmed" xml:space="preserve"><value>Confirme que tu détiens les droits sur les photos.</value></data>
+  <data name="Error_InvalidPhotographer" xml:space="preserve"><value>Le photographe manque ou est trop long (120 caractères au plus).</value></data>
+  <data name="Error_InvalidImage" xml:space="preserve"><value>Uniquement JPEG, PNG ou WebP jusqu'à 25 Mo. Exporte les photos d'iPhone (HEIC) en JPEG.</value></data>
+  <data name="Error_TooManyUploads" xml:space="preserve"><value>Trop de photos durant la dernière heure. Continue plus tard.</value></data>
 </root>

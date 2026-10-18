@@ -1,5 +1,6 @@
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Web.CrossCutting.Localization;
 
 namespace Tauchplaetze.Web.Features.Editorial;
@@ -46,6 +47,10 @@ internal class SiteForm
     public List<NoticeForm> Notices { get; } = [];
 
     public List<SketchForm> Sketch { get; } = [];
+
+    public List<MediaUseForm> Media { get; } = [];
+
+    public Guid? HeroMediaId { get; set; }
 
     public string? Comment { get; set; }
 
@@ -97,6 +102,8 @@ internal class SiteForm
         form.EntryPoints.AddRange(content.EntryPointList.Select(e => EntryForm.From(e)));
         form.Notices.AddRange(content.NoticeList.Select(NoticeForm.From));
         form.Sketch.AddRange(content.SketchList.Select(SketchForm.From));
+        form.Media.AddRange(content.MediaList.Select(m => new MediaUseForm { MediaId = m.MediaId, Section = m.Section, EntryPointId = m.EntryPointId }));
+        form.HeroMediaId = content.HeroMediaId;
         return form;
     }
 
@@ -126,7 +133,9 @@ internal class SiteForm
             t.Value.HazardsInfo, t.Value.FacilitiesInfo, t.Value.DivingBanNote, t.Value.IsMachineTranslated)).Where(HasText)],
         [.. EntryPoints.Select(e => e.ToContent())],
         [.. Notices.Select(n => n.ToContent())],
-        [.. Sketch.Select(f => f.ToContent())]);
+        [.. Sketch.Select(f => f.ToContent())],
+        [.. Media.Select(m => new MediaUse(m.MediaId, m.Section, m.Section == MediaSection.EntryPoint ? m.EntryPointId : null))],
+        Media.Any(m => m.MediaId == HeroMediaId) ? HeroMediaId : null);
 
     private static bool HasText(DiveSiteContentTranslation t) =>
         new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));
@@ -242,4 +251,14 @@ public class SketchForm
     public SketchFeature ToContent() => new(
         Id, Kind, [.. Points], Depth,
         [.. Labels.Where(l => !string.IsNullOrWhiteSpace(l.Value)).Select(l => new SketchText(l.Key, l.Value))]);
+}
+
+/// <summary>Ein Foto in der bearbeiteten Version. Öffentlich, weil der Foto-Editor es als Parameter bekommt.</summary>
+public class MediaUseForm
+{
+    public Guid MediaId { get; set; }
+
+    public MediaSection Section { get; set; }
+
+    public Guid? EntryPointId { get; set; }
 }

@@ -75,4 +75,8 @@
   <data name="Error_LastAdmin" xml:space="preserve"><value>È l'ultimo account admin attivo. Nomina prima un altro admin.</value></data>
   <data name="Error_Other" xml:space="preserve"><value>Qualcosa è andato storto. Riprova.</value></data>
   <data name="Meta_NoIndex" xml:space="preserve"><value>Account</value></data>
+  <data name="MyData_Photos" xml:space="preserve"><value>Fotografie</value></data>
+  <data name="MyData_PhotoPublic" xml:space="preserve"><value>pubblica</value></data>
+  <data name="MyData_PhotoPrivate" xml:space="preserve"><value>privata fino all'approvazione</value></data>
+  <data name="Delete_Photos" xml:space="preserve"><value>Le foto ancora private vengono eliminate. Le foto pubbliche restano con il nome del fotografo, senza collegamento al tuo account.</value></data>
 </root>

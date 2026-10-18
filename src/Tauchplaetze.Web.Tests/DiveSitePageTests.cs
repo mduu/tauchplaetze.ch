@@ -1,3 +1,4 @@
+using Tauchplaetze.Core.Features.Media;
 using System.Net;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Forecasts;
@@ -15,6 +16,12 @@ public class DiveSitePageTests : IClassFixture<WebApp>
 
     private readonly WebApp app;
 
+    private static readonly Guid HeroPhotoId = Guid.NewGuid();
+
+    private static PublicPhoto Photo(Guid id, MediaSection section, string? caption, string altText) =>
+        new(id, section, null, 960, 640, 18, "Anna Muster", null, caption, altText,
+            [new MediaRendition(480, $"https://media.test/{(id == HeroPhotoId ? "hero" : id)}/480.webp"), new MediaRendition(960, $"https://media.test/{(id == HeroPhotoId ? "hero" : id)}/960.webp")]);
+
     public DiveSitePageTests(WebApp app)
     {
         this.app = app;
@@ -25,7 +32,9 @@ public class DiveSitePageTests : IClassFixture<WebApp>
             [new SiteNotice(NoticeKind.Closure, "Tauchplatz gesperrt wegen Bauarbeiten.", new DateOnly(2027, 4, 1), true), new SiteNotice(NoticeKind.Info, "Parking payant.", null, false)],
             [new SiteEntryPoint(EntryPointKind.EntryAndExit, 47.2851, 8.6081, "Treppe beim Bootshaus")],
             new SiteRatings(3, 5, null, null, 1, null),
-            [new SiteSketchFeature(SketchKind.Sculpture, [new SitePoint(47.2852, 8.6080)], 12, "Madonna")])));
+            [new SiteSketchFeature(SketchKind.Sculpture, [new SitePoint(47.2852, 8.6080)], 12, "Madonna")],
+            [Photo(HeroPhotoId, MediaSection.Underwater, "Hecht an der Felswand", "Ein Hecht vor der Felswand"), Photo(Guid.NewGuid(), MediaSection.Surroundings, null, "Steg im Abendlicht")],
+            HeroPhotoId)));
         app.Forecasts.Add(ForecastSiteId, new SiteForecast(
             [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]), Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
             DateTimeOffset.UtcNow,
@@ -85,6 +94,25 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("Entrata e uscita Treppe beim Bootshaus", text);
         Assert.Contains("47.2851", html);
         Assert.DoesNotContain("data-here=", html);
+    }
+
+    [Fact]
+    public async Task Fotos_erscheinen_nach_Abschnitt_mit_Alternativtext_und_Fotograf_das_Titelbild_im_Hero()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithForecast, TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains("Unter Wasser", text);
+        Assert.Contains("Über Wasser", text);
+        Assert.Contains("Foto: Anna Muster · auf 18 m", text);
+        Assert.Contains("Titelbild: Anna Muster", text);
+        Assert.Contains("alt=\"Ein Hecht vor der Felswand\"", html);
+        Assert.Contains("https://media.test/hero/480.webp 480w, https://media.test/hero/960.webp 960w", html);
     }
 
     [Fact]
