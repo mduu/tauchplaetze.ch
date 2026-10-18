@@ -80,6 +80,7 @@ Der Tauchplatz. Nur `Name`, `Location` und `WaterBodyId` sind Pflicht (Ausbaustu
 | `Status` | enum | `Draft`, `Published`, `Archived` |
 | `ContentLevel` | int (0–2) | berechnet und gespeichert, siehe `cms.md` |
 | `HeroMediaId` | Guid, optional | FK `MediaItem` |
+| `Sketch` | nvarchar(max), optional | Tauchskizze als JSON: Liste von Elementen mit `id`, `kind` (Name aus `SketchKind`), `points` (`latitude`, `longitude`), `depth` (m, optional), `texts` (`culture`, `label`). Teil der Revision. `null` ohne Skizze. |
 | `CreatedAt`, `UpdatedAt` | DateTimeOffset | |
 | `CreatedBy`, `UpdatedBy` | string | Benutzer-ID |
 | `RowVersion` | rowversion | |

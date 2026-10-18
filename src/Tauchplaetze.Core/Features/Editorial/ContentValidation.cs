@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Tauchplaetze.Core.CrossCutting.Geo;
 using Tauchplaetze.Core.Features.DiveSites;
 
 namespace Tauchplaetze.Core.Features.Editorial;
@@ -39,6 +40,11 @@ internal static partial class ContentValidation
             errors.Add(EditorialError.InvalidNotice);
         }
 
+        if (content.SketchList.Count > SketchRules.MaxFeatures || content.SketchList.Any(f => IsInvalid(f, content)))
+        {
+            errors.Add(EditorialError.InvalidSketch);
+        }
+
         return errors;
     }
 
@@ -46,6 +52,17 @@ internal static partial class ContentValidation
         string.IsNullOrWhiteSpace(notice.Texts.FirstOrDefault(t => t.Culture == "de")?.Text)
         || notice.Texts.Any(t => t.Text?.Trim().Length > NoticeRules.TextLength)
         || notice is { ValidFrom: { } from, ValidUntil: { } until } && until < from;
+
+    private static bool IsInvalid(SketchFeature feature, DiveSiteContent content) =>
+        feature.Kind.ShapeOf() switch
+        {
+            SketchShape.Point => feature.Points.Count != 1,
+            SketchShape.Line => feature.Points.Count is < 2 or > SketchRules.MaxPoints,
+            _ => feature.Points.Count is < 3 or > SketchRules.MaxPoints,
+        }
+        || feature.Points.Any(p => Distance.Km(GeoPoints.Create(content.Latitude, content.Longitude), GeoPoints.Create(p.Latitude, p.Longitude)) * 1000 > SketchRules.MaxDistanceMeters)
+        || feature.Depth is < 0 or > SketchRules.MaxDepth
+        || feature.Texts.Any(t => t.Label?.Trim().Length > SketchRules.LabelLength);
 
     /// <remarks>Grob die Landesgrenze mit etwas Rand, damit Plätze an der Grenze (Bodensee, Genfersee, Rhein bei Basel) gelten.</remarks>
     private static bool InSwitzerland(double latitude, double longitude) => latitude is >= 45.7 and <= 47.9 && longitude is >= 5.8 and <= 10.6;

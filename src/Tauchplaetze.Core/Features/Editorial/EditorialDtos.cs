@@ -27,11 +27,14 @@ public record DiveSiteContent(
     bool ForecastDisabled,
     IReadOnlyList<DiveSiteContentTranslation> Translations,
     IReadOnlyList<EntryPointContent>? EntryPoints = null,
-    IReadOnlyList<NoticeContent>? Notices = null)
+    IReadOnlyList<NoticeContent>? Notices = null,
+    IReadOnlyList<SketchFeature>? Sketch = null)
 {
     public IReadOnlyList<EntryPointContent> EntryPointList => EntryPoints ?? [];
 
     public IReadOnlyList<NoticeContent> NoticeList => Notices ?? [];
+
+    public IReadOnlyList<SketchFeature> SketchList => Sketch ?? [];
 
     public DiveSiteContentTranslation? TextIn(string culture) => Translations.FirstOrDefault(t => t.Culture == culture);
 }
@@ -58,6 +61,15 @@ public record NoticeContent(Guid Id, NoticeKind Kind, DateOnly? ValidFrom, DateO
 
 /// <summary>Text eines Hinweises in einer Sprache.</summary>
 public record NoticeText(string Culture, string? Text);
+
+/// <summary>Ein Element der Tauchskizze: Art, Punkte (WGS84), optional Tiefe in Metern und Beschriftung pro Sprache.</summary>
+public record SketchFeature(Guid Id, SketchKind Kind, IReadOnlyList<SketchPoint> Points, int? Depth, IReadOnlyList<SketchText> Texts);
+
+/// <summary>Ein Punkt der Skizze.</summary>
+public record SketchPoint(double Latitude, double Longitude);
+
+/// <summary>Beschriftung eines Skizzenelements in einer Sprache.</summary>
+public record SketchText(string Culture, string? Label);
 
 /// <summary>Fehler beim Speichern oder Freigeben. Die Oberfläche bildet daraus Texte.</summary>
 public enum EditorialError
@@ -94,6 +106,9 @@ public enum EditorialError
 
     /// <summary>Ein Hinweis hat keinen deutschen Text, einen zu langen Text oder endet vor seinem Beginn.</summary>
     InvalidNotice,
+
+    /// <summary>Die Skizze hat zu viele Elemente, eine falsche Form, Punkte weit weg vom Platz, eine ungültige Tiefe oder zu lange Beschriftung.</summary>
+    InvalidSketch,
 }
 
 /// <summary>Ergebnis eines Commands der Redaktion. <see cref="NoChange"/>: Der Inhalt war gleich wie die Basis, es entstand keine Version.</summary>

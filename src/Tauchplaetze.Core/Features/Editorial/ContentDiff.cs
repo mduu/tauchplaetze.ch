@@ -75,6 +75,17 @@ internal static class ContentDiff
             }
         }
 
+        foreach (var (feature, index) in content.SketchList.Select((f, i) => (f, i + 1)))
+        {
+            fields[$"Sketch.{index}.Kind"] = feature.Kind.ToString();
+            fields[$"Sketch.{index}.Points"] = string.Join(" / ", feature.Points.Select(p => Coordinate(p.Latitude, p.Longitude)));
+            fields[$"Sketch.{index}.Depth"] = Text(feature.Depth);
+            foreach (var text in feature.Texts)
+            {
+                fields[$"Sketch.{index}.{text.Culture}.Label"] = text.Label;
+            }
+        }
+
         return fields.Where(f => !string.IsNullOrWhiteSpace(f.Value)).ToDictionary(f => f.Key, f => f.Value);
     }
 

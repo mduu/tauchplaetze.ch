@@ -8,7 +8,7 @@ namespace Tauchplaetze.Core.Features.Editorial;
 /// Speicherformat einer Version: der Inhalt als JSON mit `snapshotVersion` (ADR-008).
 /// </summary>
 /// <remarks>
-/// Format 1 vom 17.10.2026 hatte zuerst keine Einstiege, bis 18.10.2026 keine Hinweise. Fehlen sie, gilt eine leere Liste.
+/// Format 1 vom 17.10.2026 hatte zuerst keine Einstiege, bis 18.10.2026 keine Hinweise und keine Skizze. Fehlen sie, gilt eine leere Liste.
 /// Neue Felder nur optional anhängen.
 /// </remarks>
 internal static class DiveSiteSnapshot
@@ -24,11 +24,17 @@ internal static class DiveSiteSnapshot
             Translations = [.. content.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal)],
             EntryPoints = content.EntryPointList,
             Notices = [.. content.NoticeList.Select(n => n with { Texts = [.. n.Texts.OrderBy(t => t.Culture, StringComparer.Ordinal)] })],
+            Sketch = [.. content.SketchList.Select(f => f with
+            {
+                Texts = [.. f.Texts.Where(t => !string.IsNullOrWhiteSpace(t.Label)).Select(t => t with { Label = t.Label!.Trim() }).OrderBy(t => t.Culture, StringComparer.Ordinal)],
+            })],
         };
         var node = JsonSerializer.SerializeToNode(normalized, JsonOptions)!.AsObject();
         node.Remove("entryPointList");
         node.Remove("noticeList");
-        RemoveEmptyNotices(node);
+        node.Remove("sketchList");
+        RemoveEmpty(node, "notices");
+        RemoveEmpty(node, "sketch");
         node["snapshotVersion"] = CurrentVersion;
         return JsonSerializer.SerializeToUtf8Bytes(node, JsonOptions);
     }
@@ -36,15 +42,15 @@ internal static class DiveSiteSnapshot
     public static DiveSiteContent FromJson(byte[] json)
     {
         var content = JsonSerializer.Deserialize<DiveSiteContent>(json, JsonOptions)!;
-        return content with { EntryPoints = content.EntryPoints ?? [], Notices = content.Notices ?? [] };
+        return content with { EntryPoints = content.EntryPoints ?? [], Notices = content.Notices ?? [], Sketch = content.Sketch ?? [] };
     }
 
-    /// <remarks>Ohne Hinweise bleibt das JSON wie vor dem 18.10.2026. So erkennt der Hash auch bei alten Versionen «keine Änderung».</remarks>
-    private static void RemoveEmptyNotices(JsonObject node)
+    /// <remarks>Ohne Hinweise und Skizze bleibt das JSON wie vor dem 18.10.2026. So erkennt der Hash auch bei alten Versionen «keine Änderung».</remarks>
+    private static void RemoveEmpty(JsonObject node, string property)
     {
-        if (node["notices"] is JsonArray { Count: 0 })
+        if (node[property] is JsonArray { Count: 0 })
         {
-            node.Remove("notices");
+            node.Remove(property);
         }
     }
 

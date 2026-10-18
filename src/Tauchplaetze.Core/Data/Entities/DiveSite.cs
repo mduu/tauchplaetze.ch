@@ -55,6 +55,9 @@ internal class DiveSite
 
     public Guid? HeroMediaId { get; set; }
 
+    /// <summary>Die Tauchskizze als JSON (Liste von <c>SketchFeature</c>), <c>null</c> ohne Skizze.</summary>
+    public string? Sketch { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; }
 
     public DateTimeOffset UpdatedAt { get; set; }

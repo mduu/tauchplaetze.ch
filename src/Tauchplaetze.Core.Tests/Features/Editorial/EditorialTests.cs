@@ -372,7 +372,55 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Eine_Version_im_alten_Format_ohne_Einstiege_und_Hinweise_laesst_sich_laden()
+    public async Task Eine_Skizze_ist_nach_der_Freigabe_gespeichert_und_dieselbe_Skizze_erzeugt_keine_neue_Version()
+    {
+        // Arrange
+        var (moderator, _, site) = await Prepare();
+        var first = await ForEditing(site);
+        SketchFeature[] sketch =
+        [
+            Sketch(SketchKind.Sculpture, 12, [("de", " Madonna "), ("fr", "")], (47.2850, 8.6080)),
+            Sketch(SketchKind.Wall, null, [], (47.2851, 8.6079), (47.2853, 8.6077)),
+        ];
+
+        // Act
+        var saved = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, first.BaseNumber, first.Content with { Sketch = sketch }, null));
+        var second = await ForEditing(site);
+        var again = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, second.BaseNumber, second.Content with { Sketch = sketch }, null));
+
+        // Assert
+        Assert.True(saved.Succeeded);
+        Assert.Equal([(SketchKind.Sculpture, 12, "Madonna"), (SketchKind.Wall, (int?)null, (string?)null)],
+            second.Content.SketchList.Select(f => (f.Kind, f.Depth, f.Texts.FirstOrDefault(t => t.Culture == "de")?.Label)));
+        Assert.True(again.NoChange);
+    }
+
+    [SqlTheory]
+    [InlineData(SketchKind.Sculpture, 2, 0, null, 10)]
+    [InlineData(SketchKind.Wall, 1, 0, null, 10)]
+    [InlineData(SketchKind.PlantField, 2, 0, null, 10)]
+    [InlineData(SketchKind.Wreck, 1, 3000, null, 10)]
+    [InlineData(SketchKind.Wreck, 1, 0, -1, 10)]
+    [InlineData(SketchKind.Highlight, 1, 0, null, 81)]
+    public async Task Eine_Skizze_braucht_die_Form_ihrer_Art_Punkte_nahe_am_Platz_eine_gueltige_Tiefe_und_kurze_Beschriftungen(
+        SketchKind kind, int points, int metersAway, int? depth, int labelLength)
+    {
+        // Arrange
+        var (moderator, _, site) = await Prepare();
+        var edit = await ForEditing(site);
+        var north = edit.Content.Latitude + metersAway / 111_000.0;
+        var feature = new SketchFeature(Guid.NewGuid(), kind,
+            [.. Enumerable.Range(0, points).Select(i => new SketchPoint(north + i * 0.0001, edit.Content.Longitude))], depth, [new SketchText("de", new string('a', labelLength))]);
+
+        // Act
+        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber, edit.Content with { Sketch = [feature] }, null));
+
+        // Assert
+        Assert.Equal([EditorialError.InvalidSketch], result.Errors);
+    }
+
+    [SqlFact]
+    public async Task Eine_Version_im_alten_Format_ohne_Einstiege_Hinweise_und_Skizze_laesst_sich_laden()
     {
         // Arrange
         var (_, _, site) = await Prepare();
@@ -389,7 +437,11 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal("Riff Williams", edit.Content.Name);
         Assert.Empty(edit.Content.EntryPointList);
         Assert.Empty(edit.Content.NoticeList);
+        Assert.Empty(edit.Content.SketchList);
     }
+
+    private static SketchFeature Sketch(SketchKind kind, int? depth, (string Culture, string Label)[] labels, params (double Lat, double Lng)[] points) =>
+        new(Guid.NewGuid(), kind, [.. points.Select(p => new SketchPoint(p.Lat, p.Lng))], depth, [.. labels.Select(l => new SketchText(l.Culture, l.Label))]);
 
     private async Task<(string Moderator, string Anna, Guid Site)> Prepare()
     {

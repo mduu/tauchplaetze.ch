@@ -381,6 +381,9 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.Property<Point>("SatellitePoint")
                         .HasColumnType("geography");
 
+                    b.Property<string>("Sketch")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Slug")
                         .IsRequired()
                         .HasMaxLength(120)
