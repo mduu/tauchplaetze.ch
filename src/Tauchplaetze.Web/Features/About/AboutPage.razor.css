@@ -128,3 +128,7 @@ address {
 .contact-errors {
     color: var(--color-notice-closure);
 }
+
+.page-title {
+    overflow-wrap: anywhere;
+}
