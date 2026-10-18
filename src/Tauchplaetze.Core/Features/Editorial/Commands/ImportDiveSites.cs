@@ -82,7 +82,7 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
         ForecastDisabled: false,
         Translations: [],
         EntryPoints: [.. (seed.EntryPoints ?? []).Select(ToEntryPoint)],
-        OtherNames: seed.OtherNames ?? []);
+        OtherNames: OtherNames.Valid(seed.Name, seed.OtherNames ?? []));
 
     private static EntryPointContent ToEntryPoint(EntryPointSeed seed) => new(
         Guid.CreateVersion7(),

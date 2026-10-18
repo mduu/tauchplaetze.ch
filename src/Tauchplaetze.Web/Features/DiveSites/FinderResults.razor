@@ -11,7 +11,7 @@
                 <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
                 @if (site.OtherNameList.Count > 0)
                 {
-                    <span class="other-names">@string.Join(" · ", site.OtherNameList)</span>
+                    <span class="other-names"><span class="visually-hidden">@L["Site_OtherNames", ""]</span>@string.Join(" · ", site.OtherNameList)</span>
                 }
                 <span class="where">@Where(site)</span>
                 @if (Tags(site) is { Count: > 0 } tags)

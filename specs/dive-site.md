@@ -105,7 +105,7 @@ Die Bewertung beschreibt die übliche Lage. Der aktuelle Abfluss kommt aus der P
 
 ## Auch bekannt als
 
-Viele Plätze haben mehrere Namen, z.B. Steinrad, auch «Grosser Parkplatz» oder «Seeterasse» (`DiveSiteContent.OtherNames`).
+Viele Plätze haben mehrere Namen, z.B. Steinrad, auch «Grosser Parkplatz» oder «Seeterrasse» (`DiveSiteContent.OtherNames`).
 
 - Höchstens 5 weitere Namen, je höchstens 80 Zeichen, keiner doppelt und keiner gleich wie der Name (ohne Gross-/Kleinschreibung). Sonst Fehler `InvalidOtherNames`.
 - Getrimmt, leere fallen weg. Teil der Version. Eigennamen, nicht übersetzt.

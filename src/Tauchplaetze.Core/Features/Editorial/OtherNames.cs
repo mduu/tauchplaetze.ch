@@ -1,7 +1,7 @@
 namespace Tauchplaetze.Core.Features.Editorial;
 
 /// <summary>Regeln für die weiteren Namen eines Platzes (`dive-site.md`, «Auch bekannt als»).</summary>
-public static class OtherNames
+internal static class OtherNames
 {
     /// <summary>Höchstens so viele weitere Namen.</summary>
     public const int MaxCount = 5;
@@ -13,7 +13,14 @@ public static class OtherNames
     public static IReadOnlyList<string> Normalize(IEnumerable<string?> names) =>
         [.. names.Select(n => n?.Trim()).OfType<string>().Where(n => n.Length > 0)];
 
-    internal static bool AreInvalid(string name, IReadOnlyList<string> otherNames)
+    /// <summary>Normalisiert und lässt alles weg, was die Regeln verletzt (für den Erstimport).</summary>
+    public static IReadOnlyList<string> Valid(string name, IEnumerable<string?> names) =>
+        [.. Normalize(names)
+            .Where(n => n.Length <= MaxLength && !string.Equals(n, name.Trim(), StringComparison.OrdinalIgnoreCase))
+            .DistinctBy(n => n.ToLowerInvariant())
+            .Take(MaxCount)];
+
+    public static bool AreInvalid(string name, IReadOnlyList<string> otherNames)
     {
         var names = Normalize(otherNames);
         return names.Count > MaxCount

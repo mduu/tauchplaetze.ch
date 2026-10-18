@@ -38,7 +38,7 @@ internal class DiveSiteConfiguration : IEntityTypeConfiguration<DiveSite>
         builder.Property(d => d.Municipality).HasMaxLength(80);
         builder.Property(d => d.Canton).HasMaxLength(2).IsFixedLength();
         builder.Property(d => d.InflowStationOverride).HasMaxLength(20);
-        builder.Property(d => d.OtherNames).HasMaxLength(600);
+        builder.Property(d => d.OtherNames).HasMaxLength(1000);
         builder.Property(d => d.CreatedBy).HasMaxLength(450);
         builder.Property(d => d.UpdatedBy).HasMaxLength(450);
         builder.Property(d => d.RowVersion).IsRowVersion();

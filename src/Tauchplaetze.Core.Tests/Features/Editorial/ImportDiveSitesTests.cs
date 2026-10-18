@@ -52,7 +52,9 @@ public class ImportDiveSitesTests(SqlServer sql) : SqlTest(sql)
         var site = await dbContext.DiveSites.SingleAsync(d => d.Slug == "chappeli-oberaegeri", TestContext.Current.CancellationToken);
         Assert.Equal((30, (byte?)2, (byte?)4, DiveSiteAccess.Shore), (site.MaxDepth, site.DifficultyRating, site.WallRating, site.Access));
         var steinrad = await dbContext.DiveSites.SingleAsync(d => d.Name == "Steinrad", TestContext.Current.CancellationToken);
-        Assert.Equal("""["Grosser Parkplatz","Seeterasse"]""", steinrad.OtherNames);
+        Assert.Equal("""["Grosser Parkplatz","Seeterrasse"]""", steinrad.OtherNames);
+        var pumpwerk = await dbContext.DiveSites.SingleAsync(d => d.Name == "Pumpwerk Moos", TestContext.Current.CancellationToken);
+        Assert.Equal("""["Rüschlikon Marbach"]""", pumpwerk.OtherNames);
     }
 
     [SqlFact]

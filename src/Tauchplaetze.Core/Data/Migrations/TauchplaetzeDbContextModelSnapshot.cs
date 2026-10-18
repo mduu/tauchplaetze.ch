@@ -377,8 +377,8 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .HasColumnType("nvarchar(120)");
 
                     b.Property<string>("OtherNames")
-                        .HasMaxLength(600)
-                        .HasColumnType("nvarchar(600)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()

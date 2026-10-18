@@ -26,7 +26,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     {
         this.app = app;
         app.DiveSites.Add(Slug, new DiveSiteLookup.Found(new DiveSiteDetails(
-            Guid.NewGuid(), Slug, "Riff Williams", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.2849, 8.6085, 0, DateTimeOffset.UtcNow, [], [], OtherNames: ["Grosser Parkplatz", "Seeterasse"])));
+            Guid.NewGuid(), Slug, "Riff Williams", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.2849, 8.6085, 0, DateTimeOffset.UtcNow, [], [], OtherNames: ["Grosser Parkplatz", "Seeterrasse"])));
         app.DiveSites.Add(WithForecast, new DiveSiteLookup.Found(new DiveSiteDetails(
             ForecastSiteId, WithForecast, "Platz mit Prognose", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.28, 8.6, 0, DateTimeOffset.UtcNow,
             [new SiteNotice(NoticeKind.Closure, "Tauchplatz gesperrt wegen Bauarbeiten.", new DateOnly(2027, 4, 1), true), new SiteNotice(NoticeKind.Info, "Parking payant.", null, false)],
@@ -72,7 +72,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         var text = VisibleText.Of(await browser.GetStringAsync("/fr/sites-de-plongee/" + Slug, TestContext.Current.CancellationToken));
 
         // Assert
-        Assert.Contains("Riff Williams aussi appelé Grosser Parkplatz, Seeterasse", text);
+        Assert.Contains("Riff Williams aussi appelé Grosser Parkplatz, Seeterrasse", text);
     }
 
     [Fact]

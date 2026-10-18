@@ -73,6 +73,21 @@ public class GetDiveSiteTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Ungueltige_weitere_Namen_in_der_Datenbank_ergeben_keine_Namen_statt_eines_Fehlers()
+    {
+        // Arrange
+        await Sql.Arrange(async db => (await Add(db, "riff-williams-herrliberg", DiveSiteStatus.Published)).OtherNames = "kein JSON");
+
+        // Act
+        var result = await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "de"));
+        var found = await Query<FindDiveSitesQuery, FoundDiveSites>(new FindDiveSitesQuery("de", Text: "riff"));
+
+        // Assert
+        Assert.Empty(Assert.IsType<DiveSiteLookup.Found>(result).Site.OtherNameList);
+        Assert.Empty(Assert.Single(found.Sites).OtherNameList);
+    }
+
+    [SqlFact]
     public async Task Ein_alter_Slug_fuehrt_auf_den_aktuellen()
     {
         // Arrange

@@ -140,7 +140,7 @@ internal class SiteForm
         [.. Sketch.Select(f => f.ToContent())],
         [.. Media.Select(m => new MediaUse(m.MediaId, m.Section, m.Section == MediaSection.EntryPoint ? m.EntryPointId : null))],
         Media.Any(m => m.MediaId == HeroMediaId) ? HeroMediaId : null,
-        Tauchplaetze.Core.Features.Editorial.OtherNames.Normalize((OtherNames ?? "").Split(',')));
+        (OtherNames ?? "").Split(','));
 
     private static bool HasText(DiveSiteContentTranslation t) =>
         new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));

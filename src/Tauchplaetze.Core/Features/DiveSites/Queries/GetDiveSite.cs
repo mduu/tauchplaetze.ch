@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
@@ -11,7 +12,7 @@ namespace Tauchplaetze.Core.Features.DiveSites.Queries;
 /// <summary>Ein öffentlicher Platz über seinen Slug, in der Sprache <paramref name="Culture"/>. Ein alter Slug ergibt eine Weiterleitung.</summary>
 public record GetDiveSiteQuery(string Slug, string Culture);
 
-internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore media, TimeProvider time) : IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>
+internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore media, TimeProvider time, ILogger<GetDiveSiteHandler> logger) : IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>
 {
     public async Task<DiveSiteLookup> Handle(GetDiveSiteQuery query, CancellationToken ct = default)
     {
@@ -58,7 +59,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 Sketch(site.Sketch, query.Culture),
                 await Photos(site.Id, query.Culture, ct),
                 site.HeroMediaId,
-                DiveSiteContentMapping.ReadOtherNames(site.OtherNames))),
+                OtherNameJson.Read(site.OtherNames, logger))),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),

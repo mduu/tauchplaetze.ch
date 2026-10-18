@@ -149,8 +149,8 @@ Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer D
 
 ### Erstimport
 
-- Die ersten Plätze stehen in `Features/Editorial/Seed/dive-sites.json` (Name, Gewässer, Koordinate, Gemeinde, Kanton).
-- `ImportDiveSites` legt fehlende Plätze an. Jeder bekommt eine freigegebene Version 1 mit der Notiz «Erstimport». Autor und Approver ist der erste Admin aus `Accounts:Admins`.
+- Die ersten Plätze stehen in `Features/Editorial/Seed/dive-sites.json` (Name, weitere Namen, Gewässer, Koordinate, Gemeinde, Kanton, Startwerte aus OSM, Einstiege). Weitere Namen werden beim Import normalisiert, ungültige fallen weg.
+- `ImportDiveSites` legt nur fehlende Plätze an. Bestehende ändert er nie. Kommt im Seed etwas zu einem bestehenden Platz dazu (weitere Namen, Startwerte, ein entfernter Parkplatz-Ort), trägt die Redaktion es im CMS nach, oder die Datenbank wird neu aufgesetzt (lokal). Jeder bekommt eine freigegebene Version 1 mit der Notiz «Erstimport». Autor und Approver ist der erste Admin aus `Accounts:Admins`.
 - Der Slug kommt aus Name und Gemeinde (`riff-williams-herrliberg`). Ein Platz mit vorhandenem Slug bleibt unverändert. Ein zweiter Lauf ändert nichts.
 - Lokal läuft der Import beim Start der Web-App (`Database:PrepareOnStartup`).
 

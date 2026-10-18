@@ -1,12 +1,12 @@
 using System.Globalization;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NetTopologySuite.Geometries;
 using Tauchplaetze.Core.CrossCutting.Geo;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
-using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.DiveSites.Queries;
@@ -97,7 +97,7 @@ public record FoundDiveSite(
     public IReadOnlyList<string> OtherNameList => OtherNames ?? [];
 }
 
-internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider time) : IQueryHandler<FindDiveSitesQuery, FoundDiveSites>
+internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider time, ILogger<FindDiveSitesHandler> logger) : IQueryHandler<FindDiveSitesQuery, FoundDiveSites>
 {
     public async Task<FoundDiveSites> Handle(FindDiveSitesQuery query, CancellationToken ct = default)
     {
@@ -129,6 +129,7 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 d.Notices.AsQueryable().Where(active).Select(n => n.Kind).ToList(),
                 d.OtherNames))
             .ToListAsync(ct);
+        var otherNames = rows.ToDictionary(r => r.Slug, r => OtherNameJson.Read(r.OtherNames, logger));
 
         var hasLocation = query is { Latitude: not null, Longitude: not null };
         var origin = hasLocation ? GeoPoints.Create(query.Latitude!.Value, query.Longitude!.Value) : null;
@@ -140,7 +141,7 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
             .Select(r => (Row: r, Traits: TraitsOf(r), Distance: origin is null ? (double?)null : Distance.Km(origin, GeoPoints.Create(r.Latitude, r.Longitude))))
             .Where(m => waterSlug is null || m.Row.WaterSlug == waterSlug)
             .Where(m => search.Length == 0
-                || SearchText.Matches(search, [m.Row.Name, m.Row.Municipality, m.Row.NameDe, m.Row.NameEn, m.Row.NameFr, m.Row.NameIt, .. m.Row.OtherNameList]))
+                || SearchText.Matches(search, [m.Row.Name, m.Row.Municipality, m.Row.NameDe, m.Row.NameEn, m.Row.NameFr, m.Row.NameIt, .. otherNames[m.Row.Slug]]))
             .Where(m => traits.All(m.Traits.Contains))
             .Where(m => query.RadiusKm is null || m.Distance is null || m.Distance <= query.RadiusKm)
             .ToList();
@@ -178,7 +179,7 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 m.Row.MaxDepth,
                 m.Traits,
                 m.Distance is { } km ? Math.Round(km, 1) : null,
-                m.Row.OtherNameList))],
+                otherNames[m.Row.Slug]))],
             matches.Count,
             page,
             pageCount,
@@ -254,8 +255,6 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
         List<NoticeKind> Notices,
         string? OtherNames)
     {
-        public IReadOnlyList<string> OtherNameList => DiveSiteContentMapping.ReadOtherNames(OtherNames);
-
         public double Latitude => Location.Y;
 
         public double Longitude => Location.X;
