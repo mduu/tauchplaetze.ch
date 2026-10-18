@@ -13,6 +13,10 @@ internal class SmtpMailSender(IOptions<MailOptions> options) : IMailSender
         var mime = new MimeMessage();
         mime.From.Add(MailboxAddress.Parse(settings.From));
         mime.To.Add(MailboxAddress.Parse(message.To));
+        if (message.ReplyTo is { } replyTo)
+        {
+            mime.ReplyTo.Add(MailboxAddress.Parse(replyTo));
+        }
         mime.Subject = message.Subject;
         mime.Body = new TextPart("plain") { Text = message.Body };
 

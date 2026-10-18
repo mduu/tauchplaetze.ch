@@ -1,7 +1,7 @@
 namespace Tauchplaetze.Core.CrossCutting.Mail;
 
-/// <summary>Eine Mail als reiner Text.</summary>
-internal record MailMessage(string To, string Subject, string Body);
+/// <summary>Eine Mail als reiner Text. <paramref name="ReplyTo"/>: Antworten gehen dorthin statt an den Absender.</summary>
+internal record MailMessage(string To, string Subject, string Body, string? ReplyTo = null);
 
 /// <summary>Versand von Mails (lokal an Mailpit, `infrastructure.md`).</summary>
 internal interface IMailSender
