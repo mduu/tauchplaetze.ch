@@ -66,4 +66,6 @@ internal class DiveSite
     public byte[] RowVersion { get; set; } = [];
 
     public List<DiveSiteTranslation> Translations { get; set; } = [];
+
+    public List<DiveSiteEntryPoint> EntryPoints { get; set; } = [];
 }

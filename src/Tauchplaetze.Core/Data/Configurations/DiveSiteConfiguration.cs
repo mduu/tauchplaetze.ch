@@ -44,6 +44,7 @@ internal class DiveSiteConfiguration : IEntityTypeConfiguration<DiveSite>
 
         builder.HasOne(d => d.WaterBody).WithMany().HasForeignKey(d => d.WaterBodyId).OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(d => d.Translations).WithOne().HasForeignKey(t => t.DiveSiteId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(d => d.EntryPoints).WithOne().HasForeignKey(e => e.DiveSiteId).OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(d => new { d.WaterBodyId, d.Status });
     }

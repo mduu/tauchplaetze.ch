@@ -437,6 +437,56 @@ namespace Tauchplaetze.Core.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteEntryPoint", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DiveSiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<Point>("Location")
+                        .IsRequired()
+                        .HasColumnType("geography");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiveSiteId", "SortOrder");
+
+                    b.ToTable("DiveSiteEntryPoints", (string)null);
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteEntryPointTranslation", b =>
+                {
+                    b.Property<Guid>("EntryPointId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Culture")
+                        .HasMaxLength(2)
+                        .HasColumnType("nchar(2)")
+                        .IsFixedLength();
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.HasKey("EntryPointId", "Culture");
+
+                    b.ToTable("DiveSiteEntryPointTranslations", (string)null);
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteRevision", b =>
                 {
                     b.Property<Guid>("Id")
@@ -858,6 +908,24 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.Navigation("WaterBody");
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteEntryPoint", b =>
+                {
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSite", null)
+                        .WithMany("EntryPoints")
+                        .HasForeignKey("DiveSiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteEntryPointTranslation", b =>
+                {
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSiteEntryPoint", null)
+                        .WithMany("Translations")
+                        .HasForeignKey("EntryPointId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteRevision", b =>
                 {
                     b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSite", null)
@@ -895,6 +963,13 @@ namespace Tauchplaetze.Core.Data.Migrations
                 });
 
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSite", b =>
+                {
+                    b.Navigation("EntryPoints");
+
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteEntryPoint", b =>
                 {
                     b.Navigation("Translations");
                 });

@@ -36,7 +36,9 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
             var waterBodyId = waterBodies.TryGetValue(seed.WaterBody, out var id)
                 ? id
                 : throw new InvalidOperationException($"Gewässer «{seed.WaterBody}» fehlt für «{seed.Name}».");
-            await revisions.CreateApprovedSite(ToSnapshot(seed, slug, waterBodyId), command.EditorId, Comment, ct);
+            var content = ToContent(seed, slug, waterBodyId);
+            var site = revisions.NewDraft(content, command.EditorId);
+            await revisions.Append(site, content, null, command.EditorId, Comment, approve: true, ct);
         }
 
         await dbContext.SaveChangesAsync(ct);
@@ -50,8 +52,7 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
         return await JsonSerializer.DeserializeAsync<List<DiveSiteSeed>>(stream, JsonOptions, ct) ?? [];
     }
 
-    private static DiveSiteSnapshot ToSnapshot(DiveSiteSeed seed, string slug, int waterBodyId) => new(
-        SnapshotVersion: DiveSiteSnapshot.CurrentVersion,
+    private static DiveSiteContent ToContent(DiveSiteSeed seed, string slug, int waterBodyId) => new(
         Name: seed.Name,
         Slug: slug,
         WaterBodyId: waterBodyId,

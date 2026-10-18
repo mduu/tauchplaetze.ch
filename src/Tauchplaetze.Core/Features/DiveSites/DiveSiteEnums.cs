@@ -48,3 +48,16 @@ public enum DiveSiteFeatures
     /// <summary>Geeignet für Ausbildung.</summary>
     Training = 16,
 }
+
+/// <summary>Art eines Einstiegs (`dive-site.md`, «Einstiege»).</summary>
+public enum EntryPointKind
+{
+    /// <summary>Ein- und Ausstieg.</summary>
+    EntryAndExit,
+
+    /// <summary>Nur Einstieg.</summary>
+    Entry,
+
+    /// <summary>Nur Ausstieg.</summary>
+    Exit,
+}
