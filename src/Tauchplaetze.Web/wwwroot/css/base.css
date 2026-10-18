@@ -284,3 +284,51 @@ a:hover {
 .admin-main .mud-table {
   background: transparent;
 }
+
+.history-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.history-version {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+}
+
+.history-meta,
+.history-comment {
+  margin: 0 0 8px;
+  color: var(--color-text-subtle);
+}
+
+.history-diff {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.history-diff th,
+.history-diff td {
+  text-align: left;
+  vertical-align: top;
+  padding: 6px 8px;
+  border-top: 1px solid var(--color-border);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.history-diff .diff-old {
+  color: #d9a3a3;
+}
+
+.history-diff .diff-new {
+  color: var(--color-primary);
+}
+
+.site-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}

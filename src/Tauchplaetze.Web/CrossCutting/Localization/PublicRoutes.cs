@@ -27,9 +27,19 @@ internal static class PublicRoutes
         ["it"] = "previsione",
     };
 
-    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast];
+    public static readonly IReadOnlyDictionary<string, string> Versions = new Dictionary<string, string>
+    {
+        ["de"] = "versionen",
+        ["en"] = "versions",
+        ["fr"] = "versions",
+        ["it"] = "versioni",
+    };
+
+    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions];
 
     public static string DiveSite(string language, string slug) => $"/{language}/{DiveSites[language]}/{slug}";
+
+    public static string DiveSiteVersions(string language, string slug) => $"{DiveSite(language, slug)}/{Versions[language]}";
 
     /// <summary>Das Segment <paramref name="segment"/> einer Sprache in einer anderen Sprache. Unbekannte Segmente bleiben gleich.</summary>
     public static string TranslateSection(string segment, string language) =>

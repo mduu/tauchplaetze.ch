@@ -38,4 +38,15 @@
   <data name="WaterBody_Sites" xml:space="preserve"><value>Sites de plongée</value></data>
   <data name="WaterBody_MetaDescription" xml:space="preserve"><value>{0} : sites de plongée, carte et prévision.</value></data>
   <data name="Index_Today" xml:space="preserve"><value>Indice aujourd'hui</value></data>
+  <data name="History_Title" xml:space="preserve"><value>Versions de {0}</value></data>
+  <data name="History_Lead" xml:space="preserve"><value>Chaque modification validée de ce site, la plus récente d'abord. Les noms n'apparaissent que si la personne l'autorise.</value></data>
+  <data name="History_Version" xml:space="preserve"><value>Version {0}</value></data>
+  <data name="History_By" xml:space="preserve"><value>par {0}, validée par {1}, {2}</value></data>
+  <data name="History_Contributor" xml:space="preserve"><value>Contributeur</value></data>
+  <data name="History_Moderation" xml:space="preserve"><value>Modération</value></data>
+  <data name="History_Compare" xml:space="preserve"><value>Afficher les modifications</value></data>
+  <data name="History_Changes" xml:space="preserve"><value>Modifications de la version {0}</value></data>
+  <data name="History_Back" xml:space="preserve"><value>Retour au site</value></data>
+  <data name="Link_Versions" xml:space="preserve"><value>Versions</value></data>
+  <data name="Link_Edit" xml:space="preserve"><value>Modifier le site</value></data>
 </root>

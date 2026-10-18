@@ -11,6 +11,7 @@ using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Accounts.Queries;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
+using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Queries;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
@@ -40,6 +41,10 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>> SitesForEditing { get; } = new(_ => []);
 
+    public FakeQuery<GetPublicRevisionsQuery, PublicRevisions?> PublicRevisions { get; } = new(_ => null);
+
+    public FakeQuery<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?> PublicChanges { get; } = new(_ => null);
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("ConnectionStrings:tauchplaetze", "Server=127.0.0.1,1;Database=tauchplaetze;User Id=test;Password=test;TrustServerCertificate=true");
@@ -55,6 +60,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SignInCommand, SignInOutcome>>(SignIn));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPersonalDataQuery, PersonalData?>>(PersonalData));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>>(SitesForEditing));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPublicRevisionsQuery, PublicRevisions?>>(PublicRevisions));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?>>(PublicChanges));
         });
     }
 

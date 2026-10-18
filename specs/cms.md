@@ -78,7 +78,8 @@ Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit
 
 - **Öffentlich wie in einem Wiki** (Entscheid Marc, 17.10.2026): Jede Platzseite hat einen Link «Versionen» auf `/{lang}/tauchplaetze/{slug}/versionen`.
 - Die öffentliche History zeigt nur freigegebene Versionen: Nummer, Datum, Autor, Approver, Änderungsnotiz.
-- Vergleich zweier Versionen feldweise, auch öffentlich.
+- Vergleich feldweise mit der vorherigen freigegebenen Version, auch öffentlich (`?v={nummer}`).
+- Die Platzseite hat zusätzlich einen Link «Platz bearbeiten» auf das CMS. Ohne Anmeldung führt er zur Anmeldung.
 - Im CMS zeigt die History alle Versionen mit Status, auch `Pending` und `Rejected`, mit den Anzeigenamen.
 
 ### Datenschutz in der History

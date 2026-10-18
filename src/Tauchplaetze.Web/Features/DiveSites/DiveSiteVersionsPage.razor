@@ -1,0 +1,104 @@
+@page "/de/tauchplaetze/{Slug}/versionen"
+@page "/en/dive-sites/{Slug}/versions"
+@page "/fr/sites-de-plongee/{Slug}/versions"
+@page "/it/siti-di-immersione/{Slug}/versioni"
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.DiveSites.Queries
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Web.Features.Editorial
+@inject IQueryHandler<GetPublicRevisionsQuery, PublicRevisions?> Revisions
+@inject IQueryHandler<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?> Compare
+@inject IStringLocalizer<SharedStrings> Shared
+@inject IStringLocalizer<DiveSiteStrings> L
+@inject IStringLocalizer<AdminStrings> Fields
+@inject NavigationManager Navigation
+
+@if (history is not null)
+{
+    <PageTitle>@L["History_Title", history.SiteName] · @Shared["Brand"]</PageTitle>
+    <HeadContent>
+        <meta name="robots" content="noindex" />
+    </HeadContent>
+
+    <section class="page-section history">
+        <p><a href="@PublicRoutes.DiveSite(Language, history.Slug)">← @L["History_Back"]</a></p>
+        <h1 class="status-title">@L["History_Title", history.SiteName]</h1>
+        <p>@L["History_Lead"]</p>
+
+        <ol class="history-list">
+            @foreach (var revision in history.Revisions)
+            {
+                <li class="card" id="v@(revision.Number)">
+                    <h2 class="history-version">@L["History_Version", revision.Number]</h2>
+                    <p class="history-meta">
+                        @L["History_By", revision.AuthorName ?? L["History_Contributor"], revision.ReviewerName ?? L["History_Moderation"], (revision.ReviewedAt ?? revision.CreatedAt).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)]
+                    </p>
+                    @if (revision.Comment is not null)
+                    {
+                        <p class="history-comment">«@revision.Comment»</p>
+                    }
+                    @if (V == revision.Number && changes is not null)
+                    {
+                        <h3>@L["History_Changes", revision.Number]</h3>
+                        @if (changes.Count == 0)
+                        {
+                            <p>@Fields["Diff_None"]</p>
+                        }
+                        else
+                        {
+                            <table class="history-diff">
+                                <thead>
+                                    <tr><th></th><th>@Fields["Diff_Old"]</th><th>@Fields["Diff_New"]</th></tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var change in changes)
+                                    {
+                                        <tr>
+                                            <th scope="row">@FieldLabels.For(Fields, change.Field)</th>
+                                            <td class="diff-old">@change.Old</td>
+                                            <td class="diff-new">@change.New</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    }
+                    else
+                    {
+                        <p><a href="?v=@(revision.Number)#v@(revision.Number)">@L["History_Compare"]</a></p>
+                    }
+                </li>
+            }
+        </ol>
+    </section>
+}
+
+@code {
+    private PublicRevisions? history;
+
+    private IReadOnlyList<FieldChange>? changes;
+
+    [Parameter]
+    public string Slug { get; set; } = "";
+
+    [SupplyParameterFromQuery]
+    public int? V { get; set; }
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        history = await Revisions.Handle(new GetPublicRevisionsQuery(Slug));
+        if (history is null)
+        {
+            Navigation.NotFound();
+            return;
+        }
+
+        if (V is { } number)
+        {
+            var previous = history.Revisions.Where(r => r.Number < number).Select(r => (int?)r.Number).FirstOrDefault();
+            changes = await Compare.Handle(new ComparePublicRevisionsQuery(Slug, previous, number));
+        }
+    }
+}

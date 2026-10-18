@@ -11,7 +11,7 @@ else
         @foreach (var item in Items)
         {
             <li>
-                <a href="@PublicRoutes.DiveSite(Language, item.SiteSlug)">@item.SiteName</a>
+                <a href="@Link(item)">@item.SiteName</a>
                 · @L["Version", item.Number] · @L[$"Status_{item.Status}"] · @item.At.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
                 @if (item.Comment is not null)
                 {
@@ -27,4 +27,8 @@ else
     public IReadOnlyList<RevisionReference> Items { get; set; } = [];
 
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private static string Link(RevisionReference item) => item.Status == Tauchplaetze.Core.Features.Editorial.RevisionStatus.Approved
+        ? $"{PublicRoutes.DiveSiteVersions(Language, item.SiteSlug)}?v={item.Number}"
+        : PublicRoutes.DiveSite(Language, item.SiteSlug);
 }

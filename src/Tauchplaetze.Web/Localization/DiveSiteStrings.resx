@@ -38,4 +38,15 @@
   <data name="WaterBody_Sites" xml:space="preserve"><value>Tauchplätze</value></data>
   <data name="WaterBody_MetaDescription" xml:space="preserve"><value>{0}: Tauchplätze, Karte und Tauchprognose.</value></data>
   <data name="Index_Today" xml:space="preserve"><value>Index heute</value></data>
+  <data name="History_Title" xml:space="preserve"><value>Versionen von {0}</value></data>
+  <data name="History_Lead" xml:space="preserve"><value>Jede freigegebene Änderung an diesem Platz, neueste zuerst. Namen erscheinen nur, wenn die Person es erlaubt.</value></data>
+  <data name="History_Version" xml:space="preserve"><value>Version {0}</value></data>
+  <data name="History_By" xml:space="preserve"><value>von {0}, freigegeben von {1}, {2}</value></data>
+  <data name="History_Contributor" xml:space="preserve"><value>Mitwirkende</value></data>
+  <data name="History_Moderation" xml:space="preserve"><value>Moderation</value></data>
+  <data name="History_Compare" xml:space="preserve"><value>Änderungen zeigen</value></data>
+  <data name="History_Changes" xml:space="preserve"><value>Änderungen in Version {0}</value></data>
+  <data name="History_Back" xml:space="preserve"><value>Zurück zum Platz</value></data>
+  <data name="Link_Versions" xml:space="preserve"><value>Versionen</value></data>
+  <data name="Link_Edit" xml:space="preserve"><value>Platz bearbeiten</value></data>
 </root>
