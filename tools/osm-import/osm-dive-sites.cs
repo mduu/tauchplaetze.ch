@@ -78,6 +78,12 @@ var added = 0;
 foreach (var site in sites.OrderBy(s => s.Water.NameDe, StringComparer.Create(CultureInfo.GetCultureInfo("de-CH"), true)).ThenBy(s => s.Name))
 {
     var slug = Osm.Slug($"{site.Name} {site.Municipality}");
+    if (siteSeeds.Any(seed => SameSite(seed!, site)))
+    {
+        review.Duplicates.Add($"{site.Name} ({site.Municipality}): gleicher Name in höchstens 150 m besteht schon");
+        continue;
+    }
+
     if (!existingSlugs.Add(slug))
     {
         review.Duplicates.Add($"{site.Name} ({site.Municipality}): Slug «{slug}» besteht schon");
@@ -327,6 +333,11 @@ static async Task WriteJson(string path, JsonArray array) =>
         WriteIndented = true,
         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     }) + "\n");
+
+// Gleicher Name in höchstens 150 m: Ein Punkt knapp im See hat keine Gemeinde und darum einen anderen Slug.
+static bool SameSite(JsonNode seed, Site site) =>
+    string.Equals((string?)seed["name"], site.Name, StringComparison.OrdinalIgnoreCase)
+    && Distance((double)seed["latitude"]!, (double)seed["longitude"]!, site.Latitude, site.Longitude) < 150;
 
 static string Coordinates(Candidate c) => FormattableString.Invariant($"{c.Latitude:0.00000}, {c.Longitude:0.00000}");
 

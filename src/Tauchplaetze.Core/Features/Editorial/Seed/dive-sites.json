@@ -3314,17 +3314,6 @@
     ]
   },
   {
-    "name": "Riff Williams",
-    "waterBody": "zuerichsee",
-    "latitude": 47.284848,
-    "longitude": 8.60841,
-    "municipality": null,
-    "canton": "ZH",
-    "osm": [
-      "node/241788315"
-    ]
-  },
-  {
     "name": "Sandy Beach",
     "waterBody": "zuerichsee",
     "latitude": 47.28102,
