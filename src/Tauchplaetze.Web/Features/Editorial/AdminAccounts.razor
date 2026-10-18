@@ -12,7 +12,7 @@
 <MudTable Items="accounts" Dense="true" Outlined="true" Elevation="0">
     <HeaderContent>
         <MudTh>@L["Column_Name"]</MudTh>
-        <MudTh>E-Mail</MudTh>
+        <MudTh>@L["Column_Email"]</MudTh>
         @foreach (var role in Roles.All)
         {
             <MudTh>@L[$"Role_{role}"]</MudTh>

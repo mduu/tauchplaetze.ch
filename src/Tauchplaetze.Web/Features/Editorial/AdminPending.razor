@@ -22,7 +22,7 @@
         <MudPaper Outlined="true" Class="pa-4">
             <MudText Typo="Typo.h6"><MudLink Href="@($"/admin/plaetze/{item.DiveSiteId}")">@item.SiteName</MudLink></MudText>
             <MudText Typo="Typo.body2" Class="mb-2">
-                @L["Pending_By", item.Revision.Number, item.Revision.AuthorName ?? L["Versions_DeletedAccount"], item.Revision.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)]
+                @L["Pending_By", item.Revision.Number, item.Revision.AuthorName ?? L["Versions_DeletedAccount"], SwissClock.DateTime(item.Revision.CreatedAt)]
                 · «@(item.Revision.Comment ?? L["Comment_None"])»
             </MudText>
             @if (item.BaseIsOutdated)
@@ -32,9 +32,9 @@
             <MudText Typo="Typo.subtitle2">@L["Pending_Changes"]</MudText>
             <DiffTable Changes="@changes.GetValueOrDefault(item.Revision.Id)" />
             <MudStack Row="true" Class="mt-3" AlignItems="AlignItems.End">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => Approve(item))">@L["Pending_Approve"]</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="busy" OnClick="@(() => Approve(item))">@L["Pending_Approve"]</MudButton>
                 <MudTextField @bind-Value="reasons[item.Revision.Id]" Label="@L["Pending_Reason"]" MaxLength="500" />
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Reject(item))">@L["Pending_Reject"]</MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="busy" OnClick="@(() => Reject(item))">@L["Pending_Reject"]</MudButton>
             </MudStack>
         </MudPaper>
     }
@@ -49,6 +49,8 @@
 
     private IReadOnlyList<EditorialError> errors = [];
 
+    private bool busy;
+
     protected override async Task Load()
     {
         pending = await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery());
@@ -59,17 +61,22 @@
         }
     }
 
-    private async Task Approve(PendingRevision item)
-    {
-        var result = await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(UserId, item.Revision.Id, Navigation.BaseUri));
-        errors = result.Errors;
-        await Load();
-    }
+    private Task Approve(PendingRevision item) =>
+        Decide(() => Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(UserId, item.Revision.Id, Navigation.BaseUri)));
 
-    private async Task Reject(PendingRevision item)
+    private Task Reject(PendingRevision item) =>
+        Decide(() => Command<RejectRevisionCommand, EditorialResult>(new RejectRevisionCommand(UserId, item.Revision.Id, reasons[item.Revision.Id])));
+
+    private async Task Decide(Func<Task<EditorialResult>> decision)
     {
-        var result = await Command<RejectRevisionCommand, EditorialResult>(new RejectRevisionCommand(UserId, item.Revision.Id, reasons[item.Revision.Id]));
-        errors = result.Errors;
+        if (busy)
+        {
+            return;
+        }
+
+        busy = true;
+        errors = (await decision()).Errors;
         await Load();
+        busy = false;
     }
 }

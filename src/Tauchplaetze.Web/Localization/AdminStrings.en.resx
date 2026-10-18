@@ -121,7 +121,6 @@
   <data name="Diff_New" xml:space="preserve"><value>After</value></data>
   <data name="Diff_None" xml:space="preserve"><value>No differences.</value></data>
   <data name="Versions_Title" xml:space="preserve"><value>Versions of {0}</value></data>
-  <data name="Versions_Compare" xml:space="preserve"><value>Compare with previous</value></data>
   <data name="Versions_Restore" xml:space="preserve"><value>Restore</value></data>
   <data name="Versions_Author" xml:space="preserve"><value>Author</value></data>
   <data name="Versions_Reviewer" xml:space="preserve"><value>Approval</value></data>
@@ -149,4 +148,7 @@
   <data name="RunStatus_Failed" xml:space="preserve"><value>failed</value></data>
   <data name="Language_Label" xml:space="preserve"><value>Language</value></data>
   <data name="Comment_None" xml:space="preserve"><value>no note</value></data>
+  <data name="Column_Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Versions_CompareBase" xml:space="preserve"><value>Compare with base</value></data>
+  <data name="Forecast_Skipped" xml:space="preserve"><value>Another run is still active. This run did not start.</value></data>
 </root>

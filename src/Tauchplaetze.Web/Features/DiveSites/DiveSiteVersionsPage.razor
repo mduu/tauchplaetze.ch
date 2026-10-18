@@ -31,7 +31,7 @@
                 <li class="card" id="v@(revision.Number)">
                     <h2 class="history-version">@L["History_Version", revision.Number]</h2>
                     <p class="history-meta">
-                        @L["History_By", revision.AuthorName ?? L["History_Contributor"], revision.ReviewerName ?? L["History_Moderation"], (revision.ReviewedAt ?? revision.CreatedAt).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)]
+                        @L["History_By", revision.AuthorName ?? L["History_Contributor"], revision.ReviewerName ?? L["History_Moderation"], SwissClock.Date(revision.ReviewedAt ?? revision.CreatedAt)]
                     </p>
                     @if (revision.Comment is not null)
                     {
@@ -95,10 +95,9 @@
             return;
         }
 
-        if (V is { } number)
+        if (history.Revisions.FirstOrDefault(r => r.Number == V) is { } revision)
         {
-            var previous = history.Revisions.Where(r => r.Number < number).Select(r => (int?)r.Number).FirstOrDefault();
-            changes = await Compare.Handle(new ComparePublicRevisionsQuery(Slug, previous, number));
+            changes = await Compare.Handle(new ComparePublicRevisionsQuery(Slug, revision.BaseNumber, revision.Number));
         }
     }
 }

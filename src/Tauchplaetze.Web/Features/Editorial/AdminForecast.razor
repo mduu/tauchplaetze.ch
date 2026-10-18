@@ -19,11 +19,16 @@
     <MudProgressLinear Indeterminate="true" Class="mb-4" />
 }
 
+@if (skipped)
+{
+    <MudAlert Severity="Severity.Warning" Class="mb-4">@L["Forecast_Skipped"]</MudAlert>
+}
+
 <MudStack Spacing="3">
     @foreach (var run in runs)
     {
         <MudPaper Outlined="true" Class="pa-4">
-            <MudText Typo="Typo.h6">@run.StartedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture) · @L[$"RunStatus_{run.Status}"]</MudText>
+            <MudText Typo="Typo.h6">@SwissClock.DateTime(run.StartedAt) · @L[$"RunStatus_{run.Status}"]</MudText>
             <MudText Typo="Typo.body2">@L["Forecast_Calls", run.Calls]</MudText>
             @if (run.Failures.Count > 0)
             {
@@ -42,13 +47,15 @@
 
     private bool running;
 
+    private bool skipped;
+
     protected override async Task Load() =>
         runs = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery());
 
     private async Task RunNow()
     {
         running = true;
-        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+        skipped = (await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand())).Skipped;
         running = false;
         await Load();
     }

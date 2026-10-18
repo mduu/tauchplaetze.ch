@@ -72,6 +72,7 @@ public class VersionsPageTests : IClassFixture<WebApp>
     [InlineData("/de/tauchplaetze/riff-williams/versionen", "it", "/it/siti-di-immersione/riff-williams/versioni")]
     [InlineData("/en/dive-sites/riff-williams", "fr", "/fr/sites-de-plongee/riff-williams")]
     [InlineData("/fr/eaux/zuerichsee", "de", "/de/gewaesser/zuerichsee")]
+    [InlineData("/en/dive-sites/forecast/versions", "de", "/de/tauchplaetze/forecast/versionen")]
     public void Die_Sprachwahl_uebersetzt_alle_Segmente_des_Pfads(string path, string language, string expected)
     {
         // Act

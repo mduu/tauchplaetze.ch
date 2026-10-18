@@ -39,7 +39,7 @@
                 else
                 {
                     <MudText Typo="Typo.h6">@L[$"RunStatus_{lastRun.Status}"]</MudText>
-                    <MudText Typo="Typo.body2">@lastRun.StartedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)</MudText>
+                    <MudText Typo="Typo.body2">@SwissClock.DateTime(lastRun.StartedAt)</MudText>
                 }
                 <MudLink Href="/admin/prognose">@L["Nav_Forecast"] →</MudLink>
             </MudPaper>

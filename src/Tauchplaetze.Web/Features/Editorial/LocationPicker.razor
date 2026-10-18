@@ -57,6 +57,7 @@
 
     public async ValueTask DisposeAsync()
     {
+        reference?.Dispose();
         try
         {
             await JS.InvokeVoidAsync("tauchplaetzeAdmin.dispose", Id);
@@ -65,7 +66,5 @@
         {
             return;
         }
-
-        reference?.Dispose();
     }
 }

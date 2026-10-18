@@ -121,7 +121,6 @@
   <data name="Diff_New" xml:space="preserve"><value>Dopo</value></data>
   <data name="Diff_None" xml:space="preserve"><value>Nessuna differenza.</value></data>
   <data name="Versions_Title" xml:space="preserve"><value>Versioni di {0}</value></data>
-  <data name="Versions_Compare" xml:space="preserve"><value>Confronta con la precedente</value></data>
   <data name="Versions_Restore" xml:space="preserve"><value>Ripristina</value></data>
   <data name="Versions_Author" xml:space="preserve"><value>Autore</value></data>
   <data name="Versions_Reviewer" xml:space="preserve"><value>Approvazione</value></data>
@@ -149,4 +148,7 @@
   <data name="RunStatus_Failed" xml:space="preserve"><value>fallito</value></data>
   <data name="Language_Label" xml:space="preserve"><value>Lingua</value></data>
   <data name="Comment_None" xml:space="preserve"><value>senza nota</value></data>
+  <data name="Column_Email" xml:space="preserve"><value>E-mail</value></data>
+  <data name="Versions_CompareBase" xml:space="preserve"><value>Confronta con la base</value></data>
+  <data name="Forecast_Skipped" xml:space="preserve"><value>Un altro calcolo è ancora attivo. Questo calcolo non è partito.</value></data>
 </root>

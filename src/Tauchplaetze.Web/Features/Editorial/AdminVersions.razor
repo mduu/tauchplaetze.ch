@@ -18,10 +18,10 @@
                 <div>
                     <MudText Typo="Typo.h6">#@revision.Number · @L[$"Revision_{revision.Status}"]</MudText>
                     <MudText Typo="Typo.body2">
-                        @L["Versions_Author"]: @(revision.AuthorName ?? L["Versions_DeletedAccount"]) · @revision.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)
+                        @L["Versions_Author"]: @(revision.AuthorName ?? L["Versions_DeletedAccount"]) · @SwissClock.DateTime(revision.CreatedAt)
                         @if (revision.ReviewedAt is { } reviewed)
                         {
-                            <span> · @L["Versions_Reviewer"]: @(revision.ReviewerName ?? L["Versions_DeletedAccount"]), @reviewed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)</span>
+                            <span> · @L["Versions_Reviewer"]: @(revision.ReviewerName ?? L["Versions_DeletedAccount"]), @SwissClock.DateTime(reviewed)</span>
                         }
                     </MudText>
                     <MudText Typo="Typo.body2">«@(revision.Comment ?? L["Comment_None"])»</MudText>
@@ -31,10 +31,10 @@
                     }
                 </div>
                 <MudStack Row="true">
-                    <MudButton Variant="Variant.Text" OnClick="@(() => Compare(revision.Number))">@L["Versions_Compare"]</MudButton>
+                    <MudButton Variant="Variant.Text" OnClick="@(() => Compare(revision.Number))">@L["Versions_CompareBase"]</MudButton>
                     @if (IsModerator && revision.Number != revisions[0].Number)
                     {
-                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Restore(revision.Number))">@L["Versions_Restore"]</MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="busy" OnClick="@(() => Restore(revision.Number))">@L["Versions_Restore"]</MudButton>
                     }
                 </MudStack>
             </div>
@@ -55,6 +55,8 @@
 
     private int? comparing;
 
+    private bool busy;
+
     private string name = "";
 
     [Parameter]
@@ -69,14 +71,21 @@
     private async Task Compare(int number)
     {
         comparing = number;
-        var previous = revisions.Where(r => r.Number < number).Select(r => (int?)r.Number).FirstOrDefault();
-        changes = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(Id, previous, number));
+        var revision = revisions.Single(r => r.Number == number);
+        changes = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(Id, revision.BaseNumber, number));
     }
 
     private async Task Restore(int number)
     {
+        if (busy)
+        {
+            return;
+        }
+
+        busy = true;
         var result = await Command<RestoreRevisionCommand, EditorialResult>(new RestoreRevisionCommand(UserId, Id, number));
         errors = result.Errors;
         await Load();
+        busy = false;
     }
 }

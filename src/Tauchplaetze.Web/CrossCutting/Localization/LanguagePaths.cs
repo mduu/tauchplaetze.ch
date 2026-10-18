@@ -14,7 +14,7 @@ internal static class LanguagePaths
             return $"/{language}";
         }
 
-        var rest = segments[1..].Select(segment => PublicRoutes.TranslateSection(segment, language));
+        var rest = segments[1..].Select((segment, index) => index % 2 == 0 ? PublicRoutes.TranslateSection(segment, language) : segment);
 
         return "/" + string.Join('/', [language, .. rest]);
     }

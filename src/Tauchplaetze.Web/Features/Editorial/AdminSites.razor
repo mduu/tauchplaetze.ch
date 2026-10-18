@@ -30,7 +30,7 @@
         <MudTd>@context.ContentLevel</MudTd>
         <MudTd>@(context.DataLevel?.ToString(CultureInfo.InvariantCulture) ?? "–")</MudTd>
         <MudTd>@(context.PendingRevisions > 0 ? context.PendingRevisions.ToString(CultureInfo.InvariantCulture) : "")</MudTd>
-        <MudTd>@context.UpdatedAt.ToLocalTime().ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)</MudTd>
+        <MudTd>@SwissClock.Date(context.UpdatedAt)</MudTd>
     </RowTemplate>
 </MudTable>
 

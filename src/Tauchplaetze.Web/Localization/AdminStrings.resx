@@ -121,7 +121,6 @@
   <data name="Diff_New" xml:space="preserve"><value>Nachher</value></data>
   <data name="Diff_None" xml:space="preserve"><value>Keine Unterschiede.</value></data>
   <data name="Versions_Title" xml:space="preserve"><value>Versionen von {0}</value></data>
-  <data name="Versions_Compare" xml:space="preserve"><value>Mit Vorgänger vergleichen</value></data>
   <data name="Versions_Restore" xml:space="preserve"><value>Wiederherstellen</value></data>
   <data name="Versions_Author" xml:space="preserve"><value>Autor</value></data>
   <data name="Versions_Reviewer" xml:space="preserve"><value>Freigabe</value></data>
@@ -149,4 +148,7 @@
   <data name="RunStatus_Failed" xml:space="preserve"><value>fehlgeschlagen</value></data>
   <data name="Language_Label" xml:space="preserve"><value>Sprache</value></data>
   <data name="Comment_None" xml:space="preserve"><value>ohne Notiz</value></data>
+  <data name="Column_Email" xml:space="preserve"><value>E-Mail</value></data>
+  <data name="Versions_CompareBase" xml:space="preserve"><value>Mit Basis vergleichen</value></data>
+  <data name="Forecast_Skipped" xml:space="preserve"><value>Ein anderer Lauf ist noch aktiv. Dieser Lauf wurde nicht gestartet.</value></data>
 </root>
