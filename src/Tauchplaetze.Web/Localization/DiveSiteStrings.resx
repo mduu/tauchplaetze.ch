@@ -71,4 +71,73 @@
   <data name="EntryPoint_Exit" xml:space="preserve"><value>Ausstieg</value></data>
   <data name="EntryPoint_Parking" xml:space="preserve"><value>Parkplatz</value></data>
   <data name="EntryPoint_Toilet" xml:space="preserve"><value>Toilette</value></data>
+  <data name="Ratings_Title" xml:space="preserve"><value>Der Platz</value></data>
+  <data name="Rating_Value" xml:space="preserve"><value>{0} von 5</value></data>
+  <data name="Rating_Info" xml:space="preserve"><value>Was heisst «{0}»?</value></data>
+  <data name="Rating_Difficulty" xml:space="preserve"><value>Schwierigkeit</value></data>
+  <data name="Rating_Wall" xml:space="preserve"><value>Steilwand</value></data>
+  <data name="Rating_MarineLife" xml:space="preserve"><value>UW-Leben</value></data>
+  <data name="Rating_Wrecks" xml:space="preserve"><value>Wracks und Gegenstände</value></data>
+  <data name="Rating_Current" xml:space="preserve"><value>Strömung</value></data>
+  <data name="Rating_Surroundings" xml:space="preserve"><value>Umgebung</value></data>
+  <data name="Rating_Difficulty_1" xml:space="preserve"><value>sehr einfach</value></data>
+  <data name="Rating_Difficulty_1_Text" xml:space="preserve"><value>Flacher Einstieg, geringe Tiefe, keine Strömung. Geeignet für Ausbildung.</value></data>
+  <data name="Rating_Difficulty_2" xml:space="preserve"><value>einfach</value></data>
+  <data name="Rating_Difficulty_2_Text" xml:space="preserve"><value>Einfacher Einstieg. Interessante Teile in moderater Tiefe.</value></data>
+  <data name="Rating_Difficulty_3" xml:space="preserve"><value>mittel</value></data>
+  <data name="Rating_Difficulty_3_Text" xml:space="preserve"><value>Einstieg oder Tiefe verlangt Erfahrung. Orientierung nötig.</value></data>
+  <data name="Rating_Difficulty_4" xml:space="preserve"><value>anspruchsvoll</value></data>
+  <data name="Rating_Difficulty_4_Text" xml:space="preserve"><value>Grosse Tiefe, Strömung oder schwieriger Einstieg. Nur mit Erfahrung.</value></data>
+  <data name="Rating_Difficulty_5" xml:space="preserve"><value>sehr anspruchsvoll</value></data>
+  <data name="Rating_Difficulty_5_Text" xml:space="preserve"><value>Mehrere Erschwernisse zusammen. Nur für Erfahrene mit guter Planung.</value></data>
+  <data name="Rating_Wall_1" xml:space="preserve"><value>flach</value></data>
+  <data name="Rating_Wall_1_Text" xml:space="preserve"><value>Flacher Grund, kein Gefälle.</value></data>
+  <data name="Rating_Wall_2" xml:space="preserve"><value>Hang</value></data>
+  <data name="Rating_Wall_2_Text" xml:space="preserve"><value>Sanfter Hang.</value></data>
+  <data name="Rating_Wall_3" xml:space="preserve"><value>steiler Hang</value></data>
+  <data name="Rating_Wall_3_Text" xml:space="preserve"><value>Steiler Hang mit einzelnen Wandstücken.</value></data>
+  <data name="Rating_Wall_4" xml:space="preserve"><value>Wand</value></data>
+  <data name="Rating_Wall_4_Text" xml:space="preserve"><value>Wand über eine längere Strecke.</value></data>
+  <data name="Rating_Wall_5" xml:space="preserve"><value>Steilwand</value></data>
+  <data name="Rating_Wall_5_Text" xml:space="preserve"><value>Senkrechte oder überhängende Wand in grosse Tiefe.</value></data>
+  <data name="Rating_MarineLife_1" xml:space="preserve"><value>kaum</value></data>
+  <data name="Rating_MarineLife_1_Text" xml:space="preserve"><value>Kaum Fische oder Pflanzen.</value></data>
+  <data name="Rating_MarineLife_2" xml:space="preserve"><value>wenig</value></data>
+  <data name="Rating_MarineLife_2_Text" xml:space="preserve"><value>Einzelne Fische, wenig Bewuchs.</value></data>
+  <data name="Rating_MarineLife_3" xml:space="preserve"><value>typisch</value></data>
+  <data name="Rating_MarineLife_3_Text" xml:space="preserve"><value>Typisch für den See (z.B. Barsche, Hechte, Krebse, Pflanzen).</value></data>
+  <data name="Rating_MarineLife_4" xml:space="preserve"><value>reich</value></data>
+  <data name="Rating_MarineLife_4_Text" xml:space="preserve"><value>Viele Fische, dichter Bewuchs.</value></data>
+  <data name="Rating_MarineLife_5" xml:space="preserve"><value>herausragend</value></data>
+  <data name="Rating_MarineLife_5_Text" xml:space="preserve"><value>Schwärme, grosse Fische oder seltene Arten regelmässig.</value></data>
+  <data name="Rating_Wrecks_1" xml:space="preserve"><value>keine</value></data>
+  <data name="Rating_Wrecks_1_Text" xml:space="preserve"><value>Keine Wracks, keine Gegenstände.</value></data>
+  <data name="Rating_Wrecks_2" xml:space="preserve"><value>einzelne</value></data>
+  <data name="Rating_Wrecks_2_Text" xml:space="preserve"><value>Einzelne kleine Gegenstände.</value></data>
+  <data name="Rating_Wrecks_3" xml:space="preserve"><value>einige</value></data>
+  <data name="Rating_Wrecks_3_Text" xml:space="preserve"><value>Mehrere Gegenstände oder ein kleines Wrack.</value></data>
+  <data name="Rating_Wrecks_4" xml:space="preserve"><value>sehenswert</value></data>
+  <data name="Rating_Wrecks_4_Text" xml:space="preserve"><value>Ein bekanntes Wrack oder viele Gegenstände (z.B. Statuen).</value></data>
+  <data name="Rating_Wrecks_5" xml:space="preserve"><value>herausragend</value></data>
+  <data name="Rating_Wrecks_5_Text" xml:space="preserve"><value>Grosses Wrack oder aussergewöhnliche Objekte. Der Hauptgrund für den Tauchgang.</value></data>
+  <data name="Rating_Current_1" xml:space="preserve"><value>keine</value></data>
+  <data name="Rating_Current_1_Text" xml:space="preserve"><value>Keine Strömung.</value></data>
+  <data name="Rating_Current_2" xml:space="preserve"><value>schwach</value></data>
+  <data name="Rating_Current_2_Text" xml:space="preserve"><value>Selten und schwach spürbar.</value></data>
+  <data name="Rating_Current_3" xml:space="preserve"><value>mässig</value></data>
+  <data name="Rating_Current_3_Text" xml:space="preserve"><value>Oft spürbar. Tauchgang gegen die Strömung beginnen.</value></data>
+  <data name="Rating_Current_4" xml:space="preserve"><value>stark</value></data>
+  <data name="Rating_Current_4_Text" xml:space="preserve"><value>Stark, je nach Wasserstand. Planung und Erfahrung nötig.</value></data>
+  <data name="Rating_Current_5" xml:space="preserve"><value>sehr stark</value></data>
+  <data name="Rating_Current_5_Text" xml:space="preserve"><value>Fluss oder Mündung. Nur mit Erfahrung im Strömungstauchen.</value></data>
+  <data name="Rating_Surroundings_1" xml:space="preserve"><value>karg</value></data>
+  <data name="Rating_Surroundings_1_Text" xml:space="preserve"><value>Strasse, Industrie oder kaum Platz zum Umziehen.</value></data>
+  <data name="Rating_Surroundings_2" xml:space="preserve"><value>einfach</value></data>
+  <data name="Rating_Surroundings_2_Text" xml:space="preserve"><value>Zweckmässig, wenig Aufenthaltsqualität.</value></data>
+  <data name="Rating_Surroundings_3" xml:space="preserve"><value>angenehm</value></data>
+  <data name="Rating_Surroundings_3_Text" xml:space="preserve"><value>Platz zum Umziehen und Verweilen.</value></data>
+  <data name="Rating_Surroundings_4" xml:space="preserve"><value>schön</value></data>
+  <data name="Rating_Surroundings_4_Text" xml:space="preserve"><value>Wiese, Badeplatz oder schöne Aussicht.</value></data>
+  <data name="Rating_Surroundings_5" xml:space="preserve"><value>herausragend</value></data>
+  <data name="Rating_Surroundings_5_Text" xml:space="preserve"><value>Landschaft, die allein den Ausflug lohnt.</value></data>
 </root>

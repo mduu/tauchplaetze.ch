@@ -33,7 +33,11 @@ public record DiveSiteDetails(
     byte ContentLevel,
     DateTimeOffset UpdatedAt,
     IReadOnlyList<SiteNotice> Notices,
-    IReadOnlyList<SiteEntryPoint> EntryPoints);
+    IReadOnlyList<SiteEntryPoint> EntryPoints,
+    SiteRatings? Ratings = null);
+
+/// <summary>Die Bewertungen eines Platzes, je 1 bis 5. Leer heisst «nicht bewertet» (`dive-site.md`, «Bewertungen»).</summary>
+public record SiteRatings(byte? Difficulty, byte? Wall, byte? MarineLife, byte? Wrecks, byte? Current, byte? Surroundings);
 
 /// <summary>Ein gültiger Hinweis in der gewünschten Sprache. Fehlt die Übersetzung, kommt er auf Deutsch (<see cref="GermanOnly"/>).</summary>
 public record SiteNotice(NoticeKind Kind, string Text, DateOnly? ValidUntil, bool GermanOnly);

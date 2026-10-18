@@ -71,4 +71,73 @@
   <data name="EntryPoint_Exit" xml:space="preserve"><value>Point de sortie</value></data>
   <data name="EntryPoint_Parking" xml:space="preserve"><value>Parking</value></data>
   <data name="EntryPoint_Toilet" xml:space="preserve"><value>Toilettes</value></data>
+  <data name="Ratings_Title" xml:space="preserve"><value>Le site</value></data>
+  <data name="Rating_Value" xml:space="preserve"><value>{0} sur 5</value></data>
+  <data name="Rating_Info" xml:space="preserve"><value>Que signifie « {0} » ?</value></data>
+  <data name="Rating_Difficulty" xml:space="preserve"><value>Difficulté</value></data>
+  <data name="Rating_Wall" xml:space="preserve"><value>Tombant</value></data>
+  <data name="Rating_MarineLife" xml:space="preserve"><value>Vie aquatique</value></data>
+  <data name="Rating_Wrecks" xml:space="preserve"><value>Épaves et objets</value></data>
+  <data name="Rating_Current" xml:space="preserve"><value>Courant</value></data>
+  <data name="Rating_Surroundings" xml:space="preserve"><value>Environs</value></data>
+  <data name="Rating_Difficulty_1" xml:space="preserve"><value>très facile</value></data>
+  <data name="Rating_Difficulty_1_Text" xml:space="preserve"><value>Entrée facile, faible profondeur, pas de courant. Adapté à la formation.</value></data>
+  <data name="Rating_Difficulty_2" xml:space="preserve"><value>facile</value></data>
+  <data name="Rating_Difficulty_2_Text" xml:space="preserve"><value>Entrée simple. Parties intéressantes à profondeur modérée.</value></data>
+  <data name="Rating_Difficulty_3" xml:space="preserve"><value>moyen</value></data>
+  <data name="Rating_Difficulty_3_Text" xml:space="preserve"><value>L'entrée ou la profondeur demande de l'expérience. Orientation nécessaire.</value></data>
+  <data name="Rating_Difficulty_4" xml:space="preserve"><value>exigeant</value></data>
+  <data name="Rating_Difficulty_4_Text" xml:space="preserve"><value>Grande profondeur, courant ou entrée difficile. Seulement avec de l'expérience.</value></data>
+  <data name="Rating_Difficulty_5" xml:space="preserve"><value>très exigeant</value></data>
+  <data name="Rating_Difficulty_5_Text" xml:space="preserve"><value>Plusieurs difficultés réunies. Réservé aux plongeurs expérimentés avec une bonne planification.</value></data>
+  <data name="Rating_Wall_1" xml:space="preserve"><value>plat</value></data>
+  <data name="Rating_Wall_1_Text" xml:space="preserve"><value>Fond plat, sans pente.</value></data>
+  <data name="Rating_Wall_2" xml:space="preserve"><value>pente</value></data>
+  <data name="Rating_Wall_2_Text" xml:space="preserve"><value>Pente douce.</value></data>
+  <data name="Rating_Wall_3" xml:space="preserve"><value>pente raide</value></data>
+  <data name="Rating_Wall_3_Text" xml:space="preserve"><value>Pente raide avec quelques parois.</value></data>
+  <data name="Rating_Wall_4" xml:space="preserve"><value>paroi</value></data>
+  <data name="Rating_Wall_4_Text" xml:space="preserve"><value>Paroi sur une longue distance.</value></data>
+  <data name="Rating_Wall_5" xml:space="preserve"><value>tombant</value></data>
+  <data name="Rating_Wall_5_Text" xml:space="preserve"><value>Paroi verticale ou en surplomb jusqu’à grande profondeur.</value></data>
+  <data name="Rating_MarineLife_1" xml:space="preserve"><value>presque rien</value></data>
+  <data name="Rating_MarineLife_1_Text" xml:space="preserve"><value>Presque pas de poissons ni de plantes.</value></data>
+  <data name="Rating_MarineLife_2" xml:space="preserve"><value>peu</value></data>
+  <data name="Rating_MarineLife_2_Text" xml:space="preserve"><value>Quelques poissons, peu de végétation.</value></data>
+  <data name="Rating_MarineLife_3" xml:space="preserve"><value>typique</value></data>
+  <data name="Rating_MarineLife_3_Text" xml:space="preserve"><value>Typique du lac (p. ex. perches, brochets, écrevisses, plantes).</value></data>
+  <data name="Rating_MarineLife_4" xml:space="preserve"><value>riche</value></data>
+  <data name="Rating_MarineLife_4_Text" xml:space="preserve"><value>Beaucoup de poissons, végétation dense.</value></data>
+  <data name="Rating_MarineLife_5" xml:space="preserve"><value>exceptionnelle</value></data>
+  <data name="Rating_MarineLife_5_Text" xml:space="preserve"><value>Bancs, gros poissons ou espèces rares régulièrement.</value></data>
+  <data name="Rating_Wrecks_1" xml:space="preserve"><value>aucun</value></data>
+  <data name="Rating_Wrecks_1_Text" xml:space="preserve"><value>Pas d'épaves, pas d'objets.</value></data>
+  <data name="Rating_Wrecks_2" xml:space="preserve"><value>quelques-uns</value></data>
+  <data name="Rating_Wrecks_2_Text" xml:space="preserve"><value>Quelques petits objets.</value></data>
+  <data name="Rating_Wrecks_3" xml:space="preserve"><value>plusieurs</value></data>
+  <data name="Rating_Wrecks_3_Text" xml:space="preserve"><value>Plusieurs objets ou une petite épave.</value></data>
+  <data name="Rating_Wrecks_4" xml:space="preserve"><value>à voir</value></data>
+  <data name="Rating_Wrecks_4_Text" xml:space="preserve"><value>Une épave connue ou de nombreux objets (p. ex. statues).</value></data>
+  <data name="Rating_Wrecks_5" xml:space="preserve"><value>exceptionnel</value></data>
+  <data name="Rating_Wrecks_5_Text" xml:space="preserve"><value>Grande épave ou objets exceptionnels. La raison principale de la plongée.</value></data>
+  <data name="Rating_Current_1" xml:space="preserve"><value>aucun</value></data>
+  <data name="Rating_Current_1_Text" xml:space="preserve"><value>Pas de courant.</value></data>
+  <data name="Rating_Current_2" xml:space="preserve"><value>faible</value></data>
+  <data name="Rating_Current_2_Text" xml:space="preserve"><value>Rare et à peine perceptible.</value></data>
+  <data name="Rating_Current_3" xml:space="preserve"><value>modéré</value></data>
+  <data name="Rating_Current_3_Text" xml:space="preserve"><value>Souvent perceptible. Commencer la plongée à contre-courant.</value></data>
+  <data name="Rating_Current_4" xml:space="preserve"><value>fort</value></data>
+  <data name="Rating_Current_4_Text" xml:space="preserve"><value>Fort, selon le niveau de l'eau. Planification et expérience nécessaires.</value></data>
+  <data name="Rating_Current_5" xml:space="preserve"><value>très fort</value></data>
+  <data name="Rating_Current_5_Text" xml:space="preserve"><value>Rivière ou embouchure. Seulement avec de l’expérience en plongée en courant.</value></data>
+  <data name="Rating_Surroundings_1" xml:space="preserve"><value>austère</value></data>
+  <data name="Rating_Surroundings_1_Text" xml:space="preserve"><value>Route, industrie ou presque pas de place pour se changer.</value></data>
+  <data name="Rating_Surroundings_2" xml:space="preserve"><value>simple</value></data>
+  <data name="Rating_Surroundings_2_Text" xml:space="preserve"><value>Fonctionnel, peu agréable pour rester.</value></data>
+  <data name="Rating_Surroundings_3" xml:space="preserve"><value>agréable</value></data>
+  <data name="Rating_Surroundings_3_Text" xml:space="preserve"><value>De la place pour se changer et s’attarder.</value></data>
+  <data name="Rating_Surroundings_4" xml:space="preserve"><value>beau</value></data>
+  <data name="Rating_Surroundings_4_Text" xml:space="preserve"><value>Pré, plage ou belle vue.</value></data>
+  <data name="Rating_Surroundings_5" xml:space="preserve"><value>exceptionnel</value></data>
+  <data name="Rating_Surroundings_5_Text" xml:space="preserve"><value>Un paysage qui vaut à lui seul le déplacement.</value></data>
 </root>

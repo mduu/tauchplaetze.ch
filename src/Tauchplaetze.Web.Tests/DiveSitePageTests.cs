@@ -23,7 +23,8 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         app.DiveSites.Add(WithForecast, new DiveSiteLookup.Found(new DiveSiteDetails(
             ForecastSiteId, WithForecast, "Platz mit Prognose", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.28, 8.6, 0, DateTimeOffset.UtcNow,
             [new SiteNotice(NoticeKind.Closure, "Tauchplatz gesperrt wegen Bauarbeiten.", new DateOnly(2027, 4, 1), true), new SiteNotice(NoticeKind.Info, "Parking payant.", null, false)],
-            [new SiteEntryPoint(EntryPointKind.EntryAndExit, 47.2851, 8.6081, "Treppe beim Bootshaus")])));
+            [new SiteEntryPoint(EntryPointKind.EntryAndExit, 47.2851, 8.6081, "Treppe beim Bootshaus")],
+            new SiteRatings(3, 5, null, null, 1, null))));
         app.Forecasts.Add(ForecastSiteId, new SiteForecast(
             [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]), Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
             DateTimeOffset.UtcNow,
@@ -97,6 +98,25 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         // Assert
         Assert.Contains("data-here=", html);
         Assert.Contains("Lage", VisibleText.Of(html));
+    }
+
+    [Fact]
+    public async Task Bewertete_Skalen_erscheinen_mit_Zahl_Kurztext_und_Erlaeuterung_unbewertete_fehlen()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var text = VisibleText.Of(await browser.GetStringAsync("/fr/sites-de-plongee/" + WithForecast, TestContext.Current.CancellationToken));
+        var unrated = await browser.GetStringAsync("/fr/sites-de-plongee/" + Slug, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("3 moyen", text);
+        Assert.Contains("5 tombant", text);
+        Assert.Contains("1 aucun", text);
+        Assert.Contains("L'entrée ou la profondeur demande de l'expérience. Orientation nécessaire.", text);
+        Assert.DoesNotContain("Vie aquatique", text);
+        Assert.DoesNotContain("data-rating=", unrated);
     }
 
     [Fact]

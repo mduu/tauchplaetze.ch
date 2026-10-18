@@ -40,6 +40,7 @@ Es gibt im MVP **nur das dunkle Schema**. Ein helles Schema ist nicht geplant.
 | `--color-sun` | `#E8C25A` | Sonne in der Wetter-Grafik (Balken, Symbol) |
 | `--color-rain` | `#5AA9E6` | Regen in der Wetter-Grafik (Balken, Tropfen, Achse) |
 | `--color-place-parking` | `#2F6BC4` | Parkplatz auf der Karte (Schild «P», blau wie das Signal), Text `--color-place-parking-text` `#FFFFFF` |
+| `--color-depth-line` | `#0B6E99` | Tiefenlinien auf Karte und Skizze (alle 10 m kräftiger), Beschriftung «20 m» auf `--color-depth-label-bg` (`rgb(255 255 255 / 0.75)`) |
 
 Banner: Fläche `--color-surface` mit 10 % der Farbe, Rand links 5 px in der Farbe, sonst Rahmen mit 45 % der Farbe. Label in IBM Plex Mono, Grossbuchstaben, in der Farbe. Text in `--color-text`, bei einer Sperrung fett.
 
@@ -124,6 +125,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 | `TemperatureProfileChart` | SVG: Temperatur (x) über Tiefe (y), Sprungschicht als oranges Band, Werte auf 0/20/30 m |
 | `WeatherChart` | SVG, serverseitig, kompakt in der Kachel «Die nächsten 5 Tage»: Raster von 2 Stunden, Symbol nur bei Wechsel mit gepunkteter Linie dazwischen, Wind alle 6 Stunden. Eigene Wettersymbole (Sonne, Mond, Wolke, Nebel, Niesel, Regen, Schauer, Schnee, Gewitter), Windpfeile, Sonnenbalken (`--color-sun`), Temperaturlinie (`--color-signal`), Regenbalken (`--color-rain`), Nacht in `--color-bg`. Legende darunter als Text. |
 | `ForecastStrip` | 5 Tage mit Index, Farbe nach Skala, Mini-Balken, Stichwort |
+| `SiteRatingsBlock` | Kachel pro bewerteter Skala: Name (Mono, Grossbuchstaben), «i»-Knopf (44 px Zielfläche, Kreis 24 px), fünf Schritte, Zahl und Kurztext. Qualität als Punkte in `--color-primary`, Stufe (Schwierigkeit, Strömung) als Balken in `--color-signal`. Legende als Popover in `--color-surface-raised` neben dem Knopf, aktuelle Stufe mit Rahmen in `--color-primary`. |
 | `SiteSketch` | SVG-Skizze: Ufer, Einstieg (Orange), Tiefenlinien gestrichelt, Wand, Highlights, Nordpfeil |
 | `PracticalTile` | Label in Cyan oder Orange (Achtung), Text |
 | `BuddyCallout` | Fläche in Signal-Orange, dunkler Text, Buttons dunkel |

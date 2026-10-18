@@ -27,6 +27,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider 
                 d.Location,
                 d.ContentLevel,
                 d.UpdatedAt,
+                Ratings = new SiteRatings(d.DifficultyRating, d.WallRating, d.MarineLifeRating, d.WrecksRating, d.CurrentRating, d.SurroundingsRating),
                 WaterBody = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType },
             })
             .SingleOrDefaultAsync(ct);
@@ -47,7 +48,8 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider 
                 site.ContentLevel,
                 site.UpdatedAt,
                 await Notices(site.Id, query.Culture, ct),
-                await EntryPoints(site.Id, query.Culture, ct))),
+                await EntryPoints(site.Id, query.Culture, ct),
+                site.Ratings)),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),
