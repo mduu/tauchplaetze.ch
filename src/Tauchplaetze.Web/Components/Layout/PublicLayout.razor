@@ -1,7 +1,8 @@
 @inherits LayoutComponentBase
 @inject IStringLocalizer<SharedStrings> L
+@inject NavigationManager Navigation
 
-<a class="skip-link" href="#main">@L["SkipToContent"]</a>
+<a class="skip-link" href="@MainAnchor">@L["SkipToContent"]</a>
 
 <header class="site-header">
     <a class="brand" href="/@CurrentLanguage" aria-label="@L["Brand_Home"]">
@@ -38,5 +39,8 @@
 </footer>
 
 @code {
+    /// <summary>Mit Pfad, weil `&lt;base href="/"&gt;` einen reinen Anker gegen die Startseite auflöst.</summary>
+    private string MainAnchor => "/" + Navigation.ToBaseRelativePath(Navigation.Uri).Split('?', '#')[0] + "#main";
+
     private static string CurrentLanguage => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }

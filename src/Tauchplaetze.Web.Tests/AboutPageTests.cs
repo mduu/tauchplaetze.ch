@@ -33,6 +33,21 @@ public class AboutPageTests(WebApp app) : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Links_zu_Abschnitten_tragen_den_Pfad_der_Seite_weil_base_href_sonst_auf_die_Startseite_zeigt()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/ueber", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.DoesNotMatch("<a [^>]*href=\"#", html);
+        Assert.Contains("href=\"/de/ueber#kontakt\"", html);
+        Assert.Contains("href=\"/de/ueber#main\"", html);
+    }
+
+    [Fact]
     public async Task Canonical_und_Sprachversionen_der_Seite_Ueber_haben_keine_Parameter_und_die_Beschreibung_bleibt()
     {
         // Arrange

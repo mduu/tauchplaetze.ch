@@ -22,11 +22,11 @@
     <h1 class="page-title">@L["About_Title"]</h1>
     <p class="lead">@L["About_Lead"]</p>
     <nav class="about-nav" aria-label="@L["About_Nav_Label"]">
-        <a href="#prognose">@L["About_Forecast_Title"]</a>
-        <a href="#quellen">@L["About_Sources_Title"]</a>
-        <a href="#impressum">@L["About_Imprint_Title"]</a>
-        <a href="#kontakt">@L["About_Contact_Title"]</a>
-        <a href="#datenschutz">@L["About_Privacy_Title"]</a>
+        <a href="@Anchor("prognose")">@L["About_Forecast_Title"]</a>
+        <a href="@Anchor("quellen")">@L["About_Sources_Title"]</a>
+        <a href="@Anchor("impressum")">@L["About_Imprint_Title"]</a>
+        <a href="@Anchor("kontakt")">@L["About_Contact_Title"]</a>
+        <a href="@Anchor("datenschutz")">@L["About_Privacy_Title"]</a>
     </nav>
 </section>
 
@@ -90,7 +90,7 @@
         </div>
         <div>
             <h3 class="about-label">@L["About_Imprint_Contact"]</h3>
-            <p><a href="#kontakt">@L["About_Imprint_ContactForm"]</a></p>
+            <p><a href="@Anchor("kontakt")">@L["About_Imprint_ContactForm"]</a></p>
         </div>
     </div>
     <p>@L["About_Imprint_Liability"]</p>
@@ -111,7 +111,7 @@
         <p>@L[$"About_Privacy_{topic}_Text"]</p>
     }
     <h3 class="about-subtitle">@L["About_Privacy_Rights_Title"]</h3>
-    <p>@L["About_Privacy_Rights_Text"] <a href="#kontakt">@L["About_Imprint_ContactForm"]</a>.</p>
+    <p>@L["About_Privacy_Rights_Text"] <a href="@Anchor("kontakt")">@L["About_Imprint_ContactForm"]</a>.</p>
 </section>
 
 @code {
@@ -142,6 +142,9 @@
     };
 
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    /// <remarks>Mit Pfad: `&lt;base href="/"&gt;` löst einen reinen Anker sonst gegen die Startseite auf.</remarks>
+    private static string Anchor(string id) => PublicRoutes.AboutPage(Language, id);
 
     private static string SentUrl => $"/{Language}/{PublicRoutes.About[Language]}?kontakt=gesendet#kontakt";
 }
