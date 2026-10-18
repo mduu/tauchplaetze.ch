@@ -46,4 +46,5 @@
   <data name="Nav_Forecast" xml:space="preserve"><value>Prévision</value></data>
   <data name="Nav_DiveSites" xml:space="preserve"><value>Sites de plongée</value></data>
   <data name="Nav_WaterBodies" xml:space="preserve"><value>Eaux</value></data>
+  <data name="Footer_Osm" xml:space="preserve"><value>Sites de plongée en partie issus d'OpenStreetMap : © contributeurs d'OpenStreetMap, ODbL</value></data>
 </root>

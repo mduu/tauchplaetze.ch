@@ -46,4 +46,5 @@
   <data name="Nav_Forecast" xml:space="preserve"><value>Forecast</value></data>
   <data name="Nav_DiveSites" xml:space="preserve"><value>Dive sites</value></data>
   <data name="Nav_WaterBodies" xml:space="preserve"><value>Waters</value></data>
+  <data name="Footer_Osm" xml:space="preserve"><value>Dive sites partly from OpenStreetMap: © OpenStreetMap contributors, ODbL</value></data>
 </root>

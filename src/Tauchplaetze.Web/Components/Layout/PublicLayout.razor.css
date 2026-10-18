@@ -52,6 +52,10 @@
     max-width: 70ch;
 }
 
+.footer-inner a {
+    color: inherit;
+}
+
 .header-tools {
     display: flex;
     align-items: center;

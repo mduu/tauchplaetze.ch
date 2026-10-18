@@ -155,10 +155,12 @@ Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schw
 - **Einstiege:** Punkte mit «Einstieg», «Ausstieg», «Entrée», «Sortie», «Ingresso» oder «Uscita» im Namen werden Einstiege des Platzes mit demselben Namensanfang in höchstens 400 m. Fehlt er, entsteht ein Platz mit diesem Namen.
 - **Parkplätze:** Punkte mit «Parkplatz», «Parking» oder «Parcheggio» im Namen werden Ort `Parking` des nächsten Platzes in höchstens 400 m.
 - **Nicht übernommen:** Punkte ohne Namen, ohne Gewässer, Dubletten nach Slug, Punkte mit `source` von swiss-divers.ch.
-- **Durchsicht:** Das Skript schreibt `tools/osm-import/out/review.md`. Marc prüft die Liste, bevor die Seeds committet werden.
+- **Durchsicht:** Das Skript schreibt `tools/osm-import/out/review.md`. Marc prüft die Liste. Das Skript ergänzt nur, was fehlt: Ein zweiter Lauf fügt neue OSM-Punkte hinzu und lässt bestehende Seeds stehen.
+- **Quellenangabe:** im Seitenfuss «© OpenStreetMap-Mitwirkende, ODbL» mit Link auf openstreetmap.org/copyright.
+- **Abruf über curl:** .NET baut zu overpass-api.de keine TLS-Verbindung auf (macOS, 18.10.2026). Das Skript ruft darum curl auf.
 - **Lizenz:** ODbL. Quellenangabe «© OpenStreetMap contributors» bei den Daten. Die übernommenen Felder (Name, Koordinate, Gewässer) bleiben unter ODbL verfügbar (Share-Alike). Eigene Inhalte der Redaktion (Texte, Bewertungen, Fotos) sind davon getrennt.
-- **Herkunft:** Rund zwei Drittel der Punkte tragen `source=www.dive-links.com`. Siehe `open-questions.md`.
-- **Abfrage:** eine Overpass-Query, `User-Agent` mit Projekt, Retry mit Backoff (Overpass antwortet bei Last mit 502 oder 504).
+- **Herkunft:** Rund zwei Drittel der Punkte tragen `source=www.dive-links.com`. Entscheid Marc, 18.10.2026: alle übernehmen. Tauchplätze sind allgemein bekannte Ortsmarken, die in vielen Tauchführern stehen, kein besonderer Inhalt. Ob die Daten in OSM sein dürfen, verantwortet OSM. Wir übernehmen nur Name, Koordinate und Gewässer.
+- **Abfrage:** eine Overpass-Query, dazu eine kleine Query pro Punkt ohne Gewässer (Fläche um den Punkt, für Plätze mitten im See), `User-Agent` mit Projekt, Retry mit Backoff (Overpass antwortet bei Last mit 502 oder 504).
 
 ## Geprüft und nicht genutzt
 

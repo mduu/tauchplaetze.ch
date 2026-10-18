@@ -46,4 +46,5 @@
   <data name="Nav_Forecast" xml:space="preserve"><value>Prognose</value></data>
   <data name="Nav_DiveSites" xml:space="preserve"><value>Tauchplätze</value></data>
   <data name="Nav_WaterBodies" xml:space="preserve"><value>Gewässer</value></data>
+  <data name="Footer_Osm" xml:space="preserve"><value>Tauchplätze teilweise aus OpenStreetMap: © OpenStreetMap-Mitwirkende, ODbL</value></data>
 </root>

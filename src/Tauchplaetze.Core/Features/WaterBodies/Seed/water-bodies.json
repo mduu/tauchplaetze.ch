@@ -69,5 +69,929 @@
         "role": "River"
       }
     ]
+  },
+  {
+    "slug": "aare",
+    "nameDe": "Aare",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 47.2537,
+      "longitude": 7.7008
+    }
+  },
+  {
+    "slug": "aegerisee",
+    "nameDe": "Ägerisee",
+    "nameEn": null,
+    "nameFr": "Lac d’Ägeri",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.1201,
+      "longitude": 8.6159
+    }
+  },
+  {
+    "slug": "alter-rhein",
+    "nameDe": "Alter Rhein",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.3897,
+      "longitude": 9.6728
+    }
+  },
+  {
+    "slug": "arnensee",
+    "nameDe": "Arnensee",
+    "nameEn": null,
+    "nameFr": "Lac d'Arnon",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.389,
+      "longitude": 7.2168
+    }
+  },
+  {
+    "slug": "arnisee",
+    "nameDe": "Arnisee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.7718,
+      "longitude": 8.6434
+    }
+  },
+  {
+    "slug": "baldeggersee",
+    "nameDe": "Baldeggersee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.1974,
+      "longitude": 8.2601
+    }
+  },
+  {
+    "slug": "bielersee",
+    "nameDe": "Bielersee",
+    "nameEn": "Lake Bienne",
+    "nameFr": "Lac de Bienne",
+    "nameIt": "Lago di Bienna",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.0861,
+      "longitude": 7.1544
+    }
+  },
+  {
+    "slug": "blausee",
+    "nameDe": "Blausee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.5325,
+      "longitude": 7.6648
+    }
+  },
+  {
+    "slug": "brienzersee",
+    "nameDe": "Brienzersee",
+    "nameEn": "Lake Brienz",
+    "nameFr": "Lac de Brienz",
+    "nameIt": "Lago di Brienz",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.723,
+      "longitude": 7.9673
+    }
+  },
+  {
+    "slug": "burgaeschisee",
+    "nameDe": "Burgäschisee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.1696,
+      "longitude": 7.6688
+    }
+  },
+  {
+    "slug": "caumasee",
+    "nameDe": "Caumasee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.8202,
+      "longitude": 9.2951
+    }
+  },
+  {
+    "slug": "champferersee",
+    "nameDe": "Champfèrersee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4664,
+      "longitude": 9.8056
+    }
+  },
+  {
+    "slug": "davosersee",
+    "nameDe": "Davosersee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.8198,
+      "longitude": 9.8527
+    }
+  },
+  {
+    "slug": "engstlensee",
+    "nameDe": "Engstlensee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.773,
+      "longitude": 8.3557
+    }
+  },
+  {
+    "slug": "espi",
+    "nameDe": "Espi",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.6585,
+      "longitude": 8.8564
+    }
+  },
+  {
+    "slug": "etang-du-duzillet",
+    "nameDe": "Étang du Duzillet",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.2915,
+      "longitude": 6.9592
+    }
+  },
+  {
+    "slug": "genfersee",
+    "nameDe": "Genfersee",
+    "nameEn": "Lake Geneva",
+    "nameFr": "Le Léman",
+    "nameIt": "Lago Lemano",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.3614,
+      "longitude": 6.5395
+    }
+  },
+  {
+    "slug": "greifensee",
+    "nameDe": "Greifensee",
+    "nameEn": null,
+    "nameFr": "Lac de Greifen",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.3474,
+      "longitude": 8.68
+    }
+  },
+  {
+    "slug": "greyerzersee",
+    "nameDe": "Greyerzersee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": "Lago della Gruyère",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.6648,
+      "longitude": 7.0994
+    }
+  },
+  {
+    "slug": "hagneckkanal",
+    "nameDe": "Hagneckkanal",
+    "nameEn": "Hagneck Canal",
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 47.0604,
+      "longitude": 7.1751
+    }
+  },
+  {
+    "slug": "hallwilersee",
+    "nameDe": "Hallwilersee",
+    "nameEn": "Lake Hallwil",
+    "nameFr": "Lac de Hallwil",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.2824,
+      "longitude": 8.2157
+    }
+  },
+  {
+    "slug": "heidsee",
+    "nameDe": "Heidsee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.7388,
+      "longitude": 9.5511
+    }
+  },
+  {
+    "slug": "kloentalersee",
+    "nameDe": "Klöntalersee",
+    "nameEn": null,
+    "nameFr": "Lac du Klöntal",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.0278,
+      "longitude": 8.9764
+    }
+  },
+  {
+    "slug": "l-areuse",
+    "nameDe": "L'Areuse",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 46.9626,
+      "longitude": 6.8211
+    }
+  },
+  {
+    "slug": "lac-brenet",
+    "nameDe": "Lac Brenet",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.6724,
+      "longitude": 6.3241
+    }
+  },
+  {
+    "slug": "lac-de-geronde",
+    "nameDe": "Lac de Geronde",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.2888,
+      "longitude": 7.5426
+    }
+  },
+  {
+    "slug": "lac-de-l-hongrin",
+    "nameDe": "Lac de l'Hongrin",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4222,
+      "longitude": 7.0504
+    }
+  },
+  {
+    "slug": "lac-de-moiry",
+    "nameDe": "Lac de Moiry",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.1264,
+      "longitude": 7.5709
+    }
+  },
+  {
+    "slug": "lac-de-montsalvens",
+    "nameDe": "Lac de Montsalvens",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.6154,
+      "longitude": 7.1468
+    }
+  },
+  {
+    "slug": "lac-de-taney",
+    "nameDe": "Lac de Taney",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.3455,
+      "longitude": 6.84
+    }
+  },
+  {
+    "slug": "lac-lioson",
+    "nameDe": "Lac Lioson",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.3863,
+      "longitude": 7.1287
+    }
+  },
+  {
+    "slug": "laghetto-moesola",
+    "nameDe": "Laghetto Moesola",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4932,
+      "longitude": 9.1706
+    }
+  },
+  {
+    "slug": "lago-del-sambuco",
+    "nameDe": "Lago del Sambuco",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4656,
+      "longitude": 8.6471
+    }
+  },
+  {
+    "slug": "lago-di-cadagno",
+    "nameDe": "Lago di Cadagno",
+    "nameEn": "Lake Cadagno",
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.5501,
+      "longitude": 8.7116
+    }
+  },
+  {
+    "slug": "lago-di-tome",
+    "nameDe": "Lago di Tomé",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.3632,
+      "longitude": 8.6899
+    }
+  },
+  {
+    "slug": "lago-di-vogorno",
+    "nameDe": "Lago di Vogorno",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.2173,
+      "longitude": 8.8527
+    }
+  },
+  {
+    "slug": "lago-maggiore",
+    "nameDe": "Lago Maggiore",
+    "nameEn": "Lake Maggiore",
+    "nameFr": "Lac Majeur",
+    "nameIt": "Lago Maggiore",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 45.9512,
+      "longitude": 8.6731
+    }
+  },
+  {
+    "slug": "lago-scuro",
+    "nameDe": "Lago Scuro",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4783,
+      "longitude": 8.5783
+    }
+  },
+  {
+    "slug": "le-creugenat",
+    "nameDe": "Le Creugenat",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 47.3963,
+      "longitude": 7.0272
+    }
+  },
+  {
+    "slug": "lej-da-las-culuonnas",
+    "nameDe": "Lej da las Culuonnas",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4702,
+      "longitude": 9.728
+    }
+  },
+  {
+    "slug": "limmat",
+    "nameDe": "Limmat",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 47.4545,
+      "longitude": 8.3298
+    }
+  },
+  {
+    "slug": "luganersee",
+    "nameDe": "Luganersee",
+    "nameEn": null,
+    "nameFr": "Lac de Lugano",
+    "nameIt": "Lago di Lugano",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 45.9696,
+      "longitude": 8.992
+    }
+  },
+  {
+    "slug": "lungerersee",
+    "nameDe": "Lungerersee",
+    "nameEn": null,
+    "nameFr": "Lac de Lungern",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.7981,
+      "longitude": 8.1629
+    }
+  },
+  {
+    "slug": "maggia",
+    "nameDe": "Maggia",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 46.2688,
+      "longitude": 8.6888
+    }
+  },
+  {
+    "slug": "marmorerasee",
+    "nameDe": "Marmorerasee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4985,
+      "longitude": 9.6362
+    }
+  },
+  {
+    "slug": "melchsee",
+    "nameDe": "Melchsee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.7704,
+      "longitude": 8.2726
+    }
+  },
+  {
+    "slug": "muslen-stausee",
+    "nameDe": "Muslen-Stausee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.1404,
+      "longitude": 9.1351
+    }
+  },
+  {
+    "slug": "neuenburgersee",
+    "nameDe": "Neuenburgersee",
+    "nameEn": "Lake Neuchâtel",
+    "nameFr": "Lac de Neuchâtel",
+    "nameIt": "Lago di Neuchâtel",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.9457,
+      "longitude": 6.9777
+    }
+  },
+  {
+    "slug": "oeschinensee",
+    "nameDe": "Oeschinensee",
+    "nameEn": "Oeschinen Lake",
+    "nameFr": "Lac d'Oeschinen",
+    "nameIt": "Lago di Oeschinen",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4984,
+      "longitude": 7.7254
+    }
+  },
+  {
+    "slug": "orbe-inferieure",
+    "nameDe": "Orbe inférieure",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 46.698,
+      "longitude": 6.3455
+    }
+  },
+  {
+    "slug": "pfaeffikersee",
+    "nameDe": "Pfäffikersee",
+    "nameEn": null,
+    "nameFr": "Lac de Pfäffikon",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.3524,
+      "longitude": 8.7809
+    }
+  },
+  {
+    "slug": "pumpspeicherkraftwerk-mapragg",
+    "nameDe": "Pumpspeicherkraftwerk Mapragg",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.9407,
+      "longitude": 9.477
+    }
+  },
+  {
+    "slug": "riale-del-salto",
+    "nameDe": "Riale del Salto",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 46.2511,
+      "longitude": 8.7068
+    }
+  },
+  {
+    "slug": "ritomsee",
+    "nameDe": "Ritomsee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.5399,
+      "longitude": 8.6912
+    }
+  },
+  {
+    "slug": "sanetschsee",
+    "nameDe": "Sanetschsee",
+    "nameEn": null,
+    "nameFr": "Lac de Sénin",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.3556,
+      "longitude": 7.2946
+    }
+  },
+  {
+    "slug": "sarnersee",
+    "nameDe": "Sarnersee",
+    "nameEn": null,
+    "nameFr": "Lac de Sarnen",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.8677,
+      "longitude": 8.2164
+    }
+  },
+  {
+    "slug": "schiffenensee",
+    "nameDe": "Schiffenensee",
+    "nameEn": null,
+    "nameFr": "Lac de Schiffenen",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.8499,
+      "longitude": 7.1676
+    }
+  },
+  {
+    "slug": "schwarzsee",
+    "nameDe": "Schwarzsee",
+    "nameEn": null,
+    "nameFr": "Lac Noir",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.6651,
+      "longitude": 7.2818
+    }
+  },
+  {
+    "slug": "seealpsee",
+    "nameDe": "Seealpsee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.2683,
+      "longitude": 9.4012
+    }
+  },
+  {
+    "slug": "sihlsee",
+    "nameDe": "Sihlsee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.118,
+      "longitude": 8.7885
+    }
+  },
+  {
+    "slug": "silsersee",
+    "nameDe": "Silsersee",
+    "nameEn": "Lake Sils",
+    "nameFr": null,
+    "nameIt": "Lago di Sils",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4204,
+      "longitude": 9.7294
+    }
+  },
+  {
+    "slug": "silvaplanersee",
+    "nameDe": "Silvaplanersee",
+    "nameEn": "Lake Silvaplana",
+    "nameFr": "Lac de Silvaplana",
+    "nameIt": "Lago di Silvaplana",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.4483,
+      "longitude": 9.7906
+    }
+  },
+  {
+    "slug": "stausee-garichti",
+    "nameDe": "Stausee Garichti",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.9555,
+      "longitude": 9.0999
+    }
+  },
+  {
+    "slug": "stausee-gigerwald",
+    "nameDe": "Stausee Gigerwald",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.9155,
+      "longitude": 9.3742
+    }
+  },
+  {
+    "slug": "steinenbach",
+    "nameDe": "Steinenbach",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 47.2243,
+      "longitude": 8.9841
+    }
+  },
+  {
+    "slug": "stille-reuss",
+    "nameDe": "Stille Reuss",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.3154,
+      "longitude": 8.3691
+    }
+  },
+  {
+    "slug": "sufnersee",
+    "nameDe": "Sufnersee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.5671,
+      "longitude": 9.3666
+    }
+  },
+  {
+    "slug": "talalpsee",
+    "nameDe": "Talalpsee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.0955,
+      "longitude": 9.1335
+    }
+  },
+  {
+    "slug": "tannensee",
+    "nameDe": "Tannensee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.7732,
+      "longitude": 8.3069
+    }
+  },
+  {
+    "slug": "thunersee",
+    "nameDe": "Thunersee",
+    "nameEn": null,
+    "nameFr": "Lac de Thoune",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.7056,
+      "longitude": 7.73
+    }
+  },
+  {
+    "slug": "toess",
+    "nameDe": "Töss",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 47.5521,
+      "longitude": 8.5546
+    }
+  },
+  {
+    "slug": "trueebsee",
+    "nameDe": "Trüebsee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.7937,
+      "longitude": 8.3902
+    }
+  },
+  {
+    "slug": "tuerlersee",
+    "nameDe": "Türlersee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.2691,
+      "longitude": 8.5035
+    }
+  },
+  {
+    "slug": "verzasca",
+    "nameDe": "Verzasca",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 46.2476,
+      "longitude": 8.8361
+    }
+  },
+  {
+    "slug": "vierwaldstaettersee",
+    "nameDe": "Vierwaldstättersee",
+    "nameEn": "Lake Lucerne",
+    "nameFr": "Lac des Quatre Cantons",
+    "nameIt": "Lago dei Quattro Cantoni",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 46.9854,
+      "longitude": 8.4519
+    }
+  },
+  {
+    "slug": "waegitalersee",
+    "nameDe": "Wägitalersee",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.0869,
+      "longitude": 8.9152
+    }
+  },
+  {
+    "slug": "walensee",
+    "nameDe": "Walensee",
+    "nameEn": null,
+    "nameFr": "Lac de Walenstadt",
+    "nameIt": null,
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.1255,
+      "longitude": 9.2005
+    }
   }
 ]

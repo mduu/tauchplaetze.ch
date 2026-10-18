@@ -6,5 +6,3575 @@
     "longitude": 8.6085,
     "municipality": "Herrliberg",
     "canton": "ZH"
+  },
+  {
+    "name": "Alter Aarelauf",
+    "waterBody": "aare",
+    "latitude": 47.47872,
+    "longitude": 8.19408,
+    "municipality": "Brugg",
+    "canton": "AG",
+    "osm": [
+      "node/663870124"
+    ]
+  },
+  {
+    "name": "Badi Schützenmatt",
+    "waterBody": "aare",
+    "latitude": 47.34119,
+    "longitude": 7.90753,
+    "municipality": "Olten",
+    "canton": "SO",
+    "osm": [
+      "node/663870105"
+    ]
+  },
+  {
+    "name": "Ballypark",
+    "waterBody": "aare",
+    "latitude": 47.36838,
+    "longitude": 7.99561,
+    "municipality": "Schönenwerd",
+    "canton": "SO",
+    "osm": [
+      "node/663870104"
+    ]
+  },
+  {
+    "name": "Hammerschmitte",
+    "waterBody": "aare",
+    "latitude": 46.97658,
+    "longitude": 7.46392,
+    "municipality": "Ittigen",
+    "canton": "BE",
+    "osm": [
+      "node/663870035"
+    ]
+  },
+  {
+    "name": "Insel",
+    "waterBody": "aare",
+    "latitude": 47.19441,
+    "longitude": 7.48634,
+    "municipality": "Lüsslingen-Nennigkofen",
+    "canton": "SO",
+    "osm": [
+      "node/663870094"
+    ]
+  },
+  {
+    "name": "Kraftwerk",
+    "waterBody": "aare",
+    "latitude": 47.36397,
+    "longitude": 7.92187,
+    "municipality": "Olten",
+    "canton": "SO",
+    "osm": [
+      "node/663870103"
+    ]
+  },
+  {
+    "name": "Leuzigen",
+    "waterBody": "aare",
+    "latitude": 47.1815,
+    "longitude": 7.44965,
+    "municipality": "Leuzigen",
+    "canton": "BE",
+    "osm": [
+      "node/663870093"
+    ]
+  },
+  {
+    "name": "Neue Brücke",
+    "waterBody": "aare",
+    "latitude": 47.17286,
+    "longitude": 7.4216,
+    "municipality": "Grenchen",
+    "canton": "SO",
+    "osm": [
+      "node/663870095"
+    ]
+  },
+  {
+    "name": "Pontonierhaus",
+    "waterBody": "aare",
+    "latitude": 47.237114,
+    "longitude": 7.654233,
+    "municipality": "Wangen an der Aare",
+    "canton": "BE",
+    "osm": [
+      "node/663870091"
+    ]
+  },
+  {
+    "name": "Rest. Grüner Aff",
+    "waterBody": "aare",
+    "latitude": 47.18925,
+    "longitude": 7.4476,
+    "municipality": "Selzach",
+    "canton": "SO",
+    "osm": [
+      "node/663870087"
+    ]
+  },
+  {
+    "name": "Risi",
+    "waterBody": "aare",
+    "latitude": 47.23841,
+    "longitude": 7.74506,
+    "municipality": "Aarwangen",
+    "canton": "BE",
+    "osm": [
+      "node/663870099"
+    ]
+  },
+  {
+    "name": "Rüchligwehr",
+    "waterBody": "aare",
+    "latitude": 47.39944,
+    "longitude": 8.05351,
+    "municipality": "Aarau",
+    "canton": "AG",
+    "osm": [
+      "node/663870101"
+    ]
+  },
+  {
+    "name": "Stadt Solothurn",
+    "waterBody": "aare",
+    "latitude": 47.20375,
+    "longitude": 7.5342,
+    "municipality": "Solothurn",
+    "canton": "SO",
+    "osm": [
+      "node/663870089"
+    ]
+  },
+  {
+    "name": "Wengibrücke",
+    "waterBody": "aare",
+    "latitude": 47.20608,
+    "longitude": 7.53635,
+    "municipality": "Solothurn",
+    "canton": "SO",
+    "osm": [
+      "node/663870090"
+    ]
+  },
+  {
+    "name": "Altersheim Breiten",
+    "waterBody": "aegerisee",
+    "latitude": 47.13228,
+    "longitude": 8.62228,
+    "municipality": "Oberägeri",
+    "canton": "ZG",
+    "osm": [
+      "node/663870289"
+    ]
+  },
+  {
+    "name": "Chappeli",
+    "waterBody": "aegerisee",
+    "latitude": 47.118242,
+    "longitude": 8.638919,
+    "municipality": "Oberägeri",
+    "canton": "ZG",
+    "osm": [
+      "node/663870290"
+    ]
+  },
+  {
+    "name": "Eierhals",
+    "waterBody": "aegerisee",
+    "latitude": 47.116195,
+    "longitude": 8.640944,
+    "municipality": "Oberägeri",
+    "canton": "ZG",
+    "osm": [
+      "node/663870288"
+    ]
+  },
+  {
+    "name": "Kurheim Ländli",
+    "waterBody": "aegerisee",
+    "latitude": 47.12689,
+    "longitude": 8.63197,
+    "municipality": "Oberägeri",
+    "canton": "ZG",
+    "osm": [
+      "node/663452040"
+    ]
+  },
+  {
+    "name": "Morgarten Denkmal",
+    "waterBody": "aegerisee",
+    "latitude": 47.106404,
+    "longitude": 8.641415,
+    "municipality": "Oberägeri",
+    "canton": "ZG",
+    "osm": [
+      "node/663452015"
+    ]
+  },
+  {
+    "name": "Diepoldsau Sportplatz",
+    "waterBody": "alter-rhein",
+    "latitude": 47.382348,
+    "longitude": 9.672494,
+    "municipality": "Diepoldsau",
+    "canton": "SG",
+    "osm": [
+      "node/665087354"
+    ]
+  },
+  {
+    "name": "Diepoldsau Strandbad",
+    "waterBody": "alter-rhein",
+    "latitude": 47.379986,
+    "longitude": 9.671805,
+    "municipality": "Diepoldsau",
+    "canton": "SG",
+    "osm": [
+      "node/665087353",
+      "node/665087352"
+    ],
+    "entryPoints": [
+      {
+        "kind": "Entry",
+        "name": "1 Badebetrieb",
+        "latitude": 47.379986,
+        "longitude": 9.671805
+      },
+      {
+        "kind": "Entry",
+        "name": "2 Winter",
+        "latitude": 47.380574,
+        "longitude": 9.672247
+      }
+    ]
+  },
+  {
+    "name": "Matz",
+    "waterBody": "alter-rhein",
+    "latitude": 47.388889,
+    "longitude": 9.673333,
+    "municipality": "Diepoldsau",
+    "canton": "SG",
+    "osm": [
+      "node/665087350"
+    ],
+    "entryPoints": [
+      {
+        "kind": "Entry",
+        "name": null,
+        "latitude": 47.388889,
+        "longitude": 9.673333
+      }
+    ]
+  },
+  {
+    "name": "Schmitter Zoll",
+    "waterBody": "alter-rhein",
+    "latitude": 47.393341,
+    "longitude": 9.66976,
+    "municipality": "Diepoldsau",
+    "canton": "SG",
+    "osm": [
+      "node/665087346"
+    ],
+    "entryPoints": [
+      {
+        "kind": "Entry",
+        "name": null,
+        "latitude": 47.393341,
+        "longitude": 9.66976
+      }
+    ]
+  },
+  {
+    "name": "Arnensee-Ost",
+    "waterBody": "arnensee",
+    "latitude": 46.39397,
+    "longitude": 7.22083,
+    "municipality": "Gsteig",
+    "canton": "BE",
+    "osm": [
+      "node/663869966"
+    ]
+  },
+  {
+    "name": "Arnensee-West",
+    "waterBody": "arnensee",
+    "latitude": 46.39372,
+    "longitude": 7.2178,
+    "municipality": "Gsteig",
+    "canton": "BE",
+    "osm": [
+      "node/663869965"
+    ]
+  },
+  {
+    "name": "Alpenblick",
+    "waterBody": "arnisee",
+    "latitude": 46.7706,
+    "longitude": 8.64261,
+    "municipality": "Gurtnellen",
+    "canton": "UR",
+    "osm": [
+      "node/663870204"
+    ]
+  },
+  {
+    "name": "Strandbad",
+    "waterBody": "baldeggersee",
+    "latitude": 47.18611,
+    "longitude": 8.27681,
+    "municipality": "Hochdorf",
+    "canton": "LU",
+    "osm": [
+      "node/663870115"
+    ]
+  },
+  {
+    "name": "Nidaukanal",
+    "waterBody": "bielersee",
+    "latitude": 47.12469,
+    "longitude": 7.22935,
+    "municipality": "Nidau",
+    "canton": "BE",
+    "osm": [
+      "node/663870097"
+    ]
+  },
+  {
+    "name": "Nidaukanal Rest. Blue Marlin",
+    "waterBody": "bielersee",
+    "latitude": 47.12441,
+    "longitude": 7.22948,
+    "municipality": "Nidau",
+    "canton": "BE",
+    "osm": [
+      "node/663870092"
+    ]
+  },
+  {
+    "name": "St. Joux",
+    "waterBody": "bielersee",
+    "latitude": 47.06667,
+    "longitude": 7.10942,
+    "municipality": "La Neuveville",
+    "canton": "BE",
+    "osm": [
+      "node/663870036"
+    ]
+  },
+  {
+    "name": "Strandbad",
+    "waterBody": "bielersee",
+    "latitude": 47.09531,
+    "longitude": 7.16326,
+    "municipality": null,
+    "canton": "BE",
+    "osm": [
+      "node/663870038"
+    ]
+  },
+  {
+    "name": "Tüscherz Bahnhof",
+    "waterBody": "bielersee",
+    "latitude": 47.113853,
+    "longitude": 7.196172,
+    "municipality": null,
+    "canton": "BE",
+    "osm": [
+      "node/663870098"
+    ]
+  },
+  {
+    "name": "Twann",
+    "waterBody": "bielersee",
+    "latitude": 47.093144,
+    "longitude": 7.157211,
+    "municipality": null,
+    "canton": "BE",
+    "osm": [
+      "node/1469369626"
+    ]
+  },
+  {
+    "name": "Blausee",
+    "waterBody": "blausee",
+    "latitude": 46.532702,
+    "longitude": 7.664896,
+    "municipality": "Kandergrund",
+    "canton": "BE",
+    "osm": [
+      "node/663870011"
+    ]
+  },
+  {
+    "name": "Ehem. Seepolizei)",
+    "waterBody": "brienzersee",
+    "latitude": 46.69602,
+    "longitude": 7.93617,
+    "municipality": "Bönigen",
+    "canton": "BE",
+    "osm": [
+      "node/663870044"
+    ]
+  },
+  {
+    "name": "Schifflände",
+    "waterBody": "brienzersee",
+    "latitude": 46.711775,
+    "longitude": 7.962692,
+    "municipality": "Iseltwald",
+    "canton": "BE",
+    "osm": [
+      "node/663870042"
+    ]
+  },
+  {
+    "name": "Schneckeninsel",
+    "waterBody": "brienzersee",
+    "latitude": 46.716179,
+    "longitude": 7.972398,
+    "municipality": "Brienzersee",
+    "canton": "BE",
+    "osm": [
+      "node/663870040"
+    ]
+  },
+  {
+    "name": "Schulhaus",
+    "waterBody": "brienzersee",
+    "latitude": 46.717957,
+    "longitude": 7.932061,
+    "municipality": "Niederried bei Interlaken",
+    "canton": "BE",
+    "osm": [
+      "node/663870041"
+    ]
+  },
+  {
+    "name": "Burgäschisee-Strandbad",
+    "waterBody": "burgaeschisee",
+    "latitude": 47.171489,
+    "longitude": 7.670426,
+    "municipality": "Aeschi (SO)",
+    "canton": "SO",
+    "osm": [
+      "node/663870096"
+    ]
+  },
+  {
+    "name": "Lag la Cauma",
+    "waterBody": "caumasee",
+    "latitude": 46.819533,
+    "longitude": 9.294924,
+    "municipality": "Flims",
+    "canton": "GR",
+    "osm": [
+      "node/663870260"
+    ]
+  },
+  {
+    "name": "Lej da Champfèr",
+    "waterBody": "champferersee",
+    "latitude": 46.46851,
+    "longitude": 9.802621,
+    "municipality": "Silvaplana",
+    "canton": "GR",
+    "osm": [
+      "node/663870247"
+    ]
+  },
+  {
+    "name": "Alter Stollen",
+    "waterBody": "davosersee",
+    "latitude": 46.81522,
+    "longitude": 9.85152,
+    "municipality": "Davos",
+    "canton": "GR",
+    "osm": [
+      "node/663870458"
+    ]
+  },
+  {
+    "name": "Bootshaus",
+    "waterBody": "davosersee",
+    "latitude": 46.82241,
+    "longitude": 9.85076,
+    "municipality": "Davos",
+    "canton": "GR",
+    "osm": [
+      "node/663870443"
+    ]
+  },
+  {
+    "name": "Galerie",
+    "waterBody": "davosersee",
+    "latitude": 46.817094,
+    "longitude": 9.846892,
+    "municipality": "Davos",
+    "canton": "GR",
+    "osm": [
+      "node/663870444"
+    ]
+  },
+  {
+    "name": "Strandbad",
+    "waterBody": "davosersee",
+    "latitude": 46.815255,
+    "longitude": 9.852155,
+    "municipality": "Davos",
+    "canton": "GR",
+    "osm": [
+      "node/663870442"
+    ]
+  },
+  {
+    "name": "Bootsplatz",
+    "waterBody": "engstlensee",
+    "latitude": 46.773882,
+    "longitude": 8.350195,
+    "municipality": "Innertkirchen",
+    "canton": "BE",
+    "osm": [
+      "node/663870060"
+    ]
+  },
+  {
+    "name": "Brücke-Schifflände",
+    "waterBody": "espi",
+    "latitude": 47.65855,
+    "longitude": 8.85963,
+    "municipality": null,
+    "canton": null,
+    "osm": [
+      "node/663870378"
+    ]
+  },
+  {
+    "name": "Le Duzillet-Gouille Duzillet",
+    "waterBody": "etang-du-duzillet",
+    "latitude": 46.28901,
+    "longitude": 6.96165,
+    "municipality": "Ollon",
+    "canton": "VD",
+    "osm": [
+      "node/663869963"
+    ]
+  },
+  {
+    "name": "Ecole de Mission",
+    "waterBody": "genfersee",
+    "latitude": 46.38839,
+    "longitude": 6.8453,
+    "municipality": "Saint-Gingolph",
+    "canton": "VS",
+    "osm": [
+      "node/663869956"
+    ]
+  },
+  {
+    "name": "Falaise Bikini",
+    "waterBody": "genfersee",
+    "latitude": 46.38856,
+    "longitude": 6.81925,
+    "municipality": "Saint-Gingolph",
+    "canton": "VS",
+    "osm": [
+      "node/663869957"
+    ]
+  },
+  {
+    "name": "La Croix",
+    "waterBody": "genfersee",
+    "latitude": 46.388501,
+    "longitude": 6.819346,
+    "municipality": "Saint-Gingolph",
+    "canton": "VS",
+    "osm": [
+      "node/663869953"
+    ]
+  },
+  {
+    "name": "La Pichette",
+    "waterBody": "genfersee",
+    "latitude": 46.47008,
+    "longitude": 6.81049,
+    "municipality": "Chardonne",
+    "canton": "VD",
+    "osm": [
+      "node/663869989"
+    ]
+  },
+  {
+    "name": "Lac Léman - Hirondelle",
+    "waterBody": "genfersee",
+    "latitude": 46.447989,
+    "longitude": 6.861921,
+    "municipality": "La Tour-de-Peilz",
+    "canton": "VD",
+    "osm": [
+      "node/663869978"
+    ]
+  },
+  {
+    "name": "Lac Léman-Crépine",
+    "waterBody": "genfersee",
+    "latitude": 46.499629,
+    "longitude": 6.691975,
+    "municipality": "Lutry",
+    "canton": "VD",
+    "osm": [
+      "node/663869981"
+    ]
+  },
+  {
+    "name": "Lac Léman-Falaise de Glaise",
+    "waterBody": "genfersee",
+    "latitude": 46.50542,
+    "longitude": 6.65419,
+    "municipality": "Pully",
+    "canton": "VD",
+    "osm": [
+      "node/663869973"
+    ]
+  },
+  {
+    "name": "Lac Léman-Gare St. Saphorin",
+    "waterBody": "genfersee",
+    "latitude": 46.47212,
+    "longitude": 6.79802,
+    "municipality": "Saint-Saphorin (Lavaux)",
+    "canton": "VD",
+    "osm": [
+      "node/663869977"
+    ]
+  },
+  {
+    "name": "Lac Léman-Le Boesch",
+    "waterBody": "genfersee",
+    "latitude": 46.263852,
+    "longitude": 6.163562,
+    "municipality": "Genthod",
+    "canton": "GE",
+    "osm": [
+      "node/663869960"
+    ]
+  },
+  {
+    "name": "Lac Léman-Le Creux-de-Genthod",
+    "waterBody": "genfersee",
+    "latitude": 46.263842,
+    "longitude": 6.163548,
+    "municipality": "Genthod",
+    "canton": "GE",
+    "osm": [
+      "node/663869961"
+    ]
+  },
+  {
+    "name": "Lac Léman-Le Paradis",
+    "waterBody": "genfersee",
+    "latitude": 46.26385,
+    "longitude": 6.16355,
+    "municipality": "Genthod",
+    "canton": "GE",
+    "osm": [
+      "node/663869962"
+    ]
+  },
+  {
+    "name": "Lac Léman-Lutry Plage",
+    "waterBody": "genfersee",
+    "latitude": 46.50092,
+    "longitude": 6.68982,
+    "municipality": "Lutry",
+    "canton": "VD",
+    "osm": [
+      "node/663869991"
+    ]
+  },
+  {
+    "name": "Lac Léman-Minoteries",
+    "waterBody": "genfersee",
+    "latitude": 46.47415,
+    "longitude": 6.77819,
+    "municipality": "Rivaz",
+    "canton": "VD",
+    "osm": [
+      "node/663869987"
+    ]
+  },
+  {
+    "name": "Lac Léman-Piscine",
+    "waterBody": "genfersee",
+    "latitude": 46.450481,
+    "longitude": 6.858278,
+    "municipality": "La Tour-de-Peilz",
+    "canton": "VD",
+    "osm": [
+      "node/663869986"
+    ]
+  },
+  {
+    "name": "Lac Léman-Point du Suchet",
+    "waterBody": "genfersee",
+    "latitude": 46.478589,
+    "longitude": 6.461955,
+    "municipality": "Saint-Prex",
+    "canton": "VD",
+    "osm": [
+      "node/663869974"
+    ]
+  },
+  {
+    "name": "Lac Léman-Port",
+    "waterBody": "genfersee",
+    "latitude": 46.45214,
+    "longitude": 6.85489,
+    "municipality": "La Tour-de-Peilz",
+    "canton": "VD",
+    "osm": [
+      "node/663869984"
+    ]
+  },
+  {
+    "name": "Lac Léman-Rivaz Gare",
+    "waterBody": "genfersee",
+    "latitude": 46.473539,
+    "longitude": 6.784832,
+    "municipality": "Rivaz",
+    "canton": "VD",
+    "osm": [
+      "node/663869979"
+    ]
+  },
+  {
+    "name": "Les Gonelles",
+    "waterBody": "genfersee",
+    "latitude": 46.46987,
+    "longitude": 6.81539,
+    "municipality": "Corseaux",
+    "canton": "VD",
+    "osm": [
+      "node/663869990"
+    ]
+  },
+  {
+    "name": "Plage d'Hermance",
+    "waterBody": "genfersee",
+    "latitude": 46.30359,
+    "longitude": 6.24091,
+    "municipality": "Hermance",
+    "canton": "GE",
+    "osm": [
+      "node/663869959"
+    ]
+  },
+  {
+    "name": "Bad Egg",
+    "waterBody": "greifensee",
+    "latitude": 47.321282,
+    "longitude": 8.696602,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663452097"
+    ]
+  },
+  {
+    "name": "Hafen",
+    "waterBody": "greifensee",
+    "latitude": 47.34025,
+    "longitude": 8.67872,
+    "municipality": "Maur",
+    "canton": "ZH",
+    "osm": [
+      "node/663452096"
+    ]
+  },
+  {
+    "name": "Strandbad Maur",
+    "waterBody": "greifensee",
+    "latitude": 47.34564,
+    "longitude": 8.67508,
+    "municipality": "Maur",
+    "canton": "ZH",
+    "osm": [
+      "node/663452095"
+    ]
+  },
+  {
+    "name": "Strandbad Niederuster",
+    "waterBody": "greifensee",
+    "latitude": 47.34252,
+    "longitude": 8.69072,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663452094"
+    ]
+  },
+  {
+    "name": "Pont Thusy",
+    "waterBody": "greyerzersee",
+    "latitude": 46.688886,
+    "longitude": 7.107807,
+    "municipality": "Pont-la-Ville",
+    "canton": "FR",
+    "osm": [
+      "node/663870007"
+    ]
+  },
+  {
+    "name": "Sur Momont",
+    "waterBody": "greyerzersee",
+    "latitude": 46.69155,
+    "longitude": 7.11139,
+    "municipality": "Pont-la-Ville",
+    "canton": "FR",
+    "osm": [
+      "node/663870006"
+    ]
+  },
+  {
+    "name": "Hagneckkanal",
+    "waterBody": "hagneckkanal",
+    "latitude": 47.06042,
+    "longitude": 7.17512,
+    "municipality": "Lüscherz",
+    "canton": "BE",
+    "osm": [
+      "node/663870034"
+    ]
+  },
+  {
+    "name": "Landungssteg Aesch",
+    "waterBody": "hallwilersee",
+    "latitude": 47.25861,
+    "longitude": 8.22998,
+    "municipality": "Aesch (LU)",
+    "canton": "LU",
+    "osm": [
+      "node/663870114"
+    ]
+  },
+  {
+    "name": "Mosenwäldli",
+    "waterBody": "hallwilersee",
+    "latitude": 47.251339,
+    "longitude": 8.2205,
+    "municipality": "Beromünster",
+    "canton": "LU",
+    "osm": [
+      "node/663870113"
+    ]
+  },
+  {
+    "name": "Restaurant Delphin",
+    "waterBody": "hallwilersee",
+    "latitude": 47.29489,
+    "longitude": 8.219,
+    "municipality": "Meisterschwanden",
+    "canton": "AG",
+    "osm": [
+      "node/663870120"
+    ]
+  },
+  {
+    "name": "Schifflände",
+    "waterBody": "hallwilersee",
+    "latitude": 47.29083,
+    "longitude": 8.20294,
+    "municipality": "Birrwil",
+    "canton": "AG",
+    "osm": [
+      "node/663870119"
+    ]
+  },
+  {
+    "name": "Igl Lai (Heidsee)-Seerestaurant",
+    "waterBody": "heidsee",
+    "latitude": 46.73836,
+    "longitude": 9.55283,
+    "municipality": "Vaz/Obervaz",
+    "canton": "GR",
+    "osm": [
+      "node/663870245"
+    ]
+  },
+  {
+    "name": "Restaurant Rhodannenberg",
+    "waterBody": "kloentalersee",
+    "latitude": 47.03627,
+    "longitude": 9.00236,
+    "municipality": "Glarus",
+    "canton": "GL",
+    "osm": [
+      "node/663870240"
+    ]
+  },
+  {
+    "name": "Gorges de l'Areuse",
+    "waterBody": "l-areuse",
+    "latitude": 46.962588,
+    "longitude": 6.821055,
+    "municipality": "Boudry",
+    "canton": "NE",
+    "osm": [
+      "node/663869993"
+    ]
+  },
+  {
+    "name": "Lac du Joux",
+    "waterBody": "lac-brenet",
+    "latitude": 46.667722,
+    "longitude": 6.325152,
+    "municipality": "L'Abbaye",
+    "canton": "VD",
+    "osm": [
+      "node/663869972"
+    ]
+  },
+  {
+    "name": "Lac de Géronde-Plage",
+    "waterBody": "lac-de-geronde",
+    "latitude": 46.28742,
+    "longitude": 7.54135,
+    "municipality": "Sierre",
+    "canton": "VS",
+    "osm": [
+      "node/663869968"
+    ]
+  },
+  {
+    "name": "Les Crêtes",
+    "waterBody": "lac-de-l-hongrin",
+    "latitude": 46.42808,
+    "longitude": 7.04938,
+    "municipality": "Château-d'Oex",
+    "canton": "VD",
+    "osm": [
+      "node/663870005"
+    ]
+  },
+  {
+    "name": "Lac de Moiry-Rochers de Paris",
+    "waterBody": "lac-de-moiry",
+    "latitude": 46.12352,
+    "longitude": 7.57191,
+    "municipality": "Anniviers",
+    "canton": "VS",
+    "osm": [
+      "node/663869967"
+    ]
+  },
+  {
+    "name": "Presqu`ile",
+    "waterBody": "lac-de-montsalvens",
+    "latitude": 46.61875,
+    "longitude": 7.15125,
+    "municipality": "Val-de-Charmey",
+    "canton": "FR",
+    "osm": [
+      "node/663870008"
+    ]
+  },
+  {
+    "name": "Lac de Taney",
+    "waterBody": "lac-de-taney",
+    "latitude": 46.3447,
+    "longitude": 6.834808,
+    "municipality": "Vouvry",
+    "canton": "VS",
+    "osm": [
+      "node/663869958"
+    ]
+  },
+  {
+    "name": "Lac Lioson",
+    "waterBody": "lac-lioson",
+    "latitude": 46.387512,
+    "longitude": 7.128056,
+    "municipality": "Ormont-Dessous",
+    "canton": "VD",
+    "osm": [
+      "node/663869970"
+    ]
+  },
+  {
+    "name": "Laghetto Moesola immersioni",
+    "waterBody": "laghetto-moesola",
+    "latitude": 46.49354,
+    "longitude": 9.170069,
+    "municipality": "Mesocco",
+    "canton": "GR",
+    "osm": [
+      "node/663870254"
+    ]
+  },
+  {
+    "name": "Sassello",
+    "waterBody": "lago-del-sambuco",
+    "latitude": 46.4751,
+    "longitude": 8.63655,
+    "municipality": "Lavizzara",
+    "canton": "TI",
+    "osm": [
+      "node/663870190"
+    ]
+  },
+  {
+    "name": "Scheggia",
+    "waterBody": "lago-del-sambuco",
+    "latitude": 46.46658,
+    "longitude": 8.64992,
+    "municipality": "Lavizzara",
+    "canton": "TI",
+    "osm": [
+      "node/663870199"
+    ]
+  },
+  {
+    "name": "Lago Cadano",
+    "waterBody": "lago-di-cadagno",
+    "latitude": 46.54849,
+    "longitude": 8.70767,
+    "municipality": "Quinto",
+    "canton": "TI",
+    "osm": [
+      "node/663870196"
+    ]
+  },
+  {
+    "name": "Lago di Tomé",
+    "waterBody": "lago-di-tome",
+    "latitude": 46.362645,
+    "longitude": 8.690238,
+    "municipality": "Lavizzara",
+    "canton": "TI",
+    "osm": [
+      "node/663870166"
+    ]
+  },
+  {
+    "name": "Ponte",
+    "waterBody": "lago-di-vogorno",
+    "latitude": 46.22243,
+    "longitude": 8.85717,
+    "municipality": "Verzasca",
+    "canton": "TI",
+    "osm": [
+      "node/663870174"
+    ]
+  },
+  {
+    "name": "Ponte Corippo",
+    "waterBody": "lago-di-vogorno",
+    "latitude": 46.24083,
+    "longitude": 8.84389,
+    "municipality": "Verzasca",
+    "canton": "TI",
+    "osm": [
+      "node/663870181"
+    ]
+  },
+  {
+    "name": "Aqua Tenero",
+    "waterBody": "lago-maggiore",
+    "latitude": 46.17372,
+    "longitude": 8.84311,
+    "municipality": "Tenero-Contra",
+    "canton": "TI",
+    "osm": [
+      "node/663870173"
+    ]
+  },
+  {
+    "name": "Lago Maggiore-Centro Sub del Gambarogno",
+    "waterBody": "lago-maggiore",
+    "latitude": 46.13827,
+    "longitude": 8.81558,
+    "municipality": "Gambarogno",
+    "canton": "TI",
+    "osm": [
+      "node/663870177"
+    ]
+  },
+  {
+    "name": "Lago Maggiore-Sud",
+    "waterBody": "lago-maggiore",
+    "latitude": 46.12069,
+    "longitude": 8.78216,
+    "municipality": "Gambarogno",
+    "canton": "TI",
+    "osm": [
+      "node/663870159"
+    ]
+  },
+  {
+    "name": "Lido Locarno",
+    "waterBody": "lago-maggiore",
+    "latitude": 46.16158,
+    "longitude": 8.80553,
+    "municipality": "Locarno",
+    "canton": "TI",
+    "osm": [
+      "node/663870175"
+    ]
+  },
+  {
+    "name": "Porto",
+    "waterBody": "lago-maggiore",
+    "latitude": 46.11792,
+    "longitude": 8.71011,
+    "municipality": "Brissago",
+    "canton": "TI",
+    "osm": [
+      "node/663870155"
+    ]
+  },
+  {
+    "name": "Porto alla Ressiga",
+    "waterBody": "lago-maggiore",
+    "latitude": 46.1205,
+    "longitude": 8.714,
+    "municipality": "Brissago",
+    "canton": "TI",
+    "osm": [
+      "node/663870156"
+    ]
+  },
+  {
+    "name": "Porto Ronco Beach Club",
+    "waterBody": "lago-maggiore",
+    "latitude": 46.133191,
+    "longitude": 8.719358,
+    "municipality": "Ronco sopra Ascona",
+    "canton": "TI",
+    "osm": [
+      "node/3060482857"
+    ]
+  },
+  {
+    "name": "Diga del Narèt",
+    "waterBody": "lago-scuro",
+    "latitude": 46.47674,
+    "longitude": 8.57508,
+    "municipality": "Lavizzara",
+    "canton": "TI",
+    "osm": [
+      "node/663870195"
+    ]
+  },
+  {
+    "name": "Creugenat",
+    "waterBody": "le-creugenat",
+    "latitude": 47.396346,
+    "longitude": 7.027215,
+    "municipality": "Haute-Ajoie",
+    "canton": "JU",
+    "osm": [
+      "node/663870003"
+    ]
+  },
+  {
+    "name": "Coluonnas",
+    "waterBody": "lej-da-las-culuonnas",
+    "latitude": 46.46963,
+    "longitude": 9.72681,
+    "municipality": "Silvaplana",
+    "canton": "GR",
+    "osm": [
+      "node/663870248"
+    ]
+  },
+  {
+    "name": "Autobahnbrücke",
+    "waterBody": "limmat",
+    "latitude": 47.45453,
+    "longitude": 8.32975,
+    "municipality": "Neuenhof",
+    "canton": "AG",
+    "osm": [
+      "node/663870121"
+    ]
+  },
+  {
+    "name": "Foce del Casserate",
+    "waterBody": "luganersee",
+    "latitude": 46.001802,
+    "longitude": 8.961703,
+    "municipality": "Lugano",
+    "canton": "TI",
+    "osm": [
+      "node/663870138"
+    ]
+  },
+  {
+    "name": "Il vaporetto (Relitto di Milano)",
+    "waterBody": "luganersee",
+    "latitude": 45.90542,
+    "longitude": 8.97972,
+    "municipality": "Mendrisio",
+    "canton": "TI",
+    "osm": [
+      "node/663870141"
+    ]
+  },
+  {
+    "name": "Lago di Lugano-Acquedetto",
+    "waterBody": "luganersee",
+    "latitude": 45.98656,
+    "longitude": 8.95633,
+    "municipality": "Paradiso",
+    "canton": "TI",
+    "osm": [
+      "node/663870140"
+    ]
+  },
+  {
+    "name": "Lago di Lugano-Campeggio Paradiso",
+    "waterBody": "luganersee",
+    "latitude": 45.922858,
+    "longitude": 8.978635,
+    "municipality": "Val Mara",
+    "canton": "TI",
+    "osm": [
+      "node/663870146"
+    ]
+  },
+  {
+    "name": "Lago di Lugano-Il Deserto",
+    "waterBody": "luganersee",
+    "latitude": 45.95952,
+    "longitude": 8.88019,
+    "municipality": "Caslano",
+    "canton": "TI",
+    "osm": [
+      "node/663870131"
+    ]
+  },
+  {
+    "name": "Lago di Lugano-Le Macchine",
+    "waterBody": "luganersee",
+    "latitude": 45.962505,
+    "longitude": 8.870144,
+    "municipality": "Caslano",
+    "canton": "TI",
+    "osm": [
+      "node/663870133"
+    ]
+  },
+  {
+    "name": "Lago di Lugano-Lido di Riva S. Vitale",
+    "waterBody": "luganersee",
+    "latitude": 45.906628,
+    "longitude": 8.97452,
+    "municipality": "Riva San Vitale",
+    "canton": "TI",
+    "osm": [
+      "node/663870144"
+    ]
+  },
+  {
+    "name": "Lago di Lugano-Lugano-Sub",
+    "waterBody": "luganersee",
+    "latitude": 45.985711,
+    "longitude": 8.956248,
+    "municipality": "Paradiso",
+    "canton": "TI",
+    "osm": [
+      "node/663870137"
+    ]
+  },
+  {
+    "name": "Lago di Lugano-Parete di Caslano",
+    "waterBody": "luganersee",
+    "latitude": 45.96411,
+    "longitude": 8.88666,
+    "municipality": "Caslano",
+    "canton": "TI",
+    "osm": [
+      "node/663870130"
+    ]
+  },
+  {
+    "name": "Lago di Lugano-Parete di Riva",
+    "waterBody": "luganersee",
+    "latitude": 45.92197,
+    "longitude": 8.97039,
+    "municipality": "Riva San Vitale",
+    "canton": "TI",
+    "osm": [
+      "node/663870143"
+    ]
+  },
+  {
+    "name": "Ponte del Diavolo",
+    "waterBody": "luganersee",
+    "latitude": 46.002892,
+    "longitude": 8.971088,
+    "municipality": "Lugano",
+    "canton": "TI",
+    "osm": [
+      "node/663870151"
+    ]
+  },
+  {
+    "name": "Sentiero di Gandria",
+    "waterBody": "luganersee",
+    "latitude": 46.001086,
+    "longitude": 8.985375,
+    "municipality": "Lugano",
+    "canton": "TI",
+    "osm": [
+      "node/663870150"
+    ]
+  },
+  {
+    "name": "Lauenen",
+    "waterBody": "lungerersee",
+    "latitude": 46.80136,
+    "longitude": 8.16945,
+    "municipality": "Lungern",
+    "canton": "OW",
+    "osm": [
+      "node/663870065"
+    ]
+  },
+  {
+    "name": "Gola del Lupo (Wolfsrachen)",
+    "waterBody": "maggia",
+    "latitude": 46.34502,
+    "longitude": 8.61169,
+    "municipality": "Cevio",
+    "canton": "TI",
+    "osm": [
+      "node/663870169"
+    ]
+  },
+  {
+    "name": "Gola di Ponte Brolla",
+    "waterBody": "maggia",
+    "latitude": 46.186201,
+    "longitude": 8.750617,
+    "municipality": "Terre di Pedemonte",
+    "canton": "TI",
+    "osm": [
+      "node/663870164"
+    ]
+  },
+  {
+    "name": "Oberhalb Brontallo",
+    "waterBody": "maggia",
+    "latitude": 46.35844,
+    "longitude": 8.64319,
+    "municipality": "Lavizzara",
+    "canton": "TI",
+    "osm": [
+      "node/663870171"
+    ]
+  },
+  {
+    "name": "Tegna Ponte Brolla",
+    "waterBody": "maggia",
+    "latitude": 46.185599,
+    "longitude": 8.749569,
+    "municipality": "Terre di Pedemonte",
+    "canton": "TI",
+    "osm": [
+      "node/663870163"
+    ]
+  },
+  {
+    "name": "Alte Julierbrücke",
+    "waterBody": "marmorerasee",
+    "latitude": 46.488529,
+    "longitude": 9.641523,
+    "municipality": "Surses",
+    "canton": "GR",
+    "osm": [
+      "node/663870253"
+    ]
+  },
+  {
+    "name": "Kiesstrand",
+    "waterBody": "melchsee",
+    "latitude": 46.7741,
+    "longitude": 8.274,
+    "municipality": "Kerns",
+    "canton": "OW",
+    "osm": [
+      "node/663870068"
+    ]
+  },
+  {
+    "name": "Kraftwerk",
+    "waterBody": "muslen-stausee",
+    "latitude": 47.13816,
+    "longitude": 9.13433,
+    "municipality": "Amden",
+    "canton": "SG",
+    "osm": [
+      "node/663870353"
+    ]
+  },
+  {
+    "name": "La Madonne",
+    "waterBody": "neuenburgersee",
+    "latitude": 46.94573,
+    "longitude": 6.97767,
+    "municipality": "Vully-les-Lacs",
+    "canton": "VD",
+    "osm": [
+      "node/663869995"
+    ]
+  },
+  {
+    "name": "la motte",
+    "waterBody": "neuenburgersee",
+    "latitude": 46.925049,
+    "longitude": 6.922226,
+    "municipality": "Delley-Portalban",
+    "canton": "FR",
+    "osm": [
+      "node/1346947784"
+    ]
+  },
+  {
+    "name": "La Motte",
+    "waterBody": "neuenburgersee",
+    "latitude": 46.94278,
+    "longitude": 6.90409,
+    "municipality": null,
+    "canton": "NE",
+    "osm": [
+      "node/663869999"
+    ]
+  },
+  {
+    "name": "Maison du Plongeur",
+    "waterBody": "neuenburgersee",
+    "latitude": 46.99412,
+    "longitude": 6.94803,
+    "municipality": "Neuchâtel",
+    "canton": "NE",
+    "osm": [
+      "node/663870000"
+    ]
+  },
+  {
+    "name": "Pointe du Grain",
+    "waterBody": "neuenburgersee",
+    "latitude": 46.92576,
+    "longitude": 6.8372,
+    "municipality": "La Grande-Béroche",
+    "canton": "NE",
+    "osm": [
+      "node/663869996"
+    ]
+  },
+  {
+    "name": "Port",
+    "waterBody": "neuenburgersee",
+    "latitude": 46.877474,
+    "longitude": 6.760391,
+    "municipality": null,
+    "canton": "NE",
+    "osm": [
+      "node/663869997"
+    ]
+  },
+  {
+    "name": "Öschinensee-Ost",
+    "waterBody": "oeschinensee",
+    "latitude": 46.49496,
+    "longitude": 7.72189,
+    "municipality": "Kandersteg",
+    "canton": "BE",
+    "osm": [
+      "node/663870014"
+    ]
+  },
+  {
+    "name": "Öschinensee-West",
+    "waterBody": "oeschinensee",
+    "latitude": 46.49769,
+    "longitude": 7.71539,
+    "municipality": "Kandersteg",
+    "canton": "BE",
+    "osm": [
+      "node/663870013"
+    ]
+  },
+  {
+    "name": "Grotte de Vallorbe",
+    "waterBody": "orbe-inferieure",
+    "latitude": 46.69802,
+    "longitude": 6.345514,
+    "municipality": "Vallorbe",
+    "canton": "VD",
+    "osm": [
+      "node/663869976"
+    ]
+  },
+  {
+    "name": "Seerettungsdienst",
+    "waterBody": "pfaeffikersee",
+    "latitude": 47.364161,
+    "longitude": 8.77855,
+    "municipality": "Pfäffikon",
+    "canton": "ZH",
+    "osm": [
+      "node/663870348"
+    ]
+  },
+  {
+    "name": "Mapraggsee-KSL",
+    "waterBody": "pumpspeicherkraftwerk-mapragg",
+    "latitude": 46.941296,
+    "longitude": 9.478942,
+    "municipality": "Pfäfers",
+    "canton": "SG",
+    "osm": [
+      "node/2415860567"
+    ]
+  },
+  {
+    "name": "Werkhof",
+    "waterBody": "pumpspeicherkraftwerk-mapragg",
+    "latitude": 46.942153,
+    "longitude": 9.48041,
+    "municipality": "Pfäfers",
+    "canton": "SG",
+    "osm": [
+      "node/663870262"
+    ]
+  },
+  {
+    "name": "Alte Brücke-Flurlingersteg",
+    "waterBody": "rhein",
+    "latitude": 47.69194,
+    "longitude": 8.62694,
+    "municipality": "Schaffhausen",
+    "canton": "SH",
+    "osm": [
+      "node/663870368"
+    ]
+  },
+  {
+    "name": "Alte Zollbrücke",
+    "waterBody": "rhein",
+    "latitude": 47.64669,
+    "longitude": 8.60297,
+    "municipality": "Rheinau",
+    "canton": "ZH",
+    "osm": [
+      "node/663870370"
+    ]
+  },
+  {
+    "name": "Brücke",
+    "waterBody": "rhein",
+    "latitude": 47.69425,
+    "longitude": 8.64319,
+    "municipality": "Feuerthalen",
+    "canton": "ZH",
+    "osm": [
+      "node/663870369"
+    ]
+  },
+  {
+    "name": "Camping-Strandbad",
+    "waterBody": "rhein",
+    "latitude": 47.67696,
+    "longitude": 8.781729,
+    "municipality": "Diessenhofen",
+    "canton": "TG",
+    "osm": [
+      "node/663870359"
+    ]
+  },
+  {
+    "name": "Ellikon am Rhein - Rüdlingen",
+    "waterBody": "rhein",
+    "latitude": 47.60566,
+    "longitude": 8.59663,
+    "municipality": "Marthalen",
+    "canton": "ZH",
+    "osm": [
+      "node/663870355"
+    ]
+  },
+  {
+    "name": "Hafen-Kloster",
+    "waterBody": "rhein",
+    "latitude": 47.690516,
+    "longitude": 8.749832,
+    "municipality": "Diessenhofen",
+    "canton": "TG",
+    "osm": [
+      "node/663870362"
+    ]
+  },
+  {
+    "name": "Kloster",
+    "waterBody": "rhein",
+    "latitude": 47.64139,
+    "longitude": 8.60271,
+    "municipality": "Rheinau",
+    "canton": "ZH",
+    "osm": [
+      "node/663870361"
+    ]
+  },
+  {
+    "name": "Rheinau-Ellikon am Rhein",
+    "waterBody": "rhein",
+    "latitude": 47.63786,
+    "longitude": 8.59688,
+    "municipality": "Rheinau",
+    "canton": "ZH",
+    "osm": [
+      "node/663870364"
+    ]
+  },
+  {
+    "name": "Schupfen-Camping",
+    "waterBody": "rhein",
+    "latitude": 47.675095,
+    "longitude": 8.785707,
+    "municipality": "Diessenhofen",
+    "canton": "TG",
+    "osm": [
+      "node/663870365"
+    ]
+  },
+  {
+    "name": "Strandbad",
+    "waterBody": "rhein",
+    "latitude": 47.55164,
+    "longitude": 7.7767,
+    "municipality": "Rheinfelden",
+    "canton": "AG",
+    "osm": [
+      "node/663870126"
+    ]
+  },
+  {
+    "name": "Cascata Riale Salto",
+    "waterBody": "riale-del-salto",
+    "latitude": 46.251101,
+    "longitude": 8.706759,
+    "municipality": "Maggia",
+    "canton": "TI",
+    "osm": [
+      "node/663870167"
+    ]
+  },
+  {
+    "name": "Lago Ritom",
+    "waterBody": "ritomsee",
+    "latitude": 46.54232,
+    "longitude": 8.68292,
+    "municipality": "Quinto",
+    "canton": "TI",
+    "osm": [
+      "node/663870202"
+    ]
+  },
+  {
+    "name": "Diving \"Lac de Neuchâtel-De la Lé\"",
+    "waterBody": "sanetschsee",
+    "latitude": 46.35305,
+    "longitude": 7.28966,
+    "municipality": "Savièse",
+    "canton": "VS",
+    "osm": [
+      "node/663869969"
+    ]
+  },
+  {
+    "name": "Hafen Sust",
+    "waterBody": "sarnersee",
+    "latitude": 46.88769,
+    "longitude": 8.24306,
+    "municipality": "Sarnen",
+    "canton": "OW",
+    "osm": [
+      "node/663870061"
+    ]
+  },
+  {
+    "name": "Kleingurmels",
+    "waterBody": "schiffenensee",
+    "latitude": 46.88086,
+    "longitude": 7.18454,
+    "municipality": "Courtepin",
+    "canton": "FR",
+    "osm": [
+      "node/663870039"
+    ]
+  },
+  {
+    "name": "Schwarzsee",
+    "waterBody": "schwarzsee",
+    "latitude": 46.669852,
+    "longitude": 7.287157,
+    "municipality": "Plaffeien",
+    "canton": "FR",
+    "osm": [
+      "node/663870010"
+    ]
+  },
+  {
+    "name": "Seealpsee",
+    "waterBody": "seealpsee",
+    "latitude": 47.269412,
+    "longitude": 9.400289,
+    "municipality": "Schwende-Rüte",
+    "canton": "AI",
+    "osm": [
+      "node/663870414",
+      "node/665087345"
+    ],
+    "entryPoints": [
+      {
+        "kind": "Entry",
+        "name": null,
+        "latitude": 47.269472,
+        "longitude": 9.40025
+      }
+    ]
+  },
+  {
+    "name": "Rampe",
+    "waterBody": "sihlsee",
+    "latitude": 47.10441,
+    "longitude": 8.79933,
+    "municipality": "Einsiedeln",
+    "canton": "SZ",
+    "osm": [
+      "node/663870243"
+    ]
+  },
+  {
+    "name": "Halbinsel Sasc da Corn 1",
+    "waterBody": "silsersee",
+    "latitude": 46.41819,
+    "longitude": 9.72642,
+    "municipality": "Bregaglia",
+    "canton": "GR",
+    "osm": [
+      "node/663870251"
+    ]
+  },
+  {
+    "name": "Halbinsel Sasc da Corn 2",
+    "waterBody": "silsersee",
+    "latitude": 46.41927,
+    "longitude": 9.72822,
+    "municipality": "Bregaglia",
+    "canton": "GR",
+    "osm": [
+      "node/663870249"
+    ]
+  },
+  {
+    "name": "Hotel Cristallina",
+    "waterBody": "silsersee",
+    "latitude": 46.420506,
+    "longitude": 9.726803,
+    "municipality": "Sils im Engadin/Segl",
+    "canton": "GR",
+    "osm": [
+      "node/663870250"
+    ]
+  },
+  {
+    "name": "Plan di Mort",
+    "waterBody": "silsersee",
+    "latitude": 46.41536,
+    "longitude": 9.718,
+    "municipality": "Bregaglia",
+    "canton": "GR",
+    "osm": [
+      "node/663870246"
+    ]
+  },
+  {
+    "name": "Campingplatz",
+    "waterBody": "silvaplanersee",
+    "latitude": 46.455037,
+    "longitude": 9.790328,
+    "municipality": "Silvaplana",
+    "canton": "GR",
+    "osm": [
+      "node/663870257"
+    ]
+  },
+  {
+    "name": "Mettmenalp",
+    "waterBody": "stausee-garichti",
+    "latitude": 46.95755,
+    "longitude": 9.09892,
+    "municipality": "Glarus Süd",
+    "canton": "GL",
+    "osm": [
+      "node/663870239"
+    ]
+  },
+  {
+    "name": "Bacheinlauf",
+    "waterBody": "stausee-gigerwald",
+    "latitude": 46.92028,
+    "longitude": 9.35683,
+    "municipality": "Pfäfers",
+    "canton": "SG",
+    "osm": [
+      "node/663870259"
+    ]
+  },
+  {
+    "name": "Linthkanal",
+    "waterBody": "steinenbach",
+    "latitude": 47.224328,
+    "longitude": 8.984075,
+    "municipality": "Uznach",
+    "canton": "SG",
+    "osm": [
+      "node/665087342"
+    ],
+    "entryPoints": [
+      {
+        "kind": "Exit",
+        "name": null,
+        "latitude": 47.224328,
+        "longitude": 8.984075
+      }
+    ]
+  },
+  {
+    "name": "Wird",
+    "waterBody": "stille-reuss",
+    "latitude": 47.31805,
+    "longitude": 8.37294,
+    "municipality": "Rottenschwil",
+    "canton": "AG",
+    "osm": [
+      "node/663870123"
+    ]
+  },
+  {
+    "name": "Gul",
+    "waterBody": "sufnersee",
+    "latitude": 46.56508,
+    "longitude": 9.35616,
+    "municipality": "Sufers",
+    "canton": "GR",
+    "osm": [
+      "node/663870256"
+    ]
+  },
+  {
+    "name": "Im Gufer",
+    "waterBody": "sufnersee",
+    "latitude": 46.57066,
+    "longitude": 9.37486,
+    "municipality": "Sufers",
+    "canton": "GR",
+    "osm": [
+      "node/663870255"
+    ]
+  },
+  {
+    "name": "Talalpsee",
+    "waterBody": "talalpsee",
+    "latitude": 47.096656,
+    "longitude": 9.134084,
+    "municipality": "Glarus Nord",
+    "canton": "GL",
+    "osm": [
+      "node/663870244"
+    ]
+  },
+  {
+    "name": "Rechte Dammseite",
+    "waterBody": "tannensee",
+    "latitude": 46.77522,
+    "longitude": 8.30152,
+    "municipality": "Kerns",
+    "canton": "OW",
+    "osm": [
+      "node/663870062"
+    ]
+  },
+  {
+    "name": "Seemitte",
+    "waterBody": "tannensee",
+    "latitude": 46.77527,
+    "longitude": 8.30683,
+    "municipality": "Kerns",
+    "canton": "OW",
+    "osm": [
+      "node/663870063"
+    ]
+  },
+  {
+    "name": "Aarebecken",
+    "waterBody": "thunersee",
+    "latitude": 46.75177,
+    "longitude": 7.63698,
+    "municipality": "Thun",
+    "canton": "BE",
+    "osm": [
+      "node/663870017"
+    ]
+  },
+  {
+    "name": "Balmholz",
+    "waterBody": "thunersee",
+    "latitude": 46.681869,
+    "longitude": 7.768287,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845663251"
+    ]
+  },
+  {
+    "name": "Bäregg",
+    "waterBody": "thunersee",
+    "latitude": 46.70382,
+    "longitude": 7.729904,
+    "municipality": "Sigriswil",
+    "canton": "BE",
+    "osm": [
+      "node/845655443"
+    ]
+  },
+  {
+    "name": "Bätterichhöhle",
+    "waterBody": "thunersee",
+    "latitude": 46.683507,
+    "longitude": 7.799878,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/663870047"
+    ]
+  },
+  {
+    "name": "Churchillplatz",
+    "waterBody": "thunersee",
+    "latitude": 46.72755,
+    "longitude": 7.67064,
+    "municipality": "Oberhofen am Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/663870016"
+    ]
+  },
+  {
+    "name": "Crazy Divers",
+    "waterBody": "thunersee",
+    "latitude": 46.734139,
+    "longitude": 7.660596,
+    "municipality": "Hilterfingen",
+    "canton": "BE",
+    "osm": [
+      "node/845978222"
+    ]
+  },
+  {
+    "name": "Därligen",
+    "waterBody": "thunersee",
+    "latitude": 46.661346,
+    "longitude": 7.812668,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845666079"
+    ]
+  },
+  {
+    "name": "Divecenter Thun",
+    "waterBody": "thunersee",
+    "latitude": 46.734078,
+    "longitude": 7.660746,
+    "municipality": "Hilterfingen",
+    "canton": "BE",
+    "osm": [
+      "node/845978212"
+    ]
+  },
+  {
+    "name": "Entenecke",
+    "waterBody": "thunersee",
+    "latitude": 46.70961,
+    "longitude": 7.715711,
+    "municipality": "Sigriswil",
+    "canton": "BE",
+    "osm": [
+      "node/845650875"
+    ]
+  },
+  {
+    "name": "Fischbalme",
+    "waterBody": "thunersee",
+    "latitude": 46.687933,
+    "longitude": 7.744071,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845657674"
+    ]
+  },
+  {
+    "name": "Frankenstein",
+    "waterBody": "thunersee",
+    "latitude": 46.684718,
+    "longitude": 7.699828,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845803384"
+    ]
+  },
+  {
+    "name": "Frau Tschanz",
+    "waterBody": "thunersee",
+    "latitude": 46.686406,
+    "longitude": 7.746136,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845661554"
+    ]
+  },
+  {
+    "name": "Gipsunion",
+    "waterBody": "thunersee",
+    "latitude": 46.659084,
+    "longitude": 7.74828,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845693543"
+    ]
+  },
+  {
+    "name": "Grosse gelbe Wand",
+    "waterBody": "thunersee",
+    "latitude": 46.680988,
+    "longitude": 7.758937,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/663870048"
+    ]
+  },
+  {
+    "name": "Gunten Bad",
+    "waterBody": "thunersee",
+    "latitude": 46.711742,
+    "longitude": 7.707263,
+    "municipality": "Sigriswil",
+    "canton": "BE",
+    "osm": [
+      "node/845649408"
+    ]
+  },
+  {
+    "name": "Hotel Bellevue",
+    "waterBody": "thunersee",
+    "latitude": 46.733494,
+    "longitude": 7.660683,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845633679"
+    ]
+  },
+  {
+    "name": "Kleine gelbe Wand",
+    "waterBody": "thunersee",
+    "latitude": 46.681408,
+    "longitude": 7.750266,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/663870050"
+    ]
+  },
+  {
+    "name": "Längenschachen",
+    "waterBody": "thunersee",
+    "latitude": 46.720536,
+    "longitude": 7.685276,
+    "municipality": "Oberhofen am Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845643676"
+    ]
+  },
+  {
+    "name": "Matterhorn",
+    "waterBody": "thunersee",
+    "latitude": 46.710323,
+    "longitude": 7.714145,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845652257"
+    ]
+  },
+  {
+    "name": "Nastel",
+    "waterBody": "thunersee",
+    "latitude": 46.680536,
+    "longitude": 7.752928,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845664368"
+    ]
+  },
+  {
+    "name": "Niesen",
+    "waterBody": "thunersee",
+    "latitude": 46.707932,
+    "longitude": 7.722426,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845659873"
+    ]
+  },
+  {
+    "name": "Reefballs",
+    "waterBody": "thunersee",
+    "latitude": 46.664863,
+    "longitude": 7.732673,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845978217"
+    ]
+  },
+  {
+    "name": "Ruedi-Walter Platz",
+    "waterBody": "thunersee",
+    "latitude": 46.690585,
+    "longitude": 7.743125,
+    "municipality": "Sigriswil",
+    "canton": "BE",
+    "osm": [
+      "node/845656495"
+    ]
+  },
+  {
+    "name": "Schönörtli",
+    "waterBody": "thunersee",
+    "latitude": 46.719765,
+    "longitude": 7.685821,
+    "municipality": "Oberhofen am Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845646152"
+    ]
+  },
+  {
+    "name": "Seezeichen",
+    "waterBody": "thunersee",
+    "latitude": 46.682547,
+    "longitude": 7.704018,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/845803389"
+    ]
+  },
+  {
+    "name": "Stampach",
+    "waterBody": "thunersee",
+    "latitude": 46.708205,
+    "longitude": 7.720677,
+    "municipality": "Sigriswil",
+    "canton": "BE",
+    "osm": [
+      "node/845653375"
+    ]
+  },
+  {
+    "name": "Wasserfall",
+    "waterBody": "thunersee",
+    "latitude": 46.683291,
+    "longitude": 7.783845,
+    "municipality": "Thunersee",
+    "canton": "BE",
+    "osm": [
+      "node/663870055"
+    ]
+  },
+  {
+    "name": "Tössegg-Eglisau",
+    "waterBody": "toess",
+    "latitude": 47.5521,
+    "longitude": 8.55464,
+    "municipality": "Freienstein-Teufen",
+    "canton": "ZH",
+    "osm": [
+      "node/663870357"
+    ]
+  },
+  {
+    "name": "Trübsee",
+    "waterBody": "trueebsee",
+    "latitude": 46.792934,
+    "longitude": 8.394659,
+    "municipality": "Wolfenschiessen",
+    "canton": "NW",
+    "osm": [
+      "node/663870064"
+    ]
+  },
+  {
+    "name": "Türlersee",
+    "waterBody": "tuerlersee",
+    "latitude": 47.26567,
+    "longitude": 8.50995,
+    "municipality": "Hausen am Albis",
+    "canton": "ZH",
+    "osm": [
+      "node/663870285"
+    ]
+  },
+  {
+    "name": "Amslerbecken",
+    "waterBody": "verzasca",
+    "latitude": 46.246467,
+    "longitude": 8.845128,
+    "municipality": "Verzasca",
+    "canton": "TI",
+    "osm": [
+      "node/663870184"
+    ]
+  },
+  {
+    "name": "Officine Elettriche",
+    "waterBody": "verzasca",
+    "latitude": 46.181599,
+    "longitude": 8.854299,
+    "municipality": "Tenero-Contra",
+    "canton": "TI",
+    "osm": [
+      "node/663870178"
+    ]
+  },
+  {
+    "name": "Posse 1",
+    "waterBody": "verzasca",
+    "latitude": 46.251083,
+    "longitude": 8.843602,
+    "municipality": "Verzasca",
+    "canton": "TI",
+    "osm": [
+      "node/663870187"
+    ]
+  },
+  {
+    "name": "Posse 2",
+    "waterBody": "verzasca",
+    "latitude": 46.25258,
+    "longitude": 8.84286,
+    "municipality": "Verzasca",
+    "canton": "TI",
+    "osm": [
+      "node/663870186"
+    ]
+  },
+  {
+    "name": "Pozzo San Rocco",
+    "waterBody": "verzasca",
+    "latitude": 46.29366,
+    "longitude": 8.79488,
+    "municipality": "Verzasca",
+    "canton": "TI",
+    "osm": [
+      "node/663870183"
+    ]
+  },
+  {
+    "name": "Römerbrücke / Ponte dei Salti",
+    "waterBody": "verzasca",
+    "latitude": 46.260009,
+    "longitude": 8.836039,
+    "municipality": "Verzasca",
+    "canton": "TI",
+    "osm": [
+      "node/663870185"
+    ]
+  },
+  {
+    "name": "Badeplatz",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.971696,
+    "longitude": 8.322819,
+    "municipality": "Stansstad",
+    "canton": "NW",
+    "osm": [
+      "node/663870071"
+    ]
+  },
+  {
+    "name": "Beckenried Rütenen",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.963617,
+    "longitude": 8.509455,
+    "municipality": "Beckenried",
+    "canton": "NW",
+    "osm": [
+      "node/613742457",
+      "node/613753248"
+    ],
+    "entryPoints": [
+      {
+        "kind": "Entry",
+        "name": "1",
+        "latitude": 46.963617,
+        "longitude": 8.509455
+      },
+      {
+        "kind": "Entry",
+        "name": "2",
+        "latitude": 46.963782,
+        "longitude": 8.510636
+      }
+    ]
+  },
+  {
+    "name": "Bildstock",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 47.02361,
+    "longitude": 8.467429,
+    "municipality": "Weggis",
+    "canton": "LU",
+    "osm": [
+      "node/6054028416"
+    ]
+  },
+  {
+    "name": "Cholplatz",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.992936,
+    "longitude": 8.513096,
+    "municipality": "Gersau",
+    "canton": "SZ",
+    "osm": [
+      "node/9565629828"
+    ]
+  },
+  {
+    "name": "Chrüztrichter",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 47.0273,
+    "longitude": 8.38672,
+    "municipality": "Weggis",
+    "canton": "LU",
+    "osm": [
+      "node/663870082"
+    ]
+  },
+  {
+    "name": "Eichwald",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.997648,
+    "longitude": 8.569827,
+    "municipality": "Ingenbohl",
+    "canton": "SZ",
+    "osm": [
+      "node/663870214"
+    ]
+  },
+  {
+    "name": "Elefäntli",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 47.021435,
+    "longitude": 8.468238,
+    "municipality": "Vitznau",
+    "canton": "LU",
+    "osm": [
+      "node/663870223"
+    ]
+  },
+  {
+    "name": "Grenzstein",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.96952,
+    "longitude": 8.30972,
+    "municipality": "Alpnach",
+    "canton": "OW",
+    "osm": [
+      "node/663870069"
+    ]
+  },
+  {
+    "name": "Grottoni",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.951208,
+    "longitude": 8.587418,
+    "municipality": "Seelisberg",
+    "canton": "UR",
+    "osm": [
+      "node/6409596484"
+    ]
+  },
+  {
+    "name": "Holzlager",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 47.05383,
+    "longitude": 8.427543,
+    "municipality": "Greppen",
+    "canton": "LU",
+    "osm": [
+      "node/663870078"
+    ]
+  },
+  {
+    "name": "Kehrsiten Forrest",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.99421,
+    "longitude": 8.3562,
+    "municipality": "Stansstad",
+    "canton": "NW",
+    "osm": [
+      "node/663870076"
+    ]
+  },
+  {
+    "name": "Kindli",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.991199,
+    "longitude": 8.557785,
+    "municipality": "Gersau",
+    "canton": "SZ",
+    "osm": [
+      "node/663870212"
+    ]
+  },
+  {
+    "name": "Lido",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 47.00262,
+    "longitude": 8.485346,
+    "municipality": "Vitznau",
+    "canton": "LU",
+    "osm": [
+      "node/5377272894"
+    ]
+  },
+  {
+    "name": "Lopper 1",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.978905,
+    "longitude": 8.322283,
+    "municipality": "Hergiswil (NW)",
+    "canton": "NW",
+    "osm": [
+      "node/476791890"
+    ]
+  },
+  {
+    "name": "Lopper Acheregg",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.979318,
+    "longitude": 8.330822,
+    "municipality": "Hergiswil (NW)",
+    "canton": "NW",
+    "osm": [
+      "node/663870081"
+    ]
+  },
+  {
+    "name": "Lopper Känzeli",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.98013,
+    "longitude": 8.32836,
+    "municipality": "Hergiswil (NW)",
+    "canton": "NW",
+    "osm": [
+      "node/663870080"
+    ]
+  },
+  {
+    "name": "Lopper Rote Route 1",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.98125,
+    "longitude": 8.31192,
+    "municipality": "Hergiswil (NW)",
+    "canton": "NW",
+    "osm": [
+      "node/663870079"
+    ]
+  },
+  {
+    "name": "Ober Nas",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.995482,
+    "longitude": 8.473667,
+    "municipality": "Gersau",
+    "canton": "SZ",
+    "osm": [
+      "node/663870210"
+    ]
+  },
+  {
+    "name": "Obermatt",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 47.002166,
+    "longitude": 8.43128,
+    "municipality": "Ennetbürgen",
+    "canton": "NW",
+    "osm": [
+      "node/6409596483"
+    ]
+  },
+  {
+    "name": "Riedsort",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 47.023921,
+    "longitude": 8.453868,
+    "municipality": "Weggis",
+    "canton": "LU",
+    "osm": [
+      "node/663870233"
+    ]
+  },
+  {
+    "name": "Schiefernegg",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.958985,
+    "longitude": 8.614798,
+    "municipality": "Morschach",
+    "canton": "SZ",
+    "osm": [
+      "node/663870234"
+    ]
+  },
+  {
+    "name": "Schiessüberwachung",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.95425,
+    "longitude": 8.30272,
+    "municipality": "Alpnach",
+    "canton": "OW",
+    "osm": [
+      "node/663870070"
+    ]
+  },
+  {
+    "name": "Schildegg",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.92827,
+    "longitude": 8.581,
+    "municipality": "Seedorf (UR)",
+    "canton": "UR",
+    "osm": [
+      "node/663870206"
+    ]
+  },
+  {
+    "name": "Schillerstein",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.982897,
+    "longitude": 8.596737,
+    "municipality": "Seelisberg",
+    "canton": "UR",
+    "osm": [
+      "node/6410022596"
+    ]
+  },
+  {
+    "name": "Seegarten",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.916501,
+    "longitude": 8.594306,
+    "municipality": "Isenthal",
+    "canton": "UR",
+    "osm": [
+      "node/663870205"
+    ]
+  },
+  {
+    "name": "Sisikon",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.953833,
+    "longitude": 8.619344,
+    "municipality": "Morschach",
+    "canton": "SZ",
+    "osm": [
+      "node/663870235"
+    ]
+  },
+  {
+    "name": "Strandbad Kindli",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.98894,
+    "longitude": 8.54853,
+    "municipality": "Gersau",
+    "canton": "SZ",
+    "osm": [
+      "node/663870215"
+    ]
+  },
+  {
+    "name": "Unterwilen",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 47.019104,
+    "longitude": 8.471616,
+    "municipality": "Vitznau",
+    "canton": "LU",
+    "osm": [
+      "node/663870216"
+    ]
+  },
+  {
+    "name": "Vierwaldstättersee - Tellskapelle",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.932611,
+    "longitude": 8.61167,
+    "municipality": "Sisikon",
+    "canton": "UR",
+    "osm": [
+      "node/12029106323"
+    ]
+  },
+  {
+    "name": "Vitznau",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 47.012486,
+    "longitude": 8.482365,
+    "municipality": "Vitznau",
+    "canton": "LU",
+    "osm": [
+      "node/663870221"
+    ]
+  },
+  {
+    "name": "Wolfsprung",
+    "waterBody": "vierwaldstaettersee",
+    "latitude": 46.9845,
+    "longitude": 8.61183,
+    "municipality": "Ingenbohl",
+    "canton": "SZ",
+    "osm": [
+      "node/663870217"
+    ]
+  },
+  {
+    "name": "Wägitalersee",
+    "waterBody": "waegitalersee",
+    "latitude": 47.06766,
+    "longitude": 8.91461,
+    "municipality": "Innerthal",
+    "canton": "SZ",
+    "osm": [
+      "node/663870242"
+    ]
+  },
+  {
+    "name": "Äuli",
+    "waterBody": "walensee",
+    "latitude": 47.129279,
+    "longitude": 9.27524,
+    "municipality": "Walenstadt",
+    "canton": "SG",
+    "osm": [
+      "node/663870409"
+    ]
+  },
+  {
+    "name": "Bommerstein Hafen Ost",
+    "waterBody": "walensee",
+    "latitude": 47.11466,
+    "longitude": 9.28828,
+    "municipality": "Quarten",
+    "canton": "SG",
+    "osm": [
+      "node/663870410"
+    ]
+  },
+  {
+    "name": "Bommerstein Hafen West",
+    "waterBody": "walensee",
+    "latitude": 47.11389,
+    "longitude": 9.28686,
+    "municipality": "Quarten",
+    "canton": "SG",
+    "osm": [
+      "node/663870407"
+    ]
+  },
+  {
+    "name": "Broder",
+    "waterBody": "walensee",
+    "latitude": 47.11427,
+    "longitude": 9.27177,
+    "municipality": "Quarten",
+    "canton": "SG",
+    "osm": [
+      "node/663870408"
+    ]
+  },
+  {
+    "name": "Hafen",
+    "waterBody": "walensee",
+    "latitude": 47.11306,
+    "longitude": 9.20817,
+    "municipality": "Quarten",
+    "canton": "SG",
+    "osm": [
+      "node/663870405"
+    ]
+  },
+  {
+    "name": "Josen West",
+    "waterBody": "walensee",
+    "latitude": 47.1293,
+    "longitude": 9.26487,
+    "municipality": "Walenstadt",
+    "canton": "SG",
+    "osm": [
+      "node/663870406"
+    ]
+  },
+  {
+    "name": "Laui",
+    "waterBody": "walensee",
+    "latitude": 47.129684,
+    "longitude": 9.205913,
+    "municipality": "Quarten",
+    "canton": "SG",
+    "osm": [
+      "node/663870411"
+    ]
+  },
+  {
+    "name": "Lediwracks",
+    "waterBody": "walensee",
+    "latitude": 47.116738,
+    "longitude": 9.29303,
+    "municipality": "Quarten",
+    "canton": "SG",
+    "osm": [
+      "node/663870404"
+    ]
+  },
+  {
+    "name": "Rastplatz",
+    "waterBody": "walensee",
+    "latitude": 47.12394,
+    "longitude": 9.14187,
+    "municipality": "Glarus Nord",
+    "canton": "GL",
+    "osm": [
+      "node/663870401"
+    ]
+  },
+  {
+    "name": "Schiffsstation Stralegg",
+    "waterBody": "walensee",
+    "latitude": 47.134425,
+    "longitude": 9.145988,
+    "municipality": "Amden",
+    "canton": "SG",
+    "osm": [
+      "node/663870402"
+    ]
+  },
+  {
+    "name": "Teufwinkel",
+    "waterBody": "walensee",
+    "latitude": 47.11614,
+    "longitude": 9.18839,
+    "municipality": "Glarus Nord",
+    "canton": "GL",
+    "osm": [
+      "node/663870403"
+    ]
+  },
+  {
+    "name": "Tunnel 1",
+    "waterBody": "walensee",
+    "latitude": 47.13844,
+    "longitude": 9.13011,
+    "municipality": "Amden",
+    "canton": "SG",
+    "osm": [
+      "node/663870352"
+    ]
+  },
+  {
+    "name": "Altstadt",
+    "waterBody": "zugersee",
+    "latitude": 47.166338,
+    "longitude": 8.51413,
+    "municipality": "Zug",
+    "canton": "ZG",
+    "osm": [
+      "node/663870271"
+    ]
+  },
+  {
+    "name": "Baumgärtli",
+    "waterBody": "zugersee",
+    "latitude": 47.104683,
+    "longitude": 8.475516,
+    "municipality": "Küssnacht (SZ)",
+    "canton": "SZ",
+    "osm": [
+      "node/663452014"
+    ]
+  },
+  {
+    "name": "Chlausenegg",
+    "waterBody": "zugersee",
+    "latitude": 47.086333,
+    "longitude": 8.522875,
+    "municipality": "Arth",
+    "canton": "SZ",
+    "osm": [
+      "node/663870231"
+    ]
+  },
+  {
+    "name": "Egg",
+    "waterBody": "zugersee",
+    "latitude": 47.076403,
+    "longitude": 8.526009,
+    "municipality": "Arth",
+    "canton": "SZ",
+    "osm": [
+      "node/663870230"
+    ]
+  },
+  {
+    "name": "Einbaum",
+    "waterBody": "zugersee",
+    "latitude": 47.119047,
+    "longitude": 8.496409,
+    "municipality": "Zug",
+    "canton": "ZG",
+    "osm": [
+      "node/6054028414"
+    ]
+  },
+  {
+    "name": "Fischchratte",
+    "waterBody": "zugersee",
+    "latitude": 47.078986,
+    "longitude": 8.487028,
+    "municipality": "Küssnacht (SZ)",
+    "canton": "SZ",
+    "osm": [
+      "node/663452011"
+    ]
+  },
+  {
+    "name": "Grafenmatt",
+    "waterBody": "zugersee",
+    "latitude": 47.112346,
+    "longitude": 8.501357,
+    "municipality": "Walchwil",
+    "canton": "ZG",
+    "osm": [
+      "node/8306377525"
+    ]
+  },
+  {
+    "name": "Grafstatt",
+    "waterBody": "zugersee",
+    "latitude": 47.109016,
+    "longitude": 8.503014,
+    "municipality": "Walchwil",
+    "canton": "ZG",
+    "osm": [
+      "node/5377272892"
+    ]
+  },
+  {
+    "name": "Lido",
+    "waterBody": "zugersee",
+    "latitude": 47.095944,
+    "longitude": 8.516322,
+    "municipality": "Walchwil",
+    "canton": "ZG",
+    "osm": [
+      "node/663870228"
+    ]
+  },
+  {
+    "name": "Lothenbach",
+    "waterBody": "zugersee",
+    "latitude": 47.11555,
+    "longitude": 8.499669,
+    "municipality": "Zug",
+    "canton": "ZG",
+    "osm": [
+      "node/663452018"
+    ]
+  },
+  {
+    "name": "Pumpihüsli",
+    "waterBody": "zugersee",
+    "latitude": 47.11113,
+    "longitude": 8.50231,
+    "municipality": "Walchwil",
+    "canton": "ZG",
+    "osm": [
+      "node/663870270"
+    ]
+  },
+  {
+    "name": "Rabenmättli",
+    "waterBody": "zugersee",
+    "latitude": 47.114057,
+    "longitude": 8.500604,
+    "municipality": "Walchwil",
+    "canton": "ZG",
+    "osm": [
+      "node/663870269"
+    ]
+  },
+  {
+    "name": "Rigiblick",
+    "waterBody": "zugersee",
+    "latitude": 47.145561,
+    "longitude": 8.505427,
+    "municipality": "Zug",
+    "canton": "ZG",
+    "osm": [
+      "node/663870268"
+    ]
+  },
+  {
+    "name": "Rossblatten",
+    "waterBody": "zugersee",
+    "latitude": 47.09394,
+    "longitude": 8.5192,
+    "municipality": "Walchwil",
+    "canton": "ZG",
+    "osm": [
+      "node/663870227"
+    ]
+  },
+  {
+    "name": "Strick",
+    "waterBody": "zugersee",
+    "latitude": 47.072644,
+    "longitude": 8.497581,
+    "municipality": "Arth",
+    "canton": "SZ",
+    "osm": [
+      "node/1436951153"
+    ]
+  },
+  {
+    "name": "Tellenörtli",
+    "waterBody": "zugersee",
+    "latitude": 47.149989,
+    "longitude": 8.506976,
+    "municipality": "Zug",
+    "canton": "ZG",
+    "osm": [
+      "node/7776394934"
+    ]
+  },
+  {
+    "name": "Tresorfabrik",
+    "waterBody": "zugersee",
+    "latitude": 47.06536,
+    "longitude": 8.51095,
+    "municipality": "Arth",
+    "canton": "SZ",
+    "osm": [
+      "node/663452008"
+    ]
+  },
+  {
+    "name": "Vorstad",
+    "waterBody": "zugersee",
+    "latitude": 47.169281,
+    "longitude": 8.514077,
+    "municipality": "Zug",
+    "canton": "ZG",
+    "osm": [
+      "node/663452017"
+    ]
+  },
+  {
+    "name": "Wand im Nüüt",
+    "waterBody": "zugersee",
+    "latitude": 47.121141,
+    "longitude": 8.495949,
+    "municipality": "Zug",
+    "canton": "ZG",
+    "osm": [
+      "node/6054028415"
+    ]
+  },
+  {
+    "name": "Zigeunerplätzli",
+    "waterBody": "zugersee",
+    "latitude": 47.11764,
+    "longitude": 8.497633,
+    "municipality": "Zug",
+    "canton": "ZG",
+    "osm": [
+      "node/663452016"
+    ]
+  },
+  {
+    "name": "Alte Badanstalt",
+    "waterBody": "zuerichsee",
+    "latitude": 47.23116,
+    "longitude": 8.67424,
+    "municipality": "Wädenswil",
+    "canton": "ZH",
+    "osm": [
+      "node/663870292"
+    ]
+  },
+  {
+    "name": "Anlegesteg der Autofähre",
+    "waterBody": "zuerichsee",
+    "latitude": 47.26782,
+    "longitude": 8.638739,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870299"
+    ]
+  },
+  {
+    "name": "Bellerive 55",
+    "waterBody": "zuerichsee",
+    "latitude": 47.324167,
+    "longitude": 8.576084,
+    "municipality": "Küsnacht (ZH)",
+    "canton": "ZH",
+    "osm": [
+      "node/663452088"
+    ]
+  },
+  {
+    "name": "Bocchiaplatz",
+    "waterBody": "zuerichsee",
+    "latitude": 47.293211,
+    "longitude": 8.598912,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/344403290",
+      "node/107474583"
+    ],
+    "entryPoints": [
+      {
+        "kind": "Parking",
+        "name": "Kleiner Parkplatz Erlenbach Schipfe",
+        "latitude": 47.294031,
+        "longitude": 8.598121
+      }
+    ]
+  },
+  {
+    "name": "Ermitage",
+    "waterBody": "zuerichsee",
+    "latitude": 47.322077,
+    "longitude": 8.576804,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/207937370"
+    ]
+  },
+  {
+    "name": "Hafen Küsnacht",
+    "waterBody": "zuerichsee",
+    "latitude": 47.32022,
+    "longitude": 8.57798,
+    "municipality": "Küsnacht (ZH)",
+    "canton": "ZH",
+    "osm": [
+      "node/663452089"
+    ]
+  },
+  {
+    "name": "Hafen Männedorf",
+    "waterBody": "zuerichsee",
+    "latitude": 47.25219,
+    "longitude": 8.68995,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870309"
+    ]
+  },
+  {
+    "name": "Halbinsel",
+    "waterBody": "zuerichsee",
+    "latitude": 47.277758,
+    "longitude": 8.615927,
+    "municipality": "Meilen",
+    "canton": "ZH",
+    "osm": [
+      "node/663452056"
+    ]
+  },
+  {
+    "name": "Haus am See",
+    "waterBody": "zuerichsee",
+    "latitude": 47.27721,
+    "longitude": 8.61711,
+    "municipality": "Meilen",
+    "canton": "ZH",
+    "osm": [
+      "node/663452057"
+    ]
+  },
+  {
+    "name": "Kehlhof",
+    "waterBody": "zuerichsee",
+    "latitude": 47.23375,
+    "longitude": 8.739045,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870312"
+    ]
+  },
+  {
+    "name": "Key West",
+    "waterBody": "zuerichsee",
+    "latitude": 47.278585,
+    "longitude": 8.581917,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870284"
+    ]
+  },
+  {
+    "name": "Kleiner Hafen Küsnacht",
+    "waterBody": "zuerichsee",
+    "latitude": 47.325766,
+    "longitude": 8.575007,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663452083"
+    ]
+  },
+  {
+    "name": "Landungssteg Obermeilen",
+    "waterBody": "zuerichsee",
+    "latitude": 47.263973,
+    "longitude": 8.65572,
+    "municipality": "Meilen",
+    "canton": "ZH",
+    "osm": [
+      "node/663870306"
+    ]
+  },
+  {
+    "name": "Landungssteg Rüschlikon",
+    "waterBody": "zuerichsee",
+    "latitude": 47.3095,
+    "longitude": 8.55847,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663452071"
+    ]
+  },
+  {
+    "name": "Leuenhaab",
+    "waterBody": "zuerichsee",
+    "latitude": 47.251671,
+    "longitude": 8.692192,
+    "municipality": "Männedorf",
+    "canton": "ZH",
+    "osm": [
+      "node/1103969942"
+    ]
+  },
+  {
+    "name": "Matterhorn",
+    "waterBody": "zuerichsee",
+    "latitude": 47.287938,
+    "longitude": 8.605428,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870323"
+    ]
+  },
+  {
+    "name": "Meilibach",
+    "waterBody": "zuerichsee",
+    "latitude": 47.251477,
+    "longitude": 8.628532,
+    "municipality": "Wädenswil",
+    "canton": "ZH",
+    "osm": [
+      "node/663870297"
+    ]
+  },
+  {
+    "name": "Park Feldmeilen",
+    "waterBody": "zuerichsee",
+    "latitude": 47.279623,
+    "longitude": 8.613601,
+    "municipality": "Meilen",
+    "canton": "ZH",
+    "osm": [
+      "node/663870301"
+    ]
+  },
+  {
+    "name": "Park Horn",
+    "waterBody": "zuerichsee",
+    "latitude": 47.317105,
+    "longitude": 8.577328,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/3888943100"
+    ]
+  },
+  {
+    "name": "Park Thalwil",
+    "waterBody": "zuerichsee",
+    "latitude": 47.30005,
+    "longitude": 8.56348,
+    "municipality": "Thalwil",
+    "canton": "ZH",
+    "osm": [
+      "node/663870314"
+    ]
+  },
+  {
+    "name": "Pflegeheim am See",
+    "waterBody": "zuerichsee",
+    "latitude": 47.308657,
+    "longitude": 8.583918,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870333"
+    ]
+  },
+  {
+    "name": "Pumpwerk Meilen",
+    "waterBody": "zuerichsee",
+    "latitude": 47.271422,
+    "longitude": 8.628337,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870307"
+    ]
+  },
+  {
+    "name": "Pumpwerk Moos",
+    "waterBody": "zuerichsee",
+    "latitude": 47.302825,
+    "longitude": 8.561135,
+    "municipality": "Rüschlikon",
+    "canton": "ZH",
+    "osm": [
+      "node/471207418"
+    ]
+  },
+  {
+    "name": "Restaurant Bellevue",
+    "waterBody": "zuerichsee",
+    "latitude": 47.287023,
+    "longitude": 8.606512,
+    "municipality": "Herrliberg",
+    "canton": "ZH",
+    "osm": [
+      "node/663870322"
+    ]
+  },
+  {
+    "name": "Riff Williams",
+    "waterBody": "zuerichsee",
+    "latitude": 47.284848,
+    "longitude": 8.60841,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/241788315"
+    ]
+  },
+  {
+    "name": "Sandy Beach",
+    "waterBody": "zuerichsee",
+    "latitude": 47.28102,
+    "longitude": 8.61245,
+    "municipality": "Meilen",
+    "canton": "ZH",
+    "osm": [
+      "node/663870277"
+    ]
+  },
+  {
+    "name": "Schiffli",
+    "waterBody": "zuerichsee",
+    "latitude": 47.325167,
+    "longitude": 8.575436,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663452085"
+    ]
+  },
+  {
+    "name": "Schoggiwand",
+    "waterBody": "zuerichsee",
+    "latitude": 47.31974,
+    "longitude": 8.55306,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663452069"
+    ]
+  },
+  {
+    "name": "Seebad Rüschlikon",
+    "waterBody": "zuerichsee",
+    "latitude": 47.3116,
+    "longitude": 8.55667,
+    "municipality": "Rüschlikon",
+    "canton": "ZH",
+    "osm": [
+      "node/663452068"
+    ]
+  },
+  {
+    "name": "Seegüetli",
+    "waterBody": "zuerichsee",
+    "latitude": 47.254219,
+    "longitude": 8.618968,
+    "municipality": "Horgen",
+    "canton": "ZH",
+    "osm": [
+      "node/663870293"
+    ]
+  },
+  {
+    "name": "Seehalde",
+    "waterBody": "zuerichsee",
+    "latitude": 47.27352,
+    "longitude": 8.58372,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870279"
+    ]
+  },
+  {
+    "name": "Seewasser-Pumpwerk Horgen",
+    "waterBody": "zuerichsee",
+    "latitude": 47.25703,
+    "longitude": 8.61014,
+    "municipality": "Horgen",
+    "canton": "ZH",
+    "osm": [
+      "node/663452031"
+    ]
+  },
+  {
+    "name": "Segelclub Herrliberg",
+    "waterBody": "zuerichsee",
+    "latitude": 47.28942,
+    "longitude": 8.60342,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870327"
+    ]
+  },
+  {
+    "name": "Steinrad",
+    "waterBody": "zuerichsee",
+    "latitude": 47.291418,
+    "longitude": 8.600592,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/107455894"
+    ]
+  },
+  {
+    "name": "Strandbad Erlenbach",
+    "waterBody": "zuerichsee",
+    "latitude": 47.296993,
+    "longitude": 8.596972,
+    "municipality": "Erlenbach (ZH)",
+    "canton": "ZH",
+    "osm": [
+      "node/663870328"
+    ]
+  },
+  {
+    "name": "Strandbad Feldmeilen",
+    "waterBody": "zuerichsee",
+    "latitude": 47.275472,
+    "longitude": 8.621082,
+    "municipality": "Meilen",
+    "canton": "ZH",
+    "osm": [
+      "node/7319304278"
+    ]
+  },
+  {
+    "name": "Strandbad Thalwil",
+    "waterBody": "zuerichsee",
+    "latitude": 47.28894,
+    "longitude": 8.57403,
+    "municipality": "Thalwil",
+    "canton": "ZH",
+    "osm": [
+      "node/663870329"
+    ]
+  },
+  {
+    "name": "Sust",
+    "waterBody": "zuerichsee",
+    "latitude": 47.260544,
+    "longitude": 8.601256,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870280"
+    ]
+  },
+  {
+    "name": "Tauchgruppe Biber",
+    "waterBody": "zuerichsee",
+    "latitude": 47.211502,
+    "longitude": 8.704638,
+    "municipality": "Richterswil",
+    "canton": "ZH",
+    "osm": [
+      "node/6491298499"
+    ]
+  },
+  {
+    "name": "Terlinden",
+    "waterBody": "zuerichsee",
+    "latitude": 47.328987,
+    "longitude": 8.572828,
+    "municipality": "Küsnacht (ZH)",
+    "canton": "ZH",
+    "osm": [
+      "node/371470562"
+    ]
+  },
+  {
+    "name": "Vordere Au",
+    "waterBody": "zuerichsee",
+    "latitude": 47.249033,
+    "longitude": 8.651674,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663452047"
+    ]
+  },
+  {
+    "name": "Wassersportzentrum Zürich (WZT)",
+    "waterBody": "zuerichsee",
+    "latitude": 47.34596,
+    "longitude": 8.563475,
+    "municipality": "Zürich",
+    "canton": "ZH",
+    "osm": [
+      "node/76474160"
+    ]
+  },
+  {
+    "name": "Widmerland",
+    "waterBody": "zuerichsee",
+    "latitude": 47.33147,
+    "longitude": 8.54595,
+    "municipality": "Kilchberg (ZH)",
+    "canton": "ZH",
+    "osm": [
+      "node/663452091"
+    ]
+  },
+  {
+    "name": "Wiesli",
+    "waterBody": "zuerichsee",
+    "latitude": 47.279707,
+    "longitude": 8.581594,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870274"
+    ]
+  },
+  {
+    "name": "WZT;Luftverbund",
+    "waterBody": "zuerichsee",
+    "latitude": 47.347138,
+    "longitude": 8.562422,
+    "municipality": "Zürich",
+    "canton": "ZH",
+    "osm": [
+      "node/107469050"
+    ]
+  },
+  {
+    "name": "Zentenhof",
+    "waterBody": "zuerichsee",
+    "latitude": 47.29199,
+    "longitude": 8.57242,
+    "municipality": "Thalwil",
+    "canton": "ZH",
+    "osm": [
+      "node/663870326"
+    ]
+  },
+  {
+    "name": "Zollerbucht",
+    "waterBody": "zuerichsee",
+    "latitude": 47.30123,
+    "longitude": 8.591456,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/663870300"
+    ]
+  },
+  {
+    "name": "Zollerbucht (Boot)",
+    "waterBody": "zuerichsee",
+    "latitude": 47.30044,
+    "longitude": 8.591634,
+    "municipality": null,
+    "canton": "ZH",
+    "osm": [
+      "node/1786644406"
+    ]
   }
 ]

@@ -8,7 +8,6 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 |---|---|---|
 | 1 | **Dürfen wir die Daten der Alplakes API nutzen?** Unter welchen Bedingungen (Quellenangabe, Frequenz)? | Mail an Eawag (Alplakes) am 17.10.2026 gesendet (`doc/mails/2026-10-17-eawag-alplakes.md`). Antwort ausstehend. |
 | 21 | Dürfen wir die Abfluss- und Seepegelvorhersagen des BAFU nutzen? Es gibt nur ein JSON der Grafiken, keine API. | Mail an `BAFU (Hydrologie)` am 17.10.2026 gesendet (`doc/mails/2026-10-17-bafu-hydrologie.md`). Antwort ausstehend. Blockiert nur die Flussprognose in Phase 1. |
-| 22 | **Übernehmen wir die Tauchplätze aus OSM, obwohl rund zwei Drittel `source=www.dive-links.com` tragen?** Jemand hat sie von dive-links.com nach OSM übertragen. Ob mit Erlaubnis, ist offen. OSM verteilt sie unter ODbL. Wir übernehmen nur Name, Koordinate und Gewässer (Fakten). | Marc entscheidet. Optionen: alle übernehmen; nur Punkte ohne diese Quelle (rund 110); dive-links.com anfragen. Bis dahin sind die Seeds aus OSM nicht committet. |
 
 ## Erledigt am 17.10.2026
 
