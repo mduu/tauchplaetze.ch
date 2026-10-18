@@ -128,6 +128,17 @@ Ein Platz kann wichtige Hinweise haben (`DiveSiteNotice`, Entscheid Marc, 18.10.
 - Eine gültige Sperrung nimmt den Platz an diesem Tag aus «Beste Wahl» und Rangliste (`forecast.md`). Verzeichnis und Platzseite zeigen ihn weiter.
 - Mehrere Hinweise: schwerster zuerst (Sperrung, Warnung, Info), sonst in der Reihenfolge der Redaktion.
 
+## Tauchskizze (geplant)
+
+Die Tauchskizze (`SiteSketch`) zeigt den Platz unter Wasser. Alle Skizzen sehen gleich aus, darum zeichnet die Redaktion sie im CMS und lädt kein Bild hoch.
+
+- **Erfassen:** Editor im CMS auf Landeskarte oder Luftbild. Die Redaktion setzt Symbole und zeichnet Linien und Flächen. Gespeichert wird GeoJSON in der Version, mit Vorschlag und Freigabe wie bei allen Inhalten.
+- **Symbole (Punkte):** Skulptur, Baumstamm, Wrack oder Gegenstand, Felsblock, Highlight (frei benannt), Gefahr, Einstieg und Ausstieg (aus den Einstiegen).
+- **Linien und Flächen:** Steilwand, Kante, Tauchroute, Seegras- oder Pflanzenfeld, Leine.
+- **Tiefe:** Tiefenlinien aus swissBATHY3D, wo vorhanden (22 Seen). Sonst Tiefenangaben von Hand an Symbolen und Linien.
+- **Darstellung:** eigene Zeichnung mit den Design Tokens (`design-system.md`, `SiteSketch`), Hinweis «Skizze, nicht zur Navigation».
+- **Etappen:** 1. Symbole und Tiefe von Hand, 2. Linien und Flächen, 3. Tiefenlinien aus swissBATHY3D.
+
 ## Bilder pro Abschnitt
 
 Jedes Bild eines Platzes gehört zu genau einem Abschnitt (`MediaItem.Section`): `Underwater`, `Surroundings`, `Approach`, `EntryPoint`, `Hazards`. Bilder eines Einstiegs verweisen zusätzlich auf den Einstieg (`EntryPointId`). Das Hero-Foto ist meist ein Bild aus `Underwater`.
