@@ -395,6 +395,54 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.True(again.NoChange);
     }
 
+    [SqlFact]
+    public async Task Weitere_Namen_werden_getrimmt_gespeichert_und_dieselben_Namen_erzeugen_keine_neue_Version()
+    {
+        // Arrange
+        var (moderator, _, site) = await Prepare();
+        var first = await ForEditing(site);
+
+        // Act
+        var saved = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, first.BaseNumber,
+            first.Content with { OtherNames = [" Grosser Parkplatz ", "", "Seeterrasse"] }, null));
+        var second = await ForEditing(site);
+        var again = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, second.BaseNumber,
+            second.Content with { OtherNames = ["Grosser Parkplatz", "Seeterrasse "] }, null));
+
+        // Assert
+        Assert.True(saved.Succeeded);
+        Assert.Equal(["Grosser Parkplatz", "Seeterrasse"], second.Content.OtherNameList);
+        Assert.True(again.NoChange);
+    }
+
+    [SqlTheory]
+    [InlineData(6, 10, false, false)]
+    [InlineData(1, 81, false, false)]
+    [InlineData(2, 10, true, false)]
+    [InlineData(1, 10, false, true)]
+    public async Task Weitere_Namen_sind_hoechstens_fuenf_kurz_und_ohne_Dubletten_auch_nicht_gleich_wie_der_Name(int count, int length, bool duplicate, bool sameAsName)
+    {
+        // Arrange
+        var (moderator, _, site) = await Prepare();
+        var edit = await ForEditing(site);
+        var names = Enumerable.Range(0, count).Select(i => $"{i}{new string('x', length - 1)}").ToList();
+        if (duplicate)
+        {
+            names[1] = names[0].ToUpperInvariant();
+        }
+
+        if (sameAsName)
+        {
+            names[0] = "riff williams";
+        }
+
+        // Act
+        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber, edit.Content with { OtherNames = names }, null));
+
+        // Assert
+        Assert.Equal([EditorialError.InvalidOtherNames], result.Errors);
+    }
+
     [SqlTheory]
     [InlineData(SketchKind.Sculpture, 2, 0, null, 10)]
     [InlineData(SketchKind.Wall, 1, 0, null, 10)]
@@ -439,6 +487,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.Empty(edit.Content.EntryPointList);
         Assert.Empty(edit.Content.NoticeList);
         Assert.Empty(edit.Content.SketchList);
+        Assert.Empty(edit.Content.OtherNameList);
         Assert.Empty(edit.Content.MediaList);
         Assert.Null(edit.Content.HeroMediaId);
     }

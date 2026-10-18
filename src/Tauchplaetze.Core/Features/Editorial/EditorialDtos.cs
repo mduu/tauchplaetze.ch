@@ -31,9 +31,13 @@ public record DiveSiteContent(
     IReadOnlyList<NoticeContent>? Notices = null,
     IReadOnlyList<SketchFeature>? Sketch = null,
     IReadOnlyList<MediaUse>? Media = null,
-    Guid? HeroMediaId = null)
+    Guid? HeroMediaId = null,
+    IReadOnlyList<string>? OtherNames = null)
 {
     public IReadOnlyList<MediaUse> MediaList => Media ?? [];
+
+    /// <summary>Weitere Namen, unter denen der Platz bekannt ist («auch bekannt als»).</summary>
+    public IReadOnlyList<string> OtherNameList => OtherNames ?? [];
 
     public IReadOnlyList<EntryPointContent> EntryPointList => EntryPoints ?? [];
 
@@ -114,6 +118,9 @@ public enum EditorialError
 
     /// <summary>Ein Hinweis hat keinen deutschen Text, einen zu langen Text oder endet vor seinem Beginn.</summary>
     InvalidNotice,
+
+    /// <summary>Zu viele weitere Namen (höchstens 5), einer ist zu lang (höchstens 80 Zeichen) oder kommt doppelt vor.</summary>
+    InvalidOtherNames,
 
     /// <summary>Die Skizze hat zu viele Elemente, eine falsche Form, Punkte weit weg vom Platz, eine ungültige Tiefe oder zu lange Beschriftung.</summary>
     InvalidSketch,

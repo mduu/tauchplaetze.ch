@@ -38,8 +38,12 @@ public record DiveSiteDetails(
     SiteRatings? Ratings = null,
     IReadOnlyList<SiteSketchFeature>? Sketch = null,
     IReadOnlyList<PublicPhoto>? Photos = null,
-    Guid? HeroMediaId = null)
+    Guid? HeroMediaId = null,
+    IReadOnlyList<string>? OtherNames = null)
 {
+    /// <summary>Weitere Namen («auch bekannt als»).</summary>
+    public IReadOnlyList<string> OtherNameList => OtherNames ?? [];
+
     public IReadOnlyList<SiteSketchFeature> SketchList => Sketch ?? [];
 
     /// <summary>Die öffentlichen Fotos der freigegebenen Version, nach Abschnitt und Reihenfolge.</summary>

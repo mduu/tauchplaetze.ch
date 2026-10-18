@@ -31,6 +31,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 d.UpdatedAt,
                 d.Sketch,
                 d.HeroMediaId,
+                d.OtherNames,
                 Ratings = new SiteRatings(d.DifficultyRating, d.WallRating, d.MarineLifeRating, d.WrecksRating, d.CurrentRating, d.SurroundingsRating),
                 WaterBody = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType },
             })
@@ -56,7 +57,8 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 site.Ratings,
                 Sketch(site.Sketch, query.Culture),
                 await Photos(site.Id, query.Culture, ct),
-                site.HeroMediaId)),
+                site.HeroMediaId,
+                DiveSiteContentMapping.ReadOtherNames(site.OtherNames))),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),

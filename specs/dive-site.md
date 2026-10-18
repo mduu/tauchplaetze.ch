@@ -103,6 +103,16 @@ Die Bewertung beschreibt die übliche Lage. Der aktuelle Abfluss kommt aus der P
 | 4 | schön | Wiese, Badeplatz oder schöne Aussicht. |
 | 5 | herausragend | Landschaft, die allein den Ausflug lohnt. |
 
+## Auch bekannt als
+
+Viele Plätze haben mehrere Namen, z.B. Steinrad, auch «Grosser Parkplatz» oder «Seeterasse» (`DiveSiteContent.OtherNames`).
+
+- Höchstens 5 weitere Namen, je höchstens 80 Zeichen, keiner doppelt und keiner gleich wie der Name (ohne Gross-/Kleinschreibung). Sonst Fehler `InvalidOtherNames`.
+- Getrimmt, leere fallen weg. Teil der Version. Eigennamen, nicht übersetzt.
+- Die Suche im Verzeichnis findet einen Platz auch über die weiteren Namen.
+- Platzseite: unter dem Namen «auch bekannt als …». Verzeichnis: dezent neben dem Namen.
+- Erstbestand aus OSM `alt_name` (`data-sources.md`, «OpenStreetMap»).
+
 ## Einstiege und Orte
 
 Ein Platz hat null, einen oder mehrere Einstiege und Orte (`DiveSiteEntryPoint`). Die Redaktion erfasst sie im selben Tab.

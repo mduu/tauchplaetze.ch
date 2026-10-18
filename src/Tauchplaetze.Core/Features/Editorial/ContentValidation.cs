@@ -36,6 +36,11 @@ internal static partial class ContentValidation
             errors.Add(EditorialError.InvalidSlug);
         }
 
+        if (OtherNames.AreInvalid(content.Name, content.OtherNameList))
+        {
+            errors.Add(EditorialError.InvalidOtherNames);
+        }
+
         if (content.NoticeList.Any(IsInvalid))
         {
             errors.Add(EditorialError.InvalidNotice);

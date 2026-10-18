@@ -59,6 +59,7 @@ Der Tauchplatz. Nur `Name`, `Location` und `WaterBodyId` sind Pflicht (Ausbaustu
 | `Id` | Guid | |
 | `Slug` | string(120) | eindeutig |
 | `Name` | string(120) | Eigenname, wird nicht übersetzt |
+| `OtherNames` | nvarchar(600), optional | weitere Namen als JSON-Array (`dive-site.md`, «Auch bekannt als»). `null` ohne. Teil der Revision. |
 | `WaterBodyId` | int | FK `WaterBody` |
 | `Location` | geography (Point) | Position des Platzes (für Prognose und Karte) |
 | `Municipality` | string(80), optional | Gemeinde |

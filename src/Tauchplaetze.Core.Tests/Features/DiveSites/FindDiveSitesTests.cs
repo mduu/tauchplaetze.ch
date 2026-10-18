@@ -43,6 +43,25 @@ public class FindDiveSitesTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(["Ermitage"], byMunicipality.Sites.Select(s => s.Name));
     }
 
+    [SqlFact]
+    public async Task Die_Suche_findet_auch_weitere_Namen_eines_Platzes()
+    {
+        // Arrange
+        await Sql.Arrange(async db =>
+        {
+            await Seed(db);
+            db.DiveSites.Local.Single(d => d.Name == "Ermitage").OtherNames = """["Grosser Parkplatz","Seeterrasse"]""";
+        });
+
+        // Act
+        var found = await Find(new FindDiveSitesQuery("de", Text: "grosser parkplatz"));
+
+        // Assert
+        var site = Assert.Single(found.Sites);
+        Assert.Equal("Ermitage", site.Name);
+        Assert.Equal(["Grosser Parkplatz", "Seeterrasse"], site.OtherNameList);
+    }
+
     [SqlTheory]
     [InlineData(new[] { SiteTrait.Wall }, new[] { "Riff Williams" })]
     [InlineData(new[] { SiteTrait.Beginner }, new[] { "Ermitage" })]

@@ -6,12 +6,13 @@ using Tauchplaetze.Core.CrossCutting.Geo;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.DiveSites.Queries;
 
 /// <summary>
-/// Sucht öffentliche Plätze für das Verzeichnis (`ux.md`, «Verzeichnis»): Text in Name, Gemeinde und Gewässer (ohne Gross-/Kleinschreibung,
+/// Sucht öffentliche Plätze für das Verzeichnis (`ux.md`, «Verzeichnis»): Text in Name, weiteren Namen, Gemeinde und Gewässer (ohne Gross-/Kleinschreibung,
 /// Umlaute und Akzente), optional Standort mit Umkreis, Eigenschaften, Gewässer (ein unbekanntes Gewässer gilt als nicht gesetzt).
 /// Ohne Angabe sortiert nach Index heute, mit Standort nach Distanz. Lädt alle öffentlichen Plätze in den Speicher (`ux.md`, «Verzeichnis»).
 /// </summary>
@@ -90,7 +91,11 @@ public record FoundDiveSite(
     NoticeKind? NoticeToday,
     int? MaxDepth,
     IReadOnlyList<SiteTrait> Traits,
-    double? DistanceKm);
+    double? DistanceKm,
+    IReadOnlyList<string>? OtherNames = null)
+{
+    public IReadOnlyList<string> OtherNameList => OtherNames ?? [];
+}
 
 internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider time) : IQueryHandler<FindDiveSitesQuery, FoundDiveSites>
 {
@@ -121,7 +126,8 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 d.WaterBody.NameIt,
                 d.WaterBody.WaterBodyType,
                 dbContext.DailyForecasts.Where(f => f.DiveSiteId == d.Id && f.Date == today).Select(f => f.DiveIndex).FirstOrDefault(),
-                d.Notices.AsQueryable().Where(active).Select(n => n.Kind).ToList()))
+                d.Notices.AsQueryable().Where(active).Select(n => n.Kind).ToList(),
+                d.OtherNames))
             .ToListAsync(ct);
 
         var hasLocation = query is { Latitude: not null, Longitude: not null };
@@ -133,7 +139,8 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
         var matches = rows
             .Select(r => (Row: r, Traits: TraitsOf(r), Distance: origin is null ? (double?)null : Distance.Km(origin, GeoPoints.Create(r.Latitude, r.Longitude))))
             .Where(m => waterSlug is null || m.Row.WaterSlug == waterSlug)
-            .Where(m => search.Length == 0 || SearchText.Matches(search, m.Row.Name, m.Row.Municipality, m.Row.NameDe, m.Row.NameEn, m.Row.NameFr, m.Row.NameIt))
+            .Where(m => search.Length == 0
+                || SearchText.Matches(search, [m.Row.Name, m.Row.Municipality, m.Row.NameDe, m.Row.NameEn, m.Row.NameFr, m.Row.NameIt, .. m.Row.OtherNameList]))
             .Where(m => traits.All(m.Traits.Contains))
             .Where(m => query.RadiusKm is null || m.Distance is null || m.Distance <= query.RadiusKm)
             .ToList();
@@ -170,7 +177,8 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 Worst(m.Row.Notices),
                 m.Row.MaxDepth,
                 m.Traits,
-                m.Distance is { } km ? Math.Round(km, 1) : null))],
+                m.Distance is { } km ? Math.Round(km, 1) : null,
+                m.Row.OtherNameList))],
             matches.Count,
             page,
             pageCount,
@@ -243,8 +251,11 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
         string? NameIt,
         WaterBodyType WaterType,
         decimal? Index,
-        List<NoticeKind> Notices)
+        List<NoticeKind> Notices,
+        string? OtherNames)
     {
+        public IReadOnlyList<string> OtherNameList => DiveSiteContentMapping.ReadOtherNames(OtherNames);
+
         public double Latitude => Location.Y;
 
         public double Longitude => Location.X;

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Tauchplaetze.Core.CrossCutting.Geo;
 using Tauchplaetze.Core.Data.Entities;
 
@@ -37,7 +38,8 @@ internal static class DiveSiteContentMapping
             n.Id, n.Kind, n.ValidFrom, n.ValidUntil,
             [.. n.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new NoticeText(t.Culture.Trim(), t.Text))]))],
         SketchJson.Read(site.Sketch),
-        HeroMediaId: site.HeroMediaId);
+        HeroMediaId: site.HeroMediaId,
+        OtherNames: ReadOtherNames(site.OtherNames));
 
     public static void ApplyTo(DiveSite site, DiveSiteContent content)
     {
@@ -94,6 +96,7 @@ internal static class DiveSiteContentMapping
         ApplyNotices(site, content);
         site.Sketch = SketchJson.Write(content.SketchList);
         site.HeroMediaId = content.HeroMediaId;
+        site.OtherNames = OtherNames.Normalize(content.OtherNameList) is { Count: > 0 } names ? JsonSerializer.Serialize(names) : null;
     }
 
     private static void ApplyNotices(DiveSite site, DiveSiteContent content)
@@ -119,4 +122,8 @@ internal static class DiveSiteContentMapping
         new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(text => Blank(text) is not null);
 
     private static string? Blank(string? text) => string.IsNullOrWhiteSpace(text) ? null : text.Trim();
+
+    /// <summary>Weitere Namen aus der Spalte (JSON-Array). <c>null</c> heisst keine.</summary>
+    public static IReadOnlyList<string> ReadOtherNames(string? json) =>
+        json is null ? [] : JsonSerializer.Deserialize<List<string>>(json) ?? [];
 }

@@ -81,7 +81,8 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
         SatelliteLongitude: null,
         ForecastDisabled: false,
         Translations: [],
-        EntryPoints: [.. (seed.EntryPoints ?? []).Select(ToEntryPoint)]);
+        EntryPoints: [.. (seed.EntryPoints ?? []).Select(ToEntryPoint)],
+        OtherNames: seed.OtherNames ?? []);
 
     private static EntryPointContent ToEntryPoint(EntryPointSeed seed) => new(
         Guid.CreateVersion7(),
@@ -103,7 +104,8 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
         int? WallRating,
         int? WrecksRating,
         DiveSiteAccess? Access,
-        IReadOnlyList<DiveSiteFeatures>? Features);
+        IReadOnlyList<DiveSiteFeatures>? Features,
+        IReadOnlyList<string>? OtherNames);
 
     private sealed record EntryPointSeed(string Kind, string? Name, double Latitude, double Longitude);
 }

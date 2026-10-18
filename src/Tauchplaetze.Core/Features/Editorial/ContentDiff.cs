@@ -41,6 +41,7 @@ internal static class ContentDiff
             ["InflowStationOverride"] = content.InflowStationOverride,
             ["SatellitePoint"] = content is { SatelliteLatitude: { } lat, SatelliteLongitude: { } lng } ? Coordinate(lat, lng) : null,
             ["ForecastDisabled"] = content.ForecastDisabled.ToString(),
+            ["OtherNames"] = string.Join(", ", OtherNames.Normalize(content.OtherNameList)),
         };
 
         foreach (var text in content.Translations)
