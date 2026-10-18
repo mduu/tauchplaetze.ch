@@ -80,6 +80,9 @@ public enum ReasonCode
 
     /// <summary>Kein aktueller Satellitenwert.</summary>
     ClarityUnknown,
+
+    /// <summary>Der Satellitenwert ist mehr als einige Tage alt und zählt nur noch teilweise.</summary>
+    ClarityStale,
 }
 
 /// <summary>Status eines Laufs des Prognose-Jobs.</summary>

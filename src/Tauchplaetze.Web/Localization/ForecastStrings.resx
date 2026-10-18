@@ -103,4 +103,6 @@
   <data name="Source_OpenMeteo_Url" xml:space="preserve"><value>https://open-meteo.com</value></data>
   <data name="Source_Bafu" xml:space="preserve"><value>BAFU</value></data>
   <data name="Source_Bafu_Url" xml:space="preserve"><value>https://www.hydrodaten.admin.ch/de</value></data>
+  <data name="Visibility_SatelliteShore" xml:space="preserve"><value>Satellit vom {0}: ca. {1} m in der Seemitte, in Ufernähe ca. {2} m</value></data>
+  <data name="Reason_ClarityStale" xml:space="preserve"><value>Satellitenbild älter</value></data>
 </root>

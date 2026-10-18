@@ -165,6 +165,7 @@ internal class RunForecastHandler(
         forecast.ThermoclineTop = ToDecimal(result.Thermocline?.Top);
         forecast.ThermoclineBottom = ToDecimal(result.Thermocline?.Bottom);
         forecast.SecchiDepth = ToDecimal(inputs.Clarity.SecchiDepth);
+        forecast.SecchiDepthShore = ToDecimal(inputs.Clarity.ShoreDepth);
         forecast.SecchiObservedAt = inputs.Clarity.ObservedAt;
         forecast.VisibilityIndicator = inputs.Clarity.Indicator;
         forecast.VisibilityGoodBelow = ToDecimal(result.VisibilityGoodBelow);

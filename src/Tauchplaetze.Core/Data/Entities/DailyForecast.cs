@@ -28,6 +28,9 @@ internal class DailyForecast
 
     public decimal? SecchiDepth { get; set; }
 
+    /// <summary>Secchi-Schätzung in Ufernähe am Platz (`rules-1.1`). Leer bei Zeilen von `rules-1.0`.</summary>
+    public decimal? SecchiDepthShore { get; set; }
+
     public DateOnly? SecchiObservedAt { get; set; }
 
     public VisibilityIndicator VisibilityIndicator { get; set; }

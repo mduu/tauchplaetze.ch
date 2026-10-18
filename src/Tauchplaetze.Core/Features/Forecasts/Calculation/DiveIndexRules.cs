@@ -8,13 +8,15 @@ internal record SupportPoint(double Input, double Score);
 /// </summary>
 /// <remarks>
 /// Die Werte für Algen, die Korrektur der Klarheit und die Schichtung sind Startwerte vom 18.10.2026 ohne Messung.
+/// `rules-1.1` (18.10.2026): fehlende Klarheit zählt vorsichtig statt gar nicht, alte Satellitenwerte verlieren Gewicht,
+/// die Schätzung aus der Seemitte gilt in Ufernähe nur teilweise, und eine trübe Oberfläche deckelt die Schichtung.
 /// Sie werden mit Meldungen und eigenen Tauchgängen geprüft.
 /// </remarks>
 internal record DiveIndexRules
 {
     public static readonly DiveIndexRules Default = new();
 
-    public string ModelVersion { get; init; } = "rules-1.0";
+    public string ModelVersion { get; init; } = "rules-1.1";
 
     public double ClarityWeight { get; init; } = 0.35;
 
@@ -27,6 +29,24 @@ internal record DiveIndexRules
     public double ThermoclineGradient { get; init; } = 0.5;
 
     public int SatelliteMaxAgeDays { get; init; } = 14;
+
+    /// <summary>Bis zu diesem Alter in Tagen zählt der Satellitenwert voll. Danach nähern sich die Punkte bis <see cref="SatelliteMaxAgeDays"/> linear <see cref="UnknownClarityScore"/>.</summary>
+    public int SatelliteFullAgeDays { get; init; } = 5;
+
+    /// <summary>Punkte für die Klarheit, wenn kein gültiger Satellitenwert da ist.</summary>
+    public double UnknownClarityScore { get; init; } = 4;
+
+    /// <summary>Höchster Index ohne Sichtwert.</summary>
+    public double MaxIndexWithoutClarity { get; init; } = 6.5;
+
+    /// <summary>Anteil der Secchi-Tiefe aus der Seemitte, der in Ufernähe gilt.</summary>
+    public double ShoreFactor { get; init; } = 0.7;
+
+    /// <summary>Secchi-Tiefe in Ufernähe in m, ab der die Oberfläche als «mässig» gilt.</summary>
+    public double SurfaceModerateFrom { get; init; } = 3;
+
+    /// <summary>Höchste Punkte für die Schichtung, wenn die Oberfläche trüb oder unbekannt ist.</summary>
+    public double MaxStratificationWithTurbidSurface { get; init; } = 7;
 
     /// <summary>Secchi-Tiefe in m → Punkte.</summary>
     public IReadOnlyList<SupportPoint> Clarity { get; init; } = [new(2, 1), new(10, 10)];

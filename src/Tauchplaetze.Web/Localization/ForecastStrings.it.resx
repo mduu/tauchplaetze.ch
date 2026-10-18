@@ -103,4 +103,6 @@
   <data name="Source_OpenMeteo_Url" xml:space="preserve"><value>https://open-meteo.com</value></data>
   <data name="Source_Bafu" xml:space="preserve"><value>UFAM</value></data>
   <data name="Source_Bafu_Url" xml:space="preserve"><value>https://www.hydrodaten.admin.ch/it</value></data>
+  <data name="Visibility_SatelliteShore" xml:space="preserve"><value>Satellite del {0}: circa {1} m al largo, circa {2} m vicino alla riva</value></data>
+  <data name="Reason_ClarityStale" xml:space="preserve"><value>immagine satellitare datata</value></data>
 </root>

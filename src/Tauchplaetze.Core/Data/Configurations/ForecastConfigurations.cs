@@ -16,7 +16,7 @@ internal class DailyForecastConfiguration : IEntityTypeConfiguration<DailyForeca
         builder.Property(f => f.DiveIndex).HasPrecision(3, 1);
         foreach (var property in new[] { nameof(DailyForecast.SurfaceTemperature), nameof(DailyForecast.TemperatureAt10m), nameof(DailyForecast.TemperatureAt20m),
                      nameof(DailyForecast.TemperatureAt30m), nameof(DailyForecast.ThermoclineTop), nameof(DailyForecast.ThermoclineBottom),
-                     nameof(DailyForecast.SecchiDepth), nameof(DailyForecast.VisibilityGoodBelow), nameof(DailyForecast.WindSpeedKmh), nameof(DailyForecast.WindGustsKmh) })
+                     nameof(DailyForecast.SecchiDepth), nameof(DailyForecast.SecchiDepthShore), nameof(DailyForecast.VisibilityGoodBelow), nameof(DailyForecast.WindSpeedKmh), nameof(DailyForecast.WindGustsKmh) })
         {
             builder.Property(property).HasPrecision(4, 1);
         }

@@ -221,6 +221,7 @@ Eine Zeile pro Platz und Tag. PK: (`DiveSiteId`, `Date`).
 | `TemperatureAt10m`, `TemperatureAt20m`, `TemperatureAt30m` | decimal(4,1), optional | °C |
 | `ThermoclineTop`, `ThermoclineBottom` | decimal(4,1), optional | m |
 | `SecchiDepth` | decimal(4,1), optional | geschätzte Sichttiefe aus dem Satellit, m |
+| `SecchiDepthShore` | decimal(4,1), optional | Secchi-Schätzung in Ufernähe (`rules-1.1`, Uferfaktor). Leer bei Rows von `rules-1.0`. |
 | `SecchiObservedAt` | DateOnly, optional | Datum des Satellitenbilds |
 | `VisibilityIndicator` | enum | `Unknown`, `Poor`, `Moderate`, `Good`, `VeryGood` |
 | `VisibilityGoodBelow` | decimal(4,1), optional | ab dieser Tiefe besser (meist unter der Sprungschicht) |

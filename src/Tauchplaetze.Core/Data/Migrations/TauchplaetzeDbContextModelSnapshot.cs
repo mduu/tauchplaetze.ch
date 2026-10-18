@@ -235,6 +235,10 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .HasPrecision(4, 1)
                         .HasColumnType("decimal(4,1)");
 
+                    b.Property<decimal?>("SecchiDepthShore")
+                        .HasPrecision(4, 1)
+                        .HasColumnType("decimal(4,1)");
+
                     b.Property<DateOnly?>("SecchiObservedAt")
                         .HasColumnType("date");
 

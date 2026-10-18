@@ -73,7 +73,8 @@ Die Endpunkte stehen in `data-sources.md`.
 Gemessene Secchi-Tiefen gibt es über Alplakes nicht mehr (Spike 17.10.2026). Die Klarheit stützt sich auf den Satellit. Sie ist **keine Prognose**, sondern der letzte beobachtete Wert, korrigiert um das, was seither geschah.
 
 - **Satellitenpunkt:** Der Job fragt den Satellit an einem Punkt seewärts ab. Der Platz kann einen eigenen Punkt haben (`DiveSite.SatellitePoint`). Sonst gilt der Standardpunkt des Gewässers (`WaterBody.SatellitePoint`). Grund: Am Ufer fehlen die Pixel.
-- **Höchstalter 14 Tage:** Ein Satellitenwert gilt höchstens 14 Tage (konfigurierbar). Älter: Die Klarheit ist unbekannt.
+- **Alter:** Ein Satellitenwert zählt bis 5 Tage voll. Danach nähern sich seine Punkte linear bis Tag 14 dem vorsichtigen Wert von 4 Punkten (ein schlechterer Wert wird durch das Alter nicht besser). Älter als 14 Tage: Die Klarheit ist unbekannt. Begründung `ClarityStale` ab Tag 6.
+- **Ufernähe:** Der Satellitenpunkt liegt in der Seemitte, getaucht wird in Ufernähe. Dort ist das Wasser meist trüber. Die Schätzung gilt am Platz darum nur mit dem Uferfaktor 0.7. Klarheit, Sicht-Indikator und die Regel zur Oberfläche rechnen mit dem Wert in Ufernähe. Die Seite zeigt beide («ca. 6.3 m in der Seemitte, in Ufernähe ca. 4.4 m»). Gespeichert in `DailyForecast.SecchiDepth` (Seemitte) und `SecchiDepthShore` (Ufernähe).
 - **Korrektur:** Fällt seit dem Bild viel Regen oder steigt der Abfluss stark, sinkt die geschätzte Klarheit. Die Stützpunkte stehen in `Forecast:Rules`.
 - **Ohne Wert:** Die Klarheit ist unbekannt. Ihr Gewicht geht auf die anderen Teilwerte.
 - **Anzeige:** Die Seite zeigt immer das Datum des Satellitenbilds («Satellit vom 05.10.: ca. 6 m»).
@@ -81,7 +82,7 @@ Gemessene Secchi-Tiefen gibt es über Alplakes nicht mehr (Spike 17.10.2026). Di
 
 ### Sicht-Indikator
 
-- Grundlage: die Klarheit.
+- Grundlage: die Klarheit in Ufernähe.
 - Unter der Sprungschicht ist die Sicht im Sommer meist besser. Dann setzt der Algorithmus `VisibilityGoodBelow = ThermoclineBottom`.
 - Ergebnis als Stufe: `Poor`, `Moderate`, `Good`, `VeryGood`, `Unknown`.
 
@@ -95,7 +96,7 @@ Die Platzseite zeigt unter den fünf Tagen eine Grafik mit dem Wetter pro Stunde
 - **Symbol:** Wettercode nach WMO 4677: 0 klar, 1–2 teilweise bewölkt, 3 bedeckt, 45/48 Nebel, 51–57 Niesel, 61–67 Regen, 80–82 Schauer, 71–77 und 85–86 Schnee, 95–99 Gewitter. Die Reihenfolge ist die Schwere. Ein unbekannter Code ergibt kein Symbol.
 - **Speicher:** `SiteWeatherOutlook` pro Platz, bei jedem Lauf ersetzt (`datastructure.md`).
 
-## Der regelbasierte Index (`rules-1.0`)
+## Der regelbasierte Index (`rules-1.1`)
 
 Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 
@@ -106,24 +107,29 @@ Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 | Zuflüsse | 20 % | < 5 mm Regen in 72 h und Abfluss unter 1.2 × Median | Starkregen oder Abfluss über 3 × Median |
 | Schichtung | 20 % | klare Schicht unter einer Sprungschicht ≤ 20 m, oder durchmischter See mit wenig Algen | Sprungschicht tiefer als 30 m bei trüber Oberfläche |
 
-**Startwerte `rules-1.0`** (18.10.2026, ohne Messung, im Code `DiveIndexRules`):
+**Startwerte `rules-1.1`** (18.10.2026, ohne Messung, im Code `DiveIndexRules`). `rules-1.0` verteilte das Gewicht einer fehlenden Klarheit auf die anderen Teilwerte. So stieg der Index, wenn der Sichtwert fehlte, und eine trübe Oberfläche über klarem Tiefenwasser ergab volle Punkte. Marcs Erfahrung am Zürichsee im Oktober 2026 («oben naja, unten ok», seit Wochen) passte nicht dazu.
 
 | Regel | Stützpunkte |
 |---|---|
-| Klarheit | Secchi 2 m → 1, 10 m → 10. Mittlere Algen −2 Punkte. Algenblüte höchstens 3 Punkte. |
+| Klarheit | Secchi in Ufernähe 2 m → 1, 10 m → 10. Mittlere Algen −2 Punkte. Algenblüte höchstens 3 Punkte. Alter: bis 5 Tage voll, bis Tag 14 linear zu 4 Punkten. Unbekannt: 4 Punkte. |
+| Uferfaktor | Secchi aus der Seemitte × 0.7 = Secchi in Ufernähe |
 | Wind | 2 Bft → 10, 5 Bft → 1 |
 | Zuflüsse | Regen 72 h 5 mm → 10, 40 mm → 1. Abfluss 1.2 × Median → 10, 3 × Median → 1. Der tiefere Wert zählt. |
-| Schichtung | Untergrenze der Sprungschicht 20 m → 10, 30 m → 1. Bei Klarheit ab 7 Punkten mindestens 6. Durchmischter See: wenig Algen 10, mittel 6, Blüte 3. Fluss: entfällt. |
+| Schichtung | Untergrenze der Sprungschicht 20 m → 10, 30 m → 1. Bei Klarheit ab 7 Punkten mindestens 6. Durchmischter See: wenig Algen 10, mittel 6, Blüte 3. Ist die Oberfläche in Ufernähe trüber als 3 m oder unbekannt: höchstens 7. Fluss: entfällt. |
 | Algen | Chlorophyll unter 4 mg/m³ wenig, unter 10 mittel, sonst Blüte |
 | Korrektur Klarheit | Regen seit dem Bild 5 mm → 100 %, 30 mm → 60 %. Abfluss 1.2 × Median → 100 %, 3 × Median → 60 %. Der tiefere Wert zählt. |
-| Sicht-Indikator | ab 10 m sehr gut, ab 6 m gut, ab 3 m mässig, sonst schlecht |
+| Sicht-Indikator | Secchi in Ufernähe ab 10 m sehr gut, ab 6 m gut, ab 3 m mässig, sonst schlecht |
+| Ohne Sichtwert | Index höchstens 6.5 |
 | Datenstufe 3 | Gitterpunkt des 3D-Modells höchstens 500 m vom Platz |
 
-Diese Werte sind Annahmen. Meldungen und eigene Tauchgänge prüfen sie. Zwischenwerte linear interpolieren. Die Stützpunkte und Gewichte stehen in `appsettings.json` (`Forecast:Rules`). So lassen sie sich ohne Code anpassen. Jede Änderung erhöht die `ModelVersion` (`rules-1.1`, …).
+Diese Werte sind Annahmen. Meldungen und eigene Tauchgänge prüfen sie. Zwischenwerte linear interpolieren. Die Stützpunkte und Gewichte stehen in `appsettings.json` (`Forecast:Rules`). So lassen sie sich ohne Code anpassen. Jede Änderung erhöht die `ModelVersion` (`rules-1.1`, …). **Stand 18.10.2026:** Die Werte stehen erst im Code (`DiveIndexRules`), die Bindung an `Forecast:Rules` fehlt noch.
 
 Für Flussplätze gilt dieselbe Formel. Die Schichtung fällt weg (Fluss ist durchmischt). Der Abfluss zählt doppelt: einmal als Zufluss, einmal als Strömung (über 1.5 × Median gibt es Abzug). Die Werte stehen ebenfalls in `Forecast:Rules`.
 
-**Fehlende Daten:** Fehlt ein Teilwert, verteilt der Algorithmus sein Gewicht auf die anderen. Der Index braucht den Wind **und** Wasserdaten (Klarheit, Profil oder Flussstation). Fehlt eines davon, ist der Index `null`. Die Seite zeigt dann die vorhandenen Werte ohne Index. An Tagen ohne Wasserdaten heisst das «Ausblick».
+**Fehlende Daten:**
+- Der Index braucht den Wind **und** Wasserdaten (Klarheit, Profil oder Flussstation). Fehlt eines davon, ist der Index `null`. Die Seite zeigt dann die vorhandenen Werte ohne Index. An Tagen ohne Wasserdaten heisst das «Ausblick».
+- **Fehlt nur die Klarheit**, zählt sie vorsichtig mit 4 Punkten, ihr Gewicht bleibt bei ihr. Der Index ist dann höchstens 6.5. Ein Tag ohne Sichtwert ist so nie besser als ein Tag mit mässiger Sicht. Das gilt auch für Flüsse ohne Trübungsmessung.
+- Fehlen Zuflüsse oder Schichtung (Fluss), verteilt sich ihr Gewicht auf die anderen Teilwerte.
 
 **Begründung:** Der Algorithmus speichert `ReasonCodes` (z.B. `CalmLake`, `ClearBelowThermocline`, `TurbidAfterRain`, `WindAfternoon`). Die Oberfläche bildet daraus einen Satz aus den `.resx`-Ressourcen. So ist die Begründung in allen vier Sprachen verfügbar.
 

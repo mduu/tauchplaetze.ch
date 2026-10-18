@@ -115,17 +115,31 @@ public class ClarityTests
     }
 
     [Theory]
-    [InlineData(0, 1.0, 8.0, VisibilityIndicator.Good)]
-    [InlineData(30, 1.0, 4.8, VisibilityIndicator.Moderate)]
-    [InlineData(0, 3.0, 4.8, VisibilityIndicator.Moderate)]
-    [InlineData(17.5, 2.1, 6.4, VisibilityIndicator.Good)]
-    public void Regen_und_Abfluss_seit_dem_Bild_mindern_die_Klarheit(double rain, double dischargeRatio, double expectedDepth, VisibilityIndicator expected)
+    [InlineData(0, 1.0, 8.0, 5.6)]
+    [InlineData(30, 1.0, 4.8, 3.4)]
+    [InlineData(0, 3.0, 4.8, 3.4)]
+    [InlineData(17.5, 2.1, 6.4, 4.5)]
+    public void Regen_und_Abfluss_seit_dem_Bild_mindern_die_Klarheit_und_in_Ufernaehe_gilt_nur_ein_Teil(
+        double rain, double dischargeRatio, double expectedOpenWater, double expectedShore)
     {
         // Act
         var clarity = ClarityEstimate.For(Day, new SatelliteObservation(new DateOnly(2026, 10, 12), 8), rain, dischargeRatio, DiveIndexRules.Default);
 
         // Assert
-        Assert.Equal((expectedDepth, expected), (clarity.SecchiDepth!.Value, clarity.Indicator));
+        Assert.Equal((expectedOpenWater, expectedShore), (clarity.SecchiDepth!.Value, clarity.ShoreDepth!.Value));
+    }
+
+    [Theory]
+    [InlineData(10, VisibilityIndicator.Good)]
+    [InlineData(8, VisibilityIndicator.Moderate)]
+    [InlineData(4, VisibilityIndicator.Poor)]
+    public void Der_Sicht_Indikator_gilt_fuer_die_Ufernaehe(double openWater, VisibilityIndicator expected)
+    {
+        // Act
+        var clarity = ClarityEstimate.For(Day, new SatelliteObservation(new DateOnly(2026, 10, 16), openWater), 0, 1, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Equal(expected, clarity.Indicator);
     }
 
     [Theory]
@@ -186,7 +200,7 @@ public class DiveIndexTests
     public void Ruhiger_klarer_See_mit_hoher_Sprungschicht_ergibt_10()
     {
         // Arrange
-        var inputs = new DayInputs(Calm, Summer, Clear(12), AlgaeLevel.Low, 1.0, IsRiver: false);
+        var inputs = new DayInputs(Calm, Summer, Clear(15), AlgaeLevel.Low, 1.0, IsRiver: false);
 
         // Act
         var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
@@ -225,7 +239,7 @@ public class DiveIndexTests
     }
 
     [Fact]
-    public void Fehlt_die_Klarheit_verteilt_sich_ihr_Gewicht_auf_die_anderen_Teilwerte()
+    public void Fehlt_die_Klarheit_zaehlt_sie_vorsichtig_und_die_Schichtung_hoechstens_7()
     {
         // Arrange
         var windy = Calm with { WindMaxKmh = 24 };
@@ -235,8 +249,77 @@ public class DiveIndexTests
         var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
 
         // Assert
-        Assert.Null(result.Scores.Clarity);
-        Assert.Equal(Math.Round((4 * 0.25 + 10 * 0.20 + 10 * 0.20) / 0.65, 1), result.DiveIndex);
+        Assert.Equal((4.0, 7.0), (result.Scores.Clarity, result.Scores.Stratification));
+        Assert.Equal(Math.Round(4 * 0.35 + 4 * 0.25 + 10 * 0.20 + 7 * 0.20, 1), result.DiveIndex);
+    }
+
+    [Theory]
+    [InlineData(5)]
+    [InlineData(12)]
+    [InlineData(24)]
+    [InlineData(35)]
+    public void Ohne_Sichtwert_ist_der_Index_nie_besser_als_mit_maessiger_Sicht_und_hoechstens_6_5(double windKmh)
+    {
+        // Arrange
+        var weather = Calm with { WindMaxKmh = windKmh };
+        var unknown = new DayInputs(weather, Summer, ClarityEstimate.Unknown, AlgaeLevel.Unknown, 1.0, IsRiver: false);
+        var moderate = new DayInputs(weather, Summer, Clear(6), AlgaeLevel.Low, 1.0, IsRiver: false);
+
+        // Act
+        var withoutClarity = DiveIndexCalculator.Calculate(unknown, DiveIndexRules.Default).DiveIndex!.Value;
+        var withModerate = DiveIndexCalculator.Calculate(moderate, DiveIndexRules.Default).DiveIndex!.Value;
+
+        // Assert
+        Assert.True(withoutClarity <= withModerate, $"ohne Sicht {withoutClarity}, mässig {withModerate}");
+        Assert.True(withoutClarity <= 6.5, $"ohne Sicht {withoutClarity}");
+    }
+
+    [Theory]
+    [InlineData(5, 10.0)]
+    [InlineData(10, 6.7)]
+    [InlineData(14, 4.0)]
+    public void Ein_alter_Satellitenwert_naehert_sich_bis_Tag_14_dem_vorsichtigen_Wert(int ageDays, double expected)
+    {
+        // Arrange
+        var day = new DateOnly(2026, 10, 18);
+        var clarity = ClarityEstimate.For(day, new SatelliteObservation(day.AddDays(-ageDays), 15), 0, 1, DiveIndexRules.Default);
+        var inputs = new DayInputs(Calm, Summer, clarity, AlgaeLevel.Low, 1.0, IsRiver: false);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Equal(expected, Math.Round(result.Scores.Clarity!.Value, 1));
+        Assert.Equal(ageDays > 5, result.Reasons.Contains(ReasonCode.ClarityStale));
+    }
+
+    [Fact]
+    public void Ein_schlechter_Satellitenwert_wird_durch_das_Alter_nicht_besser()
+    {
+        // Arrange
+        var day = new DateOnly(2026, 10, 18);
+        var clarity = ClarityEstimate.For(day, new SatelliteObservation(day.AddDays(-12), 3), 0, 1, DiveIndexRules.Default);
+        var inputs = new DayInputs(Calm, Summer, clarity, AlgaeLevel.Low, 1.0, IsRiver: false);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
+
+        // Assert
+        Assert.True(result.Scores.Clarity < 4, $"Klarheit {result.Scores.Clarity}");
+    }
+
+    [Fact]
+    public void Ist_die_Oberflaeche_in_Ufernaehe_trueb_gibt_die_Schichtung_hoechstens_7_Punkte()
+    {
+        // Arrange
+        var inputs = new DayInputs(Calm, Summer, Clear(4), AlgaeLevel.Low, 1.0, IsRiver: false);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Equal(7, result.Scores.Stratification);
+        Assert.DoesNotContain(ReasonCode.ClearBelowThermocline, result.Reasons);
     }
 
     [Fact]
@@ -256,7 +339,7 @@ public class DiveIndexTests
     }
 
     [Fact]
-    public void Bei_einem_Fluss_entfaellt_die_Schichtung()
+    public void Bei_einem_Fluss_entfaellt_die_Schichtung_und_ohne_Sichtwert_gilt_hoechstens_6_5()
     {
         // Arrange
         var river = new DayProfile(Profiles.Of((0, 12.5)), ProfileSource.RiverStation);
@@ -267,7 +350,7 @@ public class DiveIndexTests
 
         // Assert
         Assert.Null(result.Scores.Stratification);
-        Assert.Equal(10, result.DiveIndex);
+        Assert.Equal(6.5, result.DiveIndex);
         Assert.DoesNotContain(ReasonCode.ClarityUnknown, result.Reasons);
     }
 
