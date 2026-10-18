@@ -28,11 +28,12 @@ window.tauchplaetzeMap = (function () {
   }
 
   // Dauerhafte Beschriftung wie ein Tooltip mit Pfeil auf den Punkt. Mit url öffnet ein Klick die Seite.
-  function labelled(marker, item, html, offsetY) {
+  // Plätze und Gewässer oben beschriftet, Einstiege und Orte rechts, damit sie den Platz nicht verdecken.
+  function labelled(marker, item, html, side) {
     marker.bindTooltip(item.url ? '<a href="' + item.url + '">' + html + '</a>' : html, {
       permanent: true,
-      direction: 'top',
-      offset: [0, offsetY || -8],
+      direction: side ? 'right' : 'top',
+      offset: side ? [side, 0] : [0, -8],
       interactive: !!item.url,
       className: 'map-label'
     });
@@ -86,7 +87,7 @@ window.tauchplaetzeMap = (function () {
         iconSize: [24, 24],
         iconAnchor: [12, 12]
       });
-      return labelled(L.marker([point.lat, point.lng], { icon: icon, keyboard: false }), point, label, -12);
+      return labelled(L.marker([point.lat, point.lng], { icon: icon, keyboard: false }), point, label, 12);
     }
 
     const marker = L.circleMarker([point.lat, point.lng], {
@@ -96,7 +97,7 @@ window.tauchplaetzeMap = (function () {
       fillColor: token('--color-text'),
       fillOpacity: 1
     });
-    return labelled(marker, point, label);
+    return labelled(marker, point, label, 8);
   }
 
   // Bei vielen Punkten erscheinen die Beschriftungen erst ab Zoom 11, sonst überdecken sie sich.

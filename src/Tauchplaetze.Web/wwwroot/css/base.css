@@ -350,6 +350,10 @@ a:hover {
   border-top-color: var(--color-border-strong);
 }
 
+.leaflet-tooltip-right.map-label::before {
+  border-right-color: var(--color-border-strong);
+}
+
 .leaflet-tooltip.map-label a {
   color: var(--color-text);
   text-decoration: none;
