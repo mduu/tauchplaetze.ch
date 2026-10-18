@@ -33,11 +33,13 @@ Die **Ausbaustufe** misst die Dokumentation. Die **Datenstufe** misst die Daten 
 
 Der Core berechnet die Ausbaustufe bei jeder Speicherung (`DiveSite.CalculateContentLevel()`). Die Regel steht an einer Stelle.
 
-| Stufe | Bedingung | Sichtbar auf der Platzseite |
-|---|---|---|
-| 0 – Verzeichnis | Name, Koordinate, See | Prognose, Karte, Hinweis «erst im Verzeichnis» |
-| 1 – Basis | Stufe 0 plus `MaxDepth`, `DifficultyRating`, `Access`, ein Einstieg mit Beschreibung (DE) und `ApproachInfo` (DE) | zusätzlich Praktisch-Block, Bewertungen und Tags |
-| 2 – Vollständig | Stufe 1 plus `UnderwaterDescription` (DE) und ein Hero-Foto | zusätzlich Unter Wasser, Galerie, Skizze (falls vorhanden) |
+| Stufe | Bedingung |
+|---|---|
+| 0 – Verzeichnis | Name, Koordinate, See |
+| 1 – Basis | Stufe 0 plus `MaxDepth`, `DifficultyRating`, `Access`, ein Einstieg mit Beschreibung (DE) und `ApproachInfo` (DE) |
+| 2 – Vollständig | Stufe 1 plus `UnderwaterDescription` (DE) und ein Hero-Foto |
+
+Die Stufe misst nur den Fortschritt. Sie blendet nichts aus: Die Platzseite zeigt alles, was erfasst ist, und ein Abschnitt ohne Inhalt fehlt (`ux.md`). Nur Stufe 0 zeigt zusätzlich den Hinweis «erst im Verzeichnis». Entscheid Marc, 18.10.2026.
 
 Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit wartet.
 
