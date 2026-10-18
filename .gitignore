@@ -65,3 +65,7 @@ spike-output/
 
 # Obsidian (lokale Einstellungen des Editors)
 .obsidian/
+
+# JetBrains Rider (lokale Einstellungen der IDE)
+.idea/
+*.DotSettings.user
