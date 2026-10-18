@@ -39,15 +39,9 @@ internal class GetSiteForecastHandler(TauchplaetzeDbContext dbContext, TimeProvi
                 f.WindGustsKmh,
                 f.PrecipitationLast72h,
                 f.AlgaeLevel,
-                ParseReasons(f.ReasonCodes)))
+                ReasonCodes.Parse(f.ReasonCodes)))
             .ToList();
 
         return new SiteForecast(days, rows.Count > 0 ? rows.Max(f => f.ComputedAt) : null);
     }
-
-    private static IReadOnlyList<ReasonCode> ParseReasons(string codes) =>
-        codes.Split(',', StringSplitOptions.RemoveEmptyEntries)
-            .Select(code => Enum.TryParse<ReasonCode>(code, out var reason) ? reason : (ReasonCode?)null)
-            .OfType<ReasonCode>()
-            .ToList();
 }
