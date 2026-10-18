@@ -76,8 +76,10 @@ The details are in `specs/architecture.md`, section "Code-Dokumentation".
 
 The details are in `specs/architecture.md`, section "Testing".
 
-- Test behaviour as a black box: business rules, edge cases, the dive index, state transitions, content levels and data levels.
-- Do not test mapping, CRUD roundtrips or calls on thin wrappers. Do not write the same test twice.
+- Write a test only when it checks logic: business rules, edge cases, calculations (dive index), state transitions, content levels and data levels. A test must find a real defect.
+- Do not write tests for a coverage quota. Do not test mapping, CRUD roundtrips or calls on thin wrappers. Do not write the same test twice.
+- Test the system under test (SUT) as a black box. Give the input through its public API and check the output. Do not check private members, intermediate states or the order of internal calls. A test must stay green after a refactoring that keeps the behaviour.
+- The SUT is a use case (test it through its handler or HTTP) or one unit that holds the rule itself (for example a calculator or a parser).
 - Use xUnit `Assert` and small handwritten test doubles. Do not use a mocking library.
 - Write the test name as a German sentence that states the rule.
 - Mark the phases with `// Arrange`, `// Act` and `// Assert`.
