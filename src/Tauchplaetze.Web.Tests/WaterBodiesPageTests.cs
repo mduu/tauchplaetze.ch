@@ -31,7 +31,7 @@ public class WaterBodiesPageTests : IClassFixture<WebApp>
 
         // Assert
         var titles = Regex.Matches(html, "class=\"water-group-title\"[^>]*>([^<]+)<").Select(m => WebUtility.HtmlDecode(m.Groups[1].Value));
-        Assert.Equal(["Les grands lacs", "Lacs de la région Espace Mittelland", "Lacs de la région Tessin", "Rivières"], titles);
+        Assert.Equal(["Les grands lacs", "Espace Mittelland", "Tessin", "Rivières"], titles);
         Assert.Contains("href=\"/fr/eaux#region-ticino\"", html);
         Assert.Contains("id=\"region-ticino\"", html);
         Assert.Contains("href=\"/fr/eaux/lago-di-vogorno\"", html);

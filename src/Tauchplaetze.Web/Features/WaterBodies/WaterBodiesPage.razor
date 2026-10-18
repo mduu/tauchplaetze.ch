@@ -24,7 +24,7 @@
         <nav class="water-jump" aria-label="@L["WaterBodies_Jump"]">
             @foreach (var group in groups)
             {
-                <a href="@($"{Path}#{Anchor(group)}")">@ShortTitle(group)</a>
+                <a href="@($"{Path}#{Anchor(group)}")">@Title(group)</a>
             }
         </nav>
     }
@@ -88,12 +88,8 @@
         ? $"region-{region.ToString().ToLowerInvariant()}"
         : group.Kind.ToString().ToLowerInvariant();
 
-    private string ShortTitle(WaterBodyGroup group) => group.Region is { } region
-        ? L[$"Region_{region}"]
-        : L[$"WaterBodies_Group_{group.Kind}"];
-
     private string Title(WaterBodyGroup group) => group.Region is { } region
-        ? L["WaterBodies_Group_Region", L[$"Region_{region}"]]
+        ? L[$"Region_{region}"]
         : L[$"WaterBodies_Group_{group.Kind}"];
 
     private string SiteCount(int count) => count switch

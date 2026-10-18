@@ -92,7 +92,7 @@ Use-Case: stöbern nach See («Was ist los an meinem See?»). Die Suche nach Eig
 
 - **Gruppen** (Regel im Core, `GetWaterBodyGroups`):
   1. «Die grossen Seen»: Seen mit mindestens 8 veröffentlichten Plätzen, als grosse Kacheln (Art, Name, Zahl der Plätze).
-  2. Die übrigen Seen nach Grossregion des BFS (Genferseeregion, Espace Mittelland, Nordwestschweiz, Zürich, Ostschweiz, Zentralschweiz, Tessin). Die Region eines Sees ist die des Kantons mit den meisten seiner Plätze, bei Gleichstand das Kantonskürzel alphabetisch zuerst.
+  2. Die übrigen Seen nach Grossregion des BFS, Name der Region als Überschrift (Genferseeregion, Espace Mittelland, Nordwestschweiz, Zürich, Ostschweiz, Zentralschweiz, Tessin). Die Region eines Sees ist die des Kantons mit den meisten seiner Plätze, bei Gleichstand das Kantonskürzel alphabetisch zuerst.
   3. «Flüsse»: alle Flüsse.
   4. «Weitere Gewässer»: Seen ohne Platz mit Kanton.
   Leere Gruppen fehlen. In jeder Gruppe nach Zahl der Plätze, dann nach Name.
