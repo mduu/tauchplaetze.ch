@@ -245,14 +245,34 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         var profile = await Command<UpdateProfileCommand, AccountResult>(new UpdateProfileCommand(anna, "Anna B.", true, "fr"));
         var withdraw = await Command<WithdrawRevisionCommand, EditorialResult>(new WithdrawRevisionCommand(anna, revision.Id));
         var role = await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(anna, admin, Roles.Moderator, false));
+        var archive = await Command<ArchiveDiveSiteCommand, EditorialResult>(new ArchiveDiveSiteCommand(anna, site, true));
         var data = await Query<GetPersonalDataQuery, PersonalData?>(new GetPersonalDataQuery(anna));
 
         // Assert
         Assert.Equal([AccountError.Blocked], profile.Errors);
         Assert.Equal([EditorialError.Blocked], withdraw.Errors);
-        Assert.Equal([AccountError.NotAllowed], role.Errors);
+        Assert.Equal([AccountError.Blocked], role.Errors);
+        Assert.Equal([EditorialError.Blocked], archive.Errors);
         Assert.Equal("Anna", data!.DisplayName);
         Assert.NotNull(data.BlockedAt);
+    }
+
+    [SqlFact]
+    public async Task Der_letzte_aktive_Admin_loescht_sich_nicht_ein_gesperrter_Admin_zaehlt_nicht()
+    {
+        // Arrange
+        var (admin, anna, _) = await Prepare();
+        await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(admin, anna, Roles.Admin, true));
+        await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(admin, anna, true));
+
+        // Act
+        var whileOtherBlocked = await Command<DeleteAccountCommand, AccountResult>(new DeleteAccountCommand(admin));
+        await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(admin, anna, false));
+        var whileOtherActive = await Command<DeleteAccountCommand, AccountResult>(new DeleteAccountCommand(admin));
+
+        // Assert
+        Assert.Equal([AccountError.LastAdmin], whileOtherBlocked.Errors);
+        Assert.True(whileOtherActive.Succeeded);
     }
 
     [SqlFact]

@@ -72,6 +72,7 @@
   <data name="Error_InvalidToken" xml:space="preserve"><value>Le lien n'est pas valide ou a expiré.</value></data>
   <data name="Error_NotAllowed" xml:space="preserve"><value>Tu n'as pas le droit de faire cela.</value></data>
   <data name="Error_Blocked" xml:space="preserve"><value>Ton compte est bloqué. Tu ne peux plus rien modifier.</value></data>
+  <data name="Error_LastAdmin" xml:space="preserve"><value>C'est le dernier compte admin actif. Nomme d'abord un autre admin.</value></data>
   <data name="Error_Other" xml:space="preserve"><value>Une erreur s'est produite. Merci de réessayer.</value></data>
   <data name="Meta_NoIndex" xml:space="preserve"><value>Compte</value></data>
 </root>

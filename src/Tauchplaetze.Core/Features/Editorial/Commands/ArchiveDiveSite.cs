@@ -13,9 +13,10 @@ internal class ArchiveDiveSiteHandler(TauchplaetzeDbContext dbContext, AccountRo
 {
     public async Task<EditorialResult> Handle(ArchiveDiveSiteCommand command, CancellationToken ct = default)
     {
-        if (await roles.Of(command.EditorId) is not { IsModerator: true, IsBlocked: false })
+        var rights = await roles.Of(command.EditorId);
+        if (!rights.CanModerate)
         {
-            return EditorialResult.Fail(EditorialError.NotAllowed);
+            return EditorialResult.Fail(rights.IsBlocked ? EditorialError.Blocked : EditorialError.NotAllowed);
         }
 
         var site = await dbContext.DiveSites.SingleOrDefaultAsync(d => d.Id == command.DiveSiteId && d.Status != DiveSiteStatus.Draft, ct);

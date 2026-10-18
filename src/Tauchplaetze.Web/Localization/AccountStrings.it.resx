@@ -72,6 +72,7 @@
   <data name="Error_InvalidToken" xml:space="preserve"><value>Il link non è valido o è scaduto.</value></data>
   <data name="Error_NotAllowed" xml:space="preserve"><value>Non hai il permesso di farlo.</value></data>
   <data name="Error_Blocked" xml:space="preserve"><value>Il tuo account è bloccato. Non puoi più modificare nulla.</value></data>
+  <data name="Error_LastAdmin" xml:space="preserve"><value>È l'ultimo account admin attivo. Nomina prima un altro admin.</value></data>
   <data name="Error_Other" xml:space="preserve"><value>Qualcosa è andato storto. Riprova.</value></data>
   <data name="Meta_NoIndex" xml:space="preserve"><value>Account</value></data>
 </root>

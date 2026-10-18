@@ -15,9 +15,10 @@ internal class ApproveRevisionHandler(TauchplaetzeDbContext dbContext, RevisionW
 {
     public async Task<EditorialResult> Handle(ApproveRevisionCommand command, CancellationToken ct = default)
     {
-        if (await roles.Of(command.ReviewerId) is not { IsModerator: true, IsBlocked: false })
+        var rights = await roles.Of(command.ReviewerId);
+        if (!rights.CanModerate)
         {
-            return EditorialResult.Fail(EditorialError.NotAllowed);
+            return EditorialResult.Fail(rights.IsBlocked ? EditorialError.Blocked : EditorialError.NotAllowed);
         }
 
         var revision = await dbContext.DiveSiteRevisions.SingleOrDefaultAsync(r => r.Id == command.RevisionId, ct);

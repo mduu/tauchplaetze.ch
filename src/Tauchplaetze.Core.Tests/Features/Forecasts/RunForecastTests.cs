@@ -141,7 +141,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         var byAdmin = await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(admin));
 
         // Assert
-        Assert.Equal((false, null), (byContributor.Allowed, byContributor.Run));
+        Assert.Equal((AccountError.NotAllowed, null), (byContributor.Error, byContributor.Run));
         Assert.Empty(runsAfterContributor);
         Assert.Equal(ForecastRunStatus.Succeeded, byAdmin.Run!.Status);
     }

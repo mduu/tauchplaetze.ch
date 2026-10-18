@@ -8,7 +8,7 @@ using Tauchplaetze.Core.Features.Editorial;
 namespace Tauchplaetze.Core.Features.Accounts.Commands;
 
 /// <summary>
-/// Sperrt ein Konto oder hebt die Sperre auf (Moderation und Admin). Ein Admin-Konto sperren nur Admins.
+/// Sperrt ein Konto oder hebt die Sperre auf (Moderation und Admin). Ein Admin-Konto sperren nur Admins, den letzten aktiven Admin niemand.
 /// Beim Sperren werden die offenen Vorschläge abgelehnt (`cms.md`, «Schutz gegen Missbrauch»).
 /// </summary>
 public record BlockAccountCommand(string ModeratorId, string UserId, bool Blocked);
@@ -25,9 +25,19 @@ internal class BlockAccountHandler(TauchplaetzeDbContext dbContext, UserManager<
 
         var moderator = await roles.Of(command.ModeratorId);
         var target = await roles.Of(user.Id);
-        if (moderator is not { IsModerator: true, IsBlocked: false } || (target.IsAdmin && !moderator.IsAdmin) || user.Id == command.ModeratorId)
+        if (moderator.IsBlocked)
+        {
+            return AccountResult.Fail(AccountError.Blocked);
+        }
+
+        if (!moderator.CanModerate || (target.IsAdmin && !moderator.IsAdmin) || user.Id == command.ModeratorId)
         {
             return AccountResult.Fail(AccountError.NotAllowed);
+        }
+
+        if (command.Blocked && await roles.IsLastActiveAdmin(user.Id))
+        {
+            return AccountResult.Fail(AccountError.LastAdmin);
         }
 
         var now = time.GetUtcNow();

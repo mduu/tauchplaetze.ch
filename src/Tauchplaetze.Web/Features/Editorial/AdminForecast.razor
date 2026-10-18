@@ -3,8 +3,10 @@
 @attribute [Authorize(Roles = "Moderator,Admin")]
 @inherits AdminPage
 @using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Core.Features.Forecasts.Commands
 @using Tauchplaetze.Core.Features.Forecasts.Queries
+@inject IStringLocalizer<AccountStrings> AccountL
 
 <div class="d-flex align-center justify-space-between mb-4">
     <MudText Typo="Typo.h4">@L["Forecast_Title"]</MudText>
@@ -19,9 +21,9 @@
     <MudProgressLinear Indeterminate="true" Class="mb-4" />
 }
 
-@if (notAllowed)
+@if (error is not null)
 {
-    <MudAlert Severity="Severity.Error" Class="mb-4">@L["Error_NotAllowed"]</MudAlert>
+    <MudAlert Severity="Severity.Error" Class="mb-4">@AccountL[$"Error_{error}"]</MudAlert>
 }
 
 @if (skipped)
@@ -54,7 +56,7 @@
 
     private bool skipped;
 
-    private bool notAllowed;
+    private AccountError? error;
 
     protected override async Task Load() =>
         runs = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery());
@@ -63,7 +65,7 @@
     {
         running = true;
         var result = await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(UserId));
-        notAllowed = !result.Allowed;
+        error = result.Error;
         skipped = result.Run?.Skipped ?? false;
         running = false;
         await Load();

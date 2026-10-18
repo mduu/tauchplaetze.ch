@@ -14,14 +14,15 @@ internal class StartForecastRunHandler(AccountRoles roles, ICommandHandler<RunFo
 {
     public async Task<StartForecastRunResult> Handle(StartForecastRunCommand command, CancellationToken ct = default)
     {
-        if (await roles.Of(command.AdminId) is not { IsAdmin: true, IsBlocked: false })
+        var rights = await roles.Of(command.AdminId);
+        if (!rights.CanAdminister)
         {
-            return new StartForecastRunResult(false, null);
+            return new StartForecastRunResult(rights.IsBlocked ? AccountError.Blocked : AccountError.NotAllowed, null);
         }
 
-        return new StartForecastRunResult(true, await run.Handle(new RunForecastCommand(), ct));
+        return new StartForecastRunResult(null, await run.Handle(new RunForecastCommand(), ct));
     }
 }
 
-/// <summary>Ergebnis eines Starts von Hand. Ohne Recht läuft nichts.</summary>
-public record StartForecastRunResult(bool Allowed, RunForecastResult? Run);
+/// <summary>Ergebnis eines Starts von Hand. Mit <see cref="Error"/> lief nichts.</summary>
+public record StartForecastRunResult(AccountError? Error, RunForecastResult? Run);

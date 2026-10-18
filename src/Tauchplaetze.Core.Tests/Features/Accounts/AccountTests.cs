@@ -139,7 +139,7 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
     {
         // Arrange
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
-        var admin = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
+        var admin = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin"), new AdminAccount("zweit@example.org", "Zweit")]))).UserIds[0];
         await Command<ImportDiveSitesCommand, ImportDiveSitesResult>(new ImportDiveSitesCommand(admin));
         var before = await Query<GetPersonalDataQuery, PersonalData?>(new GetPersonalDataQuery(admin));
 

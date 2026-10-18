@@ -72,6 +72,7 @@
   <data name="Error_InvalidToken" xml:space="preserve"><value>Der Link ist ungültig oder abgelaufen.</value></data>
   <data name="Error_NotAllowed" xml:space="preserve"><value>Dafür fehlt dir das Recht.</value></data>
   <data name="Error_Blocked" xml:space="preserve"><value>Dein Konto ist gesperrt. Du kannst nichts mehr ändern.</value></data>
+  <data name="Error_LastAdmin" xml:space="preserve"><value>Das ist das letzte aktive Admin-Konto. Ernenne zuerst einen weiteren Admin.</value></data>
   <data name="Error_Other" xml:space="preserve"><value>Etwas ist schiefgelaufen. Bitte versuche es nochmals.</value></data>
   <data name="Meta_NoIndex" xml:space="preserve"><value>Konto</value></data>
 </root>

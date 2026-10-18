@@ -17,7 +17,7 @@ Die Oberfläche nutzt **MudBlazor** im dunklen Theme aus den Design Tokens. Seit
 
 Ohne Anmeldung führt `/admin` zur Anmeldung. Fehlt die Rolle, antwortet der Server mit 403.
 
-**Rechte prüft der Core** (Entscheid Marc, 18.10.2026). Jeder Command und jede Query mit geschützten Daten bekommt die Benutzer-ID und liest Rollen und Sperre frisch aus der Datenbank. Die Rollen im Cookie und die Prüfungen der Oberfläche dienen nur der Bedienung. Ohne Recht liefert ein Command den Fehler `NotAllowed` bzw. `Blocked`, eine Query eine leere Liste.
+**Rechte prüft der Core** (Entscheid Marc, 18.10.2026). Jeder Command und jede Query mit geschützten Daten bekommt die Benutzer-ID und liest Rollen und Sperre frisch aus der Datenbank. Die Rollen im Cookie und die Prüfungen der Oberfläche dienen nur der Bedienung. Ohne Recht liefert ein Command den Fehler `NotAllowed`, bei einem gesperrten Konto immer `Blocked` (die Oberfläche zeigt «Dein Konto ist gesperrt»). Eine Query liefert ohne Recht eine leere Liste.
 
 **Alle können beitragen, Moderatoren geben frei** (Entscheid Marc, 17.10.2026, ADR-008). Wer ein Konto hat, kann Informationen zu Tauchplätzen beisteuern. Online sichtbar wird eine Änderung erst, wenn ein Moderator oder Admin sie freigibt. Jede Änderung ergibt eine Version, wie in einem Wiki. Die History zeigt Autor und Approver.
 
@@ -199,6 +199,7 @@ Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer D
 - Anmeldung mit ASP.NET Core Identity: E-Mail plus Passkey oder Passwort.
 - **Selbstregistrierung** für Mitwirkende (Entscheid Marc, 17.10.2026): E-Mail bestätigen, Anzeigename wählen (Pseudonym erlaubt). Öffentlich erscheint der Anzeigename nur mit Einwilligung (siehe «Datenschutz in der History»). Ab Phase 1 offen, im MVP ausgeschaltet (`Accounts:RegistrationOpen`).
 - Admins ernennen Moderatoren.
+- **Der letzte aktive Admin bleibt** (Entscheid Marc, 18.10.2026). Sperren, die Rolle Admin wegnehmen und das Konto löschen lehnt der Core mit `LastAdmin` ab, wenn danach kein Admin ohne Sperre übrig wäre.
 - Löscht jemand sein Konto, bleiben die Versionen. Autor bzw. Approver wird «gelöschtes Konto». Das erfüllt das Recht auf Löschung und hält die History vollständig.
 
 ## Slices im Code

@@ -30,6 +30,9 @@ public enum AccountError
     /// <summary>Das Konto ist gesperrt und ändert nichts mehr.</summary>
     Blocked,
 
+    /// <summary>Die Aktion liesse keinen aktiven Admin übrig.</summary>
+    LastAdmin,
+
     /// <summary>Unbekannter Fehler von Identity.</summary>
     Other,
 }
