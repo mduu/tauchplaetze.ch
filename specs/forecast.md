@@ -136,7 +136,7 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
 - **Zeitplan:** täglich 04:30 Lokalzeit (vollständiger Lauf) und 13:00 Lokalzeit (nur Wetter und Messwerte neu). Konfigurierbar.
 - **Dauer:** Alplakes braucht 5–30 s pro Call. Bei 100 Plätzen mit 3D-Abdeckung dauert ein Lauf darum einige Minuten. Das ist für einen Job am frühen Morgen genug.
 - **Lock:** nur ein Lauf gleichzeitig (Blob Lease `locks/forecast`, 60 s, alle 20 s erneuert). Hält ein anderer Lauf den Lock, endet der zweite sofort.
-- **Lokal:** `Forecast__RunOnStartup` startet einen Lauf beim Start der Web-App (Aspire).
+- **Lokal:** `Forecast__RunOnStartup` startet einen Lauf beim Start der Web-App (Aspire), ausser ein Lauf ohne Fehlschlag ist jünger als `Forecast__StartupMinAge` (Standard 6 h). So kostet nicht jeder Neustart rund 900 Calls.
 - **Profil eines Tages:** 12 Uhr Lokalzeit, höchstens 3 h vom nächsten Zeitschritt des Modells.
 - **Ablauf (Command `RunForecast`):**
   1. `ForecastRun` mit Status `Running` anlegen.

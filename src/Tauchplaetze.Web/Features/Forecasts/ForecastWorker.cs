@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Options;
 using Tauchplaetze.Core.CrossCutting.UseCases;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Commands;
+using Tauchplaetze.Core.Features.Forecasts.Queries;
 
 namespace Tauchplaetze.Web.Features.Forecasts;
 
@@ -10,7 +12,7 @@ internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSche
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (schedule.Value.RunOnStartup)
+        if (schedule.Value.RunOnStartup && !await RecentRunExists(stoppingToken))
         {
             await Run(stoppingToken);
         }
@@ -22,6 +24,20 @@ internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSche
             await Task.Delay(next - time.GetUtcNow(), time, stoppingToken);
             await Run(stoppingToken);
         }
+    }
+
+    private async Task<bool> RecentRunExists(CancellationToken ct)
+    {
+        await using var scope = scopes.CreateAsyncScope();
+        var runs = await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>>()
+            .Handle(new GetForecastRunsQuery(), ct);
+        var recent = runs.FirstOrDefault(r => r.Status != ForecastRunStatus.Failed && r.StartedAt > time.GetUtcNow() - schedule.Value.StartupMinAge);
+        if (recent is not null)
+        {
+            logger.LogInformation("Startup forecast run skipped, last run {RunId} at {StartedAt}", recent.Id, recent.StartedAt);
+        }
+
+        return recent is not null;
     }
 
     private async Task Run(CancellationToken ct)

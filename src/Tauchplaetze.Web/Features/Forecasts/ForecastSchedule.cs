@@ -10,8 +10,11 @@ internal class ForecastSchedule
     /// <summary>Uhrzeiten der Läufe in Lokalzeit.</summary>
     public List<TimeOnly> Times { get; set; } = [new(4, 30), new(13, 0)];
 
-    /// <summary>Ein Lauf direkt beim Start (lokal mit Aspire).</summary>
+    /// <summary>Ein Lauf direkt beim Start (lokal mit Aspire), ausser ein erfolgreicher Lauf ist jünger als <see cref="StartupMinAge"/>.</summary>
     public bool RunOnStartup { get; set; }
+
+    /// <summary>Schont die Quellen bei vielen Neustarts in der Entwicklung (rund 900 Calls pro Lauf bei 318 Plätzen).</summary>
+    public TimeSpan StartupMinAge { get; set; } = TimeSpan.FromHours(6);
 
     /// <summary>Der nächste Lauf nach <paramref name="now"/>, über Mitternacht und Zeitumstellung hinweg.</summary>
     public DateTimeOffset NextRun(DateTimeOffset now)
