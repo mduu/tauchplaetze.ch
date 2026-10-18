@@ -395,10 +395,9 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     {
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
         var moderator = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
-        await Command<ImportDiveSitesCommand, ImportDiveSitesResult>(new ImportDiveSitesCommand(moderator));
+        var site = await AddRiffWilliams(moderator);
         var anna = await Confirmed("anna@example.org", "Anna");
         Sql.Mail.Sent.Clear();
-        var site = (await Query<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>(new GetDiveSitesForEditingQuery())).Single().Id;
         return (moderator, anna, site);
     }
 

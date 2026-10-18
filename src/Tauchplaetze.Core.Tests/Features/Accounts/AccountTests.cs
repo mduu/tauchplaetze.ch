@@ -7,7 +7,6 @@ using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Accounts.Queries;
-using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.WaterBodies.Commands;
 using Tauchplaetze.Core.Tests.Sql;
 
@@ -140,7 +139,7 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
         // Arrange
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
         var admin = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin"), new AdminAccount("zweit@example.org", "Zweit")]))).UserIds[0];
-        await Command<ImportDiveSitesCommand, ImportDiveSitesResult>(new ImportDiveSitesCommand(admin));
+        await AddRiffWilliams(admin);
         var before = await Query<GetPersonalDataQuery, PersonalData?>(new GetPersonalDataQuery(admin));
 
         // Act

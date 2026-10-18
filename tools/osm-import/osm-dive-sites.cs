@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 const string Overpass = "https://overpass-api.de/api/interpreter";
 const string UserAgent = "tauchplaetze.ch osm-import (https://tauchplaetze.ch)";
 const string Query = """
-    [out:json][timeout:300];
+    [out:json][timeout:170];
     area["ISO3166-1"="CH"][admin_level=2]->.ch;
     nwr["sport"="scuba_diving"](area.ch)->.sites;
     foreach.sites->.s(
@@ -24,8 +24,6 @@ const string Query = """
       out tags center;
       (.s;node(w.s););is_in->.a;
       area.a[admin_level~"^(4|8)$"][boundary=administrative];
-      out tags;
-      area.a[natural=water][name];
       out tags;
     );
     """;
@@ -40,11 +38,11 @@ Directory.CreateDirectory(outDir);
 
 if (!args.Contains("--cached") || !File.Exists(rawPath))
 {
-    await File.WriteAllTextAsync(rawPath, await Download());
+    await File.WriteAllTextAsync(rawPath, await Download(Query));
 }
 
 var elements = JsonNode.Parse(await File.ReadAllTextAsync(rawPath))!["elements"]!.AsArray();
-var candidates = Candidates(elements).ToList();
+var candidates = await WithSurroundingWater(Candidates(elements).ToList(), Path.Combine(outDir, "surrounding-water.json"));
 var review = new Review();
 
 var waterSeeds = JsonNode.Parse(await File.ReadAllTextAsync(waterSeedPath))!.AsArray();
@@ -127,40 +125,68 @@ static string FindRepositoryRoot()
     return directory?.FullName ?? throw new InvalidOperationException("Aufruf aus dem Repository tauchplaetze.ch nötig.");
 }
 
-static async Task<string> Download()
+// Über curl statt HttpClient: .NET baut zu overpass-api.de keine TLS-Verbindung auf (macOS, 18.10.2026), curl schon.
+static async Task<string> Download(string query)
 {
-    using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(6) };
-    http.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
     var delay = TimeSpan.FromSeconds(15);
 
     for (var attempt = 1; ; attempt++)
     {
-        string problem;
-        try
+        var curl = new System.Diagnostics.ProcessStartInfo("curl", ["-s", "--max-time", "240", "-A", UserAgent, Overpass, "--data-urlencode", $"data={query}"])
         {
-            using var response = await http.PostAsync(Overpass, new FormUrlEncodedContent([new("data", Query)]));
-            var body = await response.Content.ReadAsStringAsync();
-            if (response.IsSuccessStatusCode && body.TrimStart().StartsWith('{'))
-            {
-                return body;
-            }
-
-            problem = $"HTTP {(int)response.StatusCode}";
-        }
-        catch (Exception exception) when (exception is HttpRequestException or TaskCanceledException)
+            RedirectStandardOutput = true,
+        };
+        using var process = System.Diagnostics.Process.Start(curl)!;
+        var body = await process.StandardOutput.ReadToEndAsync();
+        await process.WaitForExitAsync();
+        if (process.ExitCode == 0 && body.TrimStart().StartsWith('{'))
         {
-            problem = exception.GetType().Name;
+            return body;
         }
 
-        if (attempt == 5)
+        var problem = process.ExitCode == 0 ? body.Split('\n').FirstOrDefault()?.Trim('#', ' ') : $"curl {process.ExitCode}";
+        if (attempt == 6)
         {
-            throw new HttpRequestException($"Overpass antwortet nicht ({problem}).");
+            throw new InvalidOperationException($"Overpass antwortet nicht ({problem}).");
         }
 
-        Console.WriteLine($"Overpass ausgelastet ({problem}), neuer Versuch in {delay.TotalSeconds} s.");
+        Console.WriteLine($"Overpass: {problem}, neuer Versuch in {delay.TotalSeconds} s.");
         await Task.Delay(delay);
         delay *= 2;
     }
+}
+
+// Punkte mitten in einem grossen See liegen weiter als 300 m vom Ufer. Für sie fragt eine leichte Query nach der Fläche, in der sie liegen.
+static async Task<List<Candidate>> WithSurroundingWater(List<Candidate> candidates, string cachePath)
+{
+    var cache = File.Exists(cachePath)
+        ? JsonSerializer.Deserialize<Dictionary<string, JsonArray>>(await File.ReadAllTextAsync(cachePath))!
+        : [];
+    var result = new List<Candidate>();
+
+    foreach (var candidate in candidates)
+    {
+        if (candidate.Water is not null || candidate.Name is null)
+        {
+            result.Add(candidate);
+            continue;
+        }
+
+        if (!cache.TryGetValue(candidate.OsmId, out var areas))
+        {
+            var query = FormattableString.Invariant(
+                $"[out:json][timeout:60];is_in({candidate.Latitude},{candidate.Longitude})->.a;area.a[natural=water][name];out tags;");
+            areas = JsonNode.Parse(await Download(query))!["elements"]!.AsArray();
+            cache[candidate.OsmId] = areas;
+            await File.WriteAllTextAsync(cachePath, JsonSerializer.Serialize(cache));
+            await Task.Delay(TimeSpan.FromSeconds(1));
+        }
+
+        var waters = areas.Select(a => Water.From(a!["tags"]!.AsObject(), a, candidate.Latitude, candidate.Longitude)).OfType<Water>().ToList();
+        result.Add(candidate with { Water = Water.Choose(waters, candidate) });
+    }
+
+    return result;
 }
 
 static IEnumerable<Candidate> Candidates(JsonArray elements)

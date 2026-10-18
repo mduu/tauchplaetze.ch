@@ -8,17 +8,17 @@ namespace Tauchplaetze.Core.Tests.Features.WaterBodies;
 public class SeedWaterBodiesTests(SqlServer sql) : SqlTest(sql)
 {
     [SqlFact]
-    public async Task Der_Seed_legt_Zuerichsee_Zugersee_und_Rhein_an_und_ein_zweiter_Lauf_aendert_nichts()
+    public async Task Der_Seed_legt_die_Gewaesser_an_und_ein_zweiter_Lauf_aendert_nichts()
     {
         // Act
         var first = await Seed();
         var second = await Seed();
 
         // Assert
-        Assert.Equal(3, first.Added);
         Assert.Equal(0, second.Added);
         var waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"));
-        Assert.Equal(["Rhein", "Zugersee", "Zürichsee"], waterBodies.Select(w => w.Name));
+        Assert.Equal(first.Added, waterBodies.Count);
+        Assert.Subset(waterBodies.Select(w => w.Name).ToHashSet(), new HashSet<string> { "Rhein", "Zugersee", "Zürichsee" });
         Assert.Equal(WaterBodyType.River, waterBodies.Single(w => w.Slug == "rhein").Type);
     }
 

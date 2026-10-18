@@ -1,3 +1,6 @@
+using Tauchplaetze.Core.Features.Editorial.Commands;
+using Tauchplaetze.Core.Features.WaterBodies.Queries;
+using Tauchplaetze.Core.Features.WaterBodies;
 using System.Runtime.CompilerServices;
 using DotNet.Testcontainers.Configurations;
 using Microsoft.Data.SqlClient;
@@ -151,6 +154,16 @@ public abstract class SqlTest(SqlServer sql) : IAsyncLifetime
     {
         await using var scope = sql.Services.CreateAsyncScope();
         return await scope.ServiceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>().Handle(query, TestContext.Current.CancellationToken);
+    }
+
+    /// <summary>Legt Riff Williams am Zürichsee an, freigegeben von <paramref name="moderatorId"/>. Die Gewässer müssen geseedet sein.</summary>
+    protected async Task<Guid> AddRiffWilliams(string moderatorId)
+    {
+        var waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"));
+        var lake = waterBodies.Single(w => w.Slug == "zuerichsee").Id;
+        var result = await Command<ProposeDiveSiteCommand, EditorialResult>(
+            new ProposeDiveSiteCommand(moderatorId, "Riff Williams", lake, 47.2849, 8.6085, "Herrliberg", "ZH", null));
+        return result.DiveSiteId ?? throw new InvalidOperationException(string.Join(", ", result.Errors));
     }
 }
 

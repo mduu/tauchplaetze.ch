@@ -1,8 +1,5 @@
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
-using Tauchplaetze.Core.Features.DiveSites;
-using Tauchplaetze.Core.Features.DiveSites.Queries;
-using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Commands;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
@@ -153,9 +150,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     {
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
         var admins = await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]));
-        await Command<ImportDiveSitesCommand, ImportDiveSitesResult>(new ImportDiveSitesCommand(admins.UserIds[0]));
-        var site = await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "de"));
-        return ((DiveSiteLookup.Found)site).Site.Id;
+        return await AddRiffWilliams(admins.UserIds[0]);
     }
 
     private static IEnumerable<DateOnly> Days(params int[] october) => october.Select(day => new DateOnly(2026, 10, day));
