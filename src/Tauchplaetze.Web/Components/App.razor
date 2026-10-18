@@ -14,16 +14,35 @@
     <link rel="stylesheet" href="@Assets["css/fonts.css"]" />
     <link rel="stylesheet" href="@Assets["css/tokens.css"]" />
     <link rel="stylesheet" href="@Assets["css/base.css"]" />
+    @if (IsAdmin)
+    {
+        <link rel="stylesheet" href="@Assets["_content/MudBlazor/MudBlazor.min.css"]" />
+    }
     <link rel="stylesheet" href="@Assets["Tauchplaetze.Web.styles.css"]" />
     <ImportMap />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="PageRenderMode" />
 </head>
 
 <body>
-    <Routes />
+    <Routes @rendermode="PageRenderMode" />
     <script src="_framework/blazor.web.js"></script>
     <script src="@Assets["lib/leaflet/leaflet.js"]"></script>
     <script src="@Assets["js/map.js"]"></script>
+    @if (IsAdmin)
+    {
+        <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
+        <script src="@Assets["js/admin.js"]"></script>
+    }
 </body>
 
 </html>
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    /// <summary>Nur der Redaktionsbereich ist interaktiv (ADR-001). Die öffentlichen Seiten bleiben Static SSR.</summary>
+    private bool IsAdmin => HttpContext.Request.Path.StartsWithSegments("/admin");
+
+    private IComponentRenderMode? PageRenderMode => IsAdmin ? InteractiveServer : null;
+}

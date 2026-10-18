@@ -1,0 +1,55 @@
+@page "/admin/prognose"
+@layout AdminLayout
+@attribute [Authorize(Roles = "Moderator,Admin")]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Forecasts.Commands
+@using Tauchplaetze.Core.Features.Forecasts.Queries
+
+<div class="d-flex align-center justify-space-between mb-4">
+    <MudText Typo="Typo.h4">@L["Forecast_Title"]</MudText>
+    @if (IsAdmin)
+    {
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="RunNow" Disabled="running">@L["Forecast_RunNow"]</MudButton>
+    }
+</div>
+@if (running)
+{
+    <MudAlert Severity="Severity.Info" Class="mb-4">@L["Forecast_Running"]</MudAlert>
+    <MudProgressLinear Indeterminate="true" Class="mb-4" />
+}
+
+<MudStack Spacing="3">
+    @foreach (var run in runs)
+    {
+        <MudPaper Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.h6">@run.StartedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture) · @L[$"RunStatus_{run.Status}"]</MudText>
+            <MudText Typo="Typo.body2">@L["Forecast_Calls", run.Calls]</MudText>
+            @if (run.Failures.Count > 0)
+            {
+                <MudText Typo="Typo.subtitle2" Class="mt-2">@L["Forecast_Failures"]</MudText>
+                @foreach (var failure in run.Failures)
+                {
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">@failure</MudText>
+                }
+            }
+        </MudPaper>
+    }
+</MudStack>
+
+@code {
+    private IReadOnlyList<ForecastRunSummary> runs = [];
+
+    private bool running;
+
+    protected override async Task Load() =>
+        runs = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery());
+
+    private async Task RunNow()
+    {
+        running = true;
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+        running = false;
+        await Load();
+    }
+}

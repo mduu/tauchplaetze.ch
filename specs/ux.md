@@ -22,6 +22,7 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 /{lang}/gewaesser               Gewässer-Übersicht (Seen und Flüsse)
 /{lang}/gewaesser/{slug}        Gewässerseite
 /{lang}/ueber                   Über, Datenquellen, Impressum, Datenschutz
+/{lang}/site/{slug}             kurzer Link auf einen Platz (Mails, CMS), 301 auf den Pfad der Sprache
 /admin/…                        Redaktion (ohne Sprachpräfix)
 ```
 

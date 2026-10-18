@@ -1,0 +1,30 @@
+@using Tauchplaetze.Core.Features.Editorial
+@inject IStringLocalizer<AdminStrings> L
+
+@if (Changes is null || Changes.Count == 0)
+{
+    <MudText Typo="Typo.body2">@L["Diff_None"]</MudText>
+}
+else
+{
+    <MudSimpleTable Dense="true" Outlined="true" Class="diff">
+        <thead>
+            <tr><th></th><th>@L["Diff_Old"]</th><th>@L["Diff_New"]</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var change in Changes)
+            {
+                <tr>
+                    <td class="diff-field">@FieldLabels.For(L, change.Field)</td>
+                    <td class="diff-old">@change.Old</td>
+                    <td class="diff-new">@change.New</td>
+                </tr>
+            }
+        </tbody>
+    </MudSimpleTable>
+}
+
+@code {
+    [Parameter]
+    public IReadOnlyList<FieldChange>? Changes { get; set; }
+}

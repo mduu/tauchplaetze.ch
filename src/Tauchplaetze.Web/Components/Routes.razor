@@ -1,5 +1,18 @@
+@inject IStringLocalizer<AdminStrings> L
+
 <Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Features.Shared.NotFoundPage)">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(PublicLayout)" />
+        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(PublicLayout)">
+            <NotAuthorized>
+                @if (context.User.Identity?.IsAuthenticated == true)
+                {
+                    <p class="not-allowed">@L["Error_NotAllowed"]</p>
+                }
+                else
+                {
+                    <RedirectToSignIn />
+                }
+            </NotAuthorized>
+        </AuthorizeRouteView>
     </Found>
 </Router>

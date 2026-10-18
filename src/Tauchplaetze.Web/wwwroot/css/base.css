@@ -274,3 +274,13 @@ a:hover {
 .references li {
   margin-bottom: 6px;
 }
+
+.admin-map {
+  height: 320px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.admin-main .mud-table {
+  background: transparent;
+}

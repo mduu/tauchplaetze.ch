@@ -1,0 +1,171 @@
+using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Web.CrossCutting.Localization;
+
+namespace Tauchplaetze.Web.Features.Editorial;
+
+/// <summary>Bearbeitbare Fassung eines <see cref="DiveSiteContent"/> für die Formulare des CMS. Texte gibt es für alle vier Sprachen.</summary>
+internal class SiteForm
+{
+    public string Name { get; set; } = "";
+
+    public string Slug { get; set; } = "";
+
+    public int WaterBodyId { get; set; }
+
+    public double Latitude { get; set; }
+
+    public double Longitude { get; set; }
+
+    public string? Municipality { get; set; }
+
+    public string? Canton { get; set; }
+
+    public int? MaxDepth { get; set; }
+
+    public Dictionary<string, byte?> Ratings { get; } = [];
+
+    public DiveSiteAccess? Access { get; set; }
+
+    public HashSet<DiveSiteFeatures> Features { get; } = [];
+
+    public bool HasDivingBan { get; set; }
+
+    public string? InflowStationOverride { get; set; }
+
+    public double? SatelliteLatitude { get; set; }
+
+    public double? SatelliteLongitude { get; set; }
+
+    public bool ForecastDisabled { get; set; }
+
+    public Dictionary<string, TextForm> Texts { get; } = Languages.All.ToDictionary(l => l, _ => new TextForm());
+
+    public List<EntryForm> EntryPoints { get; } = [];
+
+    public string? Comment { get; set; }
+
+    public static readonly string[] RatingFields = ["DifficultyRating", "WallRating", "MarineLifeRating", "WrecksRating", "CurrentRating", "SurroundingsRating"];
+
+    public static readonly DiveSiteFeatures[] AllFeatures = [DiveSiteFeatures.Plateau, DiveSiteFeatures.Cave, DiveSiteFeatures.River, DiveSiteFeatures.IceDiving, DiveSiteFeatures.Training];
+
+    public static SiteForm From(DiveSiteContent content)
+    {
+        var form = new SiteForm
+        {
+            Name = content.Name,
+            Slug = content.Slug,
+            WaterBodyId = content.WaterBodyId,
+            Latitude = content.Latitude,
+            Longitude = content.Longitude,
+            Municipality = content.Municipality,
+            Canton = content.Canton,
+            MaxDepth = content.MaxDepth,
+            Access = content.Access,
+            HasDivingBan = content.HasDivingBan,
+            InflowStationOverride = content.InflowStationOverride,
+            SatelliteLatitude = content.SatelliteLatitude,
+            SatelliteLongitude = content.SatelliteLongitude,
+            ForecastDisabled = content.ForecastDisabled,
+        };
+        form.Ratings["DifficultyRating"] = content.DifficultyRating;
+        form.Ratings["WallRating"] = content.WallRating;
+        form.Ratings["MarineLifeRating"] = content.MarineLifeRating;
+        form.Ratings["WrecksRating"] = content.WrecksRating;
+        form.Ratings["CurrentRating"] = content.CurrentRating;
+        form.Ratings["SurroundingsRating"] = content.SurroundingsRating;
+        form.Features.UnionWith(AllFeatures.Where(f => content.Features.HasFlag(f)));
+
+        foreach (var text in content.Translations.Where(t => form.Texts.ContainsKey(t.Culture)))
+        {
+            form.Texts[text.Culture] = new TextForm
+            {
+                UnderwaterDescription = text.UnderwaterDescription,
+                SurroundingsInfo = text.SurroundingsInfo,
+                ApproachInfo = text.ApproachInfo,
+                HazardsInfo = text.HazardsInfo,
+                FacilitiesInfo = text.FacilitiesInfo,
+                DivingBanNote = text.DivingBanNote,
+                IsMachineTranslated = text.IsMachineTranslated,
+            };
+        }
+
+        form.EntryPoints.AddRange(content.EntryPointList.Select(e => EntryForm.From(e)));
+        return form;
+    }
+
+    public DiveSiteContent ToContent() => new(
+        Name,
+        Slug,
+        WaterBodyId,
+        Latitude,
+        Longitude,
+        Municipality,
+        Canton,
+        MaxDepth,
+        Ratings.GetValueOrDefault("DifficultyRating"),
+        Ratings.GetValueOrDefault("WallRating"),
+        Ratings.GetValueOrDefault("MarineLifeRating"),
+        Ratings.GetValueOrDefault("WrecksRating"),
+        Ratings.GetValueOrDefault("CurrentRating"),
+        Ratings.GetValueOrDefault("SurroundingsRating"),
+        Access,
+        Features.Aggregate(DiveSiteFeatures.None, (all, f) => all | f),
+        HasDivingBan,
+        InflowStationOverride,
+        SatelliteLatitude,
+        SatelliteLongitude,
+        ForecastDisabled,
+        [.. Texts.Select(t => new DiveSiteContentTranslation(t.Key, t.Value.UnderwaterDescription, t.Value.SurroundingsInfo, t.Value.ApproachInfo,
+            t.Value.HazardsInfo, t.Value.FacilitiesInfo, t.Value.DivingBanNote, t.Value.IsMachineTranslated)).Where(HasText)],
+        [.. EntryPoints.Select(e => e.ToContent())]);
+
+    private static bool HasText(DiveSiteContentTranslation t) =>
+        new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));
+}
+
+internal class TextForm
+{
+    public string? UnderwaterDescription { get; set; }
+
+    public string? SurroundingsInfo { get; set; }
+
+    public string? ApproachInfo { get; set; }
+
+    public string? HazardsInfo { get; set; }
+
+    public string? FacilitiesInfo { get; set; }
+
+    public string? DivingBanNote { get; set; }
+
+    public bool IsMachineTranslated { get; set; }
+}
+
+internal class EntryForm
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    public double Latitude { get; set; }
+
+    public double Longitude { get; set; }
+
+    public EntryPointKind Kind { get; set; }
+
+    public Dictionary<string, (string? Name, string? Description)> Texts { get; } = Languages.All.ToDictionary(l => l, _ => ((string?)null, (string?)null));
+
+    public static EntryForm From(EntryPointContent entry)
+    {
+        var form = new EntryForm { Id = entry.Id, Latitude = entry.Latitude, Longitude = entry.Longitude, Kind = entry.Kind };
+        foreach (var text in entry.Texts.Where(t => form.Texts.ContainsKey(t.Culture)))
+        {
+            form.Texts[text.Culture] = (text.Name, text.Description);
+        }
+
+        return form;
+    }
+
+    public EntryPointContent ToContent() => new(
+        Id, Latitude, Longitude, Kind,
+        [.. Texts.Where(t => !string.IsNullOrWhiteSpace(t.Value.Name) || !string.IsNullOrWhiteSpace(t.Value.Description))
+            .Select(t => new EntryPointText(t.Key, t.Value.Name, t.Value.Description))]);
+}

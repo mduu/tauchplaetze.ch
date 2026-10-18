@@ -1,0 +1,17 @@
+::deep .diff td {
+    vertical-align: top;
+    white-space: pre-wrap;
+}
+
+::deep .diff-field {
+    width: 26%;
+    color: var(--color-text-subtle);
+}
+
+::deep .diff-old {
+    color: #d9a3a3;
+}
+
+::deep .diff-new {
+    color: var(--color-primary);
+}

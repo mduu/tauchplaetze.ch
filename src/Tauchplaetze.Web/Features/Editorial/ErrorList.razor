@@ -1,0 +1,17 @@
+@using Tauchplaetze.Core.Features.Editorial
+@inject IStringLocalizer<AdminStrings> L
+
+@if (Errors.Count > 0)
+{
+    <MudAlert Severity="Severity.Error" Class="mb-4">
+        @foreach (var error in Errors)
+        {
+            <div>@L[$"Error_{error}"]</div>
+        }
+    </MudAlert>
+}
+
+@code {
+    [Parameter]
+    public IReadOnlyList<EditorialError> Errors { get; set; } = [];
+}

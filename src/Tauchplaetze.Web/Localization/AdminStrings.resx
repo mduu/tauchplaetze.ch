@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Title" xml:space="preserve"><value>Redaktion</value></data>
+  <data name="Nav_Dashboard" xml:space="preserve"><value>Übersicht</value></data>
+  <data name="Nav_Sites" xml:space="preserve"><value>Plätze</value></data>
+  <data name="Nav_Pending" xml:space="preserve"><value>Vorschläge</value></data>
+  <data name="Nav_Accounts" xml:space="preserve"><value>Konten</value></data>
+  <data name="Nav_Forecast" xml:space="preserve"><value>Prognose</value></data>
+  <data name="Nav_Public" xml:space="preserve"><value>Zur Website</value></data>
+  <data name="Dashboard_Welcome" xml:space="preserve"><value>Hallo {0}</value></data>
+  <data name="Dashboard_Sites" xml:space="preserve"><value>Plätze</value></data>
+  <data name="Dashboard_Pending" xml:space="preserve"><value>Offene Vorschläge</value></data>
+  <data name="Dashboard_LastRun" xml:space="preserve"><value>Letzter Prognose-Lauf</value></data>
+  <data name="Dashboard_NoRun" xml:space="preserve"><value>Noch kein Lauf.</value></data>
+  <data name="Dashboard_ContributorHint" xml:space="preserve"><value>Als Mitwirkende schlägst du Änderungen vor. Eine Moderatorin oder ein Moderator gibt sie frei.</value></data>
+  <data name="Sites_Title" xml:space="preserve"><value>Plätze</value></data>
+  <data name="Sites_Search" xml:space="preserve"><value>Suche nach Name</value></data>
+  <data name="Sites_New" xml:space="preserve"><value>Neuer Platz</value></data>
+  <data name="Column_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Column_Water" xml:space="preserve"><value>Gewässer</value></data>
+  <data name="Column_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Column_ContentLevel" xml:space="preserve"><value>Ausbaustufe</value></data>
+  <data name="Column_DataLevel" xml:space="preserve"><value>Datenstufe</value></data>
+  <data name="Column_Pending" xml:space="preserve"><value>Offen</value></data>
+  <data name="Column_Updated" xml:space="preserve"><value>Geändert</value></data>
+  <data name="SiteStatus_Draft" xml:space="preserve"><value>Entwurf</value></data>
+  <data name="SiteStatus_Published" xml:space="preserve"><value>Öffentlich</value></data>
+  <data name="SiteStatus_Archived" xml:space="preserve"><value>Archiviert</value></data>
+  <data name="New_Title" xml:space="preserve"><value>Neuen Platz vorschlagen</value></data>
+  <data name="New_Lead" xml:space="preserve"><value>Name, Gewässer und Koordinate genügen. Alles andere kannst du später ergänzen.</value></data>
+  <data name="New_Submit" xml:space="preserve"><value>Platz vorschlagen</value></data>
+  <data name="Field_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Field_Slug" xml:space="preserve"><value>Slug (URL)</value></data>
+  <data name="Field_WaterBodyId" xml:space="preserve"><value>Gewässer</value></data>
+  <data name="Field_Location" xml:space="preserve"><value>Koordinate</value></data>
+  <data name="Field_Latitude" xml:space="preserve"><value>Breite (N)</value></data>
+  <data name="Field_Longitude" xml:space="preserve"><value>Länge (E)</value></data>
+  <data name="Field_Municipality" xml:space="preserve"><value>Gemeinde</value></data>
+  <data name="Field_Canton" xml:space="preserve"><value>Kanton</value></data>
+  <data name="Field_MaxDepth" xml:space="preserve"><value>Maximaltiefe (m)</value></data>
+  <data name="Field_DifficultyRating" xml:space="preserve"><value>Schwierigkeit</value></data>
+  <data name="Field_WallRating" xml:space="preserve"><value>Steilwand</value></data>
+  <data name="Field_MarineLifeRating" xml:space="preserve"><value>UW-Leben</value></data>
+  <data name="Field_WrecksRating" xml:space="preserve"><value>Wracks und Gegenstände</value></data>
+  <data name="Field_CurrentRating" xml:space="preserve"><value>Strömung</value></data>
+  <data name="Field_SurroundingsRating" xml:space="preserve"><value>Umgebung</value></data>
+  <data name="Field_Access" xml:space="preserve"><value>Zugang</value></data>
+  <data name="Field_Features" xml:space="preserve"><value>Eigenschaften</value></data>
+  <data name="Field_HasDivingBan" xml:space="preserve"><value>Tauchverbot</value></data>
+  <data name="Field_InflowStationOverride" xml:space="preserve"><value>BAFU-Station (statt der Stationen des Gewässers)</value></data>
+  <data name="Field_SatellitePoint" xml:space="preserve"><value>Satellitenpunkt</value></data>
+  <data name="Field_SatelliteLatitude" xml:space="preserve"><value>Satellitenpunkt Breite</value></data>
+  <data name="Field_SatelliteLongitude" xml:space="preserve"><value>Satellitenpunkt Länge</value></data>
+  <data name="Field_ForecastDisabled" xml:space="preserve"><value>Prognose ausschalten</value></data>
+  <data name="Field_UnderwaterDescription" xml:space="preserve"><value>Unter Wasser</value></data>
+  <data name="Field_SurroundingsInfo" xml:space="preserve"><value>Umgebung</value></data>
+  <data name="Field_ApproachInfo" xml:space="preserve"><value>Anfahrt und Parkplatz</value></data>
+  <data name="Field_HazardsInfo" xml:space="preserve"><value>Gefahren</value></data>
+  <data name="Field_FacilitiesInfo" xml:space="preserve"><value>Restaurants und Toiletten</value></data>
+  <data name="Field_DivingBanNote" xml:space="preserve"><value>Erklärung zum Tauchverbot</value></data>
+  <data name="Field_EntryPoint" xml:space="preserve"><value>Einstieg {0}</value></data>
+  <data name="Field_EntryName" xml:space="preserve"><value>Name</value></data>
+  <data name="Field_EntryDescription" xml:space="preserve"><value>Beschreibung</value></data>
+  <data name="Field_EntryKind" xml:space="preserve"><value>Art</value></data>
+  <data name="Field_Comment" xml:space="preserve"><value>Änderungsnotiz</value></data>
+  <data name="Rating_None" xml:space="preserve"><value>nicht bewertet</value></data>
+  <data name="Access_Shore" xml:space="preserve"><value>Ufer</value></data>
+  <data name="Access_Boat" xml:space="preserve"><value>Boot</value></data>
+  <data name="Access_ShoreAndBoat" xml:space="preserve"><value>Ufer und Boot</value></data>
+  <data name="Feature_Plateau" xml:space="preserve"><value>Plateau</value></data>
+  <data name="Feature_Cave" xml:space="preserve"><value>Höhle</value></data>
+  <data name="Feature_River" xml:space="preserve"><value>Fluss</value></data>
+  <data name="Feature_IceDiving" xml:space="preserve"><value>Eistauchen</value></data>
+  <data name="Feature_Training" xml:space="preserve"><value>Ausbildung</value></data>
+  <data name="Kind_EntryAndExit" xml:space="preserve"><value>Ein- und Ausstieg</value></data>
+  <data name="Kind_Entry" xml:space="preserve"><value>Einstieg</value></data>
+  <data name="Kind_Exit" xml:space="preserve"><value>Ausstieg</value></data>
+  <data name="Edit_Tab_Basics" xml:space="preserve"><value>Grunddaten</value></data>
+  <data name="Edit_Tab_Ratings" xml:space="preserve"><value>Bewertungen</value></data>
+  <data name="Edit_Tab_Texts" xml:space="preserve"><value>Texte</value></data>
+  <data name="Edit_Tab_EntryPoints" xml:space="preserve"><value>Einstiege</value></data>
+  <data name="Edit_Tab_Moderation" xml:space="preserve"><value>Nur Moderation</value></data>
+  <data name="Edit_AddEntryPoint" xml:space="preserve"><value>Einstieg hinzufügen</value></data>
+  <data name="Edit_Remove" xml:space="preserve"><value>Entfernen</value></data>
+  <data name="Edit_Save_Contributor" xml:space="preserve"><value>Als Vorschlag speichern</value></data>
+  <data name="Edit_Save_Moderator" xml:space="preserve"><value>Speichern und freigeben</value></data>
+  <data name="Edit_Saved_Pending" xml:space="preserve"><value>Gespeichert. Dein Vorschlag wartet auf Freigabe.</value></data>
+  <data name="Edit_Saved_Approved" xml:space="preserve"><value>Gespeichert und online.</value></data>
+  <data name="Edit_NoChange" xml:space="preserve"><value>Nichts geändert.</value></data>
+  <data name="Edit_BaseInfo" xml:space="preserve"><value>Du bearbeitest Version {0}.</value></data>
+  <data name="Edit_PendingInfo" xml:space="preserve"><value>Offene Vorschläge zu diesem Platz: {0}</value></data>
+  <data name="Edit_Versions" xml:space="preserve"><value>Versionen</value></data>
+  <data name="Edit_ViewPublic" xml:space="preserve"><value>Öffentliche Seite</value></data>
+  <data name="Edit_Archive" xml:space="preserve"><value>Archivieren</value></data>
+  <data name="Edit_Unarchive" xml:space="preserve"><value>Wieder öffentlich</value></data>
+  <data name="Edit_MapHint" xml:space="preserve"><value>Klick in die Karte setzt die Koordinate.</value></data>
+  <data name="Error_InvalidName" xml:space="preserve"><value>Der Name braucht 1 bis 120 Zeichen.</value></data>
+  <data name="Error_UnknownWaterBody" xml:space="preserve"><value>Wähle ein Gewässer.</value></data>
+  <data name="Error_LocationOutsideSwitzerland" xml:space="preserve"><value>Die Koordinate liegt nicht in der Schweiz.</value></data>
+  <data name="Error_InvalidRating" xml:space="preserve"><value>Eine Bewertung liegt nicht zwischen 1 und 5.</value></data>
+  <data name="Error_InvalidSlug" xml:space="preserve"><value>Der Slug ist ungültig oder vergeben.</value></data>
+  <data name="Error_TooManyPending" xml:space="preserve"><value>Du hast schon 20 offene Vorschläge. Warte auf die Freigabe.</value></data>
+  <data name="Error_NotPending" xml:space="preserve"><value>Dieser Vorschlag wartet nicht mehr auf Freigabe.</value></data>
+  <data name="Error_NotAllowed" xml:space="preserve"><value>Das dürfen nur Moderation und Admin.</value></data>
+  <data name="Error_NotFound" xml:space="preserve"><value>Nicht gefunden.</value></data>
+  <data name="Error_Blocked" xml:space="preserve"><value>Dein Konto ist gesperrt.</value></data>
+  <data name="Pending_Title" xml:space="preserve"><value>Vorschläge prüfen</value></data>
+  <data name="Pending_None" xml:space="preserve"><value>Keine offenen Vorschläge.</value></data>
+  <data name="Pending_By" xml:space="preserve"><value>Version {0} von {1}, {2}</value></data>
+  <data name="Pending_Outdated" xml:space="preserve"><value>Die Basis ist veraltet: Seit dem Vorschlag wurde eine andere Version freigegeben. Übernimm die Änderung von Hand oder lehne ab.</value></data>
+  <data name="Pending_Approve" xml:space="preserve"><value>Freigeben</value></data>
+  <data name="Pending_Reject" xml:space="preserve"><value>Ablehnen</value></data>
+  <data name="Pending_Reason" xml:space="preserve"><value>Begründung</value></data>
+  <data name="Pending_Changes" xml:space="preserve"><value>Änderungen zur Basis</value></data>
+  <data name="Pending_Done" xml:space="preserve"><value>Erledigt.</value></data>
+  <data name="Diff_Old" xml:space="preserve"><value>Vorher</value></data>
+  <data name="Diff_New" xml:space="preserve"><value>Nachher</value></data>
+  <data name="Diff_None" xml:space="preserve"><value>Keine Unterschiede.</value></data>
+  <data name="Versions_Title" xml:space="preserve"><value>Versionen von {0}</value></data>
+  <data name="Versions_Compare" xml:space="preserve"><value>Mit Vorgänger vergleichen</value></data>
+  <data name="Versions_Restore" xml:space="preserve"><value>Wiederherstellen</value></data>
+  <data name="Versions_Author" xml:space="preserve"><value>Autor</value></data>
+  <data name="Versions_Reviewer" xml:space="preserve"><value>Freigabe</value></data>
+  <data name="Versions_DeletedAccount" xml:space="preserve"><value>gelöschtes Konto</value></data>
+  <data name="Revision_Pending" xml:space="preserve"><value>wartet</value></data>
+  <data name="Revision_Approved" xml:space="preserve"><value>freigegeben</value></data>
+  <data name="Revision_Rejected" xml:space="preserve"><value>abgelehnt</value></data>
+  <data name="Revision_Withdrawn" xml:space="preserve"><value>zurückgezogen</value></data>
+  <data name="Accounts_Title" xml:space="preserve"><value>Konten</value></data>
+  <data name="Accounts_Block" xml:space="preserve"><value>Sperren</value></data>
+  <data name="Accounts_Unblock" xml:space="preserve"><value>Sperre aufheben</value></data>
+  <data name="Accounts_Blocked" xml:space="preserve"><value>gesperrt</value></data>
+  <data name="Accounts_Unconfirmed" xml:space="preserve"><value>nicht bestätigt</value></data>
+  <data name="Role_Contributor" xml:space="preserve"><value>Mitwirkende</value></data>
+  <data name="Role_Moderator" xml:space="preserve"><value>Moderation</value></data>
+  <data name="Role_Admin" xml:space="preserve"><value>Admin</value></data>
+  <data name="Forecast_Title" xml:space="preserve"><value>Prognose-Läufe</value></data>
+  <data name="Forecast_RunNow" xml:space="preserve"><value>Lauf jetzt starten</value></data>
+  <data name="Forecast_Running" xml:space="preserve"><value>Der Lauf läuft. Das dauert einige Minuten.</value></data>
+  <data name="Forecast_Calls" xml:space="preserve"><value>{0} Calls</value></data>
+  <data name="Forecast_Failures" xml:space="preserve"><value>Fehler</value></data>
+  <data name="RunStatus_Running" xml:space="preserve"><value>läuft</value></data>
+  <data name="RunStatus_Succeeded" xml:space="preserve"><value>erfolgreich</value></data>
+  <data name="RunStatus_PartiallySucceeded" xml:space="preserve"><value>Teilerfolg</value></data>
+  <data name="RunStatus_Failed" xml:space="preserve"><value>fehlgeschlagen</value></data>
+  <data name="Language_Label" xml:space="preserve"><value>Sprache</value></data>
+  <data name="Comment_None" xml:space="preserve"><value>ohne Notiz</value></data>
+</root>

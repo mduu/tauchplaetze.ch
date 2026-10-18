@@ -1,0 +1,82 @@
+@page "/admin/plaetze/{Id:guid}/versionen"
+@layout AdminLayout
+@attribute [Authorize]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Core.Features.Editorial.Commands
+@using Tauchplaetze.Core.Features.Editorial.Queries
+
+<MudText Typo="Typo.h4" Class="mb-4">@L["Versions_Title", name]</MudText>
+<ErrorList Errors="errors" />
+
+<MudStack Spacing="3">
+    @foreach (var revision in revisions)
+    {
+        <MudPaper Outlined="true" Class="pa-4">
+            <div class="d-flex justify-space-between flex-wrap gap-2">
+                <div>
+                    <MudText Typo="Typo.h6">#@revision.Number · @L[$"Revision_{revision.Status}"]</MudText>
+                    <MudText Typo="Typo.body2">
+                        @L["Versions_Author"]: @(revision.AuthorName ?? L["Versions_DeletedAccount"]) · @revision.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)
+                        @if (revision.ReviewedAt is { } reviewed)
+                        {
+                            <span> · @L["Versions_Reviewer"]: @(revision.ReviewerName ?? L["Versions_DeletedAccount"]), @reviewed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)</span>
+                        }
+                    </MudText>
+                    <MudText Typo="Typo.body2">«@(revision.Comment ?? L["Comment_None"])»</MudText>
+                    @if (revision.ReviewComment is not null)
+                    {
+                        <MudText Typo="Typo.body2" Color="Color.Secondary">@revision.ReviewComment</MudText>
+                    }
+                </div>
+                <MudStack Row="true">
+                    <MudButton Variant="Variant.Text" OnClick="@(() => Compare(revision.Number))">@L["Versions_Compare"]</MudButton>
+                    @if (IsModerator && revision.Number != revisions[0].Number)
+                    {
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Restore(revision.Number))">@L["Versions_Restore"]</MudButton>
+                    }
+                </MudStack>
+            </div>
+            @if (comparing == revision.Number)
+            {
+                <div class="mt-3"><DiffTable Changes="changes" /></div>
+            }
+        </MudPaper>
+    }
+</MudStack>
+
+@code {
+    private IReadOnlyList<RevisionSummary> revisions = [];
+
+    private IReadOnlyList<FieldChange>? changes;
+
+    private IReadOnlyList<EditorialError> errors = [];
+
+    private int? comparing;
+
+    private string name = "";
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    protected override async Task Load()
+    {
+        revisions = await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(Id));
+        name = (await Query<GetDiveSiteForEditingQuery, DiveSiteForEditing?>(new GetDiveSiteForEditingQuery(Id)))?.Content.Name ?? "";
+    }
+
+    private async Task Compare(int number)
+    {
+        comparing = number;
+        var previous = revisions.Where(r => r.Number < number).Select(r => (int?)r.Number).FirstOrDefault();
+        changes = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(Id, previous, number));
+    }
+
+    private async Task Restore(int number)
+    {
+        var result = await Command<RestoreRevisionCommand, EditorialResult>(new RestoreRevisionCommand(UserId, Id, number));
+        errors = result.Errors;
+        await Load();
+    }
+}

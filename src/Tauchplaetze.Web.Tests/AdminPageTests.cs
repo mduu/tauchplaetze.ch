@@ -1,0 +1,83 @@
+using System.Net;
+using Tauchplaetze.Core.Features.Accounts;
+using Tauchplaetze.Core.Features.Accounts.Commands;
+
+namespace Tauchplaetze.Web.Tests;
+
+public class AdminPageTests : IClassFixture<WebApp>
+{
+    private readonly WebApp app;
+
+    public AdminPageTests(WebApp app)
+    {
+        this.app = app;
+        app.SignIn.Answer = _ => new SignInOutcome(SignInStatus.Succeeded, new SignedInAccount("user-1", "Lucie", "fr", [Roles.Contributor]));
+    }
+
+    [Fact]
+    public async Task Ohne_Anmeldung_fuehrt_die_Redaktion_zur_Anmeldung()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        using var response = await browser.GetAsync("/admin/plaetze", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.StartsWith("/de/account/sign-in?returnUrl=%2Fadmin%2Fplaetze", response.Headers.Location?.OriginalString);
+    }
+
+    [Fact]
+    public async Task Die_Redaktion_spricht_die_Sprache_aus_dem_Profil()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        using var response = await browser.GetAsync("/admin", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("Bonjour Lucie", VisibleText.Of(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)));
+    }
+
+    [Fact]
+    public async Task Mitwirkende_sehen_die_Vorschlaege_nicht()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        using var response = await browser.GetAsync("/admin/vorschlaege", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.DoesNotContain("Vérifier les propositions", VisibleText.Of(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)));
+    }
+
+    [Theory]
+    [InlineData("/de/site/riff-williams", "/de/tauchplaetze/riff-williams")]
+    [InlineData("/it/site/riff-williams", "/it/siti-di-immersione/riff-williams")]
+    public async Task Der_Link_aus_Mail_und_CMS_fuehrt_auf_den_Platz_in_der_Sprache(string link, string expected)
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        using var response = await browser.GetAsync(link, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.MovedPermanently, response.StatusCode);
+        Assert.Equal(expected, response.Headers.Location?.OriginalString);
+    }
+
+    private static async Task SignIn(HttpClient browser)
+    {
+        using var response = await WebApp.Submit(browser, "/fr/account/sign-in", "sign-in",
+            new() { ["Input.Email"] = "lucie@example.org", ["Input.Password"] = "passwort" }, TestContext.Current.CancellationToken);
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+    }
+}

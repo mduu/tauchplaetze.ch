@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MudBlazor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../Tauchplaetze.Core/Tauchplaetze.Core.csproj" />
     <ProjectReference Include="../Tauchplaetze.ServiceDefaults/Tauchplaetze.ServiceDefaults.csproj" />
   </ItemGroup>

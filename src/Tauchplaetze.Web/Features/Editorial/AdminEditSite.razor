@@ -1,0 +1,237 @@
+@page "/admin/plaetze/{Id:guid}"
+@layout AdminLayout
+@attribute [Authorize]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Core.Features.Editorial.Commands
+@using Tauchplaetze.Core.Features.Editorial.Queries
+@using Tauchplaetze.Core.Features.WaterBodies
+@using Tauchplaetze.Core.Features.WaterBodies.Queries
+@inject IStringLocalizer<SharedStrings> Shared
+
+@if (site is null || form is null)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+else
+{
+    <div class="d-flex align-center justify-space-between flex-wrap gap-2 mb-2">
+        <MudText Typo="Typo.h4">@site.Content.Name</MudText>
+        <MudStack Row="true">
+            <MudButton Href="@($"/admin/plaetze/{Id}/versionen")" Variant="Variant.Outlined">@L["Edit_Versions"]</MudButton>
+            @if (site.Status != DiveSiteStatus.Draft)
+            {
+                <MudButton Href="@($"/{Language}/site/{site.Content.Slug}")" Target="_blank" Variant="Variant.Outlined">@L["Edit_ViewPublic"]</MudButton>
+            }
+            @if (IsModerator && site.Status != DiveSiteStatus.Draft)
+            {
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ToggleArchive">@(site.Status == DiveSiteStatus.Archived ? L["Edit_Unarchive"] : L["Edit_Archive"])</MudButton>
+            }
+        </MudStack>
+    </div>
+    <MudText Typo="Typo.body2" Class="mb-4">
+        <MudChip T="string" Size="Size.Small">@L[$"SiteStatus_{site.Status}"]</MudChip>
+        @L["Edit_BaseInfo", site.BaseNumber]
+        @if (site.Pending.Count > 0)
+        {
+            <span> · @L["Edit_PendingInfo", site.Pending.Count]</span>
+        }
+    </MudText>
+
+    @if (message is not null)
+    {
+        <MudAlert Severity="Severity.Success" Class="mb-4">@message</MudAlert>
+    }
+    <ErrorList Errors="errors" />
+
+    <MudTabs Outlined="true" Elevation="0">
+        <MudTabPanel Text="@L["Edit_Tab_Basics"]">
+            <MudStack Spacing="3" Class="pt-4">
+                <MudTextField @bind-Value="form.Name" Label="@L["Field_Name"]" Required="true" MaxLength="120" />
+                <MudSelect T="int" @bind-Value="form.WaterBodyId" Label="@L["Field_WaterBodyId"]">
+                    @foreach (var water in waterBodies)
+                    {
+                        <MudSelectItem T="int" Value="water.Id">@water.Name</MudSelectItem>
+                    }
+                </MudSelect>
+                <LocationPicker Id="site-map" @bind-Latitude="form.Latitude" @bind-Longitude="form.Longitude" />
+                <MudStack Row="true">
+                    <MudTextField @bind-Value="form.Municipality" Label="@L["Field_Municipality"]" />
+                    <MudTextField @bind-Value="form.Canton" Label="@L["Field_Canton"]" MaxLength="2" />
+                    <MudNumericField @bind-Value="form.MaxDepth" Label="@L["Field_MaxDepth"]" Min="1" Max="300" />
+                </MudStack>
+                <MudSelect T="DiveSiteAccess?" @bind-Value="form.Access" Label="@L["Field_Access"]" Clearable="true">
+                    @foreach (var access in Enum.GetValues<DiveSiteAccess>())
+                    {
+                        <MudSelectItem T="DiveSiteAccess?" Value="access">@L[$"Access_{access}"]</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudText Typo="Typo.subtitle2">@L["Field_Features"]</MudText>
+                <MudStack Row="true" Wrap="Wrap.Wrap">
+                    @foreach (var feature in SiteForm.AllFeatures)
+                    {
+                        <MudCheckBox T="bool" Value="form.Features.Contains(feature)" ValueChanged="@(on => Toggle(feature, on))" Label="@L[$"Feature_{feature}"]" />
+                    }
+                </MudStack>
+                <MudCheckBox T="bool" @bind-Value="form.HasDivingBan" Label="@L["Field_HasDivingBan"]" />
+            </MudStack>
+        </MudTabPanel>
+
+        <MudTabPanel Text="@L["Edit_Tab_Ratings"]">
+            <MudStack Spacing="3" Class="pt-4">
+                @foreach (var field in SiteForm.RatingFields)
+                {
+                    <MudSelect T="byte?" Value="form.Ratings.GetValueOrDefault(field)" ValueChanged="@(value => form.Ratings[field] = value)" Label="@L[$"Field_{field}"]">
+                        <MudSelectItem T="byte?" Value="null">@L["Rating_None"]</MudSelectItem>
+                        @for (byte value = 1; value <= 5; value++)
+                        {
+                            var rating = value;
+                            <MudSelectItem T="byte?" Value="rating">@rating</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+            </MudStack>
+        </MudTabPanel>
+
+        <MudTabPanel Text="@L["Edit_Tab_Texts"]">
+            <MudTabs Elevation="0">
+                @foreach (var language in Languages.All)
+                {
+                    var text = form.Texts[language];
+                    <MudTabPanel Text="@language.ToUpperInvariant()">
+                        <MudStack Spacing="3">
+                            <MudTextField @bind-Value="text.UnderwaterDescription" Label="@L["Field_UnderwaterDescription"]" Lines="6" />
+                            <MudTextField @bind-Value="text.HazardsInfo" Label="@L["Field_HazardsInfo"]" Lines="3" MaxLength="2000" />
+                            <MudTextField @bind-Value="text.ApproachInfo" Label="@L["Field_ApproachInfo"]" Lines="3" MaxLength="2000" />
+                            <MudTextField @bind-Value="text.SurroundingsInfo" Label="@L["Field_SurroundingsInfo"]" Lines="3" MaxLength="2000" />
+                            <MudTextField @bind-Value="text.FacilitiesInfo" Label="@L["Field_FacilitiesInfo"]" Lines="2" MaxLength="1000" />
+                            @if (form.HasDivingBan)
+                            {
+                                <MudTextField @bind-Value="text.DivingBanNote" Label="@L["Field_DivingBanNote"]" Lines="2" MaxLength="500" />
+                            }
+                        </MudStack>
+                    </MudTabPanel>
+                }
+            </MudTabs>
+        </MudTabPanel>
+
+        <MudTabPanel Text="@L["Edit_Tab_EntryPoints"]">
+            <MudStack Spacing="4">
+                @foreach (var (entry, index) in form.EntryPoints.Select((e, i) => (e, i + 1)).ToList())
+                {
+                    <MudPaper Outlined="true" Class="pa-4">
+                        <div class="d-flex justify-space-between align-center">
+                            <MudText Typo="Typo.h6">@L["Field_EntryPoint", index]</MudText>
+                            <MudButton Color="Color.Secondary" OnClick="@(() => form.EntryPoints.Remove(entry))">@L["Edit_Remove"]</MudButton>
+                        </div>
+                        <MudSelect T="EntryPointKind" @bind-Value="entry.Kind" Label="@L["Field_EntryKind"]">
+                            @foreach (var kind in Enum.GetValues<EntryPointKind>())
+                            {
+                                <MudSelectItem T="EntryPointKind" Value="kind">@L[$"Kind_{kind}"]</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <LocationPicker Id="@($"entry-map-{entry.Id}")" @bind-Latitude="entry.Latitude" @bind-Longitude="entry.Longitude" />
+                        @foreach (var language in Languages.All)
+                        {
+                            var key = language;
+                            <MudStack Row="true" Class="mt-2">
+                                <MudTextField T="string" Value="entry.Texts[key].Name" ValueChanged="@(v => entry.Texts[key] = (v, entry.Texts[key].Description))" Label="@($"{L["Field_EntryName"]} ({key.ToUpperInvariant()})")" MaxLength="80" />
+                                <MudTextField T="string" Value="entry.Texts[key].Description" ValueChanged="@(v => entry.Texts[key] = (entry.Texts[key].Name, v))" Label="@($"{L["Field_EntryDescription"]} ({key.ToUpperInvariant()})")" Lines="2" MaxLength="1000" />
+                            </MudStack>
+                        }
+                    </MudPaper>
+                }
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="AddEntryPoint">@L["Edit_AddEntryPoint"]</MudButton>
+            </MudStack>
+        </MudTabPanel>
+
+        @if (IsModerator)
+        {
+            <MudTabPanel Text="@L["Edit_Tab_Moderation"]">
+                <MudStack Spacing="3" Class="pt-4">
+                    <MudTextField @bind-Value="form.Slug" Label="@L["Field_Slug"]" MaxLength="120" />
+                    <MudCheckBox T="bool" @bind-Value="form.ForecastDisabled" Label="@L["Field_ForecastDisabled"]" />
+                    <MudStack Row="true">
+                        <MudNumericField @bind-Value="form.SatelliteLatitude" Label="@L["Field_SatelliteLatitude"]" Format="0.00000" />
+                        <MudNumericField @bind-Value="form.SatelliteLongitude" Label="@L["Field_SatelliteLongitude"]" Format="0.00000" />
+                    </MudStack>
+                    <MudTextField @bind-Value="form.InflowStationOverride" Label="@L["Field_InflowStationOverride"]" MaxLength="20" />
+                </MudStack>
+            </MudTabPanel>
+        }
+    </MudTabs>
+
+    <MudPaper Outlined="true" Class="pa-4 mt-4">
+        <MudTextField @bind-Value="form.Comment" Label="@L["Field_Comment"]" MaxLength="500" />
+        <MudButton Class="mt-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="Save" Disabled="saving">
+            @(IsModerator ? L["Edit_Save_Moderator"] : L["Edit_Save_Contributor"])
+        </MudButton>
+    </MudPaper>
+}
+
+@code {
+    private DiveSiteForEditing? site;
+
+    private SiteForm? form;
+
+    private IReadOnlyList<WaterBodySummary> waterBodies = [];
+
+    private IReadOnlyList<EditorialError> errors = [];
+
+    private string? message;
+
+    private bool saving;
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    protected override async Task Load()
+    {
+        waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery(Language));
+        site = await Query<GetDiveSiteForEditingQuery, DiveSiteForEditing?>(new GetDiveSiteForEditingQuery(Id));
+        form = site is null ? null : SiteForm.From(site.Content);
+    }
+
+    private void Toggle(Tauchplaetze.Core.Features.DiveSites.DiveSiteFeatures feature, bool on)
+    {
+        if (on)
+        {
+            form!.Features.Add(feature);
+        }
+        else
+        {
+            form!.Features.Remove(feature);
+        }
+    }
+
+    private void AddEntryPoint() => form!.EntryPoints.Add(new EntryForm { Latitude = form.Latitude, Longitude = form.Longitude });
+
+    private async Task Save()
+    {
+        saving = true;
+        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(UserId, Id, site!.BaseNumber, form!.ToContent(), form.Comment));
+        saving = false;
+        errors = result.Errors;
+        message = result switch
+        {
+            { Succeeded: false } => null,
+            { NoChange: true } => L["Edit_NoChange"].Value,
+            { Status: RevisionStatus.Approved } => L["Edit_Saved_Approved"].Value,
+            _ => L["Edit_Saved_Pending"].Value,
+        };
+
+        if (result.Succeeded)
+        {
+            await Load();
+        }
+    }
+
+    private async Task ToggleArchive()
+    {
+        var result = await Command<ArchiveDiveSiteCommand, EditorialResult>(new ArchiveDiveSiteCommand(UserId, Id, site!.Status != DiveSiteStatus.Archived));
+        errors = result.Errors;
+        await Load();
+    }
+}

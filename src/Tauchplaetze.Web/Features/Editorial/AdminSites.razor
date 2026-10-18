@@ -1,0 +1,47 @@
+@page "/admin/plaetze"
+@layout AdminLayout
+@attribute [Authorize]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Editorial.Queries
+
+<div class="d-flex align-center justify-space-between mb-4">
+    <MudText Typo="Typo.h4">@L["Sites_Title"]</MudText>
+    <MudButton Href="/admin/plaetze/neu" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add">@L["Sites_New"]</MudButton>
+</div>
+
+<MudTable Items="sites" Hover="true" Filter="Matches" Dense="true" Outlined="true" Elevation="0">
+    <ToolBarContent>
+        <MudTextField @bind-Value="search" Placeholder="@L["Sites_Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Clearable="true" />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>@L["Column_Name"]</MudTh>
+        <MudTh>@L["Column_Water"]</MudTh>
+        <MudTh>@L["Column_Status"]</MudTh>
+        <MudTh>@L["Column_ContentLevel"]</MudTh>
+        <MudTh>@L["Column_DataLevel"]</MudTh>
+        <MudTh>@L["Column_Pending"]</MudTh>
+        <MudTh>@L["Column_Updated"]</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd><MudLink Href="@($"/admin/plaetze/{context.Id}")">@context.Name</MudLink></MudTd>
+        <MudTd>@context.WaterBodyName</MudTd>
+        <MudTd><MudChip T="string" Size="Size.Small" Color="@(context.Status == Tauchplaetze.Core.Features.DiveSites.DiveSiteStatus.Published ? Color.Primary : Color.Default)">@L[$"SiteStatus_{context.Status}"]</MudChip></MudTd>
+        <MudTd>@context.ContentLevel</MudTd>
+        <MudTd>@(context.DataLevel?.ToString(CultureInfo.InvariantCulture) ?? "–")</MudTd>
+        <MudTd>@(context.PendingRevisions > 0 ? context.PendingRevisions.ToString(CultureInfo.InvariantCulture) : "")</MudTd>
+        <MudTd>@context.UpdatedAt.ToLocalTime().ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<EditableDiveSite> sites = [];
+
+    private string search = "";
+
+    protected override async Task Load() =>
+        sites = await Query<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>(new GetDiveSitesForEditingQuery());
+
+    private bool Matches(EditableDiveSite site) =>
+        string.IsNullOrWhiteSpace(search) || site.Name.Contains(search, StringComparison.OrdinalIgnoreCase) || site.WaterBodyName.Contains(search, StringComparison.OrdinalIgnoreCase);
+}

@@ -1,0 +1,71 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject IStringLocalizer<AdminStrings> L
+
+<MudStack Spacing="1">
+    <MudStack Row="true">
+        <MudNumericField T="double" Value="Latitude" ValueChanged="SetLatitude" Label="@L["Field_Latitude"]" Format="0.00000" Step="0.0001" />
+        <MudNumericField T="double" Value="Longitude" ValueChanged="SetLongitude" Label="@L["Field_Longitude"]" Format="0.00000" Step="0.0001" />
+    </MudStack>
+    <div id="@Id" class="admin-map"></div>
+    <MudText Typo="Typo.caption">@L["Edit_MapHint"]</MudText>
+</MudStack>
+
+@code {
+    private DotNetObjectReference<LocationPicker>? reference;
+
+    [Parameter, EditorRequired]
+    public string Id { get; set; } = "";
+
+    [Parameter]
+    public double Latitude { get; set; }
+
+    [Parameter]
+    public EventCallback<double> LatitudeChanged { get; set; }
+
+    [Parameter]
+    public double Longitude { get; set; }
+
+    [Parameter]
+    public EventCallback<double> LongitudeChanged { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        reference ??= DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("tauchplaetzeAdmin.show", Id, Latitude, Longitude, reference);
+    }
+
+    [JSInvokable]
+    public async Task SetLocation(double latitude, double longitude)
+    {
+        await SetLatitude(Math.Round(latitude, 5));
+        await SetLongitude(Math.Round(longitude, 5));
+        StateHasChanged();
+    }
+
+    private async Task SetLatitude(double value)
+    {
+        Latitude = value;
+        await LatitudeChanged.InvokeAsync(value);
+    }
+
+    private async Task SetLongitude(double value)
+    {
+        Longitude = value;
+        await LongitudeChanged.InvokeAsync(value);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("tauchplaetzeAdmin.dispose", Id);
+        }
+        catch (JSDisconnectedException)
+        {
+            return;
+        }
+
+        reference?.Dispose();
+    }
+}

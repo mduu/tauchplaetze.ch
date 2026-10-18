@@ -1,0 +1,70 @@
+@page "/admin/konten"
+@layout AdminLayout
+@attribute [Authorize(Roles = "Admin")]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Accounts.Commands
+@using Tauchplaetze.Core.Features.Accounts.Queries
+
+<MudText Typo="Typo.h4" Class="mb-4">@L["Accounts_Title"]</MudText>
+
+<MudTable Items="accounts" Dense="true" Outlined="true" Elevation="0">
+    <HeaderContent>
+        <MudTh>@L["Column_Name"]</MudTh>
+        <MudTh>E-Mail</MudTh>
+        @foreach (var role in Roles.All)
+        {
+            <MudTh>@L[$"Role_{role}"]</MudTh>
+        }
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>
+            @context.DisplayName
+            @if (context.BlockedAt is not null)
+            {
+                <MudChip T="string" Size="Size.Small" Color="Color.Secondary">@L["Accounts_Blocked"]</MudChip>
+            }
+            @if (!context.EmailConfirmed)
+            {
+                <MudChip T="string" Size="Size.Small">@L["Accounts_Unconfirmed"]</MudChip>
+            }
+        </MudTd>
+        <MudTd>@context.Email</MudTd>
+        @foreach (var role in Roles.All)
+        {
+            var account = context;
+            var current = role;
+            <MudTd><MudCheckBox T="bool" Value="account.Roles.Contains(current)" ValueChanged="@(on => SetRole(account, current, on))" Disabled="@(account.UserId == UserId && current == Roles.Admin)" /></MudTd>
+        }
+        <MudTd>
+            @if (context.UserId != UserId)
+            {
+                var account = context;
+                <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Block(account))">
+                    @(account.BlockedAt is null ? L["Accounts_Block"] : L["Accounts_Unblock"])
+                </MudButton>
+            }
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private IReadOnlyList<AccountSummary> accounts = [];
+
+    protected override async Task Load() =>
+        accounts = await Query<GetAccountsQuery, IReadOnlyList<AccountSummary>>(new GetAccountsQuery());
+
+    private async Task SetRole(AccountSummary account, string role, bool granted)
+    {
+        await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(UserId, account.UserId, role, granted));
+        await Load();
+    }
+
+    private async Task Block(AccountSummary account)
+    {
+        await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(UserId, account.UserId, account.BlockedAt is null));
+        await Load();
+    }
+}

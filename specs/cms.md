@@ -1,6 +1,21 @@
 # Redaktion (CMS)
 
-Der Redaktionsbereich liegt unter `/admin`. Er ist ein Teil der Blazor Web App mit dem Render-Modus **Interactive Server** (ADR-001).
+Der Redaktionsbereich liegt unter `/admin`. Er ist ein Teil der Blazor Web App mit dem Render-Modus **Interactive Server** (ADR-001). Nur Pfade unter `/admin` sind interaktiv. Die öffentlichen Seiten bleiben Static SSR.
+
+Die Oberfläche nutzt **MudBlazor** im dunklen Theme aus den Design Tokens. Seiten:
+
+| Pfad | Inhalt | Wer |
+|---|---|---|
+| `/admin` | Übersicht: Plätze, offene Vorschläge, letzter Prognose-Lauf | alle Angemeldeten |
+| `/admin/plaetze` | Liste mit Suche, Status, Ausbaustufe, Datenstufe, offenen Vorschlägen | alle Angemeldeten |
+| `/admin/plaetze/neu` | neuer Platz: Name, Gewässer, Koordinate (Klick in die Karte) | alle Angemeldeten |
+| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten, Bewertungen, Texte pro Sprache, Einstiege, nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station) | alle Angemeldeten, Tab «nur Moderation» für Moderatoren |
+| `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | alle Angemeldeten, Wiederherstellen für Moderatoren |
+| `/admin/vorschlaege` | offene Vorschläge mit Vergleich zur Basis, Freigeben, Ablehnen mit Begründung | Moderatoren, Admins |
+| `/admin/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten» | Moderatoren; starten nur Admins |
+| `/admin/konten` | Konten, Rollen, Sperre | Admins |
+
+Ohne Anmeldung führt `/admin` zur Anmeldung. Fehlt die Rolle, antwortet der Server mit 403.
 
 **Alle können beitragen, Moderatoren geben frei** (Entscheid Marc, 17.10.2026, ADR-008). Wer ein Konto hat, kann Informationen zu Tauchplätzen beisteuern. Online sichtbar wird eine Änderung erst, wenn ein Moderator oder Admin sie freigibt. Jede Änderung ergibt eine Version, wie in einem Wiki. Die History zeigt Autor und Approver.
 

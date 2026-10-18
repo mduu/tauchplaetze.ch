@@ -1,0 +1,74 @@
+@page "/admin/plaetze/neu"
+@layout AdminLayout
+@attribute [Authorize]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Core.Features.Editorial.Commands
+@using Tauchplaetze.Core.Features.WaterBodies
+@using Tauchplaetze.Core.Features.WaterBodies.Queries
+@inject NavigationManager Navigation
+
+<MudText Typo="Typo.h4">@L["New_Title"]</MudText>
+<MudText Class="mb-4" Color="Color.Default">@L["New_Lead"]</MudText>
+
+<ErrorList Errors="errors" />
+
+<MudPaper Class="pa-4" Outlined="true">
+    <MudStack Spacing="3">
+        <MudTextField @bind-Value="name" Label="@L["Field_Name"]" Required="true" MaxLength="120" />
+        <MudSelect T="int" @bind-Value="waterBodyId" Label="@L["Field_WaterBodyId"]">
+            @foreach (var water in waterBodies)
+            {
+                <MudSelectItem T="int" Value="water.Id">@water.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <LocationPicker @bind-Latitude="latitude" @bind-Longitude="longitude" Id="new-site-map" />
+        <MudStack Row="true">
+            <MudTextField @bind-Value="municipality" Label="@L["Field_Municipality"]" />
+            <MudTextField @bind-Value="canton" Label="@L["Field_Canton"]" MaxLength="2" />
+        </MudStack>
+        <MudTextField @bind-Value="comment" Label="@L["Field_Comment"]" Lines="2" MaxLength="500" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Disabled="saving">@L["New_Submit"]</MudButton>
+    </MudStack>
+</MudPaper>
+
+@code {
+    private IReadOnlyList<WaterBodySummary> waterBodies = [];
+
+    private IReadOnlyList<EditorialError> errors = [];
+
+    private string name = "";
+
+    private int waterBodyId;
+
+    private double latitude = 47.28;
+
+    private double longitude = 8.6;
+
+    private string? municipality;
+
+    private string? canton;
+
+    private string? comment;
+
+    private bool saving;
+
+    protected override async Task Load()
+    {
+        waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery(Language));
+        waterBodyId = waterBodies.FirstOrDefault()?.Id ?? 0;
+    }
+
+    private async Task Submit()
+    {
+        saving = true;
+        var result = await Command<ProposeDiveSiteCommand, EditorialResult>(new ProposeDiveSiteCommand(UserId, name, waterBodyId, latitude, longitude, municipality, canton, comment));
+        saving = false;
+        errors = result.Errors;
+        if (result is { Succeeded: true, DiveSiteId: { } id })
+        {
+            Navigation.NavigateTo($"/admin/plaetze/{id}");
+        }
+    }
+}
