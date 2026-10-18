@@ -56,4 +56,6 @@
   <data name="WaterBodies_Sites_None" xml:space="preserve"><value>pas encore de site de plongée</value></data>
   <data name="WaterBodies_Sites_One" xml:space="preserve"><value>1 site de plongée</value></data>
   <data name="WaterBodies_Sites_Many" xml:space="preserve"><value>{0} sites de plongée</value></data>
+  <data name="Map_Layer_Map" xml:space="preserve"><value>Carte</value></data>
+  <data name="Map_Layer_Photo" xml:space="preserve"><value>Photo aérienne</value></data>
 </root>

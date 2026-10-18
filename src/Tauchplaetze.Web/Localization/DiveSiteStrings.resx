@@ -56,4 +56,6 @@
   <data name="WaterBodies_Sites_None" xml:space="preserve"><value>noch keine Tauchplätze</value></data>
   <data name="WaterBodies_Sites_One" xml:space="preserve"><value>1 Tauchplatz</value></data>
   <data name="WaterBodies_Sites_Many" xml:space="preserve"><value>{0} Tauchplätze</value></data>
+  <data name="Map_Layer_Map" xml:space="preserve"><value>Karte</value></data>
+  <data name="Map_Layer_Photo" xml:space="preserve"><value>Luftbild</value></data>
 </root>

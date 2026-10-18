@@ -1,6 +1,5 @@
 // Karte im CMS: Klick setzt die Koordinate (cms.md, «Platz bearbeiten»). Blazor ruft die Funktionen über JS-Interop auf.
 window.tauchplaetzeAdmin = (function () {
-  const tiles = 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg';
   const maps = new Map();
 
   function show(id, latitude, longitude, dotnet) {
@@ -12,7 +11,7 @@ window.tauchplaetzeAdmin = (function () {
     let entry = maps.get(id);
     if (!entry) {
       const map = L.map(element, { scrollWheelZoom: true });
-      L.tileLayer(tiles, { attribution: '© swisstopo', maxZoom: 18 }).addTo(map);
+      window.tauchplaetzeMap.addBaseLayers(map, element);
       const marker = L.circleMarker([latitude, longitude], { radius: 9, color: '#071417', weight: 2, fillColor: '#FF9A4D', fillOpacity: 1 }).addTo(map);
       map.on('click', function (event) {
         marker.setLatLng(event.latlng);

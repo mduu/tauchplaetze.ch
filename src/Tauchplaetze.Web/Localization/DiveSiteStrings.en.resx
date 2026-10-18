@@ -56,4 +56,6 @@
   <data name="WaterBodies_Sites_None" xml:space="preserve"><value>no dive sites yet</value></data>
   <data name="WaterBodies_Sites_One" xml:space="preserve"><value>1 dive site</value></data>
   <data name="WaterBodies_Sites_Many" xml:space="preserve"><value>{0} dive sites</value></data>
+  <data name="Map_Layer_Map" xml:space="preserve"><value>Map</value></data>
+  <data name="Map_Layer_Photo" xml:space="preserve"><value>Aerial</value></data>
 </root>

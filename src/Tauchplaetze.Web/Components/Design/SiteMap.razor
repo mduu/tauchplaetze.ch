@@ -3,7 +3,7 @@
 @using Tauchplaetze.Web.Features.Forecasts
 @inject IStringLocalizer<DiveSiteStrings> L
 
-<div class="site-map" data-map data-sites="@Json" data-lat="@Invariant(Latitude)" data-lng="@Invariant(Longitude)" data-zoom="@Zoom"
+<div class="site-map" data-map data-sites="@Json" data-lat="@Invariant(Latitude)" data-lng="@Invariant(Longitude)" data-zoom="@Zoom" data-layer-map="@L["Map_Layer_Map"]" data-layer-photo="@L["Map_Layer_Photo"]"
      role="region" aria-label="@L["Map_Label"]"></div>
 
 @code {

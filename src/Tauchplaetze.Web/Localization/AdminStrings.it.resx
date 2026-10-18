@@ -151,4 +151,6 @@
   <data name="Column_Email" xml:space="preserve"><value>E-mail</value></data>
   <data name="Versions_CompareBase" xml:space="preserve"><value>Confronta con la base</value></data>
   <data name="Forecast_Skipped" xml:space="preserve"><value>Un altro calcolo è ancora attivo. Questo calcolo non è partito.</value></data>
+  <data name="Map_Layer_Map" xml:space="preserve"><value>Mappa</value></data>
+  <data name="Map_Layer_Photo" xml:space="preserve"><value>Foto aerea</value></data>
 </root>

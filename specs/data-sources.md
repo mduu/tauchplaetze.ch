@@ -137,7 +137,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
 | Produkt | Nutzen | Zugang | Phase |
 |---|---|---|---|
-| Landeskarte und Luftbild (WMTS) | Karte auf Verzeichnis, See- und Platzseite | WMTS von geo.admin.ch, ohne Registrierung | MVP |
+| Landeskarte und Luftbild (WMTS: `ch.swisstopo.pixelkarte-farbe`, `ch.swisstopo.swissimage`) | Karte auf Verzeichnis, Gewässer- und Platzseite sowie im CMS, mit Umschalter Karte/Luftbild (Wahl bleibt im Browser) | WMTS von geo.admin.ch, ohne Registrierung | MVP |
 | swissTLM3D Gewässernetz | Stammdaten aller Seen und Flüsse (Name, Geometrie) | Download, STAC `ch.swisstopo.swisstlm3d` | MVP (Seed der Gewässer) |
 | swissBATHY3D | Tiefenkarten von 22 Seen (u.a. Zürichsee, Thunersee, Brienzersee, Walensee, Genfersee, Neuenburgersee, Vierwaldstättersee, Zugersee, Lago Maggiore, Bodensee) | Hillshade als WMTS, DTM als Download (STAC `ch.swisstopo.swissbathy3d`) | MVP als Kartenebene, DTM später (Tiefe am Einstieg, Steilwand) |
 

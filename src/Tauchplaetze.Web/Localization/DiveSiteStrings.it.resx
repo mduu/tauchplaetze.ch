@@ -56,4 +56,6 @@
   <data name="WaterBodies_Sites_None" xml:space="preserve"><value>ancora nessun sito d'immersione</value></data>
   <data name="WaterBodies_Sites_One" xml:space="preserve"><value>1 sito d'immersione</value></data>
   <data name="WaterBodies_Sites_Many" xml:space="preserve"><value>{0} siti d'immersione</value></data>
+  <data name="Map_Layer_Map" xml:space="preserve"><value>Mappa</value></data>
+  <data name="Map_Layer_Photo" xml:space="preserve"><value>Foto aerea</value></data>
 </root>

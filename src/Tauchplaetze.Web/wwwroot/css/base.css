@@ -350,3 +350,24 @@ a:hover {
   color: var(--color-text);
   text-decoration: none;
 }
+
+.leaflet-control-layers.leaflet-control {
+  padding: 4px 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-tile-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: none;
+}
+
+.leaflet-control-layers label {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.leaflet-control-layers input {
+  accent-color: var(--color-primary);
+}
