@@ -487,6 +487,55 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.ToTable("DiveSiteEntryPointTranslations", (string)null);
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteNotice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DiveSiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("ValidFrom")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("ValidUntil")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiveSiteId", "SortOrder");
+
+                    b.ToTable("DiveSiteNotices", (string)null);
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteNoticeTranslation", b =>
+                {
+                    b.Property<Guid>("NoticeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Culture")
+                        .HasMaxLength(2)
+                        .HasColumnType("nchar(2)")
+                        .IsFixedLength();
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("NoticeId", "Culture");
+
+                    b.ToTable("DiveSiteNoticeTranslations", (string)null);
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteRevision", b =>
                 {
                     b.Property<Guid>("Id")
@@ -926,6 +975,24 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteNotice", b =>
+                {
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSite", null)
+                        .WithMany("Notices")
+                        .HasForeignKey("DiveSiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteNoticeTranslation", b =>
+                {
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSiteNotice", null)
+                        .WithMany("Translations")
+                        .HasForeignKey("NoticeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteRevision", b =>
                 {
                     b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSite", null)
@@ -966,10 +1033,17 @@ namespace Tauchplaetze.Core.Data.Migrations
                 {
                     b.Navigation("EntryPoints");
 
+                    b.Navigation("Notices");
+
                     b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteEntryPoint", b =>
+                {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.DiveSiteNotice", b =>
                 {
                     b.Navigation("Translations");
                 });

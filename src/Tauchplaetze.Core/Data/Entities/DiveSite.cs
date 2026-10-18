@@ -68,4 +68,6 @@ internal class DiveSite
     public List<DiveSiteTranslation> Translations { get; set; } = [];
 
     public List<DiveSiteEntryPoint> EntryPoints { get; set; } = [];
+
+    public List<DiveSiteNotice> Notices { get; set; } = [];
 }

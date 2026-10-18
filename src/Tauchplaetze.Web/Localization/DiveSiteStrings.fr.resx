@@ -58,4 +58,9 @@
   <data name="WaterBodies_Sites_Many" xml:space="preserve"><value>{0} sites de plongée</value></data>
   <data name="Map_Layer_Map" xml:space="preserve"><value>Carte</value></data>
   <data name="Map_Layer_Photo" xml:space="preserve"><value>Photo aérienne</value></data>
+  <data name="Notices_Label" xml:space="preserve"><value>Avis importants</value></data>
+  <data name="Notice_Info" xml:space="preserve"><value>Information</value></data>
+  <data name="Notice_Warning" xml:space="preserve"><value>Avertissement</value></data>
+  <data name="Notice_Closure" xml:space="preserve"><value>Fermé</value></data>
+  <data name="Notice_Until" xml:space="preserve"><value>jusqu'au {0}</value></data>
 </root>

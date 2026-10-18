@@ -153,4 +153,16 @@
   <data name="Forecast_Skipped" xml:space="preserve"><value>Un autre calcul est encore actif. Ce calcul n'a pas démarré.</value></data>
   <data name="Map_Layer_Map" xml:space="preserve"><value>Carte</value></data>
   <data name="Map_Layer_Photo" xml:space="preserve"><value>Photo aérienne</value></data>
+  <data name="Edit_Tab_Notices" xml:space="preserve"><value>Avis</value></data>
+  <data name="Notices_Help" xml:space="preserve"><value>Les avis apparaissent en haut de la page du site. Une fermeture retire le site du classement. Sans date, un avis n'a pas de limite. L'allemand est obligatoire.</value></data>
+  <data name="Field_Notice" xml:space="preserve"><value>Avis {0}</value></data>
+  <data name="Field_NoticeKind" xml:space="preserve"><value>Type d'avis</value></data>
+  <data name="Field_NoticeValidFrom" xml:space="preserve"><value>Valable dès le</value></data>
+  <data name="Field_NoticeValidUntil" xml:space="preserve"><value>Valable jusqu'au</value></data>
+  <data name="Field_NoticeText" xml:space="preserve"><value>Texte de l'avis</value></data>
+  <data name="NoticeKind_Info" xml:space="preserve"><value>Information</value></data>
+  <data name="NoticeKind_Warning" xml:space="preserve"><value>Avertissement</value></data>
+  <data name="NoticeKind_Closure" xml:space="preserve"><value>Fermeture</value></data>
+  <data name="Edit_AddNotice" xml:space="preserve"><value>Ajouter un avis</value></data>
+  <data name="Error_InvalidNotice" xml:space="preserve"><value>Un avis demande un texte en allemand (500 caractères au plus). « Valable jusqu'au » ne peut pas précéder « Valable dès le ».</value></data>
 </root>

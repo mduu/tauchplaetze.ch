@@ -153,4 +153,16 @@
   <data name="Forecast_Skipped" xml:space="preserve"><value>Ein anderer Lauf ist noch aktiv. Dieser Lauf wurde nicht gestartet.</value></data>
   <data name="Map_Layer_Map" xml:space="preserve"><value>Karte</value></data>
   <data name="Map_Layer_Photo" xml:space="preserve"><value>Luftbild</value></data>
+  <data name="Edit_Tab_Notices" xml:space="preserve"><value>Hinweise</value></data>
+  <data name="Notices_Help" xml:space="preserve"><value>Hinweise erscheinen oben auf der Platzseite. Eine Sperrung nimmt den Platz aus der Rangliste. Ohne Datum gilt ein Hinweis unbefristet. Deutsch ist Pflicht.</value></data>
+  <data name="Field_Notice" xml:space="preserve"><value>Hinweis {0}</value></data>
+  <data name="Field_NoticeKind" xml:space="preserve"><value>Art des Hinweises</value></data>
+  <data name="Field_NoticeValidFrom" xml:space="preserve"><value>Gültig ab</value></data>
+  <data name="Field_NoticeValidUntil" xml:space="preserve"><value>Gültig bis</value></data>
+  <data name="Field_NoticeText" xml:space="preserve"><value>Hinweistext</value></data>
+  <data name="NoticeKind_Info" xml:space="preserve"><value>Info</value></data>
+  <data name="NoticeKind_Warning" xml:space="preserve"><value>Warnung</value></data>
+  <data name="NoticeKind_Closure" xml:space="preserve"><value>Sperrung</value></data>
+  <data name="Edit_AddNotice" xml:space="preserve"><value>Hinweis hinzufügen</value></data>
+  <data name="Error_InvalidNotice" xml:space="preserve"><value>Ein Hinweis braucht einen deutschen Text (höchstens 500 Zeichen). «Gültig bis» darf nicht vor «Gültig ab» liegen.</value></data>
 </root>

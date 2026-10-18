@@ -19,7 +19,7 @@ internal class RestoreRevisionHandler(TauchplaetzeDbContext dbContext, RevisionW
         }
 
         var source = await dbContext.DiveSiteRevisions.SingleOrDefaultAsync(r => r.DiveSiteId == command.DiveSiteId && r.Number == command.Number, ct);
-        var site = await dbContext.DiveSites.Include(d => d.Translations).Include(d => d.EntryPoints).ThenInclude(e => e.Translations)
+        var site = await dbContext.DiveSites.Include(d => d.Translations).Include(d => d.EntryPoints).ThenInclude(e => e.Translations).Include(d => d.Notices).ThenInclude(n => n.Translations)
             .SingleOrDefaultAsync(d => d.Id == command.DiveSiteId, ct);
         if (source is null || site is null)
         {

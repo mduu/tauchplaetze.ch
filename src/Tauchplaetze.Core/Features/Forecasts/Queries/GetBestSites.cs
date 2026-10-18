@@ -12,7 +12,7 @@ namespace Tauchplaetze.Core.Features.Forecasts.Queries;
 public record Area(double Latitude, double Longitude, int RadiusKm);
 
 /// <summary>
-/// Die Rangliste eines Tages, bester Index zuerst. Nur Plätze mit Index (`forecast.md`, «Datenstufe»).
+/// Die Rangliste eines Tages, bester Index zuerst. Nur Plätze mit Index (`forecast.md`, «Datenstufe»), ohne Plätze, die an dem Tag gesperrt sind.
 /// Ohne <paramref name="Area"/> gilt die ganze Schweiz (`features.md`). Ohne <paramref name="Date"/> gilt heute.
 /// </summary>
 public record GetBestSitesQuery(string Culture, DateOnly? Date = null, Area? Area = null);
@@ -43,12 +43,13 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
         var today = SwissTime.Today(time);
         var days = Enumerable.Range(0, ForecastSources.ForecastDays).Select(today.AddDays).ToList();
         var date = query.Date is { } wanted && days.Contains(wanted) ? wanted : today;
+        var closed = NoticeRules.ClosureOn(date);
         var origin = query.Area is { } area ? GeoPoints.Create(area.Latitude, area.Longitude) : null;
 
         var forecasts = dbContext.DailyForecasts
             .AsNoTracking()
             .Where(f => f.Date == date && f.DiveIndex != null)
-            .Join(dbContext.DiveSites.Where(d => d.Status == DiveSiteStatus.Published), f => f.DiveSiteId, d => d.Id, (f, d) => new { f, d });
+            .Join(dbContext.DiveSites.Where(d => d.Status == DiveSiteStatus.Published && !d.Notices.AsQueryable().Any(closed)), f => f.DiveSiteId, d => d.Id, (f, d) => new { f, d });
 
         if (origin is not null)
         {

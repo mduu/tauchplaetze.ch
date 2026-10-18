@@ -153,4 +153,16 @@
   <data name="Forecast_Skipped" xml:space="preserve"><value>Un altro calcolo è ancora attivo. Questo calcolo non è partito.</value></data>
   <data name="Map_Layer_Map" xml:space="preserve"><value>Mappa</value></data>
   <data name="Map_Layer_Photo" xml:space="preserve"><value>Foto aerea</value></data>
+  <data name="Edit_Tab_Notices" xml:space="preserve"><value>Avvisi</value></data>
+  <data name="Notices_Help" xml:space="preserve"><value>Gli avvisi appaiono in alto nella pagina del sito. Una chiusura toglie il sito dalla classifica. Senza date un avviso non ha limite. Il tedesco è obbligatorio.</value></data>
+  <data name="Field_Notice" xml:space="preserve"><value>Avviso {0}</value></data>
+  <data name="Field_NoticeKind" xml:space="preserve"><value>Tipo di avviso</value></data>
+  <data name="Field_NoticeValidFrom" xml:space="preserve"><value>Valido dal</value></data>
+  <data name="Field_NoticeValidUntil" xml:space="preserve"><value>Valido fino al</value></data>
+  <data name="Field_NoticeText" xml:space="preserve"><value>Testo dell'avviso</value></data>
+  <data name="NoticeKind_Info" xml:space="preserve"><value>Informazione</value></data>
+  <data name="NoticeKind_Warning" xml:space="preserve"><value>Avvertenza</value></data>
+  <data name="NoticeKind_Closure" xml:space="preserve"><value>Chiusura</value></data>
+  <data name="Edit_AddNotice" xml:space="preserve"><value>Aggiungi avviso</value></data>
+  <data name="Error_InvalidNotice" xml:space="preserve"><value>Un avviso richiede un testo in tedesco (al massimo 500 caratteri). «Valido fino al» non può precedere «Valido dal».</value></data>
 </root>

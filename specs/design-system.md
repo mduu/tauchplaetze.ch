@@ -30,6 +30,16 @@ Es gibt im MVP **nur das dunkle Schema**. Ein helles Schema ist nicht geplant.
 | `--color-signal` | `#FF9A4D` | Signal-Orange: Sprungschicht, «Beste Wahl»-Label, Buddy-Block, Warnungen, Entwurf-Badge |
 | `--color-bubble` | `#9FE9DF` | Luftblasen, Hinweis «darunter klarer» |
 
+### Hinweise
+
+| Token | Wert | Verwendung |
+|---|---|---|
+| `--color-notice-info` | `#7FE3D6` | Hinweis «Info» |
+| `--color-notice-warning` | `#FF9A4D` | Hinweis «Warnung» |
+| `--color-notice-closure` | `#FF6F61` | Hinweis «Sperrung», einzige rote Farbe |
+
+Banner: Fläche `--color-surface` mit 10 % der Farbe, Rand links 5 px in der Farbe, sonst Rahmen mit 45 % der Farbe. Label in IBM Plex Mono, Grossbuchstaben, in der Farbe. Text in `--color-text`, bei einer Sperrung fett.
+
 ### Tauch-Index-Skala
 
 Die Stufen unterscheiden sich in der **Helligkeit**, nicht nur im Farbton. Der Index steht immer zusätzlich als Zahl da.

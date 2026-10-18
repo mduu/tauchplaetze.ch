@@ -64,6 +64,17 @@ internal static class ContentDiff
             }
         }
 
+        foreach (var (notice, index) in content.NoticeList.Select((n, i) => (n, i + 1)))
+        {
+            fields[$"Notice.{index}.Kind"] = notice.Kind.ToString();
+            fields[$"Notice.{index}.ValidFrom"] = notice.ValidFrom?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            fields[$"Notice.{index}.ValidUntil"] = notice.ValidUntil?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            foreach (var text in notice.Texts)
+            {
+                fields[$"Notice.{index}.{text.Culture}.Text"] = text.Text;
+            }
+        }
+
         return fields.Where(f => !string.IsNullOrWhiteSpace(f.Value)).ToDictionary(f => f.Key, f => f.Value);
     }
 

@@ -26,9 +26,12 @@ public record DiveSiteContent(
     double? SatelliteLongitude,
     bool ForecastDisabled,
     IReadOnlyList<DiveSiteContentTranslation> Translations,
-    IReadOnlyList<EntryPointContent>? EntryPoints = null)
+    IReadOnlyList<EntryPointContent>? EntryPoints = null,
+    IReadOnlyList<NoticeContent>? Notices = null)
 {
     public IReadOnlyList<EntryPointContent> EntryPointList => EntryPoints ?? [];
+
+    public IReadOnlyList<NoticeContent> NoticeList => Notices ?? [];
 
     public DiveSiteContentTranslation? TextIn(string culture) => Translations.FirstOrDefault(t => t.Culture == culture);
 }
@@ -49,6 +52,12 @@ public record EntryPointContent(Guid Id, double Latitude, double Longitude, Entr
 
 /// <summary>Name und Beschreibung eines Einstiegs in einer Sprache.</summary>
 public record EntryPointText(string Culture, string? Name, string? Description);
+
+/// <summary>Ein Hinweis zum Platz: Info, Warnung oder Sperrung, optional mit Zeitraum (`dive-site.md`, «Hinweise»).</summary>
+public record NoticeContent(Guid Id, NoticeKind Kind, DateOnly? ValidFrom, DateOnly? ValidUntil, IReadOnlyList<NoticeText> Texts);
+
+/// <summary>Text eines Hinweises in einer Sprache.</summary>
+public record NoticeText(string Culture, string? Text);
 
 /// <summary>Fehler beim Speichern oder Freigeben. Die Oberfläche bildet daraus Texte.</summary>
 public enum EditorialError
@@ -82,6 +91,9 @@ public enum EditorialError
 
     /// <summary>Das Konto ist gesperrt.</summary>
     Blocked,
+
+    /// <summary>Ein Hinweis hat keinen deutschen Text, einen zu langen Text oder endet vor seinem Beginn.</summary>
+    InvalidNotice,
 }
 
 /// <summary>Ergebnis eines Commands der Redaktion. <see cref="NoChange"/>: Der Inhalt war gleich wie die Basis, es entstand keine Version.</summary>

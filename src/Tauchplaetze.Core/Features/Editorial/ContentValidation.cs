@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Tauchplaetze.Core.Features.DiveSites;
 
 namespace Tauchplaetze.Core.Features.Editorial;
 
@@ -33,8 +34,18 @@ internal static partial class ContentValidation
             errors.Add(EditorialError.InvalidSlug);
         }
 
+        if (content.NoticeList.Any(IsInvalid))
+        {
+            errors.Add(EditorialError.InvalidNotice);
+        }
+
         return errors;
     }
+
+    private static bool IsInvalid(NoticeContent notice) =>
+        string.IsNullOrWhiteSpace(notice.Texts.FirstOrDefault(t => t.Culture == "de")?.Text)
+        || notice.Texts.Any(t => t.Text?.Trim().Length > NoticeRules.TextLength)
+        || notice is { ValidFrom: { } from, ValidUntil: { } until } && until < from;
 
     /// <remarks>Grob die Landesgrenze mit etwas Rand, damit Plätze an der Grenze (Bodensee, Genfersee, Rhein bei Basel) gelten.</remarks>
     private static bool InSwitzerland(double latitude, double longitude) => latitude is >= 45.7 and <= 47.9 && longitude is >= 5.8 and <= 10.6;

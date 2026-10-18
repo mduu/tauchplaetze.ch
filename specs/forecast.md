@@ -32,6 +32,7 @@ Jeder Platz hat eine **Datenstufe** (`DataLevel`). Sie sagt, wie genau die Daten
 - Wetter gibt es für jeden Punkt der Schweiz. Ein veröffentlichter Platz hat darum mindestens Stufe 1, ausser die Prognose ist ausgeschaltet.
 - Die Datenstufe kann pro Tag sinken, wenn eine Quelle ausfällt.
 - Die Rangliste «Wo tauchen?» zeigt nur Plätze mit Index. Plätze ohne Index erscheinen im Verzeichnis und auf der Gewässerseite.
+- Ein Platz mit gültiger Sperrung (`dive-site.md`, «Hinweise») fehlt an diesem Tag in «Beste Wahl» und Rangliste. Der Index wird trotzdem berechnet.
 
 ## Eingaben pro Platz und Tag
 

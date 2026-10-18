@@ -1,3 +1,6 @@
+using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Accounts.Queries;
@@ -300,6 +303,69 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.Contains(accountsForAdmin, a => a.Email == "anna@example.org");
     }
 
+    [SqlFact]
+    public async Task Hinweise_gelten_nur_in_ihrem_Zeitraum_der_schwerste_zuerst_und_ohne_Uebersetzung_auf_Deutsch()
+    {
+        // Arrange
+        var (moderator, _, site) = await Prepare();
+        var edit = await ForEditing(site);
+        NoticeContent[] notices =
+        [
+            Notice(NoticeKind.Info, null, null, ("de", "Parkplatz kostet"), ("fr", "Parking payant")),
+            Notice(NoticeKind.Closure, null, new DateOnly(2026, 10, 17), ("de", "Gesperrt bis heute")),
+            Notice(NoticeKind.Warning, new DateOnly(2026, 10, 18), null, ("de", "Ab morgen Bauarbeiten")),
+            Notice(NoticeKind.Info, null, new DateOnly(2026, 10, 16), ("de", "Gestern vorbei")),
+        ];
+
+        // Act
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber, edit.Content with { Notices = notices }, null));
+        var details = ((DiveSiteLookup.Found)await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "fr"))).Site;
+        var listed = Assert.Single(await Query<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>>(new GetDiveSitesQuery("fr")));
+
+        // Assert
+        Assert.Equal(
+            [(NoticeKind.Closure, "Gesperrt bis heute", true), (NoticeKind.Info, "Parking payant", false)],
+            details.Notices.Select(n => (n.Kind, n.Text, n.GermanOnly)));
+        Assert.Equal(NoticeKind.Closure, listed.NoticeToday);
+    }
+
+    [SqlTheory]
+    [InlineData(null, null, null)]
+    [InlineData("Gesperrt", "2026-11-02", "2026-11-01")]
+    public async Task Ein_Hinweis_braucht_deutschen_Text_und_endet_nicht_vor_seinem_Beginn(string? german, string? from, string? until)
+    {
+        // Arrange
+        var (_, anna, site) = await Prepare();
+        var edit = await ForEditing(site);
+        var notice = Notice(NoticeKind.Closure, Date(from), Date(until), ("de", german), ("fr", "Fermé"));
+
+        // Act
+        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { Notices = [notice] }, null));
+
+        // Assert
+        Assert.Equal([EditorialError.InvalidNotice], result.Errors);
+    }
+
+    [SqlFact]
+    public async Task Eine_Version_im_alten_Format_ohne_Einstiege_und_Hinweise_laesst_sich_laden()
+    {
+        // Arrange
+        var (_, _, site) = await Prepare();
+        var path = Assert.Single(Sql.Revisions.Paths);
+        var json = JsonNode.Parse(await Sql.Revisions.Load(path, TestContext.Current.CancellationToken))!.AsObject();
+        json.Remove("entryPoints");
+        json.Remove("notices");
+        await Sql.Revisions.Save(path, JsonSerializer.SerializeToUtf8Bytes(json), TestContext.Current.CancellationToken);
+
+        // Act
+        var edit = await ForEditing(site);
+
+        // Assert
+        Assert.Equal("Riff Williams", edit.Content.Name);
+        Assert.Empty(edit.Content.EntryPointList);
+        Assert.Empty(edit.Content.NoticeList);
+    }
+
     private async Task<(string Moderator, string Anna, Guid Site)> Prepare()
     {
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
@@ -334,4 +400,9 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
 
     private async Task<IReadOnlyList<FieldChange>> Changes(Guid site, int from, int to) =>
         (await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(site, from, to)))!;
+
+    private static NoticeContent Notice(NoticeKind kind, DateOnly? from, DateOnly? until, params (string Culture, string? Text)[] texts) =>
+        new(Guid.Empty, kind, from, until, [.. texts.Select(t => new NoticeText(t.Culture, t.Text))]);
+
+    private static DateOnly? Date(string? value) => value is null ? null : DateOnly.Parse(value, CultureInfo.InvariantCulture);
 }

@@ -9,7 +9,7 @@ namespace Tauchplaetze.Core.Features.DiveSites.Queries;
 /// <summary>Alle öffentlichen Plätze, optional nur eines Gewässers, mit dem Index von heute. Sortiert nach Gewässer und Name.</summary>
 public record GetDiveSitesQuery(string Culture, string? WaterBodySlug = null);
 
-/// <summary>Ein Platz im Verzeichnis und auf der Karte.</summary>
+/// <summary>Ein Platz im Verzeichnis und auf der Karte. <see cref="NoticeToday"/>: der schwerste heute gültige Hinweis.</summary>
 public record DiveSiteListItem(
     string Slug,
     string Name,
@@ -21,13 +21,15 @@ public record DiveSiteListItem(
     double Longitude,
     byte ContentLevel,
     byte? DataLevel,
-    decimal? DiveIndexToday);
+    decimal? DiveIndexToday,
+    NoticeKind? NoticeToday = null);
 
 internal class GetDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider time) : IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>>
 {
     public async Task<IReadOnlyList<DiveSiteListItem>> Handle(GetDiveSitesQuery query, CancellationToken ct = default)
     {
         var today = SwissTime.Today(time);
+        var active = NoticeRules.ActiveOn(today);
         var rows = await dbContext.DiveSites
             .AsNoTracking()
             .Where(d => d.Status == DiveSiteStatus.Published)
@@ -42,6 +44,7 @@ internal class GetDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 d.DataLevel,
                 Water = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType },
                 Index = dbContext.DailyForecasts.Where(f => f.DiveSiteId == d.Id && f.Date == today).Select(f => f.DiveIndex).FirstOrDefault(),
+                Notices = d.Notices.AsQueryable().Where(active).Select(n => n.Kind).ToList(),
             })
             .ToListAsync(ct);
 
@@ -57,7 +60,8 @@ internal class GetDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 r.Location.X,
                 r.ContentLevel,
                 r.DataLevel,
-                r.Index))
+                r.Index,
+                r.Notices.Count == 0 ? null : r.Notices.Max()))
             .OrderBy(s => s.WaterBodyName, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo(query.Culture), true))
             .ThenBy(s => s.Name, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo(query.Culture), true))
             .ToList();

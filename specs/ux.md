@@ -60,26 +60,28 @@ Tagesauswahl und Umkreis ändern die URL (`?date=`, `?lat=&lng=&r=`). Die Seite 
 Mockup: `design/tauchplatz.dc.html`.
 
 1. Hero: Foto (oder Unterwasser-Illustration), Brotkrumen «See › Gemeinde», Name gross, Tags (Wand, Wrack, Tiefe, Zugang, Schwierigkeit, ganzjährig).
-2. **Tauchbedingungen:** Satz («Heute ein guter Tag.») und Index gross.
+2. **Hinweise** (falls gültig): Banner direkt unter dem Hero, schwerster zuerst. Farbe nach Art, Art und Enddatum als Label («Gesperrt · bis 01.04.2027»), darunter der Text. Siehe `dive-site.md`, «Hinweise».
+3. **Tauchbedingungen:** Satz («Heute ein guter Tag.») und Index gross.
    - Temperaturprofil als Diagramm (Temperatur über Tiefe) mit markierter Sprungschicht.
    - Kacheln: Sicht-Indikator («Gut ab 16 m», mit Datum des Satellitenbilds), Anzug-Hinweis, Wind, Algen.
    - 5-Tage-Verlauf: Index, wo vorhanden. Tage im Ausblick zeigen Wind und Regen.
    - Datenstufe als kurzer Hinweis: «Profil am Platz», «für den ganzen See», «Messstation {Name}» oder «nur Wetter».
-3. **Der Platz:** Bewertungen als kompakter Block (Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung; nur bewertete Skalen, Wert immer auch als Zahl und Kurztext). Darunter «Unter Wasser»: Text, Fotos (Galerie), Fotograf mit Link.
-4. **Gefahren:** Text und Bilder. Gut sichtbar, nicht eingeklappt.
-5. **Einstiege und Tauchplatzskizze:** Karte mit allen Einstiegen, pro Einstieg Name, Text und Bilder. Skizze mit Tiefenlinien und Highlights. Hinweis «Skizze, nicht zur Navigation».
-6. **Praktisch:** Koordinaten mit Link auf die Landeskarte, «Hinfahren» mit Routenlinks zu Google Maps und Apple Karten (die meisten navigieren damit zum Platz), Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation, Notfall.
-7. **Letzte Meldungen** (Phase 1, falls vorhanden) mit Button «Sicht melden».
-8. Buddy-Block für die Region.
-9. Fuss mit Quellen, «Zuletzt geändert am …», Links «Versionen» und «Platz bearbeiten» (führt zur Anmeldung).
+4. **Der Platz:** Bewertungen als kompakter Block (Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung; nur bewertete Skalen, Wert immer auch als Zahl und Kurztext). Darunter «Unter Wasser»: Text, Fotos (Galerie), Fotograf mit Link.
+5. **Gefahren:** Text und Bilder. Gut sichtbar, nicht eingeklappt.
+6. **Einstiege und Tauchplatzskizze:** Karte mit allen Einstiegen, pro Einstieg Name, Text und Bilder. Skizze mit Tiefenlinien und Highlights. Hinweis «Skizze, nicht zur Navigation».
+7. **Praktisch:** Koordinaten mit Link auf die Landeskarte, «Hinfahren» mit Routenlinks zu Google Maps und Apple Karten (die meisten navigieren damit zum Platz), Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation, Notfall.
+8. **Letzte Meldungen** (Phase 1, falls vorhanden) mit Button «Sicht melden».
+9. Buddy-Block für die Region.
+10. Fuss mit Quellen, «Zuletzt geändert am …», Links «Versionen» und «Platz bearbeiten» (führt zur Anmeldung).
 
-Alle Angaben in den Abschnitten 3 bis 6 sind optional (siehe `dive-site.md`). Ein Abschnitt ohne Inhalt fehlt. Fehlen die Abschnitte 3 bis 6 ganz, erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
+Alle Angaben in den Abschnitten 4 bis 7 sind optional (siehe `dive-site.md`). Ein Abschnitt ohne Inhalt fehlt. Fehlen die Abschnitte 4 bis 7 ganz, erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
 
 ### Verzeichnis
 
 - Liste und Karte nebeneinander (Desktop), umschaltbar (Handy).
 - Filter: See, Datenstufe, Schwierigkeit (Einsteiger, Fortgeschrittene, Erfahrene), Zugang, Eigenschaften (Wand und Wrack ab Bewertung 3, Fluss …).
 - Jede Zeile zeigt den heutigen Index als kleinen Wert.
+- Gilt heute eine Sperrung oder Warnung, trägt die Zeile ein Badge «Gesperrt» bzw. «Warnung».
 
 ### Gewässer-Übersicht
 
@@ -113,6 +115,7 @@ Alle Angaben in den Abschnitten 3 bis 6 sind optional (siehe `dive-site.md`). Ei
 | Text nur auf Deutsch | dezenter Hinweis über dem Text |
 | Automatisch übersetzt | dezenter Hinweis «automatisch übersetzt» |
 | Platz archiviert | 410 oder Weiterleitung zur Gewässerseite |
+| Platz gesperrt (Hinweis `Closure`) | Banner in Korallenrot oben auf der Platzseite, Badge im Verzeichnis, nicht in der Rangliste |
 
 ## Barrierefreiheit
 

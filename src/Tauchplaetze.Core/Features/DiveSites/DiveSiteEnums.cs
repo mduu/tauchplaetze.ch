@@ -61,3 +61,16 @@ public enum EntryPointKind
     /// <summary>Nur Ausstieg.</summary>
     Exit,
 }
+
+/// <summary>Art eines Hinweises zum Platz (`dive-site.md`, «Hinweise»). Die Reihenfolge ist die Schwere.</summary>
+public enum NoticeKind
+{
+    /// <summary>Information, z.B. Bauarbeiten in der Nähe.</summary>
+    Info,
+
+    /// <summary>Warnung, z.B. Parkplatz nicht zugänglich.</summary>
+    Warning,
+
+    /// <summary>Sperrung: Am Platz darf man nicht tauchen. Der Platz fehlt in der Rangliste.</summary>
+    Closure,
+}

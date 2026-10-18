@@ -43,6 +43,9 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Deutsch (UI) | Code | English (UI) | Français (UI) | Italiano (UI) |
 |---|---|---|---|---|
 | Einstieg | `EntryPoint` | entry point | point d'entrée | punto d'entrata |
+| Hinweis | `Notice` | notice | avis | avviso |
+| Sperrung, gesperrt | `Closure` | closure, closed | fermeture, fermé | chiusura, chiuso |
+| Warnung | `Warning` | warning | avertissement | avvertenza |
 | Ausstieg | `ExitPoint` | exit point | point de sortie | punto d'uscita |
 | Uferzugang | `ShoreAccess` | shore access | accès depuis la rive | accesso da riva |
 | Bootstauchgang | `BoatDive` | boat dive | plongée depuis un bateau | immersione da barca |

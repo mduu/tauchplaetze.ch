@@ -32,7 +32,10 @@ internal static class DiveSiteContentMapping
             t.Culture.Trim(), t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote, t.IsMachineTranslated))],
         [.. site.EntryPoints.OrderBy(e => e.SortOrder).Select(e => new EntryPointContent(
             e.Id, e.Location.Y, e.Location.X, e.Kind,
-            [.. e.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new EntryPointText(t.Culture.Trim(), t.Name, t.Description))]))]);
+            [.. e.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new EntryPointText(t.Culture.Trim(), t.Name, t.Description))]))],
+        [.. site.Notices.OrderBy(n => n.SortOrder).Select(n => new NoticeContent(
+            n.Id, n.Kind, n.ValidFrom, n.ValidUntil,
+            [.. n.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new NoticeText(t.Culture.Trim(), t.Text))]))]);
 
     public static void ApplyTo(DiveSite site, DiveSiteContent content)
     {
@@ -83,6 +86,27 @@ internal static class DiveSiteContentMapping
                 Culture = t.Culture,
                 Name = Blank(t.Name),
                 Description = Blank(t.Description),
+            })],
+        }));
+
+        ApplyNotices(site, content);
+    }
+
+    private static void ApplyNotices(DiveSite site, DiveSiteContent content)
+    {
+        site.Notices.Clear();
+        site.Notices.AddRange(content.NoticeList.Select((n, index) => new DiveSiteNotice
+        {
+            Id = n.Id == Guid.Empty ? Guid.CreateVersion7() : n.Id,
+            DiveSiteId = site.Id,
+            Kind = n.Kind,
+            ValidFrom = n.ValidFrom,
+            ValidUntil = n.ValidUntil,
+            SortOrder = index,
+            Translations = [.. n.Texts.Where(t => Blank(t.Text) is not null).Select(t => new DiveSiteNoticeTranslation
+            {
+                Culture = t.Culture,
+                Text = Blank(t.Text)!,
             })],
         }));
     }

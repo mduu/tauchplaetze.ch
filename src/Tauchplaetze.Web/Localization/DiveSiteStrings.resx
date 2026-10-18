@@ -58,4 +58,9 @@
   <data name="WaterBodies_Sites_Many" xml:space="preserve"><value>{0} Tauchplätze</value></data>
   <data name="Map_Layer_Map" xml:space="preserve"><value>Karte</value></data>
   <data name="Map_Layer_Photo" xml:space="preserve"><value>Luftbild</value></data>
+  <data name="Notices_Label" xml:space="preserve"><value>Wichtige Hinweise</value></data>
+  <data name="Notice_Info" xml:space="preserve"><value>Hinweis</value></data>
+  <data name="Notice_Warning" xml:space="preserve"><value>Warnung</value></data>
+  <data name="Notice_Closure" xml:space="preserve"><value>Gesperrt</value></data>
+  <data name="Notice_Until" xml:space="preserve"><value>bis {0}</value></data>
 </root>

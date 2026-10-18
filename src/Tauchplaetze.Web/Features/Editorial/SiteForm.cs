@@ -43,6 +43,8 @@ internal class SiteForm
 
     public List<EntryForm> EntryPoints { get; } = [];
 
+    public List<NoticeForm> Notices { get; } = [];
+
     public string? Comment { get; set; }
 
     public static readonly string[] RatingFields = ["DifficultyRating", "WallRating", "MarineLifeRating", "WrecksRating", "CurrentRating", "SurroundingsRating"];
@@ -91,6 +93,7 @@ internal class SiteForm
         }
 
         form.EntryPoints.AddRange(content.EntryPointList.Select(e => EntryForm.From(e)));
+        form.Notices.AddRange(content.NoticeList.Select(NoticeForm.From));
         return form;
     }
 
@@ -118,7 +121,8 @@ internal class SiteForm
         ForecastDisabled,
         [.. Texts.Select(t => new DiveSiteContentTranslation(t.Key, t.Value.UnderwaterDescription, t.Value.SurroundingsInfo, t.Value.ApproachInfo,
             t.Value.HazardsInfo, t.Value.FacilitiesInfo, t.Value.DivingBanNote, t.Value.IsMachineTranslated)).Where(HasText)],
-        [.. EntryPoints.Select(e => e.ToContent())]);
+        [.. EntryPoints.Select(e => e.ToContent())],
+        [.. Notices.Select(n => n.ToContent())]);
 
     private static bool HasText(DiveSiteContentTranslation t) =>
         new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));
@@ -168,4 +172,41 @@ internal class EntryForm
         Id, Latitude, Longitude, Kind,
         [.. Texts.Where(t => !string.IsNullOrWhiteSpace(t.Value.Name) || !string.IsNullOrWhiteSpace(t.Value.Description))
             .Select(t => new EntryPointText(t.Key, t.Value.Name, t.Value.Description))]);
+}
+
+internal class NoticeForm
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    public NoticeKind Kind { get; set; } = NoticeKind.Info;
+
+    public DateTime? ValidFrom { get; set; }
+
+    public DateTime? ValidUntil { get; set; }
+
+    public Dictionary<string, string?> Texts { get; } = Languages.All.ToDictionary(l => l, _ => (string?)null);
+
+    public static NoticeForm From(NoticeContent notice)
+    {
+        var form = new NoticeForm
+        {
+            Id = notice.Id,
+            Kind = notice.Kind,
+            ValidFrom = notice.ValidFrom?.ToDateTime(TimeOnly.MinValue),
+            ValidUntil = notice.ValidUntil?.ToDateTime(TimeOnly.MinValue),
+        };
+        foreach (var text in notice.Texts.Where(t => form.Texts.ContainsKey(t.Culture)))
+        {
+            form.Texts[text.Culture] = text.Text;
+        }
+
+        return form;
+    }
+
+    public NoticeContent ToContent() => new(
+        Id,
+        Kind,
+        ValidFrom is { } from ? DateOnly.FromDateTime(from) : null,
+        ValidUntil is { } until ? DateOnly.FromDateTime(until) : null,
+        [.. Texts.Where(t => !string.IsNullOrWhiteSpace(t.Value)).Select(t => new NoticeText(t.Key, t.Value))]);
 }

@@ -22,7 +22,7 @@ internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWri
             return EditorialResult.Fail(EditorialError.Blocked);
         }
 
-        var site = await dbContext.DiveSites.Include(d => d.Translations).Include(d => d.EntryPoints).ThenInclude(e => e.Translations)
+        var site = await dbContext.DiveSites.Include(d => d.Translations).Include(d => d.EntryPoints).ThenInclude(e => e.Translations).Include(d => d.Notices).ThenInclude(n => n.Translations)
             .SingleOrDefaultAsync(d => d.Id == command.DiveSiteId && d.Status != DiveSiteStatus.Archived, ct);
         var baseRevision = await dbContext.DiveSiteRevisions.SingleOrDefaultAsync(r => r.DiveSiteId == command.DiveSiteId && r.Number == command.BaseNumber, ct);
         if (site is null || baseRevision is null)

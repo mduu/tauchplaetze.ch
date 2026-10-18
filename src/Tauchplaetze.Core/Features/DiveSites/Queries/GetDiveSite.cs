@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.WaterBodies;
@@ -8,7 +9,7 @@ namespace Tauchplaetze.Core.Features.DiveSites.Queries;
 /// <summary>Ein öffentlicher Platz über seinen Slug, in der Sprache <paramref name="Culture"/>. Ein alter Slug ergibt eine Weiterleitung.</summary>
 public record GetDiveSiteQuery(string Slug, string Culture);
 
-internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext) : IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>
+internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider time) : IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>
 {
     public async Task<DiveSiteLookup> Handle(GetDiveSiteQuery query, CancellationToken ct = default)
     {
@@ -44,11 +45,32 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext) : IQueryHandl
                 site.Location.Y,
                 site.Location.X,
                 site.ContentLevel,
-                site.UpdatedAt)),
+                site.UpdatedAt,
+                await Notices(site.Id, query.Culture, ct))),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),
         };
+    }
+
+    private async Task<IReadOnlyList<SiteNotice>> Notices(Guid siteId, string culture, CancellationToken ct)
+    {
+        var notices = await dbContext.DiveSiteNotices
+            .AsNoTracking()
+            .Where(n => n.DiveSiteId == siteId)
+            .Where(NoticeRules.ActiveOn(SwissTime.Today(time)))
+            .Include(n => n.Translations)
+            .ToListAsync(ct);
+
+        return notices
+            .OrderByDescending(n => n.Kind)
+            .ThenBy(n => n.SortOrder)
+            .Select(n =>
+            {
+                var text = n.Translations.FirstOrDefault(t => t.Culture == culture) ?? n.Translations.First(t => t.Culture == "de");
+                return new SiteNotice(n.Kind, text.Text, n.ValidUntil, text.Culture != culture);
+            })
+            .ToList();
     }
 
     private async Task<DiveSiteLookup> FollowRedirect(string slug, CancellationToken ct)

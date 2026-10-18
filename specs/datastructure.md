@@ -116,11 +116,28 @@ Einstieg oder Ausstieg eines Platzes. Ein Platz hat null bis viele Einstiege.
 
 Der Einstieg gehört zum Aggregat `DiveSite`. Er wird nur über den Platz gespeichert und ist Teil der Revision.
 
+### DiveSiteNotice
+
+Wichtiger Hinweis zu einem Platz (`dive-site.md`, «Hinweise»). Ein Platz hat null bis viele Hinweise.
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `Id` | Guid | |
+| `DiveSiteId` | Guid | FK `DiveSite`, Cascade Delete |
+| `Kind` | enum | `Info`, `Warning`, `Closure` |
+| `ValidFrom` | date, optional | erster gültiger Tag, Schweizer Zeit |
+| `ValidUntil` | date, optional | letzter gültiger Tag (inklusive) |
+| `SortOrder` | int | Reihenfolge der Redaktion |
+
+Übersetzbar in `DiveSiteNoticeTranslation` (`NoticeId`, `Culture`, `Text` string(500)). Deutsch ist Pflicht.
+
+Der Hinweis gehört zum Aggregat `DiveSite` und ist Teil der Revision (Feld `notices` im Snapshot, fehlt bei Versionen ohne Hinweise).
+
 ### DiveSiteRevision
 
 Eine Version eines Platzes. Jede Speicherung im CMS erzeugt eine. Ablauf und Datenschutz in `cms.md`, Entscheid in ADR-008.
 
-Die Row in SQL enthält nur die Metadaten. Der Inhalt liegt als JSON in Blob Storage (`revisions/{diveSiteId}/{number}.json`, privat). So bleibt die Datenbank klein. Die aktuelle freigegebene Version steht zusätzlich in den Tabellen `DiveSites`, `DiveSiteTranslations`, `DiveSiteEntryPoints` und `MediaItems`. Nur sie lesen die öffentlichen Seiten.
+Die Row in SQL enthält nur die Metadaten. Der Inhalt liegt als JSON in Blob Storage (`revisions/{diveSiteId}/{number}.json`, privat). So bleibt die Datenbank klein. Die aktuelle freigegebene Version steht zusätzlich in den Tabellen `DiveSites`, `DiveSiteTranslations`, `DiveSiteEntryPoints`, `DiveSiteNotices` und `MediaItems`. Nur sie lesen die öffentlichen Seiten.
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
@@ -266,6 +283,7 @@ Zusätzliche Felder am Benutzer:
 - `DiveSites.Location`: Spatial Index.
 - `DiveSites (WaterBodyId, Status)`.
 - `DiveSiteEntryPoints (DiveSiteId, SortOrder)`.
+- `DiveSiteNotices (DiveSiteId, SortOrder)`.
 - `MediaItems (DiveSiteId, Section, SortOrder)`.
 - `DailyForecasts (Date, DiveIndex DESC)` für die Rangliste.
 - `Reports (DiveSiteId, DiveDate)`.

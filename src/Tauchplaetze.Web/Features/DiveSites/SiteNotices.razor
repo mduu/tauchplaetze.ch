@@ -1,0 +1,27 @@
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Web.Features.Forecasts
+@inject IStringLocalizer<DiveSiteStrings> L
+
+@if (Notices.Count > 0)
+{
+    <section class="page-section notices" aria-label="@L["Notices_Label"]">
+        @foreach (var notice in Notices)
+        {
+            <div class="notice" data-notice-kind="@notice.Kind.ToString().ToLowerInvariant()">
+                <p class="notice-kind">
+                    @L[$"Notice_{notice.Kind}"]
+                    @if (notice.ValidUntil is { } until)
+                    {
+                        <span class="notice-until">· @L["Notice_Until", ForecastFormat.Date(until)]</span>
+                    }
+                </p>
+                <p class="notice-text" lang="@(notice.GermanOnly ? "de" : null)">@notice.Text</p>
+            </div>
+        }
+    </section>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<SiteNotice> Notices { get; set; } = [];
+}

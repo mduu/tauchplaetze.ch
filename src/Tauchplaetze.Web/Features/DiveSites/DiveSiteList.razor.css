@@ -41,3 +41,20 @@
 [data-index-band="high"] { color: var(--color-index-high); }
 [data-index-band="mid"] { color: var(--color-index-mid); }
 [data-index-band="low"] { color: var(--color-index-low-text); }
+
+.notice-badge {
+    align-self: flex-start;
+    padding: 2px 10px;
+    border: 1px solid var(--color-notice-warning);
+    border-radius: var(--radius-pill);
+    color: var(--color-notice-warning);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.notice-badge[data-notice-kind="closure"] {
+    border-color: var(--color-notice-closure);
+    color: var(--color-notice-closure);
+}

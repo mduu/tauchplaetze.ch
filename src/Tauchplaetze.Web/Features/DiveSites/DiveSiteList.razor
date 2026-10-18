@@ -1,3 +1,4 @@
+@using Tauchplaetze.Core.Features.DiveSites
 @using Tauchplaetze.Core.Features.DiveSites.Queries
 @using Tauchplaetze.Web.Features.Forecasts
 @inject IStringLocalizer<DiveSiteStrings> L
@@ -9,6 +10,10 @@
             <div>
                 <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
                 <span class="where">@string.Join(" · ", new[] { site.Municipality, site.WaterBodyName }.OfType<string>())</span>
+                @if (site.NoticeToday is NoticeKind.Closure or NoticeKind.Warning)
+                {
+                    <span class="notice-badge" data-notice-kind="@site.NoticeToday.ToString()!.ToLowerInvariant()">@L[$"Notice_{site.NoticeToday}"]</span>
+                }
                 @if (site.DataLevel is { } level)
                 {
                     <span class="label">@L[$"DataLevel_{level}"]</span>

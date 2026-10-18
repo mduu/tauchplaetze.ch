@@ -1,0 +1,47 @@
+.notices {
+    display: grid;
+    gap: 12px;
+}
+
+.notice {
+    --notice-color: var(--color-notice-info);
+    padding: 16px 20px 16px 18px;
+    border: 1px solid color-mix(in srgb, var(--notice-color) 45%, transparent);
+    border-left: 5px solid var(--notice-color);
+    border-radius: var(--radius-tile);
+    background: color-mix(in srgb, var(--notice-color) 10%, var(--color-surface));
+}
+
+.notice[data-notice-kind="warning"] {
+    --notice-color: var(--color-notice-warning);
+}
+
+.notice[data-notice-kind="closure"] {
+    --notice-color: var(--color-notice-closure);
+}
+
+.notice-kind {
+    margin: 0;
+    color: var(--notice-color);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.notice-until {
+    margin-left: 0.4em;
+    color: var(--color-text-muted);
+}
+
+.notice-text {
+    margin: 6px 0 0;
+    color: var(--color-text);
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+.notice[data-notice-kind="closure"] .notice-text {
+    font-weight: 600;
+}

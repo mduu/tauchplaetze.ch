@@ -20,6 +20,8 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
 
     public DbSet<DiveSiteEntryPoint> DiveSiteEntryPoints => Set<DiveSiteEntryPoint>();
 
+    public DbSet<DiveSiteNotice> DiveSiteNotices => Set<DiveSiteNotice>();
+
     public DbSet<DiveSiteRevision> DiveSiteRevisions => Set<DiveSiteRevision>();
 
     public DbSet<SlugRedirect> SlugRedirects => Set<SlugRedirect>();
@@ -49,5 +51,6 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
         configurationBuilder.Properties<ForecastRunStatus>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<HydroStationRole>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<EntryPointKind>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<NoticeKind>().HaveConversion<string>().HaveMaxLength(20);
     }
 }

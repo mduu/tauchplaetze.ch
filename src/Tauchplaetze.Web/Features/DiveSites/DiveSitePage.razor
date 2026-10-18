@@ -36,6 +36,8 @@
             <h1 class="site-name">@site.Name</h1>
         </UnderwaterHero>
 
+        <SiteNotices Notices="site.Notices" />
+
         <section class="page-section" aria-labelledby="conditions">
             @if (forecast is { Days.Count: > 0 })
             {

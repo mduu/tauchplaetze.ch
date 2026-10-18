@@ -112,6 +112,22 @@ Ein Platz hat null, einen oder mehrere Einstiege (`DiveSiteEntryPoint`).
 - Die Reihenfolge legt die Redaktion fest. Der erste Einstieg ist der Hauptzugang.
 - `DiveSite.Location` bleibt die Position für Prognose und Karte. Ohne Einstieg zeigt die Karte nur diese Position.
 
+## Hinweise
+
+Ein Platz kann wichtige Hinweise haben (`DiveSiteNotice`, Entscheid Marc, 18.10.2026). Beispiele: «Tauchplatz ist bis 1.4.2027 gesperrt», «Parkplatz bis Sommer 2028 nicht zugänglich».
+
+| Art | Code | Bedeutung | Farbe |
+|---|---|---|---|
+| Info | `Info` | gut zu wissen | `--color-notice-info` (Glacier-Cyan) |
+| Warnung | `Warning` | Einschränkung, Tauchen möglich | `--color-notice-warning` (Signal-Orange) |
+| Sperrung | `Closure` | am Platz nicht tauchen | `--color-notice-closure` (Korallenrot) |
+
+- Text pro Sprache, höchstens 500 Zeichen. Deutsch ist Pflicht. Fehlt eine Übersetzung, erscheint der deutsche Text.
+- Optional ein Zeitraum: «gültig ab» und «gültig bis» (inklusive, Schweizer Zeit). Ausserhalb ist der Hinweis unsichtbar, ohne neue Version. Ein unscharfes Ende («bis Sommer 2028») steht im Text, das Datum bleibt leer.
+- Hinweise sind Teil des Inhalts: Mitwirkende schlagen sie vor, Moderatoren geben sie frei (ADR-008).
+- Eine gültige Sperrung nimmt den Platz an diesem Tag aus «Beste Wahl» und Rangliste (`forecast.md`). Verzeichnis und Platzseite zeigen ihn weiter.
+- Mehrere Hinweise: schwerster zuerst (Sperrung, Warnung, Info), sonst in der Reihenfolge der Redaktion.
+
 ## Bilder pro Abschnitt
 
 Jedes Bild eines Platzes gehört zu genau einem Abschnitt (`MediaItem.Section`): `Underwater`, `Surroundings`, `Approach`, `EntryPoint`, `Hazards`. Bilder eines Einstiegs verweisen zusätzlich auf den Einstieg (`EntryPointId`). Das Hero-Foto ist meist ein Bild aus `Underwater`.
@@ -121,9 +137,10 @@ Jedes Bild eines Platzes gehört zu genau einem Abschnitt (`MediaItem.Section`):
 Reihenfolge der Abschnitte siehe `ux.md`. Kurz:
 
 1. Hero mit Tags (aus Bewertungen und `Features`).
-2. Tauchbedingungen und Prognose.
-3. Bewertungen als kompakter Block (nur bewertete Skalen).
-4. Unter Wasser: Text und Galerie.
-5. Gefahren: Text und Bilder. Gut sichtbar, nicht eingeklappt.
-6. Einstiege: Karte mit allen Pins, pro Einstieg Text und Bilder.
-7. Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten.
+2. Gültige Hinweise als Banner, schwerster zuerst.
+3. Tauchbedingungen und Prognose.
+4. Bewertungen als kompakter Block (nur bewertete Skalen).
+5. Unter Wasser: Text und Galerie.
+6. Gefahren: Text und Bilder. Gut sichtbar, nicht eingeklappt.
+7. Einstiege: Karte mit allen Pins, pro Einstieg Text und Bilder.
+8. Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten.

@@ -153,4 +153,16 @@
   <data name="Forecast_Skipped" xml:space="preserve"><value>Another run is still active. This run did not start.</value></data>
   <data name="Map_Layer_Map" xml:space="preserve"><value>Map</value></data>
   <data name="Map_Layer_Photo" xml:space="preserve"><value>Aerial</value></data>
+  <data name="Edit_Tab_Notices" xml:space="preserve"><value>Notices</value></data>
+  <data name="Notices_Help" xml:space="preserve"><value>Notices appear at the top of the site page. A closure removes the site from the ranking. Without dates a notice has no time limit. German is required.</value></data>
+  <data name="Field_Notice" xml:space="preserve"><value>Notice {0}</value></data>
+  <data name="Field_NoticeKind" xml:space="preserve"><value>Kind of notice</value></data>
+  <data name="Field_NoticeValidFrom" xml:space="preserve"><value>Valid from</value></data>
+  <data name="Field_NoticeValidUntil" xml:space="preserve"><value>Valid until</value></data>
+  <data name="Field_NoticeText" xml:space="preserve"><value>Notice text</value></data>
+  <data name="NoticeKind_Info" xml:space="preserve"><value>Information</value></data>
+  <data name="NoticeKind_Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="NoticeKind_Closure" xml:space="preserve"><value>Closure</value></data>
+  <data name="Edit_AddNotice" xml:space="preserve"><value>Add notice</value></data>
+  <data name="Error_InvalidNotice" xml:space="preserve"><value>A notice needs a German text (at most 500 characters). «Valid until» must not be before «Valid from».</value></data>
 </root>

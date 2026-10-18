@@ -118,7 +118,7 @@ else
         </MudTabPanel>
 
         <MudTabPanel Text="@L["Edit_Tab_EntryPoints"]">
-            <MudStack Spacing="4">
+            <MudStack Spacing="4" Class="pt-4">
                 @foreach (var (entry, index) in form.EntryPoints.Select((e, i) => (e, i + 1)).ToList())
                 {
                     <MudPaper Outlined="true" Class="pa-4">
@@ -144,6 +144,37 @@ else
                     </MudPaper>
                 }
                 <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="AddEntryPoint">@L["Edit_AddEntryPoint"]</MudButton>
+            </MudStack>
+        </MudTabPanel>
+
+        <MudTabPanel Text="@L["Edit_Tab_Notices"]">
+            <MudStack Spacing="4" Class="pt-4">
+                <MudText Typo="Typo.body2">@L["Notices_Help"]</MudText>
+                @foreach (var (notice, index) in form.Notices.Select((n, i) => (n, i + 1)).ToList())
+                {
+                    <MudPaper Outlined="true" Class="pa-4">
+                        <div class="d-flex justify-space-between align-center">
+                            <MudText Typo="Typo.h6">@L["Field_Notice", index]</MudText>
+                            <MudButton Color="Color.Secondary" OnClick="@(() => form.Notices.Remove(notice))">@L["Edit_Remove"]</MudButton>
+                        </div>
+                        <MudStack Row="true" Wrap="Wrap.Wrap">
+                            <MudSelect T="NoticeKind" @bind-Value="notice.Kind" Label="@L["Field_NoticeKind"]" Style="min-width: 200px">
+                                @foreach (var kind in Enum.GetValues<NoticeKind>())
+                                {
+                                    <MudSelectItem T="NoticeKind" Value="kind">@L[$"NoticeKind_{kind}"]</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudDatePicker @bind-Date="notice.ValidFrom" Label="@L["Field_NoticeValidFrom"]" DateFormat="dd.MM.yyyy" Editable="true" Clearable="true" />
+                            <MudDatePicker @bind-Date="notice.ValidUntil" Label="@L["Field_NoticeValidUntil"]" DateFormat="dd.MM.yyyy" Editable="true" Clearable="true" />
+                        </MudStack>
+                        @foreach (var language in Languages.All)
+                        {
+                            var key = language;
+                            <MudTextField T="string" Value="notice.Texts[key]" ValueChanged="@(v => notice.Texts[key] = v)" Label="@($"{L["Field_NoticeText"]} ({key.ToUpperInvariant()})")" Lines="2" MaxLength="NoticeRules.TextLength" Required="@(key == "de")" Class="mt-2" />
+                        }
+                    </MudPaper>
+                }
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => form!.Notices.Add(new NoticeForm()))">@L["Edit_AddNotice"]</MudButton>
             </MudStack>
         </MudTabPanel>
 
