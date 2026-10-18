@@ -1,5 +1,10 @@
 @page "/{Lang}"
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Forecasts
+@using Tauchplaetze.Core.Features.Forecasts.Queries
 @inject IStringLocalizer<SharedStrings> L
+@inject IStringLocalizer<ForecastStrings> F
+@inject IQueryHandler<GetBestSitesQuery, BestSites> BestSitesQuery
 @inject NavigationManager Navigation
 
 <PageTitle>@L["Start_Title"] · @L["Brand"]</PageTitle>
@@ -10,19 +15,85 @@
 
 <section class="intro">
     <p class="eyebrow">@L["Start_Eyebrow"]</p>
-    <h1>@L["Start_Title"]</h1>
+    <h1>@Title</h1>
     <p class="lead">@L["Start_Lead"]</p>
+
+    @if (best is not null)
+    {
+        <nav class="pills" aria-label="@F["Start_Days_Label"]">
+            @foreach (var day in best.Days)
+            {
+                <a class="pill" href="@Link(day, place)" aria-current="@(day == best.Date ? "true" : null)">@DayLabel(day)</a>
+            }
+        </nav>
+        <details class="area">
+            <summary class="pill pill-dashed">@F["Start_Area_Label"]: @AreaLabel · @F["Start_Area_Choose"]</summary>
+            <ul>
+                <li><a href="@Link(best.Date, null)">@F["Start_Area_All"]</a></li>
+                @foreach (var option in Places.All)
+                {
+                    <li><a href="@Link(best.Date, option)">@F["Start_Area_Radius", Places.DefaultRadiusKm, F[$"Place_{option.Key}"]]</a></li>
+                }
+            </ul>
+        </details>
+    }
 </section>
 
-<section class="page-section">
-    <article class="coming-soon">
-        <LakeCrossSection />
-        <div class="coming-soon-text">
-            <p class="eyebrow signal">@L["Start_ComingSoon_Label"]</p>
-            <h2>@L["Start_ComingSoon_Title"]</h2>
-            <p>@L["Start_ComingSoon_Text"]</p>
+<section class="page-section recommendations" aria-label="@F["Start_BestPick"]">
+    @if (best is { Ranking: [var top, ..] })
+    {
+        <article class="best-pick">
+            <LakeCrossSection Surface="top.SurfaceTemperature" At20m="top.TemperatureAt20m" ThermoclineTop="top.ThermoclineTop" />
+            <div class="best-pick-text">
+                <div class="best-pick-head">
+                    <div>
+                        <p class="eyebrow signal">@F["Start_BestPick"]</p>
+                        <h2>@top.Name</h2>
+                        <p class="where">@Where(top)</p>
+                    </div>
+                    <div class="index" data-index-band="@ForecastFormat.IndexBand(top.DiveIndex)">@ForecastFormat.Number(top.DiveIndex)</div>
+                </div>
+                @if (top.Reasons.Count > 0)
+                {
+                    <p class="reason">@string.Join(" · ", top.Reasons.Take(3).Select(r => F[$"Reason_{r}"].Value))</p>
+                }
+                <a class="button" href="@PublicRoutes.DiveSite(Language, top.Slug)">@F["Start_ToSite"]</a>
+            </div>
+        </article>
+
+        <div class="card ranking">
+            <h2>@(place is null ? F["Start_Ranking"] : F["Start_Ranking_Area"])</h2>
+            <ol>
+                @foreach (var (site, rank) in best.Ranking.Select((s, i) => (s, i + 1)))
+                {
+                    <li>
+                        <span class="rank">@rank</span>
+                        <div class="ranking-site">
+                            <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
+                            <span class="where">@Where(site)</span>
+                            <span class="bar" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)" style="width: @(FormattableString.Invariant($"{Math.Clamp(site.DiveIndex * 10, 10, 100):0}%"))"></span>
+                            @if (site.Reasons.Count > 0)
+                            {
+                                <span class="reason">@F[$"Reason_{site.Reasons[0]}"]</span>
+                            }
+                        </div>
+                        <span class="index-small" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)">@ForecastFormat.Number(site.DiveIndex)</span>
+                    </li>
+                }
+            </ol>
+            <p class="note">@F["Start_Indicator"]</p>
         </div>
-    </article>
+    }
+    else
+    {
+        <article class="coming-soon">
+            <LakeCrossSection />
+            <div class="coming-soon-text">
+                <p class="eyebrow signal">@F["Start_BestPick"]</p>
+                <p>@(place is null ? F["Start_NoIndex"] : F["Start_NoSitesInArea"])</p>
+            </div>
+        </article>
+    }
 </section>
 
 <section class="page-section how" aria-labelledby="how">
@@ -42,14 +113,61 @@
 @code {
     private static readonly string[] Steps = ["Model", "Satellite", "Weather", "Community"];
 
+    private BestSites? best;
+
+    private Place? place;
+
     [Parameter]
     public string? Lang { get; set; }
 
-    protected override void OnInitialized()
+    [SupplyParameterFromQuery(Name = "tag")]
+    public string? Day { get; set; }
+
+    [SupplyParameterFromQuery(Name = "ort")]
+    public string? PlaceKey { get; set; }
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string Title => best is null || best.Date == best.Days[0]
+        ? L["Start_Title"]
+        : F["Start_Title_Day", CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(best.Date.DayOfWeek)];
+
+    private string AreaLabel => place is null ? F["Start_Area_All"] : F["Start_Area_Radius", Places.DefaultRadiusKm, F[$"Place_{place.Key}"]];
+
+    protected override async Task OnInitializedAsync()
     {
         if (!Languages.IsSupported(Lang))
         {
             Navigation.NotFound();
+            return;
         }
+
+        place = Places.Find(PlaceKey);
+        var date = DateOnly.TryParseExact(Day, "yyyy-MM-dd", out var parsed) ? parsed : (DateOnly?)null;
+        var area = place is null ? null : new Area(place.Latitude, place.Longitude, Places.DefaultRadiusKm);
+        best = await BestSitesQuery.Handle(new GetBestSitesQuery(Language, date, area));
     }
+
+    private string Link(DateOnly day, Place? area)
+    {
+        var query = new List<string>();
+        if (best is not null && day != best.Days[0])
+        {
+            query.Add($"tag={day:yyyy-MM-dd}");
+        }
+
+        if (area is not null)
+        {
+            query.Add($"ort={area.Key}");
+        }
+
+        return query.Count == 0 ? $"/{Language}" : $"/{Language}?{string.Join('&', query)}";
+    }
+
+    private string DayLabel(DateOnly day) => best is not null && day == best.Days[0]
+        ? $"{F["Day_Today"]} · {ForecastFormat.Weekday(day)} {day.Day}."
+        : $"{ForecastFormat.Weekday(day)} {day.Day}.";
+
+    private string Where(RankedSite site) =>
+        string.Join(" · ", new[] { site.Municipality, site.WaterBodyName, site.DistanceKm is { } km ? F["Start_Distance", km].Value : null }.OfType<string>());
 }

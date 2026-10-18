@@ -20,6 +20,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeSiteForecasts Forecasts { get; } = new();
 
+    public FakeBestSites BestSites { get; } = new();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("ConnectionStrings:tauchplaetze", "Server=127.0.0.1,1;Database=tauchplaetze;User Id=test;Password=test;TrustServerCertificate=true");
@@ -28,6 +30,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
         {
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetBestSitesQuery, BestSites>>(BestSites));
         });
     }
 
@@ -81,4 +84,22 @@ public sealed class FakeSiteForecasts : IQueryHandler<GetSiteForecastQuery, Site
 
     public Task<SiteForecast> Handle(GetSiteForecastQuery query, CancellationToken ct = default) =>
         Task.FromResult(forecasts.GetValueOrDefault(query.DiveSiteId) ?? new SiteForecast([], null));
+}
+
+/// <summary>Eine feste Rangliste. Merkt sich die letzte Query.</summary>
+public sealed class FakeBestSites : IQueryHandler<GetBestSitesQuery, BestSites>
+{
+    public static readonly DateOnly Today = new(2026, 10, 18);
+
+    public IReadOnlyList<RankedSite> Ranking { get; set; } = [];
+
+    public GetBestSitesQuery? LastQuery { get; private set; }
+
+    public Task<BestSites> Handle(GetBestSitesQuery query, CancellationToken ct = default)
+    {
+        LastQuery = query;
+        var days = Enumerable.Range(0, 5).Select(Today.AddDays).ToList();
+        var date = query.Date is { } wanted && days.Contains(wanted) ? wanted : Today;
+        return Task.FromResult(new BestSites(date, days, Ranking));
+    }
 }

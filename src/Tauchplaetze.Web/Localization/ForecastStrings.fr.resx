@@ -58,4 +58,30 @@
   <data name="Reason_ClarityUnknown" xml:space="preserve"><value>visibilité inconnue</value></data>
   <data name="Sources" xml:space="preserve"><value>Données : Eawag Alplakes, MétéoSuisse via Open-Meteo, OFEV. La prévision est un indicateur, pas une garantie de visibilité.</value></data>
   <data name="Computed" xml:space="preserve"><value>Calculée le {0}</value></data>
+  <data name="Start_Title_Day" xml:space="preserve"><value>Où plonger {0} ?</value></data>
+  <data name="Start_Days_Label" xml:space="preserve"><value>Choisir le jour</value></data>
+  <data name="Start_Area_All" xml:space="preserve"><value>Toute la Suisse</value></data>
+  <data name="Start_Area_Radius" xml:space="preserve"><value>{0} km autour de {1}</value></data>
+  <data name="Start_Area_Choose" xml:space="preserve"><value>Choisir un lieu</value></data>
+  <data name="Start_Area_Label" xml:space="preserve"><value>Rayon</value></data>
+  <data name="Start_BestPick" xml:space="preserve"><value>Meilleur choix</value></data>
+  <data name="Start_ToSite" xml:space="preserve"><value>Voir le site de plongée</value></data>
+  <data name="Start_Ranking" xml:space="preserve"><value>Classement</value></data>
+  <data name="Start_Ranking_Area" xml:space="preserve"><value>Classement dans le rayon</value></data>
+  <data name="Start_NoIndex" xml:space="preserve"><value>Pas encore d'indice pour ce jour. La prévision est calculée chaque jour à 04:30 et 13:00.</value></data>
+  <data name="Start_NoSitesInArea" xml:space="preserve"><value>Aucun site avec indice dans ce rayon. Choisis un rayon plus grand ou toute la Suisse.</value></data>
+  <data name="Start_Distance" xml:space="preserve"><value>{0} km</value></data>
+  <data name="Start_Indicator" xml:space="preserve"><value>L'indice est un indicateur issu du modèle de lac, du satellite, de la météo et des affluents. Il ne garantit pas la visibilité.</value></data>
+  <data name="CrossSection_Surface" xml:space="preserve"><value>en surface</value></data>
+  <data name="CrossSection_At20m" xml:space="preserve"><value>à 20 m</value></data>
+  <data name="CrossSection_Thermocline" xml:space="preserve"><value>Thermocline à {0} m</value></data>
+  <data name="Place_zuerich" xml:space="preserve"><value>Zurich</value></data>
+  <data name="Place_bern" xml:space="preserve"><value>Berne</value></data>
+  <data name="Place_basel" xml:space="preserve"><value>Bâle</value></data>
+  <data name="Place_luzern" xml:space="preserve"><value>Lucerne</value></data>
+  <data name="Place_stgallen" xml:space="preserve"><value>Saint-Gall</value></data>
+  <data name="Place_lausanne" xml:space="preserve"><value>Lausanne</value></data>
+  <data name="Place_geneve" xml:space="preserve"><value>Genève</value></data>
+  <data name="Place_lugano" xml:space="preserve"><value>Lugano</value></data>
+  <data name="Place_chur" xml:space="preserve"><value>Coire</value></data>
 </root>

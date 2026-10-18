@@ -1,6 +1,7 @@
 @inject IStringLocalizer<SharedStrings> L
+@inject IStringLocalizer<ForecastStrings> F
 
-@* Querschnitt durch einen See aus dem Entwurf (design/start.html), ohne Messwerte. *@
+@* Querschnitt durch einen See aus dem Entwurf (design/start.html). Mit Werten zeigt er Oberfläche, 20 m und Sprungschicht. *@
 <svg class="cross-section" viewBox="0 0 600 300" role="img" aria-label="@L["Start_CrossSection_Label"]">
     <rect x="0" y="0" width="600" height="34" fill="var(--color-surface-raised)" />
     <rect x="0" y="34" width="600" height="106" fill="var(--color-lake-epilimnion)" />
@@ -8,8 +9,18 @@
     <rect x="0" y="166" width="600" height="134" fill="var(--color-lake-hypolimnion)" />
     <path d="M0 34 Q25 28 50 34 T100 34 T150 34 T200 34 T250 34 T300 34 T350 34 T400 34 T450 34 T500 34 T550 34 T600 34" fill="none" stroke="var(--color-primary)" stroke-width="2" />
     <line x1="0" y1="140" x2="470" y2="140" stroke="var(--color-signal)" stroke-width="2" stroke-dasharray="7 6" />
-    <text x="20" y="132" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13">@L["Start_CrossSection_Thermocline"]</text>
-    <text x="20" y="192" fill="var(--color-bubble)" font-family="IBM Plex Mono, monospace" font-size="13">@L["Start_CrossSection_Clearer"]</text>
+    <SvgText x="20" y="132" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@ThermoclineText" />
+    <SvgText x="20" y="192" fill="var(--color-bubble)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Clearer"]" />
+    @if (Surface is { } surface)
+    {
+        <SvgText x="210" y="80" fill="var(--color-text)" font-family="Bricolage Grotesque, sans-serif" font-size="30" font-weight="700" Content="@($"{Tauchplaetze.Web.Features.Forecasts.ForecastFormat.Number(surface)} °C")" />
+        <SvgText x="210" y="100" fill="var(--color-text-muted)" font-family="IBM Plex Mono, monospace" font-size="12" Content="@F["CrossSection_Surface"]" />
+    }
+    @if (At20m is { } at20m)
+    {
+        <SvgText x="210" y="232" fill="var(--color-text)" font-family="Bricolage Grotesque, sans-serif" font-size="30" font-weight="700" Content="@($"{Tauchplaetze.Web.Features.Forecasts.ForecastFormat.Number(at20m)} °C")" />
+        <SvgText x="210" y="252" fill="var(--color-text-muted)" font-family="IBM Plex Mono, monospace" font-size="12" Content="@F["CrossSection_At20m"]" />
+    }
     <circle cx="420" cy="214" r="3.2" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
     <circle cx="426" cy="190" r="2.6" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
     <circle cx="419" cy="168" r="2.2" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
@@ -17,3 +28,18 @@
     <circle cx="420" cy="80" r="1.5" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
     <polygon points="600,34 600,300 468,300 486,252 474,212 494,170 480,124 500,78 522,34" fill="var(--color-rock)" />
 </svg>
+
+@code {
+    [Parameter]
+    public decimal? Surface { get; set; }
+
+    [Parameter]
+    public decimal? At20m { get; set; }
+
+    [Parameter]
+    public decimal? ThermoclineTop { get; set; }
+
+    private string ThermoclineText => ThermoclineTop is { } top
+        ? F["CrossSection_Thermocline", Tauchplaetze.Web.Features.Forecasts.ForecastFormat.Meters(top)]
+        : L["Start_CrossSection_Thermocline"];
+}
