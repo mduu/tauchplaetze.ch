@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.Locks;
 using Tauchplaetze.Core.CrossCutting.Storage;
@@ -77,6 +78,7 @@ internal class RunForecastHandler(
         var existing = await dbContext.DailyForecasts
             .Where(f => days.Contains(f.Date))
             .ToDictionaryAsync(f => (f.DiveSiteId, f.Date), ct);
+        var outlooks = await dbContext.SiteWeatherOutlooks.ToDictionaryAsync(o => o.DiveSiteId, ct);
         var waterBodies = new Dictionary<int, WaterBodyData>();
 
         foreach (var site in sites.Where(s => !s.ForecastDisabled))
@@ -89,6 +91,7 @@ internal class RunForecastHandler(
             }
 
             var siteData = await sources.ForSite(site, waterBody, today, recorder, ct);
+            SaveOutlook(outlooks.GetValueOrDefault(site.Id) ?? AddOutlook(site.Id), today, siteData, run);
             foreach (var day in days)
             {
                 var forecast = existing.GetValueOrDefault((site.Id, day)) ?? Add(site.Id, day);
@@ -100,6 +103,21 @@ internal class RunForecastHandler(
                 }
             }
         }
+    }
+
+    private SiteWeatherOutlook AddOutlook(Guid diveSiteId)
+    {
+        var outlook = new SiteWeatherOutlook { DiveSiteId = diveSiteId, Hours = "[]" };
+        dbContext.SiteWeatherOutlooks.Add(outlook);
+        return outlook;
+    }
+
+    private void SaveOutlook(SiteWeatherOutlook outlook, DateOnly today, SiteData siteData, ForecastRun run)
+    {
+        outlook.FromDate = today;
+        outlook.Hours = JsonSerializer.Serialize(WeatherOutlook.For(today, ForecastSources.ForecastDays, siteData.Weather), WeatherOutlookJson.Options);
+        outlook.ForecastRunId = run.Id;
+        outlook.ComputedAt = time.GetUtcNow();
     }
 
     private DailyForecast Add(Guid diveSiteId, DateOnly day)

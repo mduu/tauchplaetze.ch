@@ -102,14 +102,14 @@ Alle `…Rating`-Felder haben einen Check Constraint `BETWEEN 1 AND 5`. Im Code 
 
 ### DiveSiteEntryPoint
 
-Einstieg oder Ausstieg eines Platzes. Ein Platz hat null bis viele Einstiege.
+Einstieg, Ausstieg oder Ort an Land (Parkplatz, Toilette) eines Platzes. Ein Platz hat null bis viele.
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
 | `Id` | Guid | |
 | `DiveSiteId` | Guid | FK `DiveSite`, Cascade Delete |
 | `Location` | geography (Point) | Pin auf der Karte |
-| `Kind` | enum | `EntryAndExit` (Standard), `Entry`, `Exit` |
+| `Kind` | enum | `EntryAndExit` (Standard), `Entry`, `Exit`, `Parking`, `Toilet` |
 | `SortOrder` | int | erster Eintrag = Hauptzugang |
 
 Übersetzbar in `DiveSiteEntryPointTranslation` (`EntryPointId`, `Culture`, `Name` string(80) optional, `Description` string(1000) optional).
@@ -237,6 +237,20 @@ Eine Zeile pro Platz und Tag. PK: (`DiveSiteId`, `Date`).
 | `ModelVersion` | string(20) | z.B. `rules-1.0` |
 | `ForecastRunId` | Guid | |
 | `ComputedAt` | DateTimeOffset | |
+
+### SiteWeatherOutlook
+
+Das Wetter pro Stunde eines Platzes für die Grafik auf der Platzseite (`forecast.md`, «Wetter pro Stunde»). Eine Zeile pro Platz, jeder Lauf ersetzt sie. PK: `DiveSiteId` (FK `DiveSite`, Cascade Delete).
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `DiveSiteId` | Guid | |
+| `FromDate` | date | erste Stunde ist dieser Tag 00:00 Lokalzeit |
+| `Hours` | nvarchar(max) | JSON-Array, 120 Stunden: `localTime`, `temperatureC`, `precipitationMm`, `sunshineMinutes`, `symbol` (Name des Enums `WeatherSymbol`), `isDay`, `windSpeedKmh`, `windGustsKmh`, `windDirection`. Leere Werte fehlen. |
+| `ForecastRunId` | Guid | |
+| `ComputedAt` | DateTimeOffset | |
+
+JSON statt einer Zeile pro Stunde: Die Seite liest die Stunden immer zusammen, und ein Lauf schreibt so eine Zeile statt 120 pro Platz. Ein neues Symbol im Enum lässt alte Zeilen lesbar; ein Symbol entfernen bricht sie.
 
 ### WaterBodyConditions
 

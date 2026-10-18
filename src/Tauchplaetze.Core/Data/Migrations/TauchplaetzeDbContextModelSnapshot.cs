@@ -681,6 +681,29 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.ToTable("ForecastRuns", (string)null);
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SiteWeatherOutlook", b =>
+                {
+                    b.Property<Guid>("DiveSiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("ComputedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("ForecastRunId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("FromDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Hours")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DiveSiteId");
+
+                    b.ToTable("SiteWeatherOutlooks", (string)null);
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SlugRedirect", b =>
                 {
                     b.Property<string>("OldSlug")
@@ -1006,6 +1029,15 @@ namespace Tauchplaetze.Core.Data.Migrations
                 {
                     b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSite", null)
                         .WithMany("Translations")
+                        .HasForeignKey("DiveSiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SiteWeatherOutlook", b =>
+                {
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSite", null)
+                        .WithMany()
                         .HasForeignKey("DiveSiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

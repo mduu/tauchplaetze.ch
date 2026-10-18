@@ -54,3 +54,13 @@ internal class WaterBodyHydroStationConfiguration : IEntityTypeConfiguration<Wat
         builder.Property(s => s.Weight).HasPrecision(4, 2);
     }
 }
+
+internal class SiteWeatherOutlookConfiguration : IEntityTypeConfiguration<SiteWeatherOutlook>
+{
+    public void Configure(EntityTypeBuilder<SiteWeatherOutlook> builder)
+    {
+        builder.ToTable("SiteWeatherOutlooks");
+        builder.HasKey(o => o.DiveSiteId);
+        builder.HasOne<DiveSite>().WithMany().HasForeignKey(o => o.DiveSiteId).OnDelete(DeleteBehavior.Cascade);
+    }
+}

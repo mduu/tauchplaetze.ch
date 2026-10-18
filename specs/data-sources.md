@@ -81,7 +81,7 @@ Entscheid in ADR-007. Open-Meteo liefert die Modelle von MeteoSchweiz und andere
 
 - Ein Tag nimmt Wind aus dem feinsten Modell, das das Tauchfenster ganz abdeckt.
 - Regen nimmt pro Stunde den Wert des feinsten Modells mit Daten. So bleibt die Summe auch am Rand eines Modells vollständig.
-- Variablen: `wind_speed_10m`, `wind_gusts_10m`, `wind_direction_10m`, `precipitation`.
+- Variablen: `wind_speed_10m`, `wind_gusts_10m`, `wind_direction_10m`, `precipitation`, dazu für die Grafik «Wetter pro Stunde» `temperature_2m`, `weather_code` (WMO 4677), `sunshine_duration` (Sekunden pro Stunde) und `is_day`. Alle drei Modelle liefern sie (geprüft 18.10.2026). Mehr Variablen heisst nicht mehr Calls.
 - Plätze im selben Gitterpunkt teilen sich den Call.
 - Open-Meteo antwortet bei Last mit HTTP 503. Retry mit Backoff.
 - **Bedingungen:** Die freie API ist nur für nicht-kommerzielle Nutzung, mit Quellenangabe (CC BY 4.0). Die Daten der Modelle sind Open Data der Wetterdienste.

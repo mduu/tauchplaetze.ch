@@ -30,6 +30,8 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
 
     public DbSet<ForecastRun> ForecastRuns => Set<ForecastRun>();
 
+    public DbSet<SiteWeatherOutlook> SiteWeatherOutlooks => Set<SiteWeatherOutlook>();
+
     public DbSet<WaterBodyHydroStation> WaterBodyHydroStations => Set<WaterBodyHydroStation>();
 
     protected override void OnModelCreating(ModelBuilder builder)

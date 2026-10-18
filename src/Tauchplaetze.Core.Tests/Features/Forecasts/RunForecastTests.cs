@@ -15,7 +15,7 @@ namespace Tauchplaetze.Core.Tests.Features.Forecasts;
 public class RunForecastTests(SqlServer sql) : SqlTest(sql)
 {
     [SqlFact]
-    public async Task Ein_Lauf_berechnet_fuenf_Tage_mit_Index_solange_das_Seemodell_reicht_danach_Ausblick()
+    public async Task Ein_Lauf_berechnet_fuenf_Tage_mit_Index_solange_das_Seemodell_reicht_danach_Ausblick_und_das_Wetter_pro_Stunde()
     {
         // Arrange
         var siteId = await PrepareRiffWilliams();
@@ -29,6 +29,8 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(Days(17, 18, 19, 20, 21), forecast.Days.Select(d => d.Date));
         Assert.All(forecast.Days.Take(4), d => Assert.Equal((3, false), (d.DataLevel, d.IsOutlook)));
         Assert.Equal((1, true), (forecast.Days[4].DataLevel, forecast.Days[4].IsOutlook));
+        Assert.Equal(new DateTime(2026, 10, 17, 0, 0, 0), forecast.HourList[0].LocalTime);
+        Assert.All(forecast.HourList, h => Assert.NotNull(h.WindSpeedKmh));
     }
 
     [SqlFact]
@@ -67,7 +69,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Ein_zweiter_Lauf_am_selben_Tag_ersetzt_die_Werte_statt_neue_Tage_anzulegen()
+    public async Task Ein_zweiter_Lauf_am_selben_Tag_ersetzt_die_Werte_statt_neue_Tage_oder_Stunden_anzulegen()
     {
         // Arrange
         var siteId = await PrepareRiffWilliams();
@@ -79,6 +81,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         // Assert
         var forecast = await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId));
         Assert.Equal(5, forecast.Days.Count);
+        Assert.Equal(120, forecast.HourList.Count);
     }
 
     [SqlFact]

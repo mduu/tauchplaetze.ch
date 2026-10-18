@@ -1,3 +1,4 @@
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Alplakes;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Hydro;
 using Tauchplaetze.Core.Features.Forecasts.Sources.OpenMeteo;
@@ -69,6 +70,20 @@ public class SourceContractTests
         Assert.Equal(new DateTime(2026, 10, 14, 0, 0, 0), ch2.Hours[0].LocalTime);
         Assert.All(ch2.Hours, h => Assert.NotNull(h.WindSpeedKmh));
         Assert.Equal(3, ch1.Hours.Count(h => h.WindSpeedKmh is null));
+    }
+
+    [Fact]
+    public void Open_Meteo_liefert_Temperatur_Wettercode_Sonne_und_Tag_pro_Stunde()
+    {
+        // Act
+        var ch2 = HourlyWeather.Parse(TestData.Read("open-meteo", "forecast-meteoswiss_icon_ch2-hourly-20261018.json"));
+
+        // Assert
+        Assert.All(ch2.Hours, h => Assert.NotNull(h.TemperatureC));
+        Assert.All(ch2.Hours, h => Assert.InRange(h.SunshineSeconds!.Value, 0, 3600));
+        Assert.All(ch2.Hours, h => Assert.NotNull(WeatherSymbols.FromWmo(h.WeatherCode!.Value)));
+        Assert.Contains(ch2.Hours, h => h.IsDay == true);
+        Assert.Contains(ch2.Hours, h => h.IsDay == false);
     }
 
     [Fact]

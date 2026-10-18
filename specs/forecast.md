@@ -85,6 +85,16 @@ Gemessene Secchi-Tiefen gibt es über Alplakes nicht mehr (Spike 17.10.2026). Di
 - Unter der Sprungschicht ist die Sicht im Sommer meist besser. Dann setzt der Algorithmus `VisibilityGoodBelow = ThermoclineBottom`.
 - Ergebnis als Stufe: `Poor`, `Moderate`, `Good`, `VeryGood`, `Unknown`.
 
+## Wetter pro Stunde
+
+Die Platzseite zeigt unter den fünf Tagen eine Grafik mit dem Wetter pro Stunde (`ux.md`, Tauchplatzseite). Sie ist eine Information und fliesst nicht in den Index.
+
+- **Zeitraum:** heute 00:00 bis Ende des fünften Tags, 120 Stunden, Lokalzeit.
+- **Werte:** Temperatur 2 m, Regen, Sonnenminuten, Wetterlage als Symbol, Tag oder Nacht, Wind, Böen, Windrichtung.
+- **Modell pro Wert:** Jede Stunde nimmt jeden Wert aus dem feinsten Modell, das ihn hat (ICON-CH1, dann ICON-CH2, dann DWD ICON). Fehlt er überall, bleibt er leer.
+- **Symbol:** Wettercode nach WMO 4677: 0 klar, 1–2 teilweise bewölkt, 3 bedeckt, 45/48 Nebel, 51–57 Niesel, 61–67 Regen, 80–82 Schauer, 71–77 und 85–86 Schnee, 95–99 Gewitter. Die Reihenfolge ist die Schwere. Ein unbekannter Code ergibt kein Symbol.
+- **Speicher:** `SiteWeatherOutlook` pro Platz, bei jedem Lauf ersetzt (`datastructure.md`).
+
 ## Der regelbasierte Index (`rules-1.0`)
 
 Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
@@ -136,7 +146,7 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   5. Pro Gitterpunkt: Wetterprognose (Open-Meteo, ICON-CH1, ICON-CH2, DWD ICON, je 3 Tage zurück). Plätze im selben Gitterpunkt (zwei Dezimalen) teilen sich den Call. Pro zugeordneter Station: gemessener Wind und Regen (SwissMetNet). **Stand 18.10.2026:** SwissMetNet fehlt noch. Der Regen der vergangenen Tage kommt aus `past_days` von Open-Meteo.
   6. Pro Gewässer: Abfluss, Wassertemperatur und Trübung der zugeordneten BAFU-Stationen.
   7. Rohdaten als JSON in Blob Storage ablegen (`forecast-raw/{date}/{runId}/{source}/{key}.json`).
-  8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert).
+  8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert). Das Wetter pro Stunde in `SiteWeatherOutlook` ersetzen.
   9. Output Cache der öffentlichen Seiten invalidieren (Tag `forecast`).
   10. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.

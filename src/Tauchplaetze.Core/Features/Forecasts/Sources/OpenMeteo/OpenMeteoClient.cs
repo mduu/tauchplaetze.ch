@@ -14,15 +14,24 @@ internal class OpenMeteoClient(HttpClient httpClient)
             httpClient,
             "v1/forecast"
             + $"?latitude={SourceHttp.Format(latitude)}&longitude={SourceHttp.Format(longitude)}"
-            + "&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation"
+            + "&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation,temperature_2m,weather_code,sunshine_duration,is_day"
             + $"&past_days={pastDays}&forecast_days={forecastDays}"
             + $"&models={model}&wind_speed_unit=kmh&timezone=Europe%2FZurich",
             HourlyWeather.Parse,
             ct);
 }
 
-/// <summary>Eine Stunde Wetter am Punkt, Lokalzeit (Europe/Zurich).</summary>
-internal record WeatherHour(DateTime LocalTime, double? WindSpeedKmh, double? WindDirection, double? WindGustsKmh, double? PrecipitationMm);
+/// <summary>Eine Stunde Wetter am Punkt, Lokalzeit (Europe/Zurich). <see cref="WeatherCode"/> nach WMO, Sonne in Sekunden der Stunde.</summary>
+internal record WeatherHour(
+    DateTime LocalTime,
+    double? WindSpeedKmh,
+    double? WindDirection,
+    double? WindGustsKmh,
+    double? PrecipitationMm,
+    double? TemperatureC = null,
+    int? WeatherCode = null,
+    double? SunshineSeconds = null,
+    bool? IsDay = null);
 
 /// <summary>Das stündliche Wetter eines Modells an einem Gitterpunkt.</summary>
 internal record HourlyWeather(IReadOnlyList<WeatherHour> Hours)
@@ -41,7 +50,11 @@ internal record HourlyWeather(IReadOnlyList<WeatherHour> Hours)
                 ValueAt(hourly, "wind_speed_10m", i),
                 ValueAt(hourly, "wind_direction_10m", i),
                 ValueAt(hourly, "wind_gusts_10m", i),
-                ValueAt(hourly, "precipitation", i)))
+                ValueAt(hourly, "precipitation", i),
+                ValueAt(hourly, "temperature_2m", i),
+                ValueAt(hourly, "weather_code", i) is { } code ? (int)code : null,
+                ValueAt(hourly, "sunshine_duration", i),
+                ValueAt(hourly, "is_day", i) is { } day ? day > 0 : null))
             .ToList());
     }
 

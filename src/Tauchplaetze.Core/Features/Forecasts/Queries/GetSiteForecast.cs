@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
@@ -42,6 +43,25 @@ internal class GetSiteForecastHandler(TauchplaetzeDbContext dbContext, TimeProvi
                 ReasonCodes.Parse(f.ReasonCodes)))
             .ToList();
 
-        return new SiteForecast(days, rows.Count > 0 ? rows.Max(f => f.ComputedAt) : null);
+        return new SiteForecast(days, rows.Count > 0 ? rows.Max(f => f.ComputedAt) : null, await Hours(query.DiveSiteId, today, ct));
+    }
+
+    /// <remarks>Stunden vor heute 00:00 fallen weg. Stammt die Reihe von gestern, fehlt am Ende ein Tag.</remarks>
+    private async Task<IReadOnlyList<WeatherHourForecast>> Hours(Guid diveSiteId, DateOnly today, CancellationToken ct)
+    {
+        var json = await dbContext.SiteWeatherOutlooks
+            .AsNoTracking()
+            .Where(o => o.DiveSiteId == diveSiteId)
+            .Select(o => o.Hours)
+            .SingleOrDefaultAsync(ct);
+        if (json is null)
+        {
+            return [];
+        }
+
+        var start = today.ToDateTime(TimeOnly.MinValue);
+        return (JsonSerializer.Deserialize<List<WeatherHourForecast>>(json, WeatherOutlookJson.Options) ?? [])
+            .Where(h => h.LocalTime >= start)
+            .ToList();
     }
 }
