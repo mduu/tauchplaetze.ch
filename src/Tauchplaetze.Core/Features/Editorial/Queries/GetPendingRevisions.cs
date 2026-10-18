@@ -1,19 +1,25 @@
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Accounts;
 
 namespace Tauchplaetze.Core.Features.Editorial.Queries;
 
-/// <summary>Alle offenen Vorschläge, älteste zuerst, mit Platz und Alter der Basis (`cms.md`, «Vorschläge prüfen»).</summary>
-public record GetPendingRevisionsQuery;
+/// <summary>Alle offenen Vorschläge, älteste zuerst, mit Platz und Alter der Basis (`cms.md`, «Vorschläge prüfen»). Nur für Moderation und Admin, sonst leer.</summary>
+public record GetPendingRevisionsQuery(string ModeratorId);
 
 /// <summary>Ein offener Vorschlag. <see cref="BaseIsOutdated"/>: Seit der Basis wurde eine andere Version freigegeben.</summary>
 public record PendingRevision(Guid DiveSiteId, string SiteName, string SiteSlug, RevisionSummary Revision, bool BaseIsOutdated);
 
-internal class GetPendingRevisionsHandler(TauchplaetzeDbContext dbContext, RevisionNames names) : IQueryHandler<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>
+internal class GetPendingRevisionsHandler(TauchplaetzeDbContext dbContext, RevisionNames names, AccountRoles roles) : IQueryHandler<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>
 {
     public async Task<IReadOnlyList<PendingRevision>> Handle(GetPendingRevisionsQuery query, CancellationToken ct = default)
     {
+        if (!(await roles.Of(query.ModeratorId)).IsModerator)
+        {
+            return [];
+        }
+
         var pending = await dbContext.DiveSiteRevisions.AsNoTracking().Where(r => r.Status == RevisionStatus.Pending).OrderBy(r => r.CreatedAt).ToListAsync(ct);
         var siteIds = pending.Select(r => r.DiveSiteId).Distinct().ToList();
         var sites = await dbContext.DiveSites.AsNoTracking().Where(d => siteIds.Contains(d.Id)).ToDictionaryAsync(d => d.Id, d => new { d.Name, d.Slug }, ct);

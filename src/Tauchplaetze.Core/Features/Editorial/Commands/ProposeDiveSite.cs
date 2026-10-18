@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.Text;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Accounts;
 
 namespace Tauchplaetze.Core.Features.Editorial.Commands;
 
@@ -11,12 +12,12 @@ namespace Tauchplaetze.Core.Features.Editorial.Commands;
 /// </summary>
 public record ProposeDiveSiteCommand(string EditorId, string Name, int WaterBodyId, double Latitude, double Longitude, string? Municipality, string? Canton, string? Comment);
 
-internal class ProposeDiveSiteHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, EditorRoles roles) : ICommandHandler<ProposeDiveSiteCommand, EditorialResult>
+internal class ProposeDiveSiteHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles) : ICommandHandler<ProposeDiveSiteCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(ProposeDiveSiteCommand command, CancellationToken ct = default)
     {
         var rights = await roles.Of(command.EditorId);
-        if (!rights.Exists || rights.IsBlocked)
+        if (!rights.CanWrite)
         {
             return EditorialResult.Fail(EditorialError.Blocked);
         }

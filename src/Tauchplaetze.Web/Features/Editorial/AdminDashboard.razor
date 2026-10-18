@@ -59,7 +59,7 @@
         sites = (await Query<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>(new GetDiveSitesForEditingQuery())).Count;
         if (IsModerator)
         {
-            pending = (await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery())).Count;
+            pending = (await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(UserId))).Count;
             lastRun = (await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(1))).FirstOrDefault();
         }
     }

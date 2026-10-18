@@ -81,7 +81,7 @@ internal static class AccountPaths
 
     public static string SignOut(string language) => $"/{language}/account/sign-out";
 
-    public static string ConfirmTemplate(string baseUri, string language) => $"{baseUri.TrimEnd('/')}/{language}/account/confirm?user={{user}}&token={{token}}";
+    public static string ConfirmTemplate(string language) => $"/{language}/account/confirm?user={{user}}&token={{token}}";
 
-    public static string ResetTemplate(string baseUri, string language) => $"{baseUri.TrimEnd('/')}/{language}/account/reset-password?user={{user}}&token={{token}}";
+    public static string ResetTemplate(string language) => $"/{language}/account/reset-password?user={{user}}&token={{token}}";
 }

@@ -9,11 +9,11 @@ namespace Tauchplaetze.Core.Features.Accounts.Commands;
 
 /// <summary>
 /// Selbstregistrierung als Mitwirkende (`cms.md`, «Rollen»). Schickt eine Mail mit Link zur Bestätigung.
-/// <paramref name="ConfirmLinkTemplate"/> enthält `{user}` und `{token}`.
+/// <paramref name="ConfirmPathTemplate"/> ist ein Pfad der Website mit `{user}` und `{token}`.
 /// </summary>
-public record RegisterCommand(string Email, string Password, string DisplayName, string Culture, string ConfirmLinkTemplate);
+public record RegisterCommand(string Email, string Password, string DisplayName, string Culture, string ConfirmPathTemplate);
 
-internal class RegisterHandler(UserManager<User> users, IMailSender mail, IOptions<AccountsOptions> options) : ICommandHandler<RegisterCommand, AccountResult>
+internal class RegisterHandler(UserManager<User> users, IMailSender mail, IOptions<AccountsOptions> options, IOptions<PublicSiteOptions> site) : ICommandHandler<RegisterCommand, AccountResult>
 {
     public async Task<AccountResult> Handle(RegisterCommand command, CancellationToken ct = default)
     {
@@ -42,7 +42,7 @@ internal class RegisterHandler(UserManager<User> users, IMailSender mail, IOptio
 
         await users.AddToRoleAsync(user, Roles.Contributor);
         var token = await users.GenerateEmailConfirmationTokenAsync(user);
-        await mail.Send(AccountMails.Create(user.Email, user.PreferredCulture, "Confirm", displayName, AccountLinks.Build(command.ConfirmLinkTemplate, user.Id, token)), ct);
+        await mail.Send(AccountMails.Create(user.Email, user.PreferredCulture, "Confirm", displayName, site.Value.Link(AccountLinks.Build(command.ConfirmPathTemplate, user.Id, token))), ct);
         return AccountResult.Ok;
     }
 }

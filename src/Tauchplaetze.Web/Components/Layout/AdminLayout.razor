@@ -26,8 +26,6 @@
             <AuthorizeView Roles="@($"{Roles.Moderator},{Roles.Admin}")">
                 <MudNavLink Href="/admin/vorschlaege" Icon="@Icons.Material.Outlined.FactCheck">@L["Nav_Pending"]</MudNavLink>
                 <MudNavLink Href="/admin/prognose" Icon="@Icons.Material.Outlined.WaterDrop">@L["Nav_Forecast"]</MudNavLink>
-            </AuthorizeView>
-            <AuthorizeView Roles="@Roles.Admin">
                 <MudNavLink Href="/admin/konten" Icon="@Icons.Material.Outlined.People">@L["Nav_Accounts"]</MudNavLink>
             </AuthorizeView>
         </MudNavMenu>

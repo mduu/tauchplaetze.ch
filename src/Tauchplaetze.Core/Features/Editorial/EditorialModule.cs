@@ -9,7 +9,6 @@ internal class EditorialModule : ICoreModule
     {
         services.AddSingleton<IRevisionStore, BlobRevisionStore>();
         services.AddScoped<RevisionWriter>();
-        services.AddScoped<EditorRoles>();
         services.AddScoped<ReviewMails>();
         services.AddScoped<RevisionNames>();
     }

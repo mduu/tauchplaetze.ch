@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Tauchplaetze.Core.Features.Accounts;
 
-/// <summary>Links in Mails. Die Web-App gibt die Vorlage mit `{user}` und `{token}`, der Core setzt die Werte ein.</summary>
+/// <summary>Pfade in Mails. Die Web-App gibt die Vorlage mit `{user}` und `{token}`, der Core setzt die Werte ein.</summary>
 internal static class AccountLinks
 {
     public static string Build(string template, string userId, string token) =>

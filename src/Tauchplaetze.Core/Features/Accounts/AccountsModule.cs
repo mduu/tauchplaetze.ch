@@ -31,5 +31,6 @@ internal class AccountsModule : ICoreModule
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<TauchplaetzeDbContext>()
             .AddTokenProvider<ProtectedTokenProvider>(TokenOptions.DefaultProvider);
+        services.AddScoped<AccountRoles>();
     }
 }

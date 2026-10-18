@@ -19,9 +19,9 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
 
     private const string Password = "Felswand-auf-25m";
 
-    private const string ConfirmTemplate = "https://localhost/de/account/confirm?user={user}&token={token}";
+    private const string ConfirmTemplate = "/de/account/confirm?user={user}&token={token}";
 
-    private const string ResetTemplate = "https://localhost/de/account/reset?user={user}&token={token}";
+    private const string ResetTemplate = "/de/account/reset?user={user}&token={token}";
 
     [SqlFact]
     public async Task Wer_sich_registriert_ist_Mitwirkende_und_kann_sich_erst_nach_der_Bestaetigung_anmelden()
@@ -63,7 +63,8 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
         var handler = new RegisterHandler(
             scope.ServiceProvider.GetRequiredService<UserManager<User>>(),
             scope.ServiceProvider.GetRequiredService<IMailSender>(),
-            Options.Create(new AccountsOptions { RegistrationOpen = false }));
+            Options.Create(new AccountsOptions { RegistrationOpen = false }),
+            Options.Create(new PublicSiteOptions()));
 
         // Act
         var result = await handler.Handle(new RegisterCommand(Email, Password, "Anna", "de", ConfirmTemplate), TestContext.Current.CancellationToken);

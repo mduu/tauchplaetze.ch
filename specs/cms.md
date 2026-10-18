@@ -13,9 +13,11 @@ Die Oberfläche nutzt **MudBlazor** im dunklen Theme aus den Design Tokens. Seit
 | `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | alle Angemeldeten, Wiederherstellen für Moderatoren |
 | `/admin/vorschlaege` | offene Vorschläge mit Vergleich zur Basis, Freigeben, Ablehnen mit Begründung | Moderatoren, Admins |
 | `/admin/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten» | Moderatoren; starten nur Admins |
-| `/admin/konten` | Konten, Rollen, Sperre | Admins |
+| `/admin/konten` | Konten, Rollen, Sperre | Moderatoren sperren Konten ausser Admin-Konten; Admins sehen zusätzlich die E-Mail-Adressen, vergeben Rollen und sperren auch Admins |
 
 Ohne Anmeldung führt `/admin` zur Anmeldung. Fehlt die Rolle, antwortet der Server mit 403.
+
+**Rechte prüft der Core** (Entscheid Marc, 18.10.2026). Jeder Command und jede Query mit geschützten Daten bekommt die Benutzer-ID und liest Rollen und Sperre frisch aus der Datenbank. Die Rollen im Cookie und die Prüfungen der Oberfläche dienen nur der Bedienung. Ohne Recht liefert ein Command den Fehler `NotAllowed` bzw. `Blocked`, eine Query eine leere Liste.
 
 **Alle können beitragen, Moderatoren geben frei** (Entscheid Marc, 17.10.2026, ADR-008). Wer ein Konto hat, kann Informationen zu Tauchplätzen beisteuern. Online sichtbar wird eine Änderung erst, wenn ein Moderator oder Admin sie freigibt. Jede Änderung ergibt eine Version, wie in einem Wiki. Die History zeigt Autor und Approver.
 
@@ -120,7 +122,8 @@ Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer D
 
 - Höchstens 20 offene Vorschläge pro Konto, konfigurierbar.
 - Rate Limit beim Speichern und beim Upload.
-- Moderatoren können ein Konto sperren. Dessen offene Vorschläge werden `Rejected`.
+- Moderatoren können ein Konto sperren. Dessen offene Vorschläge werden `Rejected`. Ein Admin-Konto sperren nur Admins (Entscheid Marc, 18.10.2026). Niemand sperrt sich selbst.
+- **Gesperrt heisst: ab sofort nichts mehr schreiben** (Entscheid Marc, 18.10.2026). Der Core lehnt jeden schreibenden Command des Kontos ab: vorschlagen, zurückziehen, freigeben, ablehnen, wiederherstellen, archivieren, sperren, Rollen vergeben, Profil ändern, Prognose-Lauf starten. Lesen bleibt bis zur Abmeldung möglich: CMS-Seiten, «Meine Daten» und der Download. Das Konto löschen bleibt erlaubt (Recht auf Löschung). Eine neue Anmeldung lehnt der Core ab.
 - Fotos von Mitwirkenden liegen bis zur Freigabe in einem privaten Container.
 
 ## Funktionen
@@ -183,15 +186,15 @@ Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer D
 ### Prognose-Status
 
 - Letzter Lauf, Status pro Quelle, Datenalter, Fehler.
-- Button «Lauf jetzt starten» (nur Admin).
+- Button «Lauf jetzt starten» (nur Admin). Er ruft `StartForecastRun`, das die Rolle prüft. Der Worker ruft `RunForecast` direkt.
 
 ## Rollen
 
 | Rolle | Darf |
 |---|---|
 | `Contributor` (Mitwirkende) | Änderungen und neue Plätze vorschlagen, Fotos hochladen, eigene Vorschläge sehen und zurückziehen |
-| `Moderator` | alles von `Contributor`, dazu Vorschläge freigeben oder ablehnen, eigene Änderungen direkt freigeben, archivieren, Konten sperren, Meldungen ausblenden |
-| `Admin` | alles, dazu Rollen vergeben, Gewässer und Stationen zuordnen, Prognose-Lauf starten |
+| `Moderator` | alles von `Contributor`, dazu Vorschläge freigeben oder ablehnen, eigene Änderungen direkt freigeben, archivieren, Konten sperren (ausser Admin-Konten), Meldungen ausblenden |
+| `Admin` | alles, dazu Rollen vergeben, Admin-Konten sperren, Gewässer und Stationen zuordnen, Prognose-Lauf starten |
 
 - Anmeldung mit ASP.NET Core Identity: E-Mail plus Passkey oder Passwort.
 - **Selbstregistrierung** für Mitwirkende (Entscheid Marc, 17.10.2026): E-Mail bestätigen, Anzeigename wählen (Pseudonym erlaubt). Öffentlich erscheint der Anzeigename nur mit Einwilligung (siehe «Datenschutz in der History»). Ab Phase 1 offen, im MVP ausgeschaltet (`Accounts:RegistrationOpen`).

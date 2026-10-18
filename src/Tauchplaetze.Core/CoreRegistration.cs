@@ -31,6 +31,7 @@ public static class CoreRegistration
 
         builder.Services.Configure<MailOptions>(builder.Configuration.GetSection(MailOptions.Section));
         builder.Services.Configure<AccountsOptions>(builder.Configuration.GetSection(AccountsOptions.Section));
+        builder.Services.Configure<PublicSiteOptions>(builder.Configuration.GetSection(PublicSiteOptions.Section));
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddHandlers(typeof(CoreRegistration).Assembly);
         builder.Services.AddCoreModules(typeof(CoreRegistration).Assembly);

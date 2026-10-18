@@ -20,7 +20,7 @@ var mailpit = builder.AddContainer("mailpit", "axllent/mailpit", "v1.27")
     .WithLifetime(ContainerLifetime.Persistent);
 var smtp = mailpit.GetEndpoint("smtp");
 
-builder.AddProject<Projects.Tauchplaetze_Web>("web")
+var web = builder.AddProject<Projects.Tauchplaetze_Web>("web")
     .WithReference(database)
     .WaitFor(database)
     .WithReference(blobs)
@@ -31,6 +31,7 @@ builder.AddProject<Projects.Tauchplaetze_Web>("web")
     .WithEnvironment("Mail__Port", smtp.Property(EndpointProperty.Port))
     .WaitFor(mailpit)
     .WithExternalHttpEndpoints();
+web.WithEnvironment("PublicSite__BaseUri", web.GetEndpoint("https"));
 
 builder.AddProject<Projects.Tauchplaetze_Spike_DataSources>("spike-datasources")
     .WithExplicitStart();

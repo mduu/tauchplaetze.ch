@@ -1,18 +1,28 @@
 @page "/admin/konten"
 @layout AdminLayout
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Moderator,Admin")]
 @inherits AdminPage
 @using Microsoft.AspNetCore.Authorization
 @using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Core.Features.Accounts.Commands
 @using Tauchplaetze.Core.Features.Accounts.Queries
+@using Tauchplaetze.Web.Features.Accounts
+@inject IStringLocalizer<AccountStrings> AccountL
 
 <MudText Typo="Typo.h4" Class="mb-4">@L["Accounts_Title"]</MudText>
+
+@foreach (var error in errors)
+{
+    <MudAlert Severity="Severity.Error" Class="mb-4">@error</MudAlert>
+}
 
 <MudTable Items="accounts" Dense="true" Outlined="true" Elevation="0">
     <HeaderContent>
         <MudTh>@L["Column_Name"]</MudTh>
-        <MudTh>@L["Column_Email"]</MudTh>
+        @if (IsAdmin)
+        {
+            <MudTh>@L["Column_Email"]</MudTh>
+        }
         @foreach (var role in Roles.All)
         {
             <MudTh>@L[$"Role_{role}"]</MudTh>
@@ -31,15 +41,18 @@
                 <MudChip T="string" Size="Size.Small">@L["Accounts_Unconfirmed"]</MudChip>
             }
         </MudTd>
-        <MudTd>@context.Email</MudTd>
+        @if (IsAdmin)
+        {
+            <MudTd>@context.Email</MudTd>
+        }
         @foreach (var role in Roles.All)
         {
             var account = context;
             var current = role;
-            <MudTd><MudCheckBox T="bool" Value="account.Roles.Contains(current)" ValueChanged="@(on => SetRole(account, current, on))" Disabled="@(account.UserId == UserId && current == Roles.Admin)" /></MudTd>
+            <MudTd><MudCheckBox T="bool" Value="account.Roles.Contains(current)" ValueChanged="@(on => SetRole(account, current, on))" Disabled="@(!IsAdmin || (account.UserId == UserId && current == Roles.Admin))" /></MudTd>
         }
         <MudTd>
-            @if (context.UserId != UserId)
+            @if (CanBlock(context))
             {
                 var account = context;
                 <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Block(account))">
@@ -53,18 +66,22 @@
 @code {
     private IReadOnlyList<AccountSummary> accounts = [];
 
+    private IReadOnlyList<string> errors = [];
+
     protected override async Task Load() =>
-        accounts = await Query<GetAccountsQuery, IReadOnlyList<AccountSummary>>(new GetAccountsQuery());
+        accounts = await Query<GetAccountsQuery, IReadOnlyList<AccountSummary>>(new GetAccountsQuery(UserId));
 
-    private async Task SetRole(AccountSummary account, string role, bool granted)
-    {
-        await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(UserId, account.UserId, role, granted));
-        await Load();
-    }
+    private bool CanBlock(AccountSummary account) => account.UserId != UserId && (IsAdmin || !account.Roles.Contains(Roles.Admin));
 
-    private async Task Block(AccountSummary account)
+    private async Task SetRole(AccountSummary account, string role, bool granted) =>
+        await Apply(Command<SetRoleCommand, AccountResult>(new SetRoleCommand(UserId, account.UserId, role, granted)));
+
+    private async Task Block(AccountSummary account) =>
+        await Apply(Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(UserId, account.UserId, account.BlockedAt is null)));
+
+    private async Task Apply(Task<AccountResult> command)
     {
-        await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(UserId, account.UserId, account.BlockedAt is null));
+        errors = AccountText.Errors(AccountL, await command);
         await Load();
     }
 }

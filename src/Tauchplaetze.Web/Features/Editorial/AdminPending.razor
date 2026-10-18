@@ -6,7 +6,6 @@
 @using Tauchplaetze.Core.Features.Editorial
 @using Tauchplaetze.Core.Features.Editorial.Commands
 @using Tauchplaetze.Core.Features.Editorial.Queries
-@inject NavigationManager Navigation
 
 <MudText Typo="Typo.h4" Class="mb-4">@L["Pending_Title"]</MudText>
 <ErrorList Errors="errors" />
@@ -53,7 +52,7 @@
 
     protected override async Task Load()
     {
-        pending = await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery());
+        pending = await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(UserId));
         foreach (var item in pending)
         {
             reasons.TryAdd(item.Revision.Id, "");
@@ -62,7 +61,7 @@
     }
 
     private Task Approve(PendingRevision item) =>
-        Decide(() => Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(UserId, item.Revision.Id, Navigation.BaseUri)));
+        Decide(() => Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(UserId, item.Revision.Id)));
 
     private Task Reject(PendingRevision item) =>
         Decide(() => Command<RejectRevisionCommand, EditorialResult>(new RejectRevisionCommand(UserId, item.Revision.Id, reasons[item.Revision.Id])));

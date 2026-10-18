@@ -24,6 +24,12 @@ public enum AccountError
     /// <summary>Der Link ist ungültig oder abgelaufen.</summary>
     InvalidToken,
 
+    /// <summary>Dem Konto fehlt das Recht für diese Aktion.</summary>
+    NotAllowed,
+
+    /// <summary>Das Konto ist gesperrt und ändert nichts mehr.</summary>
+    Blocked,
+
     /// <summary>Unbekannter Fehler von Identity.</summary>
     Other,
 }

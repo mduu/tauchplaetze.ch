@@ -8,18 +8,26 @@ using Tauchplaetze.Core.Features.Editorial;
 namespace Tauchplaetze.Core.Features.Accounts.Commands;
 
 /// <summary>
-/// Sperrt ein Konto oder hebt die Sperre auf (Moderation und Admin). Beim Sperren werden die offenen Vorschläge abgelehnt (`cms.md`, «Schutz gegen Missbrauch»).
+/// Sperrt ein Konto oder hebt die Sperre auf (Moderation und Admin). Ein Admin-Konto sperren nur Admins.
+/// Beim Sperren werden die offenen Vorschläge abgelehnt (`cms.md`, «Schutz gegen Missbrauch»).
 /// </summary>
 public record BlockAccountCommand(string ModeratorId, string UserId, bool Blocked);
 
-internal class BlockAccountHandler(TauchplaetzeDbContext dbContext, UserManager<User> users, EditorRoles roles, TimeProvider time) : ICommandHandler<BlockAccountCommand, AccountResult>
+internal class BlockAccountHandler(TauchplaetzeDbContext dbContext, UserManager<User> users, AccountRoles roles, TimeProvider time) : ICommandHandler<BlockAccountCommand, AccountResult>
 {
     public async Task<AccountResult> Handle(BlockAccountCommand command, CancellationToken ct = default)
     {
         var user = await users.FindByIdAsync(command.UserId);
-        if (await roles.Of(command.ModeratorId) is not { IsModerator: true, IsBlocked: false } || user is null || user.Id == command.ModeratorId)
+        if (user is null)
         {
             return AccountResult.Fail(AccountError.Other);
+        }
+
+        var moderator = await roles.Of(command.ModeratorId);
+        var target = await roles.Of(user.Id);
+        if (moderator is not { IsModerator: true, IsBlocked: false } || (target.IsAdmin && !moderator.IsAdmin) || user.Id == command.ModeratorId)
+        {
+            return AccountResult.Fail(AccountError.NotAllowed);
         }
 
         var now = time.GetUtcNow();

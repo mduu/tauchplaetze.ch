@@ -5,7 +5,7 @@ using Tauchplaetze.Core.Data.Entities;
 
 namespace Tauchplaetze.Core.Features.Accounts.Commands;
 
-/// <summary>Ändert Anzeigename, Einwilligung zur öffentlichen Anzeige und Sprache (`cms.md`, «Datenschutz in der History»).</summary>
+/// <summary>Ändert Anzeigename, Einwilligung zur öffentlichen Anzeige und Sprache (`cms.md`, «Datenschutz in der History»). Nicht bei gesperrten Konten.</summary>
 public record UpdateProfileCommand(string UserId, string DisplayName, bool ShowNamePublicly, string Culture);
 
 internal class UpdateProfileHandler(UserManager<User> users) : ICommandHandler<UpdateProfileCommand, AccountResult>
@@ -16,6 +16,11 @@ internal class UpdateProfileHandler(UserManager<User> users) : ICommandHandler<U
         if (user is null)
         {
             return AccountResult.Fail(AccountError.Other);
+        }
+
+        if (user.BlockedAt is not null)
+        {
+            return AccountResult.Fail(AccountError.Blocked);
         }
 
         var displayName = command.DisplayName.Trim();

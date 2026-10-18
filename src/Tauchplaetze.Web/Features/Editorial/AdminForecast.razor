@@ -55,7 +55,7 @@
     private async Task RunNow()
     {
         running = true;
-        skipped = (await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand())).Skipped;
+        skipped = (await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(UserId))).Run?.Skipped ?? false;
         running = false;
         await Load();
     }

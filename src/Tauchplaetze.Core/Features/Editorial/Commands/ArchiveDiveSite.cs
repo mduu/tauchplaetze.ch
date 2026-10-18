@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.DiveSites;
 
 namespace Tauchplaetze.Core.Features.Editorial.Commands;
@@ -8,7 +9,7 @@ namespace Tauchplaetze.Core.Features.Editorial.Commands;
 /// <summary>Nimmt einen Platz offline (410) oder wieder online. Nur Moderation und Admin.</summary>
 public record ArchiveDiveSiteCommand(string EditorId, Guid DiveSiteId, bool Archived);
 
-internal class ArchiveDiveSiteHandler(TauchplaetzeDbContext dbContext, EditorRoles roles, TimeProvider time) : ICommandHandler<ArchiveDiveSiteCommand, EditorialResult>
+internal class ArchiveDiveSiteHandler(TauchplaetzeDbContext dbContext, AccountRoles roles, TimeProvider time) : ICommandHandler<ArchiveDiveSiteCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(ArchiveDiveSiteCommand command, CancellationToken ct = default)
     {

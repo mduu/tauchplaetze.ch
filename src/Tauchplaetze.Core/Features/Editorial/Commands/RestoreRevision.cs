@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Accounts;
 
 namespace Tauchplaetze.Core.Features.Editorial.Commands;
 
 /// <summary>Stellt eine frühere Version wieder her: als neue, freigegebene Version. Nichts wird überschrieben. Nur Moderation und Admin.</summary>
 public record RestoreRevisionCommand(string EditorId, Guid DiveSiteId, int Number);
 
-internal class RestoreRevisionHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, EditorRoles roles) : ICommandHandler<RestoreRevisionCommand, EditorialResult>
+internal class RestoreRevisionHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles) : ICommandHandler<RestoreRevisionCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(RestoreRevisionCommand command, CancellationToken ct = default)
     {

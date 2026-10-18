@@ -48,7 +48,7 @@ else
 
     private async Task Submit()
     {
-        var result = await Register.Handle(new RegisterCommand(Input!.Email, Input!.Password, Input!.DisplayName, Language, AccountPaths.ConfirmTemplate(Navigation.BaseUri, Language)));
+        var result = await Register.Handle(new RegisterCommand(Input!.Email, Input!.Password, Input!.DisplayName, Language, AccountPaths.ConfirmTemplate(Language)));
         done = result.Succeeded;
         messages = AccountText.Errors(L, result);
     }

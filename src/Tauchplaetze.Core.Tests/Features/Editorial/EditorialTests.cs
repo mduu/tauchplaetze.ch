@@ -1,5 +1,6 @@
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
+using Tauchplaetze.Core.Features.Accounts.Queries;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
 using Tauchplaetze.Core.Features.Editorial;
@@ -13,8 +14,6 @@ namespace Tauchplaetze.Core.Tests.Features.Editorial;
 /// <remarks>Ausgangslage: Riff Williams aus dem Erstimport (Version 1), ein Admin als Moderation und eine Mitwirkende «Anna».</remarks>
 public class EditorialTests(SqlServer sql) : SqlTest(sql)
 {
-    private const string Base = "https://localhost/";
-
     [SqlFact]
     public async Task Ein_Vorschlag_von_Mitwirkenden_ist_erst_nach_der_Freigabe_online_und_die_Autorin_bekommt_eine_Mail()
     {
@@ -25,14 +24,14 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         // Act
         var proposed = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 32 }, "Tiefe ergänzt"));
         var beforeApproval = await PublicMaxDepth(site);
-        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery()));
-        await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(moderator, pending.Revision.Id, Base));
+        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator)));
+        await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(moderator, pending.Revision.Id));
 
         // Assert
         Assert.Equal((2, RevisionStatus.Pending), (proposed.Number, proposed.Status));
         Assert.Null(beforeApproval);
         Assert.Equal(32, await PublicMaxDepth(site));
-        Assert.Contains(Sql.Mail.Sent, m => m.To == "anna@example.org" && m.Body.Contains("https://localhost/de/site/riff-williams-herrliberg", StringComparison.Ordinal));
+        Assert.Contains(Sql.Mail.Sent, m => m.To == "anna@example.org" && m.Body.Contains("https://tauchplaetze.test/de/site/riff-williams-herrliberg", StringComparison.Ordinal));
     }
 
     [SqlFact]
@@ -92,7 +91,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         var edit = await ForEditing(site);
         await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 99 }, null));
         await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 33 }, null));
-        var pending = await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery());
+        var pending = await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator));
 
         // Act
         var rejected = await Command<RejectRevisionCommand, EditorialResult>(new RejectRevisionCommand(moderator, pending[0].Revision.Id, "99 m stimmt nicht."));
@@ -104,20 +103,20 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.Contains(Sql.Mail.Sent, m => m.To == "anna@example.org" && m.Body.Contains("99 m stimmt nicht.", StringComparison.Ordinal));
         Assert.Equal([EditorialError.NotFound], withdrawnByOther.Errors);
         Assert.Equal(RevisionStatus.Withdrawn, withdrawn.Status);
-        Assert.Empty(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery()));
+        Assert.Empty(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator)));
     }
 
     [SqlFact]
     public async Task Mitwirkende_koennen_nicht_freigeben()
     {
         // Arrange
-        var (_, anna, site) = await Prepare();
+        var (moderator, anna, site) = await Prepare();
         var edit = await ForEditing(site);
         await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 20 }, null));
-        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery()));
+        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator)));
 
         // Act
-        var result = await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(anna, pending.Revision.Id, Base));
+        var result = await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(anna, pending.Revision.Id));
 
         // Assert
         Assert.Equal([EditorialError.NotAllowed], result.Errors);
@@ -150,8 +149,8 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         // Act
         var proposed = await Command<ProposeDiveSiteCommand, EditorialResult>(new ProposeDiveSiteCommand(anna, "Steinbock", waterBody, 47.30, 8.58, "Erlenbach", "ZH", "Neuer Platz"));
         var beforeApproval = await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("steinbock-erlenbach", "de"));
-        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery()));
-        await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(moderator, pending.Revision.Id, Base));
+        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator)));
+        await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(moderator, pending.Revision.Id));
         var afterApproval = await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("steinbock-erlenbach", "de"));
 
         // Assert
@@ -181,8 +180,8 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         var (moderator, anna, site) = await Prepare();
         var edit = await ForEditing(site);
         await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 31 }, null));
-        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery()));
-        await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(moderator, pending.Revision.Id, Base));
+        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator)));
+        await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(moderator, pending.Revision.Id));
         await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, 2, edit.Content with { MaxDepth = 50 }, null));
 
         // Act
@@ -210,8 +209,75 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         var afterBlock = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 22 }, null));
 
         // Assert
-        Assert.Empty(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery()));
+        Assert.Empty(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator)));
         Assert.Equal([EditorialError.Blocked], afterBlock.Errors);
+    }
+
+    [SqlFact]
+    public async Task Ein_Admin_Konto_sperren_nur_Admins()
+    {
+        // Arrange
+        var (admin, anna, _) = await Prepare();
+        var bert = await Moderator(admin);
+        await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(admin, anna, Roles.Admin, true));
+
+        // Act
+        var byModerator = await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(bert, anna, true));
+        var byAdmin = await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(admin, anna, true));
+
+        // Assert
+        Assert.Equal([AccountError.NotAllowed], byModerator.Errors);
+        Assert.True(byAdmin.Succeeded);
+    }
+
+    [SqlFact]
+    public async Task Ein_gesperrtes_Konto_aendert_sofort_nichts_mehr_kann_seine_Daten_aber_weiter_lesen()
+    {
+        // Arrange
+        var (admin, anna, site) = await Prepare();
+        var edit = await ForEditing(site);
+        await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(admin, anna, Roles.Admin, true));
+        var proposal = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 21 }, null));
+        await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(admin, anna, true));
+        var revision = (await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site))).Single(r => r.Number == proposal.Number);
+
+        // Act
+        var profile = await Command<UpdateProfileCommand, AccountResult>(new UpdateProfileCommand(anna, "Anna B.", true, "fr"));
+        var withdraw = await Command<WithdrawRevisionCommand, EditorialResult>(new WithdrawRevisionCommand(anna, revision.Id));
+        var role = await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(anna, admin, Roles.Moderator, false));
+        var data = await Query<GetPersonalDataQuery, PersonalData?>(new GetPersonalDataQuery(anna));
+
+        // Assert
+        Assert.Equal([AccountError.Blocked], profile.Errors);
+        Assert.Equal([EditorialError.Blocked], withdraw.Errors);
+        Assert.Equal([AccountError.NotAllowed], role.Errors);
+        Assert.Equal("Anna", data!.DisplayName);
+        Assert.NotNull(data.BlockedAt);
+    }
+
+    [SqlFact]
+    public async Task Mitwirkende_sehen_weder_Konten_noch_offene_Vorschlaege_und_Moderatoren_keine_E_Mail_Adressen()
+    {
+        // Arrange
+        var (admin, anna, site) = await Prepare();
+        var bert = await Moderator(admin);
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 21 }, null));
+
+        // Act
+        var pendingForAnna = await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(anna));
+        var pendingForBert = await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(bert));
+        var accountsForAnna = await Query<GetAccountsQuery, IReadOnlyList<AccountSummary>>(new GetAccountsQuery(anna));
+        var accountsForBert = await Query<GetAccountsQuery, IReadOnlyList<AccountSummary>>(new GetAccountsQuery(bert));
+        var accountsForAdmin = await Query<GetAccountsQuery, IReadOnlyList<AccountSummary>>(new GetAccountsQuery(admin));
+
+        // Assert
+        Assert.Empty(pendingForAnna);
+        Assert.Single(pendingForBert);
+        Assert.Empty(accountsForAnna);
+        Assert.Equal(3, accountsForBert.Count);
+        Assert.All(accountsForBert, a => Assert.Equal("", a.Email));
+        Assert.Contains(accountsForAdmin, a => a.Email == "anna@example.org");
     }
 
     private async Task<(string Moderator, string Anna, Guid Site)> Prepare()
@@ -219,13 +285,26 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
         var moderator = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
         await Command<ImportDiveSitesCommand, ImportDiveSitesResult>(new ImportDiveSitesCommand(moderator));
-        await Command<RegisterCommand, AccountResult>(new RegisterCommand("anna@example.org", "Felswand-auf-25m", "Anna", "de", "https://localhost/c?user={user}&token={token}"));
-        var link = new Uri(Sql.Mail.LinkTo("anna@example.org"));
-        var query = link.Query.TrimStart('?').Split('&').Select(p => p.Split('=', 2)).ToDictionary(p => p[0], p => Uri.UnescapeDataString(p[1]));
-        await Command<ConfirmEmailCommand, AccountResult>(new ConfirmEmailCommand(query["user"], query["token"]));
+        var anna = await Confirmed("anna@example.org", "Anna");
         Sql.Mail.Sent.Clear();
         var site = (await Query<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>(new GetDiveSitesForEditingQuery())).Single().Id;
-        return (moderator, query["user"], site);
+        return (moderator, anna, site);
+    }
+
+    private async Task<string> Confirmed(string email, string displayName)
+    {
+        await Command<RegisterCommand, AccountResult>(new RegisterCommand(email, "Felswand-auf-25m", displayName, "de", "/c?user={user}&token={token}"));
+        var link = new Uri(Sql.Mail.LinkTo(email));
+        var query = link.Query.TrimStart('?').Split('&').Select(p => p.Split('=', 2)).ToDictionary(p => p[0], p => Uri.UnescapeDataString(p[1]));
+        await Command<ConfirmEmailCommand, AccountResult>(new ConfirmEmailCommand(query["user"], query["token"]));
+        return query["user"];
+    }
+
+    private async Task<string> Moderator(string admin)
+    {
+        var bert = await Confirmed("bert@example.org", "Bert");
+        await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(admin, bert, Roles.Moderator, true));
+        return bert;
     }
 
     private async Task<DiveSiteForEditing> ForEditing(Guid site) =>

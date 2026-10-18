@@ -1,13 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Accounts;
 
 namespace Tauchplaetze.Core.Features.Editorial.Commands;
 
 /// <summary>Lehnt einen Vorschlag mit Begründung ab. Die Autorin oder der Autor bekommt eine Mail. Nur Moderation und Admin.</summary>
 public record RejectRevisionCommand(string ReviewerId, Guid RevisionId, string Reason);
 
-internal class RejectRevisionHandler(TauchplaetzeDbContext dbContext, EditorRoles roles, ReviewMails mails, TimeProvider time)
+internal class RejectRevisionHandler(TauchplaetzeDbContext dbContext, AccountRoles roles, ReviewMails mails, TimeProvider time)
     : ICommandHandler<RejectRevisionCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(RejectRevisionCommand command, CancellationToken ct = default)

@@ -1,3 +1,4 @@
+using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
@@ -123,6 +124,26 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         Assert.True(run.Skipped);
+    }
+
+    [SqlFact]
+    public async Task Von_Hand_startet_nur_ein_Admin_den_Prognose_Lauf()
+    {
+        // Arrange
+        await PrepareRiffWilliams();
+        var admin = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
+        await Command<RegisterCommand, AccountResult>(new RegisterCommand("anna@example.org", "Felswand-auf-25m", "Anna", "de", "/c?user={user}&token={token}"));
+        var anna = Uri.UnescapeDataString(new Uri(Sql.Mail.LinkTo("anna@example.org")).Query.TrimStart('?').Split('&')[0]["user=".Length..]);
+
+        // Act
+        var byContributor = await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(anna));
+        var runsAfterContributor = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery());
+        var byAdmin = await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(admin));
+
+        // Assert
+        Assert.Equal((false, null), (byContributor.Allowed, byContributor.Run));
+        Assert.Empty(runsAfterContributor);
+        Assert.Equal(ForecastRunStatus.Succeeded, byAdmin.Run!.Status);
     }
 
     private async Task<Guid> PrepareRiffWilliams()
