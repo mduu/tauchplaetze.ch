@@ -413,11 +413,21 @@ static class Names
         ["Steinrad"] = ["Grosser Parkplatz"],
     };
 
-    /// <summary>`alt_name` (getrennt mit `;`) und die Ergänzungen, ohne den Namen selbst und ohne Dubletten.</summary>
+    /// <summary>Schreibweisen in OSM, die Marc korrigiert hat (18.10.2026).</summary>
+    public static readonly Dictionary<string, string> Spelling = new()
+    {
+        ["Seeterasse"] = "Seeterrasse",
+    };
+
+    /// <summary>
+    /// `alt_name` (getrennt mit `;`) und die Ergänzungen, ohne den Namen selbst, ohne Dubletten, höchstens 5 mit je höchstens 80 Zeichen
+    /// (Regeln wie im Core, `dive-site.md`, «Auch bekannt als»).
+    /// </summary>
     public static List<string> OthersOf(string? name, string? altName) =>
         [.. Extra.GetValueOrDefault(name ?? "", [])
             .Concat((altName ?? "").Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
-            .Where(n => !string.Equals(n, name, StringComparison.OrdinalIgnoreCase))
+            .Select(n => Spelling.GetValueOrDefault(n, n))
+            .Where(n => n.Length <= 80 && !string.Equals(n, name, StringComparison.OrdinalIgnoreCase))
             .DistinctBy(n => n.ToLowerInvariant())
             .Take(5)];
 }
