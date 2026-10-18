@@ -63,6 +63,19 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Der_Link_ins_CMS_laedt_die_ganze_Seite_weil_das_CMS_eine_eigene_Verbindung_braucht()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + Slug, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Matches("<a href=\"/admin/plaetze/[0-9a-f-]+\"[^>]*data-enhance-nav=\"false\"", html);
+    }
+
+    [Fact]
     public async Task Weitere_Namen_stehen_unter_dem_Namen_des_Platzes()
     {
         // Arrange

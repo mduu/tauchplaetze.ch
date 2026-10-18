@@ -14,7 +14,7 @@
                 <li><a href="@AccountPaths.Profile(Language)">@L["Profile_Title"]</a></li>
                 @if (context.User.IsInRole(Roles.Moderator) || context.User.IsInRole(Roles.Admin) || context.User.IsInRole(Roles.Contributor))
                 {
-                    <li><a href="/admin">@L["Nav_Cms"]</a></li>
+                    <li><a href="/admin" data-enhance-nav="false">@L["Nav_Cms"]</a></li>
                 }
                 <li>
                     <form method="post" action="@AccountPaths.SignOut(Language)">

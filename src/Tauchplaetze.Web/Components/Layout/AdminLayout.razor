@@ -17,7 +17,7 @@
         <AuthorizeView>
             <MudText Typo="Typo.body2" Class="mr-4">@context.User.Identity?.Name</MudText>
         </AuthorizeView>
-        <MudLink Href="@($"/{Language}")" Color="Color.Inherit" Underline="Underline.None">@L["Nav_Public"]</MudLink>
+        <MudLink Href="@($"/{Language}")" Target="_top" Color="Color.Inherit" Underline="Underline.None">@L["Nav_Public"]</MudLink>
     </MudAppBar>
     <MudDrawer Open="true" ClipMode="DrawerClipMode.Always" Elevation="0" Variant="DrawerVariant.Mini" OpenMiniOnHover="false">
         <MudNavMenu>
