@@ -62,7 +62,7 @@
   <data name="Field_HazardsInfo" xml:space="preserve"><value>Gefahren</value></data>
   <data name="Field_FacilitiesInfo" xml:space="preserve"><value>Restaurants und Toiletten</value></data>
   <data name="Field_DivingBanNote" xml:space="preserve"><value>Erklärung zum Tauchverbot</value></data>
-  <data name="Field_EntryPoint" xml:space="preserve"><value>Einstieg {0}</value></data>
+  <data name="Field_EntryPoint" xml:space="preserve"><value>Ort {0}</value></data>
   <data name="Field_EntryName" xml:space="preserve"><value>Name</value></data>
   <data name="Field_EntryDescription" xml:space="preserve"><value>Beschreibung</value></data>
   <data name="Field_EntryKind" xml:space="preserve"><value>Art</value></data>
@@ -82,9 +82,9 @@
   <data name="Edit_Tab_Basics" xml:space="preserve"><value>Grunddaten</value></data>
   <data name="Edit_Tab_Ratings" xml:space="preserve"><value>Bewertungen</value></data>
   <data name="Edit_Tab_Texts" xml:space="preserve"><value>Texte</value></data>
-  <data name="Edit_Tab_EntryPoints" xml:space="preserve"><value>Einstiege</value></data>
+  <data name="Edit_Tab_EntryPoints" xml:space="preserve"><value>Einstiege und Orte</value></data>
   <data name="Edit_Tab_Moderation" xml:space="preserve"><value>Nur Moderation</value></data>
-  <data name="Edit_AddEntryPoint" xml:space="preserve"><value>Einstieg hinzufügen</value></data>
+  <data name="Edit_AddEntryPoint" xml:space="preserve"><value>Ort hinzufügen</value></data>
   <data name="Edit_Remove" xml:space="preserve"><value>Entfernen</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Als Vorschlag speichern</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Speichern und freigeben</value></data>
@@ -165,4 +165,6 @@
   <data name="NoticeKind_Closure" xml:space="preserve"><value>Sperrung</value></data>
   <data name="Edit_AddNotice" xml:space="preserve"><value>Hinweis hinzufügen</value></data>
   <data name="Error_InvalidNotice" xml:space="preserve"><value>Ein Hinweis braucht einen deutschen Text (höchstens 500 Zeichen). «Gültig bis» darf nicht vor «Gültig ab» liegen.</value></data>
+  <data name="Kind_Parking" xml:space="preserve"><value>Parkplatz</value></data>
+  <data name="Kind_Toilet" xml:space="preserve"><value>Toilette</value></data>
 </root>

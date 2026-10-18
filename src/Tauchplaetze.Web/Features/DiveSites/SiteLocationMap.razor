@@ -3,7 +3,7 @@
 @inject IStringLocalizer<DiveSiteStrings> L
 
 <section class="page-section" aria-labelledby="location">
-    <h2 id="location" class="location-title">@L[Site.EntryPoints.Count > 0 ? "Location_Title_EntryPoints" : "Location_Title"]</h2>
+    <h2 id="location" class="location-title">@L[Site.EntryPoints.Any(e => e.Kind.IsWaterAccess()) ? "Location_Title_EntryPoints" : "Location_Title"]</h2>
     <div class="location-map" data-map data-here="@Here" data-points="@Points" data-max-zoom="17"
          data-layer-map="@L["Map_Layer_Map"]" data-layer-photo="@L["Map_Layer_Photo"]"
          role="region" aria-label="@L["Location_Map_Label", Site.Name]"></div>
@@ -36,5 +36,6 @@
         lng = e.Longitude,
         name = e.Name,
         kind = L[$"EntryPoint_{e.Kind}"].Value,
+        type = e.Kind.IsWaterAccess() ? "entry" : e.Kind.ToString().ToLowerInvariant(),
     }));
 }

@@ -153,7 +153,8 @@ Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schw
 - **Übernommen:** Name, Koordinate, Gewässer, Gemeinde (`admin_level=8`), Kanton (`ISO3166-2`). Keine Beschreibungen, Tiefen oder Bewertungen aus OSM.
 - **Gewässer:** benanntes `natural=water` oder `waterway=river|canal` im Umkreis von 300 m oder als Fläche um den Punkt. Steht der Name des Gewässers im Namen des Platzes, gilt dieses. Sonst geht ein See einem Fluss vor (Platz an einer Mündung). Häfen und Becken zählen nicht. Neue Gewässer kommen mit Namen in vier Sprachen (`name:de|fr|it|en`) in den Seed, ohne Alplakes-Zuordnung (Datenstufe «nur Wetter», bis jemand sie ergänzt).
 - **Einstiege:** Punkte mit «Einstieg», «Ausstieg», «Entrée», «Sortie», «Ingresso» oder «Uscita» im Namen werden Einstiege des Platzes mit demselben Namensanfang in höchstens 400 m. Fehlt er, entsteht ein Platz mit diesem Namen.
-- **Nicht übernommen:** Punkte ohne Namen, ohne Gewässer, Parkplätze (eigene Punktart fehlt noch), Dubletten nach Slug, Punkte mit `source` von swiss-divers.ch.
+- **Parkplätze:** Punkte mit «Parkplatz», «Parking» oder «Parcheggio» im Namen werden Ort `Parking` des nächsten Platzes in höchstens 400 m.
+- **Nicht übernommen:** Punkte ohne Namen, ohne Gewässer, Dubletten nach Slug, Punkte mit `source` von swiss-divers.ch.
 - **Durchsicht:** Das Skript schreibt `tools/osm-import/out/review.md`. Marc prüft die Liste, bevor die Seeds committet werden.
 - **Lizenz:** ODbL. Quellenangabe «© OpenStreetMap contributors» bei den Daten. Die übernommenen Felder (Name, Koordinate, Gewässer) bleiben unter ODbL verfügbar (Share-Alike). Eigene Inhalte der Redaktion (Texte, Bewertungen, Fotos) sind davon getrennt.
 - **Herkunft:** Rund zwei Drittel der Punkte tragen `source=www.dive-links.com`. Siehe `open-questions.md`.

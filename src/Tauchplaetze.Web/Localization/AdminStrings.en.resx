@@ -62,7 +62,7 @@
   <data name="Field_HazardsInfo" xml:space="preserve"><value>Hazards</value></data>
   <data name="Field_FacilitiesInfo" xml:space="preserve"><value>Restaurants and toilets</value></data>
   <data name="Field_DivingBanNote" xml:space="preserve"><value>Note on the diving ban</value></data>
-  <data name="Field_EntryPoint" xml:space="preserve"><value>Entry point {0}</value></data>
+  <data name="Field_EntryPoint" xml:space="preserve"><value>Place {0}</value></data>
   <data name="Field_EntryName" xml:space="preserve"><value>Name</value></data>
   <data name="Field_EntryDescription" xml:space="preserve"><value>Description</value></data>
   <data name="Field_EntryKind" xml:space="preserve"><value>Kind</value></data>
@@ -82,9 +82,9 @@
   <data name="Edit_Tab_Basics" xml:space="preserve"><value>Basics</value></data>
   <data name="Edit_Tab_Ratings" xml:space="preserve"><value>Ratings</value></data>
   <data name="Edit_Tab_Texts" xml:space="preserve"><value>Texts</value></data>
-  <data name="Edit_Tab_EntryPoints" xml:space="preserve"><value>Entry points</value></data>
+  <data name="Edit_Tab_EntryPoints" xml:space="preserve"><value>Entry points and places</value></data>
   <data name="Edit_Tab_Moderation" xml:space="preserve"><value>Moderation only</value></data>
-  <data name="Edit_AddEntryPoint" xml:space="preserve"><value>Add entry point</value></data>
+  <data name="Edit_AddEntryPoint" xml:space="preserve"><value>Add place</value></data>
   <data name="Edit_Remove" xml:space="preserve"><value>Remove</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Save as suggestion</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Save and approve</value></data>
@@ -165,4 +165,6 @@
   <data name="NoticeKind_Closure" xml:space="preserve"><value>Closure</value></data>
   <data name="Edit_AddNotice" xml:space="preserve"><value>Add notice</value></data>
   <data name="Error_InvalidNotice" xml:space="preserve"><value>A notice needs a German text (at most 500 characters). «Valid until» must not be before «Valid from».</value></data>
+  <data name="Kind_Parking" xml:space="preserve"><value>Parking</value></data>
+  <data name="Kind_Toilet" xml:space="preserve"><value>Toilet</value></data>
 </root>

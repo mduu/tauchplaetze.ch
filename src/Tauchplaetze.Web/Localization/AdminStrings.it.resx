@@ -62,7 +62,7 @@
   <data name="Field_HazardsInfo" xml:space="preserve"><value>Pericoli</value></data>
   <data name="Field_FacilitiesInfo" xml:space="preserve"><value>Ristoranti e servizi igienici</value></data>
   <data name="Field_DivingBanNote" xml:space="preserve"><value>Spiegazione del divieto</value></data>
-  <data name="Field_EntryPoint" xml:space="preserve"><value>Punto d'entrata {0}</value></data>
+  <data name="Field_EntryPoint" xml:space="preserve"><value>Luogo {0}</value></data>
   <data name="Field_EntryName" xml:space="preserve"><value>Nome</value></data>
   <data name="Field_EntryDescription" xml:space="preserve"><value>Descrizione</value></data>
   <data name="Field_EntryKind" xml:space="preserve"><value>Tipo</value></data>
@@ -82,9 +82,9 @@
   <data name="Edit_Tab_Basics" xml:space="preserve"><value>Dati di base</value></data>
   <data name="Edit_Tab_Ratings" xml:space="preserve"><value>Valutazioni</value></data>
   <data name="Edit_Tab_Texts" xml:space="preserve"><value>Testi</value></data>
-  <data name="Edit_Tab_EntryPoints" xml:space="preserve"><value>Punti d'entrata</value></data>
+  <data name="Edit_Tab_EntryPoints" xml:space="preserve"><value>Punti d'entrata e luoghi</value></data>
   <data name="Edit_Tab_Moderation" xml:space="preserve"><value>Solo moderazione</value></data>
-  <data name="Edit_AddEntryPoint" xml:space="preserve"><value>Aggiungi punto d'entrata</value></data>
+  <data name="Edit_AddEntryPoint" xml:space="preserve"><value>Aggiungi luogo</value></data>
   <data name="Edit_Remove" xml:space="preserve"><value>Rimuovi</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Salva come proposta</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Salva e approva</value></data>
@@ -165,4 +165,6 @@
   <data name="NoticeKind_Closure" xml:space="preserve"><value>Chiusura</value></data>
   <data name="Edit_AddNotice" xml:space="preserve"><value>Aggiungi avviso</value></data>
   <data name="Error_InvalidNotice" xml:space="preserve"><value>Un avviso richiede un testo in tedesco (al massimo 500 caratteri). «Valido fino al» non può precedere «Valido dal».</value></data>
+  <data name="Kind_Parking" xml:space="preserve"><value>Parcheggio</value></data>
+  <data name="Kind_Toilet" xml:space="preserve"><value>Servizi igienici</value></data>
 </root>

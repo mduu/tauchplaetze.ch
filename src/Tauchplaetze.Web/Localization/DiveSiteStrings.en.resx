@@ -69,4 +69,6 @@
   <data name="EntryPoint_EntryAndExit" xml:space="preserve"><value>Entry and exit</value></data>
   <data name="EntryPoint_Entry" xml:space="preserve"><value>Entry point</value></data>
   <data name="EntryPoint_Exit" xml:space="preserve"><value>Exit point</value></data>
+  <data name="EntryPoint_Parking" xml:space="preserve"><value>Parking</value></data>
+  <data name="EntryPoint_Toilet" xml:space="preserve"><value>Toilet</value></data>
 </root>

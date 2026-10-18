@@ -1,3 +1,5 @@
+using Tauchplaetze.Core.Features.DiveSites;
+
 namespace Tauchplaetze.Core.Features.Editorial;
 
 /// <summary>Die Ausbaustufe eines Platzes (`cms.md`, «Ausbaustufen»). Die Regel steht nur hier.</summary>
@@ -9,7 +11,7 @@ internal static class ContentLevelRule
         var basic = content.MaxDepth is not null
                     && content.DifficultyRating is not null
                     && content.Access is not null
-                    && content.EntryPointList.Any(e => e.Texts.Any(t => t.Culture == "de" && !string.IsNullOrWhiteSpace(t.Description)))
+                    && content.EntryPointList.Any(e => e.Kind.IsWaterAccess() && e.Texts.Any(t => t.Culture == "de" && !string.IsNullOrWhiteSpace(t.Description)))
                     && !string.IsNullOrWhiteSpace(german?.ApproachInfo);
 
         if (!basic)

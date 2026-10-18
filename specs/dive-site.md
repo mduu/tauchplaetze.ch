@@ -103,13 +103,16 @@ Die Bewertung beschreibt die übliche Lage. Der aktuelle Abfluss kommt aus der P
 | 4 | schön | Wiese, Badeplatz oder schöne Aussicht. |
 | 5 | herausragend | Landschaft, die allein den Ausflug lohnt. |
 
-## Einstiege
+## Einstiege und Orte
 
-Ein Platz hat null, einen oder mehrere Einstiege (`DiveSiteEntryPoint`).
+Ein Platz hat null, einen oder mehrere Einstiege und Orte (`DiveSiteEntryPoint`). Die Redaktion erfasst sie im selben Tab.
 
-- Jeder Einstieg hat eine Koordinate (Pin auf der Karte).
-- Optional: Art (`Entry`, `Exit`, `EntryAndExit`), Name (z.B. «Treppe beim Bootshaus»), Beschreibung, Bilder.
+- Jeder Eintrag hat eine Koordinate (Pin auf der Karte).
+- Art: Wege ins Wasser (`EntryAndExit`, `Entry`, `Exit`) oder Orte an Land (`Parking`, `Toilet`). Weitere Orte an Land kommen als neue Art dazu.
+- Optional: Name (z.B. «Treppe beim Bootshaus»), Beschreibung, Bilder.
 - Die Reihenfolge legt die Redaktion fest. Der erste Einstieg ist der Hauptzugang.
+- Für die Ausbaustufe zählt nur ein beschriebener Weg ins Wasser, kein Parkplatz und keine Toilette.
+- Karte: Einstiege als Punkt, Parkplatz als blaues Schild «P», Toilette als Schild «WC», alle mit Name und Art beschriftet.
 - `DiveSite.Location` bleibt die Position für Prognose und Karte. Ohne Einstieg zeigt die Karte nur diese Position.
 
 ## Hinweise

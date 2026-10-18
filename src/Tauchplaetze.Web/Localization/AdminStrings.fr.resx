@@ -62,7 +62,7 @@
   <data name="Field_HazardsInfo" xml:space="preserve"><value>Dangers</value></data>
   <data name="Field_FacilitiesInfo" xml:space="preserve"><value>Restaurants et toilettes</value></data>
   <data name="Field_DivingBanNote" xml:space="preserve"><value>Explication de l'interdiction</value></data>
-  <data name="Field_EntryPoint" xml:space="preserve"><value>Point d'entrée {0}</value></data>
+  <data name="Field_EntryPoint" xml:space="preserve"><value>Lieu {0}</value></data>
   <data name="Field_EntryName" xml:space="preserve"><value>Nom</value></data>
   <data name="Field_EntryDescription" xml:space="preserve"><value>Description</value></data>
   <data name="Field_EntryKind" xml:space="preserve"><value>Type</value></data>
@@ -82,9 +82,9 @@
   <data name="Edit_Tab_Basics" xml:space="preserve"><value>Données de base</value></data>
   <data name="Edit_Tab_Ratings" xml:space="preserve"><value>Évaluations</value></data>
   <data name="Edit_Tab_Texts" xml:space="preserve"><value>Textes</value></data>
-  <data name="Edit_Tab_EntryPoints" xml:space="preserve"><value>Points d'entrée</value></data>
+  <data name="Edit_Tab_EntryPoints" xml:space="preserve"><value>Points d'entrée et lieux</value></data>
   <data name="Edit_Tab_Moderation" xml:space="preserve"><value>Modération seulement</value></data>
-  <data name="Edit_AddEntryPoint" xml:space="preserve"><value>Ajouter un point d'entrée</value></data>
+  <data name="Edit_AddEntryPoint" xml:space="preserve"><value>Ajouter un lieu</value></data>
   <data name="Edit_Remove" xml:space="preserve"><value>Retirer</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Enregistrer comme proposition</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Enregistrer et valider</value></data>
@@ -165,4 +165,6 @@
   <data name="NoticeKind_Closure" xml:space="preserve"><value>Fermeture</value></data>
   <data name="Edit_AddNotice" xml:space="preserve"><value>Ajouter un avis</value></data>
   <data name="Error_InvalidNotice" xml:space="preserve"><value>Un avis demande un texte en allemand (500 caractères au plus). « Valable jusqu'au » ne peut pas précéder « Valable dès le ».</value></data>
+  <data name="Kind_Parking" xml:space="preserve"><value>Parking</value></data>
+  <data name="Kind_Toilet" xml:space="preserve"><value>Toilettes</value></data>
 </root>

@@ -28,11 +28,11 @@ window.tauchplaetzeMap = (function () {
   }
 
   // Dauerhafte Beschriftung wie ein Tooltip mit Pfeil auf den Punkt. Mit url öffnet ein Klick die Seite.
-  function labelled(marker, item, html) {
+  function labelled(marker, item, html, offsetY) {
     marker.bindTooltip(item.url ? '<a href="' + item.url + '">' + html + '</a>' : html, {
       permanent: true,
       direction: 'top',
-      offset: [0, -8],
+      offset: [0, offsetY || -8],
       interactive: !!item.url,
       className: 'map-label'
     });
@@ -73,7 +73,22 @@ window.tauchplaetzeMap = (function () {
     return labelled(marker, site, escapeHtml(site.name));
   }
 
+  // Orte an Land (Parkplatz, Toilette) als Schild mit Kürzel, Einstiege als Punkt.
+  const placeSigns = { parking: 'P', toilet: 'WC' };
+
   function entryMarker(point) {
+    const name = point.name ? escapeHtml(point.name) + ' ' : '';
+    const label = name + '<span class="map-label-kind">' + escapeHtml(point.kind) + '</span>';
+    if (placeSigns[point.type]) {
+      const icon = L.divIcon({
+        className: 'map-place map-place-' + point.type,
+        html: '<span>' + placeSigns[point.type] + '</span>',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+      return labelled(L.marker([point.lat, point.lng], { icon: icon, keyboard: false }), point, label, -12);
+    }
+
     const marker = L.circleMarker([point.lat, point.lng], {
       radius: 6,
       color: token('--color-bg'),
@@ -81,8 +96,7 @@ window.tauchplaetzeMap = (function () {
       fillColor: token('--color-text'),
       fillOpacity: 1
     });
-    const name = point.name ? escapeHtml(point.name) + ' ' : '';
-    return labelled(marker, point, name + '<span class="map-label-kind">' + escapeHtml(point.kind) + '</span>');
+    return labelled(marker, point, label);
   }
 
   // Bei vielen Punkten erscheinen die Beschriftungen erst ab Zoom 11, sonst überdecken sie sich.

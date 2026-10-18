@@ -49,7 +49,7 @@ public enum DiveSiteFeatures
     Training = 16,
 }
 
-/// <summary>Art eines Einstiegs (`dive-site.md`, «Einstiege»).</summary>
+/// <summary>Art eines Orts am Platz (`dive-site.md`, «Einstiege und Orte»): ein Weg ins Wasser oder ein Ort an Land.</summary>
 public enum EntryPointKind
 {
     /// <summary>Ein- und Ausstieg.</summary>
@@ -60,6 +60,19 @@ public enum EntryPointKind
 
     /// <summary>Nur Ausstieg.</summary>
     Exit,
+
+    /// <summary>Parkplatz.</summary>
+    Parking,
+
+    /// <summary>Toilette.</summary>
+    Toilet,
+}
+
+/// <summary>Regeln zur Art eines Orts.</summary>
+public static class EntryPointKinds
+{
+    /// <summary>Ein Weg ins Wasser oder aus dem Wasser, kein Ort an Land.</summary>
+    public static bool IsWaterAccess(this EntryPointKind kind) => kind is EntryPointKind.EntryAndExit or EntryPointKind.Entry or EntryPointKind.Exit;
 }
 
 /// <summary>Art eines Hinweises zum Platz (`dive-site.md`, «Hinweise»). Die Reihenfolge ist die Schwere.</summary>

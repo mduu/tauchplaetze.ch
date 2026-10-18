@@ -38,14 +38,17 @@ public class ContentLevelTests
         Assert.Equal(1, level);
     }
 
-    [Fact]
-    public void Fehlt_die_deutsche_Beschreibung_des_Einstiegs_bleibt_Stufe_0()
+    [Theory]
+    [InlineData(EntryPointKind.Entry, "en")]
+    [InlineData(EntryPointKind.Parking, "de")]
+    [InlineData(EntryPointKind.Toilet, "de")]
+    public void Ohne_deutsch_beschriebenen_Einstieg_bleibt_Stufe_0_ein_Parkplatz_oder_eine_Toilette_zaehlt_nicht(EntryPointKind kind, string culture)
     {
         // Arrange
-        var english = Basic with { EntryPoints = [new EntryPointContent(Guid.NewGuid(), 47.28, 8.6, EntryPointKind.Entry, [new EntryPointText("en", "Stairs", "Down the stairs.")])] };
+        var content = Basic with { EntryPoints = [new EntryPointContent(Guid.NewGuid(), 47.28, 8.6, kind, [new EntryPointText(culture, "Beim Hafen", "Gleich neben dem Hafen.")])] };
 
         // Act
-        var level = ContentLevelRule.For(english, null);
+        var level = ContentLevelRule.For(content, null);
 
         // Assert
         Assert.Equal(0, level);

@@ -37,6 +37,7 @@ Es gibt im MVP **nur das dunkle Schema**. Ein helles Schema ist nicht geplant.
 | `--color-notice-info` | `#7FE3D6` | Hinweis «Info» |
 | `--color-notice-warning` | `#FF9A4D` | Hinweis «Warnung» |
 | `--color-notice-closure` | `#FF6F61` | Hinweis «Sperrung», einzige rote Farbe |
+| `--color-place-parking` | `#2F6BC4` | Parkplatz auf der Karte (Schild «P», blau wie das Signal), Text `--color-place-parking-text` `#FFFFFF` |
 
 Banner: Fläche `--color-surface` mit 10 % der Farbe, Rand links 5 px in der Farbe, sonst Rahmen mit 45 % der Farbe. Label in IBM Plex Mono, Grossbuchstaben, in der Farbe. Text in `--color-text`, bei einer Sperrung fett.
 

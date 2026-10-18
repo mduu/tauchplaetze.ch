@@ -1,7 +1,7 @@
 #:property PublishAot=false
 
 // Holt die Tauchplätze der Schweiz aus OpenStreetMap (ODbL) und ergänzt die Seeds der App.
-// Übernimmt nur Name, Koordinate, Gewässer, Gemeinde und Kanton, dazu Einstiege und Ausstiege als Einstiege des Platzes.
+// Übernimmt nur Name, Koordinate, Gewässer, Gemeinde und Kanton, dazu Einstiege, Ausstiege und Parkplätze als Orte des Platzes.
 // Aufruf aus dem Repository: dotnet run tools/osm-import/osm-dive-sites.cs [-- --cached] [-- --exclude-source <regex>]
 // Ergebnis: neue Einträge in den Seeds (src/Tauchplaetze.Core/Features/…/Seed/*.json) und tools/osm-import/out/review.md.
 // Ablauf und Regeln: specs/data-sources.md, «OpenStreetMap».
@@ -66,10 +66,6 @@ foreach (var candidate in candidates)
     else if (candidate.Water is null)
     {
         review.Skipped.Add($"kein Gewässer im Umkreis von 300 m: {candidate.Name} ({candidate.Municipality}, {Coordinates(candidate)})");
-    }
-    else if (Patterns.Parking.IsMatch(candidate.Name))
-    {
-        review.Parking.Add($"{candidate.Name} ({candidate.Water.NameDe}, {Coordinates(candidate)})");
     }
     else
     {
@@ -219,8 +215,9 @@ static IEnumerable<Candidate> Candidates(JsonArray elements)
 
 static List<Site> Group(List<Candidate> candidates, Review review)
 {
-    var entries = candidates.Where(c => Patterns.EntryPoint.IsMatch(c.Name!)).ToList();
-    var sites = candidates.Except(entries).Select(c => new Site(c.Name!, c.Latitude, c.Longitude, c.Water!, c.Municipality, c.Canton, [c.OsmId], [])).ToList();
+    var parkings = candidates.Where(c => Patterns.Parking.IsMatch(c.Name!)).ToList();
+    var entries = candidates.Where(c => Patterns.EntryPoint.IsMatch(c.Name!)).Except(parkings).ToList();
+    var sites = candidates.Except(entries).Except(parkings).Select(c => new Site(c.Name!, c.Latitude, c.Longitude, c.Water!, c.Municipality, c.Canton, [c.OsmId], [])).ToList();
 
     foreach (var entry in entries.OrderBy(e => e.Name))
     {
@@ -249,6 +246,23 @@ static List<Site> Group(List<Candidate> candidates, Review review)
         site.OsmIds.Add(entry.OsmId);
         site.EntryPoints.Add(new EntryPoint(kind, label.Length > 0 ? label : null, entry.Latitude, entry.Longitude));
         review.Grouped.Add($"«{entry.Name}» → Einstieg ({kind}) von «{site.Name}»");
+    }
+
+    foreach (var parking in parkings)
+    {
+        var site = sites
+            .Where(s => Distance(s.Latitude, s.Longitude, parking.Latitude, parking.Longitude) < 400)
+            .OrderBy(s => Distance(s.Latitude, s.Longitude, parking.Latitude, parking.Longitude))
+            .FirstOrDefault();
+        if (site is null)
+        {
+            review.Skipped.Add($"Parkplatz ohne Platz in 400 m: {parking.Name} ({Coordinates(parking)})");
+            continue;
+        }
+
+        site.OsmIds.Add(parking.OsmId);
+        site.EntryPoints.Add(new EntryPoint("Parking", parking.Name, parking.Latitude, parking.Longitude));
+        review.Grouped.Add($"«{parking.Name}» → Parkplatz von «{site.Name}»");
     }
 
     return sites;
@@ -417,8 +431,6 @@ sealed class Review
 
     public List<string> Grouped { get; } = [];
 
-    public List<string> Parking { get; } = [];
-
     public List<string> Duplicates { get; } = [];
 
     public List<string> Skipped { get; } = [];
@@ -447,8 +459,7 @@ sealed class Review
             text.AppendLine();
         }
 
-        Section(text, "Einstiege zugeordnet", Grouped);
-        Section(text, "Parkplätze (nicht übernommen, eigene Punktart fehlt)", Parking);
+        Section(text, "Einstiege und Parkplätze zugeordnet", Grouped);
         Section(text, "Doppelt (nicht übernommen)", Duplicates);
         Section(text, "Ausgelassen", Skipped);
         return text.ToString();
