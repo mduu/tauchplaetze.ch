@@ -69,7 +69,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Die_Platzseite_zeigt_die_Karte_mit_dem_Platz_und_seinen_Einstiegen()
+    public async Task Mit_Einstiegen_zeigt_die_Karte_die_Einstiege_statt_des_Platzpunkts()
     {
         // Arrange
         using var browser = app.Browser();
@@ -81,8 +81,22 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         // Assert
         Assert.Contains("Posizione e punti d'entrata", text);
         Assert.Contains("Entrata e uscita Treppe beim Bootshaus", text);
-        Assert.Contains("data-here=", html);
         Assert.Contains("47.2851", html);
+        Assert.DoesNotContain("data-here=", html);
+    }
+
+    [Fact]
+    public async Task Ohne_Einstiege_zeigt_die_Karte_den_Platz_selbst()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + Slug, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("data-here=", html);
+        Assert.Contains("Lage", VisibleText.Of(html));
     }
 
     [Fact]
@@ -129,7 +143,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithForecast, TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Contains("Wetter stündlich", VisibleText.Of(html));
+        Assert.Contains("Wetterverlauf", VisibleText.Of(html));
         Assert.Matches(@"<desc[^>]*>Mo 07\.01\.: 8 bis 14 °C, 2[.,]0 mm Regen, Wind bis 15 km/h\.", WebUtility.HtmlDecode(html));
         Assert.Contains("href=\"#wx-rain\"", html);
     }

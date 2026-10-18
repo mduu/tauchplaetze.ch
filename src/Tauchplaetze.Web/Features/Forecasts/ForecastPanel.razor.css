@@ -31,9 +31,42 @@
 
 .conditions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 24px;
     margin-top: 28px;
+}
+
+/* Desktop: links Profil und darunter die Karte, rechts Kacheln und die fünf Tage. Schmal: Profil, Kacheln, Karte. */
+@media (min-width: 960px) {
+    .conditions-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+            "profile side"
+            "below side";
+        grid-template-rows: auto 1fr;
+        align-items: start;
+    }
+
+    .conditions-grid[data-profile="false"] {
+        grid-template-areas: "below side";
+        grid-template-rows: auto;
+    }
+
+    .profile {
+        grid-area: profile;
+    }
+
+    .side {
+        grid-area: side;
+    }
+
+    .below {
+        grid-area: below;
+    }
+}
+
+.below {
+    min-width: 0;
 }
 
 .profile {
@@ -155,11 +188,24 @@
 }
 
 .hourly {
-    margin-top: 28px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-divider);
+}
+
+.hourly-title {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 600;
 }
 
 .weather-source {
-    margin: 8px 0 0;
+    margin: 6px 0 0;
     color: var(--color-text-subtle);
-    font-size: 13px;
+    font-size: 12px;
+}
+
+.side,
+.days {
+    min-width: 0;
 }

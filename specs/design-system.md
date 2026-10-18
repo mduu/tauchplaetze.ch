@@ -122,7 +122,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 | `RankingList` | `<ol>` mit Rang, Name, Ort · See, Index-Balken, Begründung, Index |
 | `StatTile` | Label (Mono, klein, Grossbuchstaben) und Wert (Bricolage 24–26 px) |
 | `TemperatureProfileChart` | SVG: Temperatur (x) über Tiefe (y), Sprungschicht als oranges Band, Werte auf 0/20/30 m |
-| `WeatherChart` | SVG, serverseitig: Stunden der nächsten Tage. Eigene Wettersymbole (Sonne, Mond, Wolke, Nebel, Niesel, Regen, Schauer, Schnee, Gewitter), Windpfeile, Sonnenbalken (`--color-sun`), Temperaturlinie (`--color-signal`), Regenbalken (`--color-rain`), Nacht in `--color-bg`. Legende darunter als Text. |
+| `WeatherChart` | SVG, serverseitig, kompakt in der Kachel «Die nächsten 5 Tage»: Raster von 2 Stunden, Symbol nur bei Wechsel mit gepunkteter Linie dazwischen, Wind alle 6 Stunden. Eigene Wettersymbole (Sonne, Mond, Wolke, Nebel, Niesel, Regen, Schauer, Schnee, Gewitter), Windpfeile, Sonnenbalken (`--color-sun`), Temperaturlinie (`--color-signal`), Regenbalken (`--color-rain`), Nacht in `--color-bg`. Legende darunter als Text. |
 | `ForecastStrip` | 5 Tage mit Index, Farbe nach Skala, Mini-Balken, Stichwort |
 | `SiteSketch` | SVG-Skizze: Ufer, Einstieg (Orange), Tiefenlinien gestrichelt, Wand, Highlights, Nordpfeil |
 | `PracticalTile` | Label in Cyan oder Orange (Achtung), Text |

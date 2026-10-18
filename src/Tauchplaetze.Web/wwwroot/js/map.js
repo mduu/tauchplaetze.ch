@@ -149,8 +149,11 @@ window.tauchplaetzeMap = (function () {
     markers.forEach(function (marker) { marker.addTo(map); });
 
     map.on('zoomend', function () { toggleLabels(map, markers.length); });
-    if (markers.length > 0) {
-      map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [48, 48], maxZoom: Number(element.dataset.maxZoom || 13) });
+    const padding = Number(element.dataset.padding || 48);
+    if (markers.length === 1 && element.dataset.singleZoom) {
+      map.setView(markers[0].getLatLng(), Number(element.dataset.singleZoom));
+    } else if (markers.length > 0) {
+      map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [padding, padding], maxZoom: Number(element.dataset.maxZoom || 13) });
     } else {
       map.setView([Number(element.dataset.lat || 46.8), Number(element.dataset.lng || 8.2)], Number(element.dataset.zoom || 8));
     }

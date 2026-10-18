@@ -78,8 +78,8 @@
   <data name="Place_geneve" xml:space="preserve"><value>Ginevra</value></data>
   <data name="Place_lugano" xml:space="preserve"><value>Lugano</value></data>
   <data name="Place_chur" xml:space="preserve"><value>Coira</value></data>
-  <data name="Weather_Heading" xml:space="preserve"><value>Meteo ora per ora</value></data>
-  <data name="Weather_Title" xml:space="preserve"><value>Meteo ora per ora per i prossimi giorni</value></data>
+  <data name="Weather_Heading" xml:space="preserve"><value>Andamento del meteo</value></data>
+  <data name="Weather_Title" xml:space="preserve"><value>Meteo a intervalli di 2 ore per i prossimi giorni</value></data>
   <data name="Weather_DaySummary" xml:space="preserve"><value>{0}: da {1} a {2} °C, {3} mm di pioggia, vento fino a {4} km/h.</value></data>
   <data name="Weather_Temperature" xml:space="preserve"><value>Temperatura °C</value></data>
   <data name="Weather_Rain" xml:space="preserve"><value>Pioggia mm/h</value></data>

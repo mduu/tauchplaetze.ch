@@ -2,9 +2,16 @@
 @using Tauchplaetze.Core.Features.DiveSites
 @inject IStringLocalizer<DiveSiteStrings> L
 
-<section class="page-section" aria-labelledby="location">
-    <h2 id="location" class="location-title">@L[Site.EntryPoints.Any(e => e.Kind.IsWaterAccess()) ? "Location_Title_EntryPoints" : "Location_Title"]</h2>
-    <div class="location-map" data-map data-here="@Here" data-points="@Points" data-max-zoom="17"
+<section class="@(Compact ? "location card" : "page-section")" aria-labelledby="location">
+    @if (Compact)
+    {
+        <h3 id="location" class="location-title-compact">@Title</h3>
+    }
+    else
+    {
+        <h2 id="location" class="location-title">@Title</h2>
+    }
+    <div class="location-map" data-map data-here="@Here" data-points="@Points" data-max-zoom="18" data-single-zoom="17" data-padding="24"
          data-layer-map="@L["Map_Layer_Map"]" data-layer-photo="@L["Map_Layer_Photo"]"
          role="region" aria-label="@L["Location_Map_Label", Site.Name]"></div>
     @if (Site.EntryPoints.Count > 0)
@@ -28,7 +35,16 @@
     [Parameter, EditorRequired]
     public DiveSiteDetails Site { get; set; } = default!;
 
-    private string Here => JsonSerializer.Serialize(new { lat = Site.Latitude, lng = Site.Longitude, name = Site.Name });
+    /// <summary>Als Karte in der Spalte neben den Bedingungen statt als eigener Abschnitt.</summary>
+    [Parameter]
+    public bool Compact { get; set; }
+
+    private string Title => L[Site.EntryPoints.Any(e => e.Kind.IsWaterAccess()) ? "Location_Title_EntryPoints" : "Location_Title"];
+
+    /// <remarks>Mit erfassten Einstiegen oder Orten fehlt der Platzpunkt. Die Orte sind genauer und überdecken sich so nicht mit ihm.</remarks>
+    private string? Here => Site.EntryPoints.Count > 0
+        ? null
+        : JsonSerializer.Serialize(new { lat = Site.Latitude, lng = Site.Longitude, name = Site.Name });
 
     private string Points => JsonSerializer.Serialize(Site.EntryPoints.Select(e => new
     {

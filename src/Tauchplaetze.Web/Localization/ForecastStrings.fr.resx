@@ -78,8 +78,8 @@
   <data name="Place_geneve" xml:space="preserve"><value>Genève</value></data>
   <data name="Place_lugano" xml:space="preserve"><value>Lugano</value></data>
   <data name="Place_chur" xml:space="preserve"><value>Coire</value></data>
-  <data name="Weather_Heading" xml:space="preserve"><value>Météo heure par heure</value></data>
-  <data name="Weather_Title" xml:space="preserve"><value>Météo heure par heure pour les prochains jours</value></data>
+  <data name="Weather_Heading" xml:space="preserve"><value>Évolution de la météo</value></data>
+  <data name="Weather_Title" xml:space="preserve"><value>Météo par tranches de 2 heures pour les prochains jours</value></data>
   <data name="Weather_DaySummary" xml:space="preserve"><value>{0} : {1} à {2} °C, {3} mm de pluie, vent jusqu'à {4} km/h.</value></data>
   <data name="Weather_Temperature" xml:space="preserve"><value>Température °C</value></data>
   <data name="Weather_Rain" xml:space="preserve"><value>Pluie mm/h</value></data>

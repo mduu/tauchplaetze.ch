@@ -2,7 +2,7 @@
 @inject IStringLocalizer<ForecastStrings> L
 @inject TimeProvider Time
 
-@* Wetter pro Stunde wie bei MeteoSchweiz: Symbole und Wind alle 3 h, Sonne, Temperatur und Regen (design-system.md, WeatherChart). *@
+@* Wetter im 2-h-Raster wie bei MeteoSchweiz, kompakt für die Kachel «Die nächsten 5 Tage» (design-system.md, WeatherChart). *@
 <div class="weather">
     <div class="weather-scroll">
         <svg class="weather-chart" viewBox="0 0 @Svg(Width) @Svg(Height)" role="img" aria-labelledby="weather-title weather-desc">
@@ -50,13 +50,13 @@
             </defs>
 
             @* Nacht und Vergangenheit *@
-            @foreach (var (start, count) in NightRuns)
+            @foreach (var (first, count) in NightRuns)
             {
-                <rect class="night" x="@Svg(X(start))" y="@Svg(TopBands)" width="@Svg(count * HourWidth)" height="@Svg(MainBottom - TopBands)" />
+                <rect class="night" x="@Svg(X(first))" y="@Svg(SymbolTop)" width="@Svg(count * SlotWidth)" height="@Svg(MainBottom - SymbolTop)" />
             }
             @if (NowOffset is { } now)
             {
-                <rect class="past" x="@Svg(Left)" y="@Svg(TopBands)" width="@Svg(now * HourWidth)" height="@Svg(MainBottom - TopBands)" />
+                <rect class="past" x="@Svg(Left)" y="@Svg(SymbolTop)" width="@Svg(now * SlotWidth)" height="@Svg(MainBottom - SymbolTop)" />
             }
 
             @* Gitter und Achsen *@
@@ -65,68 +65,62 @@
             @foreach (var tick in TemperatureTicks)
             {
                 <line class="grid" x1="@Svg(Left)" y1="@Svg(TemperatureY(tick))" x2="@Svg(Right)" y2="@Svg(TemperatureY(tick))" />
-                <SvgText class="tick" x="@Svg(Left - 6)" y="@Svg(TemperatureY(tick) + 4)" text-anchor="end" Content="@($"{tick}°")" />
+                <SvgText class="tick" x="@Svg(Left - 4)" y="@Svg(TemperatureY(tick) + 3)" text-anchor="end" Content="@($"{tick}°")" />
             }
-            @foreach (var tick in RainTicks)
-            {
-                <SvgText class="tick tick-rain" x="@Svg(Right + 6)" y="@Svg(RainY(tick) + 4)" Content="@Svg((double)tick)" />
-            }
-            <SvgText class="tick tick-sun" x="@Svg(Left - 6)" y="@Svg(SunTop + 8)" text-anchor="end" Content="60" />
-            <SvgText class="tick tick-sun" x="@Svg(Left - 6)" y="@Svg(SunBottom)" text-anchor="end" Content="0" />
+            <SvgText class="tick tick-rain" x="@Svg(Right + 4)" y="@Svg(MainTop + 3)" Content="@Svg((double)RainMax)" />
+            <SvgText class="tick tick-rain" x="@Svg(Right + 4)" y="@Svg(MainBottom)" Content="0" />
+            <SvgText class="tick tick-sun" x="@Svg(Left - 4)" y="@Svg(SunTop + 6)" text-anchor="end" Content="60" />
 
             @* Tage *@
             @foreach (var day in Days)
             {
-                <line class="midnight" x1="@Svg(X(day.Offset))" y1="0" x2="@Svg(X(day.Offset))" y2="@Svg(MainBottom + 8)" />
-                <SvgText class="day-label" x="@Svg(X(day.Offset) + 6)" y="16" Content="@day.Label" />
+                <line class="midnight" x1="@Svg(X(day.Offset))" y1="0" x2="@Svg(X(day.Offset))" y2="@Svg(MainBottom + 4)" />
+                <SvgText class="day-label" x="@Svg(X(day.Offset) + 4)" y="11" Content="@day.Label" />
             }
             @foreach (var hour in AxisHours)
             {
-                <SvgText class="tick" x="@Svg(X(hour.Offset))" y="@Svg(MainBottom + 20)" text-anchor="middle" Content="@hour.Label" />
+                <SvgText class="tick" x="@Svg(X(hour.Offset))" y="@Svg(MainBottom + 13)" text-anchor="middle" Content="@hour.Label" />
             }
 
-            @* Symbole und Wind alle 3 h *@
-            @foreach (var block in Blocks)
+            @* Symbole nur beim Wechsel, dazwischen eine gepunktete Linie *@
+            @foreach (var change in SymbolChanges)
             {
-                var center = X(block.Offset + 1.5);
-                @if (block.Symbol is { } symbol)
+                var center = X(change.Offset + 0.5);
+                @if (change.LineTo is { } next)
                 {
-                    <g>
-                        <title>@L[$"Wx_{symbol}"]</title>
-                        <use href="#@SymbolId(symbol, block.IsNight)" x="@Svg(center - 15)" y="26" width="30" height="30" />
-                    </g>
+                    <line class="same-weather" x1="@Svg(center + SymbolSize / 2 + 2)" y1="@Svg(SymbolTop + SymbolSize / 2)" x2="@Svg(X(next + 0.5) - SymbolSize / 2 - 2)" y2="@Svg(SymbolTop + SymbolSize / 2)" />
                 }
-                @if (block.WindKmh is { } wind)
-                {
-                    @if (block.WindDirection is { } direction)
-                    {
-                        <path class="wind-arrow" d="M0 -7L5 1H1.6V7H-1.6V1H-5Z" transform="translate(@Svg(center) 70) rotate(@Svg((direction + 180) % 360))" />
-                    }
-                    <SvgText class="wind-value" x="@Svg(center)" y="94" text-anchor="middle" Content="@Svg(Math.Round(wind))" />
-                }
+                <g>
+                    <title>@L[$"Wx_{change.Symbol}"]</title>
+                    <use href="#@change.Id" x="@Svg(center - SymbolSize / 2)" y="@Svg(SymbolTop)" width="@Svg(SymbolSize)" height="@Svg(SymbolSize)" />
+                </g>
             }
 
-            @* Sonne *@
-            @foreach (var (hour, index) in Hours.Select((h, i) => (h, i)))
+            @* Wind alle 6 h *@
+            @foreach (var wind in Winds)
             {
-                @if (hour.SunshineMinutes is > 0 and var minutes)
+                var center = X(wind.Offset);
+                @if (wind.Direction is { } direction)
                 {
-                    var height = Math.Min(minutes, 60) / 60.0 * (SunBottom - SunTop);
-                    <rect class="sun-bar" x="@Svg(X(index) + 1)" y="@Svg(SunBottom - height)" width="@Svg(HourWidth - 2)" height="@Svg(height)" />
+                    <path class="wind-arrow" d="M0 -5L3.6 0.8H1.2V5H-1.2V0.8H-3.6Z" transform="translate(@Svg(center) @Svg(WindArrowY)) rotate(@Svg((direction + 180) % 360))" />
                 }
+                <SvgText class="wind-value" x="@Svg(center)" y="@Svg(WindValueY)" text-anchor="middle" Content="@Svg(Math.Round(wind.Kmh))" />
             }
 
-            @* Regen *@
-            @foreach (var (hour, index) in Hours.Select((h, i) => (h, i)))
+            @* Sonne, Regen und Temperatur pro 2 h *@
+            @foreach (var slot in Slots)
             {
-                @if (hour.PrecipitationMm is > 0 and var rain)
+                @if (slot.SunshineMinutes is > 0 and var minutes)
+                {
+                    var height = Math.Min(minutes, 60) / 60 * (SunBottom - SunTop);
+                    <rect class="sun-bar" x="@Svg(X(slot.Offset) + 1)" y="@Svg(SunBottom - height)" width="@Svg(SlotWidth - 2)" height="@Svg(height)" />
+                }
+                @if (slot.RainMm is > 0 and var rain)
                 {
                     var top = RainY(rain);
-                    <rect class="rain-bar" x="@Svg(X(index) + 1)" y="@Svg(top)" width="@Svg(HourWidth - 2)" height="@Svg(MainBottom - top)" />
+                    <rect class="rain-bar" x="@Svg(X(slot.Offset) + 1)" y="@Svg(top)" width="@Svg(SlotWidth - 2)" height="@Svg(MainBottom - top)" />
                 }
             }
-
-            @* Temperatur *@
             @foreach (var line in TemperatureLines)
             {
                 <polyline class="temperature" points="@line" />
@@ -134,7 +128,7 @@
 
             @if (NowOffset is { } nowLine)
             {
-                <line class="now" x1="@Svg(X(nowLine))" y1="@Svg(TopBands)" x2="@Svg(X(nowLine))" y2="@Svg(MainBottom)" />
+                <line class="now" x1="@Svg(X(nowLine))" y1="@Svg(SymbolTop)" x2="@Svg(X(nowLine))" y2="@Svg(MainBottom)" />
             }
         </svg>
     </div>
@@ -147,95 +141,146 @@
 </div>
 
 @code {
-    private const double HourWidth = 8;
+    private const int SlotHours = 2;
 
-    private const double Left = 40;
+    private const double SlotWidth = 9;
 
-    private const double TopBands = 24;
+    private const double Left = 30;
 
-    private const double SunTop = 104;
+    private const double SymbolTop = 16;
 
-    private const double SunBottom = 144;
+    private const double SymbolSize = 20;
 
-    private const double MainTop = 156;
+    private const double WindArrowY = 46;
 
-    private const double MainBottom = 290;
+    private const double WindValueY = 64;
 
-    private const double Height = 320;
+    private const double SunTop = 70;
+
+    private const double SunBottom = 86;
+
+    private const double MainTop = 94;
+
+    private const double MainBottom = 160;
+
+    private const double Height = 178;
+
+    private const int WindEverySlots = 3;
 
     private static readonly TimeZoneInfo Zone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Zurich");
 
     [Parameter, EditorRequired]
     public IReadOnlyList<WeatherHourForecast> Hours { get; set; } = [];
 
-    private double Right => Left + Hours.Count * HourWidth;
+    private List<Slot>? slots;
 
-    private double Width => Right + 40;
+    private List<Slot> Slots => slots ??= Enumerable.Range(0, Hours.Count / SlotHours).Select(ToSlot).ToList();
+
+    private double Right => Left + Slots.Count * SlotWidth;
+
+    private double Width => Right + 22;
 
     private DateTime Start => Hours[0].LocalTime;
 
-    private double X(double offset) => Left + offset * HourWidth;
+    private double X(double slotOffset) => Left + slotOffset * SlotWidth;
 
     private double? NowOffset
     {
         get
         {
             var now = TimeZoneInfo.ConvertTime(Time.GetUtcNow(), Zone).DateTime;
-            var offset = (now - Start).TotalHours;
-            return offset > 0 && offset < Hours.Count ? offset : null;
+            var offset = (now - Start).TotalHours / SlotHours;
+            return offset > 0 && offset < Slots.Count ? offset : null;
         }
     }
 
-    private IEnumerable<(int Offset, string Label)> Days => Hours
-        .Select((h, i) => (Hour: h, Index: i))
-        .Where(h => h.Hour.LocalTime.Hour == 0)
-        .Select(h => (h.Index, DayLabel(DateOnly.FromDateTime(h.Hour.LocalTime))));
+    private Slot ToSlot(int index)
+    {
+        var hours = Hours.Skip(index * SlotHours).Take(SlotHours).ToList();
+        var symbols = hours.Where(h => h.Symbol is not null).Select(h => h.Symbol!.Value).ToList();
+        return new Slot(
+            index,
+            hours[0].LocalTime,
+            symbols.Count > 0 ? symbols.Max() : null,
+            hours.All(h => h.IsDay == false),
+            Average(hours.Select(h => h.TemperatureC)),
+            Average(hours.Select(h => h.PrecipitationMm)),
+            Average(hours.Select(h => h.SunshineMinutes is { } m ? (decimal)m : (decimal?)null)),
+            hours);
+    }
 
-    private IEnumerable<(int Offset, string Label)> AxisHours => Hours
-        .Select((h, i) => (Hour: h, Index: i))
-        .Where(h => h.Hour.LocalTime.Hour is 6 or 12 or 18)
-        .Select(h => (h.Index, h.Hour.LocalTime.ToString("HH:mm", CultureInfo.InvariantCulture)));
+    private static double? Average(IEnumerable<decimal?> values)
+    {
+        var present = values.OfType<decimal>().ToList();
+        return present.Count > 0 ? (double)present.Average() : null;
+    }
 
-    private IEnumerable<(int Start, int Count)> NightRuns
+    private IEnumerable<(int Offset, string Label)> Days => Slots
+        .Where(s => s.Time.Hour == 0)
+        .Select(s => (s.Offset, DayLabel(DateOnly.FromDateTime(s.Time))));
+
+    private IEnumerable<(int Offset, string Label)> AxisHours => Slots
+        .Where(s => s.Time.Hour is 6 or 12 or 18)
+        .Select(s => (s.Offset, s.Time.ToString("HH", CultureInfo.InvariantCulture)));
+
+    private IEnumerable<(int First, int Count)> NightRuns
     {
         get
         {
-            int? start = null;
-            for (var i = 0; i <= Hours.Count; i++)
+            int? first = null;
+            for (var i = 0; i <= Slots.Count; i++)
             {
-                var night = i < Hours.Count && Hours[i].IsDay == false;
-                if (night && start is null)
+                var night = i < Slots.Count && Slots[i].IsNight;
+                if (night && first is null)
                 {
-                    start = i;
+                    first = i;
                 }
-                else if (!night && start is { } begin)
+                else if (!night && first is { } begin)
                 {
                     yield return (begin, i - begin);
-                    start = null;
+                    first = null;
                 }
             }
         }
     }
 
-    private IEnumerable<Block> Blocks => Enumerable.Range(0, Hours.Count / 3).Select(b =>
+    /// <summary>Ein Symbol beim ersten Slot und bei jedem Wechsel. Die Linie führt bis zum nächsten Wechsel.</summary>
+    private IEnumerable<SymbolChange> SymbolChanges
     {
-        var hours = Hours.Skip(b * 3).Take(3).ToList();
-        var middle = hours[Math.Min(1, hours.Count - 1)];
-        var winds = hours.Where(h => h.WindSpeedKmh is not null).Select(h => (double)h.WindSpeedKmh!.Value).ToList();
-        var symbols = hours.Where(h => h.Symbol is not null).Select(h => h.Symbol!.Value).ToList();
-        return new Block(
-            b * 3,
-            symbols.Count > 0 ? symbols.Max() : null,
-            middle.IsDay == false,
-            winds.Count > 0 ? winds.Average() : null,
-            middle.WindDirection);
-    });
+        get
+        {
+            var changes = new List<(int Offset, WeatherSymbol Symbol, string Id)>();
+            foreach (var slot in Slots.Where(s => s.Symbol is not null))
+            {
+                var id = SymbolId(slot.Symbol!.Value, slot.IsNight);
+                if (changes.Count == 0 || changes[^1].Id != id)
+                {
+                    changes.Add((slot.Offset, slot.Symbol.Value, id));
+                }
+            }
+
+            for (var i = 0; i < changes.Count; i++)
+            {
+                var next = i + 1 < changes.Count ? changes[i + 1].Offset : Slots.Count - 1;
+                yield return new SymbolChange(changes[i].Offset, changes[i].Symbol, changes[i].Id, next - changes[i].Offset > 2 ? next : null);
+            }
+        }
+    }
+
+    private IEnumerable<(double Offset, double Kmh, int? Direction)> Winds => Slots
+        .Chunk(WindEverySlots)
+        .Select(chunk => (Hours: chunk.SelectMany(s => s.Hours).ToList(), chunk[0].Offset, chunk.Length))
+        .Where(c => c.Hours.Any(h => h.WindSpeedKmh is not null))
+        .Select(c => (
+            c.Offset + c.Length / 2.0,
+            (double)c.Hours.Where(h => h.WindSpeedKmh is not null).Average(h => h.WindSpeedKmh!.Value),
+            c.Hours[c.Hours.Count / 2].WindDirection));
 
     private (int Min, int Max) TemperatureRange
     {
         get
         {
-            var values = Hours.Where(h => h.TemperatureC is not null).Select(h => (double)h.TemperatureC!.Value).ToList();
+            var values = Slots.Where(s => s.TemperatureC is not null).Select(s => s.TemperatureC!.Value).ToList();
             if (values.Count == 0)
             {
                 return (0, 20);
@@ -265,22 +310,20 @@
         return MainBottom - (value - min) / (max - min) * (MainBottom - MainTop);
     }
 
-    private decimal RainMax => Math.Max(4, Math.Ceiling(Hours.Max(h => h.PrecipitationMm ?? 0)));
+    private decimal RainMax => Math.Max(4, Math.Ceiling((decimal)Slots.Max(s => s.RainMm ?? 0)));
 
-    private IEnumerable<decimal> RainTicks => [0, RainMax / 2, RainMax];
-
-    private double RainY(decimal value) => MainBottom - (double)(Math.Min(value, RainMax) / RainMax) * (MainBottom - MainTop);
+    private double RainY(double value) => MainBottom - Math.Min(value, (double)RainMax) / (double)RainMax * (MainBottom - MainTop);
 
     private IEnumerable<string> TemperatureLines
     {
         get
         {
             var points = new List<string>();
-            for (var i = 0; i < Hours.Count; i++)
+            foreach (var slot in Slots)
             {
-                if (Hours[i].TemperatureC is { } temperature)
+                if (slot.TemperatureC is { } temperature)
                 {
-                    points.Add($"{Svg(X(i + 0.5))},{Svg(TemperatureY((double)temperature))}");
+                    points.Add($"{Svg(X(slot.Offset + 0.5))},{Svg(TemperatureY(temperature))}");
                 }
                 else if (points.Count > 0)
                 {
@@ -328,5 +371,7 @@
 
     private static string Svg(double value) => value.ToString("0.#", CultureInfo.InvariantCulture);
 
-    private sealed record Block(int Offset, WeatherSymbol? Symbol, bool IsNight, double? WindKmh, int? WindDirection);
+    private sealed record Slot(int Offset, DateTime Time, WeatherSymbol? Symbol, bool IsNight, double? TemperatureC, double? RainMm, double? SunshineMinutes, IReadOnlyList<WeatherHourForecast> Hours);
+
+    private sealed record SymbolChange(int Offset, WeatherSymbol Symbol, string Id, int? LineTo);
 }

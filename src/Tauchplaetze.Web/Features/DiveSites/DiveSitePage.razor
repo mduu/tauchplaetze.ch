@@ -41,7 +41,11 @@
         <section class="page-section" aria-labelledby="conditions">
             @if (forecast is { Days.Count: > 0 })
             {
-                <ForecastPanel Forecast="forecast" />
+                <ForecastPanel Forecast="forecast">
+                    <Below>
+                        <SiteLocationMap Site="site" Compact="true" />
+                    </Below>
+                </ForecastPanel>
             }
             else
             {
@@ -53,7 +57,10 @@
             }
         </section>
 
-        <SiteLocationMap Site="site" />
+        @if (forecast is not { Days.Count: > 0 })
+        {
+            <SiteLocationMap Site="site" />
+        }
 
         <section class="page-section" aria-labelledby="practical">
             <h2 id="practical" class="practical-title">@L["Practical"]</h2>

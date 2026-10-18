@@ -15,7 +15,7 @@
     }
 </div>
 
-<div class="conditions-grid">
+<div class="conditions-grid" data-profile="@(Today.SurfaceTemperature is not null ? "true" : "false")">
     @if (Today.SurfaceTemperature is not null)
     {
         <figure class="card profile">
@@ -70,24 +70,32 @@
                     </li>
                 }
             </ol>
+            @if (Forecast.HourList.Count > 0)
+            {
+                <section class="hourly" aria-labelledby="weather-heading">
+                    <h3 id="weather-heading" class="hourly-title">@L["Weather_Heading"]</h3>
+                    <WeatherChart Hours="Forecast.HourList" />
+                    <p class="weather-source">@L["Weather_Source"]</p>
+                </section>
+            }
         </div>
     </div>
-</div>
 
-@if (Forecast.HourList.Count > 0)
-{
-    <section class="hourly" aria-labelledby="weather-heading">
-        <h3 id="weather-heading" class="days-title">@L["Weather_Heading"]</h3>
-        <WeatherChart Hours="Forecast.HourList" />
-        <p class="weather-source">@L["Weather_Source"]</p>
-    </section>
-}
+    @if (Below is not null)
+    {
+        <div class="below">@Below</div>
+    }
+</div>
 
 <p class="sources">@L["Sources"] @(Forecast.ComputedAt is { } computed ? L["Computed", computed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)] : "")</p>
 
 @code {
     [Parameter, EditorRequired]
     public SiteForecast Forecast { get; set; } = default!;
+
+    /// <summary>Inhalt unter dem Temperaturprofil, auf dem Desktop neben den Kacheln (z.B. die Karte).</summary>
+    [Parameter]
+    public RenderFragment? Below { get; set; }
 
     private ForecastDay Today => Forecast.Days[0];
 

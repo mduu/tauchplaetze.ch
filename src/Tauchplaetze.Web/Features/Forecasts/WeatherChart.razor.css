@@ -1,18 +1,13 @@
-.weather {
-    margin-top: 28px;
-}
-
 .weather-scroll {
     overflow-x: auto;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-tile);
-    background: var(--color-surface);
+    border-radius: var(--radius-tile-sm);
+    background: var(--color-bg);
 }
 
 .weather-chart {
     display: block;
     width: 100%;
-    min-width: 760px;
+    min-width: 520px;
     height: auto;
 }
 
@@ -46,14 +41,14 @@
 .weather-chart ::deep .day-label {
     fill: var(--color-text);
     font-family: var(--font-body);
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 600;
 }
 
 .weather-chart ::deep .tick {
     fill: var(--color-text-subtle);
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 10px;
 }
 
 .weather-chart ::deep .tick-rain {
@@ -71,7 +66,7 @@
 .weather-chart ::deep .wind-value {
     fill: var(--color-text-body);
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 10px;
 }
 
 .sun-bar {
@@ -87,26 +82,33 @@
 .temperature {
     fill: none;
     stroke: var(--color-signal);
-    stroke-width: 2.5;
+    stroke-width: 1.8;
     stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.same-weather {
+    stroke: var(--color-text-subtle);
+    stroke-width: 1;
+    stroke-dasharray: 1 3;
     stroke-linecap: round;
 }
 
 .weather-legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 20px;
-    margin: 12px 0 0;
+    gap: 4px 14px;
+    margin: 8px 0 0;
     padding: 0;
     list-style: none;
     color: var(--color-text-subtle);
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .weather-legend li {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .swatch {
