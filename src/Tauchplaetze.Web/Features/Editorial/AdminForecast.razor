@@ -19,6 +19,11 @@
     <MudProgressLinear Indeterminate="true" Class="mb-4" />
 }
 
+@if (notAllowed)
+{
+    <MudAlert Severity="Severity.Error" Class="mb-4">@L["Error_NotAllowed"]</MudAlert>
+}
+
 @if (skipped)
 {
     <MudAlert Severity="Severity.Warning" Class="mb-4">@L["Forecast_Skipped"]</MudAlert>
@@ -49,13 +54,17 @@
 
     private bool skipped;
 
+    private bool notAllowed;
+
     protected override async Task Load() =>
         runs = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery());
 
     private async Task RunNow()
     {
         running = true;
-        skipped = (await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(UserId))).Run?.Skipped ?? false;
+        var result = await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(UserId));
+        notAllowed = !result.Allowed;
+        skipped = result.Run?.Skipped ?? false;
         running = false;
         await Load();
     }
