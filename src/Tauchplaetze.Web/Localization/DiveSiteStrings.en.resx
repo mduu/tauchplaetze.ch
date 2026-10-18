@@ -164,4 +164,16 @@
   <data name="Photo_Credit" xml:space="preserve"><value>Photo: {0}</value></data>
   <data name="Photo_Depth" xml:space="preserve"><value>at {0} m</value></data>
   <data name="Hero_Credit" xml:space="preserve"><value>Cover photo: {0}</value></data>
+  <data name="WaterBodies_Jump" xml:space="preserve"><value>Jump to</value></data>
+  <data name="WaterBodies_Group_LargeLakes" xml:space="preserve"><value>The large lakes</value></data>
+  <data name="WaterBodies_Group_Rivers" xml:space="preserve"><value>Rivers</value></data>
+  <data name="WaterBodies_Group_Other" xml:space="preserve"><value>Other waters</value></data>
+  <data name="WaterBodies_Group_Region" xml:space="preserve"><value>Lakes in {0}</value></data>
+  <data name="Region_LakeGeneva" xml:space="preserve"><value>Lake Geneva region</value></data>
+  <data name="Region_Mittelland" xml:space="preserve"><value>Espace Mittelland</value></data>
+  <data name="Region_Northwest" xml:space="preserve"><value>Northwestern Switzerland</value></data>
+  <data name="Region_Zurich" xml:space="preserve"><value>Zurich</value></data>
+  <data name="Region_East" xml:space="preserve"><value>Eastern Switzerland</value></data>
+  <data name="Region_Central" xml:space="preserve"><value>Central Switzerland</value></data>
+  <data name="Region_Ticino" xml:space="preserve"><value>Ticino</value></data>
 </root>

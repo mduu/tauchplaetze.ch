@@ -88,8 +88,17 @@ Alle Angaben in den Abschnitten 4 bis 7 sind optional (siehe `dive-site.md`). Ei
 
 ### Gewässer-Übersicht
 
-- Zwei Spalten ab 960 px: links die Gewässer als Kacheln (Art, Name, Zahl der Tauchplätze, Umbruch nach Breite), rechts die Karte mit beschrifteten Gewässern. Die Karte bleibt beim Scrollen sichtbar.
-- Schmal: zuerst die Kacheln, darunter die Karte.
+Use-Case: stöbern nach See («Was ist los an meinem See?»). Die Suche nach Eigenschaften und Nähe gehört zu «Tauchplätze».
+
+- **Gruppen** (Regel im Core, `GetWaterBodyGroups`):
+  1. «Die grossen Seen»: Seen mit mindestens 8 veröffentlichten Plätzen, als grosse Kacheln (Art, Name, Zahl der Plätze).
+  2. Die übrigen Seen nach Grossregion des BFS (Genferseeregion, Espace Mittelland, Nordwestschweiz, Zürich, Ostschweiz, Zentralschweiz, Tessin). Die Region eines Sees ist die des Kantons mit den meisten seiner Plätze, bei Gleichstand das Kantonskürzel alphabetisch zuerst.
+  3. «Flüsse»: alle Flüsse.
+  4. «Weitere Gewässer»: Seen ohne Platz mit Kanton.
+  Leere Gruppen fehlen. In jeder Gruppe nach Zahl der Plätze, dann nach Name.
+- Ausser den grossen Seen stehen die Gewässer als kompakte Liste (Name, Zahl der Plätze), auf breiten Bildschirmen in zwei Spalten.
+- Oben eine Sprungnavigation zu den Gruppen (Anker `#largelakes`, `#region-ticino` …).
+- Zwei Spalten ab 960 px: links die Gruppen, rechts die Karte mit allen beschrifteten Gewässern. Die Karte bleibt beim Scrollen sichtbar. Schmal: zuerst die Gruppen, darunter die Karte.
 - Ein Klick auf eine Beschriftung öffnet die Gewässerseite.
 
 ### Gewässerseite

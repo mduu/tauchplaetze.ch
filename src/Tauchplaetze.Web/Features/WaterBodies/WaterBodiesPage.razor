@@ -5,7 +5,7 @@
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.WaterBodies
 @using Tauchplaetze.Core.Features.WaterBodies.Queries
-@inject IQueryHandler<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>> WaterBodies
+@inject IQueryHandler<GetWaterBodyGroupsQuery, IReadOnlyList<WaterBodyGroup>> WaterBodyGroups
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
 
@@ -18,28 +18,83 @@
 <section class="page-section">
     <h1 class="page-title">@L["WaterBodies_Title"]</h1>
     <p class="lead">@L["WaterBodies_Lead"]</p>
-    <div class="waters">
-        <ul class="water-panels">
-            @foreach (var water in waterBodies)
+
+    @if (groups.Count > 1)
+    {
+        <nav class="water-jump" aria-label="@L["WaterBodies_Jump"]">
+            @foreach (var group in groups)
             {
-                <li class="tile">
-                    <div class="tile-label">@L[$"WaterBody_{water.Type}"]</div>
-                    <a href="/@Language/@PublicRoutes.WaterBodies[Language]/@water.Slug">@water.Name</a>
-                    <p class="water-count">@SiteCount(water.SiteCount)</p>
-                </li>
+                <a href="@($"{Path}#{Anchor(group)}")">@ShortTitle(group)</a>
             }
-        </ul>
-        <WaterMap Waters="waterBodies" />
+        </nav>
+    }
+
+    <div class="waters">
+        <div class="water-groups">
+            @foreach (var group in groups)
+            {
+                <section class="water-group" id="@Anchor(group)" aria-labelledby="@($"{Anchor(group)}-title")">
+                    <h2 id="@($"{Anchor(group)}-title")" class="water-group-title">@Title(group)</h2>
+                    @if (group.Kind == WaterBodyGroupKind.LargeLakes)
+                    {
+                        <ul class="water-panels">
+                            @foreach (var water in group.Waters)
+                            {
+                                <li class="tile">
+                                    <div class="tile-label">@L[$"WaterBody_{water.Type}"]</div>
+                                    <a href="@Link(water)">@water.Name</a>
+                                    <p class="water-count">@SiteCount(water.SiteCount)</p>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="water-list">
+                            @foreach (var water in group.Waters)
+                            {
+                                <li>
+                                    <a href="@Link(water)">@water.Name</a>
+                                    <span class="water-list-count" aria-label="@SiteCount(water.SiteCount)">@water.SiteCount</span>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </section>
+            }
+        </div>
+        <WaterMap Waters="allWaters" />
     </div>
 </section>
 
 @code {
-    private IReadOnlyList<WaterBodySummary> waterBodies = [];
+    private IReadOnlyList<WaterBodyGroup> groups = [];
+
+    private IReadOnlyList<WaterBodySummary> allWaters = [];
 
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
-    protected override async Task OnInitializedAsync() =>
-        waterBodies = await WaterBodies.Handle(new GetWaterBodiesQuery(Language));
+    private static string Path => $"/{Language}/{PublicRoutes.WaterBodies[Language]}";
+
+    protected override async Task OnInitializedAsync()
+    {
+        groups = await WaterBodyGroups.Handle(new GetWaterBodyGroupsQuery(Language));
+        allWaters = [.. groups.SelectMany(g => g.Waters)];
+    }
+
+    private static string Link(WaterBodySummary water) => $"{Path}/{water.Slug}";
+
+    private static string Anchor(WaterBodyGroup group) => group.Region is { } region
+        ? $"region-{region.ToString().ToLowerInvariant()}"
+        : group.Kind.ToString().ToLowerInvariant();
+
+    private string ShortTitle(WaterBodyGroup group) => group.Region is { } region
+        ? L[$"Region_{region}"]
+        : L[$"WaterBodies_Group_{group.Kind}"];
+
+    private string Title(WaterBodyGroup group) => group.Region is { } region
+        ? L["WaterBodies_Group_Region", L[$"Region_{region}"]]
+        : L[$"WaterBodies_Group_{group.Kind}"];
 
     private string SiteCount(int count) => count switch
     {

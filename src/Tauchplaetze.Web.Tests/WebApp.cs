@@ -33,6 +33,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>> WaterBodyList { get; } = new(_ => []);
 
+    public FakeQuery<GetWaterBodyGroupsQuery, IReadOnlyList<WaterBodyGroup>> WaterBodyGroups { get; } = new(_ => []);
+
     public FakeQuery<GetWaterBodyQuery, WaterBodyDetails?> WaterBody { get; } = new(_ => null);
 
     public FakeQuery<SignInCommand, SignInOutcome> SignIn { get; } = new(_ => new SignInOutcome(SignInStatus.Failed));
@@ -56,6 +58,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetBestSitesQuery, BestSites>>(BestSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>>>(SiteList));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>>(WaterBodyList));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyGroupsQuery, IReadOnlyList<WaterBodyGroup>>>(WaterBodyGroups));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyQuery, WaterBodyDetails?>>(WaterBody));
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SignInCommand, SignInOutcome>>(SignIn));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPersonalDataQuery, PersonalData?>>(PersonalData));

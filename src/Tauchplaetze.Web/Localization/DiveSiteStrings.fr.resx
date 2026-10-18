@@ -164,4 +164,16 @@
   <data name="Photo_Credit" xml:space="preserve"><value>Photo : {0}</value></data>
   <data name="Photo_Depth" xml:space="preserve"><value>à {0} m</value></data>
   <data name="Hero_Credit" xml:space="preserve"><value>Photo de couverture : {0}</value></data>
+  <data name="WaterBodies_Jump" xml:space="preserve"><value>Aller à</value></data>
+  <data name="WaterBodies_Group_LargeLakes" xml:space="preserve"><value>Les grands lacs</value></data>
+  <data name="WaterBodies_Group_Rivers" xml:space="preserve"><value>Rivières</value></data>
+  <data name="WaterBodies_Group_Other" xml:space="preserve"><value>Autres plans d’eau</value></data>
+  <data name="WaterBodies_Group_Region" xml:space="preserve"><value>Lacs de la région {0}</value></data>
+  <data name="Region_LakeGeneva" xml:space="preserve"><value>Région lémanique</value></data>
+  <data name="Region_Mittelland" xml:space="preserve"><value>Espace Mittelland</value></data>
+  <data name="Region_Northwest" xml:space="preserve"><value>Suisse du Nord-Ouest</value></data>
+  <data name="Region_Zurich" xml:space="preserve"><value>Zurich</value></data>
+  <data name="Region_East" xml:space="preserve"><value>Suisse orientale</value></data>
+  <data name="Region_Central" xml:space="preserve"><value>Suisse centrale</value></data>
+  <data name="Region_Ticino" xml:space="preserve"><value>Tessin</value></data>
 </root>
