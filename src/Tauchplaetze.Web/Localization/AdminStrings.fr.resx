@@ -234,6 +234,10 @@
   <data name="Error_InvalidMedia" xml:space="preserve"><value>Une photo ne convient pas : elle appartient à un autre site, apparaît deux fois, la photo de couverture manque dans la liste, le point d'entrée manque ou un texte est trop long.</value></data>
   <data name="Error_RightsNotConfirmed" xml:space="preserve"><value>Confirme que tu détiens les droits sur les photos.</value></data>
   <data name="Error_InvalidPhotographer" xml:space="preserve"><value>Le photographe manque ou est trop long (120 caractères au plus).</value></data>
-  <data name="Error_InvalidImage" xml:space="preserve"><value>Uniquement JPEG, PNG ou WebP jusqu'à 25 Mo. Exporte les photos d'iPhone (HEIC) en JPEG.</value></data>
-  <data name="Error_TooManyUploads" xml:space="preserve"><value>Trop de photos durant la dernière heure. Continue plus tard.</value></data>
+  <data name="Error_InvalidImage" xml:space="preserve"><value>Uniquement JPEG, PNG ou WebP jusqu'à 25 Mo et 12 000 px par côté au plus. Exporte les photos d'iPhone (HEIC) en JPEG.</value></data>
+  <data name="Error_TooManyUploads" xml:space="preserve"><value>Trop de photos durant la dernière heure (30) ou le dernier jour (100). Continue plus tard.</value></data>
+  <data name="Media_Delete" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="Media_DeleteTitle" xml:space="preserve"><value>Supprimer la photo ?</value></data>
+  <data name="Media_DeleteConfirm" xml:space="preserve"><value>La photo est supprimée définitivement et disparaît de toutes les versions.</value></data>
+  <data name="Error_InvalidPhotographerUrl" xml:space="preserve"><value>Le lien du photographe doit commencer par http:// ou https:// (300 caractères au plus).</value></data>
 </root>

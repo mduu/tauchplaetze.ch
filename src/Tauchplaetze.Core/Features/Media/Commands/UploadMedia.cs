@@ -11,6 +11,7 @@ namespace Tauchplaetze.Core.Features.Media.Commands;
 /// <summary>
 /// Lädt ein Foto zu einem Platz hoch (`cms.md`, «Medien»). Wer hochlädt, bestätigt die Rechte. Das Foto bleibt privat,
 /// bis eine freigegebene Version es verwendet. Gespeichert werden das Original (privat) und die Bildgrössen als WebP ohne Metadaten.
+/// <paramref name="ContentType"/> ist nur ein Vorfilter: Das Format kommt aus dem Inhalt der Datei.
 /// </summary>
 public record UploadMediaCommand(
     string UploaderId,
@@ -27,15 +28,7 @@ public record UploadMediaCommand(
 internal class UploadMediaHandler(TauchplaetzeDbContext dbContext, IMediaStore store, AccountRoles roles, TimeProvider time)
     : ICommandHandler<UploadMediaCommand, UploadMediaResult>
 {
-    /// <summary>Höchstens so viele Uploads pro Stunde und Konto (`cms.md`, «Schutz gegen Missbrauch»). Moderation ausgenommen.</summary>
-    public const int MaxPerHour = 30;
-
-    private static readonly Dictionary<string, string> Types = new(StringComparer.OrdinalIgnoreCase)
-    {
-        ["image/jpeg"] = "jpg",
-        ["image/png"] = "png",
-        ["image/webp"] = "webp",
-    };
+    private static readonly HashSet<string> ContentTypes = new(StringComparer.OrdinalIgnoreCase) { "image/jpeg", "image/png", "image/webp" };
 
     public async Task<UploadMediaResult> Handle(UploadMediaCommand command, CancellationToken ct = default)
     {
@@ -56,46 +49,63 @@ internal class UploadMediaHandler(TauchplaetzeDbContext dbContext, IMediaStore s
             return new UploadMediaResult(errors);
         }
 
-        var since = time.GetUtcNow().AddHours(-1);
-        if (!rights.IsModerator && await dbContext.MediaItems.CountAsync(m => m.UploadedBy == command.UploaderId && m.UploadedAt > since, ct) >= MaxPerHour)
+        if (!rights.IsModerator && await LimitReached(command.UploaderId, ct))
         {
             return Fail(EditorialError.TooManyUploads);
         }
 
-        var image = ImageProcessor.Process(command.Content);
+        var image = await ImageProcessor.Process(command.Content, ct);
         if (image is null)
         {
             return Fail(EditorialError.InvalidImage);
         }
 
         var id = Guid.CreateVersion7(time.GetUtcNow());
-        await store.SavePending(id, $"original.{Types[command.ContentType]}", command.Content, command.ContentType, ct);
-        foreach (var (width, content) in image.Renditions)
+        try
         {
-            await store.SavePending(id, MediaFiles.Rendition(width), content, "image/webp", ct);
+            await store.SavePending(id, $"original.{image.Extension}", command.Content, image.ContentType, ct);
+            foreach (var (width, content) in image.Renditions)
+            {
+                await store.SavePending(id, MediaFiles.Rendition(width), content, "image/webp", ct);
+            }
+
+            dbContext.MediaItems.Add(ToEntity(command, id, image));
+            await dbContext.SaveChangesAsync(ct);
+        }
+        catch (Exception)
+        {
+            await store.DeletePending(id, CancellationToken.None);
+            throw;
         }
 
-        dbContext.MediaItems.Add(new MediaItem
-        {
-            Id = id,
-            DiveSiteId = command.DiveSiteId,
-            Section = command.Section,
-            Kind = MediaKind.Photo,
-            BlobPath = id.ToString(),
-            Width = image.Width,
-            Height = image.Height,
-            TakenAt = image.TakenAt,
-            Depth = command.Depth,
-            Photographer = command.Photographer.Trim(),
-            PhotographerUrl = Blank(command.PhotographerUrl),
-            UploadedBy = command.UploaderId,
-            UploadedAt = time.GetUtcNow(),
-            RightsConfirmed = true,
-            Translations = MediaTexts.ToEntities(id, command.Texts),
-        });
-        await dbContext.SaveChangesAsync(ct);
         return new UploadMediaResult([], id);
     }
+
+    private async Task<bool> LimitReached(string uploaderId, CancellationToken ct)
+    {
+        var now = time.GetUtcNow();
+        var lastDay = await dbContext.MediaItems.Where(m => m.UploadedBy == uploaderId && m.UploadedAt > now.AddDays(-1)).Select(m => m.UploadedAt).ToListAsync(ct);
+        return lastDay.Count >= MediaRules.MaxPerDay || lastDay.Count(at => at > now.AddHours(-1)) >= MediaRules.MaxPerHour;
+    }
+
+    private MediaItem ToEntity(UploadMediaCommand command, Guid id, ProcessedImage image) => new()
+    {
+        Id = id,
+        DiveSiteId = command.DiveSiteId,
+        Section = command.Section,
+        Kind = MediaKind.Photo,
+        BlobPath = id.ToString(),
+        Width = image.Width,
+        Height = image.Height,
+        TakenAt = image.TakenAt,
+        Depth = command.Depth,
+        Photographer = command.Photographer.Trim(),
+        PhotographerUrl = string.IsNullOrWhiteSpace(command.PhotographerUrl) ? null : command.PhotographerUrl.Trim(),
+        UploadedBy = command.UploaderId,
+        UploadedAt = time.GetUtcNow(),
+        RightsConfirmed = true,
+        Translations = MediaTexts.ToEntities(id, command.Texts),
+    };
 
     private static List<EditorialError> Errors(UploadMediaCommand command)
     {
@@ -105,12 +115,9 @@ internal class UploadMediaHandler(TauchplaetzeDbContext dbContext, IMediaStore s
             errors.Add(EditorialError.RightsNotConfirmed);
         }
 
-        if (string.IsNullOrWhiteSpace(command.Photographer) || command.Photographer.Trim().Length > 120 || command.PhotographerUrl?.Trim().Length > 300)
-        {
-            errors.Add(EditorialError.InvalidPhotographer);
-        }
+        errors.AddRange(MediaRules.PhotographerErrors(command.Photographer, command.PhotographerUrl));
 
-        if (!Types.ContainsKey(command.ContentType) || command.Content.Length == 0 || command.Content.Length > MediaFiles.MaxBytes)
+        if (!ContentTypes.Contains(command.ContentType) || command.Content.Length == 0 || command.Content.Length > MediaFiles.MaxBytes)
         {
             errors.Add(EditorialError.InvalidImage);
         }
@@ -124,6 +131,4 @@ internal class UploadMediaHandler(TauchplaetzeDbContext dbContext, IMediaStore s
     }
 
     private static UploadMediaResult Fail(EditorialError error) => new([error]);
-
-    private static string? Blank(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

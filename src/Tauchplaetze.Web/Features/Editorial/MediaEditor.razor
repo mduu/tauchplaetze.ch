@@ -5,6 +5,7 @@
 @using Tauchplaetze.Core.Features.Media.Commands
 @using Tauchplaetze.Core.Features.Media.Queries
 @using Tauchplaetze.Web.Features.Media
+@inject IDialogService Dialogs
 
 <MudStack Spacing="4">
     <MudText Typo="Typo.body2">@L["Media_Help"]</MudText>
@@ -93,6 +94,10 @@
                             <MudButton Size="Size.Small" OnClick="@(() => ToggleDetails(item))">@L["Media_Details"]</MudButton>
                         }
                         <MudButton Size="Size.Small" Color="Color.Secondary" OnClick="@(() => RemoveUse(use))">@L["Media_RemoveFromVersion"]</MudButton>
+                        @if (item is not null && (IsModerator || item is { IsPublic: false, IsOwn: true }))
+                        {
+                            <MudButton Size="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(item))">@L["Media_Delete"]</MudButton>
+                        }
                     </div>
                     @if (item is not null && details?.Id == item.Id)
                     {
@@ -113,7 +118,13 @@
                     <img class="media-thumb" src="@item.Renditions[0].Url" alt="@AltOf(item)" width="160" height="@(item.Height * 160 / Math.Max(1, item.Width))" />
                     <div class="d-flex justify-space-between align-center mt-1">
                         <MudText Typo="Typo.caption">@item.Photographer</MudText>
-                        <MudButton Size="Size.Small" OnClick="@(() => AddUse(item))">@L["Media_Add"]</MudButton>
+                        <div>
+                            <MudButton Size="Size.Small" OnClick="@(() => AddUse(item))">@L["Media_Add"]</MudButton>
+                            @if (IsModerator || item is { IsPublic: false, IsOwn: true })
+                            {
+                                <MudIconButton Size="Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => Delete(item))" aria-label="@L["Media_Delete"]" />
+                            }
+                        </div>
                     </div>
                 </MudPaper>
             }
@@ -231,6 +242,29 @@
     }
 
     private void AddUse(SiteMediaItem item) => Uses.Add(new MediaUseForm { MediaId = item.Id, Section = item.Section });
+
+    private async Task Delete(SiteMediaItem item)
+    {
+        var confirmed = await Dialogs.ShowMessageBoxAsync(L["Media_DeleteTitle"], L["Media_DeleteConfirm"], yesText: L["Media_Delete"], cancelText: L["Sketch_Cancel"]);
+        if (confirmed != true)
+        {
+            return;
+        }
+
+        var result = await Command<DeleteMediaCommand, UploadMediaResult>(new DeleteMediaCommand(UserId, item.Id));
+        uploadErrors = [.. result.Errors.Select(e => L[$"Error_{e}"].Value)];
+        if (result.Succeeded)
+        {
+            Uses.RemoveAll(u => u.MediaId == item.Id);
+            if (Hero == item.Id)
+            {
+                Hero = null;
+                await HeroChanged.InvokeAsync(null);
+            }
+        }
+
+        await Reload();
+    }
 
     private void ToggleDetails(SiteMediaItem item) => details = details?.Id == item.Id ? null : MediaDetails.From(item);
 

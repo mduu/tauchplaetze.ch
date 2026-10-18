@@ -21,6 +21,31 @@ internal static class TestImages
         return takenAt is { } date ? WithExif(jpeg, date) : jpeg;
     }
 
+    /// <summary>Ein PNG, dessen Kopf 20 000 × 20 000 Pixel verspricht: klein als Datei, riesig beim Dekodieren.</summary>
+    public static byte[] PixelBomb()
+    {
+        var header = new byte[13];
+        BinaryPrimitives.WriteUInt32BigEndian(header, 20_000);
+        BinaryPrimitives.WriteUInt32BigEndian(header.AsSpan(4), 20_000);
+        header[8] = 8;
+        header[9] = 2;
+        byte[] data = [0x78, 0x9C, 0x03, 0x00, 0x00, 0x00, 0x00, 0x01];
+        return [0x89, (byte)'P', (byte)'N', (byte)'G', 0x0D, 0x0A, 0x1A, 0x0A, .. Chunk("IHDR", header), .. Chunk("IDAT", data), .. Chunk("IEND", [])];
+    }
+
+    /// <summary>Ein GIF mit 1 × 1 Pixel.</summary>
+    public static byte[] Gif() => Convert.FromHexString("47494638396101000100800000000000FFFFFF21F90401000000002C00000000010001000002024401003B");
+
+    private static byte[] Chunk(string type, byte[] data)
+    {
+        var typeBytes = Encoding.ASCII.GetBytes(type);
+        var length = new byte[4];
+        BinaryPrimitives.WriteUInt32BigEndian(length, (uint)data.Length);
+        var crc = new byte[4];
+        BinaryPrimitives.WriteUInt32BigEndian(crc, System.IO.Hashing.Crc32.HashToUInt32([.. typeBytes, .. data]));
+        return [.. length, .. typeBytes, .. data, .. crc];
+    }
+
     /// <summary>Fügt nach dem SOI ein APP1-Segment mit IFD0, Exif-IFD (DateTimeOriginal) und GPS-IFD (Breitengrad) ein.</summary>
     private static byte[] WithExif(byte[] jpeg, DateTime takenAt)
     {

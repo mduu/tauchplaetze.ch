@@ -9,7 +9,7 @@ namespace Tauchplaetze.Core.Features.Accounts.Commands;
 
 /// <summary>
 /// Löscht ein Konto. Die Versionen bleiben, Autor und Approver werden «gelöschtes Konto» (`cms.md`, «Datenschutz in der History»).
-/// Private Fotos werden gelöscht. Öffentliche bleiben mit dem Namen des Fotografen, ohne Bezug zum Konto. Der letzte aktive Admin löscht sich nicht.
+/// Private Fotos werden gelöscht. Öffentliche bleiben als Bildgrössen mit dem Namen des Fotografen, ohne Bezug zum Konto; ihre Originale (mit EXIF) werden gelöscht. Der letzte aktive Admin löscht sich nicht.
 /// </summary>
 public record DeleteAccountCommand(string UserId);
 
@@ -41,12 +41,13 @@ internal class DeleteAccountHandler(TauchplaetzeDbContext dbContext, UserManager
 
     private async Task DeletePrivatePhotos(string userId, CancellationToken ct)
     {
-        var ids = await dbContext.MediaItems.Where(m => m.UploadedBy == userId && !m.IsPublic).Select(m => m.Id).ToListAsync(ct);
-        foreach (var id in ids)
+        var photos = await dbContext.MediaItems.Where(m => m.UploadedBy == userId).Select(m => new { m.Id, m.IsPublic }).ToListAsync(ct);
+        foreach (var photo in photos)
         {
-            await media.DeletePending(id, ct);
+            await media.DeletePending(photo.Id, ct);
         }
 
-        await dbContext.MediaItems.Where(m => ids.Contains(m.Id)).ExecuteDeleteAsync(ct);
+        var privateIds = photos.Where(p => !p.IsPublic).Select(p => p.Id).ToList();
+        await dbContext.MediaItems.Where(m => privateIds.Contains(m.Id)).ExecuteDeleteAsync(ct);
     }
 }

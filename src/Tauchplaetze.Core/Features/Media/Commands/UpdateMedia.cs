@@ -33,9 +33,10 @@ internal class UpdateMediaHandler(TauchplaetzeDbContext dbContext, AccountRoles 
             return new UploadMediaResult([EditorialError.NotAllowed]);
         }
 
-        if (string.IsNullOrWhiteSpace(command.Photographer) || command.Photographer.Trim().Length > 120 || command.PhotographerUrl?.Trim().Length > 300)
+        var photographerErrors = MediaRules.PhotographerErrors(command.Photographer, command.PhotographerUrl).ToList();
+        if (photographerErrors.Count > 0)
         {
-            return new UploadMediaResult([EditorialError.InvalidPhotographer]);
+            return new UploadMediaResult(photographerErrors);
         }
 
         if (command.Depth is < 0 or > 200 || !MediaTexts.AreValid(command.Texts))

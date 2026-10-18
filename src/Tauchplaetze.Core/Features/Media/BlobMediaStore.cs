@@ -4,8 +4,13 @@ using Microsoft.Extensions.Options;
 
 namespace Tauchplaetze.Core.Features.Media;
 
+/// <remarks>Die Container entstehen einmal pro Prozess. In Prod legt das Deployment `media` mit öffentlichem Lesezugriff an (`infrastructure.md`).</remarks>
 internal class BlobMediaStore(BlobServiceClient blobs, IOptions<MediaOptions> options) : IMediaStore
 {
+    private readonly SemaphoreSlim containerGate = new(1, 1);
+
+    private bool containersReady;
+
     public const string PendingContainer = "media-pending";
 
     public const string PublicContainer = "media";
@@ -14,9 +19,8 @@ internal class BlobMediaStore(BlobServiceClient blobs, IOptions<MediaOptions> op
 
     public async Task SavePending(Guid mediaId, string name, byte[] content, string contentType, CancellationToken ct)
     {
-        var container = blobs.GetBlobContainerClient(PendingContainer);
-        await container.CreateIfNotExistsAsync(cancellationToken: ct);
-        await container.GetBlobClient($"{mediaId}/{name}").UploadAsync(
+        await EnsureContainers(ct);
+        await blobs.GetBlobContainerClient(PendingContainer).GetBlobClient($"{mediaId}/{name}").UploadAsync(
             new BinaryData(content),
             new BlobUploadOptions { HttpHeaders = new BlobHttpHeaders { ContentType = contentType } },
             ct);
@@ -35,8 +39,8 @@ internal class BlobMediaStore(BlobServiceClient blobs, IOptions<MediaOptions> op
 
     public async Task Publish(Guid mediaId, IReadOnlyList<string> names, CancellationToken ct)
     {
+        await EnsureContainers(ct);
         var target = blobs.GetBlobContainerClient(PublicContainer);
-        await target.CreateIfNotExistsAsync(PublicAccessType.Blob, cancellationToken: ct);
         foreach (var name in names)
         {
             var content = await LoadPending(mediaId, name, ct) ?? throw new InvalidOperationException($"Datei {mediaId}/{name} fehlt.");
@@ -47,17 +51,40 @@ internal class BlobMediaStore(BlobServiceClient blobs, IOptions<MediaOptions> op
         }
     }
 
-    public async Task DeletePending(Guid mediaId, CancellationToken ct)
+    public Task DeletePending(Guid mediaId, CancellationToken ct) => DeleteAll(PendingContainer, mediaId, ct);
+
+    public Task DeletePublic(Guid mediaId, CancellationToken ct) => DeleteAll(PublicContainer, mediaId, ct);
+
+    private async Task DeleteAll(string containerName, Guid mediaId, CancellationToken ct)
     {
-        var container = blobs.GetBlobContainerClient(PendingContainer);
-        if (!await container.ExistsAsync(ct))
+        await EnsureContainers(ct);
+        var container = blobs.GetBlobContainerClient(containerName);
+        await foreach (var blob in container.GetBlobsAsync(new GetBlobsOptions { Prefix = $"{mediaId}/" }, ct))
+        {
+            await container.DeleteBlobIfExistsAsync(blob.Name, cancellationToken: ct);
+        }
+    }
+
+    private async Task EnsureContainers(CancellationToken ct)
+    {
+        if (containersReady)
         {
             return;
         }
 
-        await foreach (var blob in container.GetBlobsAsync(new GetBlobsOptions { Prefix = $"{mediaId}/" }, ct))
+        await containerGate.WaitAsync(ct);
+        try
         {
-            await container.DeleteBlobIfExistsAsync(blob.Name, cancellationToken: ct);
+            if (!containersReady)
+            {
+                await blobs.GetBlobContainerClient(PendingContainer).CreateIfNotExistsAsync(cancellationToken: ct);
+                await blobs.GetBlobContainerClient(PublicContainer).CreateIfNotExistsAsync(PublicAccessType.Blob, cancellationToken: ct);
+                containersReady = true;
+            }
+        }
+        finally
+        {
+            containerGate.Release();
         }
     }
 

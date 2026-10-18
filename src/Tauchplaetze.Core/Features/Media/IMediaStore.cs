@@ -15,8 +15,11 @@ internal interface IMediaStore
     /// <summary>Kopiert Dateien in den öffentlichen Container. Ein zweiter Aufruf überschreibt sie mit demselben Inhalt.</summary>
     Task Publish(Guid mediaId, IReadOnlyList<string> names, CancellationToken ct);
 
-    /// <summary>Löscht alle privaten Dateien eines Fotos.</summary>
+    /// <summary>Löscht alle privaten Dateien eines Fotos, auch das Original.</summary>
     Task DeletePending(Guid mediaId, CancellationToken ct);
+
+    /// <summary>Löscht alle öffentlichen Dateien eines Fotos. Ein Cache davor (Cloudflare) behält sie, bis er abläuft oder geleert wird.</summary>
+    Task DeletePublic(Guid mediaId, CancellationToken ct);
 
     /// <summary>Die öffentliche Adresse einer Datei.</summary>
     Uri PublicUri(Guid mediaId, string name);

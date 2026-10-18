@@ -127,10 +127,13 @@ public enum EditorialError
     /// <summary>Fotograf fehlt oder ist zu lang.</summary>
     InvalidPhotographer,
 
-    /// <summary>Die Datei ist kein JPEG, PNG oder WebP oder ist grösser als 25 MB.</summary>
+    /// <summary>Der Link zum Fotografen ist keine absolute http- oder https-Adresse oder länger als 300 Zeichen.</summary>
+    InvalidPhotographerUrl,
+
+    /// <summary>Die Datei ist kein JPEG, PNG oder WebP, ist grösser als 25 MB oder hat mehr als 12 000 px pro Seite oder 50 Megapixel.</summary>
     InvalidImage,
 
-    /// <summary>Zu viele Uploads in der letzten Stunde.</summary>
+    /// <summary>Zu viele Uploads in der letzten Stunde oder am letzten Tag.</summary>
     TooManyUploads,
 }
 

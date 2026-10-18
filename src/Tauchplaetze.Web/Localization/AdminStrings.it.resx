@@ -234,6 +234,10 @@
   <data name="Error_InvalidMedia" xml:space="preserve"><value>Una foto non va bene: appartiene a un altro sito, compare due volte, la foto di copertina manca nell'elenco, manca il punto d'entrata o un testo è troppo lungo.</value></data>
   <data name="Error_RightsNotConfirmed" xml:space="preserve"><value>Conferma di possedere i diritti sulle foto.</value></data>
   <data name="Error_InvalidPhotographer" xml:space="preserve"><value>Il fotografo manca o è troppo lungo (al massimo 120 caratteri).</value></data>
-  <data name="Error_InvalidImage" xml:space="preserve"><value>Solo JPEG, PNG o WebP fino a 25 MB. Esporta le foto iPhone (HEIC) in JPEG.</value></data>
-  <data name="Error_TooManyUploads" xml:space="preserve"><value>Troppe foto nell'ultima ora. Continua più tardi.</value></data>
+  <data name="Error_InvalidImage" xml:space="preserve"><value>Solo JPEG, PNG o WebP fino a 25 MB e al massimo 12 000 px per lato. Esporta le foto iPhone (HEIC) in JPEG.</value></data>
+  <data name="Error_TooManyUploads" xml:space="preserve"><value>Troppe foto nell'ultima ora (30) o nell'ultimo giorno (100). Continua più tardi.</value></data>
+  <data name="Media_Delete" xml:space="preserve"><value>Elimina</value></data>
+  <data name="Media_DeleteTitle" xml:space="preserve"><value>Eliminare la foto?</value></data>
+  <data name="Media_DeleteConfirm" xml:space="preserve"><value>La foto viene eliminata definitivamente e scompare da tutte le versioni.</value></data>
+  <data name="Error_InvalidPhotographerUrl" xml:space="preserve"><value>Il link del fotografo deve iniziare con http:// o https:// (al massimo 300 caratteri).</value></data>
 </root>

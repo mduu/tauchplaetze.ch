@@ -21,24 +21,134 @@ public class MediaTests(SqlServer sql) : SqlTest(sql)
     private const string Pending = "/admin/medien/{id}/{file}";
 
     [SqlTheory]
-    [InlineData(false, "Anna Muster", "image/jpeg", true, EditorialError.RightsNotConfirmed)]
-    [InlineData(true, " ", "image/jpeg", true, EditorialError.InvalidPhotographer)]
-    [InlineData(true, "Anna Muster", "image/heic", true, EditorialError.InvalidImage)]
-    [InlineData(true, "Anna Muster", "image/jpeg", false, EditorialError.InvalidImage)]
-    public async Task Ein_Upload_braucht_die_Bestaetigung_der_Rechte_einen_Fotografen_und_ein_lesbares_JPEG_PNG_oder_WebP(
-        bool rightsConfirmed, string photographer, string contentType, bool isImage, EditorialError expected)
+    [InlineData(false, "Anna Muster", null, "image/jpeg", "jpeg", EditorialError.RightsNotConfirmed)]
+    [InlineData(true, " ", null, "image/jpeg", "jpeg", EditorialError.InvalidPhotographer)]
+    [InlineData(true, "Anna Muster", "javascript:alert(1)", "image/jpeg", "jpeg", EditorialError.InvalidPhotographerUrl)]
+    [InlineData(true, "Anna Muster", "ftp://tauchfotos.ch/a", "image/jpeg", "jpeg", EditorialError.InvalidPhotographerUrl)]
+    [InlineData(true, "Anna Muster", "tauchfotos.ch", "image/jpeg", "jpeg", EditorialError.InvalidPhotographerUrl)]
+    [InlineData(true, "Anna Muster", null, "image/heic", "jpeg", EditorialError.InvalidImage)]
+    [InlineData(true, "Anna Muster", null, "image/jpeg", "text", EditorialError.InvalidImage)]
+    [InlineData(true, "Anna Muster", null, "image/jpeg", "gif", EditorialError.InvalidImage)]
+    [InlineData(true, "Anna Muster", null, "image/png", "bomb", EditorialError.InvalidImage)]
+    public async Task Ein_Upload_braucht_Rechte_Fotograf_einen_Web_Link_und_ein_lesbares_JPEG_PNG_oder_WebP_von_vernuenftiger_Groesse(
+        bool rightsConfirmed, string photographer, string? url, string contentType, string kind, EditorialError expected)
     {
         // Arrange
         var (_, anna, site) = await Prepare();
-        var content = isImage ? TestImages.Jpeg() : "kein Bild"u8.ToArray();
+        var content = kind switch
+        {
+            "jpeg" => TestImages.Jpeg(),
+            "gif" => TestImages.Gif(),
+            "bomb" => TestImages.PixelBomb(),
+            _ => "kein Bild"u8.ToArray(),
+        };
 
         // Act
         var result = await Command<UploadMediaCommand, UploadMediaResult>(new UploadMediaCommand(
-            anna, site, content, contentType, photographer, null, MediaSection.Underwater, null, rightsConfirmed, []));
+            anna, site, content, contentType, photographer, url, MediaSection.Underwater, null, rightsConfirmed, []));
 
         // Assert
         Assert.Equal([expected], result.Errors);
         Assert.Empty(Sql.Media.Pending);
+    }
+
+    [SqlFact]
+    public async Task Mitwirkende_laden_hoechstens_100_Fotos_pro_Tag_hoch()
+    {
+        // Arrange
+        var (_, anna, site) = await Prepare();
+        await Sql.Arrange(db =>
+        {
+            for (var i = 0; i < 100; i++)
+            {
+                db.MediaItems.Add(new Tauchplaetze.Core.Data.Entities.MediaItem
+                {
+                    Id = Guid.NewGuid(), DiveSiteId = site, BlobPath = "x", Photographer = "Anna", Width = 480, Height = 320,
+                    UploadedBy = anna, UploadedAt = FixedTime.SpikeDay.AddHours(-5), RightsConfirmed = true,
+                });
+            }
+
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var result = await Upload(anna, site);
+
+        // Assert
+        Assert.Equal([EditorialError.TooManyUploads], result.Errors);
+    }
+
+    [SqlFact]
+    public async Task Ein_privates_Foto_loeschen_wer_es_hochgeladen_hat_und_die_Moderation_ein_oeffentliches_nur_die_Moderation()
+    {
+        // Arrange
+        var (moderator, anna, site) = await Prepare();
+        var bert = await RegisterConfirmed("bert@example.org", "Bert");
+        var own = (await Upload(anna, site)).MediaId!.Value;
+        var published = (await Upload(anna, site)).MediaId!.Value;
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber,
+            edit.Content with { Media = [new MediaUse(published, MediaSection.Underwater)], HeroMediaId = published }, null));
+
+        // Act
+        var byBert = await Command<DeleteMediaCommand, UploadMediaResult>(new DeleteMediaCommand(bert, own));
+        var ownByAnna = await Command<DeleteMediaCommand, UploadMediaResult>(new DeleteMediaCommand(anna, own));
+        var publishedByAnna = await Command<DeleteMediaCommand, UploadMediaResult>(new DeleteMediaCommand(anna, published));
+        var publishedByModerator = await Command<DeleteMediaCommand, UploadMediaResult>(new DeleteMediaCommand(moderator, published));
+
+        // Assert
+        Assert.Equal([EditorialError.NotAllowed], byBert.Errors);
+        Assert.True(ownByAnna.Succeeded);
+        Assert.Equal([EditorialError.NotAllowed], publishedByAnna.Errors);
+        Assert.True(publishedByModerator.Succeeded);
+        Assert.Empty(Sql.Media.Pending);
+        Assert.Empty(Sql.Media.Public);
+        var after = await PublicSite();
+        Assert.Empty(after.PhotoList);
+        Assert.Null(after.Hero);
+    }
+
+    [SqlFact]
+    public async Task Eine_Version_mit_geloeschtem_Foto_laesst_sich_wiederherstellen_und_speichern_ohne_das_Foto()
+    {
+        // Arrange
+        var (moderator, anna, site) = await Prepare();
+        var photo = (await Upload(anna, site)).MediaId!.Value;
+        var edit = await ForEditing(site);
+        var withPhoto = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber,
+            edit.Content with { Media = [new MediaUse(photo, MediaSection.Underwater)], HeroMediaId = photo }, null));
+        await Command<DeleteMediaCommand, UploadMediaResult>(new DeleteMediaCommand(moderator, photo));
+
+        // Act
+        var restored = await Command<RestoreRevisionCommand, EditorialResult>(new RestoreRevisionCommand(moderator, site, withPhoto.Number!.Value));
+        var stale = await ForEditing(site);
+        var saved = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, stale.BaseNumber,
+            stale.Content with { Media = [new MediaUse(photo, MediaSection.Underwater)], HeroMediaId = photo, MaxDepth = 40 }, null));
+
+        // Assert
+        Assert.True(restored.Succeeded);
+        Assert.True(saved.Succeeded);
+        var current = await PublicSite();
+        Assert.Empty(current.PhotoList);
+        Assert.Null(current.Hero);
+        Assert.Empty((await ForEditing(site)).Content.MediaList);
+    }
+
+    [SqlFact]
+    public async Task Mitwirkende_verwenden_nur_oeffentliche_oder_eigene_Fotos()
+    {
+        // Arrange
+        var (_, anna, site) = await Prepare();
+        var bert = await RegisterConfirmed("bert@example.org", "Bert");
+        var bertsPrivate = (await Upload(bert, site)).MediaId!.Value;
+        var edit = await ForEditing(site);
+
+        // Act
+        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber,
+            edit.Content with { Media = [new MediaUse(bertsPrivate, MediaSection.Underwater)] }, null));
+
+        // Assert
+        Assert.Equal([EditorialError.InvalidMedia], result.Errors);
     }
 
     [SqlFact]
@@ -146,7 +256,7 @@ public class MediaTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Wird_ein_Konto_geloescht_verschwinden_seine_privaten_Fotos_die_oeffentlichen_bleiben_mit_dem_Fotografen()
+    public async Task Wird_ein_Konto_geloescht_verschwinden_private_Fotos_und_alle_Originale_die_oeffentlichen_Bildgroessen_bleiben_mit_dem_Fotografen()
     {
         // Arrange
         var (moderator, anna, site) = await Prepare();
@@ -162,7 +272,9 @@ public class MediaTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         Assert.Equal(2, before!.PhotoList.Count);
-        Assert.DoesNotContain(Sql.Media.Pending.Keys, key => key.StartsWith($"{unpublished}/", StringComparison.Ordinal));
+        Assert.Equal("Felswand mit Hecht", before.PhotoList[0].Texts.Single().AltText);
+        Assert.Empty(Sql.Media.Pending);
+        Assert.NotEmpty(Sql.Media.Public);
         Assert.Equal("Anna Muster", Assert.Single((await PublicSite()).PhotoList).Photographer);
         Assert.Equal([published], (await Query<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>(new GetSiteMediaQuery(moderator, site, Pending))).Select(m => m.Id));
     }

@@ -3,6 +3,7 @@ using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Media;
 
 namespace Tauchplaetze.Core.Features.Editorial.Commands;
 
@@ -12,7 +13,7 @@ namespace Tauchplaetze.Core.Features.Editorial.Commands;
 /// </summary>
 public record ProposeChangeCommand(string EditorId, Guid DiveSiteId, int BaseNumber, DiveSiteContent Content, string? Comment);
 
-internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles) : ICommandHandler<ProposeChangeCommand, EditorialResult>
+internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles, MediaPublisher media) : ICommandHandler<ProposeChangeCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(ProposeChangeCommand command, CancellationToken ct = default)
     {
@@ -43,8 +44,8 @@ internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWri
             errors.Add(EditorialError.InvalidSlug);
         }
 
-        var siteMedia = await dbContext.MediaItems.Where(m => m.DiveSiteId == site.Id).Select(m => m.Id).ToListAsync(ct);
-        if (content.MediaList.Any(m => !siteMedia.Contains(m.MediaId)) && !errors.Contains(EditorialError.InvalidMedia))
+        content = await media.WithoutDeleted(content, ct);
+        if (await UsesForbiddenMedia(content, site.Id, command.EditorId, rights.IsModerator, ct) && !errors.Contains(EditorialError.InvalidMedia))
         {
             errors.Add(EditorialError.InvalidMedia);
         }
@@ -62,5 +63,13 @@ internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWri
         var revision = await revisions.Append(site, content, command.BaseNumber, command.EditorId, command.Comment, rights.IsModerator, ct);
         await dbContext.SaveChangesAsync(ct);
         return new EditorialResult([], site.Id, revision.Number, revision.Status);
+    }
+
+    /// <summary>Nur Fotos dieses Platzes. Mitwirkende verwenden nur öffentliche oder eigene Fotos (`cms.md`, «Medien»).</summary>
+    private async Task<bool> UsesForbiddenMedia(DiveSiteContent content, Guid siteId, string editorId, bool isModerator, CancellationToken ct)
+    {
+        var ids = content.MediaList.Select(m => m.MediaId).ToList();
+        var used = await dbContext.MediaItems.Where(m => ids.Contains(m.Id)).Select(m => new { m.DiveSiteId, m.IsPublic, m.UploadedBy }).ToListAsync(ct);
+        return used.Any(m => m.DiveSiteId != siteId || (!isModerator && !m.IsPublic && m.UploadedBy != editorId));
     }
 }

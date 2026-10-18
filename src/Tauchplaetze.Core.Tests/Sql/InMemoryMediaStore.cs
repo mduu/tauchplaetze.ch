@@ -38,6 +38,16 @@ internal sealed class InMemoryMediaStore : IMediaStore
         return Task.CompletedTask;
     }
 
+    public Task DeletePublic(Guid mediaId, CancellationToken ct)
+    {
+        foreach (var key in Public.Keys.Where(k => k.StartsWith($"{mediaId}/", StringComparison.Ordinal)))
+        {
+            Public.TryRemove(key, out _);
+        }
+
+        return Task.CompletedTask;
+    }
+
     public Uri PublicUri(Guid mediaId, string name) => new($"https://media.tauchplaetze.test/{mediaId}/{name}");
 
     public void Clear()

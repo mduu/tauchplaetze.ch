@@ -68,6 +68,7 @@ internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore st
     /// <summary>Gibt eine Version frei: Ihr Inhalt und ihre Fotos gehen online. Ein geänderter Slug hinterlässt einen Redirect (301).</summary>
     public async Task Approve(DiveSite site, DiveSiteRevision revision, DiveSiteContent content, string reviewerId, CancellationToken ct)
     {
+        content = await media.WithoutDeleted(content, ct);
         var now = time.GetUtcNow();
         var oldSlug = site.Status == DiveSiteStatus.Draft ? null : site.Slug;
 
