@@ -43,8 +43,8 @@ Quelle: Microsoft Learn, «Azure SQL Database free offer».
 
 | Container | Inhalt | Zugriff |
 |---|---|---|
-| `media` | Originale und Bildgrössen | öffentlich lesbar, Cloudflare davor (Entscheid 17.10.2026: einfacher und günstiger als ein Endpunkt der App) |
-| `media-pending` | Fotos von Mitwirkenden bis zur Freigabe | privat |
+| `media` | Bildgrössen als WebP ohne Metadaten (ADR-009), `Cache-Control: immutable` | öffentlich lesbar, Cloudflare davor (Entscheid 17.10.2026: einfacher und günstiger als ein Endpunkt der App) |
+| `media-pending` | Hochgeladene Fotos bis zur Freigabe, dazu immer das Original (mit EXIF) | privat |
 | `revisions` | Inhalt aller Versionen der Plätze als JSON (`{diveSiteId}/{number}.json`) | privat |
 | `forecast-raw` | Rohdaten der Läufe als JSON | privat |
 | `models` | ML-Modelle (Phase 2) | privat |
@@ -70,6 +70,7 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 - **Lokal:** Aspire (`Tauchplaetze.AppHost`) startet SQL Server und Azurite im Container. Beide behalten ihre Daten in einem Volume. Die Web-App migriert die Datenbank beim Start und legt fehlende Stammdaten an (`Database__PrepareOnStartup`).
 - **Admins lokal:** `Accounts:Admins` als User Secret der Web-App, z.B. `dotnet user-secrets set "Accounts:Admins:0:Email" "…"` und `…:0:DisplayName`. Ohne Admin legt der Start keine Plätze an.
 - **Speicher für Docker:** SQL Server braucht rund 2 GB im Container. Laufen SQL Server anderer Projekte, stirbt der Container mit Fehler 17138 (17.10.2026). Dann andere SQL-Container stoppen oder Docker mehr Speicher geben.
+- **Bild-URLs:** `Media:PublicBaseUri`, die Adresse vor dem Container `media` (in Prod Cloudflare). Ohne Wert gilt die Adresse des Containers, lokal Azurite. Der Core legt `media` mit öffentlichem Lesezugriff auf Blobs an.
 - **Links in Mails:** `PublicSite:BaseUri` (Standard `https://tauchplaetze.ch`). Lokal setzt Aspire die Adresse der Web-App. Die Links kommen nie aus dem Host-Header der Anfrage (Entscheid Marc, 18.10.2026).
 - **PROD:** einzige Cloud-Umgebung (wie feldnah). Keine Test-Umgebung in Azure. Ein Health Check nach dem Deploy ist das Sicherheitsnetz.
 

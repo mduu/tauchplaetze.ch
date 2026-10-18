@@ -130,6 +130,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 | `ForecastStrip` | 5 Tage mit Index, Farbe nach Skala, Mini-Balken, Stichwort |
 | `SiteRatingsBlock` | Kachel pro bewerteter Skala: Name (Mono, Grossbuchstaben), «i»-Knopf (44 px Zielfläche, Kreis 24 px), fünf Schritte, Zahl und Kurztext. Qualität als Punkte in `--color-primary`, Stufe (Schwierigkeit, Strömung) als Balken in `--color-signal`. Legende als Popover in `--color-surface-raised` neben dem Knopf, aktuelle Stufe mit Rahmen in `--color-primary`. |
 | `SiteSketch` | Ebene auf der Leaflet-Karte (`sketch.js`): Symbole als runde Schilder (`--color-surface-raised`, Farbe pro Art: Baumstamm `--color-wood`, Besonderheit `--color-signal`, Gefahr `--color-notice-closure`, sonst `--color-primary`), Steilwand dick und Kante gestrichelt in `--color-sketch-wall`, Route gepunktet in `--color-primary`, Leine in `--color-sketch-line`, Pflanzenfeld als Fläche in `--color-sketch-plants`. Die Linienfarben sind dunkel, weil Landeskarte und Luftbild hell sind. |
+| `SitePhotos` | Galerie: Titel wie «Der Platz», Abschnitt als Mono-Label in Grossbuchstaben, Raster `repeat(auto-fill, minmax(min(100%, 280px), 1fr))`, Bild 3:2 mit `object-fit: cover`, Rahmen `--color-border`, Radius `--radius-tile`. Legende in `--color-text-body`, Fotograf in `--color-text-subtle`. |
 | `PracticalTile` | Label in Cyan oder Orange (Achtung), Text |
 | `BuddyCallout` | Fläche in Signal-Orange, dunkler Text, Buttons dunkel |
 | `DataSourceFooter` | Quellen, Sicherheitshinweis, Notfallnummern |

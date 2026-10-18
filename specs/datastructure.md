@@ -79,7 +79,7 @@ Der Tauchplatz. Nur `Name`, `Location` und `WaterBodyId` sind Pflicht (Ausbaustu
 | `DataLevel` | tinyint (0–3), optional | vom Job berechnet, Stand des letzten Laufs, siehe `forecast.md`. `null` bis zum ersten Lauf (noch nicht berechnet). Nicht Teil der Revision. |
 | `Status` | enum | `Draft`, `Published`, `Archived` |
 | `ContentLevel` | int (0–2) | berechnet und gespeichert, siehe `cms.md` |
-| `HeroMediaId` | Guid, optional | FK `MediaItem` |
+| `HeroMediaId` | Guid, optional | Titelbild, ein `MediaItem` des Platzes (ohne FK, Teil der Version) |
 | `Sketch` | nvarchar(max), optional | Tauchskizze als JSON: Liste von Elementen mit `id`, `kind` (Name aus `SketchKind`; die Revision speichert die Zahl, darum Werte nie ändern, neue Arten hinten anhängen; eine unbekannte Art fällt beim Lesen weg), `points` (`latitude`, `longitude`), `depth` (m, optional), `texts` (`culture`, `label`). Teil der Revision. `null` ohne Skizze. |
 | `CreatedAt`, `UpdatedAt` | DateTimeOffset | |
 | `CreatedBy`, `UpdatedBy` | string | Benutzer-ID |
@@ -176,23 +176,23 @@ Die Row in SQL enthält nur die Metadaten. Der Inhalt liegt als JSON in Blob Sto
 | `Id` | Guid | |
 | `DiveSiteId` | Guid, optional | ein Bild kann auch zu einem See gehören |
 | `WaterBodyId` | int, optional | |
-| `Section` | enum, optional | `Underwater`, `Surroundings`, `Approach`, `EntryPoint`, `Hazards`; nur bei Bildern eines Platzes, siehe `dive-site.md` |
+| `Section` | enum (string(20)) | `Underwater`, `Surroundings` (über Wasser), `Approach`, `EntryPoint`, `Hazards`; siehe `dive-site.md`. Beim Upload gewählt, bei der Freigabe aus der Version übernommen |
 | `EntryPointId` | Guid, optional | FK `DiveSiteEntryPoint`, nur bei `Section = EntryPoint` |
-| `Kind` | enum | `Photo`, `Video`, `Sketch` |
-| `BlobPath` | string(300) | Original in Blob Storage |
+| `Kind` | enum (string(20)) | `Photo`, `Video` (später). Die Tauchskizze ist kein Medium, sondern `DiveSite.Sketch` |
+| `BlobPath` | string(300) | Ordner in Blob Storage (`{mediaId}`): `original.{ext}` nur in `media-pending`, Bildgrössen `{breite}.webp` in `media-pending` und nach der Freigabe in `media` |
 | `Width`, `Height` | int | |
 | `TakenAt` | DateOnly, optional | aus EXIF |
 | `Depth` | int, optional | Aufnahmetiefe in m |
 | `Photographer` | string(120) | Namensnennung, Pflicht |
 | `PhotographerUrl` | string(300), optional | |
 | `SourceUrl` | string(300), optional | z.B. Seite auf tauchfotos.ch |
-| `SortOrder` | int | innerhalb des Abschnitts |
+| `SortOrder` | int, optional | Position in der freigegebenen Version. `null`: Die freigegebene Version verwendet das Foto nicht (keine Galerie) |
 | `UploadedBy` | string, optional | Konto. `null` nach Löschung |
 | `UploadedAt` | DateTimeOffset | |
 | `RightsConfirmed` | bool | Person hat die Rechte und die Nutzung mit Namensnennung bestätigt |
 | `IsPublic` | bool | `true`, sobald eine freigegebene Version das Bild verwendet. Vorher liegt das Bild im privaten Container `media-pending`. |
 
-Bildlegende und Alternativtext pro Sprache in `MediaItemTranslation` (`Caption`, `AltText`).
+Bildlegende und Alternativtext pro Sprache in `MediaItemTranslation` (`Caption`, `AltText`, je string(300)). Die Zuordnung der Fotos einer Version steht in ihrem Snapshot (`media`: `mediaId`, `section`, `entryPointId`; `heroMediaId`). Leere Liste und leeres Titelbild fehlen im JSON, so bleibt der Hash alter Versionen gleich. Indizes: (`DiveSiteId`, `Section`, `SortOrder`), (`UploadedBy`, `UploadedAt`) für das Rate Limit. Konto löschen: private Fotos samt Dateien weg, öffentliche bleiben mit `UploadedBy = null` und dem Namen des Fotografen.
 
 ### ForecastRun
 

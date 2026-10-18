@@ -69,6 +69,7 @@ specs/
 | Hosting | Azure App Service (Linux B1), Background Worker im selben Host | [006](specs/adrs/006-app-service-mit-worker.md) |
 | Wetter und Abfluss | Open-Meteo (Prognose), MeteoSchweiz SwissMetNet (Messung), BAFU über existenz.ch | [007](specs/adrs/007-wetter-und-abflussquellen.md) |
 | Inhalte | Alle können beitragen, Moderatoren geben frei. Versionen wie im Wiki, Inhalt in Blob Storage | [008](specs/adrs/008-beitraege-mit-freigabe-und-versionen.md) |
+| Fotos | SkiaSharp und MetadataExtractor, Bildgrössen nur als WebP ohne Metadaten, Original privat | [009](specs/adrs/009-fotos-mit-skiasharp-und-webp.md) |
 | Design | Dunkles Farbschema («Kaltwasser-Nacht») | [design-system.md](specs/design-system.md) |
 
 ## Bezug zu bestehenden Projekten

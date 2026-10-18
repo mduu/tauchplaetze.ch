@@ -9,7 +9,7 @@ Die Oberfläche nutzt **MudBlazor** im dunklen Theme aus den Design Tokens. Seit
 | `/admin` | Übersicht: Plätze, offene Vorschläge, letzter Prognose-Lauf | alle Angemeldeten |
 | `/admin/plaetze` | Liste mit Suche, Status, Ausbaustufe, Datenstufe, offenen Vorschlägen | alle Angemeldeten |
 | `/admin/plaetze/neu` | neuer Platz: Name, Gewässer, Koordinate (Klick in die Karte) | alle Angemeldeten |
-| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten, Bewertungen, Texte pro Sprache, Einstiege und Orte, Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station) | alle Angemeldeten, Tab «nur Moderation» für Moderatoren |
+| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten, Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station) | alle Angemeldeten, Tab «nur Moderation» für Moderatoren |
 | `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | alle Angemeldeten, Wiederherstellen für Moderatoren |
 | `/admin/vorschlaege` | offene Vorschläge mit Vergleich zur Basis, Freigeben, Ablehnen mit Begründung | Moderatoren, Admins |
 | `/admin/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten» | Moderatoren; starten nur Admins |
@@ -136,7 +136,7 @@ Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer D
 
 ### Platz bearbeiten
 
-- Abschnitte: Grunddaten, Lage (Karte mit verschiebbarem Pin für den Platz, optional ein zweiter Pin für den Satellitenpunkt seewärts, Schalter «Prognose ausschalten»), Einstiege, Bewertungen, Eigenschaften, Texte pro Sprache (Tabs DE, EN, FR, IT), Medien, Vorschau.
+- Abschnitte: Grunddaten, Lage (Karte mit verschiebbarem Pin für den Platz, optional ein zweiter Pin für den Satellitenpunkt seewärts, Schalter «Prognose ausschalten»), Einstiege, Bewertungen, Eigenschaften, Texte pro Sprache (Tabs DE, EN, FR, IT), Fotos, Vorschau.
 - Einstiege: Liste mit Hinzufügen, Entfernen und Reihenfolge. Pro Einstieg ein Pin auf derselben Karte, Art, Name und Beschreibung pro Sprache.
 - Bewertungen: pro Skala eine Auswahl 1–5 mit Kurztext der Stufe und «nicht bewertet». Skalen in `dive-site.md`.
 - Texte pro Sprache: Unter Wasser, Gefahren, Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten.
@@ -166,12 +166,16 @@ Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer D
 
 ### Medien
 
-- Upload mehrerer Fotos auf einmal (Drag and Drop).
-- Der Core liest EXIF (Datum, falls vorhanden) und erzeugt Bildgrössen (z.B. 480, 960, 1600, 2400 px Breite) als WebP und JPEG.
-- Original und Grössen liegen in Blob Storage (`media/{mediaId}/{size}.webp`).
-- Pflicht: Fotograf. Optional: Legende und Alternativtext pro Sprache, Aufnahmetiefe.
-- Jedes Bild eines Platzes einem Abschnitt zuordnen (Unter Wasser, Umgebung, Anfahrt, Einstieg, Gefahren). Bei «Einstieg» zusätzlich den Einstieg wählen.
-- Reihenfolge per Drag and Drop innerhalb des Abschnitts. Ein Foto als Hero wählen.
+Tab «Fotos» beim Bearbeiten eines Platzes (ADR-009).
+
+- **Hochladen:** mehrere Fotos auf einmal (JPEG, PNG oder WebP, je höchstens 25 MB; HEIC bitte als JPEG exportieren). Pflicht: Fotograf (Vorgabe: Anzeigename) und die Bestätigung «Ich habe diese Fotos selbst gemacht oder besitze die Rechte daran und erlaube tauchplaetze.ch, sie mit Namensnennung zu zeigen». Optional: Link zum Fotografen, Abschnitt, Aufnahmetiefe.
+- **Verarbeitung im Core** (Command `UploadMedia`): Drehen nach EXIF, Aufnahmedatum aus EXIF, Bildgrössen 480, 960, 1600 und 2400 px Breite als WebP (nie grösser als das Original). Die Bildgrössen tragen keine Metadaten, also weder Standort noch Kamera.
+- **Privat bis zur Freigabe:** Original und Bildgrössen liegen in `media-pending/{mediaId}/`. Die Vorschau im CMS läuft über `/admin/medien/{id}/{datei}`. Sie zeigt ein privates Foto nur der Person, die es hochgeladen hat, und der Moderation.
+- **Zuordnung ist Teil der Version:** `DiveSiteContent.Media` (Foto, Abschnitt, bei «Einstieg» der Einstieg; die Reihenfolge der Liste ist die Reihenfolge) und `HeroMediaId` (Titelbild). Ein Foto eines anderen Platzes, doppelt, ein Titelbild ausserhalb der Liste oder ein fehlender Einstieg ergibt `InvalidMedia`.
+- **Freigabe:** Gibt die Moderation eine Version frei (auch beim direkten Speichern, beim Wiederherstellen und beim Erstimport), kopiert der Core die Bildgrössen der verwendeten Fotos nach `media/{mediaId}/{breite}.webp` und setzt `IsPublic`. Ein schon öffentliches Foto wird nicht nochmals kopiert. Fotos, die die Version nicht verwendet, verlieren ihren Platz in der Galerie (`SortOrder = null`). Das Original wird nie öffentlich.
+- **Angaben ändern** (Command `UpdateMedia`): Fotograf, Link, Tiefe, Legende und Alternativtext pro Sprache. Bei privaten Fotos die Person, die hochgeladen hat, bei öffentlichen nur die Moderation. Diese Angaben sind nicht Teil der Version.
+- **Reihenfolge** mit Pfeilen hoch und runter. Ein Foto als Titelbild wählen (Stern).
+- **Schutz:** höchstens 30 Uploads pro Stunde und Konto (Moderation ausgenommen). Ein gesperrtes Konto lädt nichts hoch.
 - Import aus tauchfotos.ch: Marc lädt die Originale hoch. Kein automatischer Abzug von der alten Website.
 
 ### Seen, Shops, Buddy-Gruppen
