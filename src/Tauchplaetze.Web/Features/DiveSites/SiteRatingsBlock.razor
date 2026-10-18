@@ -1,7 +1,7 @@
 @using Tauchplaetze.Core.Features.DiveSites
 @inject IStringLocalizer<DiveSiteStrings> L
 
-@if (Rated.Count > 0)
+@if (Rated.Any())
 {
     <section class="page-section" aria-labelledby="ratings">
         <h2 id="ratings" class="ratings-title">@L["Ratings_Title"]</h2>
@@ -45,19 +45,6 @@
     [Parameter, EditorRequired]
     public SiteRatings? Ratings { get; set; }
 
-    /// <summary>Nur bewertete Skalen. Schwierigkeit und Strömung sind Stufen, die übrigen Qualitäten (`dive-site.md`, «Bewertungen»).</summary>
-    private List<(string Scale, byte Value, bool IsLevel)> Rated => Ratings is not { } r
-        ? []
-        : new (string Scale, byte? Value, bool IsLevel)[]
-            {
-                ("Difficulty", r.Difficulty, true),
-                ("Wall", r.Wall, false),
-                ("MarineLife", r.MarineLife, false),
-                ("Wrecks", r.Wrecks, false),
-                ("Current", r.Current, true),
-                ("Surroundings", r.Surroundings, false),
-            }
-            .Where(s => s.Value is >= 1 and <= 5)
-            .Select(s => (s.Scale, s.Value!.Value, s.IsLevel))
-            .ToList();
+    private IEnumerable<(string Scale, byte Value, bool IsLevel)> Rated =>
+        (Ratings?.Rated ?? []).Select(r => (r.Scale.ToString(), r.Value, r.IsLevel));
 }

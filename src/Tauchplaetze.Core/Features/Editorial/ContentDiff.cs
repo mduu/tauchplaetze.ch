@@ -82,7 +82,7 @@ internal static class ContentDiff
             fields[$"Sketch.{index}.Depth"] = Text(feature.Depth);
             foreach (var text in feature.Texts)
             {
-                fields[$"Sketch.{index}.{text.Culture}.Label"] = text.Label;
+                fields[$"Sketch.{index}.{text.Culture}.Label"] = text.Label?.Trim();
             }
         }
 

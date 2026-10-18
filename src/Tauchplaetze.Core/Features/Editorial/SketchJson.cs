@@ -12,8 +12,29 @@ internal static class SketchJson
         Converters = { new JsonStringEnumConverter() },
     };
 
-    public static IReadOnlyList<SketchFeature> Read(string? json) =>
-        json is null ? [] : JsonSerializer.Deserialize<List<SketchFeature>>(json, Options) ?? [];
+    /// <summary>Ein Element mit unbekannter Art fällt weg, statt die Seite scheitern zu lassen.</summary>
+    public static IReadOnlyList<SketchFeature> Read(string? json)
+    {
+        if (json is null)
+        {
+            return [];
+        }
+
+        var items = JsonSerializer.Deserialize<List<JsonElement>>(json, Options) ?? [];
+        return [.. items.Select(TryRead).OfType<SketchFeature>()];
+    }
+
+    private static SketchFeature? TryRead(JsonElement item)
+    {
+        try
+        {
+            return item.Deserialize<SketchFeature>(Options);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
 
     public static string? Write(IReadOnlyList<SketchFeature> sketch) =>
         sketch.Count == 0

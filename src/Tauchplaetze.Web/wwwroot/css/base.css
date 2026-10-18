@@ -413,9 +413,6 @@ a:hover {
   white-space: nowrap;
 }
 
-.map-depth-labels-hidden .map-depth-label {
-  display: none;
-}
 
 .map-labels-hidden .leaflet-tooltip.map-label {
   display: none;

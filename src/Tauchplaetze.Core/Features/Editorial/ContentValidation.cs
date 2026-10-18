@@ -40,7 +40,9 @@ internal static partial class ContentValidation
             errors.Add(EditorialError.InvalidNotice);
         }
 
-        if (content.SketchList.Count > SketchRules.MaxFeatures || content.SketchList.Any(f => IsInvalid(f, content)))
+        if (content.SketchList.Count > SketchRules.MaxFeatures
+            || content.SketchList.DistinctBy(f => f.Id).Count() != content.SketchList.Count
+            || content.SketchList.Any(f => IsInvalid(f, content)))
         {
             errors.Add(EditorialError.InvalidSketch);
         }
@@ -54,7 +56,9 @@ internal static partial class ContentValidation
         || notice is { ValidFrom: { } from, ValidUntil: { } until } && until < from;
 
     private static bool IsInvalid(SketchFeature feature, DiveSiteContent content) =>
-        feature.Kind.ShapeOf() switch
+        !Enum.IsDefined(feature.Kind)
+        || feature.Texts.Any(t => !Cultures.Contains(t.Culture))
+        || feature.Kind.ShapeOf() switch
         {
             SketchShape.Point => feature.Points.Count != 1,
             SketchShape.Line => feature.Points.Count is < 2 or > SketchRules.MaxPoints,
@@ -66,6 +70,8 @@ internal static partial class ContentValidation
 
     /// <remarks>Grob die Landesgrenze mit etwas Rand, damit Plätze an der Grenze (Bodensee, Genfersee, Rhein bei Basel) gelten.</remarks>
     private static bool InSwitzerland(double latitude, double longitude) => latitude is >= 45.7 and <= 47.9 && longitude is >= 5.8 and <= 10.6;
+
+    private static readonly HashSet<string> Cultures = ["de", "en", "fr", "it"];
 
     [GeneratedRegex("^[a-z0-9]+(-[a-z0-9]+)*$")]
     private static partial Regex SlugPattern();

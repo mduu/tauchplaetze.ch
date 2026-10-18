@@ -402,7 +402,8 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     [InlineData(SketchKind.Wreck, 1, 3000, null, 10)]
     [InlineData(SketchKind.Wreck, 1, 0, -1, 10)]
     [InlineData(SketchKind.Highlight, 1, 0, null, 81)]
-    public async Task Eine_Skizze_braucht_die_Form_ihrer_Art_Punkte_nahe_am_Platz_eine_gueltige_Tiefe_und_kurze_Beschriftungen(
+    [InlineData((SketchKind)99, 1, 0, null, 10)]
+    public async Task Eine_Skizze_braucht_eine_bekannte_Art_deren_Form_Punkte_nahe_am_Platz_eine_gueltige_Tiefe_und_kurze_Beschriftungen(
         SketchKind kind, int points, int metersAway, int? depth, int labelLength)
     {
         // Arrange

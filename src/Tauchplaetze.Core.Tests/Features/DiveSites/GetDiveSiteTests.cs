@@ -48,7 +48,7 @@ public class GetDiveSiteTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Die_Skizze_kommt_mit_der_Beschriftung_der_Sprache_sonst_auf_Deutsch()
+    public async Task Die_Skizze_kommt_mit_der_Beschriftung_der_Sprache_sonst_auf_Deutsch_und_ohne_unbekannte_Arten()
     {
         // Arrange
         await Sql.Arrange(async db =>
@@ -57,6 +57,7 @@ public class GetDiveSiteTests(SqlServer sql) : SqlTest(sql)
             site.Sketch = """
                 [{"id":"0199f1c2-0000-7000-8000-000000000001","kind":"Sculpture","points":[{"latitude":47.285,"longitude":8.608}],"depth":12,
                   "texts":[{"culture":"de","label":"Madonna"},{"culture":"fr","label":"Madone"}]},
+                 {"id":"0199f1c2-0000-7000-8000-000000000003","kind":"Mermaid","points":[{"latitude":47.285,"longitude":8.608}],"texts":[]},
                  {"id":"0199f1c2-0000-7000-8000-000000000002","kind":"Wall","points":[{"latitude":47.285,"longitude":8.608},{"latitude":47.286,"longitude":8.607}],"texts":[]}]
                 """;
         });

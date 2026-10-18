@@ -117,6 +117,13 @@
     private async Task Finish() => await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.finish", Id);
 
     [JSInvokable]
+    public void ToolStopped()
+    {
+        tool = null;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
     public async Task Add(string kind, List<JsPoint> points)
     {
         var item = new SketchForm { Kind = Enum.Parse<SketchKind>(kind), Points = [.. points.Select(p => new SketchPoint(p.Lat, p.Lng))] };
@@ -186,14 +193,17 @@
 
     public async ValueTask DisposeAsync()
     {
-        reference?.Dispose();
         try
         {
             await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.dispose", Id);
         }
-        catch (JSDisconnectedException)
+        catch (Exception exception) when (exception is JSDisconnectedException or OperationCanceledException)
         {
-            return;
+            // Die Verbindung ist schon weg, die Karte mit ihr.
+        }
+        finally
+        {
+            reference?.Dispose();
         }
     }
 

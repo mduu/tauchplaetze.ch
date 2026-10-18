@@ -84,8 +84,11 @@
       }, 200);
     }
 
-    button.addEventListener('pointerout', leave, { once: true });
-    popover.addEventListener('pointerout', leave, { once: true });
-    popover.addEventListener('pointerover', function () { clearTimeout(hideTimer); }, { once: true });
+    if (!popover.dataset.hoverBound) {
+      popover.dataset.hoverBound = 'true';
+      button.addEventListener('pointerleave', leave);
+      popover.addEventListener('pointerleave', leave);
+      popover.addEventListener('pointerenter', function () { clearTimeout(hideTimer); });
+    }
   });
 })();

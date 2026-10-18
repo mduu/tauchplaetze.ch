@@ -171,6 +171,7 @@ window.tauchplaetzeMap = (function () {
 
     const base = element.dataset.contoursBase || '/bathymetry/';
     const lines = L.layerGroup();
+    const labels = L.layerGroup();
     const shown = {};
     const color = token('--color-depth-line');
 
@@ -191,12 +192,18 @@ window.tauchplaetzeMap = (function () {
       data.features.forEach(function (feature) {
         feature.geometry.coordinates
           .filter(function (line) { return line.length >= 6; })
-          .forEach(function (line) { lines.addLayer(label(feature.properties.depth, middleOf(line))); });
+          .forEach(function (line) { labels.addLayer(label(feature.properties.depth, middleOf(line))); });
       });
     }
 
     function refresh() {
-      map.getContainer().classList.toggle('map-depth-labels-hidden', map.getZoom() < contourLabelZoom);
+      const showLabels = map.hasLayer(lines) && map.getZoom() >= contourLabelZoom;
+      if (showLabels && !map.hasLayer(labels)) {
+        labels.addTo(map);
+      } else if (!showLabels && map.hasLayer(labels)) {
+        map.removeLayer(labels);
+      }
+
       if (!map.hasLayer(lines) || map.getZoom() < contourMinZoom) {
         return;
       }
@@ -237,6 +244,7 @@ window.tauchplaetzeMap = (function () {
     map.on('overlayremove', function (event) {
       if (event.layer === lines) {
         map.attributionControl.removeAttribution(attribution);
+        map.removeLayer(labels);
       }
     });
     map.on('moveend', refresh);

@@ -45,8 +45,18 @@ window.tauchplaetzeSketchEditor = (function () {
 
   function init(id, latitude, longitude, dotnet, kindNames) {
     const element = document.getElementById(id);
-    if (!element || editors.has(id)) {
+    if (!element) {
       return;
+    }
+
+    // MudTabs baut das Panel beim Tab-Wechsel neu. Ein alter Editor mit derselben Id gehört dann zu einem entfernten Element.
+    const existing = editors.get(id);
+    if (existing && existing.map.getContainer() === element) {
+      return;
+    }
+
+    if (existing) {
+      dispose(id);
     }
 
     const map = L.map(element, { scrollWheelZoom: true, doubleClickZoom: false });
@@ -80,6 +90,11 @@ window.tauchplaetzeSketchEditor = (function () {
     }
 
     editor.draft = editor.draft || [];
+    const last = editor.draft[editor.draft.length - 1];
+    if (last && last.lat === point.lat && last.lng === point.lng) {
+      return;
+    }
+
     editor.draft.push(point);
     drawDraft(editor);
   }
@@ -181,7 +196,12 @@ window.tauchplaetzeSketchEditor = (function () {
 
   document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
-      editors.forEach(function (_, id) { setTool(id, null, null); });
+      editors.forEach(function (editor, id) {
+        if (editor.tool) {
+          setTool(id, null, null);
+          editor.dotnet.invokeMethodAsync('ToolStopped');
+        }
+      });
     }
   });
 

@@ -38,7 +38,7 @@ window.tauchplaetzeSketch = (function () {
 
   function label(feature, kindNames) {
     const name = feature.label || kindNames[feature.kind] || feature.kind;
-    const depth = feature.depth != null ? ' <span class="map-label-kind">' + feature.depth + ' m</span>' : '';
+    const depth = feature.depth != null ? ' <span class="map-label-kind">· ' + feature.depth + ' m</span>' : '';
     return escapeHtml(name) + depth;
   }
 

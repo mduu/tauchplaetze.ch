@@ -112,7 +112,7 @@ foreach (var (slug, zipUrl, date) in await LakeList())
 }
 
 index["lakes"] = lakes;
-await File.WriteAllTextAsync(indexPath, index.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n");
+await File.WriteAllTextAsync(indexPath, index.ToJsonString(new JsonSerializerOptions { WriteIndented = false }) + "\n");
 return;
 
 static double Round(double value) => Math.Round(value, 6);

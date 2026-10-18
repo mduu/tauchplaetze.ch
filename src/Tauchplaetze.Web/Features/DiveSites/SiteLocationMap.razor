@@ -1,5 +1,6 @@
 @using System.Text.Json
 @using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.WaterBodies
 @inject IStringLocalizer<DiveSiteStrings> L
 
 <section class="@(Compact ? "location card" : "page-section")" aria-labelledby="location">
@@ -13,7 +14,7 @@
     }
     <div class="location-map" data-map data-here="@Here" data-points="@Points" data-max-zoom="18" data-single-zoom="17" data-padding="24"
          data-layer-map="@L["Map_Layer_Map"]" data-layer-photo="@L["Map_Layer_Photo"]"
-         data-contours="auto" data-layer-contours="@L["Map_Layer_Contours"]"
+         data-contours="@(Site.WaterBodyType == WaterBodyType.Lake ? "auto" : null)" data-layer-contours="@L["Map_Layer_Contours"]"
          data-sketch="@SketchJson" data-sketch-kinds="@SketchKinds" data-layer-sketch="@L["Map_Layer_Sketch"]"
          role="region" aria-label="@L["Location_Map_Label", Site.Name]"></div>
     @if (Site.SketchList.Count > 0)

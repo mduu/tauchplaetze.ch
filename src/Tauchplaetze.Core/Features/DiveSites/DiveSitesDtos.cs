@@ -47,7 +47,48 @@ public record SiteSketchFeature(SketchKind Kind, IReadOnlyList<SitePoint> Points
 public record SitePoint(double Latitude, double Longitude);
 
 /// <summary>Die Bewertungen eines Platzes, je 1 bis 5. Leer heisst «nicht bewertet» (`dive-site.md`, «Bewertungen»).</summary>
-public record SiteRatings(byte? Difficulty, byte? Wall, byte? MarineLife, byte? Wrecks, byte? Current, byte? Surroundings);
+public record SiteRatings(byte? Difficulty, byte? Wall, byte? MarineLife, byte? Wrecks, byte? Current, byte? Surroundings)
+{
+    /// <summary>Nur bewertete Skalen in fester Reihenfolge. Schwierigkeit und Strömung sind Stufen, die übrigen Qualitäten.</summary>
+    public IReadOnlyList<RatedScale> Rated =>
+        new (RatingScale Scale, byte? Value)[]
+            {
+                (RatingScale.Difficulty, Difficulty),
+                (RatingScale.Wall, Wall),
+                (RatingScale.MarineLife, MarineLife),
+                (RatingScale.Wrecks, Wrecks),
+                (RatingScale.Current, Current),
+                (RatingScale.Surroundings, Surroundings),
+            }
+            .Where(s => s.Value is >= 1 and <= 5)
+            .Select(s => new RatedScale(s.Scale, s.Value!.Value, s.Scale is RatingScale.Difficulty or RatingScale.Current))
+            .ToList();
+}
+
+/// <summary>Eine Bewertungsskala (`dive-site.md`, «Bewertungen»).</summary>
+public enum RatingScale
+{
+    /// <summary>Schwierigkeit.</summary>
+    Difficulty,
+
+    /// <summary>Steilwand.</summary>
+    Wall,
+
+    /// <summary>UW-Leben.</summary>
+    MarineLife,
+
+    /// <summary>Wracks und Gegenstände.</summary>
+    Wrecks,
+
+    /// <summary>Strömung.</summary>
+    Current,
+
+    /// <summary>Umgebung.</summary>
+    Surroundings,
+}
+
+/// <summary>Eine bewertete Skala. <see cref="IsLevel"/>: eine Stufe (mehr ist anspruchsvoller), sonst eine Qualität (mehr ist besser).</summary>
+public record RatedScale(RatingScale Scale, byte Value, bool IsLevel);
 
 /// <summary>Ein gültiger Hinweis in der gewünschten Sprache. Fehlt die Übersetzung, kommt er auf Deutsch (<see cref="GermanOnly"/>).</summary>
 public record SiteNotice(NoticeKind Kind, string Text, DateOnly? ValidUntil, bool GermanOnly);
