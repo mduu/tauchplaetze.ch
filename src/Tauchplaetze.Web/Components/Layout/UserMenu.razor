@@ -1,21 +1,29 @@
-@using System.Security.Claims
 @using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Web.Features.Accounts
 @inject IStringLocalizer<AccountStrings> L
 
 <AuthorizeView>
     <Authorized>
-        <div class="user-menu">
-            <a href="@AccountPaths.Profile(Language)">@context.User.Identity?.Name</a>
-            @if (context.User.IsInRole(Roles.Moderator) || context.User.IsInRole(Roles.Admin) || context.User.IsInRole(Roles.Contributor))
-            {
-                <a href="/admin">@L["Nav_Cms"]</a>
-            }
-            <form method="post" action="@AccountPaths.SignOut(Language)">
-                <AntiforgeryToken />
-                <button type="submit" class="link-button">@L["Nav_SignOut"]</button>
-            </form>
-        </div>
+        <details class="dropdown" data-dropdown>
+            <summary aria-label="@L["Nav_Account"]">
+                <svg class="user-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5.2" r="3" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M2.2 14.5c.8-3 3.1-4.5 5.8-4.5s5 1.5 5.8 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg>
+                <span class="user-name">@context.User.Identity?.Name</span>
+                <DropdownChevron />
+            </summary>
+            <ul class="dropdown-menu">
+                <li><a href="@AccountPaths.Profile(Language)">@L["Profile_Title"]</a></li>
+                @if (context.User.IsInRole(Roles.Moderator) || context.User.IsInRole(Roles.Admin) || context.User.IsInRole(Roles.Contributor))
+                {
+                    <li><a href="/admin">@L["Nav_Cms"]</a></li>
+                }
+                <li>
+                    <form method="post" action="@AccountPaths.SignOut(Language)">
+                        <AntiforgeryToken />
+                        <button type="submit">@L["Nav_SignOut"]</button>
+                    </form>
+                </li>
+            </ul>
+        </details>
     </Authorized>
     <NotAuthorized>
         <a class="sign-in" href="@AccountPaths.SignIn(Language)">@L["Nav_SignIn"]</a>

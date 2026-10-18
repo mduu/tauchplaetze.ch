@@ -39,3 +39,9 @@
   --space-section: 52px;
   --content-max: 1240px;
 }
+
+@media (max-width: 420px) {
+  :root {
+    --space-gutter: 16px;
+  }
+}

@@ -98,7 +98,7 @@ Entwurf vom 17.10.2026, generiert mit Gemini. Die Quellen liegen in `assets/logo
 
 | Token | Wert |
 |---|---|
-| `--space-gutter` | 24 px (seitlicher Rand, Gitterabstand) |
+| `--space-gutter` | 24 px, bis 420 px Breite 16 px (seitlicher Rand, Gitterabstand) |
 | `--space-section` | 48–56 px zwischen Abschnitten |
 | `--radius-card` | 28 px |
 | `--radius-tile` | 20 px |

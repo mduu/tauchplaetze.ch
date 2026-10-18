@@ -401,3 +401,112 @@ a:hover {
 .leaflet-control-layers input {
   accent-color: var(--color-primary);
 }
+
+/* Aufklappmenü im Kopf (Sprache, Konto): details[data-dropdown], site.js schliesst es bei Klick daneben. */
+.dropdown {
+  position: relative;
+}
+
+.dropdown > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  list-style: none;
+  cursor: pointer;
+}
+
+.dropdown > summary::-webkit-details-marker {
+  display: none;
+}
+
+.dropdown > summary:hover,
+.dropdown[open] > summary {
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+
+.dropdown-chevron {
+  transition: transform 0.15s ease;
+}
+
+.dropdown[open] .dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.dropdown-code {
+  min-width: 2.2em;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 1100;
+  min-width: 180px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-tile);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.4);
+}
+
+.dropdown-menu form {
+  margin: 0;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-tile-sm);
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.dropdown-menu a[aria-current="true"] {
+  color: var(--color-primary);
+}
+
+@media (max-width: 420px) {
+  .dropdown > summary {
+    padding: 0 10px;
+  }
+
+  .dropdown > summary .dropdown-chevron {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown-chevron {
+    transition: none;
+  }
+}

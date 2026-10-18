@@ -55,5 +55,66 @@
 .header-tools {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
+}
+
+/* Bis 1000 px: Logo und Werkzeuge in der ersten Zeile, Navigation darunter über die ganze Breite. */
+@media (max-width: 1000px) {
+    .site-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "brand tools"
+            "nav nav";
+        gap: 8px 12px;
+    }
+
+    .brand {
+        grid-area: brand;
+        min-width: 0;
+    }
+
+    .header-tools {
+        grid-area: tools;
+    }
+
+    .nav-slot {
+        grid-area: nav;
+        min-width: 0;
+        margin: 0 -10px;
+    }
+}
+
+@media (max-width: 720px) {
+    .site-header {
+        padding-top: 12px;
+        padding-bottom: 4px;
+    }
+
+    .brand {
+        gap: 8px;
+    }
+
+    .brand-mark {
+        width: 36px;
+        height: 37px;
+    }
+
+    .brand-name {
+        font-size: 19px;
+    }
+
+    .header-tools {
+        gap: 6px;
+    }
+}
+
+@media (max-width: 360px) {
+    .site-header {
+        column-gap: 8px;
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
 }

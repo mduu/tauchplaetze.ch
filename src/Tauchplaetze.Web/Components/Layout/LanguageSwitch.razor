@@ -1,12 +1,12 @@
 @inject IStringLocalizer<SharedStrings> L
 @inject NavigationManager Navigation
 
-<details class="language-switch" data-dropdown>
+<details class="dropdown" data-dropdown>
     <summary aria-label="@L["Language_Choose"]">
-        <span lang="@Current">@Current.ToUpperInvariant()</span>
-        <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        <span class="dropdown-code" lang="@Current">@Current.ToUpperInvariant()</span>
+        <DropdownChevron />
     </summary>
-    <ul>
+    <ul class="dropdown-menu">
         @foreach (var language in Languages.All)
         {
             <li>
@@ -14,7 +14,7 @@
                    hreflang="@language"
                    lang="@language"
                    aria-current="@(language == Current ? "true" : null)">
-                    <span class="code">@language.ToUpperInvariant()</span>
+                    <span class="dropdown-code">@language.ToUpperInvariant()</span>
                     <span>@L[$"Language_{language}"]</span>
                 </a>
             </li>

@@ -1,15 +1,27 @@
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.user-menu a,
 .sign-in {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     color: var(--color-text-muted);
     text-decoration: none;
 }
 
-.user-menu form {
-    margin: 0;
+.sign-in:hover {
+    color: var(--color-text);
+}
+
+.user-name {
+    max-width: 14ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-body);
+    letter-spacing: 0;
+    font-size: 14px;
+}
+
+@media (max-width: 720px) {
+    .user-name {
+        display: none;
+    }
 }

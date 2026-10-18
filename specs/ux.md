@@ -28,7 +28,7 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 
 Pfadsegmente pro Sprache: siehe `i18n.md`.
 
-Hauptnavigation: Prognose · Tauchplätze · Gewässer · Buddy-Gruppen. Rechts: Sprachwahl als Aufklappmenü (Knopf mit dem Kürzel der aktuellen Sprache, darunter Kürzel und Name jeder Sprache). Das Menü ist ein `<details>` und geht ohne JavaScript; mit JavaScript schliesst es bei Klick daneben und mit Escape.
+Hauptnavigation: Prognose · Tauchplätze · Gewässer · Buddy-Gruppen. Rechts: Konto (angemeldet als Aufklappmenü mit Profil, Redaktion und Abmelden, sonst «Anmelden») und Sprachwahl als Aufklappmenü (Knopf mit dem Kürzel der aktuellen Sprache, darunter Kürzel und Name jeder Sprache). Das Menü ist ein `<details>` und geht ohne JavaScript; mit JavaScript schliesst es bei Klick daneben und mit Escape. Bis 1000 px Breite stehen Logo, Konto und Sprache in der ersten Zeile und die Navigation darunter (auf dem Handy seitlich scrollbar); bis 720 px zeigt das Konto nur das Symbol.
 
 ## Seiten
 
