@@ -31,6 +31,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> SiteList { get; } = new(_ => []);
 
+    public FakeQuery<FindDiveSitesQuery, FoundDiveSites> Finder { get; } = new(_ => new FoundDiveSites([], 0, 1, 1, SiteSort.Index, [], 0, 0, null));
+
     public FakeQuery<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>> WaterBodyList { get; } = new(_ => []);
 
     public FakeQuery<GetWaterBodyGroupsQuery, IReadOnlyList<WaterBodyGroup>> WaterBodyGroups { get; } = new(_ => []);
@@ -57,6 +59,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetBestSitesQuery, BestSites>>(BestSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>>>(SiteList));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<FindDiveSitesQuery, FoundDiveSites>>(Finder));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>>(WaterBodyList));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyGroupsQuery, IReadOnlyList<WaterBodyGroup>>>(WaterBodyGroups));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyQuery, WaterBodyDetails?>>(WaterBody));

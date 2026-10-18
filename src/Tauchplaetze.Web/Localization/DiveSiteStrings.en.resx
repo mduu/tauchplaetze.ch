@@ -21,10 +21,7 @@
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Do you know this site?</value></data>
   <data name="Map_Label" xml:space="preserve"><value>Map of dive sites</value></data>
   <data name="Directory_Title" xml:space="preserve"><value>Dive sites</value></data>
-  <data name="Directory_Lead" xml:space="preserve"><value>All dive sites in Swiss lakes and rivers. The index is for today.</value></data>
-  <data name="Directory_Filter" xml:space="preserve"><value>Water</value></data>
-  <data name="Directory_Filter_All" xml:space="preserve"><value>All waters</value></data>
-  <data name="Directory_Empty" xml:space="preserve"><value>No dive sites yet.</value></data>
+  <data name="Directory_Lead" xml:space="preserve"><value>Search by name, place or lake, near you or by features. The index is for today.</value></data>
   <data name="Directory_MetaDescription" xml:space="preserve"><value>Directory of dive sites in Swiss lakes and rivers, with map and dive index.</value></data>
   <data name="DataLevel_0" xml:space="preserve"><value>no forecast</value></data>
   <data name="DataLevel_1" xml:space="preserve"><value>weather only</value></data>
@@ -175,4 +172,35 @@
   <data name="Region_East" xml:space="preserve"><value>Eastern Switzerland</value></data>
   <data name="Region_Central" xml:space="preserve"><value>Central Switzerland</value></data>
   <data name="Region_Ticino" xml:space="preserve"><value>Ticino</value></data>
+  <data name="Directory_Count" xml:space="preserve"><value>{0} sites at {1} lakes and rivers.</value></data>
+  <data name="Finder_Search_Label" xml:space="preserve"><value>Name, place or lake</value></data>
+  <data name="Finder_Search_Placeholder" xml:space="preserve"><value>e.g. Riff Williams, Herrliberg, Lake Thun</value></data>
+  <data name="Finder_Submit" xml:space="preserve"><value>Search</value></data>
+  <data name="Finder_Near" xml:space="preserve"><value>Near me</value></data>
+  <data name="Finder_Near_Active" xml:space="preserve"><value>Near you</value></data>
+  <data name="Finder_Remove" xml:space="preserve"><value>Remove {0}</value></data>
+  <data name="Finder_Traits" xml:space="preserve"><value>Features</value></data>
+  <data name="Trait_Wall" xml:space="preserve"><value>Wall</value></data>
+  <data name="Trait_Wreck" xml:space="preserve"><value>Wreck</value></data>
+  <data name="Trait_Beginner" xml:space="preserve"><value>Beginners</value></data>
+  <data name="Trait_Training" xml:space="preserve"><value>Training</value></data>
+  <data name="Trait_River" xml:space="preserve"><value>River</value></data>
+  <data name="Trait_Cave" xml:space="preserve"><value>Cave</value></data>
+  <data name="Finder_Sort" xml:space="preserve"><value>Sort by</value></data>
+  <data name="Sort_Index" xml:space="preserve"><value>Index today</value></data>
+  <data name="Sort_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Sort_Distance" xml:space="preserve"><value>Distance</value></data>
+  <data name="Finder_Browse" xml:space="preserve"><value>Browse by lake or river</value></data>
+  <data name="Finder_Results" xml:space="preserve"><value>{0} results</value></data>
+  <data name="Finder_Results_One" xml:space="preserve"><value>1 result</value></data>
+  <data name="Finder_Empty" xml:space="preserve"><value>No dive sites found.</value></data>
+  <data name="Finder_Empty_Reset" xml:space="preserve"><value>Search without filters</value></data>
+  <data name="Finder_View_List" xml:space="preserve"><value>List</value></data>
+  <data name="Finder_View_Map" xml:space="preserve"><value>Map</value></data>
+  <data name="Finder_Pages" xml:space="preserve"><value>Pages</value></data>
+  <data name="Finder_Page" xml:space="preserve"><value>Page {0} of {1}</value></data>
+  <data name="Finder_Previous" xml:space="preserve"><value>Previous</value></data>
+  <data name="Finder_Next" xml:space="preserve"><value>Next</value></data>
+  <data name="Finder_Depth" xml:space="preserve"><value>up to {0} m</value></data>
+  <data name="Directory_Empty" xml:space="preserve"><value>No dive sites yet.</value></data>
 </root>

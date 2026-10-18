@@ -21,10 +21,7 @@
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Kennst du diesen Platz?</value></data>
   <data name="Map_Label" xml:space="preserve"><value>Karte der Tauchplätze</value></data>
   <data name="Directory_Title" xml:space="preserve"><value>Tauchplätze</value></data>
-  <data name="Directory_Lead" xml:space="preserve"><value>Alle Tauchplätze in Schweizer Seen und Flüssen. Der Index gilt für heute.</value></data>
-  <data name="Directory_Filter" xml:space="preserve"><value>Gewässer</value></data>
-  <data name="Directory_Filter_All" xml:space="preserve"><value>Alle Gewässer</value></data>
-  <data name="Directory_Empty" xml:space="preserve"><value>Noch keine Tauchplätze.</value></data>
+  <data name="Directory_Lead" xml:space="preserve"><value>Suche nach Name, Ort oder See, in deiner Nähe oder nach Eigenschaften. Der Index gilt für heute.</value></data>
   <data name="Directory_MetaDescription" xml:space="preserve"><value>Verzeichnis der Tauchplätze in Schweizer Seen und Flüssen, mit Karte und Tauch-Index.</value></data>
   <data name="DataLevel_0" xml:space="preserve"><value>keine Prognose</value></data>
   <data name="DataLevel_1" xml:space="preserve"><value>nur Wetter</value></data>
@@ -175,4 +172,35 @@
   <data name="Region_East" xml:space="preserve"><value>Ostschweiz</value></data>
   <data name="Region_Central" xml:space="preserve"><value>Zentralschweiz</value></data>
   <data name="Region_Ticino" xml:space="preserve"><value>Tessin</value></data>
+  <data name="Directory_Count" xml:space="preserve"><value>{0} Plätze an {1} Gewässern.</value></data>
+  <data name="Finder_Search_Label" xml:space="preserve"><value>Name, Ort oder See</value></data>
+  <data name="Finder_Search_Placeholder" xml:space="preserve"><value>z.B. Riff Williams, Herrliberg, Thunersee</value></data>
+  <data name="Finder_Submit" xml:space="preserve"><value>Suchen</value></data>
+  <data name="Finder_Near" xml:space="preserve"><value>In meiner Nähe</value></data>
+  <data name="Finder_Near_Active" xml:space="preserve"><value>In deiner Nähe</value></data>
+  <data name="Finder_Remove" xml:space="preserve"><value>{0} entfernen</value></data>
+  <data name="Finder_Traits" xml:space="preserve"><value>Eigenschaften</value></data>
+  <data name="Trait_Wall" xml:space="preserve"><value>Steilwand</value></data>
+  <data name="Trait_Wreck" xml:space="preserve"><value>Wrack</value></data>
+  <data name="Trait_Beginner" xml:space="preserve"><value>Einsteiger</value></data>
+  <data name="Trait_Training" xml:space="preserve"><value>Ausbildung</value></data>
+  <data name="Trait_River" xml:space="preserve"><value>Fluss</value></data>
+  <data name="Trait_Cave" xml:space="preserve"><value>Höhle</value></data>
+  <data name="Finder_Sort" xml:space="preserve"><value>Sortieren</value></data>
+  <data name="Sort_Index" xml:space="preserve"><value>Index heute</value></data>
+  <data name="Sort_Name" xml:space="preserve"><value>Alphabetisch</value></data>
+  <data name="Sort_Distance" xml:space="preserve"><value>Distanz</value></data>
+  <data name="Finder_Browse" xml:space="preserve"><value>Nach Gewässer stöbern</value></data>
+  <data name="Finder_Results" xml:space="preserve"><value>{0} Treffer</value></data>
+  <data name="Finder_Results_One" xml:space="preserve"><value>1 Treffer</value></data>
+  <data name="Finder_Empty" xml:space="preserve"><value>Keine Plätze gefunden.</value></data>
+  <data name="Finder_Empty_Reset" xml:space="preserve"><value>Suche ohne Filter</value></data>
+  <data name="Finder_View_List" xml:space="preserve"><value>Liste</value></data>
+  <data name="Finder_View_Map" xml:space="preserve"><value>Karte</value></data>
+  <data name="Finder_Pages" xml:space="preserve"><value>Seiten</value></data>
+  <data name="Finder_Page" xml:space="preserve"><value>Seite {0} von {1}</value></data>
+  <data name="Finder_Previous" xml:space="preserve"><value>Zurück</value></data>
+  <data name="Finder_Next" xml:space="preserve"><value>Weiter</value></data>
+  <data name="Finder_Depth" xml:space="preserve"><value>bis {0} m</value></data>
+  <data name="Directory_Empty" xml:space="preserve"><value>Noch keine Tauchplätze.</value></data>
 </root>

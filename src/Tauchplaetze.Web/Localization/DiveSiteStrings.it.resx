@@ -21,10 +21,7 @@
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Conosci questo sito?</value></data>
   <data name="Map_Label" xml:space="preserve"><value>Mappa dei siti d'immersione</value></data>
   <data name="Directory_Title" xml:space="preserve"><value>Siti d'immersione</value></data>
-  <data name="Directory_Lead" xml:space="preserve"><value>Tutti i siti d'immersione nei laghi e fiumi svizzeri. L'indice vale per oggi.</value></data>
-  <data name="Directory_Filter" xml:space="preserve"><value>Acque</value></data>
-  <data name="Directory_Filter_All" xml:space="preserve"><value>Tutte le acque</value></data>
-  <data name="Directory_Empty" xml:space="preserve"><value>Ancora nessun sito d'immersione.</value></data>
+  <data name="Directory_Lead" xml:space="preserve"><value>Cerca per nome, luogo o lago, vicino a te o per caratteristiche. L'indice vale per oggi.</value></data>
   <data name="Directory_MetaDescription" xml:space="preserve"><value>Elenco dei siti d'immersione nei laghi e fiumi svizzeri, con mappa e indice d'immersione.</value></data>
   <data name="DataLevel_0" xml:space="preserve"><value>nessuna previsione</value></data>
   <data name="DataLevel_1" xml:space="preserve"><value>solo meteo</value></data>
@@ -175,4 +172,35 @@
   <data name="Region_East" xml:space="preserve"><value>Svizzera orientale</value></data>
   <data name="Region_Central" xml:space="preserve"><value>Svizzera centrale</value></data>
   <data name="Region_Ticino" xml:space="preserve"><value>Ticino</value></data>
+  <data name="Directory_Count" xml:space="preserve"><value>{0} siti in {1} laghi e fiumi.</value></data>
+  <data name="Finder_Search_Label" xml:space="preserve"><value>Nome, luogo o lago</value></data>
+  <data name="Finder_Search_Placeholder" xml:space="preserve"><value>p. es. Riff Williams, Herrliberg, lago di Thun</value></data>
+  <data name="Finder_Submit" xml:space="preserve"><value>Cerca</value></data>
+  <data name="Finder_Near" xml:space="preserve"><value>Vicino a me</value></data>
+  <data name="Finder_Near_Active" xml:space="preserve"><value>Vicino a te</value></data>
+  <data name="Finder_Remove" xml:space="preserve"><value>Rimuovi {0}</value></data>
+  <data name="Finder_Traits" xml:space="preserve"><value>Caratteristiche</value></data>
+  <data name="Trait_Wall" xml:space="preserve"><value>Parete</value></data>
+  <data name="Trait_Wreck" xml:space="preserve"><value>Relitto</value></data>
+  <data name="Trait_Beginner" xml:space="preserve"><value>Principianti</value></data>
+  <data name="Trait_Training" xml:space="preserve"><value>Formazione</value></data>
+  <data name="Trait_River" xml:space="preserve"><value>Fiume</value></data>
+  <data name="Trait_Cave" xml:space="preserve"><value>Grotta</value></data>
+  <data name="Finder_Sort" xml:space="preserve"><value>Ordina per</value></data>
+  <data name="Sort_Index" xml:space="preserve"><value>Indice di oggi</value></data>
+  <data name="Sort_Name" xml:space="preserve"><value>Nome</value></data>
+  <data name="Sort_Distance" xml:space="preserve"><value>Distanza</value></data>
+  <data name="Finder_Browse" xml:space="preserve"><value>Sfoglia per lago o fiume</value></data>
+  <data name="Finder_Results" xml:space="preserve"><value>{0} risultati</value></data>
+  <data name="Finder_Results_One" xml:space="preserve"><value>1 risultato</value></data>
+  <data name="Finder_Empty" xml:space="preserve"><value>Nessun sito trovato.</value></data>
+  <data name="Finder_Empty_Reset" xml:space="preserve"><value>Cerca senza filtri</value></data>
+  <data name="Finder_View_List" xml:space="preserve"><value>Elenco</value></data>
+  <data name="Finder_View_Map" xml:space="preserve"><value>Mappa</value></data>
+  <data name="Finder_Pages" xml:space="preserve"><value>Pagine</value></data>
+  <data name="Finder_Page" xml:space="preserve"><value>Pagina {0} di {1}</value></data>
+  <data name="Finder_Previous" xml:space="preserve"><value>Precedente</value></data>
+  <data name="Finder_Next" xml:space="preserve"><value>Successiva</value></data>
+  <data name="Finder_Depth" xml:space="preserve"><value>fino a {0} m</value></data>
+  <data name="Directory_Empty" xml:space="preserve"><value>Ancora nessun sito d'immersione.</value></data>
 </root>

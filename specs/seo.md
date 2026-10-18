@@ -22,7 +22,7 @@ Siehe `i18n.md`. Grundsätze:
 - Kurz, lesbar, ohne IDs: `/de/tauchplaetze/riff-williams-herrliberg`.
 - Kleinbuchstaben, Bindestriche, keine Umlaute im Slug.
 - Ein geänderter Slug erzeugt automatisch einen 301 vom alten Slug.
-- Query-Parameter (`?date=…`) sind kanonisch auf die Seite ohne Parameter.
+- Query-Parameter (`?date=…`, Suche und Filter im Verzeichnis `?q=…&f=…&page=…`) sind kanonisch auf die Seite ohne Parameter. Das Verzeichnis setzt `<link rel="canonical">` auf `/{lang}/tauchplaetze`. Suchergebnisse sind keine eigenen Landingpages.
 
 ## Pro Seite
 

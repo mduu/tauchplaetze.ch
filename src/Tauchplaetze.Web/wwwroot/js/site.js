@@ -92,3 +92,77 @@
     }
   });
 })();
+
+// Verzeichnis: Filter und Sortierung schicken das Formular gleich ab. Ohne JavaScript bleibt der Knopf «Suchen».
+(function () {
+  document.addEventListener('change', function (event) {
+    const form = event.target.closest && event.target.closest('form[data-autosubmit]');
+    if (form && event.target.matches('input[type="checkbox"], select')) {
+      form.requestSubmit();
+    }
+  });
+})();
+
+// «In meiner Nähe»: Standort aus dem Browser, auf zwei Dezimalen gerundet (rund 1 km), damit die URL keinen genauen Ort verrät.
+(function () {
+  function show() {
+    if (!('geolocation' in navigator)) {
+      return;
+    }
+
+    document.querySelectorAll('[data-near]').forEach(function (button) {
+      button.hidden = false;
+      if (button.dataset.bound) {
+        return;
+      }
+
+      button.dataset.bound = 'true';
+      button.addEventListener('click', function () {
+        button.disabled = true;
+        navigator.geolocation.getCurrentPosition(function (position) {
+          const form = button.closest('form');
+          const url = new URL(form.action, window.location.origin);
+          new FormData(form).forEach(function (value, key) {
+            if (key !== 'lat' && key !== 'lng' && key !== 'sort' && value !== '') {
+              url.searchParams.append(key, value);
+            }
+          });
+          url.searchParams.set('lat', position.coords.latitude.toFixed(2));
+          url.searchParams.set('lng', position.coords.longitude.toFixed(2));
+          window.location.assign(url.toString());
+        }, function () {
+          button.disabled = false;
+        }, { maximumAge: 600000, timeout: 10000 });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    show();
+    if (window.Blazor) {
+      window.Blazor.addEventListener('enhancedload', show);
+    }
+  });
+})();
+
+// Verschleierte E-Mail-Adressen (ObfuscatedEmail.razor): Der Link entsteht erst im Browser aus den rückwärts geschriebenen Teilen.
+(function () {
+  function reverse(text) {
+    return text.split('').reverse().join('');
+  }
+
+  function revealEmails() {
+    document.querySelectorAll('a.obfuscated-email[data-email-user]:not([href])').forEach(function (link) {
+      const address = reverse(link.dataset.emailUser) + '@' + reverse(link.dataset.emailDomain);
+      link.href = 'mail' + 'to:' + address;
+      link.textContent = address;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    revealEmails();
+    if (window.Blazor) {
+      window.Blazor.addEventListener('enhancedload', revealEmails);
+    }
+  });
+})();

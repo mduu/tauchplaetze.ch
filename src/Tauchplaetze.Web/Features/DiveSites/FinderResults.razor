@@ -1,0 +1,54 @@
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.DiveSites.Queries
+@using Tauchplaetze.Web.Features.Forecasts
+@inject IStringLocalizer<DiveSiteStrings> L
+
+<ul class="site-list">
+    @foreach (var site in Sites)
+    {
+        <li>
+            <div class="site-main">
+                <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
+                <span class="where">@Where(site)</span>
+                @if (Tags(site) is { Count: > 0 } tags)
+                {
+                    <span class="tags">@string.Join(" · ", tags)</span>
+                }
+                @if (site.NoticeToday is NoticeKind.Closure or NoticeKind.Warning)
+                {
+                    <span class="notice-badge" data-notice-kind="@site.NoticeToday.ToString()!.ToLowerInvariant()">@L[$"Notice_{site.NoticeToday}"]</span>
+                }
+            </div>
+            <div class="site-side">
+                <div class="index-today" data-index-band="@ForecastFormat.IndexBand(site.DiveIndexToday)" title="@L["Index_Today"]">
+                    @(site.DiveIndexToday is { } index ? ForecastFormat.Number(index) : "–")
+                </div>
+                @if (site.DistanceKm is { } km)
+                {
+                    <div class="distance">@ForecastFormat.Number((decimal)km) km</div>
+                }
+            </div>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<FoundDiveSite> Sites { get; set; } = [];
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private static string Where(FoundDiveSite site) =>
+        string.Join(" · ", new[] { site.Municipality is null ? null : $"{site.Municipality} {site.Canton}".Trim(), site.WaterBodyName }.OfType<string>());
+
+    private List<string> Tags(FoundDiveSite site)
+    {
+        var tags = site.Traits.Where(t => t is not SiteTrait.River).Select(t => L[$"Trait_{t}"].Value).ToList();
+        if (site.MaxDepth is { } depth)
+        {
+            tags.Add(L["Finder_Depth", depth]);
+        }
+
+        return tags;
+    }
+}

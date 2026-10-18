@@ -4,64 +4,215 @@
 @page "/it/siti-di-immersione"
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.DiveSites.Queries
-@using Tauchplaetze.Core.Features.WaterBodies
-@using Tauchplaetze.Core.Features.WaterBodies.Queries
-@using Tauchplaetze.Web.Features.Forecasts
-@inject IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> DiveSites
-@inject IQueryHandler<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>> WaterBodies
+@inject IQueryHandler<FindDiveSitesQuery, FoundDiveSites> Finder
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
+@inject NavigationManager Navigation
 
 <PageTitle>@L["Directory_Title"] · @Shared["Brand"]</PageTitle>
 <HeadContent>
     <meta name="description" content="@L["Directory_MetaDescription"]" />
+    <link rel="canonical" href="@Navigation.ToAbsoluteUri(BasePath)" />
 </HeadContent>
 <HreflangLinks />
 
-<section class="page-section">
+<section class="page-section finder-head">
     <h1 class="page-title">@L["Directory_Title"]</h1>
-    <p class="lead">@L["Directory_Lead"]</p>
+    <p class="lead">@L["Directory_Count", found.SiteCount, found.WaterBodyCount] @L["Directory_Lead"]</p>
 
-    <nav class="filter" aria-label="@L["Directory_Filter"]">
-        <a href="@Path(null)" aria-current="@(WaterBody is null ? "true" : null)">@L["Directory_Filter_All"]</a>
-        @foreach (var water in waterBodies)
+    <form method="get" action="@BasePath" class="finder-form" role="search" data-autosubmit>
+        <div class="search-row">
+            <label class="visually-hidden" for="finder-q">@L["Finder_Search_Label"]</label>
+            <input id="finder-q" type="search" name="q" value="@Q" placeholder="@L["Finder_Search_Placeholder"]" autocomplete="off" />
+            <button type="submit" class="search-submit">@L["Finder_Submit"]</button>
+            <button type="button" class="near-button" data-near hidden>@L["Finder_Near"]</button>
+        </div>
+
+        @if (HasLocation || Gewaesser is not null)
         {
-            <a href="@Path(water.Slug)" aria-current="@(WaterBody == water.Slug ? "true" : null)">@water.Name</a>
+            <div class="active-filters">
+                @if (HasLocation)
+                {
+                    <input type="hidden" name="lat" value="@Invariant(Lat!.Value)" />
+                    <input type="hidden" name="lng" value="@Invariant(Lng!.Value)" />
+                    <a class="active-chip" href="@Url(dropLocation: true)" aria-label="@L["Finder_Remove", L["Finder_Near_Active"]]">@L["Finder_Near_Active"] <span aria-hidden="true">×</span></a>
+                }
+                @if (Gewaesser is not null)
+                {
+                    <input type="hidden" name="gewaesser" value="@Gewaesser" />
+                    <a class="active-chip" href="@Url(dropWaterBody: true)" aria-label="@L["Finder_Remove", found.WaterBodyName ?? Gewaesser]">@(found.WaterBodyName ?? Gewaesser) <span aria-hidden="true">×</span></a>
+                }
+            </div>
         }
-    </nav>
+
+        <fieldset class="traits">
+            <legend class="visually-hidden">@L["Finder_Traits"]</legend>
+            @foreach (var trait in Enum.GetValues<SiteTrait>())
+            {
+                <label class="trait">
+                    <input type="checkbox" name="f" value="@TraitKey(trait)" checked="@Traits.Contains(trait)" />
+                    <span>@L[$"Trait_{trait}"]</span>
+                </label>
+            }
+        </fieldset>
+
+        <div class="sort-row">
+            <label for="finder-sort">@L["Finder_Sort"]</label>
+            <select id="finder-sort" name="sort">
+                <option value="index" selected="@(found.Sort == SiteSort.Index)">@L["Sort_Index"]</option>
+                <option value="name" selected="@(found.Sort == SiteSort.Name)">@L["Sort_Name"]</option>
+                @if (HasLocation)
+                {
+                    <option value="distance" selected="@(found.Sort == SiteSort.Distance)">@L["Sort_Distance"]</option>
+                }
+            </select>
+            <a class="browse" href="/@Language/@PublicRoutes.WaterBodies[Language]">@L["Finder_Browse"] →</a>
+        </div>
+    </form>
 </section>
 
-<section class="page-section">
-    <SiteMap Sites="sites" />
-</section>
+<section class="page-section finder" aria-labelledby="finder-results">
+    <input type="radio" name="finder-view" id="finder-view-list" class="view-radio" data-map-view checked />
+    <input type="radio" name="finder-view" id="finder-view-map" class="view-radio" data-map-view />
+    <div class="results-head">
+        <h2 id="finder-results" class="results-count">@(found.Total == 1 ? L["Finder_Results_One"] : L["Finder_Results", found.Total])</h2>
+        <div class="view-switch">
+            <label for="finder-view-list">@L["Finder_View_List"]</label>
+            <label for="finder-view-map">@L["Finder_View_Map"]</label>
+        </div>
+    </div>
 
-<section class="page-section">
-    @if (sites.Count == 0)
-    {
-        <p>@L["Directory_Empty"]</p>
-    }
-    else
-    {
-        <DiveSiteList Sites="sites" />
-    }
+    <div class="finder-layout">
+        <div class="finder-list">
+            @if (found.Total == 0)
+            {
+                <div class="empty">
+                    <p>@L["Finder_Empty"]</p>
+                    <p><a href="@BasePath">@L["Finder_Empty_Reset"]</a></p>
+                </div>
+            }
+            else
+            {
+                <FinderResults Sites="found.Sites" />
+                @if (found.PageCount > 1)
+                {
+                    <nav class="pager" aria-label="@L["Finder_Pages"]">
+                        @if (found.Page > 1)
+                        {
+                            <a href="@Url(page: found.Page - 1)" rel="prev">← @L["Finder_Previous"]</a>
+                        }
+                        <span>@L["Finder_Page", found.Page, found.PageCount]</span>
+                        @if (found.Page < found.PageCount)
+                        {
+                            <a href="@Url(page: found.Page + 1)" rel="next">@L["Finder_Next"] →</a>
+                        }
+                    </nav>
+                }
+            }
+        </div>
+        <div class="finder-map">
+            <SiteMap Sites="found.MapSites" Cluster="true" />
+        </div>
+    </div>
 </section>
 
 @code {
-    private IReadOnlyList<DiveSiteListItem> sites = [];
+    private static readonly Dictionary<string, SiteTrait> TraitKeys = new()
+    {
+        ["wall"] = SiteTrait.Wall,
+        ["wreck"] = SiteTrait.Wreck,
+        ["beginner"] = SiteTrait.Beginner,
+        ["training"] = SiteTrait.Training,
+        ["river"] = SiteTrait.River,
+        ["cave"] = SiteTrait.Cave,
+    };
 
-    private IReadOnlyList<WaterBodySummary> waterBodies = [];
+    private FoundDiveSites found = new([], 0, 1, 1, SiteSort.Index, [], 0, 0, null);
 
+    [SupplyParameterFromQuery(Name = "q")]
+    public string? Q { get; set; }
+
+    [SupplyParameterFromQuery(Name = "f")]
+    public string[]? F { get; set; }
+
+    [SupplyParameterFromQuery(Name = "sort")]
+    public string? SortKey { get; set; }
+
+    [SupplyParameterFromQuery(Name = "page")]
+    public int? PageNumber { get; set; }
+
+    [SupplyParameterFromQuery(Name = "lat")]
+    public double? Lat { get; set; }
+
+    [SupplyParameterFromQuery(Name = "lng")]
+    public double? Lng { get; set; }
+
+    /// <summary>Alter Filter nach Gewässer (`?gewaesser=slug`). Links von früher funktionieren weiter.</summary>
     [SupplyParameterFromQuery(Name = "gewaesser")]
-    public string? WaterBody { get; set; }
+    public string? Gewaesser { get; set; }
 
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
+    private static string BasePath => $"/{Language}/{PublicRoutes.DiveSites[Language]}";
+
+    private bool HasLocation => Lat is >= -90 and <= 90 && Lng is >= -180 and <= 180;
+
+    private HashSet<SiteTrait> Traits => [.. (F ?? []).Where(TraitKeys.ContainsKey).Select(k => TraitKeys[k])];
+
     protected override async Task OnInitializedAsync()
     {
-        waterBodies = await WaterBodies.Handle(new GetWaterBodiesQuery(Language));
-        sites = await DiveSites.Handle(new GetDiveSitesQuery(Language, WaterBody));
+        var sort = SortKey switch
+        {
+            "index" => SiteSort.Index,
+            "name" => SiteSort.Name,
+            "distance" => SiteSort.Distance,
+            _ => (SiteSort?)null,
+        };
+        found = await Finder.Handle(new FindDiveSitesQuery(
+            Language,
+            string.IsNullOrWhiteSpace(Q) ? null : Q.Trim(),
+            HasLocation ? Lat : null,
+            HasLocation ? Lng : null,
+            Traits: Traits,
+            WaterBodySlug: string.IsNullOrWhiteSpace(Gewaesser) ? null : Gewaesser,
+            Sort: sort,
+            Page: PageNumber ?? 1));
     }
 
-    private static string Path(string? waterBody) =>
-        waterBody is null ? $"/{Language}/{PublicRoutes.DiveSites[Language]}" : $"/{Language}/{PublicRoutes.DiveSites[Language]}?gewaesser={waterBody}";
+    private static string TraitKey(SiteTrait trait) => TraitKeys.First(k => k.Value == trait).Key;
+
+    private string Url(int? page = null, bool dropLocation = false, bool dropWaterBody = false)
+    {
+        var query = new List<KeyValuePair<string, string>>();
+        if (!string.IsNullOrWhiteSpace(Q))
+        {
+            query.Add(new("q", Q.Trim()));
+        }
+
+        query.AddRange(Traits.Select(t => new KeyValuePair<string, string>("f", TraitKey(t))));
+        if (SortKey is { Length: > 0 } sort && !(dropLocation && sort == "distance"))
+        {
+            query.Add(new("sort", sort));
+        }
+
+        if (HasLocation && !dropLocation)
+        {
+            query.Add(new("lat", Invariant(Lat!.Value)));
+            query.Add(new("lng", Invariant(Lng!.Value)));
+        }
+
+        if (Gewaesser is not null && !dropWaterBody)
+        {
+            query.Add(new("gewaesser", Gewaesser));
+        }
+
+        if (page is > 1)
+        {
+            query.Add(new("page", page.Value.ToString(CultureInfo.InvariantCulture)));
+        }
+
+        return query.Count == 0 ? BasePath : $"{BasePath}?{string.Join("&", query.Select(p => $"{p.Key}={Uri.EscapeDataString(p.Value)}"))}";
+    }
+
+    private static string Invariant(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 }

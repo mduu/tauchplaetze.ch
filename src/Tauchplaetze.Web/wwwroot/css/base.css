@@ -49,6 +49,18 @@ a:hover {
   outline-offset: 3px;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .skip-link {
   position: absolute;
   left: var(--space-gutter);
@@ -669,4 +681,19 @@ a:hover {
 .revision-photo-meta {
   width: 100%;
   color: var(--color-text-subtle);
+}
+
+/* Gruppen auf der Karte des Verzeichnisses (Leaflet.markercluster). */
+.map-cluster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-bg);
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-bg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }

@@ -81,10 +81,18 @@ Alle Angaben in den Abschnitten 4 bis 7 sind optional (siehe `dive-site.md`). Ei
 
 ### Verzeichnis
 
-- Liste und Karte nebeneinander (Desktop), umschaltbar (Handy).
-- Filter: See, Datenstufe, Schwierigkeit (Einsteiger, Fortgeschrittene, Erfahrene), Zugang, Eigenschaften (Wand und Wrack ab Bewertung 3, Fluss …).
-- Jede Zeile zeigt den heutigen Index als kleinen Wert.
-- Gilt heute eine Sperrung oder Warnung, trägt die Zeile ein Badge «Gesperrt» bzw. «Warnung».
+Die Seite «Tauchplätze» ist der **Finder**: «Welcher Platz passt zu mir, oder wo ist der Platz XY?» Sie grenzt sich ab von der Prognose («Wo tauche ich heute?», Rangliste nach Index) und von der Gewässer-Übersicht («Was ist los an meinem See?», Stöbern nach See).
+
+- **Kopf:** Titel, «{n} Plätze an {m} Gewässern», ein Satz zur Suche.
+- **Suche:** ein Feld für Name, Gemeinde und Gewässer (alle Sprachen, ohne Gross-/Kleinschreibung, Umlaute und Akzente: «zurich» findet «Zürichsee»). Ein GET-Formular, die Seite bleibt Static SSR.
+- **In meiner Nähe:** Knopf nur mit JavaScript und Standort im Browser. Die Koordinate kommt auf zwei Dezimalen gerundet (rund 1 km) in die URL (`lat`, `lng`). Die Liste sortiert dann nach Distanz und zeigt sie. Ein Chip «In deiner Nähe ×» entfernt den Standort.
+- **Eigenschaften als Chips:** Steilwand (Bewertung ≥ 3), Wrack (Wracks ≥ 3), Einsteiger (Schwierigkeit ≤ 2), Ausbildung, Fluss, Höhle. Mehrere gelten zusammen. Mit JavaScript schickt ein Klick das Formular gleich ab.
+- **Sortierung:** Index heute (ohne Index am Ende), alphabetisch, mit Standort Distanz.
+- **Liste:** 30 Plätze pro Seite mit Name, Gemeinde · Gewässer, Eigenschaften und Tiefe, Index heute, Distanz (mit Standort), Badge «Gesperrt» oder «Warnung». Seitenlinks behalten Suche und Filter.
+- **Karte:** alle Treffer, nahe Plätze als Gruppe mit Anzahl (Leaflet.markercluster). Desktop rechts neben der Liste und beim Scrollen sichtbar, schmal per Umschalter «Liste | Karte».
+- **Leer:** «Keine Plätze gefunden» mit Link «Suche ohne Filter».
+- **Gewässer:** keine Pillen mehr. Link «Nach Gewässer stöbern» zur Gewässer-Übersicht. Alte Links mit `?gewaesser={slug}` filtern weiter auf das Gewässer und zeigen es als entfernbaren Chip.
+- URL-Parameter: `q`, `f` (mehrfach: `wall`, `wreck`, `beginner`, `training`, `river`, `cave`), `sort` (`index`, `name`, `distance`), `page`, `lat`, `lng`, `gewaesser`.
 
 ### Gewässer-Übersicht
 
