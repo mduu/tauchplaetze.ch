@@ -27,19 +27,6 @@
   <data name="Start_CrossSection_Label" xml:space="preserve"><value>Querschnitt durch einen See: wärmere Oberflächenschicht, Sprungschicht, darunter kälteres und klareres Wasser</value></data>
   <data name="Start_CrossSection_Thermocline" xml:space="preserve"><value>Sprungschicht</value></data>
   <data name="Start_CrossSection_Clearer" xml:space="preserve"><value>darunter oft klarer</value></data>
-  <data name="How_Title" xml:space="preserve"><value>Keine Meldungen nötig. Der See verrät es selbst.</value></data>
-  <data name="How_Model_Label" xml:space="preserve"><value>01 · Seemodell</value></data>
-  <data name="How_Model_Title" xml:space="preserve"><value>Temperatur in jeder Tiefe</value></data>
-  <data name="How_Model_Text" xml:space="preserve"><value>Seemodelle der Eawag rechnen bis vier Tage voraus, wie warm es auf 0, 10, 20 und 30 m ist und wo die Sprungschicht liegt.</value></data>
-  <data name="How_Satellite_Label" xml:space="preserve"><value>02 · Satellit</value></data>
-  <data name="How_Satellite_Title" xml:space="preserve"><value>Klarheit und Algen</value></data>
-  <data name="How_Satellite_Text" xml:space="preserve"><value>Satellitenbilder zeigen ein- bis zweimal pro Woche, wie klar die Oberfläche ist und ob sich Algen ausbreiten.</value></data>
-  <data name="How_Weather_Label" xml:space="preserve"><value>03 · Wetter und Zuflüsse</value></data>
-  <data name="How_Weather_Title" xml:space="preserve"><value>Wind, Regen, Abfluss</value></data>
-  <data name="How_Weather_Text" xml:space="preserve"><value>Starker Regen trübt die Zuflüsse, Wind wühlt das Ufer auf. Beides fliesst in den Index ein.</value></data>
-  <data name="How_Community_Label" xml:space="preserve"><value>04 · Community (Bonus)</value></data>
-  <data name="How_Community_Title" xml:space="preserve"><value>Meldungen schärfen das Modell</value></data>
-  <data name="How_Community_Text" xml:space="preserve"><value>Wer nach dem Tauchgang die Sicht meldet, verbessert die Prognose. Nötig ist es nicht.</value></data>
   <data name="Footer_Note" xml:space="preserve"><value>Prognosen sind Indikatoren, Angaben ohne Gewähr. Tauche nie allein und innerhalb deiner Ausbildung.</value></data>
   <data name="Footer_Emergency" xml:space="preserve"><value>Notfall: Sanität 144 · Rega 1414</value></data>
   <data name="Nav_Label" xml:space="preserve"><value>Hauptnavigation</value></data>
@@ -47,4 +34,9 @@
   <data name="Nav_DiveSites" xml:space="preserve"><value>Tauchplätze</value></data>
   <data name="Nav_WaterBodies" xml:space="preserve"><value>Gewässer</value></data>
   <data name="Footer_Osm" xml:space="preserve"><value>Tauchplätze teilweise aus OpenStreetMap: © OpenStreetMap-Mitwirkende, ODbL</value></data>
+  <data name="Start_HowLink" xml:space="preserve"><value>So entsteht die Prognose</value></data>
+  <data name="Footer_About" xml:space="preserve"><value>Über</value></data>
+  <data name="Footer_Imprint" xml:space="preserve"><value>Impressum</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Datenschutz</value></data>
+  <data name="Footer_Links" xml:space="preserve"><value>Über die Website</value></data>
 </root>

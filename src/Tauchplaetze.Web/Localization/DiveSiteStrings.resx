@@ -203,4 +203,5 @@
   <data name="Finder_Next" xml:space="preserve"><value>Weiter</value></data>
   <data name="Finder_Depth" xml:space="preserve"><value>bis {0} m</value></data>
   <data name="Directory_Empty" xml:space="preserve"><value>Noch keine Tauchplätze.</value></data>
+  <data name="DirectoryOnly_Write" xml:space="preserve"><value>Schreib uns.</value></data>
 </root>

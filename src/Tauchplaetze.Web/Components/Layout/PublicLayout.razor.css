@@ -56,6 +56,12 @@
     color: inherit;
 }
 
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+}
+
 .header-tools {
     display: flex;
     align-items: center;

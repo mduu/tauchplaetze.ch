@@ -27,19 +27,6 @@
   <data name="Start_CrossSection_Label" xml:space="preserve"><value>Sezione di un lago: strato superficiale più caldo, termoclino, sotto acqua più fredda e più limpida</value></data>
   <data name="Start_CrossSection_Thermocline" xml:space="preserve"><value>Termoclino</value></data>
   <data name="Start_CrossSection_Clearer" xml:space="preserve"><value>spesso più limpido sotto</value></data>
-  <data name="How_Title" xml:space="preserve"><value>Nessuna segnalazione necessaria. Il lago lo dice da sé.</value></data>
-  <data name="How_Model_Label" xml:space="preserve"><value>01 · Modello del lago</value></data>
-  <data name="How_Model_Title" xml:space="preserve"><value>La temperatura a ogni profondità</value></data>
-  <data name="How_Model_Text" xml:space="preserve"><value>I modelli dei laghi dell'Eawag calcolano fino a quattro giorni prima la temperatura a 0, 10, 20 e 30 m e dove si trova il termoclino.</value></data>
-  <data name="How_Satellite_Label" xml:space="preserve"><value>02 · Satellite</value></data>
-  <data name="How_Satellite_Title" xml:space="preserve"><value>Limpidezza e alghe</value></data>
-  <data name="How_Satellite_Text" xml:space="preserve"><value>Una o due volte alla settimana le immagini satellitari mostrano quanto è limpida la superficie e se le alghe si diffondono.</value></data>
-  <data name="How_Weather_Label" xml:space="preserve"><value>03 · Meteo e immissari</value></data>
-  <data name="How_Weather_Title" xml:space="preserve"><value>Vento, pioggia, portata</value></data>
-  <data name="How_Weather_Text" xml:space="preserve"><value>La pioggia forte intorbida gli immissari, il vento smuove la riva. Entrambi entrano nell'indice.</value></data>
-  <data name="How_Community_Label" xml:space="preserve"><value>04 · Community (bonus)</value></data>
-  <data name="How_Community_Title" xml:space="preserve"><value>Le segnalazioni affinano il modello</value></data>
-  <data name="How_Community_Text" xml:space="preserve"><value>Segnalare la visibilità dopo l'immersione migliora la previsione. Non è obbligatorio.</value></data>
   <data name="Footer_Note" xml:space="preserve"><value>Le previsioni sono indicatori, senza garanzia. Non immergerti mai da solo e resta nei limiti della tua formazione.</value></data>
   <data name="Footer_Emergency" xml:space="preserve"><value>Emergenza: ambulanza 144 · Rega 1414</value></data>
   <data name="Nav_Label" xml:space="preserve"><value>Navigazione principale</value></data>
@@ -47,4 +34,9 @@
   <data name="Nav_DiveSites" xml:space="preserve"><value>Siti d'immersione</value></data>
   <data name="Nav_WaterBodies" xml:space="preserve"><value>Acque</value></data>
   <data name="Footer_Osm" xml:space="preserve"><value>Siti d’immersione in parte da OpenStreetMap: © collaboratori di OpenStreetMap, ODbL</value></data>
+  <data name="Start_HowLink" xml:space="preserve"><value>Come nasce la previsione</value></data>
+  <data name="Footer_About" xml:space="preserve"><value>Chi siamo</value></data>
+  <data name="Footer_Imprint" xml:space="preserve"><value>Note legali</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Protezione dei dati</value></data>
+  <data name="Footer_Links" xml:space="preserve"><value>Informazioni sul sito</value></data>
 </root>

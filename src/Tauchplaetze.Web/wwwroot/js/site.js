@@ -144,25 +144,3 @@
     }
   });
 })();
-
-// Verschleierte E-Mail-Adressen (ObfuscatedEmail.razor): Der Link entsteht erst im Browser aus den rückwärts geschriebenen Teilen.
-(function () {
-  function reverse(text) {
-    return text.split('').reverse().join('');
-  }
-
-  function revealEmails() {
-    document.querySelectorAll('a.obfuscated-email[data-email-user]:not([href])').forEach(function (link) {
-      const address = reverse(link.dataset.emailUser) + '@' + reverse(link.dataset.emailDomain);
-      link.href = 'mail' + 'to:' + address;
-      link.textContent = address;
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function () {
-    revealEmails();
-    if (window.Blazor) {
-      window.Blazor.addEventListener('enhancedload', revealEmails);
-    }
-  });
-})();

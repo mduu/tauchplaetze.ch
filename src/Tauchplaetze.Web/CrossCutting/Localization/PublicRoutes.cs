@@ -35,7 +35,22 @@ internal static class PublicRoutes
         ["it"] = "versioni",
     };
 
-    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions];
+    public static readonly IReadOnlyDictionary<string, string> About = new Dictionary<string, string>
+    {
+        ["de"] = "ueber",
+        ["en"] = "about",
+        ["fr"] = "a-propos",
+        ["it"] = "chi-siamo",
+    };
+
+    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions, About];
+
+    /// <summary>Die Seite «Über», optional mit Anker (`prognose`, `quellen`, `impressum`, `datenschutz`).</summary>
+    public static string AboutPage(string language, string? anchor = null) => $"/{language}/{About[language]}{(anchor is null ? "" : "#" + anchor)}";
+
+    /// <summary>Das Kontaktformular auf «Über», optional mit vorausgefülltem Bezug (z.B. Name eines Platzes).</summary>
+    public static string Contact(string language, string? reference = null) =>
+        $"/{language}/{About[language]}{(reference is null ? "" : "?bezug=" + Uri.EscapeDataString(reference))}#kontakt";
 
     public static string DiveSite(string language, string slug) => $"/{language}/{DiveSites[language]}/{slug}";
 

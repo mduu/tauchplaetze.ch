@@ -38,7 +38,7 @@ Mockup: `design/start.dc.html`.
 
 1. Kopf: Logo, Navigation, Sprachwahl.
 2. Titel als Frage, abhängig vom gewählten Tag («… heute?», «… am Sonntag?»).
-3. Kurzer Satz, woher die Prognose kommt.
+3. Kurzer Satz, woher die Prognose kommt, mit Link «So entsteht die Prognose» auf die Seite «Über» (`#prognose`).
 4. Tagesauswahl als Pillen (heute plus 4 Tage). Tage ohne Index tragen den Zusatz «Ausblick». Umkreis-Auswahl («60 km ab Zürich · ändern»). Ohne gewählten Ort: «ganze Schweiz · Ort wählen».
 5. **Beste Wahl** (grosse Karte):
    - Seequerschnitt als Illustration mit Oberflächentemperatur, Temperatur auf 20 m und Sprungschicht.
@@ -48,12 +48,26 @@ Mockup: `design/start.dc.html`.
    - Aktionen: «Zum Tauchplatz», «Buddy für {See} finden».
 6. **Rangliste im Umkreis:** Rang, Name (Link), Ort · See, Balken, Index, Begründung.
 7. Hinweis: «Der Index ist ein Indikator …».
-8. «Keine Meldungen nötig. Der See verrät es selbst.»: vier Schritte (Seemodell, Satellit, Wetter und Zuflüsse, Community als Bonus).
-9. Seen im Überblick: Kachel pro See mit Temperatur, Mini-Verlauf der Klarheit und Trendtext.
-10. Buddy-Block (Akzentfarbe): Links zu den WhatsApp-Gruppen.
-11. Fuss: Datenquellen, Hinweis «Tauche nie allein», Notfallnummern.
+8. Seen im Überblick: Kachel pro See mit Temperatur, Mini-Verlauf der Klarheit und Trendtext.
+9. Buddy-Block (Akzentfarbe): Links zu den WhatsApp-Gruppen.
+10. Fuss: Datenquellen, Hinweis «Tauche nie allein», Notfallnummern, Links «Über · Impressum · Datenschutz».
+
+Die vier Schritte «Keine Meldungen nötig. Der See verrät es selbst.» stehen seit dem 18.10.2026 auf der Seite «Über» (Entscheid Marc): Die Startseite gibt zuerst die Antwort, die Erklärung ist für Neue.
 
 Tagesauswahl und Umkreis ändern die URL (`?date=`, `?lat=&lng=&r=`). Die Seite bleibt Static SSR.
+
+### Über
+
+Pfad `/de/ueber`, `/en/about`, `/fr/a-propos`, `/it/chi-siamo`. Nicht in der Hauptnavigation, sondern im Fuss («Über · Impressum · Datenschutz») und als Link von der Startseite. Abschnitte mit Ankern:
+
+1. **So entsteht die Prognose** (`#prognose`): die vier Schritte (Seemodell, Satellit, Wetter und Zuflüsse, Community als Bonus), die Datenstufen 3 bis 1 kurz erklärt, Hinweis «Der Index ist ein Indikator».
+2. **Datenquellen** (`#quellen`): Eawag Alplakes, MeteoSchweiz über Open-Meteo, BAFU Hydrodaten über existenz.ch, swisstopo (Landeskarte, Luftbild, swissBATHY3D), OpenStreetMap (ODbL), je mit Link und Lizenz (`data-sources.md`).
+3. **Impressum** (`#impressum`): Betreiber (Name, Adresse) aus `Operator:*` (`infrastructure.md`), Kontakt über das Formular, Haftungshinweis. Fehlen Name oder Adresse: «Angaben folgen».
+4. **Kontakt** (`#kontakt`): Formular mit Name (optional), E-Mail für die Antwort (Pflicht), Bezug (optional) und Nachricht (10–4000 Zeichen). Der Command `SendContactMessage` schickt sie per Mail an `Operator:Email`, Antwort an die Absenderin (Reply-To), Betreff «tauchplaetze.ch Kontakt: …». Die Nachricht wird nicht gespeichert. Nach dem Senden Redirect mit «Danke!» (`?kontakt=gesendet`). Plätze der Stufe 0 verlinken mit «Schreib uns.» auf das Formular, Bezug vorausgefüllt (`?bezug={Name}`).
+   - **Schutz:** Honeypot (Feld «Website», per CSS ausserhalb des Bildschirms, `aria-hidden`, `tabindex=-1`), Zeitfalle (Zeitstempel mit Data Protection signiert, unter 3 s oder über 6 h ungültig), Rate Limit 5 POST pro Stunde und IP (nur im Arbeitsspeicher). Honeypot oder zu schnell: Die Seite meldet «gesendet», sendet aber nichts.
+5. **Datenschutz** (`#datenschutz`): Besuch, Speicherort, Konto, Beiträge und Fotos, Kontaktformular, Standort und Karten, Routen, Rechte («Meine Daten», «Konto löschen»), Verweis auf das Formular.
+
+Die E-Mail-Adresse des Betreibers erscheint nirgends auf der Website, auch nicht verschleiert (Entscheid Marc, 18.10.2026).
 
 ### Tauchplatzseite
 

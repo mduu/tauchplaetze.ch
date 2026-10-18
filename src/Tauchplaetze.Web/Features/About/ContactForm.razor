@@ -1,0 +1,131 @@
+@using Microsoft.AspNetCore.DataProtection
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Contact.Commands
+@inject ICommandHandler<SendContactMessageCommand, ContactResult> SendMessage
+@inject IDataProtectionProvider Protection
+@inject IStringLocalizer<AboutStrings> L
+@inject NavigationManager Navigation
+@inject TimeProvider Time
+
+@if (Status == ContactStatus.Sent)
+{
+    <p class="contact-message" role="status">@L["Contact_Sent"]</p>
+}
+else
+{
+    @if (errors.Count > 0)
+    {
+        <ul class="contact-errors" role="alert">
+            @foreach (var error in errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    }
+
+    <EditForm Model="Input" FormName="contact" OnSubmit="Submit" class="form contact-form">
+        <input type="hidden" name="Input.Stamp" value="@Stamp" />
+        <label>@L["Contact_Name"] <InputText autocomplete="name" maxlength="@ContactRules.MaxName" @bind-Value="Input!.Name" /></label>
+        <label>@L["Contact_Email"] <InputText type="email" autocomplete="email" required maxlength="@ContactRules.MaxEmail" @bind-Value="Input!.Email" /></label>
+        <label>@L["Contact_Reference"] <InputText maxlength="@ContactRules.MaxReference" @bind-Value="Input!.Reference" /></label>
+        <label>@L["Contact_Message"] <InputTextArea required rows="7" minlength="@ContactRules.MinMessage" maxlength="@ContactRules.MaxMessage" @bind-Value="Input!.Message" /></label>
+        <label class="contact-trap" aria-hidden="true">@L["Contact_Trap"] <InputText tabindex="-1" autocomplete="off" @bind-Value="Input!.Website" /></label>
+        <button type="submit" class="button">@L["Contact_Submit"]</button>
+    </EditForm>
+}
+
+@code {
+    /// <summary>Name der Policy für das Rate Limit (5 Nachrichten pro Stunde und IP, `Program.cs`).</summary>
+    public const string RateLimitPolicy = "contact";
+
+    private static readonly TimeSpan MinFillTime = TimeSpan.FromSeconds(3);
+
+    private static readonly TimeSpan MaxFillTime = TimeSpan.FromHours(6);
+
+    private IReadOnlyList<string> errors = [];
+
+    [Parameter]
+    public ContactStatus Status { get; set; }
+
+    [Parameter]
+    public string? Reference { get; set; }
+
+    [Parameter, EditorRequired]
+    public string SentUrl { get; set; } = "";
+
+    [SupplyParameterFromForm(FormName = "contact")]
+    private ContactInput? Input { get; set; }
+
+    private IDataProtector Protector => Protection.CreateProtector("Tauchplaetze.ContactForm.Stamp");
+
+    private string Stamp => Protector.Protect(Time.GetUtcNow().UtcTicks.ToString(CultureInfo.InvariantCulture));
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override void OnInitialized()
+    {
+        Input ??= new ContactInput { Reference = Reference };
+        if (Status == ContactStatus.Limited)
+        {
+            errors = [L["Contact_Error_Limit"]];
+        }
+    }
+
+    /// <remarks>
+    /// Honeypot und Zeitfalle schützen den Transport: Ein Bot füllt das versteckte Feld oder sendet in unter 3 s. Er sieht trotzdem «gesendet» und lernt nichts.
+    /// Die Inhalte prüft der Core.
+    /// </remarks>
+    private async Task Submit()
+    {
+        var age = AgeOf(Input!.Stamp);
+        if (!string.IsNullOrEmpty(Input.Website) || age < MinFillTime)
+        {
+            Navigation.NavigateTo(SentUrl);
+            return;
+        }
+
+        if (age is null || age > MaxFillTime)
+        {
+            errors = [L["Contact_Error_Expired"]];
+            return;
+        }
+
+        var result = await SendMessage.Handle(new SendContactMessageCommand(Input.Name, Input.Email ?? "", Input.Message ?? "", Input.Reference, Language));
+        if (result.Succeeded)
+        {
+            Navigation.NavigateTo(SentUrl);
+            return;
+        }
+
+        errors = [.. result.Errors.Select(e => L[$"Contact_Error_{e}"].Value)];
+    }
+
+    private TimeSpan? AgeOf(string? stamp)
+    {
+        try
+        {
+            var ticks = long.Parse(Protector.Unprotect(stamp ?? ""), CultureInfo.InvariantCulture);
+            return Time.GetUtcNow() - new DateTimeOffset(ticks, TimeSpan.Zero);
+        }
+        catch (Exception exception) when (exception is System.Security.Cryptography.CryptographicException or FormatException)
+        {
+            return null;
+        }
+    }
+
+    private sealed class ContactInput
+    {
+        public string? Name { get; set; }
+
+        public string? Email { get; set; }
+
+        public string? Reference { get; set; }
+
+        public string? Message { get; set; }
+
+        public string? Stamp { get; set; }
+
+        /// <summary>Honeypot: Menschen sehen das Feld nicht und lassen es leer.</summary>
+        public string? Website { get; set; }
+    }
+}

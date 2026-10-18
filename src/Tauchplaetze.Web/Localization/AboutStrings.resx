@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="How_Title" xml:space="preserve"><value>Keine Meldungen nötig. Der See verrät es selbst.</value></data>
+  <data name="How_Model_Label" xml:space="preserve"><value>01 · Seemodell</value></data>
+  <data name="How_Model_Title" xml:space="preserve"><value>Temperatur in jeder Tiefe</value></data>
+  <data name="How_Model_Text" xml:space="preserve"><value>Seemodelle der Eawag rechnen bis vier Tage voraus, wie warm es auf 0, 10, 20 und 30 m ist und wo die Sprungschicht liegt.</value></data>
+  <data name="How_Satellite_Label" xml:space="preserve"><value>02 · Satellit</value></data>
+  <data name="How_Satellite_Title" xml:space="preserve"><value>Klarheit und Algen</value></data>
+  <data name="How_Satellite_Text" xml:space="preserve"><value>Satellitenbilder zeigen ein- bis zweimal pro Woche, wie klar die Oberfläche ist und ob sich Algen ausbreiten.</value></data>
+  <data name="How_Weather_Label" xml:space="preserve"><value>03 · Wetter und Zuflüsse</value></data>
+  <data name="How_Weather_Title" xml:space="preserve"><value>Wind, Regen, Abfluss</value></data>
+  <data name="How_Weather_Text" xml:space="preserve"><value>Starker Regen trübt die Zuflüsse, Wind wühlt das Ufer auf. Beides fliesst in den Index ein.</value></data>
+  <data name="How_Community_Label" xml:space="preserve"><value>04 · Community (Bonus)</value></data>
+  <data name="How_Community_Title" xml:space="preserve"><value>Meldungen schärfen das Modell</value></data>
+  <data name="How_Community_Text" xml:space="preserve"><value>Wer nach dem Tauchgang die Sicht meldet, verbessert die Prognose. Nötig ist es nicht.</value></data>
+  <data name="About_Title" xml:space="preserve"><value>Über tauchplaetze.ch</value></data>
+  <data name="About_MetaDescription" xml:space="preserve"><value>Wie die Tauchprognose entsteht, welche Datenquellen wir nutzen, Impressum und Datenschutz von tauchplaetze.ch.</value></data>
+  <data name="About_Lead" xml:space="preserve"><value>Ein nicht kommerzielles Projekt von Tauchern für alle, die in Schweizer Seen und Flüssen tauchen. Ohne Werbung und ohne Tracking.</value></data>
+  <data name="About_Nav_Label" xml:space="preserve"><value>Inhalt dieser Seite</value></data>
+  <data name="About_Forecast_Title" xml:space="preserve"><value>So entsteht die Prognose</value></data>
+  <data name="About_Forecast_Lead" xml:space="preserve"><value>Keine Meldungen nötig: Der See verrät es selbst. Ein Job holt zweimal täglich die Daten aus vier Quellen und rechnet für jeden Platz den Tauch-Index für fünf Tage.</value></data>
+  <data name="About_Levels_Title" xml:space="preserve"><value>Wie genau ist die Prognose?</value></data>
+  <data name="About_Levels_Lead" xml:space="preserve"><value>Jeder Platz hat eine Datenstufe. Sie zeigt, wie nah die Daten am Platz sind.</value></data>
+  <data name="About_Level_3" xml:space="preserve"><value>Genau: Temperaturprofil am Platz aus dem 3D-Seemodell der Eawag.</value></data>
+  <data name="About_Level_2" xml:space="preserve"><value>Gewässer: Profil für den ganzen See aus dem 1D-Modell, bei Flüssen eine Messstation des BAFU.</value></data>
+  <data name="About_Level_1" xml:space="preserve"><value>Wetter: nur Wind und Regen am Platz. Einen Index gibt es dann nur mit einem Satellitenbild.</value></data>
+  <data name="About_Index_Note" xml:space="preserve"><value>Der Tauch-Index (0 bis 10) ist ein Indikator, keine Garantie für die Sicht. Prüfe die Bedingungen vor Ort, und tauche nie allein.</value></data>
+  <data name="About_Sources_Title" xml:space="preserve"><value>Datenquellen</value></data>
+  <data name="About_Sources_Lead" xml:space="preserve"><value>Wir zeigen alle Daten mit Quellenangabe. Die Seiten lesen nur unsere eigene Datenbank, die Quellen fragt allein der Job ab.</value></data>
+  <data name="About_Source_Alplakes_Name" xml:space="preserve"><value>Eawag Alplakes</value></data>
+  <data name="About_Source_Alplakes_Text" xml:space="preserve"><value>Seemodelle (3D und 1D) mit der Temperatur in der Tiefe, dazu Satellitendaten zu Sichttiefe und Algen. © Eawag.</value></data>
+  <data name="About_Source_Weather_Name" xml:space="preserve"><value>MeteoSchweiz über Open-Meteo</value></data>
+  <data name="About_Source_Weather_Text" xml:space="preserve"><value>Wettermodelle ICON-CH1 und ICON-CH2 von MeteoSchweiz (Open Government Data) und ICON des DWD, abgerufen über Open-Meteo (CC BY 4.0).</value></data>
+  <data name="About_Source_Hydro_Name" xml:space="preserve"><value>BAFU Hydrodaten</value></data>
+  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Abfluss und Wassertemperatur der Messstationen des Bundesamts für Umwelt, abgerufen über existenz.ch. Open Government Data mit Quellenangabe.</value></data>
+  <data name="About_Source_Swisstopo_Name" xml:space="preserve"><value>swisstopo</value></data>
+  <data name="About_Source_Swisstopo_Text" xml:space="preserve"><value>Landeskarte, Luftbild (SWISSIMAGE) und Tiefendaten der Seen (swissBATHY3D) für die Tiefenlinien. Open Government Data, © swisstopo.</value></data>
+  <data name="About_Source_Osm_Name" xml:space="preserve"><value>OpenStreetMap</value></data>
+  <data name="About_Source_Osm_Text" xml:space="preserve"><value>Grundbestand der Tauchplätze mit Name, Lage und einigen Angaben. © OpenStreetMap-Mitwirkende, Open Database License (ODbL). Die übernommenen Daten stehen ebenfalls unter der ODbL.</value></data>
+  <data name="About_Imprint_Title" xml:space="preserve"><value>Impressum</value></data>
+  <data name="About_Imprint_Operator" xml:space="preserve"><value>Betrieb</value></data>
+  <data name="About_Imprint_Contact" xml:space="preserve"><value>Kontakt</value></data>
+  <data name="About_Imprint_Pending" xml:space="preserve"><value>Angaben folgen.</value></data>
+  <data name="About_Imprint_Liability" xml:space="preserve"><value>Alle Angaben ohne Gewähr. Die Prognose ist ein Indikator, Tauchen geschieht auf eigene Verantwortung. Für verlinkte Seiten sind deren Betreiber verantwortlich.</value></data>
+  <data name="About_Privacy_Title" xml:space="preserve"><value>Datenschutz</value></data>
+  <data name="About_Privacy_Lead" xml:space="preserve"><value>Wir bearbeiten so wenig Personendaten wie möglich, nach dem Schweizer Datenschutzgesetz (DSG).</value></data>
+  <data name="About_Privacy_Visit_Title" xml:space="preserve"><value>Besuch der Website</value></data>
+  <data name="About_Privacy_Visit_Text" xml:space="preserve"><value>Für den Besuch brauchst du kein Konto. Wir setzen keine Tracking- oder Werbe-Cookies. Zur Fehlersuche erfassen wir Betriebsdaten (aufgerufene Adresse, Zeit, Fehler) mit Microsoft Azure Application Insights, ohne IP-Adresse, und löschen sie nach 30 Tagen.</value></data>
+  <data name="About_Privacy_Hosting_Title" xml:space="preserve"><value>Wo die Daten liegen</value></data>
+  <data name="About_Privacy_Hosting_Text" xml:space="preserve"><value>Website, Datenbank und Fotos liegen bei Microsoft Azure in der Region Schweiz Nord. Cloudflare liefert Seiten und Bilder aus und schützt vor Angriffen. Dabei verarbeitet Cloudflare deine IP-Adresse. Cloudflare ist ein Unternehmen mit Sitz in den USA, die Daten können dabei auch ausserhalb der Schweiz bearbeitet werden.</value></data>
+  <data name="About_Privacy_Account_Title" xml:space="preserve"><value>Konto</value></data>
+  <data name="About_Privacy_Account_Text" xml:space="preserve"><value>Ein Konto braucht nur, wer beiträgt: E-Mail-Adresse, Anzeigename und das Passwort als Hash. Die Anmeldung nutzt ein technisch nötiges Cookie, Formulare ein Cookie zum Schutz vor Missbrauch. Mails zur Bestätigung und zum Zurücksetzen des Passworts gehen nur an dich.</value></data>
+  <data name="About_Privacy_Contributions_Title" xml:space="preserve"><value>Beiträge und Fotos</value></data>
+  <data name="About_Privacy_Contributions_Text" xml:space="preserve"><value>Änderungen stehen in den Versionen eines Platzes, mit deinem Namen nur, wenn du zustimmst. Fotos zeigen wir mit dem Namen des Fotografen. Die öffentlichen Bildgrössen enthalten keine GPS- und Kameradaten, das Original bleibt privat.</value></data>
+  <data name="About_Privacy_Location_Title" xml:space="preserve"><value>Standort und Karten</value></data>
+  <data name="About_Privacy_Location_Text" xml:space="preserve"><value>«In meiner Nähe» fragt deinen Standort im Browser ab. Die Koordinate steht nur in der Adresse der Suche und kann so in den Betriebsdaten erscheinen. Wir werten sie nicht aus und speichern sie nicht in einem Konto. Kartenkacheln lädt dein Browser direkt bei swisstopo (geo.admin.ch), swisstopo sieht dabei deine IP-Adresse. Die Wahl Karte oder Luftbild merkt sich dein Browser.</value></data>
+  <data name="About_Privacy_Routes_Title" xml:space="preserve"><value>Routen</value></data>
+  <data name="About_Privacy_Routes_Text" xml:space="preserve"><value>Die Links zu Google Maps und Apple Karten übermitteln die Koordinate des Platzes erst, wenn du darauf klickst.</value></data>
+  <data name="About_Privacy_Rights_Title" xml:space="preserve"><value>Deine Rechte</value></data>
+  <data name="About_Privacy_Rights_Text" xml:space="preserve"><value>Unter «Meine Daten» siehst du alle Daten zu deinem Konto und lädst sie herunter. Unter «Konto löschen» löschst du dein Konto: Private Fotos und alle Originale werden gelöscht, Versionen bleiben ohne Namen. Fragen und Anfragen ohne Konto über das</value></data>
+  <data name="About_Contact_Title" xml:space="preserve"><value>Kontakt</value></data>
+  <data name="About_Contact_Lead" xml:space="preserve"><value>Fragen, Korrekturen oder ein Platz, den wir noch nicht kennen? Schreib uns. Die Nachricht geht per E-Mail an den Betreiber und wird nicht gespeichert.</value></data>
+  <data name="About_Imprint_ContactForm" xml:space="preserve"><value>Kontaktformular</value></data>
+  <data name="Contact_Name" xml:space="preserve"><value>Dein Name (optional)</value></data>
+  <data name="Contact_Email" xml:space="preserve"><value>Deine E-Mail-Adresse für die Antwort</value></data>
+  <data name="Contact_Reference" xml:space="preserve"><value>Bezug (optional, z.B. Name des Platzes)</value></data>
+  <data name="Contact_Message" xml:space="preserve"><value>Nachricht</value></data>
+  <data name="Contact_Submit" xml:space="preserve"><value>Senden</value></data>
+  <data name="Contact_Trap" xml:space="preserve"><value>Dieses Feld leer lassen</value></data>
+  <data name="Contact_Sent" xml:space="preserve"><value>Danke! Deine Nachricht ist unterwegs.</value></data>
+  <data name="Contact_Error_InvalidEmail" xml:space="preserve"><value>Bitte gib eine gültige E-Mail-Adresse an, damit wir antworten können.</value></data>
+  <data name="Contact_Error_InvalidMessage" xml:space="preserve"><value>Die Nachricht braucht 10 bis 4000 Zeichen.</value></data>
+  <data name="Contact_Error_TooLong" xml:space="preserve"><value>Name oder Bezug ist zu lang.</value></data>
+  <data name="Contact_Error_NotSent" xml:space="preserve"><value>Die Nachricht konnte nicht gesendet werden. Versuche es später nochmals.</value></data>
+  <data name="Contact_Error_Expired" xml:space="preserve"><value>Das Formular ist abgelaufen. Bitte sende die Nachricht nochmals.</value></data>
+  <data name="Contact_Error_Limit" xml:space="preserve"><value>Zu viele Nachrichten in kurzer Zeit. Versuche es in einer Stunde nochmals.</value></data>
+  <data name="About_Privacy_Contact_Title" xml:space="preserve"><value>Kontaktformular</value></data>
+  <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Name, E-Mail-Adresse und Nachricht gehen per E-Mail an den Betreiber und werden nicht in der Datenbank gespeichert. Gegen Missbrauch zählen wir die Nachrichten pro IP-Adresse eine Stunde lang im Arbeitsspeicher, ohne die Adresse zu speichern.</value></data>
+</root>

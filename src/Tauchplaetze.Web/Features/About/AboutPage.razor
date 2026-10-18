@@ -1,0 +1,144 @@
+@page "/de/ueber"
+@page "/en/about"
+@page "/fr/a-propos"
+@page "/it/chi-siamo"
+@using Microsoft.AspNetCore.RateLimiting
+@using Microsoft.Extensions.Options
+@attribute [EnableRateLimiting(ContactForm.RateLimitPolicy)]
+@inject IStringLocalizer<SharedStrings> Shared
+@inject IStringLocalizer<AboutStrings> L
+@inject IOptions<OperatorOptions> Operator
+
+<PageTitle>@L["About_Title"] · @Shared["Brand"]</PageTitle>
+<HeadContent>
+    <meta name="description" content="@L["About_MetaDescription"]" />
+</HeadContent>
+<HreflangLinks />
+
+<section class="page-section">
+    <h1 class="page-title">@L["About_Title"]</h1>
+    <p class="lead">@L["About_Lead"]</p>
+    <nav class="about-nav" aria-label="@L["About_Nav_Label"]">
+        <a href="#prognose">@L["About_Forecast_Title"]</a>
+        <a href="#quellen">@L["About_Sources_Title"]</a>
+        <a href="#impressum">@L["About_Imprint_Title"]</a>
+        <a href="#kontakt">@L["About_Contact_Title"]</a>
+        <a href="#datenschutz">@L["About_Privacy_Title"]</a>
+    </nav>
+</section>
+
+<section id="prognose" class="page-section" aria-labelledby="forecast-title">
+    <h2 id="forecast-title" class="about-title">@L["About_Forecast_Title"]</h2>
+    <p class="about-lead">@L["About_Forecast_Lead"]</p>
+    <div class="how-steps">
+        @foreach (var step in Steps)
+        {
+            <div class="how-step">
+                <div class="tile-label">@L[$"How_{step}_Label"]</div>
+                <h3>@L[$"How_{step}_Title"]</h3>
+                <p>@L[$"How_{step}_Text"]</p>
+            </div>
+        }
+    </div>
+
+    <h3 class="about-subtitle">@L["About_Levels_Title"]</h3>
+    <p>@L["About_Levels_Lead"]</p>
+    <ul class="about-list">
+        <li>@L["About_Level_3"]</li>
+        <li>@L["About_Level_2"]</li>
+        <li>@L["About_Level_1"]</li>
+    </ul>
+    <p class="callout about-note">@L["About_Index_Note"]</p>
+</section>
+
+<section id="quellen" class="page-section" aria-labelledby="sources-title">
+    <h2 id="sources-title" class="about-title">@L["About_Sources_Title"]</h2>
+    <p class="about-lead">@L["About_Sources_Lead"]</p>
+    <dl class="sources">
+        @foreach (var (key, url) in Sources)
+        {
+            <div class="source">
+                <dt><a href="@url" rel="noopener" target="_blank">@L[$"About_Source_{key}_Name"]</a></dt>
+                <dd>@L[$"About_Source_{key}_Text"]</dd>
+            </div>
+        }
+    </dl>
+</section>
+
+<section id="impressum" class="page-section" aria-labelledby="imprint-title">
+    <h2 id="imprint-title" class="about-title">@L["About_Imprint_Title"]</h2>
+    <div class="imprint">
+        <div>
+            <h3 class="about-label">@L["About_Imprint_Operator"]</h3>
+            @if (Operator.Value is { IsComplete: true } op)
+            {
+                <address>
+                    @op.Name<br />
+                    @foreach (var line in op.AddressLines)
+                    {
+                        @line<br />
+                    }
+                </address>
+            }
+            else
+            {
+                <p data-operator-missing>@L["About_Imprint_Pending"]</p>
+            }
+        </div>
+        <div>
+            <h3 class="about-label">@L["About_Imprint_Contact"]</h3>
+            <p><a href="#kontakt">@L["About_Imprint_ContactForm"]</a></p>
+        </div>
+    </div>
+    <p>@L["About_Imprint_Liability"]</p>
+</section>
+
+<section id="kontakt" class="page-section" aria-labelledby="contact-title">
+    <h2 id="contact-title" class="about-title">@L["About_Contact_Title"]</h2>
+    <p class="about-lead">@L["About_Contact_Lead"]</p>
+    <ContactForm Status="Status" Reference="@Reference" SentUrl="@SentUrl" />
+</section>
+
+<section id="datenschutz" class="page-section" aria-labelledby="privacy-title">
+    <h2 id="privacy-title" class="about-title">@L["About_Privacy_Title"]</h2>
+    <p class="about-lead">@L["About_Privacy_Lead"]</p>
+    @foreach (var topic in PrivacyTopics)
+    {
+        <h3 class="about-subtitle">@L[$"About_Privacy_{topic}_Title"]</h3>
+        <p>@L[$"About_Privacy_{topic}_Text"]</p>
+    }
+    <h3 class="about-subtitle">@L["About_Privacy_Rights_Title"]</h3>
+    <p>@L["About_Privacy_Rights_Text"] <a href="#kontakt">@L["About_Imprint_ContactForm"]</a>.</p>
+</section>
+
+@code {
+    private static readonly string[] Steps = ["Model", "Satellite", "Weather", "Community"];
+
+    private static readonly string[] PrivacyTopics = ["Visit", "Hosting", "Account", "Contributions", "Contact", "Location", "Routes"];
+
+    private static readonly (string Key, string Url)[] Sources =
+    [
+        ("Alplakes", "https://www.alplakes.eawag.ch"),
+        ("Weather", "https://open-meteo.com"),
+        ("Hydro", "https://www.hydrodaten.admin.ch"),
+        ("Swisstopo", "https://www.swisstopo.admin.ch"),
+        ("Osm", "https://www.openstreetmap.org/copyright"),
+    ];
+
+    [SupplyParameterFromQuery(Name = "bezug")]
+    public string? Reference { get; set; }
+
+    [SupplyParameterFromQuery(Name = "kontakt")]
+    public string? ContactState { get; set; }
+
+    private ContactStatus Status => ContactState switch
+    {
+        "gesendet" => ContactStatus.Sent,
+        "limit" => ContactStatus.Limited,
+        _ => ContactStatus.Open,
+    };
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private static string SentUrl => $"/{Language}/{PublicRoutes.About[Language]}?kontakt=gesendet#kontakt";
+}

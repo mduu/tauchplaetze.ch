@@ -1,0 +1,130 @@
+.about-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin-top: 20px;
+}
+
+.about-nav a {
+    color: var(--color-primary);
+}
+
+.about-title {
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -0.02em;
+}
+
+.about-lead {
+    max-width: 70ch;
+    color: var(--color-text-body);
+    font-size: 18px;
+    line-height: 1.55;
+}
+
+.about-subtitle {
+    margin-top: 28px;
+    font-size: 20px;
+}
+
+.about-label {
+    margin: 0 0 6px;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.page-section p,
+.about-list {
+    max-width: 70ch;
+    color: var(--color-text-body);
+    line-height: 1.6;
+}
+
+.about-list li {
+    margin: 6px 0;
+}
+
+.about-note {
+    margin-top: 20px;
+}
+
+.how-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 20px;
+    margin-top: 28px;
+}
+
+.how-step {
+    padding-top: 18px;
+    border-top: 2px solid var(--color-border-strong);
+}
+
+.how-step h3 {
+    margin-top: 10px;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+}
+
+.how-step p {
+    margin: 8px 0 0;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+}
+
+.sources {
+    display: grid;
+    gap: 18px;
+    max-width: 80ch;
+    margin: 24px 0 0;
+}
+
+.source dt a {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.source dd {
+    margin: 4px 0 0;
+    color: var(--color-text-body);
+    line-height: 1.55;
+}
+
+.imprint {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+address {
+    font-style: normal;
+    color: var(--color-text-body);
+    line-height: 1.6;
+}
+
+.contact-form {
+    max-width: 640px;
+}
+
+.contact-trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.contact-message {
+    padding: 14px 18px;
+    border-left: 3px solid var(--color-primary);
+    background: var(--color-surface);
+}
+
+.contact-errors {
+    color: var(--color-notice-closure);
+}

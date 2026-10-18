@@ -29,6 +29,11 @@
         <p>@L["Footer_Note"]</p>
         <p>@L["Footer_Emergency"]</p>
         <p><a href="https://www.openstreetmap.org/copyright" rel="noopener">@L["Footer_Osm"]</a></p>
+        <nav class="footer-links" aria-label="@L["Footer_Links"]">
+            <a href="@PublicRoutes.AboutPage(CurrentLanguage)">@L["Footer_About"]</a>
+            <a href="@PublicRoutes.AboutPage(CurrentLanguage, "impressum")">@L["Footer_Imprint"]</a>
+            <a href="@PublicRoutes.AboutPage(CurrentLanguage, "datenschutz")">@L["Footer_Privacy"]</a>
+        </nav>
     </div>
 </footer>
 

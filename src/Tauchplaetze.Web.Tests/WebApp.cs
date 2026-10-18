@@ -1,3 +1,4 @@
+using Tauchplaetze.Core.Features.Contact.Commands;
 using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +42,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<SignInCommand, SignInOutcome> SignIn { get; } = new(_ => new SignInOutcome(SignInStatus.Failed));
 
+    public FakeQuery<SendContactMessageCommand, ContactResult> Contact { get; } = new(_ => new ContactResult([]));
+
     public FakeQuery<GetPersonalDataQuery, PersonalData?> PersonalData { get; } = new(_ => null);
 
     public FakeQuery<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>> SitesForEditing { get; } = new(_ => []);
@@ -64,6 +67,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyGroupsQuery, IReadOnlyList<WaterBodyGroup>>>(WaterBodyGroups));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyQuery, WaterBodyDetails?>>(WaterBody));
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SignInCommand, SignInOutcome>>(SignIn));
+            services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SendContactMessageCommand, ContactResult>>(Contact));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPersonalDataQuery, PersonalData?>>(PersonalData));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>>(SitesForEditing));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPublicRevisionsQuery, PublicRevisions?>>(PublicRevisions));

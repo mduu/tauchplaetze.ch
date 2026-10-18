@@ -16,7 +16,7 @@
 <section class="intro">
     <p class="eyebrow">@L["Start_Eyebrow"]</p>
     <h1>@Title</h1>
-    <p class="lead">@L["Start_Lead"]</p>
+    <p class="lead">@L["Start_Lead"] <a class="how-link" href="@PublicRoutes.AboutPage(Language, "prognose")">@L["Start_HowLink"]</a></p>
 
     @if (best is not null)
     {
@@ -96,23 +96,8 @@
     }
 </section>
 
-<section class="page-section how" aria-labelledby="how">
-    <h2 id="how" class="how-title">@L["How_Title"]</h2>
-    <div class="how-steps">
-        @foreach (var step in Steps)
-        {
-            <div class="how-step">
-                <div class="tile-label">@L[$"How_{step}_Label"]</div>
-                <h3>@L[$"How_{step}_Title"]</h3>
-                <p>@L[$"How_{step}_Text"]</p>
-            </div>
-        }
-    </div>
-</section>
 
 @code {
-    private static readonly string[] Steps = ["Model", "Satellite", "Weather", "Community"];
-
     private BestSites? best;
 
     private Place? place;

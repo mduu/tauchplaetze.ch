@@ -27,19 +27,6 @@
   <data name="Start_CrossSection_Label" xml:space="preserve"><value>Cross-section of a lake: warmer surface layer, thermocline, colder and clearer water below</value></data>
   <data name="Start_CrossSection_Thermocline" xml:space="preserve"><value>Thermocline</value></data>
   <data name="Start_CrossSection_Clearer" xml:space="preserve"><value>often clearer below</value></data>
-  <data name="How_Title" xml:space="preserve"><value>No reports needed. The lake tells us itself.</value></data>
-  <data name="How_Model_Label" xml:space="preserve"><value>01 · Lake model</value></data>
-  <data name="How_Model_Title" xml:space="preserve"><value>Temperature at every depth</value></data>
-  <data name="How_Model_Text" xml:space="preserve"><value>Eawag lake models calculate up to four days ahead how warm it is at 0, 10, 20 and 30 m and where the thermocline lies.</value></data>
-  <data name="How_Satellite_Label" xml:space="preserve"><value>02 · Satellite</value></data>
-  <data name="How_Satellite_Title" xml:space="preserve"><value>Clarity and algae</value></data>
-  <data name="How_Satellite_Text" xml:space="preserve"><value>Once or twice a week, satellite images show how clear the surface is and whether algae are spreading.</value></data>
-  <data name="How_Weather_Label" xml:space="preserve"><value>03 · Weather and inflows</value></data>
-  <data name="How_Weather_Title" xml:space="preserve"><value>Wind, rain, discharge</value></data>
-  <data name="How_Weather_Text" xml:space="preserve"><value>Heavy rain makes inflows murky, wind stirs up the shore. Both go into the index.</value></data>
-  <data name="How_Community_Label" xml:space="preserve"><value>04 · Community (bonus)</value></data>
-  <data name="How_Community_Title" xml:space="preserve"><value>Reports sharpen the model</value></data>
-  <data name="How_Community_Text" xml:space="preserve"><value>Reporting the visibility after a dive improves the forecast. It is not required.</value></data>
   <data name="Footer_Note" xml:space="preserve"><value>Forecasts are indicators, without guarantee. Never dive alone and stay within your training.</value></data>
   <data name="Footer_Emergency" xml:space="preserve"><value>Emergency: ambulance 144 · Rega 1414</value></data>
   <data name="Nav_Label" xml:space="preserve"><value>Main navigation</value></data>
@@ -47,4 +34,9 @@
   <data name="Nav_DiveSites" xml:space="preserve"><value>Dive sites</value></data>
   <data name="Nav_WaterBodies" xml:space="preserve"><value>Waters</value></data>
   <data name="Footer_Osm" xml:space="preserve"><value>Dive sites partly from OpenStreetMap: © OpenStreetMap contributors, ODbL</value></data>
+  <data name="Start_HowLink" xml:space="preserve"><value>How the forecast works</value></data>
+  <data name="Footer_About" xml:space="preserve"><value>About</value></data>
+  <data name="Footer_Imprint" xml:space="preserve"><value>Legal notice</value></data>
+  <data name="Footer_Privacy" xml:space="preserve"><value>Privacy</value></data>
+  <data name="Footer_Links" xml:space="preserve"><value>About the website</value></data>
 </root>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="How_Title" xml:space="preserve"><value>No reports needed. The lake tells us itself.</value></data>
+  <data name="How_Model_Label" xml:space="preserve"><value>01 · Lake model</value></data>
+  <data name="How_Model_Title" xml:space="preserve"><value>Temperature at every depth</value></data>
+  <data name="How_Model_Text" xml:space="preserve"><value>Eawag lake models calculate up to four days ahead how warm it is at 0, 10, 20 and 30 m and where the thermocline lies.</value></data>
+  <data name="How_Satellite_Label" xml:space="preserve"><value>02 · Satellite</value></data>
+  <data name="How_Satellite_Title" xml:space="preserve"><value>Clarity and algae</value></data>
+  <data name="How_Satellite_Text" xml:space="preserve"><value>Once or twice a week, satellite images show how clear the surface is and whether algae are spreading.</value></data>
+  <data name="How_Weather_Label" xml:space="preserve"><value>03 · Weather and inflows</value></data>
+  <data name="How_Weather_Title" xml:space="preserve"><value>Wind, rain, discharge</value></data>
+  <data name="How_Weather_Text" xml:space="preserve"><value>Heavy rain makes inflows murky, wind stirs up the shore. Both go into the index.</value></data>
+  <data name="How_Community_Label" xml:space="preserve"><value>04 · Community (bonus)</value></data>
+  <data name="How_Community_Title" xml:space="preserve"><value>Reports sharpen the model</value></data>
+  <data name="How_Community_Text" xml:space="preserve"><value>Reporting the visibility after a dive improves the forecast. It is not required.</value></data>
+  <data name="About_Title" xml:space="preserve"><value>About tauchplaetze.ch</value></data>
+  <data name="About_MetaDescription" xml:space="preserve"><value>How the dive forecast works, which data sources we use, legal notice and privacy policy of tauchplaetze.ch.</value></data>
+  <data name="About_Lead" xml:space="preserve"><value>A non-commercial project by divers for everyone who dives in Swiss lakes and rivers. No ads and no tracking.</value></data>
+  <data name="About_Nav_Label" xml:space="preserve"><value>Contents of this page</value></data>
+  <data name="About_Forecast_Title" xml:space="preserve"><value>How the forecast works</value></data>
+  <data name="About_Forecast_Lead" xml:space="preserve"><value>No reports needed: the lake tells us itself. Twice a day a job fetches data from four sources and calculates the dive index for every site for five days.</value></data>
+  <data name="About_Levels_Title" xml:space="preserve"><value>How precise is the forecast?</value></data>
+  <data name="About_Levels_Lead" xml:space="preserve"><value>Every site has a data level. It shows how close the data is to the site.</value></data>
+  <data name="About_Level_3" xml:space="preserve"><value>Precise: temperature profile at the site from the Eawag 3D lake model.</value></data>
+  <data name="About_Level_2" xml:space="preserve"><value>Water body: profile for the whole lake from the 1D model, for rivers a FOEN gauging station.</value></data>
+  <data name="About_Level_1" xml:space="preserve"><value>Weather: only wind and rain at the site. An index exists only with a satellite image.</value></data>
+  <data name="About_Index_Note" xml:space="preserve"><value>The dive index (0 to 10) is an indicator, not a guarantee of visibility. Check the conditions on site, and never dive alone.</value></data>
+  <data name="About_Sources_Title" xml:space="preserve"><value>Data sources</value></data>
+  <data name="About_Sources_Lead" xml:space="preserve"><value>We show all data with attribution. The pages read only our own database; only the job queries the sources.</value></data>
+  <data name="About_Source_Alplakes_Name" xml:space="preserve"><value>Eawag Alplakes</value></data>
+  <data name="About_Source_Alplakes_Text" xml:space="preserve"><value>Lake models (3D and 1D) with the temperature at depth, plus satellite data on clarity and algae. © Eawag.</value></data>
+  <data name="About_Source_Weather_Name" xml:space="preserve"><value>MeteoSwiss via Open-Meteo</value></data>
+  <data name="About_Source_Weather_Text" xml:space="preserve"><value>Weather models ICON-CH1 and ICON-CH2 by MeteoSwiss (open government data) and ICON by DWD, retrieved via Open-Meteo (CC BY 4.0).</value></data>
+  <data name="About_Source_Hydro_Name" xml:space="preserve"><value>FOEN hydrological data</value></data>
+  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Discharge and water temperature from the gauging stations of the Federal Office for the Environment, retrieved via existenz.ch. Open government data with attribution.</value></data>
+  <data name="About_Source_Swisstopo_Name" xml:space="preserve"><value>swisstopo</value></data>
+  <data name="About_Source_Swisstopo_Text" xml:space="preserve"><value>National map, aerial imagery (SWISSIMAGE) and lake depth data (swissBATHY3D) for the depth contours. Open government data, © swisstopo.</value></data>
+  <data name="About_Source_Osm_Name" xml:space="preserve"><value>OpenStreetMap</value></data>
+  <data name="About_Source_Osm_Text" xml:space="preserve"><value>Initial set of dive sites with name, location and some details. © OpenStreetMap contributors, Open Database License (ODbL). The data we took over is also available under the ODbL.</value></data>
+  <data name="About_Imprint_Title" xml:space="preserve"><value>Legal notice</value></data>
+  <data name="About_Imprint_Operator" xml:space="preserve"><value>Operator</value></data>
+  <data name="About_Imprint_Contact" xml:space="preserve"><value>Contact</value></data>
+  <data name="About_Imprint_Pending" xml:space="preserve"><value>Details to follow.</value></data>
+  <data name="About_Imprint_Liability" xml:space="preserve"><value>All information without guarantee. The forecast is an indicator; diving is at your own risk. The operators of linked pages are responsible for their content.</value></data>
+  <data name="About_Privacy_Title" xml:space="preserve"><value>Privacy</value></data>
+  <data name="About_Privacy_Lead" xml:space="preserve"><value>We process as little personal data as possible, in line with the Swiss Federal Act on Data Protection (FADP).</value></data>
+  <data name="About_Privacy_Visit_Title" xml:space="preserve"><value>Visiting the website</value></data>
+  <data name="About_Privacy_Visit_Text" xml:space="preserve"><value>You do not need an account to visit. We set no tracking or advertising cookies. For troubleshooting we record operational data (requested address, time, errors) with Microsoft Azure Application Insights, without IP address, and delete it after 30 days.</value></data>
+  <data name="About_Privacy_Hosting_Title" xml:space="preserve"><value>Hosting</value></data>
+  <data name="About_Privacy_Hosting_Text" xml:space="preserve"><value>Website, database and photos are hosted by Microsoft Azure in the Switzerland North region. Cloudflare delivers pages and images and protects against attacks. In doing so, Cloudflare processes your IP address. Cloudflare is a company based in the USA; the data may therefore also be processed outside Switzerland.</value></data>
+  <data name="About_Privacy_Account_Title" xml:space="preserve"><value>Account</value></data>
+  <data name="About_Privacy_Account_Text" xml:space="preserve"><value>Only contributors need an account: e-mail address, display name and the password as a hash. Signing in uses a technically necessary cookie, forms use a cookie that protects against misuse. Confirmation and password reset mails go only to you.</value></data>
+  <data name="About_Privacy_Contributions_Title" xml:space="preserve"><value>Contributions and photos</value></data>
+  <data name="About_Privacy_Contributions_Text" xml:space="preserve"><value>Changes appear in the versions of a site, with your name only if you agree. We show photos with the photographer’s name. The public image sizes contain no GPS or camera data; the original stays private.</value></data>
+  <data name="About_Privacy_Location_Title" xml:space="preserve"><value>Location and maps</value></data>
+  <data name="About_Privacy_Location_Text" xml:space="preserve"><value>«Near me» asks your browser for your location. The coordinate is only part of the search address and may therefore appear in the operational data. We do not analyse it and do not store it in an account. Your browser loads map tiles directly from swisstopo (geo.admin.ch); swisstopo sees your IP address. Your browser remembers the choice of map or aerial image.</value></data>
+  <data name="About_Privacy_Routes_Title" xml:space="preserve"><value>Routes</value></data>
+  <data name="About_Privacy_Routes_Text" xml:space="preserve"><value>The links to Google Maps and Apple Maps only transmit the site’s coordinate when you click them.</value></data>
+  <data name="About_Privacy_Rights_Title" xml:space="preserve"><value>Your rights</value></data>
+  <data name="About_Privacy_Rights_Text" xml:space="preserve"><value>Under «My data» you see all data about your account and can download it. Under «Delete account» you delete your account: private photos and all originals are deleted, versions remain without a name. Questions and requests without an account via the</value></data>
+  <data name="About_Contact_Title" xml:space="preserve"><value>Contact</value></data>
+  <data name="About_Contact_Lead" xml:space="preserve"><value>Questions, corrections or a site we do not know yet? Write to us. The message goes to the operator by e-mail and is not stored.</value></data>
+  <data name="About_Imprint_ContactForm" xml:space="preserve"><value>contact form</value></data>
+  <data name="Contact_Name" xml:space="preserve"><value>Your name (optional)</value></data>
+  <data name="Contact_Email" xml:space="preserve"><value>Your e-mail address for the reply</value></data>
+  <data name="Contact_Reference" xml:space="preserve"><value>Subject (optional, e.g. name of the site)</value></data>
+  <data name="Contact_Message" xml:space="preserve"><value>Message</value></data>
+  <data name="Contact_Submit" xml:space="preserve"><value>Send</value></data>
+  <data name="Contact_Trap" xml:space="preserve"><value>Leave this field empty</value></data>
+  <data name="Contact_Sent" xml:space="preserve"><value>Thank you! Your message is on its way.</value></data>
+  <data name="Contact_Error_InvalidEmail" xml:space="preserve"><value>Please enter a valid e-mail address so that we can reply.</value></data>
+  <data name="Contact_Error_InvalidMessage" xml:space="preserve"><value>The message needs 10 to 4000 characters.</value></data>
+  <data name="Contact_Error_TooLong" xml:space="preserve"><value>Name or subject is too long.</value></data>
+  <data name="Contact_Error_NotSent" xml:space="preserve"><value>The message could not be sent. Please try again later.</value></data>
+  <data name="Contact_Error_Expired" xml:space="preserve"><value>The form has expired. Please send the message again.</value></data>
+  <data name="Contact_Error_Limit" xml:space="preserve"><value>Too many messages in a short time. Please try again in an hour.</value></data>
+  <data name="About_Privacy_Contact_Title" xml:space="preserve"><value>Contact form</value></data>
+  <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Name, e-mail address and message go to the operator by e-mail and are not stored in the database. To prevent misuse, we count messages per IP address for one hour in memory without storing the address.</value></data>
+</root>
