@@ -70,14 +70,59 @@ public class GetWaterBodiesTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal([("rhein", 0), ("zuerichsee", 1)], result.Select(w => (w.Slug, w.SiteCount)));
     }
 
-    private static DiveSite Site(WaterBody waterBody, string slug, DiveSiteStatus status) => new()
+    [SqlFact]
+    public async Task Die_Uebersicht_zeigt_zuerst_grosse_Seen_dann_Seen_nach_Region_der_meisten_Plaetze_dann_Fluesse_dann_Seen_ohne_Kanton()
+    {
+        // Arrange
+        await Sql.Arrange(db =>
+        {
+            var zurich = Lake("zuerichsee", "Zürichsee");
+            var thun = Lake("thunersee", "Thunersee");
+            var greifen = Lake("greifensee", "Greifensee");
+            var hallwil = Lake("hallwilersee", "Hallwilersee");
+            var walen = Lake("walensee", "Walensee");
+            var lauerz = Lake("lauerzersee", "Lauerzersee");
+            var empty = Lake("leer", "Leersee");
+            var rhine = Lake("rhein", "Rhein", type: WaterBodyType.River);
+            db.WaterBodies.Add(empty);
+            db.DiveSites.AddRange(Sites(zurich, 9, "ZH"));
+            db.DiveSites.AddRange(Sites(thun, 8, "BE"));
+            db.DiveSites.AddRange(Sites(greifen, 2, "ZH"));
+            db.DiveSites.AddRange([.. Sites(hallwil, 1, "AG"), .. Sites(hallwil, 2, "LU")]);
+            db.DiveSites.AddRange([.. Sites(walen, 2, "GL"), .. Sites(walen, 2, "SG")]);
+            db.DiveSites.AddRange(Sites(lauerz, 1, null));
+            db.DiveSites.AddRange(Sites(rhine, 12, "BS"));
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var groups = await Query<GetWaterBodyGroupsQuery, IReadOnlyList<WaterBodyGroup>>(new GetWaterBodyGroupsQuery("de"));
+
+        // Assert
+        Assert.Equal(
+            [
+                (WaterBodyGroupKind.LargeLakes, (SwissRegion?)null, "zuerichsee thunersee"),
+                (WaterBodyGroupKind.Region, SwissRegion.Zurich, "greifensee"),
+                (WaterBodyGroupKind.Region, SwissRegion.East, "walensee"),
+                (WaterBodyGroupKind.Region, SwissRegion.Central, "hallwilersee"),
+                (WaterBodyGroupKind.Rivers, null, "rhein"),
+                (WaterBodyGroupKind.Other, null, "lauerzersee leer"),
+            ],
+            groups.Select(g => (g.Kind, g.Region, string.Join(" ", g.Waters.Select(w => w.Slug)))));
+    }
+
+    private static IEnumerable<DiveSite> Sites(WaterBody waterBody, int count, string? canton) =>
+        Enumerable.Range(1, count).Select(i => Site(waterBody, $"{waterBody.Slug}-{canton}-{i}", DiveSiteStatus.Published, canton));
+
+    private static DiveSite Site(WaterBody waterBody, string slug, DiveSiteStatus status, string? canton = null) => new()
     {
         Id = Guid.CreateVersion7(),
-        Slug = slug,
+        Slug = slug.ToLowerInvariant(),
         Name = slug,
         WaterBody = waterBody,
         Location = new Point(8.6, 47.3) { SRID = 4326 },
         Status = status,
+        Canton = canton,
     };
 
     private static WaterBody Lake(
