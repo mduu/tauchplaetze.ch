@@ -1,0 +1,11 @@
+@inject IStringLocalizer<AccountStrings> L
+
+<nav class="account-nav" aria-label="@L["Nav_Account"]">
+    <a href="@AccountPaths.Profile(Language)">@L["Profile_Title"]</a>
+    <a href="@AccountPaths.MyData(Language)">@L["MyData_Title"]</a>
+    <a href="@AccountPaths.Delete(Language)">@L["Delete_Title"]</a>
+</nav>
+
+@code {
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}

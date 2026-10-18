@@ -1,0 +1,64 @@
+@page "/{Lang}/account/register"
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Accounts.Commands
+@inject ICommandHandler<RegisterCommand, AccountResult> Register
+@inject IStringLocalizer<AccountStrings> L
+@inject NavigationManager Navigation
+
+@if (done)
+{
+    <AccountLayout Title="@L["Register_Done_Title"]" Lead="@L["Register_Done_Text"]" />
+}
+else
+{
+    <AccountLayout Title="@L["Register_Title"]" Lead="@L["Register_Lead"]" Messages="messages" IsError="true">
+        <EditForm Model="Input" FormName="register" OnSubmit="Submit" class="form">
+            <label>@L["DisplayName"] <InputText autocomplete="nickname" required maxlength="60" @bind-Value="Input!.DisplayName" /></label>
+            <p class="help">@L["DisplayName_Help"]</p>
+            <label>@L["Email"] <InputText type="email" autocomplete="email" required @bind-Value="Input!.Email" /></label>
+            <label>@L["Password"] <InputText type="password" autocomplete="new-password" required minlength="10" @bind-Value="Input!.Password" /></label>
+            <p class="help">@L["Password_Help"]</p>
+            <button type="submit" class="button">@L["Register_Submit"]</button>
+        </EditForm>
+    </AccountLayout>
+}
+
+@code {
+    private IReadOnlyList<string> messages = [];
+
+    private bool done;
+
+    [Parameter]
+    public string? Lang { get; set; }
+
+    [SupplyParameterFromForm]
+    private RegisterInput? Input { get; set; }
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override void OnInitialized()
+    {
+        Input ??= new RegisterInput();
+        if (!Languages.IsSupported(Lang))
+        {
+            Navigation.NotFound();
+        }
+    }
+
+    private async Task Submit()
+    {
+        var result = await Register.Handle(new RegisterCommand(Input!.Email, Input!.Password, Input!.DisplayName, Language, AccountPaths.ConfirmTemplate(Navigation.BaseUri, Language)));
+        done = result.Succeeded;
+        messages = AccountText.Errors(L, result);
+    }
+
+    private sealed class RegisterInput
+    {
+        public string DisplayName { get; set; } = "";
+
+        public string Email { get; set; } = "";
+
+        public string Password { get; set; } = "";
+    }
+}

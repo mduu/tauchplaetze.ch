@@ -1,0 +1,27 @@
+@using System.Security.Claims
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Web.Features.Accounts
+@inject IStringLocalizer<AccountStrings> L
+
+<AuthorizeView>
+    <Authorized>
+        <div class="user-menu">
+            <a href="@AccountPaths.Profile(Language)">@context.User.Identity?.Name</a>
+            @if (context.User.IsInRole(Roles.Moderator) || context.User.IsInRole(Roles.Admin) || context.User.IsInRole(Roles.Contributor))
+            {
+                <a href="/admin">@L["Nav_Cms"]</a>
+            }
+            <form method="post" action="@AccountPaths.SignOut(Language)">
+                <AntiforgeryToken />
+                <button type="submit" class="link-button">@L["Nav_SignOut"]</button>
+            </form>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <a class="sign-in" href="@AccountPaths.SignIn(Language)">@L["Nav_SignIn"]</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}

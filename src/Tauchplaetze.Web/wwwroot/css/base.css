@@ -162,3 +162,115 @@ a:hover {
 .leaflet-container {
   font-family: var(--font-body);
 }
+
+.form {
+  display: grid;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.form label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.form label.check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.form input[type="text"],
+.form input[type="email"],
+.form input[type="password"],
+.form input:not([type]),
+.form select,
+.form textarea {
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-tile-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.form input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--color-primary);
+}
+
+.help {
+  margin: -6px 0 0;
+  font-size: 14px;
+  color: var(--color-text-subtle);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  color: var(--color-bg);
+  font: 600 16px var(--font-body);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button.danger {
+  background: var(--color-signal);
+}
+
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.subtitle {
+  margin-top: 32px;
+  font-size: 24px;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 20px;
+  margin: 14px 0 0;
+}
+
+.facts dt {
+  color: var(--color-text-subtle);
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.references {
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
+
+.references li {
+  margin-bottom: 6px;
+}

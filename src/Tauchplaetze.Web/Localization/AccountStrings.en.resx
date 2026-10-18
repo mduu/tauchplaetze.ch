@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="SignIn_Title" xml:space="preserve"><value>Sign in</value></data>
+  <data name="Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Password" xml:space="preserve"><value>Password</value></data>
+  <data name="SignIn_Submit" xml:space="preserve"><value>Sign in</value></data>
+  <data name="SignIn_Failed" xml:space="preserve"><value>Email or password is wrong.</value></data>
+  <data name="SignIn_NotConfirmed" xml:space="preserve"><value>Please confirm your email address first. You will find the link in the email.</value></data>
+  <data name="SignIn_LockedOut" xml:space="preserve"><value>Too many attempts. Try again in 15 minutes.</value></data>
+  <data name="SignIn_Blocked" xml:space="preserve"><value>This account is blocked.</value></data>
+  <data name="SignIn_Forgot" xml:space="preserve"><value>Forgot your password?</value></data>
+  <data name="SignIn_Register" xml:space="preserve"><value>No account yet? Register</value></data>
+  <data name="Register_Title" xml:space="preserve"><value>Register</value></data>
+  <data name="Register_Lead" xml:space="preserve"><value>With an account you can add to dive sites and suggest new ones. A moderator approves your contributions.</value></data>
+  <data name="DisplayName" xml:space="preserve"><value>Display name</value></data>
+  <data name="DisplayName_Help" xml:space="preserve"><value>A pseudonym is fine. It appears publicly only if you allow it in your profile.</value></data>
+  <data name="Password_Help" xml:space="preserve"><value>At least 10 characters.</value></data>
+  <data name="Register_Submit" xml:space="preserve"><value>Create account</value></data>
+  <data name="Register_Done_Title" xml:space="preserve"><value>Almost done</value></data>
+  <data name="Register_Done_Text" xml:space="preserve"><value>We have sent you an email. Confirm your email address with the link in it.</value></data>
+  <data name="Confirm_Title" xml:space="preserve"><value>Confirm email</value></data>
+  <data name="Confirm_Ok" xml:space="preserve"><value>Thank you! Your email address is confirmed. You can sign in now.</value></data>
+  <data name="Forgot_Title" xml:space="preserve"><value>Forgot password</value></data>
+  <data name="Forgot_Lead" xml:space="preserve"><value>Enter your email address. We will send you a link for a new password.</value></data>
+  <data name="Forgot_Submit" xml:space="preserve"><value>Send link</value></data>
+  <data name="Forgot_Done" xml:space="preserve"><value>If there is an account for this address, the email is on its way.</value></data>
+  <data name="Reset_Title" xml:space="preserve"><value>New password</value></data>
+  <data name="Reset_Submit" xml:space="preserve"><value>Save password</value></data>
+  <data name="Reset_Done" xml:space="preserve"><value>Your password is saved. You can sign in now.</value></data>
+  <data name="Profile_Title" xml:space="preserve"><value>Profile</value></data>
+  <data name="Profile_ShowName" xml:space="preserve"><value>Show my display name publicly with my contributions</value></data>
+  <data name="Profile_ShowName_Help" xml:space="preserve"><value>Without consent, the public history shows «Contributor». You can change this at any time.</value></data>
+  <data name="Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Profile_Submit" xml:space="preserve"><value>Save</value></data>
+  <data name="Profile_Saved" xml:space="preserve"><value>Saved.</value></data>
+  <data name="MyData_Title" xml:space="preserve"><value>My data</value></data>
+  <data name="MyData_Lead" xml:space="preserve"><value>All data we store about your account (FADP art. 25).</value></data>
+  <data name="MyData_Account" xml:space="preserve"><value>Account</value></data>
+  <data name="MyData_Roles" xml:space="preserve"><value>Roles</value></data>
+  <data name="MyData_Confirmed" xml:space="preserve"><value>Email confirmed</value></data>
+  <data name="MyData_PublicName" xml:space="preserve"><value>Name public</value></data>
+  <data name="Yes" xml:space="preserve"><value>Yes</value></data>
+  <data name="No" xml:space="preserve"><value>No</value></data>
+  <data name="MyData_Contributions" xml:space="preserve"><value>Contributions</value></data>
+  <data name="MyData_Reviews" xml:space="preserve"><value>Approvals and rejections</value></data>
+  <data name="MyData_None" xml:space="preserve"><value>None.</value></data>
+  <data name="MyData_Download" xml:space="preserve"><value>Download as JSON</value></data>
+  <data name="Status_Pending" xml:space="preserve"><value>awaiting approval</value></data>
+  <data name="Status_Approved" xml:space="preserve"><value>approved</value></data>
+  <data name="Status_Rejected" xml:space="preserve"><value>rejected</value></data>
+  <data name="Status_Withdrawn" xml:space="preserve"><value>withdrawn</value></data>
+  <data name="Version" xml:space="preserve"><value>Version {0}</value></data>
+  <data name="Delete_Title" xml:space="preserve"><value>Delete account</value></data>
+  <data name="Delete_Lead" xml:space="preserve"><value>We delete your account, your email address and your display name. Your contributions stay online without a name («deleted account»).</value></data>
+  <data name="Delete_Confirm" xml:space="preserve"><value>I want to delete my account.</value></data>
+  <data name="Delete_Submit" xml:space="preserve"><value>Delete account permanently</value></data>
+  <data name="Delete_Done" xml:space="preserve"><value>Your account is deleted.</value></data>
+  <data name="Nav_SignIn" xml:space="preserve"><value>Sign in</value></data>
+  <data name="Nav_SignOut" xml:space="preserve"><value>Sign out</value></data>
+  <data name="Nav_Cms" xml:space="preserve"><value>Editing</value></data>
+  <data name="Nav_Account" xml:space="preserve"><value>Account</value></data>
+  <data name="Error_RegistrationClosed" xml:space="preserve"><value>Registration is not open yet.</value></data>
+  <data name="Error_InvalidEmail" xml:space="preserve"><value>This email address is invalid.</value></data>
+  <data name="Error_EmailTaken" xml:space="preserve"><value>There is already an account for this email address.</value></data>
+  <data name="Error_InvalidDisplayName" xml:space="preserve"><value>The display name needs 1 to 60 characters.</value></data>
+  <data name="Error_DisplayNameTaken" xml:space="preserve"><value>This display name is taken.</value></data>
+  <data name="Error_PasswordTooShort" xml:space="preserve"><value>The password needs at least 10 characters.</value></data>
+  <data name="Error_InvalidToken" xml:space="preserve"><value>The link is invalid or has expired.</value></data>
+  <data name="Error_Other" xml:space="preserve"><value>Something went wrong. Please try again.</value></data>
+  <data name="Meta_NoIndex" xml:space="preserve"><value>Account</value></data>
+</root>

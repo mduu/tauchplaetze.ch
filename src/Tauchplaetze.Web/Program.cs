@@ -2,6 +2,7 @@ using Tauchplaetze.Core;
 using Tauchplaetze.Web.Components;
 using Tauchplaetze.Web.CrossCutting.Database;
 using Tauchplaetze.Web.CrossCutting.Localization;
+using Tauchplaetze.Web.Features.Accounts;
 using Tauchplaetze.Web.Features.Forecasts;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.AddServiceDefaults();
 builder.AddTauchplaetzeCore();
 
 builder.Services.AddPublicLocalization();
+builder.Services.AddAccountCookie();
 builder.Services.AddRazorComponents();
 builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(ForecastSchedule.Section));
 builder.Services.AddHostedService<ForecastWorker>();
@@ -27,10 +29,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRequestLocalization();
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapLanguageRedirect();
+app.MapAccountEndpoints();
 app.MapRazorComponents<App>();
 app.MapDefaultEndpoints();
 

@@ -1,0 +1,46 @@
+@page "/{Lang}/account/my-data"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Accounts.Queries
+@inject IQueryHandler<GetPersonalDataQuery, PersonalData?> PersonalDataQuery
+@inject IStringLocalizer<AccountStrings> L
+
+<AccountLayout Title="@L["MyData_Title"]" Lead="@L["MyData_Lead"]">
+    <AccountNav />
+    @if (data is not null)
+    {
+        <h2 class="subtitle">@L["MyData_Account"]</h2>
+        <dl class="facts">
+            <dt>@L["Email"]</dt><dd>@data.Email</dd>
+            <dt>@L["DisplayName"]</dt><dd>@data.DisplayName</dd>
+            <dt>@L["MyData_PublicName"]</dt><dd>@(data.ShowNamePublicly ? L["Yes"] : L["No"])</dd>
+            <dt>@L["Language"]</dt><dd>@data.PreferredCulture</dd>
+            <dt>@L["MyData_Roles"]</dt><dd>@string.Join(", ", data.Roles)</dd>
+            <dt>@L["MyData_Confirmed"]</dt><dd>@(data.EmailConfirmed ? L["Yes"] : L["No"])</dd>
+        </dl>
+
+        <h2 class="subtitle">@L["MyData_Contributions"]</h2>
+        <RevisionReferences Items="data.Contributions" />
+
+        <h2 class="subtitle">@L["MyData_Reviews"]</h2>
+        <RevisionReferences Items="data.Reviews" />
+
+        <p><a class="button" href="/@Language/account/my-data.json" download>@L["MyData_Download"]</a></p>
+    }
+</AccountLayout>
+
+@code {
+    private PersonalData? data;
+
+    [Parameter]
+    public string? Lang { get; set; }
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override async Task OnInitializedAsync() =>
+        data = await PersonalDataQuery.Handle(new GetPersonalDataQuery(AccountCookie.UserId(HttpContext.User)!));
+}

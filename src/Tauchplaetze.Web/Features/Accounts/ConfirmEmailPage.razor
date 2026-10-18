@@ -1,0 +1,37 @@
+@page "/{Lang}/account/confirm"
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Accounts.Commands
+@inject ICommandHandler<ConfirmEmailCommand, AccountResult> Confirm
+@inject IStringLocalizer<AccountStrings> L
+
+<AccountLayout Title="@L["Confirm_Title"]" Messages="messages" IsError="@(!succeeded)">
+    @if (succeeded)
+    {
+        <p><a class="button" href="@AccountPaths.SignIn(Language)">@L["SignIn_Submit"]</a></p>
+    }
+</AccountLayout>
+
+@code {
+    private IReadOnlyList<string> messages = [];
+
+    private bool succeeded;
+
+    [Parameter]
+    public string? Lang { get; set; }
+
+    [SupplyParameterFromQuery(Name = "user")]
+    public string? UserId { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string? Token { get; set; }
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await Confirm.Handle(new ConfirmEmailCommand(UserId ?? "", Token ?? ""));
+        succeeded = result.Succeeded;
+        messages = succeeded ? [L["Confirm_Ok"]] : AccountText.Errors(L, result);
+    }
+}

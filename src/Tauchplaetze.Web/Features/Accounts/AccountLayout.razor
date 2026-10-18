@@ -1,0 +1,42 @@
+@inject IStringLocalizer<AccountStrings> L
+@inject IStringLocalizer<SharedStrings> Shared
+
+<PageTitle>@Title · @Shared["Brand"]</PageTitle>
+<HeadContent>
+    <meta name="robots" content="noindex" />
+</HeadContent>
+
+<section class="page-section account">
+    <h1 class="page-title">@Title</h1>
+    @if (Lead is not null)
+    {
+        <p class="lead">@Lead</p>
+    }
+    @if (Messages.Count > 0)
+    {
+        <div class="message @(IsError ? "error" : "ok")" role="@(IsError ? "alert" : "status")">
+            @foreach (var message in Messages)
+            {
+                <p>@message</p>
+            }
+        </div>
+    }
+    @ChildContent
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = "";
+
+    [Parameter]
+    public string? Lead { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<string> Messages { get; set; } = [];
+
+    [Parameter]
+    public bool IsError { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

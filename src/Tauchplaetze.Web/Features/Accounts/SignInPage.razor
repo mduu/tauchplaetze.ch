@@ -1,0 +1,66 @@
+@page "/{Lang}/account/sign-in"
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Accounts.Commands
+@inject ICommandHandler<SignInCommand, SignInOutcome> SignIn
+@inject IStringLocalizer<AccountStrings> L
+@inject NavigationManager Navigation
+
+<AccountLayout Title="@L["SignIn_Title"]" Messages="messages" IsError="true">
+    <EditForm Model="Input" FormName="sign-in" OnSubmit="Submit" class="form">
+        <label>@L["Email"] <InputText type="email" autocomplete="username" required @bind-Value="Input!.Email" /></label>
+        <label>@L["Password"] <InputText type="password" autocomplete="current-password" required @bind-Value="Input!.Password" /></label>
+        <button type="submit" class="button">@L["SignIn_Submit"]</button>
+    </EditForm>
+    <p class="links">
+        <a href="@AccountPaths.Forgot(Language)">@L["SignIn_Forgot"]</a>
+        <a href="@AccountPaths.Register(Language)">@L["SignIn_Register"]</a>
+    </p>
+</AccountLayout>
+
+@code {
+    private IReadOnlyList<string> messages = [];
+
+    [Parameter]
+    public string? Lang { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string? ReturnUrl { get; set; }
+
+    [SupplyParameterFromForm]
+    private SignInInput? Input { get; set; }
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override void OnInitialized()
+    {
+        Input ??= new SignInInput();
+        if (!Languages.IsSupported(Lang))
+        {
+            Navigation.NotFound();
+        }
+    }
+
+    private async Task Submit()
+    {
+        var outcome = await SignIn.Handle(new SignInCommand(Input!.Email, Input!.Password));
+        if (outcome is { Status: SignInStatus.Succeeded, Account: { } account })
+        {
+            await AccountCookie.SignIn(HttpContext, account);
+            Navigation.NavigateTo(AccountCookie.SafeReturnUrl(ReturnUrl, $"/{Language}"));
+            return;
+        }
+
+        messages = [L[$"SignIn_{outcome.Status}"]];
+    }
+
+    private sealed class SignInInput
+    {
+        public string Email { get; set; } = "";
+
+        public string Password { get; set; } = "";
+    }
+}

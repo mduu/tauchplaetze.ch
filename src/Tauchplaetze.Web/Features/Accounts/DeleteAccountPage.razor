@@ -1,0 +1,60 @@
+@page "/{Lang}/account/delete"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Accounts.Commands
+@inject ICommandHandler<DeleteAccountCommand, AccountResult> DeleteAccount
+@inject IStringLocalizer<AccountStrings> L
+
+<AccountLayout Title="@L["Delete_Title"]" Lead="@(deleted ? null : L["Delete_Lead"].Value)" Messages="messages" IsError="@(!deleted)">
+    @if (!deleted)
+    {
+        <AccountNav />
+        <EditForm Model="Input" FormName="delete" OnSubmit="Submit" class="form">
+            <label class="check"><InputCheckbox @bind-Value="Input!.Confirmed" required /> @L["Delete_Confirm"]</label>
+            <button type="submit" class="button danger">@L["Delete_Submit"]</button>
+        </EditForm>
+    }
+</AccountLayout>
+
+@code {
+    private IReadOnlyList<string> messages = [];
+
+    private bool deleted;
+
+    [Parameter]
+    public string? Lang { get; set; }
+
+    [SupplyParameterFromForm]
+    private DeleteInput? Input { get; set; }
+
+    protected override void OnInitialized() => Input ??= new DeleteInput();
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    private async Task Submit()
+    {
+        if (!Input!.Confirmed)
+        {
+            return;
+        }
+
+        var result = await DeleteAccount.Handle(new DeleteAccountCommand(AccountCookie.UserId(HttpContext.User)!));
+        deleted = result.Succeeded;
+        if (deleted)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+
+        messages = deleted ? [L["Delete_Done"]] : AccountText.Errors(L, result);
+    }
+
+    private sealed class DeleteInput
+    {
+        public bool Confirmed { get; set; }
+    }
+}

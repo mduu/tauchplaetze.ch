@@ -51,3 +51,9 @@
     margin: 0;
     max-width: 70ch;
 }
+
+.header-tools {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}

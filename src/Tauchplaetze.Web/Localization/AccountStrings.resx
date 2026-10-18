@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="SignIn_Title" xml:space="preserve"><value>Anmelden</value></data>
+  <data name="Email" xml:space="preserve"><value>E-Mail</value></data>
+  <data name="Password" xml:space="preserve"><value>Passwort</value></data>
+  <data name="SignIn_Submit" xml:space="preserve"><value>Anmelden</value></data>
+  <data name="SignIn_Failed" xml:space="preserve"><value>E-Mail oder Passwort stimmt nicht.</value></data>
+  <data name="SignIn_NotConfirmed" xml:space="preserve"><value>Bitte bestätige zuerst deine E-Mail-Adresse. Den Link findest du in der Mail.</value></data>
+  <data name="SignIn_LockedOut" xml:space="preserve"><value>Zu viele Versuche. Versuche es in 15 Minuten wieder.</value></data>
+  <data name="SignIn_Blocked" xml:space="preserve"><value>Dieses Konto ist gesperrt.</value></data>
+  <data name="SignIn_Forgot" xml:space="preserve"><value>Passwort vergessen?</value></data>
+  <data name="SignIn_Register" xml:space="preserve"><value>Noch kein Konto? Registrieren</value></data>
+  <data name="Register_Title" xml:space="preserve"><value>Registrieren</value></data>
+  <data name="Register_Lead" xml:space="preserve"><value>Mit einem Konto kannst du Tauchplätze ergänzen und neue vorschlagen. Eine Moderatorin oder ein Moderator gibt deine Beiträge frei.</value></data>
+  <data name="DisplayName" xml:space="preserve"><value>Anzeigename</value></data>
+  <data name="DisplayName_Help" xml:space="preserve"><value>Ein Pseudonym ist erlaubt. Öffentlich erscheint er nur, wenn du das im Profil erlaubst.</value></data>
+  <data name="Password_Help" xml:space="preserve"><value>Mindestens 10 Zeichen.</value></data>
+  <data name="Register_Submit" xml:space="preserve"><value>Konto anlegen</value></data>
+  <data name="Register_Done_Title" xml:space="preserve"><value>Fast geschafft</value></data>
+  <data name="Register_Done_Text" xml:space="preserve"><value>Wir haben dir eine Mail geschickt. Bestätige deine E-Mail-Adresse mit dem Link darin.</value></data>
+  <data name="Confirm_Title" xml:space="preserve"><value>E-Mail bestätigen</value></data>
+  <data name="Confirm_Ok" xml:space="preserve"><value>Danke! Deine E-Mail-Adresse ist bestätigt. Du kannst dich jetzt anmelden.</value></data>
+  <data name="Forgot_Title" xml:space="preserve"><value>Passwort vergessen</value></data>
+  <data name="Forgot_Lead" xml:space="preserve"><value>Gib deine E-Mail-Adresse ein. Wir schicken dir einen Link für ein neues Passwort.</value></data>
+  <data name="Forgot_Submit" xml:space="preserve"><value>Link schicken</value></data>
+  <data name="Forgot_Done" xml:space="preserve"><value>Wenn es ein Konto zu dieser Adresse gibt, ist die Mail unterwegs.</value></data>
+  <data name="Reset_Title" xml:space="preserve"><value>Neues Passwort</value></data>
+  <data name="Reset_Submit" xml:space="preserve"><value>Passwort speichern</value></data>
+  <data name="Reset_Done" xml:space="preserve"><value>Dein Passwort ist gespeichert. Du kannst dich jetzt anmelden.</value></data>
+  <data name="Profile_Title" xml:space="preserve"><value>Profil</value></data>
+  <data name="Profile_ShowName" xml:space="preserve"><value>Meinen Anzeigenamen öffentlich bei meinen Beiträgen zeigen</value></data>
+  <data name="Profile_ShowName_Help" xml:space="preserve"><value>Ohne Einwilligung steht in der öffentlichen History «Mitwirkende». Du kannst das jederzeit ändern.</value></data>
+  <data name="Language" xml:space="preserve"><value>Sprache</value></data>
+  <data name="Profile_Submit" xml:space="preserve"><value>Speichern</value></data>
+  <data name="Profile_Saved" xml:space="preserve"><value>Gespeichert.</value></data>
+  <data name="MyData_Title" xml:space="preserve"><value>Meine Daten</value></data>
+  <data name="MyData_Lead" xml:space="preserve"><value>Alle Daten, die wir zu deinem Konto speichern (nDSG Art. 25).</value></data>
+  <data name="MyData_Account" xml:space="preserve"><value>Konto</value></data>
+  <data name="MyData_Roles" xml:space="preserve"><value>Rollen</value></data>
+  <data name="MyData_Confirmed" xml:space="preserve"><value>E-Mail bestätigt</value></data>
+  <data name="MyData_PublicName" xml:space="preserve"><value>Name öffentlich</value></data>
+  <data name="Yes" xml:space="preserve"><value>Ja</value></data>
+  <data name="No" xml:space="preserve"><value>Nein</value></data>
+  <data name="MyData_Contributions" xml:space="preserve"><value>Beiträge</value></data>
+  <data name="MyData_Reviews" xml:space="preserve"><value>Freigaben und Ablehnungen</value></data>
+  <data name="MyData_None" xml:space="preserve"><value>Keine.</value></data>
+  <data name="MyData_Download" xml:space="preserve"><value>Als JSON herunterladen</value></data>
+  <data name="Status_Pending" xml:space="preserve"><value>wartet auf Freigabe</value></data>
+  <data name="Status_Approved" xml:space="preserve"><value>freigegeben</value></data>
+  <data name="Status_Rejected" xml:space="preserve"><value>abgelehnt</value></data>
+  <data name="Status_Withdrawn" xml:space="preserve"><value>zurückgezogen</value></data>
+  <data name="Version" xml:space="preserve"><value>Version {0}</value></data>
+  <data name="Delete_Title" xml:space="preserve"><value>Konto löschen</value></data>
+  <data name="Delete_Lead" xml:space="preserve"><value>Wir löschen dein Konto, deine E-Mail-Adresse und deinen Anzeigenamen. Deine Beiträge bleiben online, ohne Namen («gelöschtes Konto»).</value></data>
+  <data name="Delete_Confirm" xml:space="preserve"><value>Ich will mein Konto löschen.</value></data>
+  <data name="Delete_Submit" xml:space="preserve"><value>Konto endgültig löschen</value></data>
+  <data name="Delete_Done" xml:space="preserve"><value>Dein Konto ist gelöscht.</value></data>
+  <data name="Nav_SignIn" xml:space="preserve"><value>Anmelden</value></data>
+  <data name="Nav_SignOut" xml:space="preserve"><value>Abmelden</value></data>
+  <data name="Nav_Cms" xml:space="preserve"><value>Redaktion</value></data>
+  <data name="Nav_Account" xml:space="preserve"><value>Konto</value></data>
+  <data name="Error_RegistrationClosed" xml:space="preserve"><value>Die Registrierung ist noch nicht offen.</value></data>
+  <data name="Error_InvalidEmail" xml:space="preserve"><value>Diese E-Mail-Adresse ist ungültig.</value></data>
+  <data name="Error_EmailTaken" xml:space="preserve"><value>Zu dieser E-Mail-Adresse gibt es schon ein Konto.</value></data>
+  <data name="Error_InvalidDisplayName" xml:space="preserve"><value>Der Anzeigename braucht 1 bis 60 Zeichen.</value></data>
+  <data name="Error_DisplayNameTaken" xml:space="preserve"><value>Dieser Anzeigename ist vergeben.</value></data>
+  <data name="Error_PasswordTooShort" xml:space="preserve"><value>Das Passwort braucht mindestens 10 Zeichen.</value></data>
+  <data name="Error_InvalidToken" xml:space="preserve"><value>Der Link ist ungültig oder abgelaufen.</value></data>
+  <data name="Error_Other" xml:space="preserve"><value>Etwas ist schiefgelaufen. Bitte versuche es nochmals.</value></data>
+  <data name="Meta_NoIndex" xml:space="preserve"><value>Konto</value></data>
+</root>

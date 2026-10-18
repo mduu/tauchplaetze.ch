@@ -1,0 +1,15 @@
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-menu a,
+.sign-in {
+    color: var(--color-text-muted);
+    text-decoration: none;
+}
+
+.user-menu form {
+    margin: 0;
+}

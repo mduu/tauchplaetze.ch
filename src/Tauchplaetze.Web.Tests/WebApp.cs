@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tauchplaetze.Core.CrossCutting.UseCases;
+using Tauchplaetze.Core.Features.Accounts;
+using Tauchplaetze.Core.Features.Accounts.Commands;
+using Tauchplaetze.Core.Features.Accounts.Queries;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
 using Tauchplaetze.Core.Features.Forecasts;
@@ -30,6 +33,10 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetWaterBodyQuery, WaterBodyDetails?> WaterBody { get; } = new(_ => null);
 
+    public FakeQuery<SignInCommand, SignInOutcome> SignIn { get; } = new(_ => new SignInOutcome(SignInStatus.Failed));
+
+    public FakeQuery<GetPersonalDataQuery, PersonalData?> PersonalData { get; } = new(_ => null);
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("ConnectionStrings:tauchplaetze", "Server=127.0.0.1,1;Database=tauchplaetze;User Id=test;Password=test;TrustServerCertificate=true");
@@ -42,7 +49,18 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>>>(SiteList));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>>(WaterBodyList));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyQuery, WaterBodyDetails?>>(WaterBody));
+            services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SignInCommand, SignInOutcome>>(SignIn));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPersonalDataQuery, PersonalData?>>(PersonalData));
         });
+    }
+
+    /// <summary>Schickt ein Formular einer Seite ab: holt die Seite, liest das Antiforgery-Token und postet die Felder.</summary>
+    public static async Task<HttpResponseMessage> Submit(HttpClient browser, string path, string formName, Dictionary<string, string> fields, CancellationToken ct)
+    {
+        var page = await browser.GetStringAsync(path, ct);
+        var token = Regex.Match(page, "name=\"__RequestVerificationToken\" value=\"([^\"]+)\"").Groups[1].Value;
+        var form = new Dictionary<string, string>(fields) { ["__RequestVerificationToken"] = token, ["_handler"] = formName };
+        return await browser.PostAsync(path, new FormUrlEncodedContent(form), ct);
     }
 
     public HttpClient Browser() => CreateClient(new WebApplicationFactoryClientOptions
@@ -116,7 +134,7 @@ public sealed class FakeBestSites : IQueryHandler<GetBestSitesQuery, BestSites>
 }
 
 /// <summary>Eine Query mit fester Antwort. <see cref="Answer"/> lässt sich pro Test setzen.</summary>
-public sealed class FakeQuery<TQuery, TResult>(Func<TQuery, TResult> answer) : IQueryHandler<TQuery, TResult>
+public sealed class FakeQuery<TQuery, TResult>(Func<TQuery, TResult> answer) : IQueryHandler<TQuery, TResult>, ICommandHandler<TQuery, TResult>
 {
     public Func<TQuery, TResult> Answer { get; set; } = answer;
 

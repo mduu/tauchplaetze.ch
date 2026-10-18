@@ -1,0 +1,80 @@
+@page "/{Lang}/account/profile"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Accounts.Commands
+@using Tauchplaetze.Core.Features.Accounts.Queries
+@inject IQueryHandler<GetPersonalDataQuery, PersonalData?> PersonalDataQuery
+@inject ICommandHandler<UpdateProfileCommand, AccountResult> UpdateProfile
+@inject IQueryHandler<GetPersonalDataQuery, PersonalData?> Reload
+@inject IStringLocalizer<AccountStrings> L
+@inject IStringLocalizer<SharedStrings> Shared
+
+<AccountLayout Title="@L["Profile_Title"]" Messages="messages" IsError="@(!saved)">
+    <AccountNav />
+    <EditForm Model="Input" FormName="profile" OnSubmit="Submit" class="form">
+        <label>@L["DisplayName"] <InputText required maxlength="60" @bind-Value="Input!.DisplayName" /></label>
+        <p class="help">@L["DisplayName_Help"]</p>
+        <label class="check"><InputCheckbox @bind-Value="Input!.ShowNamePublicly" /> @L["Profile_ShowName"]</label>
+        <p class="help">@L["Profile_ShowName_Help"]</p>
+        <label>@L["Language"]
+            <InputSelect @bind-Value="Input!.Culture">
+                @foreach (var language in Languages.All)
+                {
+                    <option value="@language">@Shared[$"Language_{language}"]</option>
+                }
+            </InputSelect>
+        </label>
+        <button type="submit" class="button">@L["Profile_Submit"]</button>
+    </EditForm>
+</AccountLayout>
+
+@code {
+    private IReadOnlyList<string> messages = [];
+
+    private bool saved;
+
+    [Parameter]
+    public string? Lang { get; set; }
+
+    [SupplyParameterFromForm]
+    private ProfileInput? Input { get; set; }
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    private string UserId => AccountCookie.UserId(HttpContext.User)!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpContext.Request.HasFormContentType)
+        {
+            return;
+        }
+
+        var data = await PersonalDataQuery.Handle(new GetPersonalDataQuery(UserId));
+        Input = new ProfileInput { DisplayName = data?.DisplayName ?? "", ShowNamePublicly = data?.ShowNamePublicly ?? false, Culture = data?.PreferredCulture ?? "de" };
+    }
+
+    private async Task Submit()
+    {
+        var result = await UpdateProfile.Handle(new UpdateProfileCommand(UserId, Input!.DisplayName, Input!.ShowNamePublicly, Input!.Culture));
+        saved = result.Succeeded;
+        messages = saved ? [L["Profile_Saved"]] : AccountText.Errors(L, result);
+
+        if (saved && await Reload.Handle(new GetPersonalDataQuery(UserId)) is { } data)
+        {
+            await AccountCookie.SignIn(HttpContext, new SignedInAccount(UserId, data.DisplayName, data.PreferredCulture, data.Roles));
+        }
+    }
+
+    private sealed class ProfileInput
+    {
+        public string DisplayName { get; set; } = "";
+
+        public bool ShowNamePublicly { get; set; }
+
+        public string Culture { get; set; } = "de";
+    }
+}

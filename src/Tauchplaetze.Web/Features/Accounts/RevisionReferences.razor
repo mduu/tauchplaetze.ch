@@ -1,0 +1,30 @@
+@using Tauchplaetze.Core.Features.Accounts.Queries
+@inject IStringLocalizer<AccountStrings> L
+
+@if (Items.Count == 0)
+{
+    <p>@L["MyData_None"]</p>
+}
+else
+{
+    <ul class="references">
+        @foreach (var item in Items)
+        {
+            <li>
+                <a href="@PublicRoutes.DiveSite(Language, item.SiteSlug)">@item.SiteName</a>
+                · @L["Version", item.Number] · @L[$"Status_{item.Status}"] · @item.At.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
+                @if (item.Comment is not null)
+                {
+                    <span class="comment">«@item.Comment»</span>
+                }
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<RevisionReference> Items { get; set; } = [];
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
