@@ -64,10 +64,12 @@ Pfad `/de/ueber`, `/en/about`, `/fr/a-propos`, `/it/chi-siamo`. Nicht in der Hau
 2. **Datenquellen** (`#quellen`): Eawag Alplakes, MeteoSchweiz über Open-Meteo, BAFU Hydrodaten über existenz.ch, swisstopo (Landeskarte, Luftbild, swissBATHY3D), OpenStreetMap (ODbL), je mit Link und Lizenz (`data-sources.md`).
 3. **Impressum** (`#impressum`): Betreiber (Name, Adresse) aus `Operator:*` (`infrastructure.md`), Kontakt über das Formular, Haftungshinweis. Fehlen Name oder Adresse: «Angaben folgen».
 4. **Kontakt** (`#kontakt`): Formular mit Name (optional), E-Mail für die Antwort (Pflicht), Bezug (optional) und Nachricht (10–4000 Zeichen). Der Command `SendContactMessage` schickt sie per Mail an `Operator:Email`, Antwort an die Absenderin (Reply-To), Betreff «tauchplaetze.ch Kontakt: …». Die Nachricht wird nicht gespeichert. Nach dem Senden Redirect mit «Danke!» (`?kontakt=gesendet`). Plätze der Stufe 0 verlinken mit «Schreib uns.» auf das Formular, Bezug vorausgefüllt (`?bezug={Name}`).
-   - **Schutz:** Honeypot (Feld «Website», per CSS ausserhalb des Bildschirms, `aria-hidden`, `tabindex=-1`), Zeitfalle (Zeitstempel mit Data Protection signiert, unter 3 s oder über 6 h ungültig), Rate Limit 5 POST pro Stunde und IP (nur im Arbeitsspeicher). Honeypot oder zu schnell: Die Seite meldet «gesendet», sendet aber nichts.
+   - **Schutz:** Honeypot (Feld «Website», per CSS ausserhalb des Bildschirms, `aria-hidden`, `tabindex=-1`), Zeitfalle (Timestamp mit Data Protection signiert, unter 3 s oder über 6 h ungültig), Rate Limit 5 POST pro Stunde und Client (nur im Arbeitsspeicher, `infrastructure.md`). Nach einem Fehler bleibt der gesendete Timestamp gültig, damit ein zweiter Versuch nicht als «zu schnell» gilt. Honeypot oder zu schnell: Die Seite meldet «gesendet», sendet aber nichts.
 5. **Datenschutz** (`#datenschutz`): Besuch, Speicherort, Konto, Beiträge und Fotos, Kontaktformular, Standort und Karten, Routen, Rechte («Meine Daten», «Konto löschen»), Verweis auf das Formular.
 
 Die E-Mail-Adresse des Betreibers erscheint nirgends auf der Website, auch nicht verschleiert (Entscheid Marc, 18.10.2026).
+
+`canonical` der Seite ist immer `/{lang}/{segment}` ohne Parameter (`?bezug`, `?kontakt`). Die Seite ist vom künftigen Output Cache ausgenommen: Das Formular trägt ein Antiforgery-Token und einen Timestamp pro Aufruf.
 
 ### Tauchplatzseite
 

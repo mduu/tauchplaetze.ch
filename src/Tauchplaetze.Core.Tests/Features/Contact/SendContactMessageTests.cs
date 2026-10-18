@@ -23,6 +23,19 @@ public class SendContactMessageTests
         Assert.Contains("Beim Riff Williams fehlt der Einstieg.", sent.Body);
     }
 
+    [Fact]
+    public async Task Zeilenumbrueche_im_Bezug_oder_in_der_Nachricht_ergeben_einen_einzeiligen_Betreff()
+    {
+        // Act
+        await Send(new SendContactMessageCommand(null, "anna@example.org", "Erste Zeile\r\nBcc: spam@example.org\nDritte Zeile", null, "de"));
+        await Send(new SendContactMessageCommand(null, "anna@example.org", "Eine genügend lange Nachricht.", "Riff\r\nWilliams", "de"));
+
+        // Assert
+        Assert.All(mail.Sent, m => Assert.DoesNotContain('\n', m.Subject));
+        Assert.All(mail.Sent, m => Assert.DoesNotContain('\r', m.Subject));
+        Assert.Equal("tauchplaetze.ch Kontakt: Riff Williams", mail.Sent.Last().Subject);
+    }
+
     [Theory]
     [InlineData("", "Eine genügend lange Nachricht.", ContactError.InvalidEmail)]
     [InlineData("keine-adresse", "Eine genügend lange Nachricht.", ContactError.InvalidEmail)]

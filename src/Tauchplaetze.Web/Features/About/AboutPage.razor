@@ -4,14 +4,17 @@
 @page "/it/chi-siamo"
 @using Microsoft.AspNetCore.RateLimiting
 @using Microsoft.Extensions.Options
+@using Tauchplaetze.Core.CrossCutting.Mail
 @attribute [EnableRateLimiting(ContactForm.RateLimitPolicy)]
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<AboutStrings> L
 @inject IOptions<OperatorOptions> Operator
+@inject IOptions<PublicSiteOptions> Site
 
 <PageTitle>@L["About_Title"] · @Shared["Brand"]</PageTitle>
 <HeadContent>
     <meta name="description" content="@L["About_MetaDescription"]" />
+    <link rel="canonical" href="@Site.Value.Link(PublicRoutes.AboutPage(Language))" />
 </HeadContent>
 <HreflangLinks />
 

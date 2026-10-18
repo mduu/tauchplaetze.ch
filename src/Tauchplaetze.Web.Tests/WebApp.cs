@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Tauchplaetze.Core.Features.Contact.Commands;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -52,10 +53,18 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?> PublicChanges { get; } = new(_ => null);
 
+    /// <summary>Empfänger des Kontaktformulars im Test. Er darf nie im HTML stehen.</summary>
+    public const string OperatorEmail = "betreiber@example.org";
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("ConnectionStrings:tauchplaetze", "Server=127.0.0.1,1;Database=tauchplaetze;User Id=test;Password=test;TrustServerCertificate=true");
         builder.UseSetting("ConnectionStrings:blobs", "UseDevelopmentStorage=true");
+        builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            ["Operator:Email"] = OperatorEmail,
+            ["Contact:MessagesPerHour"] = "1000",
+        }));
         builder.ConfigureTestServices(services =>
         {
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));

@@ -49,7 +49,7 @@
   <data name="About_Privacy_Title" xml:space="preserve"><value>Protezione dei dati</value></data>
   <data name="About_Privacy_Lead" xml:space="preserve"><value>Trattiamo il minor numero possibile di dati personali, secondo la legge svizzera sulla protezione dei dati (LPD).</value></data>
   <data name="About_Privacy_Visit_Title" xml:space="preserve"><value>Visita del sito</value></data>
-  <data name="About_Privacy_Visit_Text" xml:space="preserve"><value>Per la visita non serve un account. Non usiamo cookie di tracciamento o pubblicitari. Per la ricerca degli errori registriamo dati d’esercizio (indirizzo richiesto, ora, errori) con Microsoft Azure Application Insights, senza indirizzo IP, e li cancelliamo dopo 30 giorni.</value></data>
+  <data name="About_Privacy_Visit_Text" xml:space="preserve"><value>Per la visita non serve un account. Non usiamo cookie di tracciamento o pubblicitari. Per la ricerca degli errori l’app scrive dati d’esercizio (indirizzo richiesto, ora, errori) in un registro, senza indirizzo IP. Lo conserviamo al massimo 30 giorni.</value></data>
   <data name="About_Privacy_Hosting_Title" xml:space="preserve"><value>Hosting</value></data>
   <data name="About_Privacy_Hosting_Text" xml:space="preserve"><value>Sito, banca dati e foto sono ospitati da Microsoft Azure nella regione Svizzera Nord. Cloudflare distribuisce pagine e immagini e protegge dagli attacchi. In tal modo Cloudflare tratta il tuo indirizzo IP. Cloudflare è un’azienda con sede negli Stati Uniti; i dati possono quindi essere trattati anche fuori dalla Svizzera.</value></data>
   <data name="About_Privacy_Account_Title" xml:space="preserve"><value>Account</value></data>
@@ -57,7 +57,7 @@
   <data name="About_Privacy_Contributions_Title" xml:space="preserve"><value>Contributi e foto</value></data>
   <data name="About_Privacy_Contributions_Text" xml:space="preserve"><value>Le modifiche compaiono nelle versioni di un sito, con il tuo nome solo se acconsenti. Mostriamo le foto con il nome del fotografo. Le dimensioni pubbliche delle immagini non contengono dati GPS né della fotocamera; l’originale resta privato.</value></data>
   <data name="About_Privacy_Location_Title" xml:space="preserve"><value>Posizione e mappe</value></data>
-  <data name="About_Privacy_Location_Text" xml:space="preserve"><value>«Vicino a me» chiede la tua posizione al browser. La coordinata compare solo nell’indirizzo della ricerca e può quindi apparire nei dati d’esercizio. Non la analizziamo e non la salviamo in un account. Il tuo browser carica le tessere della mappa direttamente da swisstopo (geo.admin.ch); swisstopo vede il tuo indirizzo IP. Il tuo browser ricorda la scelta tra mappa e immagine aerea.</value></data>
+  <data name="About_Privacy_Location_Text" xml:space="preserve"><value>«Vicino a me» chiede la tua posizione al browser. La coordinata compare solo nell’indirizzo della ricerca e può quindi apparire nel registro dell’app. Non la analizziamo e non la salviamo in un account. Il tuo browser carica le tessere della mappa direttamente da swisstopo (geo.admin.ch); swisstopo vede il tuo indirizzo IP. Il tuo browser ricorda la scelta tra mappa e immagine aerea.</value></data>
   <data name="About_Privacy_Routes_Title" xml:space="preserve"><value>Percorsi</value></data>
   <data name="About_Privacy_Routes_Text" xml:space="preserve"><value>I link a Google Maps e Mappe di Apple trasmettono la coordinata del sito solo quando ci clicchi.</value></data>
   <data name="About_Privacy_Rights_Title" xml:space="preserve"><value>I tuoi diritti</value></data>
@@ -79,5 +79,5 @@
   <data name="Contact_Error_Expired" xml:space="preserve"><value>Il modulo è scaduto. Invia di nuovo il messaggio.</value></data>
   <data name="Contact_Error_Limit" xml:space="preserve"><value>Troppi messaggi in poco tempo. Riprova tra un’ora.</value></data>
   <data name="About_Privacy_Contact_Title" xml:space="preserve"><value>Modulo di contatto</value></data>
-  <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Nome, indirizzo e-mail e messaggio arrivano al gestore per e-mail e non vengono salvati nella banca dati. Contro gli abusi contiamo i messaggi per indirizzo IP per un’ora in memoria, senza salvare l’indirizzo.</value></data>
+  <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Nome, indirizzo e-mail e messaggio arrivano al gestore per e-mail e non vengono salvati nella banca dati. Il modulo usa un cookie tecnicamente necessario di protezione dagli abusi. Contro lo spam contiamo i messaggi per indirizzo IP, solo in memoria e al massimo per un’ora.</value></data>
 </root>

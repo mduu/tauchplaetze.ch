@@ -2,7 +2,7 @@ namespace Tauchplaetze.Web.Features.About;
 
 /// <summary>
 /// Betreiber für das Impressum (`infrastructure.md`). Fehlen Name oder Adresse, zeigt die Seite «Angaben folgen».
-/// <see cref="Email"/> ist nur der Empfänger des Kontaktformulars und erscheint nie auf der Website.
+/// Die E-Mail des Betreibers (`Operator:Email`) liest nur der Core als Empfänger des Kontaktformulars (`ContactOptions`).
 /// </summary>
 internal class OperatorOptions
 {
@@ -12,8 +12,6 @@ internal class OperatorOptions
 
     /// <summary>Adresse, Zeilen getrennt durch Zeilenumbruch.</summary>
     public string? Address { get; set; }
-
-    public string? Email { get; set; }
 
     public bool IsComplete => !string.IsNullOrWhiteSpace(Name) && !string.IsNullOrWhiteSpace(Address);
 

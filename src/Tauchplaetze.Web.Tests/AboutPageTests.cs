@@ -1,8 +1,11 @@
 using System.Globalization;
+using System.Net;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Tauchplaetze.Core.Features.Contact.Commands;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -30,6 +33,19 @@ public class AboutPageTests(WebApp app) : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Das_Canonical_der_Seite_Ueber_hat_keine_Parameter()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/fr/a-propos?bezug=Riff%20Williams&kontakt=gesendet", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Matches("<link rel=\"canonical\" href=\"https://[^\"?]+/fr/a-propos\"", html);
+    }
+
+    [Fact]
     public async Task Das_Impressum_zeigt_die_Adresse_und_statt_einer_E_Mail_das_Kontaktformular()
     {
         // Arrange
@@ -41,7 +57,7 @@ public class AboutPageTests(WebApp app) : IClassFixture<WebApp>
         // Assert
         Assert.Contains("Panoramastrasse 34", html);
         Assert.Contains("id=\"kontakt\"", html);
-        Assert.DoesNotContain("betreiber@example.org", html);
+        Assert.DoesNotContain(WebApp.OperatorEmail, html);
         Assert.DoesNotContain("betreiber@", html);
         Assert.DoesNotContain("mailto:", html);
     }
@@ -75,6 +91,65 @@ public class AboutPageTests(WebApp app) : IClassFixture<WebApp>
         // Assert
         Assert.EndsWith("/de/ueber?kontakt=gesendet#kontakt", response.Headers.Location?.OriginalString);
         Assert.Same(before, app.Contact.LastQuery);
+    }
+
+    [Fact]
+    public async Task Nach_einem_Fehler_bleibt_der_Stempel_gueltig_und_ein_zweiter_Versuch_sofort_danach_sendet()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        var calls = 0;
+        app.Contact.Answer = _ => ++calls == 1 ? new ContactResult([ContactError.InvalidEmail]) : new ContactResult([]);
+        var first = await Post(browser, Stamp(TimeSpan.FromMinutes(2)), trap: "");
+        var html = await first.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        var kept = WebUtility.HtmlDecode(Regex.Match(html, "name=\"Input.Stamp\" value=\"([^\"]+)\"").Groups[1].Value);
+
+        // Act
+        var second = await Post(browser, kept, trap: "");
+
+        // Assert
+        app.Contact.Answer = _ => new ContactResult([]);
+        Assert.Contains("gültige E-Mail-Adresse", VisibleText.Of(html));
+        Assert.EndsWith("?kontakt=gesendet#kontakt", second.Headers.Location?.OriginalString);
+        Assert.Equal(2, calls);
+    }
+
+    [Fact]
+    public async Task Ein_manipulierter_Stempel_gilt_als_abgelaufen_und_sendet_nichts()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        var before = app.Contact.LastQuery;
+
+        // Act
+        var response = await Post(browser, "gefaelscht", trap: "");
+
+        // Assert
+        Assert.Contains("Das Formular ist abgelaufen.", VisibleText.Of(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)));
+        Assert.Same(before, app.Contact.LastQuery);
+    }
+
+    [Fact]
+    public async Task Der_sechste_Versuch_in_einer_Stunde_landet_beim_Limit_auch_mit_wechselndem_Cloudflare_Header()
+    {
+        // Arrange
+        using var limited = app.WithWebHostBuilder(builder => builder.ConfigureAppConfiguration((_, config) =>
+            config.AddInMemoryCollection(new Dictionary<string, string?> { ["Contact:MessagesPerHour"] = "5" })));
+        using var browser = limited.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, BaseAddress = new Uri("https://localhost") });
+        var stamp = StampOf(limited.Services, TimeSpan.FromMinutes(2));
+        var responses = new List<HttpResponseMessage>();
+
+        // Act
+        for (var attempt = 1; attempt <= 6; attempt++)
+        {
+            browser.DefaultRequestHeaders.Remove("CF-Connecting-IP");
+            browser.DefaultRequestHeaders.Add("CF-Connecting-IP", $"203.0.113.{attempt}");
+            responses.Add(await Post(browser, stamp, trap: "bot"));
+        }
+
+        // Assert
+        Assert.All(responses.Take(5), r => Assert.EndsWith("?kontakt=gesendet#kontakt", r.Headers.Location?.OriginalString));
+        Assert.EndsWith("?kontakt=limit#kontakt", responses[5].Headers.Location?.OriginalString);
     }
 
     [Fact]
@@ -120,8 +195,10 @@ public class AboutPageTests(WebApp app) : IClassFixture<WebApp>
         Assert.DoesNotContain("Pas besoin de signalements", VisibleText.Of(html));
     }
 
-    private string Stamp(TimeSpan age) =>
-        app.Services.GetRequiredService<IDataProtectionProvider>().CreateProtector("Tauchplaetze.ContactForm.Stamp")
+    private string Stamp(TimeSpan age) => StampOf(app.Services, age);
+
+    private static string StampOf(IServiceProvider services, TimeSpan age) =>
+        services.GetRequiredService<IDataProtectionProvider>().CreateProtector("Tauchplaetze.ContactForm.Stamp")
             .Protect((DateTimeOffset.UtcNow - age).UtcTicks.ToString(CultureInfo.InvariantCulture));
 
     private static Task<HttpResponseMessage> Post(HttpClient browser, string stamp, string trap) =>

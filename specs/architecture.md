@@ -196,7 +196,7 @@ Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, ko
 
 ## Caching
 
-- **Output Cache** für öffentliche Seiten: Standard 15 Minuten. Tags `forecast`, `site:{id}`, `water:{id}`.
+- **Output Cache** für öffentliche Seiten: Standard 15 Minuten. Tags `forecast`, `site:{id}`, `water:{id}`. Ausgenommen sind Seiten mit Formular (Antiforgery-Token, Timestamp pro Aufruf): «Über» mit dem Kontaktformular und die Konto-Seiten.
 - Der Prognose-Lauf invalidiert `forecast`. Eine Speicherung im CMS invalidiert `site:{id}` und `water:{id}`.
 - Variation nach Kultur und Query-Parametern (Tag, Umkreis).
 - Bilder: lange Cache-Dauer (`immutable`), Dateiname enthält die Version. Cloudflare cacht vor dem App Service.

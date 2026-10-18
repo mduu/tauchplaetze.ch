@@ -24,7 +24,7 @@ else
     }
 
     <EditForm Model="Input" FormName="contact" OnSubmit="Submit" class="form contact-form">
-        <input type="hidden" name="Input.Stamp" value="@Stamp" />
+        <input type="hidden" name="Input.Stamp" value="@stamp" />
         <label>@L["Contact_Name"] <InputText autocomplete="name" maxlength="@ContactRules.MaxName" @bind-Value="Input!.Name" /></label>
         <label>@L["Contact_Email"] <InputText type="email" autocomplete="email" required maxlength="@ContactRules.MaxEmail" @bind-Value="Input!.Email" /></label>
         <label>@L["Contact_Reference"] <InputText maxlength="@ContactRules.MaxReference" @bind-Value="Input!.Reference" /></label>
@@ -35,7 +35,7 @@ else
 }
 
 @code {
-    /// <summary>Name der Policy für das Rate Limit (5 Nachrichten pro Stunde und IP, `Program.cs`).</summary>
+    /// <summary>Name der Policy für das Rate Limit (`ContactRateLimit`).</summary>
     public const string RateLimitPolicy = "contact";
 
     private static readonly TimeSpan MinFillTime = TimeSpan.FromSeconds(3);
@@ -43,6 +43,8 @@ else
     private static readonly TimeSpan MaxFillTime = TimeSpan.FromHours(6);
 
     private IReadOnlyList<string> errors = [];
+
+    private string stamp = "";
 
     [Parameter]
     public ContactStatus Status { get; set; }
@@ -58,13 +60,16 @@ else
 
     private IDataProtector Protector => Protection.CreateProtector("Tauchplaetze.ContactForm.Stamp");
 
-    private string Stamp => Protector.Protect(Time.GetUtcNow().UtcTicks.ToString(CultureInfo.InvariantCulture));
+    private string NewStamp() => Protector.Protect(Time.GetUtcNow().UtcTicks.ToString(CultureInfo.InvariantCulture));
 
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
+    /// <remarks>Nach einem Fehler bleibt der gesendete Stempel gültig. Ein neuer würde den zweiten Versuch als «zu schnell» verwerfen.</remarks>
     protected override void OnInitialized()
     {
         Input ??= new ContactInput { Reference = Reference };
+
+        stamp = Input.Stamp is { } posted && AgeOf(posted) is { } age && age <= MaxFillTime ? posted : NewStamp();
         if (Status == ContactStatus.Limited)
         {
             errors = [L["Contact_Error_Limit"]];
@@ -86,6 +91,7 @@ else
 
         if (age is null || age > MaxFillTime)
         {
+            stamp = NewStamp();
             errors = [L["Contact_Error_Expired"]];
             return;
         }

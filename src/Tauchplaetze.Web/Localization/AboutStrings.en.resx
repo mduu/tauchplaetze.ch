@@ -49,7 +49,7 @@
   <data name="About_Privacy_Title" xml:space="preserve"><value>Privacy</value></data>
   <data name="About_Privacy_Lead" xml:space="preserve"><value>We process as little personal data as possible, in line with the Swiss Federal Act on Data Protection (FADP).</value></data>
   <data name="About_Privacy_Visit_Title" xml:space="preserve"><value>Visiting the website</value></data>
-  <data name="About_Privacy_Visit_Text" xml:space="preserve"><value>You do not need an account to visit. We set no tracking or advertising cookies. For troubleshooting we record operational data (requested address, time, errors) with Microsoft Azure Application Insights, without IP address, and delete it after 30 days.</value></data>
+  <data name="About_Privacy_Visit_Text" xml:space="preserve"><value>You do not need an account to visit. We set no tracking or advertising cookies. For troubleshooting, the app writes operational data (requested address, time, errors) to a log, without IP address. We keep it for at most 30 days.</value></data>
   <data name="About_Privacy_Hosting_Title" xml:space="preserve"><value>Hosting</value></data>
   <data name="About_Privacy_Hosting_Text" xml:space="preserve"><value>Website, database and photos are hosted by Microsoft Azure in the Switzerland North region. Cloudflare delivers pages and images and protects against attacks. In doing so, Cloudflare processes your IP address. Cloudflare is a company based in the USA; the data may therefore also be processed outside Switzerland.</value></data>
   <data name="About_Privacy_Account_Title" xml:space="preserve"><value>Account</value></data>
@@ -57,7 +57,7 @@
   <data name="About_Privacy_Contributions_Title" xml:space="preserve"><value>Contributions and photos</value></data>
   <data name="About_Privacy_Contributions_Text" xml:space="preserve"><value>Changes appear in the versions of a site, with your name only if you agree. We show photos with the photographer’s name. The public image sizes contain no GPS or camera data; the original stays private.</value></data>
   <data name="About_Privacy_Location_Title" xml:space="preserve"><value>Location and maps</value></data>
-  <data name="About_Privacy_Location_Text" xml:space="preserve"><value>«Near me» asks your browser for your location. The coordinate is only part of the search address and may therefore appear in the operational data. We do not analyse it and do not store it in an account. Your browser loads map tiles directly from swisstopo (geo.admin.ch); swisstopo sees your IP address. Your browser remembers the choice of map or aerial image.</value></data>
+  <data name="About_Privacy_Location_Text" xml:space="preserve"><value>«Near me» asks your browser for your location. The coordinate is only part of the search address and may therefore appear in the app’s log. We do not analyse it and do not store it in an account. Your browser loads map tiles directly from swisstopo (geo.admin.ch); swisstopo sees your IP address. Your browser remembers the choice of map or aerial image.</value></data>
   <data name="About_Privacy_Routes_Title" xml:space="preserve"><value>Routes</value></data>
   <data name="About_Privacy_Routes_Text" xml:space="preserve"><value>The links to Google Maps and Apple Maps only transmit the site’s coordinate when you click them.</value></data>
   <data name="About_Privacy_Rights_Title" xml:space="preserve"><value>Your rights</value></data>
@@ -79,5 +79,5 @@
   <data name="Contact_Error_Expired" xml:space="preserve"><value>The form has expired. Please send the message again.</value></data>
   <data name="Contact_Error_Limit" xml:space="preserve"><value>Too many messages in a short time. Please try again in an hour.</value></data>
   <data name="About_Privacy_Contact_Title" xml:space="preserve"><value>Contact form</value></data>
-  <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Name, e-mail address and message go to the operator by e-mail and are not stored in the database. To prevent misuse, we count messages per IP address for one hour in memory without storing the address.</value></data>
+  <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Name, e-mail address and message go to the operator by e-mail and are not stored in the database. The form uses a technically necessary cookie that protects against misuse. Against spam, we count messages per IP address, only in memory and for at most one hour.</value></data>
 </root>

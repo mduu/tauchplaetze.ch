@@ -21,15 +21,15 @@ builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(Fo
 builder.Services.AddHostedService<ForecastWorker>();
 builder.Services.AddHostedService<MediaPurgeWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));
-builder.Services.AddContactRateLimit();
+builder.Services.AddContactRateLimit(builder.Configuration);
 
 var app = builder.Build();
 
 await app.PrepareDatabase();
 
-if (app.Configuration.GetSection(OperatorOptions.Section).Get<OperatorOptions>() is not { IsComplete: true, Email.Length: > 0 })
+if (app.Configuration.GetSection(OperatorOptions.Section).Get<OperatorOptions>() is not { IsComplete: true })
 {
-    app.Logger.LogWarning("Operator details in {Section} are incomplete. The legal notice shows a placeholder, the contact form may not send.", OperatorOptions.Section);
+    app.Logger.LogWarning("Operator name or address in {Section} is missing. The legal notice shows a placeholder.", OperatorOptions.Section);
 }
 
 if (!app.Environment.IsDevelopment())
