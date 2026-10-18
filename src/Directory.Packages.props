@@ -13,6 +13,11 @@
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
   </ItemGroup>
 
+  <ItemGroup Label="Mail und Identity">
+    <PackageVersion Include="MailKit" Version="4.18.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="10.0.13" />
+  </ItemGroup>
+
   <ItemGroup Label="Aspire">
     <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.6.1" />
     <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.6.1" />

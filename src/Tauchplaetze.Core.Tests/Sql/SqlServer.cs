@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Tauchplaetze.Core.CrossCutting.Locks;
+using Tauchplaetze.Core.CrossCutting.Mail;
 using Tauchplaetze.Core.CrossCutting.Storage;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
@@ -38,6 +39,8 @@ public sealed class SqlServer : IAsyncLifetime
 
     internal FixedTime Time { get; } = new(FixedTime.SpikeDay);
 
+    internal InMemoryMailSender Mail { get; } = new();
+
     /// <summary>Kein Test ruft eine echte Quelle auf (architecture.md, Testing).</summary>
     internal FakeSources Sources { get; } = new();
 
@@ -58,12 +61,14 @@ public sealed class SqlServer : IAsyncLifetime
         {
             [$"ConnectionStrings:{CoreRegistration.DatabaseConnectionName}"] = ConnectionString(),
             [$"ConnectionStrings:{CoreRegistration.BlobsConnectionName}"] = "UseDevelopmentStorage=true",
+            ["Accounts:RegistrationOpen"] = "true",
         });
         builder.AddTauchplaetzeCore();
         builder.Services.Replace(ServiceDescriptor.Singleton<IRevisionStore>(Revisions));
         builder.Services.Replace(ServiceDescriptor.Singleton<IRawDataStore>(RawData));
         builder.Services.Replace(ServiceDescriptor.Singleton<IRunLock>(RunLock));
         builder.Services.Replace(ServiceDescriptor.Singleton<TimeProvider>(Time));
+        builder.Services.Replace(ServiceDescriptor.Singleton<IMailSender>(Mail));
         builder.Services.ConfigureHttpClientDefaults(client => client.ConfigurePrimaryHttpMessageHandler(() => Sources));
         host = builder.Build();
 
@@ -107,6 +112,7 @@ public sealed class SqlServer : IAsyncLifetime
         await dbContext.Database.ExecuteSqlRawAsync(sql);
         Revisions.Clear();
         RawData.Files.Clear();
+        Mail.Sent.Clear();
         Sources.Failing = null;
         Time.Now = FixedTime.SpikeDay;
     }

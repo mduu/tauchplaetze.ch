@@ -2,9 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Tauchplaetze.Core.CrossCutting.Mail;
 using Tauchplaetze.Core.CrossCutting.Modules;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Accounts;
 
 namespace Tauchplaetze.Core;
 
@@ -27,6 +29,8 @@ public static class CoreRegistration
         builder.EnrichSqlServerDbContext<TauchplaetzeDbContext>();
         builder.AddAzureBlobServiceClient(BlobsConnectionName);
 
+        builder.Services.Configure<MailOptions>(builder.Configuration.GetSection(MailOptions.Section));
+        builder.Services.Configure<AccountsOptions>(builder.Configuration.GetSection(AccountsOptions.Section));
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddHandlers(typeof(CoreRegistration).Assembly);
         builder.Services.AddCoreModules(typeof(CoreRegistration).Assembly);

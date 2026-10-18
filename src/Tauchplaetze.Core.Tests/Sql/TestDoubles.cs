@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Net;
 using Tauchplaetze.Core.CrossCutting.Locks;
+using Tauchplaetze.Core.CrossCutting.Mail;
 using Tauchplaetze.Core.CrossCutting.Storage;
 using Tauchplaetze.Core.Tests.Features.Forecasts;
 
@@ -76,4 +77,19 @@ internal sealed class FakeSources : HttpMessageHandler
 
         return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(TestData.Read(route.Source, route.File)) });
     }
+}
+
+internal sealed class InMemoryMailSender : IMailSender
+{
+    public ConcurrentQueue<MailMessage> Sent { get; } = new();
+
+    public Task Send(MailMessage message, CancellationToken ct)
+    {
+        Sent.Enqueue(message);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>Der Link in der letzten Mail an <paramref name="to"/>.</summary>
+    public string LinkTo(string to) =>
+        Sent.Last(m => m.To == to).Body.Split('\n').Single(line => line.StartsWith("https://", StringComparison.Ordinal)).Trim();
 }

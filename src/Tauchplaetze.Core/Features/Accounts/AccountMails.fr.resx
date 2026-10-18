@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Confirm_Subject" xml:space="preserve"><value>Merci de confirmer ton adresse e-mail</value></data>
+  <data name="Confirm_Body" xml:space="preserve"><value>Bonjour {0}
+
+Merci pour ton inscription sur tauchplaetze.ch. Confirme ton adresse e-mail avec ce lien :
+
+{1}
+
+Tu ne t'es pas inscrit ? Ignore cet e-mail.
+
+tauchplaetze.ch</value></data>
+  <data name="Reset_Subject" xml:space="preserve"><value>Nouveau mot de passe pour tauchplaetze.ch</value></data>
+  <data name="Reset_Body" xml:space="preserve"><value>Bonjour {0}
+
+Ce lien te permet de définir un nouveau mot de passe. Il est valable un jour :
+
+{1}
+
+Tu n'as pas demandé de nouveau mot de passe ? Ignore cet e-mail.
+
+tauchplaetze.ch</value></data>
+  <data name="Approved_Subject" xml:space="preserve"><value>Ta contribution est en ligne</value></data>
+  <data name="Approved_Body" xml:space="preserve"><value>Bonjour {0}
+
+Merci ! Ta modification de «{1}» est validée et en ligne :
+
+{2}
+
+tauchplaetze.ch</value></data>
+  <data name="Rejected_Subject" xml:space="preserve"><value>Ta contribution n'a pas été retenue</value></data>
+  <data name="Rejected_Body" xml:space="preserve"><value>Bonjour {0}
+
+Ta modification de «{1}» n'a pas été retenue. Motif :
+
+{2}
+
+Merci quand même pour ta contribution.
+
+tauchplaetze.ch</value></data>
+</root>
