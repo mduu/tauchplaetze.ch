@@ -33,7 +33,7 @@ public class AboutPageTests(WebApp app) : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Das_Canonical_der_Seite_Ueber_hat_keine_Parameter()
+    public async Task Canonical_und_Sprachversionen_der_Seite_Ueber_haben_keine_Parameter_und_die_Beschreibung_bleibt()
     {
         // Arrange
         using var browser = app.Browser();
@@ -43,6 +43,9 @@ public class AboutPageTests(WebApp app) : IClassFixture<WebApp>
 
         // Assert
         Assert.Matches("<link rel=\"canonical\" href=\"https://[^\"?]+/fr/a-propos\"", html);
+        Assert.Matches("<link rel=\"alternate\" hreflang=\"de\" href=\"https://[^\"?]+/de/ueber\"", html);
+        Assert.Matches("<link rel=\"alternate\" hreflang=\"it\" href=\"https://[^\"?]+/it/chi-siamo\"", html);
+        Assert.Contains("<meta name=\"description\" content=\"Comment la prévision", WebUtility.HtmlDecode(html));
     }
 
     [Fact]
