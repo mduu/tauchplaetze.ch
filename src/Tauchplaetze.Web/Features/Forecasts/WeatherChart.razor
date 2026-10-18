@@ -75,11 +75,11 @@
             @foreach (var day in Days)
             {
                 <line class="midnight" x1="@Svg(X(day.Offset))" y1="0" x2="@Svg(X(day.Offset))" y2="@Svg(MainBottom + 4)" />
-                <SvgText class="day-label" x="@Svg(X(day.Offset) + 4)" y="11" Content="@day.Label" />
+                <SvgText class="day-label" x="@Svg(X(day.Offset) + 4)" y="14" Content="@day.Label" />
             }
             @foreach (var hour in AxisHours)
             {
-                <SvgText class="tick" x="@Svg(X(hour.Offset))" y="@Svg(MainBottom + 13)" text-anchor="middle" Content="@hour.Label" />
+                <SvgText class="tick" x="@Svg(X(hour.Offset))" y="@Svg(MainBottom + 16)" text-anchor="middle" Content="@hour.Label" />
             }
 
             @* Symbole nur beim Wechsel, dazwischen eine gepunktete Linie *@
@@ -102,7 +102,7 @@
                 var center = X(wind.Offset);
                 @if (wind.Direction is { } direction)
                 {
-                    <path class="wind-arrow" d="M0 -5L3.6 0.8H1.2V5H-1.2V0.8H-3.6Z" transform="translate(@Svg(center) @Svg(WindArrowY)) rotate(@Svg((direction + 180) % 360))" />
+                    <path class="wind-arrow" d="M0 -7L5 1.1H1.7V7H-1.7V1.1H-5Z" transform="translate(@Svg(center) @Svg(WindArrowY)) rotate(@Svg((direction + 180) % 360))" />
                 }
                 <SvgText class="wind-value" x="@Svg(center)" y="@Svg(WindValueY)" text-anchor="middle" Content="@Svg(Math.Round(wind.Kmh))" />
             }
@@ -147,23 +147,23 @@
 
     private const double Left = 30;
 
-    private const double SymbolTop = 16;
+    private const double SymbolTop = 22;
 
-    private const double SymbolSize = 20;
+    private const double SymbolSize = 26;
 
-    private const double WindArrowY = 46;
+    private const double WindArrowY = 64;
 
-    private const double WindValueY = 64;
+    private const double WindValueY = 84;
 
-    private const double SunTop = 70;
+    private const double SunTop = 96;
 
-    private const double SunBottom = 86;
+    private const double SunBottom = 136;
 
-    private const double MainTop = 94;
+    private const double MainTop = 150;
 
-    private const double MainBottom = 160;
+    private const double MainBottom = 390;
 
-    private const double Height = 178;
+    private const double Height = 412;
 
     private const int WindEverySlots = 3;
 

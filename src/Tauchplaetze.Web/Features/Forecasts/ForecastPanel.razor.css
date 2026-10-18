@@ -60,8 +60,19 @@
         grid-area: profile;
     }
 
+    /* Die rechte Spalte reicht so weit wie die linke. Der Wetterverlauf füllt den Rest der Kachel. */
     .days {
         grid-area: days;
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hourly {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
 }
 
