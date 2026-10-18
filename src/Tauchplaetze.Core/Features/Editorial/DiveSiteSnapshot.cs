@@ -23,7 +23,7 @@ internal static class DiveSiteSnapshot
         {
             Translations = [.. content.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal)],
             EntryPoints = content.EntryPointList,
-            Notices = content.NoticeList,
+            Notices = [.. content.NoticeList.Select(n => n with { Texts = [.. n.Texts.OrderBy(t => t.Culture, StringComparer.Ordinal)] })],
         };
         var node = JsonSerializer.SerializeToNode(normalized, JsonOptions)!.AsObject();
         node.Remove("entryPointList");

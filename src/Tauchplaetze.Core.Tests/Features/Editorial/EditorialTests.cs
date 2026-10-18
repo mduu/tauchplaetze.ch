@@ -329,6 +329,31 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(NoticeKind.Closure, listed.NoticeToday);
     }
 
+    [SqlFact]
+    public async Task Ein_vorhandener_Hinweis_laesst_sich_aendern_und_entfernen()
+    {
+        // Arrange
+        var (moderator, _, site) = await Prepare();
+        var first = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, first.BaseNumber,
+            first.Content with { Notices = [Notice(NoticeKind.Warning, null, null, ("de", "Parkplatz zu"), ("fr", "Parking fermé"))] }, null));
+        var second = await ForEditing(site);
+        var saved = Assert.Single(second.Content.NoticeList);
+
+        // Act
+        var changed = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, second.BaseNumber,
+            second.Content with { Notices = [saved with { Kind = NoticeKind.Closure, Texts = [new NoticeText("de", "Gesperrt")] }] }, null));
+        var afterChange = await PublicNotices(site);
+        var third = await ForEditing(site);
+        var removed = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, third.BaseNumber, third.Content with { Notices = [] }, null));
+
+        // Assert
+        Assert.True(changed.Succeeded);
+        Assert.Equal([(NoticeKind.Closure, "Gesperrt")], afterChange.Select(n => (n.Kind, n.Text)));
+        Assert.True(removed.Succeeded);
+        Assert.Empty(await PublicNotices(site));
+    }
+
     [SqlTheory]
     [InlineData(null, null, null)]
     [InlineData("Gesperrt", "2026-11-02", "2026-11-01")]
@@ -400,6 +425,12 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
 
     private async Task<IReadOnlyList<FieldChange>> Changes(Guid site, int from, int to) =>
         (await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(site, from, to)))!;
+
+    private async Task<IReadOnlyList<SiteNotice>> PublicNotices(Guid site)
+    {
+        var slug = (await ForEditing(site)).Content.Slug;
+        return ((DiveSiteLookup.Found)await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery(slug, "de"))).Site.Notices;
+    }
 
     private static NoticeContent Notice(NoticeKind kind, DateOnly? from, DateOnly? until, params (string Culture, string? Text)[] texts) =>
         new(Guid.Empty, kind, from, until, [.. texts.Select(t => new NoticeText(t.Culture, t.Text))]);

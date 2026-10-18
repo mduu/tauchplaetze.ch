@@ -67,7 +67,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider 
             .ThenBy(n => n.SortOrder)
             .Select(n =>
             {
-                var text = n.Translations.FirstOrDefault(t => t.Culture == culture) ?? n.Translations.First(t => t.Culture == "de");
+                var text = n.Translations.FirstOrDefault(t => t.Culture == culture) ?? n.Translations.FirstOrDefault(t => t.Culture == "de") ?? n.Translations.First();
                 return new SiteNotice(n.Kind, text.Text, n.ValidUntil, text.Culture != culture);
             })
             .ToList();
