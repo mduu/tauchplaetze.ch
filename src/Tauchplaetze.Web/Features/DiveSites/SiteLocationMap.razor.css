@@ -1,0 +1,37 @@
+.location-title {
+    font-size: 36px;
+    letter-spacing: -0.02em;
+}
+
+.location-map {
+    height: 380px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--color-surface);
+}
+
+.entry-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--color-text-body);
+}
+
+.entry-kind {
+    margin-right: 6px;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+    .location-map {
+        height: 300px;
+    }
+}

@@ -366,6 +366,12 @@ a:hover {
   font-weight: 500;
 }
 
+.map-label-kind {
+  margin-left: 2px;
+  color: var(--color-text-subtle);
+  font-size: 12px;
+}
+
 .map-label-high { color: var(--color-index-high); }
 .map-label-mid { color: var(--color-index-mid); }
 .map-label-low { color: var(--color-index-low-text); }

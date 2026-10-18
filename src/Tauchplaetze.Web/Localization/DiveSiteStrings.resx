@@ -63,4 +63,10 @@
   <data name="Notice_Warning" xml:space="preserve"><value>Warnung</value></data>
   <data name="Notice_Closure" xml:space="preserve"><value>Gesperrt</value></data>
   <data name="Notice_Until" xml:space="preserve"><value>bis {0}</value></data>
+  <data name="Location_Title" xml:space="preserve"><value>Lage</value></data>
+  <data name="Location_Title_EntryPoints" xml:space="preserve"><value>Lage und Einstiege</value></data>
+  <data name="Location_Map_Label" xml:space="preserve"><value>Karte von {0}</value></data>
+  <data name="EntryPoint_EntryAndExit" xml:space="preserve"><value>Ein- und Ausstieg</value></data>
+  <data name="EntryPoint_Entry" xml:space="preserve"><value>Einstieg</value></data>
+  <data name="EntryPoint_Exit" xml:space="preserve"><value>Ausstieg</value></data>
 </root>

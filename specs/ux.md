@@ -28,7 +28,7 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 
 Pfadsegmente pro Sprache: siehe `i18n.md`.
 
-Hauptnavigation: Prognose · Tauchplätze · Gewässer · Buddy-Gruppen. Rechts: Sprachwahl (DE · EN · FR · IT).
+Hauptnavigation: Prognose · Tauchplätze · Gewässer · Buddy-Gruppen. Rechts: Sprachwahl als Aufklappmenü (Knopf mit dem Kürzel der aktuellen Sprache, darunter Kürzel und Name jeder Sprache). Das Menü ist ein `<details>` und geht ohne JavaScript; mit JavaScript schliesst es bei Klick daneben und mit Escape.
 
 ## Seiten
 
@@ -63,18 +63,18 @@ Mockup: `design/tauchplatz.dc.html`.
 2. **Hinweise** (falls gültig): Banner direkt unter dem Hero, schwerster zuerst. Farbe nach Art, Art und Enddatum als Label («Gesperrt · bis 01.04.2027»), darunter der Text. Siehe `dive-site.md`, «Hinweise».
 3. **Tauchbedingungen:** Satz («Heute ein guter Tag.») und Index gross.
    - Temperaturprofil als Diagramm (Temperatur über Tiefe) mit markierter Sprungschicht.
-   - Kacheln: Sicht-Indikator («Gut ab 16 m», mit Datum des Satellitenbilds), Anzug-Hinweis, Wind, Algen.
+   - Kacheln: Sicht-Indikator («Gut ab 16 m», mit Datum des Satellitenbilds), Wind, Algen. Kein Anzug-Hinweis: In der Schweiz taucht man fast immer trocken.
    - 5-Tage-Verlauf: Index, wo vorhanden. Tage im Ausblick zeigen Wind und Regen.
    - Datenstufe als kurzer Hinweis: «Profil am Platz», «für den ganzen See», «Messstation {Name}» oder «nur Wetter».
 4. **Der Platz:** Bewertungen als kompakter Block (Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung; nur bewertete Skalen, Wert immer auch als Zahl und Kurztext). Darunter «Unter Wasser»: Text, Fotos (Galerie), Fotograf mit Link.
 5. **Gefahren:** Text und Bilder. Gut sichtbar, nicht eingeklappt.
-6. **Einstiege und Tauchplatzskizze:** Karte mit allen Einstiegen, pro Einstieg Name, Text und Bilder. Skizze mit Tiefenlinien und Highlights. Hinweis «Skizze, nicht zur Navigation».
+6. **Lage und Einstiege:** Karte (Landeskarte oder Luftbild) mit dem Platz und allen Einstiegen, beschriftet mit Name und Art. Die Karte erscheint immer, auch ohne Einstiege (Titel dann «Lage»). Darunter die Einstiege als Liste. Später: Parkplatz und weitere Punkte, pro Einstieg Text und Bilder, Tauchplatzskizze mit Tiefenlinien und Highlights, Hinweis «Skizze, nicht zur Navigation».
 7. **Praktisch:** Koordinaten mit Link auf die Landeskarte, «Hinfahren» mit Routenlinks zu Google Maps und Apple Karten (die meisten navigieren damit zum Platz), Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation, Notfall.
 8. **Letzte Meldungen** (Phase 1, falls vorhanden) mit Button «Sicht melden».
 9. Buddy-Block für die Region.
 10. Fuss mit Quellen, «Zuletzt geändert am …», Links «Versionen» und «Platz bearbeiten» (führt zur Anmeldung).
 
-Alle Angaben in den Abschnitten 4 bis 7 sind optional (siehe `dive-site.md`). Ein Abschnitt ohne Inhalt fehlt. Fehlen die Abschnitte 4 bis 7 ganz, erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
+Alle Angaben in den Abschnitten 4 bis 7 sind optional (siehe `dive-site.md`). Ein Abschnitt ohne Inhalt fehlt, ausser der Karte in Abschnitt 6. Fehlen die Abschnitte 4 bis 7 ganz, erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
 
 ### Verzeichnis
 

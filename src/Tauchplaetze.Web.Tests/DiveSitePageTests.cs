@@ -19,10 +19,11 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     {
         this.app = app;
         app.DiveSites.Add(Slug, new DiveSiteLookup.Found(new DiveSiteDetails(
-            Guid.NewGuid(), Slug, "Riff Williams", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.2849, 8.6085, 0, DateTimeOffset.UtcNow, [])));
+            Guid.NewGuid(), Slug, "Riff Williams", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.2849, 8.6085, 0, DateTimeOffset.UtcNow, [], [])));
         app.DiveSites.Add(WithForecast, new DiveSiteLookup.Found(new DiveSiteDetails(
             ForecastSiteId, WithForecast, "Platz mit Prognose", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.28, 8.6, 0, DateTimeOffset.UtcNow,
-            [new SiteNotice(NoticeKind.Closure, "Tauchplatz gesperrt wegen Bauarbeiten.", new DateOnly(2027, 4, 1), true), new SiteNotice(NoticeKind.Info, "Parking payant.", null, false)])));
+            [new SiteNotice(NoticeKind.Closure, "Tauchplatz gesperrt wegen Bauarbeiten.", new DateOnly(2027, 4, 1), true), new SiteNotice(NoticeKind.Info, "Parking payant.", null, false)],
+            [new SiteEntryPoint(EntryPointKind.EntryAndExit, 47.2851, 8.6081, "Treppe beim Bootshaus")])));
         app.Forecasts.Add(ForecastSiteId, new SiteForecast(
             [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]), Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
             DateTimeOffset.UtcNow));
@@ -64,6 +65,23 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Matches("lang=\"de\"[^>]*>Tauchplatz gesperrt wegen Bauarbeiten.", html);
         Assert.True(html.IndexOf("data-notice-kind=\"closure\"", StringComparison.Ordinal) < html.IndexOf("id=\"conditions\"", StringComparison.Ordinal));
         Assert.Contains("Parking payant.", text);
+    }
+
+    [Fact]
+    public async Task Die_Platzseite_zeigt_die_Karte_mit_dem_Platz_und_seinen_Einstiegen()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/it/siti-di-immersione/" + WithForecast, TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains("Posizione e punti d'entrata", text);
+        Assert.Contains("Entrata e uscita Treppe beim Bootshaus", text);
+        Assert.Contains("data-here=", html);
+        Assert.Contains("47.2851", html);
     }
 
     [Fact]

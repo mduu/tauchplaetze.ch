@@ -18,7 +18,7 @@ public abstract record DiveSiteLookup
     public sealed record NotFound : DiveSiteLookup;
 }
 
-/// <summary>Ein öffentlicher Platz, mit dem Namen des Gewässers in der gewünschten Sprache und den heute gültigen Hinweisen, schwerster zuerst.</summary>
+/// <summary>Ein öffentlicher Platz, mit dem Namen des Gewässers in der gewünschten Sprache, den heute gültigen Hinweisen (schwerster zuerst) und den Einstiegen.</summary>
 public record DiveSiteDetails(
     Guid Id,
     string Slug,
@@ -32,7 +32,11 @@ public record DiveSiteDetails(
     double Longitude,
     byte ContentLevel,
     DateTimeOffset UpdatedAt,
-    IReadOnlyList<SiteNotice> Notices);
+    IReadOnlyList<SiteNotice> Notices,
+    IReadOnlyList<SiteEntryPoint> EntryPoints);
 
 /// <summary>Ein gültiger Hinweis in der gewünschten Sprache. Fehlt die Übersetzung, kommt er auf Deutsch (<see cref="GermanOnly"/>).</summary>
 public record SiteNotice(NoticeKind Kind, string Text, DateOnly? ValidUntil, bool GermanOnly);
+
+/// <summary>Ein Einstieg mit dem Namen in der gewünschten Sprache, sonst auf Deutsch, sonst ohne Namen.</summary>
+public record SiteEntryPoint(EntryPointKind Kind, double Latitude, double Longitude, string? Name);

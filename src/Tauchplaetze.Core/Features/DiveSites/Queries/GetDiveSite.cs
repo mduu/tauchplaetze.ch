@@ -46,7 +46,8 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider 
                 site.Location.X,
                 site.ContentLevel,
                 site.UpdatedAt,
-                await Notices(site.Id, query.Culture, ct))),
+                await Notices(site.Id, query.Culture, ct),
+                await EntryPoints(site.Id, query.Culture, ct))),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),
@@ -70,6 +71,25 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider 
                 var text = n.Translations.FirstOrDefault(t => t.Culture == culture) ?? n.Translations.FirstOrDefault(t => t.Culture == "de") ?? n.Translations.First();
                 return new SiteNotice(n.Kind, text.Text, n.ValidUntil, text.Culture != culture);
             })
+            .ToList();
+    }
+
+    private async Task<IReadOnlyList<SiteEntryPoint>> EntryPoints(Guid siteId, string culture, CancellationToken ct)
+    {
+        var entryPoints = await dbContext.DiveSiteEntryPoints
+            .AsNoTracking()
+            .Where(e => e.DiveSiteId == siteId)
+            .OrderBy(e => e.SortOrder)
+            .Include(e => e.Translations)
+            .ToListAsync(ct);
+
+        return entryPoints
+            .Select(e => new SiteEntryPoint(
+                e.Kind,
+                e.Location.Y,
+                e.Location.X,
+                e.Translations.FirstOrDefault(t => t.Culture == culture && !string.IsNullOrWhiteSpace(t.Name))?.Name
+                    ?? e.Translations.FirstOrDefault(t => t.Culture == "de" && !string.IsNullOrWhiteSpace(t.Name))?.Name))
             .ToList();
     }
 

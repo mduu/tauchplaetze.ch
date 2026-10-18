@@ -1,4 +1,5 @@
-// Karte mit Landeskarte von swisstopo (data-sources.md, swisstopo). Liest Plätze aus data-sites, Gewässer aus data-waters.
+// Karte mit Landeskarte von swisstopo (data-sources.md, swisstopo). Liest Plätze aus data-sites, Gewässer aus data-waters,
+// den eigenen Platz einer Platzseite aus data-here und seine Einstiege aus data-points.
 // Blazor ersetzt beim Seitenwechsel (enhanced navigation) den Inhalt der Elemente, nicht die Elemente selbst.
 // Darum baut jeder Wechsel alle Karten neu auf.
 window.tauchplaetzeMap = (function () {
@@ -26,17 +27,16 @@ window.tauchplaetzeMap = (function () {
     return token({ high: '--color-index-high', mid: '--color-index-mid', low: '--color-index-low' }[band] || '--color-text-subtle');
   }
 
-  // Dauerhafte Beschriftung wie ein Tooltip mit Pfeil auf den Punkt. Ein Klick öffnet die Seite.
+  // Dauerhafte Beschriftung wie ein Tooltip mit Pfeil auf den Punkt. Mit url öffnet ein Klick die Seite.
   function labelled(marker, item, html) {
-    return marker
-      .bindTooltip('<a href="' + item.url + '">' + html + '</a>', {
-        permanent: true,
-        direction: 'top',
-        offset: [0, -8],
-        interactive: true,
-        className: 'map-label'
-      })
-      .on('click', function () { window.location.href = item.url; });
+    marker.bindTooltip(item.url ? '<a href="' + item.url + '">' + html + '</a>' : html, {
+      permanent: true,
+      direction: 'top',
+      offset: [0, -8],
+      interactive: !!item.url,
+      className: 'map-label'
+    });
+    return item.url ? marker.on('click', function () { window.location.href = item.url; }) : marker;
   }
 
   function siteMarker(site) {
@@ -60,6 +60,29 @@ window.tauchplaetzeMap = (function () {
       fillOpacity: 1
     });
     return labelled(marker, water, escapeHtml(water.name));
+  }
+
+  function hereMarker(site) {
+    const marker = L.circleMarker([site.lat, site.lng], {
+      radius: 10,
+      color: token('--color-bg'),
+      weight: 3,
+      fillColor: token('--color-primary'),
+      fillOpacity: 1
+    });
+    return labelled(marker, site, escapeHtml(site.name));
+  }
+
+  function entryMarker(point) {
+    const marker = L.circleMarker([point.lat, point.lng], {
+      radius: 6,
+      color: token('--color-bg'),
+      weight: 2,
+      fillColor: token('--color-text'),
+      fillOpacity: 1
+    });
+    const name = point.name ? escapeHtml(point.name) + ' ' : '';
+    return labelled(marker, point, name + '<span class="map-label-kind">' + escapeHtml(point.kind) + '</span>');
   }
 
   // Bei vielen Punkten erscheinen die Beschriftungen erst ab Zoom 11, sonst überdecken sie sich.
@@ -105,7 +128,9 @@ window.tauchplaetzeMap = (function () {
     addBaseLayers(map, element);
 
     const markers = JSON.parse(element.dataset.sites || '[]').map(siteMarker)
-      .concat(JSON.parse(element.dataset.waters || '[]').map(waterMarker));
+      .concat(JSON.parse(element.dataset.waters || '[]').map(waterMarker))
+      .concat(element.dataset.here ? [hereMarker(JSON.parse(element.dataset.here))] : [])
+      .concat(JSON.parse(element.dataset.points || '[]').map(entryMarker));
     markers.forEach(function (marker) { marker.addTo(map); });
 
     map.on('zoomend', function () { toggleLabels(map, markers.length); });

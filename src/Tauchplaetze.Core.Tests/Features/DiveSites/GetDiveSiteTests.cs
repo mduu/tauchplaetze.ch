@@ -26,6 +26,28 @@ public class GetDiveSiteTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Einstiege_kommen_in_ihrer_Reihenfolge_mit_dem_Namen_der_Sprache_sonst_auf_Deutsch_sonst_ohne_Namen()
+    {
+        // Arrange
+        await Sql.Arrange(async db =>
+        {
+            var site = await Add(db, "riff-williams-herrliberg", DiveSiteStatus.Published);
+            site.EntryPoints.Add(EntryPoint(2, EntryPointKind.Exit, ("de", "Leiter")));
+            site.EntryPoints.Add(EntryPoint(0, EntryPointKind.EntryAndExit, ("de", "Treppe"), ("fr", "Escalier")));
+            site.EntryPoints.Add(EntryPoint(1, EntryPointKind.Entry, ("fr", "")));
+        });
+
+        // Act
+        var result = await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "fr"));
+
+        // Assert
+        var site = Assert.IsType<DiveSiteLookup.Found>(result).Site;
+        Assert.Equal(
+            [(EntryPointKind.EntryAndExit, "Escalier"), (EntryPointKind.Entry, null), (EntryPointKind.Exit, "Leiter")],
+            site.EntryPoints.Select(e => (e.Kind, e.Name)));
+    }
+
+    [SqlFact]
     public async Task Ein_alter_Slug_fuehrt_auf_den_aktuellen()
     {
         // Arrange
@@ -65,6 +87,19 @@ public class GetDiveSiteTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         Assert.IsType<DiveSiteLookup.NotFound>(result);
+    }
+
+    private static DiveSiteEntryPoint EntryPoint(int sortOrder, EntryPointKind kind, params (string Culture, string Name)[] names)
+    {
+        var id = Guid.CreateVersion7();
+        return new DiveSiteEntryPoint
+        {
+            Id = id,
+            Kind = kind,
+            SortOrder = sortOrder,
+            Location = GeoPoints.Create(47.285, 8.608),
+            Translations = [.. names.Select(n => new DiveSiteEntryPointTranslation { EntryPointId = id, Culture = n.Culture, Name = n.Name })],
+        };
     }
 
     private static Task<DiveSite> Add(TauchplaetzeDbContext db, string slug, DiveSiteStatus status)
