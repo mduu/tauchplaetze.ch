@@ -2,6 +2,7 @@ using Tauchplaetze.Core;
 using Tauchplaetze.Web.Components;
 using Tauchplaetze.Web.CrossCutting.Database;
 using Tauchplaetze.Web.CrossCutting.Localization;
+using Tauchplaetze.Web.Features.Forecasts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.AddTauchplaetzeCore();
 
 builder.Services.AddPublicLocalization();
 builder.Services.AddRazorComponents();
+builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(ForecastSchedule.Section));
+builder.Services.AddHostedService<ForecastWorker>();
 
 var app = builder.Build();
 

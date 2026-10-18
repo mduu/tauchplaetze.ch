@@ -124,13 +124,15 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
 
 - **Zeitplan:** täglich 04:30 Lokalzeit (vollständiger Lauf) und 13:00 Lokalzeit (nur Wetter und Messwerte neu). Konfigurierbar.
 - **Dauer:** Alplakes braucht 5–30 s pro Call. Bei 100 Plätzen mit 3D-Abdeckung dauert ein Lauf darum einige Minuten. Das ist für einen Job am frühen Morgen genug.
-- **Sperre:** nur ein Lauf gleichzeitig (Blob Lease oder SQL-Lock). Wichtig, falls später mehrere Instanzen laufen.
+- **Lock:** nur ein Lauf gleichzeitig (Blob Lease `locks/forecast`, 60 s, alle 20 s erneuert). Hält ein anderer Lauf den Lock, endet der zweite sofort.
+- **Lokal:** `Forecast__RunOnStartup` startet einen Lauf beim Start der Web-App (Aspire).
+- **Profil eines Tages:** 12 Uhr Lokalzeit, höchstens 3 h vom nächsten Zeitschritt des Modells.
 - **Ablauf (Command `RunForecast`):**
   1. `ForecastRun` mit Status `Running` anlegen.
   2. Pro aktivem Gewässer: Abdeckung der Alplakes-Modelle laden (3D und 1D).
   3. Pro Platz mit 3D-Abdeckung: Temperatur über Tiefe und Zeit mit **einem** Call holen (`depthtime`, ganzer Prognosezeitraum). Pro See ohne 3D: ein Call auf das 1D-Modell.
   4. Pro Satellitenpunkt: Secchi und Chlorophyll der letzten 14 Tage.
-  5. Pro Gitterpunkt: Wetterprognose (Open-Meteo). Plätze im selben Gitterpunkt teilen sich den Call. Pro zugeordneter Station: gemessener Wind und Regen (SwissMetNet).
+  5. Pro Gitterpunkt: Wetterprognose (Open-Meteo, ICON-CH1, ICON-CH2, DWD ICON, je 3 Tage zurück). Plätze im selben Gitterpunkt (zwei Dezimalen) teilen sich den Call. Pro zugeordneter Station: gemessener Wind und Regen (SwissMetNet). **Stand 18.10.2026:** SwissMetNet fehlt noch. Der Regen der vergangenen Tage kommt aus `past_days` von Open-Meteo.
   6. Pro Gewässer: Abfluss, Wassertemperatur und Trübung der zugeordneten BAFU-Stationen.
   7. Rohdaten als JSON in Blob Storage ablegen (`forecast-raw/{date}/{runId}/{source}/{key}.json`).
   8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert).

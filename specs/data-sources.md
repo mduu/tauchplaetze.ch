@@ -112,6 +112,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
 ### Verwendung
 
+- **Stationen im MVP** (Seed, vor Ort prüfen): Zürichsee 2104 Linth – Weesen (Zufluss), Zugersee 2477 Lorze – Zug, Letzi (Zufluss), Rhein 2091 Rhein – Rheinfelden (Fluss).
 - **Seen:** Jedes Gewässer hat eine Liste relevanter Stationen (Hauptzuflüsse). Ein Platz kann die Zuordnung überschreiben (z.B. nahe einer Mündung). Der Abfluss geteilt durch den Median der letzten 30 Tage ergibt `InflowDischargeRatio`.
 - **Flüsse:** Die Station des Flusses liefert Abfluss, Wassertemperatur und, wo vorhanden, Trübung am Platz. Das ist die Datenstufe «Gewässer» für Flussplätze (`forecast.md`).
 - **Seepegel:** Information auf der Gewässerseite und bei Einstiegen, kein Teil des Index.

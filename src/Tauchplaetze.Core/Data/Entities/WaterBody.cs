@@ -34,4 +34,6 @@ internal class WaterBody
     public Point? SatellitePoint { get; set; }
 
     public bool IsActive { get; set; }
+
+    public List<WaterBodyHydroStation> HydroStations { get; set; } = [];
 }

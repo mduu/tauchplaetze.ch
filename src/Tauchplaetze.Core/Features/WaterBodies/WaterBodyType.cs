@@ -9,3 +9,13 @@ public enum WaterBodyType
     /// <summary>Fluss.</summary>
     River,
 }
+
+/// <summary>Rolle einer BAFU-Station für ein Gewässer.</summary>
+public enum HydroStationRole
+{
+    /// <summary>Zufluss eines Sees.</summary>
+    Inflow,
+
+    /// <summary>Station am Fluss selbst, für Flussplätze.</summary>
+    River,
+}

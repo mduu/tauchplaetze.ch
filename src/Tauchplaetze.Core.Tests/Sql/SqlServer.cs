@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Tauchplaetze.Core.CrossCutting.Locks;
+using Tauchplaetze.Core.CrossCutting.Storage;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.Editorial;
@@ -30,6 +32,15 @@ public sealed class SqlServer : IAsyncLifetime
     /// <summary>Der Inhalt der Versionen liegt in den Tests im Speicher. Die Datenbank ist echt.</summary>
     internal InMemoryRevisionStore Revisions { get; } = new();
 
+    internal InMemoryRawDataStore RawData { get; } = new();
+
+    internal InMemoryRunLock RunLock { get; } = new();
+
+    internal FixedTime Time { get; } = new(FixedTime.SpikeDay);
+
+    /// <summary>Kein Test ruft eine echte Quelle auf (architecture.md, Testing).</summary>
+    internal FakeSources Sources { get; } = new();
+
     public IServiceProvider Services => host?.Services ?? throw new InvalidOperationException("SQL Server läuft nicht. Test ohne [SqlFact]?");
 
     public async ValueTask InitializeAsync()
@@ -50,6 +61,10 @@ public sealed class SqlServer : IAsyncLifetime
         });
         builder.AddTauchplaetzeCore();
         builder.Services.Replace(ServiceDescriptor.Singleton<IRevisionStore>(Revisions));
+        builder.Services.Replace(ServiceDescriptor.Singleton<IRawDataStore>(RawData));
+        builder.Services.Replace(ServiceDescriptor.Singleton<IRunLock>(RunLock));
+        builder.Services.Replace(ServiceDescriptor.Singleton<TimeProvider>(Time));
+        builder.Services.ConfigureHttpClientDefaults(client => client.ConfigurePrimaryHttpMessageHandler(() => Sources));
         host = builder.Build();
 
         await using var scope = Services.CreateAsyncScope();
@@ -91,6 +106,9 @@ public sealed class SqlServer : IAsyncLifetime
                   + string.Concat(tables.Select(t => $"ALTER TABLE {t} WITH CHECK CHECK CONSTRAINT ALL;"));
         await dbContext.Database.ExecuteSqlRawAsync(sql);
         Revisions.Clear();
+        RawData.Files.Clear();
+        Sources.Failing = null;
+        Time.Now = FixedTime.SpikeDay;
     }
 
     private string ConnectionString() =>

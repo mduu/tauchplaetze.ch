@@ -6,11 +6,24 @@
     "nameFr": "lac de Zurich",
     "nameIt": "lago di Zurigo",
     "type": "Lake",
-    "centroid": { "latitude": 47.2600, "longitude": 8.6800 },
-    "satellitePoint": { "latitude": 47.2800, "longitude": 8.6000 },
+    "centroid": {
+      "latitude": 47.26,
+      "longitude": 8.68
+    },
+    "satellitePoint": {
+      "latitude": 47.28,
+      "longitude": 8.6
+    },
     "alplakesLakeKey": "zurich",
     "alplakesModel3d": "delft3d-flow",
-    "alplakesSimstratKey": "lowerzurich"
+    "alplakesSimstratKey": "lowerzurich",
+    "hydroStations": [
+      {
+        "id": "2104",
+        "name": "Linth – Weesen, Biäsche",
+        "role": "Inflow"
+      }
+    ]
   },
   {
     "slug": "zugersee",
@@ -19,11 +32,24 @@
     "nameFr": "lac de Zoug",
     "nameIt": "lago di Zugo",
     "type": "Lake",
-    "centroid": { "latitude": 47.1200, "longitude": 8.4900 },
-    "satellitePoint": { "latitude": 47.1300, "longitude": 8.4900 },
+    "centroid": {
+      "latitude": 47.12,
+      "longitude": 8.49
+    },
+    "satellitePoint": {
+      "latitude": 47.13,
+      "longitude": 8.49
+    },
     "alplakesLakeKey": "zug",
     "alplakesModel3d": "mitgcm",
-    "alplakesSimstratKey": "zug"
+    "alplakesSimstratKey": "zug",
+    "hydroStations": [
+      {
+        "id": "2477",
+        "name": "Lorze – Zug, Letzi",
+        "role": "Inflow"
+      }
+    ]
   },
   {
     "slug": "rhein",
@@ -32,6 +58,16 @@
     "nameFr": "Rhin",
     "nameIt": "Reno",
     "type": "River",
-    "centroid": { "latitude": 47.5600, "longitude": 7.8000 }
+    "centroid": {
+      "latitude": 47.56,
+      "longitude": 7.8
+    },
+    "hydroStations": [
+      {
+        "id": "2091",
+        "name": "Rhein – Rheinfelden",
+        "role": "River"
+      }
+    ]
   }
 ]

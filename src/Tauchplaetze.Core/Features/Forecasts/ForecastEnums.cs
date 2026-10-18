@@ -81,3 +81,19 @@ public enum ReasonCode
     /// <summary>Kein aktueller Satellitenwert.</summary>
     ClarityUnknown,
 }
+
+/// <summary>Status eines Laufs des Prognose-Jobs.</summary>
+public enum ForecastRunStatus
+{
+    /// <summary>Läuft.</summary>
+    Running,
+
+    /// <summary>Alle Quellen lieferten.</summary>
+    Succeeded,
+
+    /// <summary>Mindestens eine Quelle fehlte. Die übrigen Werte sind gespeichert.</summary>
+    PartiallySucceeded,
+
+    /// <summary>Der Lauf brach ab.</summary>
+    Failed,
+}

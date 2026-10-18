@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Data;
@@ -21,6 +22,12 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
 
     public DbSet<SlugRedirect> SlugRedirects => Set<SlugRedirect>();
 
+    public DbSet<DailyForecast> DailyForecasts => Set<DailyForecast>();
+
+    public DbSet<ForecastRun> ForecastRuns => Set<ForecastRun>();
+
+    public DbSet<WaterBodyHydroStation> WaterBodyHydroStations => Set<WaterBodyHydroStation>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -34,5 +41,10 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
         configurationBuilder.Properties<DiveSiteStatus>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<DiveSiteAccess>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<RevisionStatus>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<ProfileSource>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<VisibilityIndicator>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<AlgaeLevel>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<ForecastRunStatus>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<HydroStationRole>().HaveConversion<string>().HaveMaxLength(20);
     }
 }

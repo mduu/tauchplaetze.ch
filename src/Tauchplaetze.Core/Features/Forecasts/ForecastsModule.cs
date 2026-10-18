@@ -15,6 +15,7 @@ internal class ForecastsModule : ICoreModule
         AddSourceClient<AlplakesClient>(services, "https://alplakes-api.eawag.ch/");
         AddSourceClient<OpenMeteoClient>(services, "https://api.open-meteo.com/");
         AddSourceClient<HydroClient>(services, "https://api.existenz.ch/");
+        services.AddScoped<ForecastSources>();
     }
 
     /// <remarks>

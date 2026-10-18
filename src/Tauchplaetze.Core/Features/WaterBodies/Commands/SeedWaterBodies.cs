@@ -8,11 +8,11 @@ using Tauchplaetze.Core.Data.Entities;
 
 namespace Tauchplaetze.Core.Features.WaterBodies.Commands;
 
-/// <summary>Legt die Gewässer aus `Seed/water-bodies.json` an, die noch fehlen. Bestehende Gewässer bleiben unverändert.</summary>
+/// <summary>Legt die Gewässer und BAFU-Stationen aus `Seed/water-bodies.json` an, die noch fehlen. Bestehende bleiben unverändert.</summary>
 public record SeedWaterBodiesCommand;
 
-/// <summary>Ergebnis des Seeds: Zahl der neu angelegten Gewässer.</summary>
-public record SeedWaterBodiesResult(int Added);
+/// <summary>Ergebnis des Seeds: Zahl der neu angelegten Gewässer und Stationen.</summary>
+public record SeedWaterBodiesResult(int Added, int StationsAdded = 0);
 
 internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : ICommandHandler<SeedWaterBodiesCommand, SeedWaterBodiesResult>
 {
@@ -22,13 +22,24 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
 
     public async Task<SeedWaterBodiesResult> Handle(SeedWaterBodiesCommand command, CancellationToken ct = default)
     {
-        var existing = await dbContext.WaterBodies.Select(w => w.Slug).ToListAsync(ct);
-        var missing = (await ReadSeed(ct)).Where(s => !existing.Contains(s.Slug)).ToList();
+        var seeds = await ReadSeed(ct);
+        var existing = await dbContext.WaterBodies.Include(w => w.HydroStations).ToDictionaryAsync(w => w.Slug, ct);
+        var missing = seeds.Where(s => !existing.ContainsKey(s.Slug)).ToList();
+        var missingStations = seeds
+            .Where(s => existing.ContainsKey(s.Slug))
+            .SelectMany(s => (s.HydroStations ?? []).Select(station => (WaterBody: existing[s.Slug], Station: station)))
+            .Where(p => p.WaterBody.HydroStations.All(h => h.StationId != p.Station.Id))
+            .ToList();
 
         dbContext.WaterBodies.AddRange(missing.Select(ToEntity));
+        foreach (var (waterBody, station) in missingStations)
+        {
+            waterBody.HydroStations.Add(station.ToEntity());
+        }
+
         await dbContext.SaveChangesAsync(ct);
 
-        return new SeedWaterBodiesResult(missing.Count);
+        return new SeedWaterBodiesResult(missing.Count, missing.Sum(m => m.HydroStations?.Count ?? 0) + missingStations.Count);
     }
 
     private static async Task<IReadOnlyList<WaterBodySeed>> ReadSeed(CancellationToken ct)
@@ -52,6 +63,7 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
         AlplakesModel3d = seed.AlplakesModel3d,
         AlplakesSimstratKey = seed.AlplakesSimstratKey,
         IsActive = true,
+        HydroStations = [.. (seed.HydroStations ?? []).Select(s => s.ToEntity())],
     };
 
     private sealed record WaterBodySeed(
@@ -65,7 +77,13 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
         Coordinate? SatellitePoint,
         string? AlplakesLakeKey,
         string? AlplakesModel3d,
-        string? AlplakesSimstratKey);
+        string? AlplakesSimstratKey,
+        IReadOnlyList<HydroStationSeed>? HydroStations);
+
+    private sealed record HydroStationSeed(string Id, string Name, string Role)
+    {
+        public WaterBodyHydroStation ToEntity() => new() { StationId = Id, Name = Name, Role = Enum.Parse<HydroStationRole>(Role) };
+    }
 
     private sealed record Coordinate(double Latitude, double Longitude)
     {
