@@ -18,6 +18,7 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(ForecastSchedule.Section));
 builder.Services.AddHostedService<ForecastWorker>();
+builder.Services.AddHostedService<MediaPurgeWorker>();
 
 var app = builder.Build();
 

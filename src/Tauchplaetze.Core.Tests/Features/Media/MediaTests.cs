@@ -279,6 +279,34 @@ public class MediaTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal([published], (await Query<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>(new GetSiteMediaQuery(moderator, site, Pending))).Select(m => m.Id));
     }
 
+    [SqlFact]
+    public async Task Private_Fotos_ohne_Verwendung_verschwinden_nach_30_Tagen_junge_vorgeschlagene_und_oeffentliche_bleiben()
+    {
+        // Arrange
+        var (moderator, anna, site) = await Prepare();
+        var unused = (await Upload(anna, site)).MediaId!.Value;
+        var proposed = (await Upload(anna, site)).MediaId!.Value;
+        var published = (await Upload(moderator, site)).MediaId!.Value;
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber,
+            edit.Content with { Media = [new MediaUse(published, MediaSection.Underwater)] }, null));
+        var approved = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, approved.BaseNumber,
+            approved.Content with { Media = [.. approved.Content.MediaList, new MediaUse(proposed, MediaSection.Surroundings)] }, null));
+        Sql.Time.Now = FixedTime.SpikeDay.AddDays(31);
+        var young = (await Upload(anna, site)).MediaId!.Value;
+
+        // Act
+        var first = await Command<PurgeUnusedMediaCommand, PurgeUnusedMediaResult>(new PurgeUnusedMediaCommand());
+        var second = await Command<PurgeUnusedMediaCommand, PurgeUnusedMediaResult>(new PurgeUnusedMediaCommand());
+
+        // Assert
+        Assert.Equal((1, 0), (first.Deleted, second.Deleted));
+        var remaining = (await Query<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>(new GetSiteMediaQuery(moderator, site, Pending))).Select(m => m.Id).ToHashSet();
+        Assert.Equal(new HashSet<Guid> { proposed, published, young }, remaining);
+        Assert.DoesNotContain(Sql.Media.Pending.Keys, key => key.StartsWith(unused.ToString(), StringComparison.Ordinal));
+    }
+
     private Task<UploadMediaResult> Upload(string uploader, Guid site) =>
         Command<UploadMediaCommand, UploadMediaResult>(new UploadMediaCommand(
             uploader, site, TestImages.Jpeg(), "image/jpeg", "Anna Muster", "https://tauchfotos.ch", MediaSection.Underwater, 18, true,
