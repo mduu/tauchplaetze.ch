@@ -55,7 +55,8 @@
                             {
                                 <li>
                                     <a href="@Link(water)">@water.Name</a>
-                                    <span class="water-list-count" aria-label="@SiteCount(water.SiteCount)">@water.SiteCount</span>
+                                    <span class="water-list-count" aria-hidden="true">@water.SiteCount</span>
+                                    <span class="visually-hidden">@SiteCount(water.SiteCount)</span>
                                 </li>
                             }
                         </ul>

@@ -35,6 +35,7 @@ public class WaterBodiesPageTests : IClassFixture<WebApp>
         Assert.Contains("href=\"/fr/eaux#region-ticino\"", html);
         Assert.Contains("id=\"region-ticino\"", html);
         Assert.Contains("href=\"/fr/eaux/lago-di-vogorno\"", html);
+        Assert.Contains("2 sites de plongée", VisibleText.Of(html));
     }
 
     private static WaterBodySummary Water(string slug, string name, WaterBodyType type, int sites) => new(slug.Length, slug, name, type, 46.5, 8.0, sites);
