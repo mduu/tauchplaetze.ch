@@ -176,7 +176,7 @@ Die Row in SQL enthält nur die Metadaten. Der Inhalt liegt als JSON in Blob Sto
 | `Id` | Guid | |
 | `DiveSiteId` | Guid, optional | ein Bild kann auch zu einem See gehören |
 | `WaterBodyId` | int, optional | |
-| `Section` | enum (string(20)) | `Underwater`, `Surroundings` (über Wasser), `Approach`, `EntryPoint`, `Hazards`; siehe `dive-site.md`. Beim Upload gewählt, bei der Freigabe aus der Version übernommen |
+| `Section` | enum (string(20)) | `Underwater` = 0, `Surroundings` = 1 (über Wasser), `Approach` = 2, `EntryPoint` = 3, `Hazards` = 4; siehe `dive-site.md`. Beim Upload gewählt, bei der Freigabe aus der Version übernommen. Der Snapshot einer Version speichert die Zahl: Werte nie ändern, neue Abschnitte nur hinten anhängen |
 | `EntryPointId` | Guid, optional | FK `DiveSiteEntryPoint`, nur bei `Section = EntryPoint` |
 | `Kind` | enum (string(20)) | `Photo`, `Video` (später). Die Tauchskizze ist kein Medium, sondern `DiveSite.Sketch` |
 | `BlobPath` | string(300) | Ordner in Blob Storage (`{mediaId}`): `original.{ext}` nur in `media-pending`, Bildgrössen `{breite}.webp` in `media-pending` und nach der Freigabe in `media` |

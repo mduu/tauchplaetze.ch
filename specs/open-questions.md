@@ -9,6 +9,8 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 | 1 | **Dürfen wir die Daten der Alplakes API nutzen?** Unter welchen Bedingungen (Quellenangabe, Frequenz)? | Mail an Eawag (Alplakes) am 17.10.2026 gesendet (`doc/mails/2026-10-17-eawag-alplakes.md`). Antwort ausstehend. |
 | 21 | Dürfen wir die Abfluss- und Seepegelvorhersagen des BAFU nutzen? Es gibt nur ein JSON der Grafiken, keine API. | Mail an `BAFU (Hydrologie)` am 17.10.2026 gesendet (`doc/mails/2026-10-17-bafu-hydrologie.md`). Antwort ausstehend. Blockiert nur die Flussprognose in Phase 1. |
 | 23 | **Blendet die Ausbaustufe Inhalte aus?** `cms.md` zeigt Bewertungen erst ab Stufe 1, Skizze und Galerie erst ab Stufe 2. `ux.md` sagt: Alles ist optional, ein Abschnitt ohne Inhalt fehlt. Die Seite folgt heute `ux.md` und zeigt alles, was erfasst ist. | Marc entscheidet. Vorschlag: `ux.md` gilt, die Stufe ist nur Fortschritt (Badge im CMS); `cms.md` anpassen. |
+| 24 | **Private, nie verwendete Fotos aufräumen?** Ein Foto, das 30 Tage privat bleibt und keine offene Version verwendet, belegt nur Speicher. | Job, der solche Fotos samt Dateien löscht. Noch nicht gebaut. |
+| 25 | **Vorschaubilder in der Freigabe-Ansicht?** Die Moderation sieht neue Fotos heute nur im Tab «Fotos» des Platzes, nicht in der Liste der Vorschläge und nicht im Vergleich. | Bei Bedarf Thumbnails in «Vorschläge» und im Versionsvergleich. |
 
 ## Erledigt am 17.10.2026
 
