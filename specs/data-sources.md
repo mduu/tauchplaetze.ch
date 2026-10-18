@@ -17,6 +17,7 @@ Das Projekt ist **nicht kommerziell** (`vision.md`, «Finanzierung»). Mehrere Q
 | swisstopo | Kartenkacheln, Gewässernetz (swissTLM3D), Bathymetrie (swissBATHY3D) | Karte, Stammdaten aller Gewässer, Tiefenkarten | MVP | ✅ |
 | Eawag Datalakes | In-situ-Messungen: Temperaturketten, Bojen, Profile, Secchi (LéXPLORE) | aktueller Stand, Kontrolle der Modelle | Phase 1 | ✅ |
 | BAFU Abfluss- und Seepegelvorhersagen | Prognose für etwa 50–60 Stationen | Prognose für Flussplätze | Phase 1, nach Klärung | ⚠️ |
+| OpenStreetMap (Overpass API) | Tauchplätze (`sport=scuba_diving`) mit Name und Koordinate, Gewässer, Gemeinde, Kanton | Erstbestand des Verzeichnisses | MVP | ✅ Skript |
 | Eigenes Archiv (tauchfotos.ch, tauchvideos.ch) | Fotos, Videos | Dokumentation | MVP | Rechte bei Marc |
 
 ## Eawag Alplakes
@@ -145,10 +146,25 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 - Damit ist offener Punkt #11 (Kartenkacheln) entschieden: swisstopo.
 - Google Maps und Apple Karten sind nur Links für die Route (`google.com/maps/dir/?api=1&destination=…`, `maps.apple.com/?daddr=…`). Kein API-Key, keine Kosten. Erst der Klick schickt die Koordinate an den Anbieter.
 
+## OpenStreetMap
+
+Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schweiz (Stand 18.10.2026: 340). Das Skript `tools/osm-import/osm-dive-sites.cs` holt sie einmalig über die Overpass API und ergänzt die Seeds. Die App selbst ruft OSM nie auf.
+
+- **Übernommen:** Name, Koordinate, Gewässer, Gemeinde (`admin_level=8`), Kanton (`ISO3166-2`). Keine Beschreibungen, Tiefen oder Bewertungen aus OSM.
+- **Gewässer:** benanntes `natural=water` oder `waterway=river|canal` im Umkreis von 300 m oder als Fläche um den Punkt. Steht der Name des Gewässers im Namen des Platzes, gilt dieses. Sonst geht ein See einem Fluss vor (Platz an einer Mündung). Häfen und Becken zählen nicht. Neue Gewässer kommen mit Namen in vier Sprachen (`name:de|fr|it|en`) in den Seed, ohne Alplakes-Zuordnung (Datenstufe «nur Wetter», bis jemand sie ergänzt).
+- **Einstiege:** Punkte mit «Einstieg», «Ausstieg», «Entrée», «Sortie», «Ingresso» oder «Uscita» im Namen werden Einstiege des Platzes mit demselben Namensanfang in höchstens 400 m. Fehlt er, entsteht ein Platz mit diesem Namen.
+- **Nicht übernommen:** Punkte ohne Namen, ohne Gewässer, Parkplätze (eigene Punktart fehlt noch), Dubletten nach Slug, Punkte mit `source` von swiss-divers.ch.
+- **Durchsicht:** Das Skript schreibt `tools/osm-import/out/review.md`. Marc prüft die Liste, bevor die Seeds committet werden.
+- **Lizenz:** ODbL. Quellenangabe «© OpenStreetMap contributors» bei den Daten. Die übernommenen Felder (Name, Koordinate, Gewässer) bleiben unter ODbL verfügbar (Share-Alike). Eigene Inhalte der Redaktion (Texte, Bewertungen, Fotos) sind davon getrennt.
+- **Herkunft:** Rund zwei Drittel der Punkte tragen `source=www.dive-links.com`. Siehe `open-questions.md`.
+- **Abfrage:** eine Overpass-Query, `User-Agent` mit Projekt, Retry mit Backoff (Overpass antwortet bei Last mit 502 oder 504).
+
 ## Geprüft und nicht genutzt
 
 | Quelle | Grund |
 |---|---|
+| Google Maps (Places) | Die Bedingungen verbieten Scraping und das dauerhafte Speichern der Inhalte. Nur Links für die Route. |
+| swiss-divers.ch | Tauchplatzführer mit eigenem Verzeichnis. Systematisches Übernehmen wäre unlauter (UWG Art. 5 lit. c), eine Anfrage wenig aussichtsreich (gleiches Angebot). Punkte in OSM mit dieser Quelle werden ausgelassen. |
 | MeteoSchweiz ICON direkt (GRIB2) | Open-Meteo liefert dieselben Modelle als JSON (ADR-007). Direkt heisst: grosse Dateien für die ganze Schweiz laden, um wenige Punkte zu lesen. Mehrwert erst mit dem **Ensemble** (11 bzw. 21 Läufe): Es zeigt, wie sicher die Windprognose ist. Kandidat für Phase 2 («Prognose unsicher»). |
 | MeteoSchweiz `ogd-local-forecasting` (CSV-Punktprognose) | Später möglich als Ersatz für Open-Meteo, falls dessen Bedingungen nicht mehr passen. |
 | MeteoSchweiz CombiPrecip (Radar) | Regen im ganzen Einzugsgebiet wäre genauer. HDF5, Aufwand M. Später. |

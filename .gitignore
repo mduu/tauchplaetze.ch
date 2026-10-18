@@ -69,3 +69,6 @@ spike-output/
 # JetBrains Rider (lokale Einstellungen der IDE)
 .idea/
 *.DotSettings.user
+
+# Ausgabe des OSM-Imports (Rohdaten und Durchsicht)
+tools/osm-import/out/
