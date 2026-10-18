@@ -16,6 +16,30 @@
 </div>
 
 <div class="conditions-grid" data-profile="@(Today.SurfaceTemperature is not null ? "true" : "false")">
+    <div class="tiles">
+        <div class="stat">
+            <div class="label">@L["Tile_Visibility"]</div>
+            <div class="stat-value">@L[$"Visibility_{Today.VisibilityIndicator}"]</div>
+            <div class="stat-note">@VisibilityNote</div>
+        </div>
+        <div class="stat">
+            <div class="label">@L["Tile_Wind"]</div>
+            @if (Today.WindBeaufort is { } bft)
+            {
+                <div class="stat-value">@L["Wind_Value", bft]</div>
+                <div class="stat-note">@L["Wind_Detail", ForecastFormat.Meters(Today.WindSpeedKmh ?? 0), ForecastFormat.Meters(Today.WindGustsKmh ?? 0)]</div>
+            }
+            else
+            {
+                <div class="stat-value">@L["Wind_Unknown"]</div>
+            }
+        </div>
+        <div class="stat">
+            <div class="label">@L["Tile_Algae"]</div>
+            <div class="stat-value">@L[$"Algae_{Today.AlgaeLevel}"]</div>
+        </div>
+    </div>
+
     @if (Today.SurfaceTemperature is not null)
     {
         <figure class="card profile">
@@ -25,77 +49,43 @@
         </figure>
     }
 
-    <div class="side">
-        <div class="tiles">
-            <div class="stat">
-                <div class="label">@L["Tile_Visibility"]</div>
-                <div class="stat-value">@L[$"Visibility_{Today.VisibilityIndicator}"]</div>
-                <div class="stat-note">@VisibilityNote</div>
-            </div>
-            <div class="stat">
-                <div class="label">@L["Tile_Wind"]</div>
-                @if (Today.WindBeaufort is { } bft)
-                {
-                    <div class="stat-value">@L["Wind_Value", bft]</div>
-                    <div class="stat-note">@L["Wind_Detail", ForecastFormat.Meters(Today.WindSpeedKmh ?? 0), ForecastFormat.Meters(Today.WindGustsKmh ?? 0)]</div>
-                }
-                else
-                {
-                    <div class="stat-value">@L["Wind_Unknown"]</div>
-                }
-            </div>
-            <div class="stat">
-                <div class="label">@L["Tile_Algae"]</div>
-                <div class="stat-value">@L[$"Algae_{Today.AlgaeLevel}"]</div>
-            </div>
-        </div>
-
-        <div class="days">
-            <div class="days-title">@L["Days_Title"]</div>
-            <ol>
-                @foreach (var day in Forecast.Days)
-                {
-                    <li data-outlook="@(day.IsOutlook ? "true" : "false")">
-                        <div class="day-name">@(day.Date == Today.Date ? L["Day_Today"] : ForecastFormat.Weekday(day.Date))</div>
-                        @if (day.DiveIndex is { } dayIndex)
-                        {
-                            <div class="day-index" data-index-band="@ForecastFormat.IndexBand(dayIndex)">@ForecastFormat.Number(dayIndex)</div>
-                            <div class="day-bar" data-index-band="@ForecastFormat.IndexBand(dayIndex)" style="width: @(BarWidth(dayIndex))"></div>
-                        }
-                        else
-                        {
-                            <div class="day-index">–</div>
-                        }
-                        <div class="day-word">@DayWord(day)</div>
-                    </li>
-                }
-            </ol>
-            @if (Forecast.HourList.Count > 0)
+    <div class="days">
+        <div class="days-title">@L["Days_Title"]</div>
+        <ol>
+            @foreach (var day in Forecast.Days)
             {
-                <section class="hourly" aria-labelledby="weather-heading">
-                    <h3 id="weather-heading" class="hourly-title">@L["Weather_Heading"]</h3>
-                    <WeatherChart Hours="Forecast.HourList" />
-                    <p class="weather-source">@L["Weather_Source"]</p>
-                </section>
+                <li data-outlook="@(day.IsOutlook ? "true" : "false")">
+                    <div class="day-name">@(day.Date == Today.Date ? L["Day_Today"] : ForecastFormat.Weekday(day.Date))</div>
+                    @if (day.DiveIndex is { } dayIndex)
+                    {
+                        <div class="day-index" data-index-band="@ForecastFormat.IndexBand(dayIndex)">@ForecastFormat.Number(dayIndex)</div>
+                        <div class="day-bar" data-index-band="@ForecastFormat.IndexBand(dayIndex)" style="width: @(BarWidth(dayIndex))"></div>
+                    }
+                    else
+                    {
+                        <div class="day-index">–</div>
+                    }
+                    <div class="day-word">@DayWord(day)</div>
+                </li>
             }
-        </div>
+        </ol>
+        @if (Forecast.HourList.Count > 0)
+        {
+            <section class="hourly" aria-labelledby="weather-heading">
+                <h3 id="weather-heading" class="hourly-title">@L["Weather_Heading"]</h3>
+                <WeatherChart Hours="Forecast.HourList" />
+                <p class="weather-source">@SourceLinks.Format(L["Weather_Source"], SourceLinks.MeteoSwiss(L), SourceLinks.OpenMeteo(L))</p>
+            </section>
+        }
     </div>
-
-    @if (Below is not null)
-    {
-        <div class="below">@Below</div>
-    }
 </div>
 
-<p class="sources">@L["Sources"] @(Forecast.ComputedAt is { } computed ? L["Computed", computed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)] : "")</p>
+<p class="sources">@SourceLinks.Format(L["Sources"], SourceLinks.Alplakes(L), SourceLinks.MeteoSwiss(L), SourceLinks.OpenMeteo(L), SourceLinks.Bafu(L)) @(Forecast.ComputedAt is { } computed ? L["Computed", computed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)] : "")</p>
 
 @code {
     [Parameter, EditorRequired]
     public SiteForecast Forecast { get; set; } = default!;
 
-    /// <summary>Inhalt unter dem Temperaturprofil, auf dem Desktop neben den Kacheln (z.B. die Karte).</summary>
-    [Parameter]
-    public RenderFragment? Below { get; set; }
 
     private ForecastDay Today => Forecast.Days[0];
 

@@ -50,7 +50,7 @@
   <data name="Reason_MixedLake" xml:space="preserve"><value>rimescolato</value></data>
   <data name="Reason_AlgaeBloom" xml:space="preserve"><value>fioritura algale</value></data>
   <data name="Reason_ClarityUnknown" xml:space="preserve"><value>visibilità sconosciuta</value></data>
-  <data name="Sources" xml:space="preserve"><value>Dati: Eawag Alplakes, MeteoSvizzera tramite Open-Meteo, UFAM. La previsione è un indicatore, non una garanzia di visibilità.</value></data>
+  <data name="Sources" xml:space="preserve"><value>Dati: {0}, {1} tramite {2}, {3}. La previsione è un indicatore, non una garanzia di visibilità.</value></data>
   <data name="Computed" xml:space="preserve"><value>Calcolata il {0}</value></data>
   <data name="Start_Title_Day" xml:space="preserve"><value>Dove ci immergiamo {0}?</value></data>
   <data name="Start_Days_Label" xml:space="preserve"><value>Scegli il giorno</value></data>
@@ -85,7 +85,7 @@
   <data name="Weather_Rain" xml:space="preserve"><value>Pioggia mm/h</value></data>
   <data name="Weather_Sun" xml:space="preserve"><value>Sole min/h</value></data>
   <data name="Weather_Wind" xml:space="preserve"><value>Vento km/h, freccia nella direzione del vento</value></data>
-  <data name="Weather_Source" xml:space="preserve"><value>Meteo: MeteoSvizzera ICON-CH1 e ICON-CH2, DWD ICON, tramite Open-Meteo.</value></data>
+  <data name="Weather_Source" xml:space="preserve"><value>Meteo: {0} ICON-CH1 e ICON-CH2, DWD ICON, tramite {1}.</value></data>
   <data name="Wx_Clear" xml:space="preserve"><value>Sereno</value></data>
   <data name="Wx_PartlyCloudy" xml:space="preserve"><value>Parzialmente nuvoloso</value></data>
   <data name="Wx_Cloudy" xml:space="preserve"><value>Coperto</value></data>
@@ -95,4 +95,12 @@
   <data name="Wx_Showers" xml:space="preserve"><value>Rovesci</value></data>
   <data name="Wx_Snow" xml:space="preserve"><value>Neve</value></data>
   <data name="Wx_Thunderstorm" xml:space="preserve"><value>Temporale</value></data>
+  <data name="Source_Alplakes" xml:space="preserve"><value>Eawag Alplakes</value></data>
+  <data name="Source_Alplakes_Url" xml:space="preserve"><value>https://www.alplakes.eawag.ch</value></data>
+  <data name="Source_MeteoSwiss" xml:space="preserve"><value>MeteoSvizzera</value></data>
+  <data name="Source_MeteoSwiss_Url" xml:space="preserve"><value>https://www.meteosvizzera.admin.ch</value></data>
+  <data name="Source_OpenMeteo" xml:space="preserve"><value>Open-Meteo</value></data>
+  <data name="Source_OpenMeteo_Url" xml:space="preserve"><value>https://open-meteo.com</value></data>
+  <data name="Source_Bafu" xml:space="preserve"><value>UFAM</value></data>
+  <data name="Source_Bafu_Url" xml:space="preserve"><value>https://www.hydrodaten.admin.ch/it</value></data>
 </root>

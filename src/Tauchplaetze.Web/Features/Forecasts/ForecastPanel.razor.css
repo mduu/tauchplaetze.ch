@@ -36,37 +36,33 @@
     margin-top: 28px;
 }
 
-/* Desktop: links Profil und darunter die Karte, rechts Kacheln und die fünf Tage. Schmal: Profil, Kacheln, Karte. */
+/* Desktop: links die drei Kacheln und darunter das Profil, rechts die fünf Tage mit dem Wetterverlauf. Schmal in dieser Reihenfolge untereinander. */
 @media (min-width: 960px) {
     .conditions-grid {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         grid-template-areas:
-            "profile side"
-            "below side";
+            "tiles days"
+            "profile days";
         grid-template-rows: auto 1fr;
         align-items: start;
     }
 
     .conditions-grid[data-profile="false"] {
-        grid-template-areas: "below side";
+        grid-template-areas: "tiles days";
         grid-template-rows: auto;
+    }
+
+    .tiles {
+        grid-area: tiles;
     }
 
     .profile {
         grid-area: profile;
     }
 
-    .side {
-        grid-area: side;
+    .days {
+        grid-area: days;
     }
-
-    .below {
-        grid-area: below;
-    }
-}
-
-.below {
-    min-width: 0;
 }
 
 .profile {
@@ -82,12 +78,6 @@
     margin: 4px 0 0;
     font-size: 14px;
     color: var(--color-text-subtle);
-}
-
-.side {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
 }
 
 .tiles {
@@ -205,7 +195,11 @@
     font-size: 12px;
 }
 
-.side,
 .days {
     min-width: 0;
+}
+
+.sources a,
+.weather-source a {
+    color: inherit;
 }

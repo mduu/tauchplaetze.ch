@@ -3,15 +3,8 @@
 @using Tauchplaetze.Core.Features.WaterBodies
 @inject IStringLocalizer<DiveSiteStrings> L
 
-<section class="@(Compact ? "location card" : "page-section")" aria-labelledby="location">
-    @if (Compact)
-    {
-        <h3 id="location" class="location-title-compact">@Title</h3>
-    }
-    else
-    {
-        <h2 id="location" class="location-title">@Title</h2>
-    }
+<section class="page-section" aria-labelledby="location">
+    <h2 id="location" class="location-title">@Title</h2>
     <div class="location-map" data-map data-here="@Here" data-points="@Points" data-max-zoom="18" data-single-zoom="17" data-padding="24"
          data-layer-map="@L["Map_Layer_Map"]" data-layer-photo="@L["Map_Layer_Photo"]"
          data-contours="@(Site.WaterBodyType == WaterBodyType.Lake ? "auto" : null)" data-layer-contours="@L["Map_Layer_Contours"]"
@@ -53,9 +46,6 @@
     [Parameter, EditorRequired]
     public DiveSiteDetails Site { get; set; } = default!;
 
-    /// <summary>Als Karte in der Spalte neben den Bedingungen statt als eigener Abschnitt.</summary>
-    [Parameter]
-    public bool Compact { get; set; }
 
     private string Title => L[Site.EntryPoints.Any(e => e.Kind.IsWaterAccess()) ? "Location_Title_EntryPoints" : "Location_Title"];
 

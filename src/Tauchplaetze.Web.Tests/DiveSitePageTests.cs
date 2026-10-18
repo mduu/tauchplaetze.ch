@@ -116,6 +116,25 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Die_Bedingungen_zeigen_die_Kacheln_vor_dem_Profil_die_Karte_danach_und_verlinken_die_Quellen()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/fr/sites-de-plongee/" + WithForecast, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.True(html.IndexOf("class=\"tiles\"", StringComparison.Ordinal) < html.IndexOf("class=\"card profile\"", StringComparison.Ordinal));
+        Assert.True(html.IndexOf("class=\"sources\"", StringComparison.Ordinal) < html.IndexOf("id=\"location\"", StringComparison.Ordinal));
+        Assert.Matches("href=\"https://www.meteosuisse.admin.ch\"[^>]*>MétéoSuisse</a>", html);
+        Assert.Contains("href=\"https://open-meteo.com\"", html);
+        Assert.Contains("href=\"https://www.alplakes.eawag.ch\"", html);
+        Assert.Contains("href=\"https://www.hydrodaten.admin.ch/fr\"", html);
+        Assert.Matches(@"Données : Eawag Alplakes\s*,\s*MétéoSuisse via Open-Meteo\s*,\s*OFEV\s*\.", VisibleText.Of(html));
+    }
+
+    [Fact]
     public async Task Mit_Skizze_traegt_die_Karte_die_Skizze_und_den_Hinweis_dass_sie_nicht_zur_Navigation_dient()
     {
         // Arrange
