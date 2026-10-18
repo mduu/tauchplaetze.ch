@@ -283,7 +283,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
 
         // Assert
         Assert.Contains($"href=\"/it/siti-di-immersione/{Slug}\"", html);
-        Assert.Contains($"hreflang=\"en\" href=\"https://localhost/en/dive-sites/{Slug}\"", html);
+        Assert.Contains($"hreflang=\"en\" href=\"https://tauchplaetze.ch/en/dive-sites/{Slug}\"", html);
     }
 
     private static IReadOnlyList<WeatherHourForecast> Hours(DateTime start) =>

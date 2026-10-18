@@ -20,8 +20,8 @@
         <PageTitle>@site.Name · @site.WaterBodyName · @Shared["Brand"]</PageTitle>
         <HeadContent>
             <meta name="description" content="@L["MetaDescription", site.Name, site.WaterBodyName]" />
+            <HreflangLinks />
         </HeadContent>
-        <HreflangLinks />
 
         <UnderwaterHero Photo="site.Hero" Credit="@(site.Hero is { } hero ? L["Hero_Credit", hero.Photographer].Value : null)">
             <nav aria-label="@L["Breadcrumb"]">
