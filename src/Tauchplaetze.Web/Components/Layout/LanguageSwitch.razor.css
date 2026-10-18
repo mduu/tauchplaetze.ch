@@ -1,31 +1,87 @@
-.language-switch ul {
-    display: flex;
-    gap: 4px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+.language-switch {
+    position: relative;
 }
 
-.language-switch a {
+.language-switch summary {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
     min-width: 44px;
     min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-pill);
     color: var(--color-text-muted);
     font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 500;
     letter-spacing: 0.1em;
+    list-style: none;
+    cursor: pointer;
+}
+
+.language-switch summary::-webkit-details-marker {
+    display: none;
+}
+
+.language-switch summary:hover,
+.language-switch[open] summary {
+    color: var(--color-text);
+    border-color: var(--color-primary);
+}
+
+.chevron {
+    transition: transform 0.15s ease;
+}
+
+.language-switch[open] .chevron {
+    transform: rotate(180deg);
+}
+
+.language-switch ul {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 1100;
+    min-width: 180px;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.4);
+}
+
+.language-switch a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: calc(var(--radius-card) - 4px);
+    color: var(--color-text-muted);
     text-decoration: none;
 }
 
 .language-switch a:hover {
+    background: var(--color-surface-raised);
     color: var(--color-text);
 }
 
 .language-switch a[aria-current="true"] {
-    background: var(--color-primary);
-    color: var(--color-bg);
+    color: var(--color-primary);
+}
+
+.code {
+    width: 2.2em;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chevron {
+        transition: none;
+    }
 }

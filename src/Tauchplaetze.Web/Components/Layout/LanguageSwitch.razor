@@ -1,7 +1,11 @@
 @inject IStringLocalizer<SharedStrings> L
 @inject NavigationManager Navigation
 
-<nav class="language-switch" aria-label="@L["Language_Choose"]">
+<details class="language-switch" data-dropdown>
+    <summary aria-label="@L["Language_Choose"]">
+        <span lang="@Current">@Current.ToUpperInvariant()</span>
+        <svg class="chevron" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    </summary>
     <ul>
         @foreach (var language in Languages.All)
         {
@@ -9,12 +13,14 @@
                 <a href="@LinkFor(language)"
                    hreflang="@language"
                    lang="@language"
-                   aria-label="@L[$"Language_{language}"]"
-                   aria-current="@(language == Current ? "true" : null)">@language.ToUpperInvariant()</a>
+                   aria-current="@(language == Current ? "true" : null)">
+                    <span class="code">@language.ToUpperInvariant()</span>
+                    <span>@L[$"Language_{language}"]</span>
+                </a>
             </li>
         }
     </ul>
-</nav>
+</details>
 
 @code {
     private static string Current => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
