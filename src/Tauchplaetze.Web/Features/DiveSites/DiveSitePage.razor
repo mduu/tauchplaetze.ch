@@ -34,6 +34,10 @@
                 </ol>
             </nav>
             <h1 class="site-name">@site.Name</h1>
+            @if (site.OtherNameList.Count > 0)
+            {
+                <p class="other-names">@L["Site_OtherNames", string.Join(", ", site.OtherNameList)]</p>
+            }
         </UnderwaterHero>
 
         <SiteNotices Notices="site.Notices" />

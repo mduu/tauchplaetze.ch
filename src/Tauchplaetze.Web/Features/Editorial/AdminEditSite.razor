@@ -50,6 +50,7 @@ else
         <MudTabPanel Text="@L["Edit_Tab_Basics"]">
             <MudStack Spacing="3" Class="pt-4">
                 <MudTextField @bind-Value="form.Name" Label="@L["Field_Name"]" Required="true" MaxLength="120" />
+                <MudTextField @bind-Value="form.OtherNames" Label="@L["Field_OtherNames"]" HelperText="@L["Field_OtherNames_Help"]" MaxLength="450" />
                 <MudSelect T="int" @bind-Value="form.WaterBodyId" Label="@L["Field_WaterBodyId"]">
                     @foreach (var water in waterBodies)
                     {

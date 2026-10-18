@@ -9,7 +9,7 @@ Die Oberfläche nutzt **MudBlazor** im dunklen Theme aus den Design Tokens. Seit
 | `/admin` | Übersicht: Plätze, offene Vorschläge, letzter Prognose-Lauf | alle Angemeldeten |
 | `/admin/plaetze` | Liste mit Suche, Status, Ausbaustufe, Datenstufe, offenen Vorschlägen | alle Angemeldeten |
 | `/admin/plaetze/neu` | neuer Platz: Name, Gewässer, Koordinate (Klick in die Karte) | alle Angemeldeten |
-| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten, Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station) | alle Angemeldeten, Tab «nur Moderation» für Moderatoren |
+| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten (mit «Auch bekannt als», Namen mit Komma getrennt), Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station) | alle Angemeldeten, Tab «nur Moderation» für Moderatoren |
 | `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | alle Angemeldeten, Wiederherstellen für Moderatoren |
 | `/admin/vorschlaege` | offene Vorschläge mit Vergleich zur Basis, Freigeben, Ablehnen mit Begründung | Moderatoren, Admins |
 | `/admin/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten» | Moderatoren; starten nur Admins |

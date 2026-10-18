@@ -22,6 +22,9 @@ internal class SiteForm
 
     public string? Canton { get; set; }
 
+    /// <summary>Weitere Namen, getrennt mit Komma.</summary>
+    public string? OtherNames { get; set; }
+
     public int? MaxDepth { get; set; }
 
     public Dictionary<string, byte?> Ratings { get; } = [];
@@ -104,6 +107,7 @@ internal class SiteForm
         form.Sketch.AddRange(content.SketchList.Select(SketchForm.From));
         form.Media.AddRange(content.MediaList.Select(m => new MediaUseForm { MediaId = m.MediaId, Section = m.Section, EntryPointId = m.EntryPointId }));
         form.HeroMediaId = content.HeroMediaId;
+        form.OtherNames = content.OtherNameList.Count > 0 ? string.Join(", ", content.OtherNameList) : null;
         return form;
     }
 
@@ -135,7 +139,8 @@ internal class SiteForm
         [.. Notices.Select(n => n.ToContent())],
         [.. Sketch.Select(f => f.ToContent())],
         [.. Media.Select(m => new MediaUse(m.MediaId, m.Section, m.Section == MediaSection.EntryPoint ? m.EntryPointId : null))],
-        Media.Any(m => m.MediaId == HeroMediaId) ? HeroMediaId : null);
+        Media.Any(m => m.MediaId == HeroMediaId) ? HeroMediaId : null,
+        Tauchplaetze.Core.Features.Editorial.OtherNames.Normalize((OtherNames ?? "").Split(',')));
 
     private static bool HasText(DiveSiteContentTranslation t) =>
         new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));

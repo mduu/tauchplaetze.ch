@@ -204,4 +204,5 @@
   <data name="Finder_Depth" xml:space="preserve"><value>up to {0} m</value></data>
   <data name="Directory_Empty" xml:space="preserve"><value>No dive sites yet.</value></data>
   <data name="DirectoryOnly_Write" xml:space="preserve"><value>Write to us.</value></data>
+  <data name="Site_OtherNames" xml:space="preserve"><value>also known as {0}</value></data>
 </root>

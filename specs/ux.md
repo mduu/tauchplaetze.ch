@@ -75,7 +75,7 @@ Die E-Mail-Adresse des Betreibers erscheint nirgends auf der Website, auch nicht
 
 Mockup: `design/tauchplatz.dc.html`.
 
-1. Hero: Titelbild (`HeroMediaId`, mit «Titelbild: {Fotograf}» oben rechts und Verlauf nach unten für die Lesbarkeit) oder die Unterwasser-Illustration, Brotkrumen «See › Gemeinde», Name gross, Tags (Wand, Wrack, Tiefe, Zugang, Schwierigkeit, ganzjährig).
+1. Hero: Titelbild (`HeroMediaId`, mit «Titelbild: {Fotograf}» oben rechts und Verlauf nach unten für die Lesbarkeit) oder die Unterwasser-Illustration, Brotkrumen «See › Gemeinde», Name gross, darunter «auch bekannt als …» (falls vorhanden), Tags (Wand, Wrack, Tiefe, Zugang, Schwierigkeit, ganzjährig).
 2. **Hinweise** (falls gültig): Banner direkt unter dem Hero, schwerster zuerst. Farbe nach Art, Art und Enddatum als Label («Gesperrt · bis 01.04.2027»), darunter der Text. Siehe `dive-site.md`, «Hinweise».
 3. **Tauchbedingungen:** Satz («Heute ein guter Tag.») und Index gross.
    - Temperaturprofil als Diagramm (Temperatur über Tiefe) mit markierter Sprungschicht.
@@ -100,11 +100,11 @@ Alle Angaben in den Abschnitten 4 bis 7 sind optional (siehe `dive-site.md`). Ei
 Die Seite «Tauchplätze» ist der **Finder**: «Welcher Platz passt zu mir, oder wo ist der Platz XY?» Sie grenzt sich ab von der Prognose («Wo tauche ich heute?», Rangliste nach Index) und von der Gewässer-Übersicht («Was ist los an meinem See?», Stöbern nach See).
 
 - **Kopf:** Titel, «{n} Plätze an {m} Gewässern», ein Satz zur Suche.
-- **Suche:** ein Feld für Name, Gemeinde und Gewässer (alle Sprachen, ohne Gross-/Kleinschreibung, Umlaute und Akzente: «zurich» findet «Zürichsee»). Ein GET-Formular, die Seite bleibt Static SSR.
+- **Suche:** ein Feld für Name, weitere Namen, Gemeinde und Gewässer (alle Sprachen, ohne Gross-/Kleinschreibung, Umlaute und Akzente: «zurich» findet «Zürichsee»). Ein GET-Formular, die Seite bleibt Static SSR.
 - **In meiner Nähe:** Knopf nur mit JavaScript und Standort im Browser. Die Koordinate kommt auf zwei Dezimalen gerundet (rund 1 km) in die URL (`lat`, `lng`). Die Liste sortiert dann nach Distanz und zeigt sie. Ein Chip «In deiner Nähe ×» entfernt den Standort.
 - **Eigenschaften als Chips:** Steilwand (Bewertung ≥ 3), Wrack (Wracks ≥ 3), Einsteiger (Schwierigkeit ≤ 2), Ausbildung, Fluss, Höhle. Mehrere gelten zusammen. Mit JavaScript schickt ein Klick das Formular gleich ab.
 - **Sortierung:** Index heute (ohne Index am Ende), alphabetisch, mit Standort Distanz.
-- **Liste:** 30 Plätze pro Seite mit Name, Gemeinde · Gewässer, Eigenschaften und Tiefe, Index heute, Distanz (mit Standort), Badge «Gesperrt» oder «Warnung». Seitenlinks behalten Suche und Filter.
+- **Liste:** 30 Plätze pro Seite mit Name (dazu dezent die weiteren Namen), Gemeinde · Gewässer, Eigenschaften und Tiefe, Index heute, Distanz (mit Standort), Badge «Gesperrt» oder «Warnung». Seitenlinks behalten Suche und Filter.
 - **Karte:** alle Treffer, nahe Plätze als Gruppe mit Anzahl (Leaflet.markercluster). Desktop rechts neben der Liste und beim Scrollen sichtbar, schmal per Umschalter «Liste | Karte».
 - **Leer:** «Keine Plätze gefunden» mit Link «Suche ohne Filter».
 - **Gewässer:** keine Pillen mehr. Link «Nach Gewässer stöbern» zur Gewässer-Übersicht. Alte Links mit `?gewaesser={slug}` filtern weiter auf das Gewässer und zeigen es als entfernbaren Chip.

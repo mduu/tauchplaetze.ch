@@ -204,4 +204,5 @@
   <data name="Finder_Depth" xml:space="preserve"><value>fino a {0} m</value></data>
   <data name="Directory_Empty" xml:space="preserve"><value>Ancora nessun sito d'immersione.</value></data>
   <data name="DirectoryOnly_Write" xml:space="preserve"><value>Scrivici.</value></data>
+  <data name="Site_OtherNames" xml:space="preserve"><value>noto anche come {0}</value></data>
 </root>

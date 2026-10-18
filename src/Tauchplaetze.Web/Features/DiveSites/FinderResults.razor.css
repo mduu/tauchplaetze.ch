@@ -84,3 +84,8 @@
     border-color: var(--color-notice-closure);
     color: var(--color-notice-closure);
 }
+
+.other-names {
+    color: var(--color-text-subtle);
+    font-size: 14px;
+}

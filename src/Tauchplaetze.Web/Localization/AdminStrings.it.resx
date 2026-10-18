@@ -247,4 +247,7 @@
   <data name="PhotoChange_Unchanged" xml:space="preserve"><value>Invariata</value></data>
   <data name="Photo_Deleted" xml:space="preserve"><value>Foto eliminata</value></data>
   <data name="Photo_NoPreview" xml:space="preserve"><value>Nessuna anteprima</value></data>
+  <data name="Field_OtherNames" xml:space="preserve"><value>Noto anche come</value></data>
+  <data name="Field_OtherNames_Help" xml:space="preserve"><value>Altri nomi, separati da virgole, p. es. «Grosser Parkplatz, Seeterasse». Al massimo 5.</value></data>
+  <data name="Error_InvalidOtherNames" xml:space="preserve"><value>Gli altri nomi non sono validi: al massimo 5, ognuno al massimo 80 caratteri, nessun doppione né uguale al nome.</value></data>
 </root>
