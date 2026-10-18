@@ -28,6 +28,7 @@
         name = s.Name,
         url = PublicRoutes.DiveSite(Language, s.Slug),
         band = ForecastFormat.IndexBand(s.DiveIndexToday),
+        index = s.DiveIndexToday is { } index ? ForecastFormat.Number(index) : null,
     }));
 
     private static string Invariant(double value) => value.ToString(CultureInfo.InvariantCulture);

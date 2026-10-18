@@ -7,7 +7,8 @@ window.tauchplaetzeMap = (function () {
     photo: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg'
   };
   const storageKey = 'tauchplaetze.mapLayer';
-  const colors = { high: '#7FE3D6', mid: '#4FB3A9', low: '#5E9C96', none: '#8FAAA6' };
+  const labelLimit = 10;
+  const labelZoom = 11;
   let maps = [];
 
   function escapeHtml(text) {
@@ -16,31 +17,54 @@ window.tauchplaetzeMap = (function () {
     return span.innerHTML;
   }
 
+  // Farben aus den Design Tokens (design-system.md), damit tokens.css die einzige Quelle bleibt.
+  function token(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function bandColor(band) {
+    return token({ high: '--color-index-high', mid: '--color-index-mid', low: '--color-index-low' }[band] || '--color-text-subtle');
+  }
+
+  // Dauerhafte Beschriftung wie ein Tooltip mit Pfeil auf den Punkt. Ein Klick öffnet die Seite.
+  function labelled(marker, item, html) {
+    return marker
+      .bindTooltip('<a href="' + item.url + '">' + html + '</a>', {
+        permanent: true,
+        direction: 'top',
+        offset: [0, -8],
+        interactive: true,
+        className: 'map-label'
+      })
+      .on('click', function () { window.location.href = item.url; });
+  }
+
   function siteMarker(site) {
-    return L.circleMarker([site.lat, site.lng], {
-      radius: 9,
-      color: '#071417',
+    const index = site.index ? ' <span class="map-label-index map-label-' + (site.band || 'none') + '">' + escapeHtml(site.index) + '</span>' : '';
+    const marker = L.circleMarker([site.lat, site.lng], {
+      radius: 8,
+      color: token('--color-bg'),
       weight: 2,
-      fillColor: colors[site.band] || colors.none,
+      fillColor: bandColor(site.band),
       fillOpacity: 1
-    }).bindPopup('<a href="' + site.url + '">' + escapeHtml(site.name) + '</a>');
+    });
+    return labelled(marker, site, escapeHtml(site.name) + index);
   }
 
   function waterMarker(water) {
-    return L.circleMarker([water.lat, water.lng], {
+    const marker = L.circleMarker([water.lat, water.lng], {
       radius: 6,
-      color: '#071417',
+      color: token('--color-bg'),
       weight: 2,
-      fillColor: colors.high,
+      fillColor: token('--color-primary'),
       fillOpacity: 1
-    })
-      .bindTooltip('<a href="' + water.url + '">' + escapeHtml(water.name) + '</a>', {
-        permanent: true,
-        direction: 'right',
-        interactive: true,
-        className: 'water-label'
-      })
-      .on('click', function () { window.location.href = water.url; });
+    });
+    return labelled(marker, water, escapeHtml(water.name));
+  }
+
+  // Bei vielen Punkten erscheinen die Beschriftungen erst ab Zoom 11, sonst überdecken sie sich.
+  function toggleLabels(map, count) {
+    map.getContainer().classList.toggle('map-labels-hidden', count > labelLimit && map.getZoom() < labelZoom);
   }
 
   function storedLayer() {
@@ -84,8 +108,9 @@ window.tauchplaetzeMap = (function () {
       .concat(JSON.parse(element.dataset.waters || '[]').map(waterMarker));
     markers.forEach(function (marker) { marker.addTo(map); });
 
+    map.on('zoomend', function () { toggleLabels(map, markers.length); });
     if (markers.length > 0) {
-      map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [40, 40], maxZoom: Number(element.dataset.maxZoom || 13) });
+      map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [48, 48], maxZoom: Number(element.dataset.maxZoom || 13) });
     } else {
       map.setView([Number(element.dataset.lat || 46.8), Number(element.dataset.lng || 8.2)], Number(element.dataset.zoom || 8));
     }

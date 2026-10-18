@@ -51,6 +51,13 @@ Die Stufen unterscheiden sich in der **Helligkeit**, nicht nur im Farbton. Der I
 | `--color-rock` | `#05161A` | Felswand, Seegrund |
 | `--color-wood` | `#B88A5A` | Baumstamm in Skizzen |
 
+### Karten
+
+- Punkte: Tauchplatz in der Farbe seiner Index-Stufe (`--color-index-*`, ohne Index `--color-text-subtle`), Gewässer in `--color-primary`. Rand `--color-bg`. Im CMS ist der Pin `--color-signal`.
+- Beschriftung wie ein Tooltip, dauerhaft sichtbar: Pille in `--color-bg` mit Rahmen `--color-border-strong` und Pfeil auf den Punkt. Name in IBM Plex Sans 600, 13 px. Bei Plätzen folgt der heutige Index in IBM Plex Mono in der Farbe der Stufe (`--color-index-low-text` für tiefe Werte). Ein Klick öffnet die Seite.
+- Mehr als 10 Punkte: Beschriftungen erst ab Zoom 11, sonst überdecken sie sich.
+- Die Farben liest `map.js` aus den Tokens. Keine Farbwerte im JavaScript.
+
 ## Logo und Favicon
 
 Entwurf vom 17.10.2026, generiert mit Gemini. Die Quellen liegen in `assets/logo/` (PNG und Pixelmator).

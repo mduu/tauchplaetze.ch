@@ -12,7 +12,7 @@ window.tauchplaetzeAdmin = (function () {
     if (!entry) {
       const map = L.map(element, { scrollWheelZoom: true });
       window.tauchplaetzeMap.addBaseLayers(map, element);
-      const marker = L.circleMarker([latitude, longitude], { radius: 9, color: '#071417', weight: 2, fillColor: '#FF9A4D', fillOpacity: 1 }).addTo(map);
+      const marker = L.circleMarker([latitude, longitude], { radius: 9, color: getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim(), weight: 2, fillColor: getComputedStyle(document.documentElement).getPropertyValue('--color-signal').trim(), fillOpacity: 1 }).addTo(map);
       map.on('click', function (event) {
         marker.setLatLng(event.latlng);
         dotnet.invokeMethodAsync('SetLocation', event.latlng.lat, event.latlng.lng);

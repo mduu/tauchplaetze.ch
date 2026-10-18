@@ -333,22 +333,46 @@ a:hover {
   gap: 16px;
 }
 
-.leaflet-tooltip.water-label {
-  padding: 2px 8px;
+.leaflet-tooltip.map-label {
+  padding: 3px 10px;
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-pill);
   background: var(--color-bg);
   box-shadow: none;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 13px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
-.leaflet-tooltip.water-label::before {
-  display: none;
+.leaflet-tooltip-top.map-label::before {
+  border-top-color: var(--color-border-strong);
 }
 
-.leaflet-tooltip.water-label a {
+.leaflet-tooltip.map-label a {
   color: var(--color-text);
   text-decoration: none;
+}
+
+.leaflet-tooltip.map-label a:hover,
+.leaflet-tooltip.map-label a:focus-visible {
+  color: var(--color-primary-hover);
+}
+
+.map-label-index {
+  margin-left: 4px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.map-label-high { color: var(--color-index-high); }
+.map-label-mid { color: var(--color-index-mid); }
+.map-label-low { color: var(--color-index-low-text); }
+.map-label-none { color: var(--color-text-subtle); }
+
+.map-labels-hidden .leaflet-tooltip.map-label {
+  display: none;
 }
 
 .leaflet-control-layers.leaflet-control {
