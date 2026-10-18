@@ -1,5 +1,6 @@
 using System.Net;
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Web.Tests;
@@ -8,6 +9,10 @@ public class DiveSitePageTests : IClassFixture<WebApp>
 {
     private const string Slug = "riff-williams-herrliberg";
 
+    private const string WithForecast = "platz-mit-prognose";
+
+    private static readonly Guid ForecastSiteId = Guid.NewGuid();
+
     private readonly WebApp app;
 
     public DiveSitePageTests(WebApp app)
@@ -15,6 +20,11 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         this.app = app;
         app.DiveSites.Add(Slug, new DiveSiteLookup.Found(new DiveSiteDetails(
             Guid.NewGuid(), Slug, "Riff Williams", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.2849, 8.6085, 0, DateTimeOffset.UtcNow)));
+        app.DiveSites.Add(WithForecast, new DiveSiteLookup.Found(new DiveSiteDetails(
+            ForecastSiteId, WithForecast, "Platz mit Prognose", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.28, 8.6, 0, DateTimeOffset.UtcNow)));
+        app.Forecasts.Add(ForecastSiteId, new SiteForecast(
+            [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]), Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
+            DateTimeOffset.UtcNow));
         app.DiveSites.Add("alter-name", new DiveSiteLookup.Moved(Slug));
         app.DiveSites.Add("archiviert", new DiveSiteLookup.Gone());
     }
@@ -36,6 +46,26 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("Riff Williams", text);
         Assert.Contains("Herrliberg ZH", text);
         Assert.Contains(directoryOnly, text);
+    }
+
+    [Theory]
+    [InlineData("/de/tauchplaetze/", "Ein guter Tag.", "Gut", "Ausblick")]
+    [InlineData("/fr/sites-de-plongee/", "Une bonne journée.", "Bonne", "Tendance")]
+    public async Task Mit_Prognose_zeigt_die_Seite_Index_Kacheln_und_Tage_mit_Ausblick(string path, string headline, string visibility, string outlook)
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync(path + WithForecast, TestContext.Current.CancellationToken);
+
+        // Assert
+        var text = VisibleText.Of(html);
+        Assert.Contains(headline, text);
+        Assert.Contains(visibility, text);
+        Assert.Contains(outlook, text);
+        Assert.Contains("data-index-band=\"high\"", html);
+        Assert.Contains("data-outlook=\"true\"", html);
     }
 
     [Fact]
@@ -91,4 +121,9 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains($"href=\"/it/siti-di-immersione/{Slug}\"", html);
         Assert.Contains($"hreflang=\"en\" href=\"https://localhost/en/dive-sites/{Slug}\"", html);
     }
+
+    private static ForecastDay Day(int october, decimal? index, ReasonCode[] reasons) => new(
+        new DateOnly(2026, 10, october), index is null ? (byte)1 : (byte)3, index, index is null ? null : ProfileSource.Model3d,
+        index is null ? null : 15.2m, 15.0m, 11.4m, 7.9m, 12m, 18m, 7.5m, new DateOnly(2026, 10, 15), VisibilityIndicator.Good, 18m,
+        2, 9m, 15m, 1.2m, AlgaeLevel.Low, reasons);
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Headline_Good" xml:space="preserve"><value>A good day.</value></data>
+  <data name="Headline_Fair" xml:space="preserve"><value>A decent day.</value></data>
+  <data name="Headline_Poor" xml:space="preserve"><value>Better not.</value></data>
+  <data name="Headline_Outlook" xml:space="preserve"><value>Weather outlook only.</value></data>
+  <data name="Index_Label" xml:space="preserve"><value>Dive index / 10</value></data>
+  <data name="Profile_Title" xml:space="preserve"><value>Temperature by depth</value></data>
+  <data name="Profile_Source_Model3d" xml:space="preserve"><value>Lake model at the site</value></data>
+  <data name="Profile_Source_Model1d" xml:space="preserve"><value>Lake model for the whole lake</value></data>
+  <data name="Profile_Source_RiverStation" xml:space="preserve"><value>Gauging station on the river</value></data>
+  <data name="Profile_Source_InSitu" xml:space="preserve"><value>Measurement in the lake</value></data>
+  <data name="Profile_Thermocline" xml:space="preserve"><value>Thermocline at {0}–{1} m</value></data>
+  <data name="Profile_Mixed" xml:space="preserve"><value>No thermocline, the lake is mixed</value></data>
+  <data name="Profile_Chart_Label" xml:space="preserve"><value>Temperature profile by depth</value></data>
+  <data name="Profile_Thermocline_Short" xml:space="preserve"><value>Thermocline</value></data>
+  <data name="Profile_Value" xml:space="preserve"><value>{0} m: {1} °C</value></data>
+  <data name="Tile_Visibility" xml:space="preserve"><value>Visibility indicator</value></data>
+  <data name="Visibility_Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Visibility_Poor" xml:space="preserve"><value>Poor</value></data>
+  <data name="Visibility_Moderate" xml:space="preserve"><value>Moderate</value></data>
+  <data name="Visibility_Good" xml:space="preserve"><value>Good</value></data>
+  <data name="Visibility_VeryGood" xml:space="preserve"><value>Very good</value></data>
+  <data name="Visibility_GoodBelow" xml:space="preserve"><value>better below {0} m</value></data>
+  <data name="Visibility_Satellite" xml:space="preserve"><value>Satellite of {0}: approx. {1} m</value></data>
+  <data name="Visibility_SatelliteOld" xml:space="preserve"><value>Last satellite image from {0}</value></data>
+  <data name="Visibility_NoSatellite" xml:space="preserve"><value>No satellite image</value></data>
+  <data name="Tile_Suit" xml:space="preserve"><value>Suit</value></data>
+  <data name="Suit_DrySuit" xml:space="preserve"><value>Drysuit</value></data>
+  <data name="Suit_WetSuit7" xml:space="preserve"><value>Wetsuit 7 mm</value></data>
+  <data name="Suit_WetSuit5" xml:space="preserve"><value>Wetsuit 5 mm</value></data>
+  <data name="Suit_At20m" xml:space="preserve"><value>{0} °C at 20 m</value></data>
+  <data name="Suit_Surface" xml:space="preserve"><value>water {0} °C</value></data>
+  <data name="Tile_Wind" xml:space="preserve"><value>Wind</value></data>
+  <data name="Wind_Value" xml:space="preserve"><value>{0} Bft</value></data>
+  <data name="Wind_Detail" xml:space="preserve"><value>{0} km/h, gusts {1} km/h</value></data>
+  <data name="Wind_Unknown" xml:space="preserve"><value>No values</value></data>
+  <data name="Tile_Algae" xml:space="preserve"><value>Algae (satellite)</value></data>
+  <data name="Algae_Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Algae_Low" xml:space="preserve"><value>Low</value></data>
+  <data name="Algae_Medium" xml:space="preserve"><value>Medium</value></data>
+  <data name="Algae_High" xml:space="preserve"><value>High</value></data>
+  <data name="Days_Title" xml:space="preserve"><value>The next 5 days</value></data>
+  <data name="Day_Outlook" xml:space="preserve"><value>Outlook</value></data>
+  <data name="Day_Today" xml:space="preserve"><value>Today</value></data>
+  <data name="Reason_CalmLake" xml:space="preserve"><value>calm</value></data>
+  <data name="Reason_Windy" xml:space="preserve"><value>windy</value></data>
+  <data name="Reason_ClearWater" xml:space="preserve"><value>clear</value></data>
+  <data name="Reason_TurbidWater" xml:space="preserve"><value>murky</value></data>
+  <data name="Reason_TurbidAfterRain" xml:space="preserve"><value>murky after rain</value></data>
+  <data name="Reason_ClearBelowThermocline" xml:space="preserve"><value>clearer below</value></data>
+  <data name="Reason_MixedLake" xml:space="preserve"><value>mixed</value></data>
+  <data name="Reason_AlgaeBloom" xml:space="preserve"><value>algae bloom</value></data>
+  <data name="Reason_ClarityUnknown" xml:space="preserve"><value>visibility unknown</value></data>
+  <data name="Sources" xml:space="preserve"><value>Data: Eawag Alplakes, MeteoSwiss via Open-Meteo, FOEN. The forecast is an indicator, not a guarantee of visibility.</value></data>
+  <data name="Computed" xml:space="preserve"><value>Calculated on {0}</value></data>
+</root>

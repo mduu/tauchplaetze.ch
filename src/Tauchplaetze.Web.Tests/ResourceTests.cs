@@ -7,7 +7,7 @@ public class ResourceTests
     private static readonly string[] Translations = ["en", "fr", "it"];
 
     /// <remarks>Marke und Sprachnamen sind in allen Sprachen gleich (`i18n.md`).</remarks>
-    private static readonly string[] SameInAllLanguages = ["Brand", "Language_de", "Language_en", "Language_fr", "Language_it"];
+    private static readonly string[] SameInAllLanguages = ["Brand", "Language_de", "Language_en", "Language_fr", "Language_it", "Wind_Value", "Tile_Wind", "Profile_Value"];
 
     public static TheoryData<string> ResourceSets() => new(
         Directory.EnumerateFiles(LocalizationFolder(), "*.resx")

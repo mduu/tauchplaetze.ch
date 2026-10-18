@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Headline_Good" xml:space="preserve"><value>Una buona giornata.</value></data>
+  <data name="Headline_Fair" xml:space="preserve"><value>Una giornata discreta.</value></data>
+  <data name="Headline_Poor" xml:space="preserve"><value>Meglio di no.</value></data>
+  <data name="Headline_Outlook" xml:space="preserve"><value>Solo una tendenza meteo.</value></data>
+  <data name="Index_Label" xml:space="preserve"><value>Indice d'immersione / 10</value></data>
+  <data name="Profile_Title" xml:space="preserve"><value>Temperatura per profondità</value></data>
+  <data name="Profile_Source_Model3d" xml:space="preserve"><value>Modello del lago al sito</value></data>
+  <data name="Profile_Source_Model1d" xml:space="preserve"><value>Modello per tutto il lago</value></data>
+  <data name="Profile_Source_RiverStation" xml:space="preserve"><value>Stazione di misura sul fiume</value></data>
+  <data name="Profile_Source_InSitu" xml:space="preserve"><value>Misura nel lago</value></data>
+  <data name="Profile_Thermocline" xml:space="preserve"><value>Termoclino a {0}–{1} m</value></data>
+  <data name="Profile_Mixed" xml:space="preserve"><value>Nessun termoclino, il lago è rimescolato</value></data>
+  <data name="Profile_Chart_Label" xml:space="preserve"><value>Profilo di temperatura per profondità</value></data>
+  <data name="Profile_Thermocline_Short" xml:space="preserve"><value>Termoclino</value></data>
+  <data name="Profile_Value" xml:space="preserve"><value>{0} m: {1} °C</value></data>
+  <data name="Tile_Visibility" xml:space="preserve"><value>Indicatore di visibilità</value></data>
+  <data name="Visibility_Unknown" xml:space="preserve"><value>Sconosciuta</value></data>
+  <data name="Visibility_Poor" xml:space="preserve"><value>Scarsa</value></data>
+  <data name="Visibility_Moderate" xml:space="preserve"><value>Discreta</value></data>
+  <data name="Visibility_Good" xml:space="preserve"><value>Buona</value></data>
+  <data name="Visibility_VeryGood" xml:space="preserve"><value>Ottima</value></data>
+  <data name="Visibility_GoodBelow" xml:space="preserve"><value>migliore da {0} m</value></data>
+  <data name="Visibility_Satellite" xml:space="preserve"><value>Satellite del {0}: circa {1} m</value></data>
+  <data name="Visibility_SatelliteOld" xml:space="preserve"><value>Ultima immagine satellitare del {0}</value></data>
+  <data name="Visibility_NoSatellite" xml:space="preserve"><value>Nessuna immagine satellitare</value></data>
+  <data name="Tile_Suit" xml:space="preserve"><value>Muta</value></data>
+  <data name="Suit_DrySuit" xml:space="preserve"><value>Stagna</value></data>
+  <data name="Suit_WetSuit7" xml:space="preserve"><value>Umida 7 mm</value></data>
+  <data name="Suit_WetSuit5" xml:space="preserve"><value>Umida 5 mm</value></data>
+  <data name="Suit_At20m" xml:space="preserve"><value>{0} °C a 20 m</value></data>
+  <data name="Suit_Surface" xml:space="preserve"><value>acqua {0} °C</value></data>
+  <data name="Tile_Wind" xml:space="preserve"><value>Vento</value></data>
+  <data name="Wind_Value" xml:space="preserve"><value>{0} Bft</value></data>
+  <data name="Wind_Detail" xml:space="preserve"><value>{0} km/h, raffiche {1} km/h</value></data>
+  <data name="Wind_Unknown" xml:space="preserve"><value>Nessun valore</value></data>
+  <data name="Tile_Algae" xml:space="preserve"><value>Alghe (satellite)</value></data>
+  <data name="Algae_Unknown" xml:space="preserve"><value>Sconosciute</value></data>
+  <data name="Algae_Low" xml:space="preserve"><value>Poche</value></data>
+  <data name="Algae_Medium" xml:space="preserve"><value>Medie</value></data>
+  <data name="Algae_High" xml:space="preserve"><value>Molte</value></data>
+  <data name="Days_Title" xml:space="preserve"><value>I prossimi 5 giorni</value></data>
+  <data name="Day_Outlook" xml:space="preserve"><value>Tendenza</value></data>
+  <data name="Day_Today" xml:space="preserve"><value>Oggi</value></data>
+  <data name="Reason_CalmLake" xml:space="preserve"><value>calmo</value></data>
+  <data name="Reason_Windy" xml:space="preserve"><value>ventoso</value></data>
+  <data name="Reason_ClearWater" xml:space="preserve"><value>limpido</value></data>
+  <data name="Reason_TurbidWater" xml:space="preserve"><value>torbido</value></data>
+  <data name="Reason_TurbidAfterRain" xml:space="preserve"><value>torbido dopo la pioggia</value></data>
+  <data name="Reason_ClearBelowThermocline" xml:space="preserve"><value>più limpido sotto</value></data>
+  <data name="Reason_MixedLake" xml:space="preserve"><value>rimescolato</value></data>
+  <data name="Reason_AlgaeBloom" xml:space="preserve"><value>fioritura algale</value></data>
+  <data name="Reason_ClarityUnknown" xml:space="preserve"><value>visibilità sconosciuta</value></data>
+  <data name="Sources" xml:space="preserve"><value>Dati: Eawag Alplakes, MeteoSvizzera tramite Open-Meteo, UFAM. La previsione è un indicatore, non una garanzia di visibilità.</value></data>
+  <data name="Computed" xml:space="preserve"><value>Calcolata il {0}</value></data>
+</root>

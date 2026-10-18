@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
+using Tauchplaetze.Core.Features.Forecasts;
+using Tauchplaetze.Core.Features.Forecasts.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -16,12 +18,17 @@ public sealed class WebApp : WebApplicationFactory<Program>
 {
     public FakeDiveSites DiveSites { get; } = new();
 
+    public FakeSiteForecasts Forecasts { get; } = new();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("ConnectionStrings:tauchplaetze", "Server=127.0.0.1,1;Database=tauchplaetze;User Id=test;Password=test;TrustServerCertificate=true");
         builder.UseSetting("ConnectionStrings:blobs", "UseDevelopmentStorage=true");
         builder.ConfigureTestServices(services =>
-            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites)));
+        {
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
+        });
     }
 
     public HttpClient Browser() => CreateClient(new WebApplicationFactoryClientOptions
@@ -63,4 +70,15 @@ public sealed class FakeDiveSites : IQueryHandler<GetDiveSiteQuery, DiveSiteLook
 
     public Task<DiveSiteLookup> Handle(GetDiveSiteQuery query, CancellationToken ct = default) =>
         Task.FromResult(lookups.GetValueOrDefault(query.Slug) ?? new DiveSiteLookup.NotFound());
+}
+
+/// <summary>Prognosen nach Platz. Ohne Eintrag ist die Prognose leer.</summary>
+public sealed class FakeSiteForecasts : IQueryHandler<GetSiteForecastQuery, SiteForecast>
+{
+    private readonly Dictionary<Guid, SiteForecast> forecasts = [];
+
+    public void Add(Guid diveSiteId, SiteForecast forecast) => forecasts[diveSiteId] = forecast;
+
+    public Task<SiteForecast> Handle(GetSiteForecastQuery query, CancellationToken ct = default) =>
+        Task.FromResult(forecasts.GetValueOrDefault(query.DiveSiteId) ?? new SiteForecast([], null));
 }

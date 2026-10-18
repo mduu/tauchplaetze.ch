@@ -84,6 +84,12 @@ Gemessene Secchi-Tiefen gibt es über Alplakes nicht mehr (Spike 17.10.2026). Di
 - Unter der Sprungschicht ist die Sicht im Sommer meist besser. Dann setzt der Algorithmus `VisibilityGoodBelow = ThermoclineBottom`.
 - Ergebnis als Stufe: `Poor`, `Moderate`, `Good`, `VeryGood`, `Unknown`.
 
+### Anzug
+
+- Grundlage: Temperatur auf 20 m, ohne Profil die Oberflächentemperatur (Fluss).
+- Unter 14 °C Trockentauchanzug, 14 bis 20 °C Nass 7 mm, ab 20 °C Nass 5 mm. Startwerte vom 18.10.2026.
+- Ein Hinweis, keine Vorschrift. Die Oberfläche sagt das.
+
 ## Der regelbasierte Index (`rules-1.0`)
 
 Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.

@@ -1,0 +1,116 @@
+@using Tauchplaetze.Core.Features.Forecasts
+@inject IStringLocalizer<ForecastStrings> L
+
+<div class="conditions-head">
+    <div>
+        <p class="eyebrow">@Eyebrow</p>
+        <h2 id="conditions" class="section-title">@L[ForecastFormat.Headline(Today)]</h2>
+    </div>
+    @if (Today.DiveIndex is { } index)
+    {
+        <div class="index" data-index-band="@ForecastFormat.IndexBand(index)">
+            <span class="index-value">@ForecastFormat.Number(index)</span>
+            <span class="index-label">@L["Index_Label"]</span>
+        </div>
+    }
+</div>
+
+<div class="conditions-grid">
+    @if (Today.SurfaceTemperature is not null)
+    {
+        <figure class="card profile">
+            <figcaption class="profile-title">@L["Profile_Title"]</figcaption>
+            <p class="profile-note">@ProfileNote</p>
+            <TemperatureProfileChart Day="Today" />
+        </figure>
+    }
+
+    <div class="side">
+        <div class="tiles">
+            <div class="stat">
+                <div class="label">@L["Tile_Visibility"]</div>
+                <div class="stat-value">@L[$"Visibility_{Today.VisibilityIndicator}"]</div>
+                <div class="stat-note">@VisibilityNote</div>
+            </div>
+            @if (Today.Suit is { } suit)
+            {
+                <div class="stat">
+                    <div class="label">@L["Tile_Suit"]</div>
+                    <div class="stat-value">@L[$"Suit_{suit}"]</div>
+                    <div class="stat-note">@SuitNote</div>
+                </div>
+            }
+            <div class="stat">
+                <div class="label">@L["Tile_Wind"]</div>
+                @if (Today.WindBeaufort is { } bft)
+                {
+                    <div class="stat-value">@L["Wind_Value", bft]</div>
+                    <div class="stat-note">@L["Wind_Detail", ForecastFormat.Meters(Today.WindSpeedKmh ?? 0), ForecastFormat.Meters(Today.WindGustsKmh ?? 0)]</div>
+                }
+                else
+                {
+                    <div class="stat-value">@L["Wind_Unknown"]</div>
+                }
+            </div>
+            <div class="stat">
+                <div class="label">@L["Tile_Algae"]</div>
+                <div class="stat-value">@L[$"Algae_{Today.AlgaeLevel}"]</div>
+            </div>
+        </div>
+
+        <div class="days">
+            <div class="days-title">@L["Days_Title"]</div>
+            <ol>
+                @foreach (var day in Forecast.Days)
+                {
+                    <li data-outlook="@(day.IsOutlook ? "true" : "false")">
+                        <div class="day-name">@(day.Date == Today.Date ? L["Day_Today"] : ForecastFormat.Weekday(day.Date))</div>
+                        @if (day.DiveIndex is { } dayIndex)
+                        {
+                            <div class="day-index" data-index-band="@ForecastFormat.IndexBand(dayIndex)">@ForecastFormat.Number(dayIndex)</div>
+                            <div class="day-bar" data-index-band="@ForecastFormat.IndexBand(dayIndex)" style="width: @(BarWidth(dayIndex))"></div>
+                        }
+                        else
+                        {
+                            <div class="day-index">–</div>
+                        }
+                        <div class="day-word">@DayWord(day)</div>
+                    </li>
+                }
+            </ol>
+        </div>
+    </div>
+</div>
+
+<p class="sources">@L["Sources"] @(Forecast.ComputedAt is { } computed ? L["Computed", computed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)] : "")</p>
+
+@code {
+    [Parameter, EditorRequired]
+    public SiteForecast Forecast { get; set; } = default!;
+
+    private ForecastDay Today => Forecast.Days[0];
+
+    private string Eyebrow => Today.ProfileSource is { } source ? L[$"Profile_Source_{source}"] : L["Day_Outlook"];
+
+    private string ProfileNote => Today is { ThermoclineTop: { } top, ThermoclineBottom: { } bottom }
+        ? L["Profile_Thermocline", ForecastFormat.Meters(top), ForecastFormat.Meters(bottom)]
+        : L["Profile_Mixed"];
+
+    private string VisibilityNote => Today switch
+    {
+        { SecchiDepth: { } depth, SecchiObservedAt: { } date } => L["Visibility_Satellite", ForecastFormat.Date(date), ForecastFormat.Number(depth)]
+            + (Today.VisibilityGoodBelow is { } below ? $" · {L["Visibility_GoodBelow", ForecastFormat.Meters(below)]}" : ""),
+        { SecchiObservedAt: { } old } => L["Visibility_SatelliteOld", ForecastFormat.Date(old)],
+        _ => L["Visibility_NoSatellite"],
+    };
+
+    private string SuitNote => Today.TemperatureAt20m is { } at20m
+        ? L["Suit_At20m", ForecastFormat.Number(at20m)]
+        : L["Suit_Surface", ForecastFormat.Number(Today.SurfaceTemperature ?? 0)];
+
+    private string DayWord(ForecastDay day) => day.IsOutlook
+        ? L["Day_Outlook"]
+        : day.Reasons.Count > 0 ? L[$"Reason_{day.Reasons[0]}"] : "";
+
+    private static string BarWidth(decimal index) => FormattableString.Invariant($"{Math.Clamp(index * 10, 10, 100):0}%");
+}

@@ -1,0 +1,61 @@
+@using Tauchplaetze.Core.Features.Forecasts
+@inject IStringLocalizer<ForecastStrings> L
+
+@* Temperatur (x) über Tiefe (y) mit Sprungschicht als oranges Band (design-system.md, TemperatureProfileChart). *@
+<svg class="profile-chart" viewBox="0 0 600 380" role="img" aria-label="@L["Profile_Chart_Label"]">
+    @if (Day.ThermoclineTop is { } top && Day.ThermoclineBottom is { } bottom)
+    {
+        <rect x="80" y="@Svg(Y(top))" width="480" height="@Svg(Y(bottom) - Y(top))" fill="var(--color-signal)" opacity="0.14" />
+        <SvgText x="548" y="@Svg(Y(top) + 16)" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="12" text-anchor="end" Content="@L["Profile_Thermocline_Short"]" />
+    }
+    <line x1="80" y1="20" x2="80" y2="340" stroke="var(--color-border-strong)" />
+    <line x1="80" y1="340" x2="560" y2="340" stroke="var(--color-border-strong)" />
+    @foreach (var depth in new[] { 10, 20, 30 })
+    {
+        <line x1="80" y1="@Svg(Y(depth))" x2="560" y2="@Svg(Y(depth))" stroke="var(--color-divider)" />
+    }
+    @foreach (var depth in new[] { 0, 10, 20, 30, 40 })
+    {
+        <SvgText x="70" y="@Svg(Y(depth) + 4)" fill="var(--color-text-subtle)" font-family="IBM Plex Mono, monospace" font-size="12" text-anchor="end" Content="@($"{depth} m")" />
+    }
+    @foreach (var temperature in TemperatureTicks)
+    {
+        <SvgText x="@Svg(X(temperature))" y="362" fill="var(--color-text-subtle)" font-family="IBM Plex Mono, monospace" font-size="12" text-anchor="middle" Content="@($"{temperature}°")" />
+    }
+    <polyline points="@Polyline" fill="none" stroke="var(--color-primary)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />
+    @foreach (var (depth, temperature) in Points)
+    {
+        <circle cx="@Svg(X(temperature))" cy="@Svg(Y(depth))" r="5" fill="var(--color-primary)" />
+        <SvgText x="@Svg(X(temperature) + 12)" y="@Svg(Y(depth) + 20)" fill="var(--color-text)" font-family="Bricolage Grotesque, sans-serif" font-size="20" font-weight="700" Content="@($"{ForecastFormat.Number(temperature)}°")" />
+    }
+</svg>
+<ul class="profile-values">
+    @foreach (var (depth, temperature) in Points)
+    {
+        <li>@L["Profile_Value", depth, ForecastFormat.Number(temperature)]</li>
+    }
+</ul>
+
+@code {
+    private const double MinTemperature = 4;
+
+    private const double MaxTemperature = 24;
+
+    private static readonly int[] TemperatureTicks = [6, 10, 14, 18, 22];
+
+    [Parameter, EditorRequired]
+    public ForecastDay Day { get; set; } = default!;
+
+    private IEnumerable<(int Depth, decimal Temperature)> Points =>
+        new (int Depth, decimal? Temperature)[] { (0, Day.SurfaceTemperature), (10, Day.TemperatureAt10m), (20, Day.TemperatureAt20m), (30, Day.TemperatureAt30m) }
+            .Where(p => p.Temperature is not null)
+            .Select(p => (p.Depth, p.Temperature!.Value));
+
+    private string Polyline => string.Join(' ', Points.Select(p => FormattableString.Invariant($"{X(p.Temperature):0.#},{Y(p.Depth):0.#}")));
+
+    private static string Svg(double value) => value.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+
+    private static double Y(decimal depth) => 20 + (double)depth * 8;
+
+    private static double X(decimal temperature) => 80 + (Math.Clamp((double)temperature, MinTemperature, MaxTemperature) - MinTemperature) / (MaxTemperature - MinTemperature) * 480;
+}

@@ -5,7 +5,11 @@
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.DiveSites
 @using Tauchplaetze.Core.Features.DiveSites.Queries
+@using Tauchplaetze.Core.Features.Forecasts
+@using Tauchplaetze.Core.Features.Forecasts.Queries
+@using Tauchplaetze.Web.Features.Forecasts
 @inject IQueryHandler<GetDiveSiteQuery, DiveSiteLookup> DiveSites
+@inject IQueryHandler<GetSiteForecastQuery, SiteForecast> Forecasts
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
 @inject NavigationManager Navigation
@@ -33,11 +37,18 @@
         </UnderwaterHero>
 
         <section class="page-section" aria-labelledby="conditions">
-            <p class="eyebrow">@L["Conditions_Eyebrow"]</p>
-            <h2 id="conditions" class="section-title">@L["Conditions_Soon_Title"]</h2>
-            <div class="card pending">
-                <p>@L["Conditions_Soon_Text"]</p>
-            </div>
+            @if (forecast is { Days.Count: > 0 })
+            {
+                <ForecastPanel Forecast="forecast" />
+            }
+            else
+            {
+                <p class="eyebrow">@L["Conditions_Eyebrow"]</p>
+                <h2 id="conditions" class="section-title">@L["Conditions_Soon_Title"]</h2>
+                <div class="card pending">
+                    <p>@L["Conditions_Soon_Text"]</p>
+                </div>
+            }
         </section>
 
         <section class="page-section" aria-labelledby="practical">
@@ -77,6 +88,8 @@
 @code {
     private DiveSiteLookup? lookup;
 
+    private SiteForecast? forecast;
+
     [Parameter]
     public string Slug { get; set; } = "";
 
@@ -91,6 +104,9 @@
 
         switch (lookup)
         {
+            case DiveSiteLookup.Found found:
+                forecast = await Forecasts.Handle(new GetSiteForecastQuery(found.Site.Id));
+                break;
             case DiveSiteLookup.Moved moved:
                 RedirectPermanently(PublicRoutes.DiveSite(Language, moved.Slug));
                 break;

@@ -1,0 +1,18 @@
+.profile-chart {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+}
+
+.profile-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-subtle);
+}
