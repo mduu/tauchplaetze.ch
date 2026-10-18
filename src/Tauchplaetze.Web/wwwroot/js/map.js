@@ -268,7 +268,20 @@ window.tauchplaetzeMap = (function () {
       .concat(JSON.parse(element.dataset.waters || '[]').map(waterMarker))
       .concat(element.dataset.here ? [hereMarker(JSON.parse(element.dataset.here))] : [])
       .concat(JSON.parse(element.dataset.points || '[]').map(entryMarker));
-    markers.forEach(function (marker) { marker.addTo(map); });
+    if (element.dataset.cluster && L.markerClusterGroup) {
+      const cluster = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        maxClusterRadius: 48,
+        iconCreateFunction: function (group) {
+          return L.divIcon({ className: 'map-cluster', html: '<span>' + group.getChildCount() + '</span>', iconSize: [36, 36] });
+        }
+      });
+      markers.forEach(function (marker) { cluster.addLayer(marker); });
+      cluster.addTo(map);
+    } else {
+      markers.forEach(function (marker) { marker.addTo(map); });
+    }
+
     const sketch = window.tauchplaetzeSketch ? window.tauchplaetzeSketch.addTo(map, element, map.tauchplaetzeLayers) : null;
     if (sketch) {
       markers.push(sketch);
@@ -276,13 +289,16 @@ window.tauchplaetzeMap = (function () {
 
     map.on('zoomend', function () { toggleLabels(map, markers.length); });
     const padding = Number(element.dataset.padding || 48);
-    if (markers.length === 1 && markers[0].getLatLng && element.dataset.singleZoom) {
-      map.setView(markers[0].getLatLng(), Number(element.dataset.singleZoom));
-    } else if (markers.length > 0) {
-      map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [padding, padding], maxZoom: Number(element.dataset.maxZoom || 13) });
-    } else {
-      map.setView([Number(element.dataset.lat || 46.8), Number(element.dataset.lng || 8.2)], Number(element.dataset.zoom || 8));
-    }
+    map.tauchplaetzeFit = function () {
+      if (markers.length === 1 && markers[0].getLatLng && element.dataset.singleZoom) {
+        map.setView(markers[0].getLatLng(), Number(element.dataset.singleZoom));
+      } else if (markers.length > 0) {
+        map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [padding, padding], maxZoom: Number(element.dataset.maxZoom || 13) });
+      } else {
+        map.setView([Number(element.dataset.lat || 46.8), Number(element.dataset.lng || 8.2)], Number(element.dataset.zoom || 8));
+      }
+    };
+    map.tauchplaetzeFit();
 
     return map;
   }
@@ -297,6 +313,16 @@ window.tauchplaetzeMap = (function () {
     });
     maps = Array.from(document.querySelectorAll('[data-map]')).map(create);
   }
+
+  // Umschalter Liste/Karte im Verzeichnis (schmal): Eine Karte, die versteckt war, kennt ihre Grösse erst nach dem Umschalten.
+  document.addEventListener('change', function (event) {
+    if (event.target.matches && event.target.matches('[data-map-view]')) {
+      maps.forEach(function (map) {
+        map.invalidateSize();
+        map.tauchplaetzeFit();
+      });
+    }
+  });
 
   document.addEventListener('DOMContentLoaded', function () {
     initMaps();
