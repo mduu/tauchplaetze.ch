@@ -598,3 +598,75 @@ a:hover {
 .sketch-item-selected {
   border-color: var(--color-primary) !important;
 }
+
+/* Fotos im Vergleich einer Version (cms.md, «Vorschläge prüfen»): neu oder geändert mit orangem Rahmen, entfernt ausgegraut. */
+.revision-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.revision-photo {
+  margin: 0;
+  padding: 6px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-tile-sm);
+  font-size: 13px;
+}
+
+.revision-photo img,
+.revision-photo-missing {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--color-surface-raised);
+}
+
+.revision-photo-missing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-subtle);
+}
+
+.revision-photo figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin-top: 6px;
+  color: var(--color-text-muted);
+}
+
+.revision-photo[data-change="added"],
+.revision-photo[data-change="changed"] {
+  border-color: var(--color-signal);
+}
+
+.revision-photo-change {
+  color: var(--color-signal);
+  font-weight: 600;
+}
+
+.revision-photo[data-change="removed"] {
+  opacity: 0.5;
+}
+
+.revision-photo[data-change="removed"] img {
+  filter: grayscale(1);
+}
+
+.revision-photo[data-change="removed"] figcaption {
+  text-decoration: line-through;
+}
+
+.revision-photo[data-change="removed"] .revision-photo-change {
+  color: var(--color-text-muted);
+}
+
+.revision-photo-meta {
+  width: 100%;
+  color: var(--color-text-subtle);
+}

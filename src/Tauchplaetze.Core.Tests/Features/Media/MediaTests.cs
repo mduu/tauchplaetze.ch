@@ -307,6 +307,39 @@ public class MediaTests(SqlServer sql) : SqlTest(sql)
         Assert.DoesNotContain(Sql.Media.Pending.Keys, key => key.StartsWith(unused.ToString(), StringComparison.Ordinal));
     }
 
+    [SqlFact]
+    public async Task Der_Vergleich_eines_Vorschlags_zeigt_neue_geaenderte_unveraenderte_und_entfernte_Fotos_mit_Vorschau()
+    {
+        // Arrange
+        var (moderator, anna, site) = await Prepare();
+        var (same, removed, moved) = ((await Upload(moderator, site)).MediaId!.Value, (await Upload(moderator, site)).MediaId!.Value, (await Upload(moderator, site)).MediaId!.Value);
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber, edit.Content with
+        {
+            Media = [new MediaUse(same, MediaSection.Underwater), new MediaUse(removed, MediaSection.Underwater), new MediaUse(moved, MediaSection.Underwater)],
+            HeroMediaId = removed,
+        }, null));
+        var added = (await Upload(anna, site)).MediaId!.Value;
+        var approved = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, approved.BaseNumber, approved.Content with
+        {
+            Media = [new MediaUse(same, MediaSection.Underwater), new MediaUse(moved, MediaSection.Underwater), new MediaUse(added, MediaSection.Surroundings)],
+            HeroMediaId = moved,
+        }, null));
+        var proposal = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator))).Revision;
+
+        // Act
+        var photos = await Query<CompareRevisionMediaQuery, IReadOnlyList<RevisionPhoto>>(
+            new CompareRevisionMediaQuery(moderator, site, proposal.BaseNumber, proposal.Number, Pending));
+
+        // Assert
+        Assert.Equal(
+            [(same, PhotoChange.Unchanged, false), (moved, PhotoChange.Changed, true), (added, PhotoChange.Added, false), (removed, PhotoChange.Removed, true)],
+            photos.Select(p => (p.MediaId, p.Change, p.IsHero)));
+        Assert.Equal($"/admin/medien/{added}/480.webp", photos[2].ThumbnailUrl);
+        Assert.All(photos, p => Assert.Equal("Anna Muster", p.Photographer));
+    }
+
     private Task<UploadMediaResult> Upload(string uploader, Guid site) =>
         Command<UploadMediaCommand, UploadMediaResult>(new UploadMediaCommand(
             uploader, site, TestImages.Jpeg(), "image/jpeg", "Anna Muster", "https://tauchfotos.ch", MediaSection.Underwater, 18, true,

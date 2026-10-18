@@ -3,6 +3,8 @@
 @attribute [Authorize]
 @inherits AdminPage
 @using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Media.Queries
+@using Tauchplaetze.Web.Features.Media
 @using Tauchplaetze.Core.Features.Editorial
 @using Tauchplaetze.Core.Features.Editorial.Commands
 @using Tauchplaetze.Core.Features.Editorial.Queries
@@ -40,7 +42,7 @@
             </div>
             @if (comparing == revision.Number)
             {
-                <div class="mt-3"><DiffTable Changes="changes" /></div>
+                <div class="mt-3"><DiffTable Changes="changes" /><RevisionPhotos Photos="photos" /></div>
             }
         </MudPaper>
     }
@@ -50,6 +52,8 @@
     private IReadOnlyList<RevisionSummary> revisions = [];
 
     private IReadOnlyList<FieldChange>? changes;
+
+    private IReadOnlyList<RevisionPhoto> photos = [];
 
     private IReadOnlyList<EditorialError> errors = [];
 
@@ -73,6 +77,7 @@
         comparing = number;
         var revision = revisions.Single(r => r.Number == number);
         changes = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(Id, revision.BaseNumber, number));
+        photos = await Query<CompareRevisionMediaQuery, IReadOnlyList<RevisionPhoto>>(new CompareRevisionMediaQuery(UserId, Id, revision.BaseNumber, number, MediaEndpoints.PendingPathTemplate));
     }
 
     private async Task Restore(int number)

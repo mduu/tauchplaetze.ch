@@ -6,6 +6,8 @@
 @using Tauchplaetze.Core.Features.Editorial
 @using Tauchplaetze.Core.Features.Editorial.Commands
 @using Tauchplaetze.Core.Features.Editorial.Queries
+@using Tauchplaetze.Core.Features.Media.Queries
+@using Tauchplaetze.Web.Features.Media
 
 <MudText Typo="Typo.h4" Class="mb-4">@L["Pending_Title"]</MudText>
 <ErrorList Errors="errors" />
@@ -30,6 +32,7 @@
             }
             <MudText Typo="Typo.subtitle2">@L["Pending_Changes"]</MudText>
             <DiffTable Changes="@changes.GetValueOrDefault(item.Revision.Id)" />
+            <RevisionPhotos Photos="@photos.GetValueOrDefault(item.Revision.Id, [])" />
             <MudStack Row="true" Class="mt-3" AlignItems="AlignItems.End">
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="busy" OnClick="@(() => Approve(item))">@L["Pending_Approve"]</MudButton>
                 <MudTextField @bind-Value="reasons[item.Revision.Id]" Label="@L["Pending_Reason"]" MaxLength="500" />
@@ -44,6 +47,8 @@
 
     private readonly Dictionary<Guid, IReadOnlyList<FieldChange>?> changes = [];
 
+    private readonly Dictionary<Guid, IReadOnlyList<RevisionPhoto>> photos = [];
+
     private readonly Dictionary<Guid, string> reasons = [];
 
     private IReadOnlyList<EditorialError> errors = [];
@@ -57,6 +62,8 @@
         {
             reasons.TryAdd(item.Revision.Id, "");
             changes[item.Revision.Id] = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(item.DiveSiteId, item.Revision.BaseNumber, item.Revision.Number));
+            photos[item.Revision.Id] = await Query<CompareRevisionMediaQuery, IReadOnlyList<RevisionPhoto>>(
+                new CompareRevisionMediaQuery(UserId, item.DiveSiteId, item.Revision.BaseNumber, item.Revision.Number, MediaEndpoints.PendingPathTemplate));
         }
     }
 

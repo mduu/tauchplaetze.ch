@@ -240,4 +240,11 @@
   <data name="Media_DeleteTitle" xml:space="preserve"><value>Foto löschen?</value></data>
   <data name="Media_DeleteConfirm" xml:space="preserve"><value>Das Foto wird endgültig gelöscht und verschwindet aus allen Versionen.</value></data>
   <data name="Error_InvalidPhotographerUrl" xml:space="preserve"><value>Der Link zum Fotografen muss mit http:// oder https:// beginnen (höchstens 300 Zeichen).</value></data>
+  <data name="Photos_Changes" xml:space="preserve"><value>Fotos</value></data>
+  <data name="PhotoChange_Added" xml:space="preserve"><value>Neu</value></data>
+  <data name="PhotoChange_Changed" xml:space="preserve"><value>Geändert</value></data>
+  <data name="PhotoChange_Removed" xml:space="preserve"><value>Entfernt</value></data>
+  <data name="PhotoChange_Unchanged" xml:space="preserve"><value>Unverändert</value></data>
+  <data name="Photo_Deleted" xml:space="preserve"><value>Foto gelöscht</value></data>
+  <data name="Photo_NoPreview" xml:space="preserve"><value>Keine Vorschau</value></data>
 </root>

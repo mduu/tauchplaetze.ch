@@ -158,6 +158,7 @@ Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer D
 
 - Liste der offenen Vorschläge, älteste zuerst, mit Platz, Autor, Notiz und Alter der Basis.
 - Vergleich zur Basis und, falls veraltet, zur aktuellen Version.
+- **Fotos im Vergleich** (Query `CompareRevisionMedia`, auch in «Versionen»): Vorschaubild, Abschnitt, Titelbild, Fotograf und Legende jedes Fotos der Version. Neue und geänderte Fotos (anderer Abschnitt, Einstieg, Platz in der Reihenfolge oder Titelbild) haben einen orangen Rahmen (`--color-signal`), entfernte sind ausgegraut und durchgestrichen. Private Fotos zeigen ihr Vorschaubild nur der Moderation und der Person, die sie hochgeladen hat.
 - Aktionen: Freigeben, Bearbeiten und freigeben, Ablehnen mit Begründung.
 
 ### Versionen

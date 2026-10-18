@@ -1,0 +1,43 @@
+@using Tauchplaetze.Core.Features.Media
+@using Tauchplaetze.Core.Features.Media.Queries
+@inject IStringLocalizer<AdminStrings> L
+
+@if (Photos.Count > 0)
+{
+    <MudText Typo="Typo.subtitle2" Class="mt-3">@L["Photos_Changes"]</MudText>
+    <div class="revision-photos">
+        @foreach (var photo in Photos)
+        {
+            <figure class="revision-photo" data-change="@photo.Change.ToString().ToLowerInvariant()">
+                @if (photo.ThumbnailUrl is not null)
+                {
+                    <img src="@photo.ThumbnailUrl" alt="@(photo.Caption ?? "")" loading="lazy" />
+                }
+                else
+                {
+                    <div class="revision-photo-missing">@L[photo.Photographer is null ? "Photo_Deleted" : "Photo_NoPreview"]</div>
+                }
+                <figcaption>
+                    @if (photo.Change != PhotoChange.Unchanged)
+                    {
+                        <span class="revision-photo-change">@L[$"PhotoChange_{photo.Change}"]</span>
+                    }
+                    @if (photo.IsHero)
+                    {
+                        <span class="revision-photo-hero">★ @L["Media_Hero"]</span>
+                    }
+                    <span>@L[$"MediaSection_{photo.Section}"]</span>
+                    @if (photo.Photographer is not null)
+                    {
+                        <span class="revision-photo-meta">@photo.Photographer@(photo.Caption is null ? "" : $" · {photo.Caption}")</span>
+                    }
+                </figcaption>
+            </figure>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public IReadOnlyList<RevisionPhoto> Photos { get; set; } = [];
+}
