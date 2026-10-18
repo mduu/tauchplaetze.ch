@@ -106,7 +106,9 @@ Die Seite «Tauchplätze» ist der **Finder**: «Welcher Platz passt zu mir, ode
 - **Karte:** alle Treffer, nahe Plätze als Gruppe mit Anzahl (Leaflet.markercluster). Desktop rechts neben der Liste und beim Scrollen sichtbar, schmal per Umschalter «Liste | Karte».
 - **Leer:** «Keine Plätze gefunden» mit Link «Suche ohne Filter».
 - **Gewässer:** keine Pillen mehr. Link «Nach Gewässer stöbern» zur Gewässer-Übersicht. Alte Links mit `?gewaesser={slug}` filtern weiter auf das Gewässer und zeigen es als entfernbaren Chip.
-- URL-Parameter: `q`, `f` (mehrfach: `wall`, `wreck`, `beginner`, `training`, `river`, `cave`), `sort` (`index`, `name`, `distance`), `page`, `lat`, `lng`, `gewaesser`.
+- URL-Parameter: `q`, `f` (mehrfach: `wall`, `wreck`, `beginner`, `training`, `river`, `cave`), `sort` (`index`, `name`, `distance`), `page`, `lat`, `lng`, `gewaesser`. Ungültige Werte (z.B. `page=abc`, `lat=x`, ein unbekanntes Gewässer) gelten als nicht gesetzt, nie als Fehler.
+- **Grenze:** Die Suche lädt alle öffentlichen Plätze in den Speicher und filtert dort (`FindDiveSites`). Das reicht bis etwa 2000 Plätze. Darüber kommen Suche, Filter und Paging in die SQL-Query.
+- **Später:** Output Cache für die Seite ohne Parameter (Tag `forecast`, wie die Startseite).
 
 ### Gewässer-Übersicht
 

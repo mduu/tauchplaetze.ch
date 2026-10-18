@@ -75,6 +75,55 @@ public class DirectoryPageTests : IClassFixture<WebApp>
         Assert.Contains("href=\"/de/tauchplaetze?q=platz\"", html);
     }
 
+    [Theory]
+    [InlineData("?page=abc&lat=x&lng=1e999&sort=quatsch&f=%3Cb%3E")]
+    [InlineData("?page=-3&lat=91&lng=8.5")]
+    [InlineData("?page=99999999999999999999&lat=NaN&lng=Infinity")]
+    public async Task Unsinnige_Werte_in_der_URL_werden_ignoriert_und_die_Liste_erscheint(string query)
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        using var response = await browser.GetAsync("/de/tauchplaetze" + query, TestContext.Current.CancellationToken);
+        var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("Riff Williams", VisibleText.Of(html));
+        Assert.Equal((1, (double?)null, (SiteSort?)null), (app.Finder.LastQuery!.Page, app.Finder.LastQuery.Latitude, app.Finder.LastQuery.Sort));
+        Assert.Empty(app.Finder.LastQuery.Traits!);
+    }
+
+    [Fact]
+    public async Task Ein_unbekanntes_Gewaesser_zeigt_keinen_Chip()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze?gewaesser=unbekannt", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.DoesNotContain("unbekannt", VisibleText.Of(html));
+        Assert.DoesNotContain("name=\"gewaesser\"", html);
+    }
+
+    [Fact]
+    public async Task Canonical_und_Sprachversionen_kommen_aus_der_Konfiguration_ohne_Suche()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/fr/sites-de-plongee?q=thoune&page=2", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("rel=\"canonical\" href=\"https://tauchplaetze.ch/fr/sites-de-plongee\"", html);
+        Assert.Contains("hreflang=\"de\" href=\"https://tauchplaetze.ch/de/tauchplaetze\"", html);
+        Assert.Contains("<meta name=\"description\"", html);
+    }
+
     [Fact]
     public async Task Die_Seitenlinks_behalten_die_Suche()
     {

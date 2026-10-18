@@ -23,6 +23,7 @@ Siehe `i18n.md`. Grundsätze:
 - Kleinbuchstaben, Bindestriche, keine Umlaute im Slug.
 - Ein geänderter Slug erzeugt automatisch einen 301 vom alten Slug.
 - Query-Parameter (`?date=…`, Suche und Filter im Verzeichnis `?q=…&f=…&page=…`) sind kanonisch auf die Seite ohne Parameter. Das Verzeichnis setzt `<link rel="canonical">` auf `/{lang}/tauchplaetze`. Suchergebnisse sind keine eigenen Landingpages.
+- Absolute Adressen in `canonical` und `hreflang` kommen aus `PublicSite:BaseUri`, nie aus der Anfrage (hinter Ingress und Cloudflare stimmen Schema und Host der Anfrage nicht), immer ohne Query-String.
 
 ## Pro Seite
 

@@ -12,7 +12,8 @@ namespace Tauchplaetze.Core.Features.DiveSites.Queries;
 
 /// <summary>
 /// Sucht öffentliche Plätze für das Verzeichnis (`ux.md`, «Verzeichnis»): Text in Name, Gemeinde und Gewässer (ohne Gross-/Kleinschreibung,
-/// Umlaute und Akzente), optional Standort mit Umkreis, Eigenschaften, Gewässer. Ohne Angabe sortiert nach Index heute, mit Standort nach Distanz.
+/// Umlaute und Akzente), optional Standort mit Umkreis, Eigenschaften, Gewässer (ein unbekanntes Gewässer gilt als nicht gesetzt).
+/// Ohne Angabe sortiert nach Index heute, mit Standort nach Distanz. Lädt alle öffentlichen Plätze in den Speicher (`ux.md`, «Verzeichnis»).
 /// </summary>
 public record FindDiveSitesQuery(
     string Culture,
@@ -127,10 +128,11 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
         var origin = hasLocation ? GeoPoints.Create(query.Latitude!.Value, query.Longitude!.Value) : null;
         var search = SearchText.Of(query.Text);
         var traits = query.Traits ?? [];
+        var waterSlug = rows.Any(r => r.WaterSlug == query.WaterBodySlug) ? query.WaterBodySlug : null;
 
         var matches = rows
             .Select(r => (Row: r, Traits: TraitsOf(r), Distance: origin is null ? (double?)null : Distance.Km(origin, GeoPoints.Create(r.Latitude, r.Longitude))))
-            .Where(m => query.WaterBodySlug is null || m.Row.WaterSlug == query.WaterBodySlug)
+            .Where(m => waterSlug is null || m.Row.WaterSlug == waterSlug)
             .Where(m => search.Length == 0 || SearchText.Matches(search, m.Row.Name, m.Row.Municipality, m.Row.NameDe, m.Row.NameEn, m.Row.NameFr, m.Row.NameIt))
             .Where(m => traits.All(m.Traits.Contains))
             .Where(m => query.RadiusKm is null || m.Distance is null || m.Distance <= query.RadiusKm)
@@ -153,7 +155,7 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
         var pageSize = Math.Clamp(query.PageSize, 1, 100);
         var pageCount = Math.Max(1, (int)Math.Ceiling(matches.Count / (double)pageSize));
         var page = Math.Clamp(query.Page, 1, pageCount);
-        var waterName = query.WaterBodySlug is null ? null : rows.Where(r => r.WaterSlug == query.WaterBodySlug).Select(r => WaterName(r, query.Culture)).FirstOrDefault();
+        var waterName = waterSlug is null ? null : rows.Where(r => r.WaterSlug == waterSlug).Select(r => WaterName(r, query.Culture)).FirstOrDefault();
 
         return new FoundDiveSites(
             [.. sorted.Skip((page - 1) * pageSize).Take(pageSize).Select(m => new FoundDiveSite(

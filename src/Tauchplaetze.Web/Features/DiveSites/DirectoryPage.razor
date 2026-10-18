@@ -7,14 +7,16 @@
 @inject IQueryHandler<FindDiveSitesQuery, FoundDiveSites> Finder
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
-@inject NavigationManager Navigation
+@using Microsoft.Extensions.Options
+@using Tauchplaetze.Core.CrossCutting.Mail
+@inject IOptions<PublicSiteOptions> Site
 
 <PageTitle>@L["Directory_Title"] · @Shared["Brand"]</PageTitle>
 <HeadContent>
     <meta name="description" content="@L["Directory_MetaDescription"]" />
-    <link rel="canonical" href="@Navigation.ToAbsoluteUri(BasePath)" />
+    <link rel="canonical" href="@Site.Value.Link(BasePath)" />
+    <HreflangLinks />
 </HeadContent>
-<HreflangLinks />
 
 <section class="page-section finder-head">
     <h1 class="page-title">@L["Directory_Title"]</h1>
@@ -28,7 +30,7 @@
             <button type="button" class="near-button" data-near hidden>@L["Finder_Near"]</button>
         </div>
 
-        @if (HasLocation || Gewaesser is not null)
+        @if (HasLocation || KnownWaterBody)
         {
             <div class="active-filters">
                 @if (HasLocation)
@@ -37,10 +39,10 @@
                     <input type="hidden" name="lng" value="@Invariant(Lng!.Value)" />
                     <a class="active-chip" href="@Url(dropLocation: true)" aria-label="@L["Finder_Remove", L["Finder_Near_Active"]]">@L["Finder_Near_Active"] <span aria-hidden="true">×</span></a>
                 }
-                @if (Gewaesser is not null)
+                @if (KnownWaterBody)
                 {
                     <input type="hidden" name="gewaesser" value="@Gewaesser" />
-                    <a class="active-chip" href="@Url(dropWaterBody: true)" aria-label="@L["Finder_Remove", found.WaterBodyName ?? Gewaesser]">@(found.WaterBodyName ?? Gewaesser) <span aria-hidden="true">×</span></a>
+                    <a class="active-chip" href="@Url(dropWaterBody: true)" aria-label="@L["Finder_Remove", found.WaterBodyName!]">@found.WaterBodyName <span aria-hidden="true">×</span></a>
                 }
             </div>
         }
@@ -139,13 +141,13 @@
     public string? SortKey { get; set; }
 
     [SupplyParameterFromQuery(Name = "page")]
-    public int? PageNumber { get; set; }
+    public string? PageText { get; set; }
 
     [SupplyParameterFromQuery(Name = "lat")]
-    public double? Lat { get; set; }
+    public string? LatText { get; set; }
 
     [SupplyParameterFromQuery(Name = "lng")]
-    public double? Lng { get; set; }
+    public string? LngText { get; set; }
 
     /// <summary>Alter Filter nach Gewässer (`?gewaesser=slug`). Links von früher funktionieren weiter.</summary>
     [SupplyParameterFromQuery(Name = "gewaesser")]
@@ -155,7 +157,15 @@
 
     private static string BasePath => $"/{Language}/{PublicRoutes.DiveSites[Language]}";
 
-    private bool HasLocation => Lat is >= -90 and <= 90 && Lng is >= -180 and <= 180;
+    private double? Lat => Coordinate(LatText, 90);
+
+    private double? Lng => Coordinate(LngText, 180);
+
+    private int PageNumber => int.TryParse(PageText, NumberStyles.None, CultureInfo.InvariantCulture, out var page) && page > 0 ? page : 1;
+
+    private bool HasLocation => Lat is not null && Lng is not null;
+
+    private bool KnownWaterBody => Gewaesser is not null && found.WaterBodyName is not null;
 
     private HashSet<SiteTrait> Traits => [.. (F ?? []).Where(TraitKeys.ContainsKey).Select(k => TraitKeys[k])];
 
@@ -176,7 +186,7 @@
             Traits: Traits,
             WaterBodySlug: string.IsNullOrWhiteSpace(Gewaesser) ? null : Gewaesser,
             Sort: sort,
-            Page: PageNumber ?? 1));
+            Page: PageNumber));
     }
 
     private static string TraitKey(SiteTrait trait) => TraitKeys.First(k => k.Value == trait).Key;
@@ -201,9 +211,9 @@
             query.Add(new("lng", Invariant(Lng!.Value)));
         }
 
-        if (Gewaesser is not null && !dropWaterBody)
+        if (KnownWaterBody && !dropWaterBody)
         {
-            query.Add(new("gewaesser", Gewaesser));
+            query.Add(new("gewaesser", Gewaesser!));
         }
 
         if (page is > 1)
@@ -215,4 +225,8 @@
     }
 
     private static string Invariant(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
+
+    /// <summary>Eine Koordinate aus der URL. Ungültige Werte gelten als nicht gesetzt.</summary>
+    private static double? Coordinate(string? text, double limit) =>
+        double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) && double.IsFinite(value) && Math.Abs(value) <= limit ? value : null;
 }

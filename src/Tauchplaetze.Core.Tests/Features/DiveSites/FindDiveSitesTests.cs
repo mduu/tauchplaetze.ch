@@ -122,6 +122,19 @@ public class FindDiveSitesTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(("lac de Zurich", 2), (found.WaterBodyName, found.Total));
     }
 
+    [SqlFact]
+    public async Task Ein_unbekanntes_Gewaesser_gilt_als_nicht_gesetzt()
+    {
+        // Arrange
+        await Sql.Arrange(Seed);
+
+        // Act
+        var found = await Find(new FindDiveSitesQuery("de", WaterBodySlug: "<script>"));
+
+        // Assert
+        Assert.Equal(((string?)null, 3), (found.WaterBodyName, found.Total));
+    }
+
     private Task<FoundDiveSites> Find(FindDiveSitesQuery query) => Query<FindDiveSitesQuery, FoundDiveSites>(query);
 
     private static Task Seed(TauchplaetzeDbContext db)
