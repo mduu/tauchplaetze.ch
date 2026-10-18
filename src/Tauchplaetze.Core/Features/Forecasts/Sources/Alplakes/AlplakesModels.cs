@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
+using Tauchplaetze.Core.Features.Forecasts.Calculation;
 
 namespace Tauchplaetze.Core.Features.Forecasts.Sources.Alplakes;
 

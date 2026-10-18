@@ -95,7 +95,20 @@ Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 | Zuflüsse | 20 % | < 5 mm Regen in 72 h und Abfluss unter 1.2 × Median | Starkregen oder Abfluss über 3 × Median |
 | Schichtung | 20 % | klare Schicht unter einer Sprungschicht ≤ 20 m, oder durchmischter See mit wenig Algen | Sprungschicht tiefer als 30 m bei trüber Oberfläche |
 
-Zwischenwerte linear interpolieren. Die Stützpunkte und Gewichte stehen in `appsettings.json` (`Forecast:Rules`). So lassen sie sich ohne Code anpassen. Jede Änderung erhöht die `ModelVersion` (`rules-1.1`, …).
+**Startwerte `rules-1.0`** (18.10.2026, ohne Messung, im Code `DiveIndexRules`):
+
+| Regel | Stützpunkte |
+|---|---|
+| Klarheit | Secchi 2 m → 1, 10 m → 10. Mittlere Algen −2 Punkte. Algenblüte höchstens 3 Punkte. |
+| Wind | 2 Bft → 10, 5 Bft → 1 |
+| Zuflüsse | Regen 72 h 5 mm → 10, 40 mm → 1. Abfluss 1.2 × Median → 10, 3 × Median → 1. Der tiefere Wert zählt. |
+| Schichtung | Untergrenze der Sprungschicht 20 m → 10, 30 m → 1. Bei Klarheit ab 7 Punkten mindestens 6. Durchmischter See: wenig Algen 10, mittel 6, Blüte 3. Fluss: entfällt. |
+| Algen | Chlorophyll unter 4 mg/m³ wenig, unter 10 mittel, sonst Blüte |
+| Korrektur Klarheit | Regen seit dem Bild 5 mm → 100 %, 30 mm → 60 %. Abfluss 1.2 × Median → 100 %, 3 × Median → 60 %. Der tiefere Wert zählt. |
+| Sicht-Indikator | ab 10 m sehr gut, ab 6 m gut, ab 3 m mässig, sonst schlecht |
+| Datenstufe 3 | Gitterpunkt des 3D-Modells höchstens 500 m vom Platz |
+
+Diese Werte sind Annahmen. Meldungen und eigene Tauchgänge prüfen sie. Zwischenwerte linear interpolieren. Die Stützpunkte und Gewichte stehen in `appsettings.json` (`Forecast:Rules`). So lassen sie sich ohne Code anpassen. Jede Änderung erhöht die `ModelVersion` (`rules-1.1`, …).
 
 Für Flussplätze gilt dieselbe Formel. Die Schichtung fällt weg (Fluss ist durchmischt). Der Abfluss zählt doppelt: einmal als Zufluss, einmal als Strömung (über 1.5 × Median gibt es Abzug). Die Werte stehen ebenfalls in `Forecast:Rules`.
 

@@ -1,4 +1,4 @@
-namespace Tauchplaetze.Core.Features.Forecasts;
+namespace Tauchplaetze.Core.Features.Forecasts.Calculation;
 
 /// <summary>Ein Temperaturwert in einer Tiefe.</summary>
 internal record ProfilePoint(double Depth, double Temperature);
