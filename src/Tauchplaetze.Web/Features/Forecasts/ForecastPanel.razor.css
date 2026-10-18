@@ -153,3 +153,13 @@
     font-size: 13px;
     color: var(--color-text-subtle);
 }
+
+.hourly {
+    margin-top: 28px;
+}
+
+.weather-source {
+    margin: 8px 0 0;
+    color: var(--color-text-subtle);
+    font-size: 13px;
+}

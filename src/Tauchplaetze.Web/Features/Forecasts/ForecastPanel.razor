@@ -74,6 +74,15 @@
     </div>
 </div>
 
+@if (Forecast.HourList.Count > 0)
+{
+    <section class="hourly" aria-labelledby="weather-heading">
+        <h3 id="weather-heading" class="days-title">@L["Weather_Heading"]</h3>
+        <WeatherChart Hours="Forecast.HourList" />
+        <p class="weather-source">@L["Weather_Source"]</p>
+    </section>
+}
+
 <p class="sources">@L["Sources"] @(Forecast.ComputedAt is { } computed ? L["Computed", computed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)] : "")</p>
 
 @code {

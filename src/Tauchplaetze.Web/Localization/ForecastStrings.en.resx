@@ -78,4 +78,21 @@
   <data name="Place_geneve" xml:space="preserve"><value>Geneva</value></data>
   <data name="Place_lugano" xml:space="preserve"><value>Lugano</value></data>
   <data name="Place_chur" xml:space="preserve"><value>Chur</value></data>
+  <data name="Weather_Heading" xml:space="preserve"><value>Hourly weather</value></data>
+  <data name="Weather_Title" xml:space="preserve"><value>Weather by the hour for the next days</value></data>
+  <data name="Weather_DaySummary" xml:space="preserve"><value>{0}: {1} to {2} °C, {3} mm rain, wind up to {4} km/h.</value></data>
+  <data name="Weather_Temperature" xml:space="preserve"><value>Temperature °C</value></data>
+  <data name="Weather_Rain" xml:space="preserve"><value>Rain mm/h</value></data>
+  <data name="Weather_Sun" xml:space="preserve"><value>Sunshine min/h</value></data>
+  <data name="Weather_Wind" xml:space="preserve"><value>Wind km/h, arrow shows wind direction</value></data>
+  <data name="Weather_Source" xml:space="preserve"><value>Weather: MeteoSwiss ICON-CH1 and ICON-CH2, DWD ICON, via Open-Meteo.</value></data>
+  <data name="Wx_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Wx_PartlyCloudy" xml:space="preserve"><value>Partly cloudy</value></data>
+  <data name="Wx_Cloudy" xml:space="preserve"><value>Overcast</value></data>
+  <data name="Wx_Fog" xml:space="preserve"><value>Fog</value></data>
+  <data name="Wx_Drizzle" xml:space="preserve"><value>Drizzle</value></data>
+  <data name="Wx_Rain" xml:space="preserve"><value>Rain</value></data>
+  <data name="Wx_Showers" xml:space="preserve"><value>Showers</value></data>
+  <data name="Wx_Snow" xml:space="preserve"><value>Snow</value></data>
+  <data name="Wx_Thunderstorm" xml:space="preserve"><value>Thunderstorm</value></data>
 </root>

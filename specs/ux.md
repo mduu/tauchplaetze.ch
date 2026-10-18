@@ -65,6 +65,7 @@ Mockup: `design/tauchplatz.dc.html`.
    - Temperaturprofil als Diagramm (Temperatur über Tiefe) mit markierter Sprungschicht.
    - Kacheln: Sicht-Indikator («Gut ab 16 m», mit Datum des Satellitenbilds), Wind, Algen. Kein Anzug-Hinweis: In der Schweiz taucht man fast immer trocken.
    - 5-Tage-Verlauf: Index, wo vorhanden. Tage im Ausblick zeigen Wind und Regen.
+   - «Wetter stündlich» darunter über die volle Breite, wie bei MeteoSchweiz: Wettersymbol und Wind (Pfeil in Windrichtung, km/h) alle 3 Stunden, Sonne in Minuten pro Stunde, Temperaturlinie und Regenbalken. Nacht dunkler, vergangene Stunden schattiert, Linie bei «jetzt». Auf dem Handy seitlich scrollbar. Textalternative: Zusammenfassung pro Tag (Temperatur, Regen, Wind). Nur, wenn der Lauf Stundenwerte hat.
    - Datenstufe als kurzer Hinweis: «Profil am Platz», «für den ganzen See», «Messstation {Name}» oder «nur Wetter».
 4. **Der Platz:** Bewertungen als kompakter Block (Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung; nur bewertete Skalen, Wert immer auch als Zahl und Kurztext). Darunter «Unter Wasser»: Text, Fotos (Galerie), Fotograf mit Link.
 5. **Gefahren:** Text und Bilder. Gut sichtbar, nicht eingeklappt.

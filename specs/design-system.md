@@ -37,6 +37,8 @@ Es gibt im MVP **nur das dunkle Schema**. Ein helles Schema ist nicht geplant.
 | `--color-notice-info` | `#7FE3D6` | Hinweis «Info» |
 | `--color-notice-warning` | `#FF9A4D` | Hinweis «Warnung» |
 | `--color-notice-closure` | `#FF6F61` | Hinweis «Sperrung», einzige rote Farbe |
+| `--color-sun` | `#E8C25A` | Sonne in der Wetter-Grafik (Balken, Symbol) |
+| `--color-rain` | `#5AA9E6` | Regen in der Wetter-Grafik (Balken, Tropfen, Achse) |
 | `--color-place-parking` | `#2F6BC4` | Parkplatz auf der Karte (Schild «P», blau wie das Signal), Text `--color-place-parking-text` `#FFFFFF` |
 
 Banner: Fläche `--color-surface` mit 10 % der Farbe, Rand links 5 px in der Farbe, sonst Rahmen mit 45 % der Farbe. Label in IBM Plex Mono, Grossbuchstaben, in der Farbe. Text in `--color-text`, bei einer Sperrung fett.
@@ -120,6 +122,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 | `RankingList` | `<ol>` mit Rang, Name, Ort · See, Index-Balken, Begründung, Index |
 | `StatTile` | Label (Mono, klein, Grossbuchstaben) und Wert (Bricolage 24–26 px) |
 | `TemperatureProfileChart` | SVG: Temperatur (x) über Tiefe (y), Sprungschicht als oranges Band, Werte auf 0/20/30 m |
+| `WeatherChart` | SVG, serverseitig: Stunden der nächsten Tage. Eigene Wettersymbole (Sonne, Mond, Wolke, Nebel, Niesel, Regen, Schauer, Schnee, Gewitter), Windpfeile, Sonnenbalken (`--color-sun`), Temperaturlinie (`--color-signal`), Regenbalken (`--color-rain`), Nacht in `--color-bg`. Legende darunter als Text. |
 | `ForecastStrip` | 5 Tage mit Index, Farbe nach Skala, Mini-Balken, Stichwort |
 | `SiteSketch` | SVG-Skizze: Ufer, Einstieg (Orange), Tiefenlinien gestrichelt, Wand, Highlights, Nordpfeil |
 | `PracticalTile` | Label in Cyan oder Orange (Achtung), Text |

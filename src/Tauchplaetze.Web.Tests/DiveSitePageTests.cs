@@ -26,7 +26,8 @@ public class DiveSitePageTests : IClassFixture<WebApp>
             [new SiteEntryPoint(EntryPointKind.EntryAndExit, 47.2851, 8.6081, "Treppe beim Bootshaus")])));
         app.Forecasts.Add(ForecastSiteId, new SiteForecast(
             [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]), Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
-            DateTimeOffset.UtcNow));
+            DateTimeOffset.UtcNow,
+            Hours(new DateTime(2030, 1, 7))));
         app.DiveSites.Add("alter-name", new DiveSiteLookup.Moved(Slug));
         app.DiveSites.Add("archiviert", new DiveSiteLookup.Gone());
     }
@@ -119,6 +120,21 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Das_Wetter_pro_Stunde_erscheint_mit_einer_Zusammenfassung_pro_Tag()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithForecast, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("Wetter stündlich", VisibleText.Of(html));
+        Assert.Matches(@"<desc[^>]*>Mo 07\.01\.: 8 bis 14 °C, 2[.,]0 mm Regen, Wind bis 15 km/h\.", WebUtility.HtmlDecode(html));
+        Assert.Contains("href=\"#wx-rain\"", html);
+    }
+
+    [Fact]
     public async Task Der_Pfad_einer_anderen_Sprache_ergibt_404()
     {
         // Arrange
@@ -171,6 +187,18 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains($"href=\"/it/siti-di-immersione/{Slug}\"", html);
         Assert.Contains($"hreflang=\"en\" href=\"https://localhost/en/dive-sites/{Slug}\"", html);
     }
+
+    private static IReadOnlyList<WeatherHourForecast> Hours(DateTime start) =>
+        [.. Enumerable.Range(0, 24).Select(hour => new WeatherHourForecast(
+            start.AddHours(hour),
+            8 + hour / 4m,
+            hour == 14 ? 2.0m : 0m,
+            hour is >= 9 and <= 16 ? 30 : 0,
+            hour == 14 ? WeatherSymbol.Rain : WeatherSymbol.PartlyCloudy,
+            hour is >= 8 and <= 17,
+            hour == 15 ? 15m : 6m,
+            hour == 15 ? 28m : 10m,
+            220))];
 
     private static ForecastDay Day(int october, decimal? index, ReasonCode[] reasons) => new(
         new DateOnly(2026, 10, october), index is null ? (byte)1 : (byte)3, index, index is null ? null : ProfileSource.Model3d,
