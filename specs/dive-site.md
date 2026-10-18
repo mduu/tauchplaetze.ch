@@ -131,16 +131,18 @@ Ein Platz kann wichtige Hinweise haben (`DiveSiteNotice`, Entscheid Marc, 18.10.
 - Eine gültige Sperrung nimmt den Platz an diesem Tag aus «Beste Wahl» und Rangliste (`forecast.md`). Verzeichnis und Platzseite zeigen ihn weiter.
 - Mehrere Hinweise: schwerster zuerst (Sperrung, Warnung, Info), sonst in der Reihenfolge der Redaktion.
 
-## Tauchskizze (geplant)
+## Tauchskizze
 
 Die Tauchskizze (`SiteSketch`) zeigt den Platz unter Wasser. Alle Skizzen sehen gleich aus, darum zeichnet die Redaktion sie im CMS und lädt kein Bild hoch.
 
-- **Erfassen:** Editor im CMS auf Landeskarte oder Luftbild. Die Redaktion setzt Symbole und zeichnet Linien und Flächen. Gespeichert wird GeoJSON in der Version, mit Vorschlag und Freigabe wie bei allen Inhalten.
-- **Symbole (Punkte):** Skulptur, Baumstamm, Wrack oder Gegenstand, Felsblock, Highlight (frei benannt), Gefahr, Einstieg und Ausstieg (aus den Einstiegen).
-- **Linien und Flächen:** Steilwand, Kante, Tauchroute, Seegras- oder Pflanzenfeld, Leine.
-- **Tiefe:** Tiefenlinien aus swissBATHY3D, wo vorhanden (22 Seen). Sonst Tiefenangaben von Hand an Symbolen und Linien.
-- **Darstellung:** eigene Zeichnung mit den Design Tokens (`design-system.md`, `SiteSketch`), Hinweis «Skizze, nicht zur Navigation».
-- **Etappen:** 1. Symbole und Tiefe von Hand, 2. Linien und Flächen, 3. Tiefenlinien aus swissBATHY3D.
+- **Erfassen:** Tab «Skizze» im CMS. Karte (Landeskarte oder Luftbild) mit Tiefenlinien. Art oben wählen, dann auf die Karte klicken: ein Klick setzt ein Symbol, Linien und Flächen entstehen Punkt für Punkt und enden mit Doppelklick oder «Fertig». Ein Klick auf ein Element wählt es: Punkte lassen sich ziehen, dazu Art (gleiche Form), Tiefe und Beschriftung pro Sprache. Escape bricht ab.
+- **Speichern:** als Teil der Version (`DiveSiteContent.Sketch`), mit Vorschlag und Freigabe wie bei allen Inhalten. Die Tabelle hält die aktuelle Skizze als JSON (`DiveSite.Sketch`, `datastructure.md`).
+- **Symbole (Punkte):** Skulptur, Baumstamm, Wrack, Gegenstand, Felsblock, Besonderheit (frei benannt), Gefahr. Einstiege und Orte kommen aus «Einstiege und Orte».
+- **Linien:** Steilwand, Kante, Tauchroute, Leine. **Flächen:** Pflanzenfeld.
+- **Regeln:** höchstens 200 Elemente, je höchstens 200 Punkte, alle Punkte höchstens 2 km vom Platz, Tiefe 0 bis 200 m, Beschriftung bis 80 Zeichen. Die Art legt die Form fest (Punkt genau 1, Linie ab 2, Fläche ab 3 Punkten). Sonst Fehler `InvalidSketch`.
+- **Beschriftung:** in der Sprache der Seite, sonst Deutsch, sonst der Name der Art. Mit Tiefe «Madonna · 12 m».
+- **Tiefe:** Tiefenlinien aus swissBATHY3D, wo vorhanden (22 Seen), alle 5 m bis 40 m, dazu 50 und 60 m. Sie entstehen einmalig mit `tools/bathymetry/contours.cs` und liegen als statische Kacheln bei der App (`data-sources.md`, «Tiefenlinien»). Sonst Tiefenangaben von Hand an Symbolen und Linien.
+- **Darstellung:** Auf der Platzseite liegt die Skizze als Ebene «Skizze» auf der Karte «Lage und Einstiege», die Tiefenlinien als Ebene «Tiefenlinien». Beide sind an und lassen sich abschalten. Darunter «Skizze, nicht zur Navigation». Gleiche Zeichnung im CMS und auf der Seite (`wwwroot/js/sketch.js`, Tokens in `design-system.md`).
 
 ## Bilder pro Abschnitt
 

@@ -1,0 +1,1 @@
+{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"depth":5},"geometry":{"type":"MultiLineString","coordinates":[[[6.887521,46.895462],[6.888029,46.895808]]]}},{"type":"Feature","properties":{"depth":10},"geometry":{"type":"MultiLineString","coordinates":[[[6.88752,46.895586],[6.887847,46.895807]]]}}]}

@@ -167,4 +167,34 @@
   <data name="Error_InvalidNotice" xml:space="preserve"><value>Un avis demande un texte en allemand (500 caractères au plus). « Valable jusqu'au » ne peut pas précéder « Valable dès le ».</value></data>
   <data name="Kind_Parking" xml:space="preserve"><value>Parking</value></data>
   <data name="Kind_Toilet" xml:space="preserve"><value>Toilettes</value></data>
+  <data name="Edit_Tab_Sketch" xml:space="preserve"><value>Croquis</value></data>
+  <data name="Sketch_Help" xml:space="preserve"><value>Choisis un type ci-dessus et place-le sur la carte. Clique sur un élément pour le déplacer, le nommer ou lui donner une profondeur.</value></data>
+  <data name="Sketch_Hint_Point" xml:space="preserve"><value>Clique sur la carte pour placer le symbole.</value></data>
+  <data name="Sketch_Hint_Line" xml:space="preserve"><value>Clique point par point. Un double-clic ou «Terminer» termine.</value></data>
+  <data name="Sketch_Finish" xml:space="preserve"><value>Terminer</value></data>
+  <data name="Sketch_Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Sketch_NotForNavigation" xml:space="preserve"><value>Croquis, pas pour la navigation.</value></data>
+  <data name="Sketch_Empty" xml:space="preserve"><value>Pas encore d'éléments.</value></data>
+  <data name="Sketch_Kind" xml:space="preserve"><value>Type</value></data>
+  <data name="Sketch_Depth" xml:space="preserve"><value>Profondeur (m)</value></data>
+  <data name="Sketch_Label" xml:space="preserve"><value>Libellé</value></data>
+  <data name="Map_Layer_Contours" xml:space="preserve"><value>Isobathes</value></data>
+  <data name="SketchKind_Sculpture" xml:space="preserve"><value>Statue</value></data>
+  <data name="SketchKind_TreeTrunk" xml:space="preserve"><value>Tronc d'arbre</value></data>
+  <data name="SketchKind_Wreck" xml:space="preserve"><value>Épave</value></data>
+  <data name="SketchKind_Object" xml:space="preserve"><value>Objet</value></data>
+  <data name="SketchKind_Boulder" xml:space="preserve"><value>Bloc rocheux</value></data>
+  <data name="SketchKind_Highlight" xml:space="preserve"><value>Curiosité</value></data>
+  <data name="SketchKind_Danger" xml:space="preserve"><value>Danger</value></data>
+  <data name="SketchKind_Wall" xml:space="preserve"><value>Tombant</value></data>
+  <data name="SketchKind_Edge" xml:space="preserve"><value>Arête</value></data>
+  <data name="SketchKind_Route" xml:space="preserve"><value>Parcours</value></data>
+  <data name="SketchKind_Line" xml:space="preserve"><value>Fil d’Ariane</value></data>
+  <data name="SketchKind_PlantField" xml:space="preserve"><value>Herbier</value></data>
+  <data name="Field_Sketch" xml:space="preserve"><value>Croquis {0}</value></data>
+  <data name="Field_SketchKind" xml:space="preserve"><value>Type</value></data>
+  <data name="Field_SketchPoints" xml:space="preserve"><value>Emplacement</value></data>
+  <data name="Field_SketchDepth" xml:space="preserve"><value>Profondeur</value></data>
+  <data name="Field_SketchLabel" xml:space="preserve"><value>Libellé</value></data>
+  <data name="Error_InvalidSketch" xml:space="preserve"><value>Le croquis est invalide : 200 éléments au plus, tous les points à 2 km au plus du site, profondeur jusqu’à 200 m, libellés de 80 caractères au plus.</value></data>
 </root>

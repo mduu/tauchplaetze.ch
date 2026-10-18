@@ -167,4 +167,34 @@
   <data name="Error_InvalidNotice" xml:space="preserve"><value>A notice needs a German text (at most 500 characters). «Valid until» must not be before «Valid from».</value></data>
   <data name="Kind_Parking" xml:space="preserve"><value>Parking</value></data>
   <data name="Kind_Toilet" xml:space="preserve"><value>Toilet</value></data>
+  <data name="Edit_Tab_Sketch" xml:space="preserve"><value>Sketch</value></data>
+  <data name="Sketch_Help" xml:space="preserve"><value>Pick a kind above and place it on the map. Click an element to move it, label it or give it a depth.</value></data>
+  <data name="Sketch_Hint_Point" xml:space="preserve"><value>Click on the map to place the symbol.</value></data>
+  <data name="Sketch_Hint_Line" xml:space="preserve"><value>Click point by point. Double-click or «Done» finishes.</value></data>
+  <data name="Sketch_Finish" xml:space="preserve"><value>Done</value></data>
+  <data name="Sketch_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Sketch_NotForNavigation" xml:space="preserve"><value>Sketch, not for navigation.</value></data>
+  <data name="Sketch_Empty" xml:space="preserve"><value>No elements yet.</value></data>
+  <data name="Sketch_Kind" xml:space="preserve"><value>Kind</value></data>
+  <data name="Sketch_Depth" xml:space="preserve"><value>Depth (m)</value></data>
+  <data name="Sketch_Label" xml:space="preserve"><value>Label</value></data>
+  <data name="Map_Layer_Contours" xml:space="preserve"><value>Depth contours</value></data>
+  <data name="SketchKind_Sculpture" xml:space="preserve"><value>Sculpture</value></data>
+  <data name="SketchKind_TreeTrunk" xml:space="preserve"><value>Tree trunk</value></data>
+  <data name="SketchKind_Wreck" xml:space="preserve"><value>Wreck</value></data>
+  <data name="SketchKind_Object" xml:space="preserve"><value>Object</value></data>
+  <data name="SketchKind_Boulder" xml:space="preserve"><value>Boulder</value></data>
+  <data name="SketchKind_Highlight" xml:space="preserve"><value>Highlight</value></data>
+  <data name="SketchKind_Danger" xml:space="preserve"><value>Danger</value></data>
+  <data name="SketchKind_Wall" xml:space="preserve"><value>Wall</value></data>
+  <data name="SketchKind_Edge" xml:space="preserve"><value>Edge</value></data>
+  <data name="SketchKind_Route" xml:space="preserve"><value>Dive route</value></data>
+  <data name="SketchKind_Line" xml:space="preserve"><value>Guide line</value></data>
+  <data name="SketchKind_PlantField" xml:space="preserve"><value>Plant field</value></data>
+  <data name="Field_Sketch" xml:space="preserve"><value>Sketch {0}</value></data>
+  <data name="Field_SketchKind" xml:space="preserve"><value>Kind</value></data>
+  <data name="Field_SketchPoints" xml:space="preserve"><value>Position</value></data>
+  <data name="Field_SketchDepth" xml:space="preserve"><value>Depth</value></data>
+  <data name="Field_SketchLabel" xml:space="preserve"><value>Label</value></data>
+  <data name="Error_InvalidSketch" xml:space="preserve"><value>The sketch is invalid: at most 200 elements, all points within 2 km of the site, depth up to 200 m, labels up to 80 characters.</value></data>
 </root>

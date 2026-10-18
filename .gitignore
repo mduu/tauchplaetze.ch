@@ -72,3 +72,6 @@ spike-output/
 
 # Ausgabe des OSM-Imports (Rohdaten und Durchsicht)
 tools/osm-import/out/
+
+# Downloads von swissBATHY3D (rund 3 GB)
+tools/bathymetry/out/

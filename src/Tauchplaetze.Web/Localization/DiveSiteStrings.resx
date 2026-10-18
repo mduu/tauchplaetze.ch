@@ -140,4 +140,19 @@
   <data name="Rating_Surroundings_4_Text" xml:space="preserve"><value>Wiese, Badeplatz oder schöne Aussicht.</value></data>
   <data name="Rating_Surroundings_5" xml:space="preserve"><value>herausragend</value></data>
   <data name="Rating_Surroundings_5_Text" xml:space="preserve"><value>Landschaft, die allein den Ausflug lohnt.</value></data>
+  <data name="Map_Layer_Contours" xml:space="preserve"><value>Tiefenlinien</value></data>
+  <data name="Map_Layer_Sketch" xml:space="preserve"><value>Skizze</value></data>
+  <data name="Sketch_NotForNavigation" xml:space="preserve"><value>Skizze, nicht zur Navigation.</value></data>
+  <data name="SketchKind_Sculpture" xml:space="preserve"><value>Skulptur</value></data>
+  <data name="SketchKind_TreeTrunk" xml:space="preserve"><value>Baumstamm</value></data>
+  <data name="SketchKind_Wreck" xml:space="preserve"><value>Wrack</value></data>
+  <data name="SketchKind_Object" xml:space="preserve"><value>Gegenstand</value></data>
+  <data name="SketchKind_Boulder" xml:space="preserve"><value>Felsblock</value></data>
+  <data name="SketchKind_Highlight" xml:space="preserve"><value>Besonderheit</value></data>
+  <data name="SketchKind_Danger" xml:space="preserve"><value>Gefahr</value></data>
+  <data name="SketchKind_Wall" xml:space="preserve"><value>Steilwand</value></data>
+  <data name="SketchKind_Edge" xml:space="preserve"><value>Kante</value></data>
+  <data name="SketchKind_Route" xml:space="preserve"><value>Tauchroute</value></data>
+  <data name="SketchKind_Line" xml:space="preserve"><value>Leine</value></data>
+  <data name="SketchKind_PlantField" xml:space="preserve"><value>Pflanzenfeld</value></data>
 </root>

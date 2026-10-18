@@ -1,5 +1,5 @@
 // Karte mit Landeskarte von swisstopo (data-sources.md, swisstopo). Liest Plätze aus data-sites, Gewässer aus data-waters,
-// den eigenen Platz einer Platzseite aus data-here und seine Einstiege aus data-points.
+// den eigenen Platz einer Platzseite aus data-here und seine Einstiege aus data-points. Mit data-contours zeichnet sie Tiefenlinien.
 // Blazor ersetzt beim Seitenwechsel (enhanced navigation) den Inhalt der Elemente, nicht die Elemente selbst.
 // Darum baut jeder Wechsel alle Karten neu auf.
 window.tauchplaetzeMap = (function () {
@@ -132,25 +132,143 @@ window.tauchplaetzeMap = (function () {
     labels[element.dataset.layerPhoto || 'Luftbild'] = base.photo;
 
     base[storedLayer()].addTo(map);
-    L.control.layers(labels, null, { collapsed: false, position: 'topright' }).addTo(map);
+    map.tauchplaetzeLayers = L.control.layers(labels, null, { collapsed: false, position: 'topright' }).addTo(map);
     map.on('baselayerchange', function (event) {
       storeLayer(event.layer === base.photo ? 'photo' : 'map');
     });
   }
 
+  // Tiefenlinien aus swissBATHY3D als GeoJSON-Kacheln von 1 km (tools/bathymetry/contours.cs, data-sources.md).
+  // Erst ab Zoom 13 geladen, Beschriftung der Tiefe ab Zoom 15. Kacheln bleiben im Cache, solange die Seite offen ist.
+  const contourMinZoom = 13;
+  const contourLabelZoom = 15;
+  const contourTiles = {};
+  let contourIndex = null;
+
+  function loadJson(url) {
+    if (!contourTiles[url]) {
+      contourTiles[url] = fetch(url)
+        .then(function (response) { return response.ok ? response.json() : null; })
+        .catch(function () { return null; });
+    }
+
+    return contourTiles[url];
+  }
+
+  function boundsOf(box) {
+    return L.latLngBounds([box[1], box[0]], [box[3], box[2]]);
+  }
+
+  function middleOf(line) {
+    return line[Math.floor(line.length / 2)];
+  }
+
+  function addContours(map, element) {
+    const lake = element.dataset.contours;
+    if (!lake) {
+      return null;
+    }
+
+    const base = element.dataset.contoursBase || '/bathymetry/';
+    const lines = L.layerGroup();
+    const shown = {};
+    const color = token('--color-depth-line');
+
+    function style(feature) {
+      return { color: color, weight: feature.properties.depth % 10 === 0 ? 1.6 : 0.9, opacity: 0.9, interactive: false };
+    }
+
+    function label(depth, point) {
+      return L.marker([point[1], point[0]], {
+        icon: L.divIcon({ className: 'map-depth-label', html: '<span>' + depth + ' m</span>', iconSize: null }),
+        interactive: false,
+        keyboard: false
+      });
+    }
+
+    function draw(data) {
+      lines.addLayer(L.geoJSON(data, { style: style, interactive: false }));
+      data.features.forEach(function (feature) {
+        feature.geometry.coordinates
+          .filter(function (line) { return line.length >= 6; })
+          .forEach(function (line) { lines.addLayer(label(feature.properties.depth, middleOf(line))); });
+      });
+    }
+
+    function refresh() {
+      map.getContainer().classList.toggle('map-depth-labels-hidden', map.getZoom() < contourLabelZoom);
+      if (!map.hasLayer(lines) || map.getZoom() < contourMinZoom) {
+        return;
+      }
+
+      contourIndex = contourIndex || loadJson(base + 'index.json');
+      contourIndex.then(function (index) {
+        const view = map.getBounds().pad(0.3);
+        Object.keys((index && index.lakes) || {}).forEach(function (slug) {
+          const entry = index.lakes[slug];
+          if ((lake !== 'auto' && lake !== slug) || !view.intersects(boundsOf(entry.bbox))) {
+            return;
+          }
+
+          Object.keys(entry.tiles).forEach(function (name) {
+            const key = slug + '/' + name;
+            if (shown[key] || !view.intersects(boundsOf(entry.tiles[name]))) {
+              return;
+            }
+
+            shown[key] = true;
+            loadJson(base + key + '.json').then(function (data) {
+              if (data) {
+                draw(data);
+              }
+            });
+          });
+        });
+      });
+    }
+
+    const attribution = element.dataset.contoursAttribution || 'swissBATHY3D © swisstopo';
+    map.on('overlayadd', function (event) {
+      if (event.layer === lines) {
+        map.attributionControl.addAttribution(attribution);
+        refresh();
+      }
+    });
+    map.on('overlayremove', function (event) {
+      if (event.layer === lines) {
+        map.attributionControl.removeAttribution(attribution);
+      }
+    });
+    map.on('moveend', refresh);
+
+    lines.addTo(map);
+    map.attributionControl.addAttribution(attribution);
+    if (map.tauchplaetzeLayers) {
+      map.tauchplaetzeLayers.addOverlay(lines, element.dataset.layerContours || 'Tiefenlinien');
+    }
+
+    map.whenReady(refresh);
+    return lines;
+  }
+
   function create(element) {
     const map = L.map(element, { scrollWheelZoom: false });
     addBaseLayers(map, element);
+    addContours(map, element);
 
     const markers = JSON.parse(element.dataset.sites || '[]').map(siteMarker)
       .concat(JSON.parse(element.dataset.waters || '[]').map(waterMarker))
       .concat(element.dataset.here ? [hereMarker(JSON.parse(element.dataset.here))] : [])
       .concat(JSON.parse(element.dataset.points || '[]').map(entryMarker));
     markers.forEach(function (marker) { marker.addTo(map); });
+    const sketch = window.tauchplaetzeSketch ? window.tauchplaetzeSketch.addTo(map, element, map.tauchplaetzeLayers) : null;
+    if (sketch) {
+      markers.push(sketch);
+    }
 
     map.on('zoomend', function () { toggleLabels(map, markers.length); });
     const padding = Number(element.dataset.padding || 48);
-    if (markers.length === 1 && element.dataset.singleZoom) {
+    if (markers.length === 1 && markers[0].getLatLng && element.dataset.singleZoom) {
       map.setView(markers[0].getLatLng(), Number(element.dataset.singleZoom));
     } else if (markers.length > 0) {
       map.fitBounds(L.featureGroup(markers).getBounds(), { padding: [padding, padding], maxZoom: Number(element.dataset.maxZoom || 13) });
@@ -179,5 +297,5 @@ window.tauchplaetzeMap = (function () {
     }
   });
 
-  return { addBaseLayers: addBaseLayers };
+  return { addBaseLayers: addBaseLayers, addContours: addContours };
 })();

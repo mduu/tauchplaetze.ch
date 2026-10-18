@@ -140,4 +140,19 @@
   <data name="Rating_Surroundings_4_Text" xml:space="preserve"><value>Pré, plage ou belle vue.</value></data>
   <data name="Rating_Surroundings_5" xml:space="preserve"><value>exceptionnel</value></data>
   <data name="Rating_Surroundings_5_Text" xml:space="preserve"><value>Un paysage qui vaut à lui seul le déplacement.</value></data>
+  <data name="Map_Layer_Contours" xml:space="preserve"><value>Isobathes</value></data>
+  <data name="Map_Layer_Sketch" xml:space="preserve"><value>Croquis</value></data>
+  <data name="Sketch_NotForNavigation" xml:space="preserve"><value>Croquis, pas pour la navigation.</value></data>
+  <data name="SketchKind_Sculpture" xml:space="preserve"><value>Statue</value></data>
+  <data name="SketchKind_TreeTrunk" xml:space="preserve"><value>Tronc d'arbre</value></data>
+  <data name="SketchKind_Wreck" xml:space="preserve"><value>Épave</value></data>
+  <data name="SketchKind_Object" xml:space="preserve"><value>Objet</value></data>
+  <data name="SketchKind_Boulder" xml:space="preserve"><value>Bloc rocheux</value></data>
+  <data name="SketchKind_Highlight" xml:space="preserve"><value>Curiosité</value></data>
+  <data name="SketchKind_Danger" xml:space="preserve"><value>Danger</value></data>
+  <data name="SketchKind_Wall" xml:space="preserve"><value>Tombant</value></data>
+  <data name="SketchKind_Edge" xml:space="preserve"><value>Arête</value></data>
+  <data name="SketchKind_Route" xml:space="preserve"><value>Parcours</value></data>
+  <data name="SketchKind_Line" xml:space="preserve"><value>Fil d’Ariane</value></data>
+  <data name="SketchKind_PlantField" xml:space="preserve"><value>Herbier</value></data>
 </root>

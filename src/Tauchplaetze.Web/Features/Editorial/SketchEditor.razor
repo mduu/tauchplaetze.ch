@@ -1,0 +1,202 @@
+@implements IAsyncDisposable
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.Editorial
+@inject IJSRuntime JS
+@inject IStringLocalizer<AdminStrings> L
+
+<MudStack Spacing="3">
+    <MudText Typo="Typo.body2">@L["Sketch_Help"]</MudText>
+
+    <div class="d-flex flex-wrap gap-1 align-center">
+        @foreach (var kind in Enum.GetValues<SketchKind>())
+        {
+            var current = kind;
+            <MudChip T="string" Color="@(tool == current ? Color.Primary : Color.Default)" Variant="@(tool == current ? Variant.Filled : Variant.Outlined)"
+                     OnClick="@(() => StartTool(current))">@L[$"SketchKind_{current}"]</MudChip>
+        }
+    </div>
+
+    @if (tool is { } active)
+    {
+        <MudAlert Severity="Severity.Info" Dense="true">
+            @L[active.ShapeOf() == SketchShape.Point ? "Sketch_Hint_Point" : "Sketch_Hint_Line"]
+            @if (active.ShapeOf() != SketchShape.Point)
+            {
+                <MudButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" Class="ml-2" OnClick="Finish">@L["Sketch_Finish"]</MudButton>
+            }
+            <MudButton Size="Size.Small" Class="ml-1" OnClick="StopTool">@L["Sketch_Cancel"]</MudButton>
+        </MudAlert>
+    }
+
+    <div id="@Id" class="admin-map sketch-map" data-contours="auto"
+         data-layer-map="@L["Map_Layer_Map"]" data-layer-photo="@L["Map_Layer_Photo"]" data-layer-contours="@L["Map_Layer_Contours"]"></div>
+    <MudText Typo="Typo.caption">@L["Sketch_NotForNavigation"]</MudText>
+
+    @if (Items.Count == 0)
+    {
+        <MudText Typo="Typo.body2">@L["Sketch_Empty"]</MudText>
+    }
+
+    @foreach (var (item, index) in Items.Select((f, i) => (f, i + 1)).ToList())
+    {
+        var selectedItem = item.Id == selected;
+        <MudPaper Outlined="true" Class="@($"pa-3 {(selectedItem ? "sketch-item-selected" : "")}")" @onclick="@(() => Select(item.Id))">
+            <div class="d-flex justify-space-between align-center">
+                <MudText Typo="Typo.subtitle1">@index. @L[$"SketchKind_{item.Kind}"] @(LabelOf(item) is { } label ? $"· {label}" : "")</MudText>
+                <MudButton Color="Color.Secondary" Size="Size.Small" OnClick="@(() => Remove(item))">@L["Edit_Remove"]</MudButton>
+            </div>
+            @if (selectedItem)
+            {
+                <MudStack Row="true" Class="mt-2" Wrap="Wrap.Wrap">
+                    <MudSelect T="SketchKind" @bind-Value="item.Kind" @bind-Value:after="Render" Label="@L["Sketch_Kind"]" Style="min-width: 180px">
+                        @foreach (var kind in Enum.GetValues<SketchKind>().Where(k => k.ShapeOf() == item.Kind.ShapeOf()))
+                        {
+                            <MudSelectItem T="SketchKind" Value="kind">@L[$"SketchKind_{kind}"]</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudNumericField T="int?" @bind-Value="item.Depth" @bind-Value:after="Render" Label="@L["Sketch_Depth"]" Min="0" Max="SketchRules.MaxDepth" Clearable="true" Style="max-width: 140px" />
+                </MudStack>
+                <MudStack Row="true" Wrap="Wrap.Wrap">
+                    @foreach (var language in Languages.All)
+                    {
+                        var key = language;
+                        <MudTextField T="string" Value="item.Labels[key]" ValueChanged="@(v => SetLabel(item, key, v))" MaxLength="SketchRules.LabelLength"
+                                      Label="@($"{L["Sketch_Label"]} ({key.ToUpperInvariant()})")" Style="min-width: 200px" />
+                    }
+                </MudStack>
+            }
+        </MudPaper>
+    }
+</MudStack>
+
+@code {
+    private DotNetObjectReference<SketchEditor>? reference;
+
+    private SketchKind? tool;
+
+    private Guid? selected;
+
+    private bool initialized;
+
+    [Parameter, EditorRequired]
+    public string Id { get; set; } = "";
+
+    [Parameter, EditorRequired]
+    public List<SketchForm> Items { get; set; } = [];
+
+    [Parameter]
+    public double Latitude { get; set; }
+
+    [Parameter]
+    public double Longitude { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!initialized)
+        {
+            reference ??= DotNetObjectReference.Create(this);
+            var kindNames = Enum.GetValues<SketchKind>().ToDictionary(k => k.ToString(), k => L[$"SketchKind_{k}"].Value);
+            await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.init", Id, Latitude, Longitude, reference, kindNames);
+            initialized = true;
+            await Render();
+        }
+    }
+
+    private async Task StartTool(SketchKind kind)
+    {
+        tool = kind;
+        await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.setTool", Id, kind.ToString(), kind.ShapeOf().ToString().ToLowerInvariant());
+    }
+
+    private async Task StopTool()
+    {
+        tool = null;
+        await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.setTool", Id, null, null);
+    }
+
+    private async Task Finish() => await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.finish", Id);
+
+    [JSInvokable]
+    public async Task Add(string kind, List<JsPoint> points)
+    {
+        var item = new SketchForm { Kind = Enum.Parse<SketchKind>(kind), Points = [.. points.Select(p => new SketchPoint(p.Lat, p.Lng))] };
+        Items.Add(item);
+        selected = item.Id;
+        tool = null;
+        await Render();
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task Select(Guid? id)
+    {
+        if (selected == id)
+        {
+            return;
+        }
+
+        selected = id;
+        await Render();
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task Move(Guid id, List<JsPoint> points)
+    {
+        if (Items.FirstOrDefault(i => i.Id == id) is { } item)
+        {
+            item.Points = [.. points.Select(p => new SketchPoint(p.Lat, p.Lng))];
+            await Render();
+        }
+    }
+
+    private async Task Remove(SketchForm item)
+    {
+        Items.Remove(item);
+        selected = null;
+        await Render();
+    }
+
+    private async Task SetLabel(SketchForm item, string language, string? value)
+    {
+        item.Labels[language] = value;
+        await Render();
+    }
+
+    private static string? LabelOf(SketchForm item) =>
+        item.Labels.GetValueOrDefault("de") is { Length: > 0 } german ? german : item.Labels.Values.FirstOrDefault(v => !string.IsNullOrWhiteSpace(v));
+
+    private async Task Render()
+    {
+        if (!initialized)
+        {
+            return;
+        }
+
+        var features = Items.Select(i => new
+        {
+            id = i.Id,
+            kind = i.Kind.ToString(),
+            points = i.Points.Select(p => new { lat = p.Latitude, lng = p.Longitude }),
+            depth = i.Depth,
+            label = LabelOf(i),
+        });
+        await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.render", Id, features, selected);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        reference?.Dispose();
+        try
+        {
+            await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.dispose", Id);
+        }
+        catch (JSDisconnectedException)
+        {
+            return;
+        }
+    }
+
+    /// <summary>Ein Punkt aus dem Browser.</summary>
+    public record JsPoint(double Lat, double Lng);
+}

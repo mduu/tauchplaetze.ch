@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.DiveSites.Queries;
@@ -27,6 +28,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider 
                 d.Location,
                 d.ContentLevel,
                 d.UpdatedAt,
+                d.Sketch,
                 Ratings = new SiteRatings(d.DifficultyRating, d.WallRating, d.MarineLifeRating, d.WrecksRating, d.CurrentRating, d.SurroundingsRating),
                 WaterBody = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType },
             })
@@ -49,12 +51,20 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider 
                 site.UpdatedAt,
                 await Notices(site.Id, query.Culture, ct),
                 await EntryPoints(site.Id, query.Culture, ct),
-                site.Ratings)),
+                site.Ratings,
+                Sketch(site.Sketch, query.Culture))),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),
         };
     }
+
+    private static IReadOnlyList<SiteSketchFeature> Sketch(string? json, string culture) =>
+        [.. SketchJson.Read(json).Select(f => new SiteSketchFeature(
+            f.Kind,
+            [.. f.Points.Select(p => new SitePoint(p.Latitude, p.Longitude))],
+            f.Depth,
+            f.Texts.FirstOrDefault(t => t.Culture == culture)?.Label ?? f.Texts.FirstOrDefault(t => t.Culture == "de")?.Label))];
 
     private async Task<IReadOnlyList<SiteNotice>> Notices(Guid siteId, string culture, CancellationToken ct)
     {

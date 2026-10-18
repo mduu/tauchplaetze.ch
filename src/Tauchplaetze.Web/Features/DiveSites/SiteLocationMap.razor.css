@@ -50,3 +50,9 @@
     height: 320px;
     border-radius: var(--radius-tile-sm);
 }
+
+.sketch-note {
+    margin: 8px 0 0;
+    color: var(--color-text-subtle);
+    font-size: 13px;
+}

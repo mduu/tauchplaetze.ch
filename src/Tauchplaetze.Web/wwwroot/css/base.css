@@ -400,6 +400,23 @@ a:hover {
 .map-label-low { color: var(--color-index-low-text); }
 .map-label-none { color: var(--color-text-subtle); }
 
+.map-depth-label span {
+  display: inline-block;
+  transform: translate(-50%, -50%);
+  padding: 0 3px;
+  border-radius: 3px;
+  background: var(--color-depth-label-bg);
+  color: var(--color-depth-line);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.map-depth-labels-hidden .map-depth-label {
+  display: none;
+}
+
 .map-labels-hidden .leaflet-tooltip.map-label {
   display: none;
 }
@@ -532,4 +549,55 @@ a:hover {
   .dropdown-chevron {
     transition: none;
   }
+}
+
+/* Tauchskizze (sketch.js): Symbole als Schild, Farbe pro Art. */
+.sketch-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-bg);
+  border-radius: 50%;
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.sketch-symbol svg {
+  fill: currentColor;
+}
+
+.sketch-symbol .sketch-cut {
+  fill: var(--color-surface-raised);
+  stroke: var(--color-surface-raised);
+}
+
+.sketch-treetrunk { color: var(--color-wood); }
+.sketch-highlight { color: var(--color-signal); }
+.sketch-danger { color: var(--color-notice-closure); }
+.sketch-wreck,
+.sketch-object,
+.sketch-sculpture { color: var(--color-primary); }
+.sketch-boulder { color: var(--color-sketch-wall); }
+
+.sketch-symbol.is-selected {
+  border-color: var(--color-signal);
+}
+
+.sketch-handle {
+  border: 2px solid var(--color-bg);
+  border-radius: 50%;
+  background: var(--color-signal);
+  cursor: move;
+}
+
+.leaflet-container.is-drawing {
+  cursor: crosshair;
+}
+
+.sketch-map {
+  height: 520px;
+}
+
+.sketch-item-selected {
+  border-color: var(--color-primary) !important;
 }

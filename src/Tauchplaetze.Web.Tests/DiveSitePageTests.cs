@@ -24,7 +24,8 @@ public class DiveSitePageTests : IClassFixture<WebApp>
             ForecastSiteId, WithForecast, "Platz mit Prognose", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.28, 8.6, 0, DateTimeOffset.UtcNow,
             [new SiteNotice(NoticeKind.Closure, "Tauchplatz gesperrt wegen Bauarbeiten.", new DateOnly(2027, 4, 1), true), new SiteNotice(NoticeKind.Info, "Parking payant.", null, false)],
             [new SiteEntryPoint(EntryPointKind.EntryAndExit, 47.2851, 8.6081, "Treppe beim Bootshaus")],
-            new SiteRatings(3, 5, null, null, 1, null))));
+            new SiteRatings(3, 5, null, null, 1, null),
+            [new SiteSketchFeature(SketchKind.Sculpture, [new SitePoint(47.2852, 8.6080)], 12, "Madonna")])));
         app.Forecasts.Add(ForecastSiteId, new SiteForecast(
             [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]), Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
             DateTimeOffset.UtcNow,
@@ -84,6 +85,22 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("Entrata e uscita Treppe beim Bootshaus", text);
         Assert.Contains("47.2851", html);
         Assert.DoesNotContain("data-here=", html);
+    }
+
+    [Fact]
+    public async Task Mit_Skizze_traegt_die_Karte_die_Skizze_und_den_Hinweis_dass_sie_nicht_zur_Navigation_dient()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var withSketch = await browser.GetStringAsync("/fr/sites-de-plongee/" + WithForecast, TestContext.Current.CancellationToken);
+        var withoutSketch = await browser.GetStringAsync("/fr/sites-de-plongee/" + Slug, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("Croquis, pas pour la navigation.", VisibleText.Of(withSketch));
+        Assert.Contains("Madonna", withSketch);
+        Assert.DoesNotContain("Croquis, pas pour la navigation.", VisibleText.Of(withoutSketch));
     }
 
     [Fact]

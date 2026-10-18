@@ -45,6 +45,8 @@ internal class SiteForm
 
     public List<NoticeForm> Notices { get; } = [];
 
+    public List<SketchForm> Sketch { get; } = [];
+
     public string? Comment { get; set; }
 
     public static readonly string[] RatingFields = ["DifficultyRating", "WallRating", "MarineLifeRating", "WrecksRating", "CurrentRating", "SurroundingsRating"];
@@ -94,6 +96,7 @@ internal class SiteForm
 
         form.EntryPoints.AddRange(content.EntryPointList.Select(e => EntryForm.From(e)));
         form.Notices.AddRange(content.NoticeList.Select(NoticeForm.From));
+        form.Sketch.AddRange(content.SketchList.Select(SketchForm.From));
         return form;
     }
 
@@ -122,7 +125,8 @@ internal class SiteForm
         [.. Texts.Select(t => new DiveSiteContentTranslation(t.Key, t.Value.UnderwaterDescription, t.Value.SurroundingsInfo, t.Value.ApproachInfo,
             t.Value.HazardsInfo, t.Value.FacilitiesInfo, t.Value.DivingBanNote, t.Value.IsMachineTranslated)).Where(HasText)],
         [.. EntryPoints.Select(e => e.ToContent())],
-        [.. Notices.Select(n => n.ToContent())]);
+        [.. Notices.Select(n => n.ToContent())],
+        [.. Sketch.Select(f => f.ToContent())]);
 
     private static bool HasText(DiveSiteContentTranslation t) =>
         new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));
@@ -209,4 +213,33 @@ internal class NoticeForm
         ValidFrom is { } from ? DateOnly.FromDateTime(from) : null,
         ValidUntil is { } until ? DateOnly.FromDateTime(until) : null,
         [.. Texts.Where(t => !string.IsNullOrWhiteSpace(t.Value)).Select(t => new NoticeText(t.Key, t.Value))]);
+}
+
+/// <summary>Bearbeitbares Element der Tauchskizze. Öffentlich, weil der Editor es als Parameter bekommt.</summary>
+public class SketchForm
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    public SketchKind Kind { get; set; }
+
+    public List<SketchPoint> Points { get; set; } = [];
+
+    public int? Depth { get; set; }
+
+    public Dictionary<string, string?> Labels { get; } = Languages.All.ToDictionary(l => l, _ => (string?)null);
+
+    public static SketchForm From(SketchFeature feature)
+    {
+        var form = new SketchForm { Id = feature.Id, Kind = feature.Kind, Points = [.. feature.Points], Depth = feature.Depth };
+        foreach (var text in feature.Texts.Where(t => form.Labels.ContainsKey(t.Culture)))
+        {
+            form.Labels[text.Culture] = text.Label;
+        }
+
+        return form;
+    }
+
+    public SketchFeature ToContent() => new(
+        Id, Kind, [.. Points], Depth,
+        [.. Labels.Where(l => !string.IsNullOrWhiteSpace(l.Value)).Select(l => new SketchText(l.Key, l.Value))]);
 }

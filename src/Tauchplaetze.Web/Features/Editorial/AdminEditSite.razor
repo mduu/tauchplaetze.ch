@@ -147,6 +147,12 @@ else
             </MudStack>
         </MudTabPanel>
 
+        <MudTabPanel Text="@L["Edit_Tab_Sketch"]">
+            <div class="pt-4">
+                <SketchEditor Id="@($"sketch-map-{Id}")" Items="form.Sketch" Latitude="form.Latitude" Longitude="form.Longitude" />
+            </div>
+        </MudTabPanel>
+
         <MudTabPanel Text="@L["Edit_Tab_Notices"]">
             <MudStack Spacing="4" Class="pt-4">
                 <MudText Typo="Typo.body2">@L["Notices_Help"]</MudText>

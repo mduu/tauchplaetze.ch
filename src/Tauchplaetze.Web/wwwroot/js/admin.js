@@ -38,3 +38,152 @@ window.tauchplaetzeAdmin = (function () {
 
   return { show: show, dispose: dispose };
 })();
+
+// Editor der Tauchskizze im CMS (dive-site.md, «Tauchskizze»). Blazor hält die Elemente, die Karte zeigt sie und meldet Klicks und Verschiebungen.
+window.tauchplaetzeSketchEditor = (function () {
+  const editors = new Map();
+
+  function init(id, latitude, longitude, dotnet, kindNames) {
+    const element = document.getElementById(id);
+    if (!element || editors.has(id)) {
+      return;
+    }
+
+    const map = L.map(element, { scrollWheelZoom: true, doubleClickZoom: false });
+    window.tauchplaetzeMap.addBaseLayers(map, element);
+    if (window.tauchplaetzeMap.addContours) {
+      window.tauchplaetzeMap.addContours(map, element);
+    }
+
+    L.circleMarker([latitude, longitude], { radius: 5, color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-subtle').trim(), weight: 2, fill: false }).addTo(map);
+    map.setView([latitude, longitude], 18);
+
+    const editor = { map: map, dotnet: dotnet, kindNames: kindNames, layers: L.layerGroup().addTo(map), handles: L.layerGroup().addTo(map), draft: null, tool: null, features: [], selectedId: null };
+    editors.set(id, editor);
+
+    map.on('click', function (event) { onClick(editor, event.latlng); });
+    map.on('dblclick', function () { finish(id); });
+    setTimeout(function () { map.invalidateSize(); }, 150);
+  }
+
+  function onClick(editor, latlng) {
+    if (!editor.tool) {
+      editor.dotnet.invokeMethodAsync('Select', null);
+      return;
+    }
+
+    const point = { lat: round(latlng.lat), lng: round(latlng.lng) };
+    if (editor.tool.shape === 'point') {
+      editor.dotnet.invokeMethodAsync('Add', editor.tool.kind, [point]);
+      editor.tool = null;
+      return;
+    }
+
+    editor.draft = editor.draft || [];
+    editor.draft.push(point);
+    drawDraft(editor);
+  }
+
+  function drawDraft(editor) {
+    if (editor.draftLayer) {
+      editor.map.removeLayer(editor.draftLayer);
+    }
+
+    const latlngs = editor.draft.map(function (p) { return [p.lat, p.lng]; });
+    editor.draftLayer = L.polyline(latlngs, { color: getComputedStyle(document.documentElement).getPropertyValue('--color-signal').trim(), weight: 2, dashArray: '4 4' }).addTo(editor.map);
+  }
+
+  function round(value) {
+    return Math.round(value * 1e6) / 1e6;
+  }
+
+  function setTool(id, kind, shape) {
+    const editor = editors.get(id);
+    if (!editor) {
+      return;
+    }
+
+    cancel(id);
+    editor.tool = kind ? { kind: kind, shape: shape } : null;
+    editor.map.getContainer().classList.toggle('is-drawing', !!kind);
+  }
+
+  // Schliesst eine Linie oder Fläche ab, sobald sie genug Punkte hat (Doppelklick oder Knopf «Fertig»).
+  function finish(id) {
+    const editor = editors.get(id);
+    if (!editor || !editor.tool || !editor.draft) {
+      return;
+    }
+
+    const needed = editor.tool.shape === 'area' ? 3 : 2;
+    if (editor.draft.length >= needed) {
+      editor.dotnet.invokeMethodAsync('Add', editor.tool.kind, editor.draft);
+    }
+
+    setTool(id, null, null);
+  }
+
+  function cancel(id) {
+    const editor = editors.get(id);
+    if (!editor) {
+      return;
+    }
+
+    editor.draft = null;
+    if (editor.draftLayer) {
+      editor.map.removeLayer(editor.draftLayer);
+      editor.draftLayer = null;
+    }
+  }
+
+  // Zeichnet alle Elemente neu. Das gewählte bekommt verschiebbare Griffe an jedem Punkt.
+  function render(id, features, selectedId) {
+    const editor = editors.get(id);
+    if (!editor) {
+      return;
+    }
+
+    editor.features = features;
+    editor.selectedId = selectedId;
+    editor.layers.clearLayers();
+    editor.handles.clearLayers();
+
+    features.forEach(function (feature) {
+      window.tauchplaetzeSketch.layerFor(feature, editor.kindNames, {
+        selectedId: selectedId,
+        onSelect: function (featureId) { editor.dotnet.invokeMethodAsync('Select', featureId); }
+      }).addTo(editor.layers);
+    });
+
+    const selected = features.find(function (f) { return f.id === selectedId; });
+    if (selected) {
+      selected.points.forEach(function (p, index) {
+        L.marker([p.lat, p.lng], {
+          draggable: true,
+          icon: L.divIcon({ className: 'sketch-handle', iconSize: [14, 14], iconAnchor: [7, 7] })
+        }).on('dragend', function (event) {
+          const moved = selected.points.slice();
+          const latlng = event.target.getLatLng();
+          moved[index] = { lat: round(latlng.lat), lng: round(latlng.lng) };
+          editor.dotnet.invokeMethodAsync('Move', selected.id, moved);
+        }).addTo(editor.handles);
+      });
+    }
+  }
+
+  function dispose(id) {
+    const editor = editors.get(id);
+    if (editor) {
+      editor.map.remove();
+      editors.delete(id);
+    }
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      editors.forEach(function (_, id) { setTool(id, null, null); });
+    }
+  });
+
+  return { init: init, setTool: setTool, finish: finish, cancel: cancel, render: render, dispose: dispose };
+})();

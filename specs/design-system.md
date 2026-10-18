@@ -39,6 +39,9 @@ Es gibt im MVP **nur das dunkle Schema**. Ein helles Schema ist nicht geplant.
 | `--color-notice-closure` | `#FF6F61` | Hinweis «Sperrung», einzige rote Farbe |
 | `--color-sun` | `#E8C25A` | Sonne in der Wetter-Grafik (Balken, Symbol) |
 | `--color-rain` | `#5AA9E6` | Regen in der Wetter-Grafik (Balken, Tropfen, Achse) |
+| `--color-sketch-wall` | `#3B4B49` | Steilwand und Kante in der Skizze |
+| `--color-sketch-line` | `#B8740F` | Leine in der Skizze |
+| `--color-sketch-plants` | `#2F8F55` | Pflanzenfeld in der Skizze |
 | `--color-place-parking` | `#2F6BC4` | Parkplatz auf der Karte (Schild «P», blau wie das Signal), Text `--color-place-parking-text` `#FFFFFF` |
 | `--color-depth-line` | `#0B6E99` | Tiefenlinien auf Karte und Skizze (alle 10 m kräftiger), Beschriftung «20 m» auf `--color-depth-label-bg` (`rgb(255 255 255 / 0.75)`) |
 
@@ -126,7 +129,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 | `WeatherChart` | SVG, serverseitig, kompakt in der Kachel «Die nächsten 5 Tage»: Raster von 2 Stunden, Symbol nur bei Wechsel mit gepunkteter Linie dazwischen, Wind alle 6 Stunden. Eigene Wettersymbole (Sonne, Mond, Wolke, Nebel, Niesel, Regen, Schauer, Schnee, Gewitter), Windpfeile, Sonnenbalken (`--color-sun`), Temperaturlinie (`--color-signal`), Regenbalken (`--color-rain`), Nacht in `--color-bg`. Legende darunter als Text. |
 | `ForecastStrip` | 5 Tage mit Index, Farbe nach Skala, Mini-Balken, Stichwort |
 | `SiteRatingsBlock` | Kachel pro bewerteter Skala: Name (Mono, Grossbuchstaben), «i»-Knopf (44 px Zielfläche, Kreis 24 px), fünf Schritte, Zahl und Kurztext. Qualität als Punkte in `--color-primary`, Stufe (Schwierigkeit, Strömung) als Balken in `--color-signal`. Legende als Popover in `--color-surface-raised` neben dem Knopf, aktuelle Stufe mit Rahmen in `--color-primary`. |
-| `SiteSketch` | SVG-Skizze: Ufer, Einstieg (Orange), Tiefenlinien gestrichelt, Wand, Highlights, Nordpfeil |
+| `SiteSketch` | Ebene auf der Leaflet-Karte (`sketch.js`): Symbole als runde Schilder (`--color-surface-raised`, Farbe pro Art: Baumstamm `--color-wood`, Besonderheit `--color-signal`, Gefahr `--color-notice-closure`, sonst `--color-primary`), Steilwand dick und Kante gestrichelt in `--color-sketch-wall`, Route gepunktet in `--color-primary`, Leine in `--color-sketch-line`, Pflanzenfeld als Fläche in `--color-sketch-plants`. Die Linienfarben sind dunkel, weil Landeskarte und Luftbild hell sind. |
 | `PracticalTile` | Label in Cyan oder Orange (Achtung), Text |
 | `BuddyCallout` | Fläche in Signal-Orange, dunkler Text, Buttons dunkel |
 | `DataSourceFooter` | Quellen, Sicherheitshinweis, Notfallnummern |

@@ -13,7 +13,13 @@
     }
     <div class="location-map" data-map data-here="@Here" data-points="@Points" data-max-zoom="18" data-single-zoom="17" data-padding="24"
          data-layer-map="@L["Map_Layer_Map"]" data-layer-photo="@L["Map_Layer_Photo"]"
+         data-contours="auto" data-layer-contours="@L["Map_Layer_Contours"]"
+         data-sketch="@SketchJson" data-sketch-kinds="@SketchKinds" data-layer-sketch="@L["Map_Layer_Sketch"]"
          role="region" aria-label="@L["Location_Map_Label", Site.Name]"></div>
+    @if (Site.SketchList.Count > 0)
+    {
+        <p class="sketch-note">@L["Sketch_NotForNavigation"]</p>
+    }
     @if (Site.EntryPoints.Count > 0)
     {
         <ul class="entry-points">
@@ -32,6 +38,17 @@
 </section>
 
 @code {
+    private string SketchJson => JsonSerializer.Serialize(Site.SketchList.Select((f, i) => new
+    {
+        id = i,
+        kind = f.Kind.ToString(),
+        points = f.Points.Select(p => new { lat = p.Latitude, lng = p.Longitude }),
+        depth = f.Depth,
+        label = f.Label,
+    }));
+
+    private string SketchKinds => JsonSerializer.Serialize(Enum.GetValues<SketchKind>().ToDictionary(k => k.ToString(), k => L[$"SketchKind_{k}"].Value));
+
     [Parameter, EditorRequired]
     public DiveSiteDetails Site { get; set; } = default!;
 

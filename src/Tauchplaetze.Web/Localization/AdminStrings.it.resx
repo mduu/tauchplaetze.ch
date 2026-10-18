@@ -167,4 +167,34 @@
   <data name="Error_InvalidNotice" xml:space="preserve"><value>Un avviso richiede un testo in tedesco (al massimo 500 caratteri). «Valido fino al» non può precedere «Valido dal».</value></data>
   <data name="Kind_Parking" xml:space="preserve"><value>Parcheggio</value></data>
   <data name="Kind_Toilet" xml:space="preserve"><value>Servizi igienici</value></data>
+  <data name="Edit_Tab_Sketch" xml:space="preserve"><value>Schizzo</value></data>
+  <data name="Sketch_Help" xml:space="preserve"><value>Scegli un tipo qui sopra e posizionalo sulla mappa. Clicca su un elemento per spostarlo, etichettarlo o assegnargli una profondità.</value></data>
+  <data name="Sketch_Hint_Point" xml:space="preserve"><value>Clicca sulla mappa per posizionare il simbolo.</value></data>
+  <data name="Sketch_Hint_Line" xml:space="preserve"><value>Clicca punto per punto. Doppio clic o «Fine» per concludere.</value></data>
+  <data name="Sketch_Finish" xml:space="preserve"><value>Fine</value></data>
+  <data name="Sketch_Cancel" xml:space="preserve"><value>Annulla</value></data>
+  <data name="Sketch_NotForNavigation" xml:space="preserve"><value>Schizzo, non per la navigazione.</value></data>
+  <data name="Sketch_Empty" xml:space="preserve"><value>Ancora nessun elemento.</value></data>
+  <data name="Sketch_Kind" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Sketch_Depth" xml:space="preserve"><value>Profondità (m)</value></data>
+  <data name="Sketch_Label" xml:space="preserve"><value>Etichetta</value></data>
+  <data name="Map_Layer_Contours" xml:space="preserve"><value>Isobate</value></data>
+  <data name="SketchKind_Sculpture" xml:space="preserve"><value>Scultura</value></data>
+  <data name="SketchKind_TreeTrunk" xml:space="preserve"><value>Tronco</value></data>
+  <data name="SketchKind_Wreck" xml:space="preserve"><value>Relitto</value></data>
+  <data name="SketchKind_Object" xml:space="preserve"><value>Oggetto</value></data>
+  <data name="SketchKind_Boulder" xml:space="preserve"><value>Masso</value></data>
+  <data name="SketchKind_Highlight" xml:space="preserve"><value>Punto d'interesse</value></data>
+  <data name="SketchKind_Danger" xml:space="preserve"><value>Pericolo</value></data>
+  <data name="SketchKind_Wall" xml:space="preserve"><value>Parete</value></data>
+  <data name="SketchKind_Edge" xml:space="preserve"><value>Bordo</value></data>
+  <data name="SketchKind_Route" xml:space="preserve"><value>Percorso</value></data>
+  <data name="SketchKind_Line" xml:space="preserve"><value>Sagola</value></data>
+  <data name="SketchKind_PlantField" xml:space="preserve"><value>Prateria</value></data>
+  <data name="Field_Sketch" xml:space="preserve"><value>Schizzo {0}</value></data>
+  <data name="Field_SketchKind" xml:space="preserve"><value>Tipo</value></data>
+  <data name="Field_SketchPoints" xml:space="preserve"><value>Posizione</value></data>
+  <data name="Field_SketchDepth" xml:space="preserve"><value>Profondità</value></data>
+  <data name="Field_SketchLabel" xml:space="preserve"><value>Etichetta</value></data>
+  <data name="Error_InvalidSketch" xml:space="preserve"><value>Lo schizzo non è valido: al massimo 200 elementi, tutti i punti entro 2 km dal sito, profondità fino a 200 m, etichette fino a 80 caratteri.</value></data>
 </root>

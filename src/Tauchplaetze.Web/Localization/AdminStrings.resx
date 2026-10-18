@@ -167,4 +167,34 @@
   <data name="Error_InvalidNotice" xml:space="preserve"><value>Ein Hinweis braucht einen deutschen Text (höchstens 500 Zeichen). «Gültig bis» darf nicht vor «Gültig ab» liegen.</value></data>
   <data name="Kind_Parking" xml:space="preserve"><value>Parkplatz</value></data>
   <data name="Kind_Toilet" xml:space="preserve"><value>Toilette</value></data>
+  <data name="Edit_Tab_Sketch" xml:space="preserve"><value>Skizze</value></data>
+  <data name="Sketch_Help" xml:space="preserve"><value>Wähle oben eine Art und setze sie auf der Karte. Klicke ein Element an, um es zu verschieben, zu beschriften oder mit einer Tiefe zu versehen.</value></data>
+  <data name="Sketch_Hint_Point" xml:space="preserve"><value>Klicke auf die Karte, um das Symbol zu setzen.</value></data>
+  <data name="Sketch_Hint_Line" xml:space="preserve"><value>Klicke Punkt für Punkt. Doppelklick oder «Fertig» schliesst ab.</value></data>
+  <data name="Sketch_Finish" xml:space="preserve"><value>Fertig</value></data>
+  <data name="Sketch_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Sketch_NotForNavigation" xml:space="preserve"><value>Skizze, nicht zur Navigation.</value></data>
+  <data name="Sketch_Empty" xml:space="preserve"><value>Noch keine Elemente.</value></data>
+  <data name="Sketch_Kind" xml:space="preserve"><value>Art</value></data>
+  <data name="Sketch_Depth" xml:space="preserve"><value>Tiefe (m)</value></data>
+  <data name="Sketch_Label" xml:space="preserve"><value>Beschriftung</value></data>
+  <data name="Map_Layer_Contours" xml:space="preserve"><value>Tiefenlinien</value></data>
+  <data name="SketchKind_Sculpture" xml:space="preserve"><value>Skulptur</value></data>
+  <data name="SketchKind_TreeTrunk" xml:space="preserve"><value>Baumstamm</value></data>
+  <data name="SketchKind_Wreck" xml:space="preserve"><value>Wrack</value></data>
+  <data name="SketchKind_Object" xml:space="preserve"><value>Gegenstand</value></data>
+  <data name="SketchKind_Boulder" xml:space="preserve"><value>Felsblock</value></data>
+  <data name="SketchKind_Highlight" xml:space="preserve"><value>Besonderheit</value></data>
+  <data name="SketchKind_Danger" xml:space="preserve"><value>Gefahr</value></data>
+  <data name="SketchKind_Wall" xml:space="preserve"><value>Steilwand</value></data>
+  <data name="SketchKind_Edge" xml:space="preserve"><value>Kante</value></data>
+  <data name="SketchKind_Route" xml:space="preserve"><value>Tauchroute</value></data>
+  <data name="SketchKind_Line" xml:space="preserve"><value>Leine</value></data>
+  <data name="SketchKind_PlantField" xml:space="preserve"><value>Pflanzenfeld</value></data>
+  <data name="Field_Sketch" xml:space="preserve"><value>Skizze {0}</value></data>
+  <data name="Field_SketchKind" xml:space="preserve"><value>Art</value></data>
+  <data name="Field_SketchPoints" xml:space="preserve"><value>Lage</value></data>
+  <data name="Field_SketchDepth" xml:space="preserve"><value>Tiefe</value></data>
+  <data name="Field_SketchLabel" xml:space="preserve"><value>Beschriftung</value></data>
+  <data name="Error_InvalidSketch" xml:space="preserve"><value>Die Skizze ist ungültig: höchstens 200 Elemente, alle Punkte höchstens 2 km vom Platz, Tiefe bis 200 m, Beschriftung bis 80 Zeichen.</value></data>
 </root>

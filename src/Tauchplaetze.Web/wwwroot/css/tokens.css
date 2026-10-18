@@ -18,6 +18,11 @@
   --color-notice-warning: #FF9A4D;
   --color-notice-closure: #FF6F61;
   --color-place-parking: #2F6BC4;
+  --color-sketch-wall: #3B4B49;
+  --color-sketch-line: #B8740F;
+  --color-sketch-plants: #2F8F55;
+  --color-depth-line: #0B6E99;
+  --color-depth-label-bg: rgb(255 255 255 / 0.75);
   --color-place-parking-text: #FFFFFF;
   --color-sun: #E8C25A;
   --color-rain: #5AA9E6;

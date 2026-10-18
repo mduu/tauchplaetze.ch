@@ -48,6 +48,30 @@ public class GetDiveSiteTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Die_Skizze_kommt_mit_der_Beschriftung_der_Sprache_sonst_auf_Deutsch()
+    {
+        // Arrange
+        await Sql.Arrange(async db =>
+        {
+            var site = await Add(db, "riff-williams-herrliberg", DiveSiteStatus.Published);
+            site.Sketch = """
+                [{"id":"0199f1c2-0000-7000-8000-000000000001","kind":"Sculpture","points":[{"latitude":47.285,"longitude":8.608}],"depth":12,
+                  "texts":[{"culture":"de","label":"Madonna"},{"culture":"fr","label":"Madone"}]},
+                 {"id":"0199f1c2-0000-7000-8000-000000000002","kind":"Wall","points":[{"latitude":47.285,"longitude":8.608},{"latitude":47.286,"longitude":8.607}],"texts":[]}]
+                """;
+        });
+
+        // Act
+        var french = Assert.IsType<DiveSiteLookup.Found>(await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "fr"))).Site;
+        var italian = Assert.IsType<DiveSiteLookup.Found>(await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "it"))).Site;
+
+        // Assert
+        Assert.Equal([(SketchKind.Sculpture, "Madone", (int?)12), (SketchKind.Wall, (string?)null, (int?)null)], french.SketchList.Select(f => (f.Kind, f.Label, f.Depth)));
+        Assert.Equal("Madonna", italian.SketchList[0].Label);
+        Assert.Equal(2, french.SketchList[1].Points.Count);
+    }
+
+    [SqlFact]
     public async Task Ein_alter_Slug_fuehrt_auf_den_aktuellen()
     {
         // Arrange

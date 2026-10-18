@@ -140,4 +140,19 @@
   <data name="Rating_Surroundings_4_Text" xml:space="preserve"><value>Prato, lido o bella vista.</value></data>
   <data name="Rating_Surroundings_5" xml:space="preserve"><value>eccezionale</value></data>
   <data name="Rating_Surroundings_5_Text" xml:space="preserve"><value>Un paesaggio che da solo vale la gita.</value></data>
+  <data name="Map_Layer_Contours" xml:space="preserve"><value>Isobate</value></data>
+  <data name="Map_Layer_Sketch" xml:space="preserve"><value>Schizzo</value></data>
+  <data name="Sketch_NotForNavigation" xml:space="preserve"><value>Schizzo, non per la navigazione.</value></data>
+  <data name="SketchKind_Sculpture" xml:space="preserve"><value>Scultura</value></data>
+  <data name="SketchKind_TreeTrunk" xml:space="preserve"><value>Tronco</value></data>
+  <data name="SketchKind_Wreck" xml:space="preserve"><value>Relitto</value></data>
+  <data name="SketchKind_Object" xml:space="preserve"><value>Oggetto</value></data>
+  <data name="SketchKind_Boulder" xml:space="preserve"><value>Masso</value></data>
+  <data name="SketchKind_Highlight" xml:space="preserve"><value>Punto d'interesse</value></data>
+  <data name="SketchKind_Danger" xml:space="preserve"><value>Pericolo</value></data>
+  <data name="SketchKind_Wall" xml:space="preserve"><value>Parete</value></data>
+  <data name="SketchKind_Edge" xml:space="preserve"><value>Bordo</value></data>
+  <data name="SketchKind_Route" xml:space="preserve"><value>Percorso</value></data>
+  <data name="SketchKind_Line" xml:space="preserve"><value>Sagola</value></data>
+  <data name="SketchKind_PlantField" xml:space="preserve"><value>Prateria</value></data>
 </root>

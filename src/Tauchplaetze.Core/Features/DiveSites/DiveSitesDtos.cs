@@ -34,7 +34,17 @@ public record DiveSiteDetails(
     DateTimeOffset UpdatedAt,
     IReadOnlyList<SiteNotice> Notices,
     IReadOnlyList<SiteEntryPoint> EntryPoints,
-    SiteRatings? Ratings = null);
+    SiteRatings? Ratings = null,
+    IReadOnlyList<SiteSketchFeature>? Sketch = null)
+{
+    public IReadOnlyList<SiteSketchFeature> SketchList => Sketch ?? [];
+}
+
+/// <summary>Ein Element der Tauchskizze mit der Beschriftung in der gewünschten Sprache, sonst auf Deutsch, sonst ohne.</summary>
+public record SiteSketchFeature(SketchKind Kind, IReadOnlyList<SitePoint> Points, int? Depth, string? Label);
+
+/// <summary>Ein Punkt in WGS84.</summary>
+public record SitePoint(double Latitude, double Longitude);
 
 /// <summary>Die Bewertungen eines Platzes, je 1 bis 5. Leer heisst «nicht bewertet» (`dive-site.md`, «Bewertungen»).</summary>
 public record SiteRatings(byte? Difficulty, byte? Wall, byte? MarineLife, byte? Wrecks, byte? Current, byte? Surroundings);
