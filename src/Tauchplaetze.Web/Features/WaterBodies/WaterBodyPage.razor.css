@@ -1,0 +1,11 @@
+.water-name {
+    margin-top: 12px;
+    font-size: clamp(48px, 8vw, 112px);
+    line-height: 0.92;
+}
+
+.practical-title {
+    font-size: 36px;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+}

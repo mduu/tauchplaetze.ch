@@ -1,0 +1,39 @@
+@page "/de/gewaesser"
+@page "/en/waters"
+@page "/fr/eaux"
+@page "/it/acque"
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.WaterBodies
+@using Tauchplaetze.Core.Features.WaterBodies.Queries
+@inject IQueryHandler<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>> WaterBodies
+@inject IStringLocalizer<SharedStrings> Shared
+@inject IStringLocalizer<DiveSiteStrings> L
+
+<PageTitle>@L["WaterBodies_Title"] · @Shared["Brand"]</PageTitle>
+<HeadContent>
+    <meta name="description" content="@L["WaterBodies_MetaDescription"]" />
+</HeadContent>
+<HreflangLinks />
+
+<section class="page-section">
+    <h1 class="page-title">@L["WaterBodies_Title"]</h1>
+    <p class="lead">@L["WaterBodies_Lead"]</p>
+    <ul class="water-grid">
+        @foreach (var water in waterBodies)
+        {
+            <li class="tile">
+                <div class="tile-label">@L[$"WaterBody_{water.Type}"]</div>
+                <a href="/@Language/@PublicRoutes.WaterBodies[Language]/@water.Slug">@water.Name</a>
+            </li>
+        }
+    </ul>
+</section>
+
+@code {
+    private IReadOnlyList<WaterBodySummary> waterBodies = [];
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override async Task OnInitializedAsync() =>
+        waterBodies = await WaterBodies.Handle(new GetWaterBodiesQuery(Language));
+}

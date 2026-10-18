@@ -1,0 +1,34 @@
+@using System.Text.Json
+@using Tauchplaetze.Core.Features.DiveSites.Queries
+@using Tauchplaetze.Web.Features.Forecasts
+@inject IStringLocalizer<DiveSiteStrings> L
+
+<div class="site-map" data-map data-sites="@Json" data-lat="@Invariant(Latitude)" data-lng="@Invariant(Longitude)" data-zoom="@Zoom"
+     role="region" aria-label="@L["Map_Label"]"></div>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<DiveSiteListItem> Sites { get; set; } = [];
+
+    [Parameter]
+    public double Latitude { get; set; } = 46.8;
+
+    [Parameter]
+    public double Longitude { get; set; } = 8.2;
+
+    [Parameter]
+    public int Zoom { get; set; } = 8;
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string Json => JsonSerializer.Serialize(Sites.Select(s => new
+    {
+        lat = s.Latitude,
+        lng = s.Longitude,
+        name = s.Name,
+        url = PublicRoutes.DiveSite(Language, s.Slug),
+        band = ForecastFormat.IndexBand(s.DiveIndexToday),
+    }));
+
+    private static string Invariant(double value) => value.ToString(CultureInfo.InvariantCulture);
+}

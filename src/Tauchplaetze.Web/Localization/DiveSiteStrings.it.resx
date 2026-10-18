@@ -19,4 +19,23 @@
   <data name="Emergency" xml:space="preserve"><value>Emergenza</value></data>
   <data name="Emergency_Numbers" xml:space="preserve"><value>Ambulanza 144 · Rega 1414 · Polizia 117</value></data>
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Conosci questo sito?</value></data>
+  <data name="Map_Label" xml:space="preserve"><value>Mappa dei siti d'immersione</value></data>
+  <data name="Directory_Title" xml:space="preserve"><value>Siti d'immersione</value></data>
+  <data name="Directory_Lead" xml:space="preserve"><value>Tutti i siti d'immersione nei laghi e fiumi svizzeri. L'indice vale per oggi.</value></data>
+  <data name="Directory_Filter" xml:space="preserve"><value>Acque</value></data>
+  <data name="Directory_Filter_All" xml:space="preserve"><value>Tutte le acque</value></data>
+  <data name="Directory_Empty" xml:space="preserve"><value>Ancora nessun sito d'immersione.</value></data>
+  <data name="Directory_MetaDescription" xml:space="preserve"><value>Elenco dei siti d'immersione nei laghi e fiumi svizzeri, con mappa e indice d'immersione.</value></data>
+  <data name="DataLevel_0" xml:space="preserve"><value>nessuna previsione</value></data>
+  <data name="DataLevel_1" xml:space="preserve"><value>solo meteo</value></data>
+  <data name="DataLevel_2" xml:space="preserve"><value>dati per lo specchio d'acqua</value></data>
+  <data name="DataLevel_3" xml:space="preserve"><value>dati al sito</value></data>
+  <data name="WaterBodies_Title" xml:space="preserve"><value>Acque</value></data>
+  <data name="WaterBodies_Lead" xml:space="preserve"><value>Laghi e fiumi con siti d'immersione.</value></data>
+  <data name="WaterBodies_MetaDescription" xml:space="preserve"><value>Laghi e fiumi svizzeri con siti e previsione d'immersione.</value></data>
+  <data name="WaterBody_Lake" xml:space="preserve"><value>Lago</value></data>
+  <data name="WaterBody_River" xml:space="preserve"><value>Fiume</value></data>
+  <data name="WaterBody_Sites" xml:space="preserve"><value>Siti d'immersione</value></data>
+  <data name="WaterBody_MetaDescription" xml:space="preserve"><value>{0}: siti d'immersione, mappa e previsione.</value></data>
+  <data name="Index_Today" xml:space="preserve"><value>Indice oggi</value></data>
 </root>

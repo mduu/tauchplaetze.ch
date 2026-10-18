@@ -1,0 +1,67 @@
+@page "/de/tauchplaetze"
+@page "/en/dive-sites"
+@page "/fr/sites-de-plongee"
+@page "/it/siti-di-immersione"
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.DiveSites.Queries
+@using Tauchplaetze.Core.Features.WaterBodies
+@using Tauchplaetze.Core.Features.WaterBodies.Queries
+@using Tauchplaetze.Web.Features.Forecasts
+@inject IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> DiveSites
+@inject IQueryHandler<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>> WaterBodies
+@inject IStringLocalizer<SharedStrings> Shared
+@inject IStringLocalizer<DiveSiteStrings> L
+
+<PageTitle>@L["Directory_Title"] · @Shared["Brand"]</PageTitle>
+<HeadContent>
+    <meta name="description" content="@L["Directory_MetaDescription"]" />
+</HeadContent>
+<HreflangLinks />
+
+<section class="page-section">
+    <h1 class="page-title">@L["Directory_Title"]</h1>
+    <p class="lead">@L["Directory_Lead"]</p>
+
+    <nav class="filter" aria-label="@L["Directory_Filter"]">
+        <a href="@Path(null)" aria-current="@(WaterBody is null ? "true" : null)">@L["Directory_Filter_All"]</a>
+        @foreach (var water in waterBodies)
+        {
+            <a href="@Path(water.Slug)" aria-current="@(WaterBody == water.Slug ? "true" : null)">@water.Name</a>
+        }
+    </nav>
+</section>
+
+<section class="page-section">
+    <SiteMap Sites="sites" />
+</section>
+
+<section class="page-section">
+    @if (sites.Count == 0)
+    {
+        <p>@L["Directory_Empty"]</p>
+    }
+    else
+    {
+        <DiveSiteList Sites="sites" />
+    }
+</section>
+
+@code {
+    private IReadOnlyList<DiveSiteListItem> sites = [];
+
+    private IReadOnlyList<WaterBodySummary> waterBodies = [];
+
+    [SupplyParameterFromQuery(Name = "gewaesser")]
+    public string? WaterBody { get; set; }
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        waterBodies = await WaterBodies.Handle(new GetWaterBodiesQuery(Language));
+        sites = await DiveSites.Handle(new GetDiveSitesQuery(Language, WaterBody));
+    }
+
+    private static string Path(string? waterBody) =>
+        waterBody is null ? $"/{Language}/{PublicRoutes.DiveSites[Language]}" : $"/{Language}/{PublicRoutes.DiveSites[Language]}?gewaesser={waterBody}";
+}

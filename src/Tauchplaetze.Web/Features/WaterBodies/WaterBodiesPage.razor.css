@@ -1,0 +1,18 @@
+.water-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.water-grid a {
+    display: block;
+    margin-top: 8px;
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    text-decoration: none;
+}

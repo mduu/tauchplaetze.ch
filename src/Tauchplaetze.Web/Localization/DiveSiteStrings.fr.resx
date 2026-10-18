@@ -19,4 +19,23 @@
   <data name="Emergency" xml:space="preserve"><value>Urgence</value></data>
   <data name="Emergency_Numbers" xml:space="preserve"><value>Ambulance 144 · Rega 1414 · Police 117</value></data>
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Tu connais ce site ?</value></data>
+  <data name="Map_Label" xml:space="preserve"><value>Carte des sites de plongée</value></data>
+  <data name="Directory_Title" xml:space="preserve"><value>Sites de plongée</value></data>
+  <data name="Directory_Lead" xml:space="preserve"><value>Tous les sites de plongée des lacs et rivières de Suisse. L'indice vaut pour aujourd'hui.</value></data>
+  <data name="Directory_Filter" xml:space="preserve"><value>Eaux</value></data>
+  <data name="Directory_Filter_All" xml:space="preserve"><value>Toutes les eaux</value></data>
+  <data name="Directory_Empty" xml:space="preserve"><value>Pas encore de sites de plongée.</value></data>
+  <data name="Directory_MetaDescription" xml:space="preserve"><value>Annuaire des sites de plongée des lacs et rivières de Suisse, avec carte et indice de plongée.</value></data>
+  <data name="DataLevel_0" xml:space="preserve"><value>pas de prévision</value></data>
+  <data name="DataLevel_1" xml:space="preserve"><value>météo seulement</value></data>
+  <data name="DataLevel_2" xml:space="preserve"><value>données pour le plan d'eau</value></data>
+  <data name="DataLevel_3" xml:space="preserve"><value>données au site</value></data>
+  <data name="WaterBodies_Title" xml:space="preserve"><value>Eaux</value></data>
+  <data name="WaterBodies_Lead" xml:space="preserve"><value>Lacs et rivières avec des sites de plongée.</value></data>
+  <data name="WaterBodies_MetaDescription" xml:space="preserve"><value>Lacs et rivières de Suisse avec sites et prévision de plongée.</value></data>
+  <data name="WaterBody_Lake" xml:space="preserve"><value>Lac</value></data>
+  <data name="WaterBody_River" xml:space="preserve"><value>Rivière</value></data>
+  <data name="WaterBody_Sites" xml:space="preserve"><value>Sites de plongée</value></data>
+  <data name="WaterBody_MetaDescription" xml:space="preserve"><value>{0} : sites de plongée, carte et prévision.</value></data>
+  <data name="Index_Today" xml:space="preserve"><value>Indice aujourd'hui</value></data>
 </root>

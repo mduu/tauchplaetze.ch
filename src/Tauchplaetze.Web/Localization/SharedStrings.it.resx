@@ -42,4 +42,8 @@
   <data name="How_Community_Text" xml:space="preserve"><value>Segnalare la visibilità dopo l'immersione migliora la previsione. Non è obbligatorio.</value></data>
   <data name="Footer_Note" xml:space="preserve"><value>Le previsioni sono indicatori, senza garanzia. Non immergerti mai da solo e resta nei limiti della tua formazione.</value></data>
   <data name="Footer_Emergency" xml:space="preserve"><value>Emergenza: ambulanza 144 · Rega 1414</value></data>
+  <data name="Nav_Label" xml:space="preserve"><value>Navigazione principale</value></data>
+  <data name="Nav_Forecast" xml:space="preserve"><value>Previsione</value></data>
+  <data name="Nav_DiveSites" xml:space="preserve"><value>Siti d'immersione</value></data>
+  <data name="Nav_WaterBodies" xml:space="preserve"><value>Acque</value></data>
 </root>

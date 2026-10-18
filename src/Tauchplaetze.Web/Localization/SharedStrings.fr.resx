@@ -42,4 +42,8 @@
   <data name="How_Community_Text" xml:space="preserve"><value>Signaler la visibilité après la plongée améliore la prévision. Ce n'est pas obligatoire.</value></data>
   <data name="Footer_Note" xml:space="preserve"><value>Les prévisions sont des indicateurs, sans garantie. Ne plonge jamais seul et reste dans les limites de ta formation.</value></data>
   <data name="Footer_Emergency" xml:space="preserve"><value>Urgence : ambulance 144 · Rega 1414</value></data>
+  <data name="Nav_Label" xml:space="preserve"><value>Navigation principale</value></data>
+  <data name="Nav_Forecast" xml:space="preserve"><value>Prévision</value></data>
+  <data name="Nav_DiveSites" xml:space="preserve"><value>Sites de plongée</value></data>
+  <data name="Nav_WaterBodies" xml:space="preserve"><value>Eaux</value></data>
 </root>

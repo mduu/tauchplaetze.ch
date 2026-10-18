@@ -1,0 +1,21 @@
+.main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.main-nav a {
+    padding: 12px 14px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+}
+
+.main-nav a:hover {
+    color: var(--color-text);
+}
+
+.main-nav a[aria-current="page"] {
+    color: var(--color-text);
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-primary);
+}

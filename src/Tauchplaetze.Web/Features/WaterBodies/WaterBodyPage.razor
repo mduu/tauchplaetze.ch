@@ -1,0 +1,66 @@
+@page "/de/gewaesser/{Slug}"
+@page "/en/waters/{Slug}"
+@page "/fr/eaux/{Slug}"
+@page "/it/acque/{Slug}"
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.DiveSites.Queries
+@using Tauchplaetze.Core.Features.WaterBodies.Queries
+@using Tauchplaetze.Web.Features.DiveSites
+@inject IQueryHandler<GetWaterBodyQuery, WaterBodyDetails?> WaterBodyQuery
+@inject IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> DiveSites
+@inject IStringLocalizer<SharedStrings> Shared
+@inject IStringLocalizer<DiveSiteStrings> L
+@inject NavigationManager Navigation
+
+@if (water is not null)
+{
+    <PageTitle>@water.Name · @Shared["Brand"]</PageTitle>
+    <HeadContent>
+        <meta name="description" content="@L["WaterBody_MetaDescription", water.Name]" />
+    </HeadContent>
+    <HreflangLinks />
+
+    <UnderwaterHero>
+        <p class="eyebrow">@L[$"WaterBody_{water.Type}"]</p>
+        <h1 class="water-name">@water.Name</h1>
+    </UnderwaterHero>
+
+    <section class="page-section">
+        <SiteMap Sites="sites" Latitude="water.Latitude" Longitude="water.Longitude" Zoom="11" />
+    </section>
+
+    <section class="page-section">
+        <h2 class="practical-title">@L["WaterBody_Sites"]</h2>
+        @if (sites.Count == 0)
+        {
+            <p>@L["Directory_Empty"]</p>
+        }
+        else
+        {
+            <DiveSiteList Sites="sites" />
+        }
+    </section>
+}
+
+@code {
+    private WaterBodyDetails? water;
+
+    private IReadOnlyList<DiveSiteListItem> sites = [];
+
+    [Parameter]
+    public string Slug { get; set; } = "";
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        water = await WaterBodyQuery.Handle(new GetWaterBodyQuery(Slug, Language));
+        if (water is null)
+        {
+            Navigation.NotFound();
+            return;
+        }
+
+        sites = await DiveSites.Handle(new GetDiveSitesQuery(Language, Slug));
+    }
+}

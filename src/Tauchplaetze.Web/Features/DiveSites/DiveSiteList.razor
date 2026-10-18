@@ -1,0 +1,29 @@
+@using Tauchplaetze.Core.Features.DiveSites.Queries
+@using Tauchplaetze.Web.Features.Forecasts
+@inject IStringLocalizer<DiveSiteStrings> L
+
+<ul class="site-list">
+    @foreach (var site in Sites)
+    {
+        <li>
+            <div>
+                <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
+                <span class="where">@string.Join(" · ", new[] { site.Municipality, site.WaterBodyName }.OfType<string>())</span>
+                @if (site.DataLevel is { } level)
+                {
+                    <span class="label">@L[$"DataLevel_{level}"]</span>
+                }
+            </div>
+            <div class="index-today" data-index-band="@ForecastFormat.IndexBand(site.DiveIndexToday)" title="@L["Index_Today"]">
+                @(site.DiveIndexToday is { } index ? ForecastFormat.Number(index) : "–")
+            </div>
+        </li>
+    }
+</ul>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<DiveSiteListItem> Sites { get; set; } = [];
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}

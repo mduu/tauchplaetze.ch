@@ -1,0 +1,19 @@
+@inject IStringLocalizer<SharedStrings> L
+@inject NavigationManager Navigation
+
+<nav class="main-nav" aria-label="@L["Nav_Label"]">
+    <a href="/@Language" aria-current="@Current(null)">@L["Nav_Forecast"]</a>
+    <a href="/@Language/@PublicRoutes.DiveSites[Language]" aria-current="@Current(PublicRoutes.DiveSites)">@L["Nav_DiveSites"]</a>
+    <a href="/@Language/@PublicRoutes.WaterBodies[Language]" aria-current="@Current(PublicRoutes.WaterBodies)">@L["Nav_WaterBodies"]</a>
+</nav>
+
+@code {
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string? Current(IReadOnlyDictionary<string, string>? section)
+    {
+        var segments = Navigation.ToBaseRelativePath(Navigation.Uri).Split('?', '#')[0].Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var active = section is null ? segments.Length == 1 : segments.Length > 1 && segments[1] == section[Language];
+        return active ? "page" : null;
+    }
+}

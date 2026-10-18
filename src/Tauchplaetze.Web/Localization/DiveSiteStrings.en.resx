@@ -19,4 +19,23 @@
   <data name="Emergency" xml:space="preserve"><value>Emergency</value></data>
   <data name="Emergency_Numbers" xml:space="preserve"><value>Ambulance 144 · Rega 1414 · Police 117</value></data>
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Do you know this site?</value></data>
+  <data name="Map_Label" xml:space="preserve"><value>Map of dive sites</value></data>
+  <data name="Directory_Title" xml:space="preserve"><value>Dive sites</value></data>
+  <data name="Directory_Lead" xml:space="preserve"><value>All dive sites in Swiss lakes and rivers. The index is for today.</value></data>
+  <data name="Directory_Filter" xml:space="preserve"><value>Water</value></data>
+  <data name="Directory_Filter_All" xml:space="preserve"><value>All waters</value></data>
+  <data name="Directory_Empty" xml:space="preserve"><value>No dive sites yet.</value></data>
+  <data name="Directory_MetaDescription" xml:space="preserve"><value>Directory of dive sites in Swiss lakes and rivers, with map and dive index.</value></data>
+  <data name="DataLevel_0" xml:space="preserve"><value>no forecast</value></data>
+  <data name="DataLevel_1" xml:space="preserve"><value>weather only</value></data>
+  <data name="DataLevel_2" xml:space="preserve"><value>data for the water body</value></data>
+  <data name="DataLevel_3" xml:space="preserve"><value>data at the site</value></data>
+  <data name="WaterBodies_Title" xml:space="preserve"><value>Waters</value></data>
+  <data name="WaterBodies_Lead" xml:space="preserve"><value>Lakes and rivers with dive sites.</value></data>
+  <data name="WaterBodies_MetaDescription" xml:space="preserve"><value>Swiss lakes and rivers with dive sites and dive forecast.</value></data>
+  <data name="WaterBody_Lake" xml:space="preserve"><value>Lake</value></data>
+  <data name="WaterBody_River" xml:space="preserve"><value>River</value></data>
+  <data name="WaterBody_Sites" xml:space="preserve"><value>Dive sites</value></data>
+  <data name="WaterBody_MetaDescription" xml:space="preserve"><value>{0}: dive sites, map and dive forecast.</value></data>
+  <data name="Index_Today" xml:space="preserve"><value>Index today</value></data>
 </root>

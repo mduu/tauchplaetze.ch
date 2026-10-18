@@ -42,4 +42,8 @@
   <data name="How_Community_Text" xml:space="preserve"><value>Wer nach dem Tauchgang die Sicht meldet, verbessert die Prognose. Nötig ist es nicht.</value></data>
   <data name="Footer_Note" xml:space="preserve"><value>Prognosen sind Indikatoren, Angaben ohne Gewähr. Tauche nie allein und innerhalb deiner Ausbildung.</value></data>
   <data name="Footer_Emergency" xml:space="preserve"><value>Notfall: Sanität 144 · Rega 1414</value></data>
+  <data name="Nav_Label" xml:space="preserve"><value>Hauptnavigation</value></data>
+  <data name="Nav_Forecast" xml:space="preserve"><value>Prognose</value></data>
+  <data name="Nav_DiveSites" xml:space="preserve"><value>Tauchplätze</value></data>
+  <data name="Nav_WaterBodies" xml:space="preserve"><value>Gewässer</value></data>
 </root>

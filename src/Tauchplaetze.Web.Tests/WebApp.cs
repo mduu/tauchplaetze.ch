@@ -10,6 +10,8 @@ using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
+using Tauchplaetze.Core.Features.WaterBodies;
+using Tauchplaetze.Core.Features.WaterBodies.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -22,6 +24,12 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeBestSites BestSites { get; } = new();
 
+    public FakeQuery<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> SiteList { get; } = new(_ => []);
+
+    public FakeQuery<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>> WaterBodyList { get; } = new(_ => []);
+
+    public FakeQuery<GetWaterBodyQuery, WaterBodyDetails?> WaterBody { get; } = new(_ => null);
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("ConnectionStrings:tauchplaetze", "Server=127.0.0.1,1;Database=tauchplaetze;User Id=test;Password=test;TrustServerCertificate=true");
@@ -31,6 +39,9 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetBestSitesQuery, BestSites>>(BestSites));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>>>(SiteList));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>>(WaterBodyList));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyQuery, WaterBodyDetails?>>(WaterBody));
         });
     }
 
@@ -101,5 +112,19 @@ public sealed class FakeBestSites : IQueryHandler<GetBestSitesQuery, BestSites>
         var days = Enumerable.Range(0, 5).Select(Today.AddDays).ToList();
         var date = query.Date is { } wanted && days.Contains(wanted) ? wanted : Today;
         return Task.FromResult(new BestSites(date, days, Ranking));
+    }
+}
+
+/// <summary>Eine Query mit fester Antwort. <see cref="Answer"/> lässt sich pro Test setzen.</summary>
+public sealed class FakeQuery<TQuery, TResult>(Func<TQuery, TResult> answer) : IQueryHandler<TQuery, TResult>
+{
+    public Func<TQuery, TResult> Answer { get; set; } = answer;
+
+    public TQuery? LastQuery { get; private set; }
+
+    public Task<TResult> Handle(TQuery query, CancellationToken ct = default)
+    {
+        LastQuery = query;
+        return Task.FromResult(Answer(query));
     }
 }

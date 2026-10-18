@@ -42,4 +42,8 @@
   <data name="How_Community_Text" xml:space="preserve"><value>Reporting the visibility after a dive improves the forecast. It is not required.</value></data>
   <data name="Footer_Note" xml:space="preserve"><value>Forecasts are indicators, without guarantee. Never dive alone and stay within your training.</value></data>
   <data name="Footer_Emergency" xml:space="preserve"><value>Emergency: ambulance 144 · Rega 1414</value></data>
+  <data name="Nav_Label" xml:space="preserve"><value>Main navigation</value></data>
+  <data name="Nav_Forecast" xml:space="preserve"><value>Forecast</value></data>
+  <data name="Nav_DiveSites" xml:space="preserve"><value>Dive sites</value></data>
+  <data name="Nav_WaterBodies" xml:space="preserve"><value>Waters</value></data>
 </root>

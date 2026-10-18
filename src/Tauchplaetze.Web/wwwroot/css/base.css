@@ -146,3 +146,19 @@ a:hover {
 .callout h3 {
   color: var(--color-bg);
 }
+
+.page-title {
+  font-size: clamp(40px, 6vw, 80px);
+}
+
+.lead {
+  margin: 18px 0 0;
+  max-width: 58ch;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.leaflet-container {
+  font-family: var(--font-body);
+}
