@@ -9,7 +9,7 @@ internal record DayInputs(
     double? DischargeRatio,
     bool IsRiver);
 
-/// <summary>Die Teilwerte 1 bis 10. <c>null</c>, wenn die Daten fehlen.</summary>
+/// <summary>Die Teilwerte 1 bis 10. Die Klarheit hat immer einen Wert (ohne Satellit vorsichtig), Wind, Zuflüsse und Schichtung sind <c>null</c> ohne Daten.</summary>
 internal record SubScores(double? Clarity, double? Wind, double? Inflow, double? Stratification);
 
 /// <summary>Index und Begründung eines Tages. <see cref="DiveIndex"/> ist <c>null</c> ohne Wind oder ohne Wasserdaten (Ausblick).</summary>
@@ -66,7 +66,7 @@ internal static class DiveIndexCalculator
             return score;
         }
 
-        var share = Math.Min(1, (double)(ageDays - rules.SatelliteFullAgeDays) / (rules.SatelliteMaxAgeDays - rules.SatelliteFullAgeDays));
+        var share = Math.Min(1, (double)(ageDays - rules.SatelliteFullAgeDays) / rules.AgingDays);
         return score - (score - rules.UnknownClarityScore) * share;
     }
 
@@ -107,11 +107,18 @@ internal static class DiveIndexCalculator
         return SurfaceIsModerate(inputs, rules) ? score : Math.Min(score, rules.MaxStratificationWithTurbidSurface);
     }
 
-    /// <summary>Volle Punkte für die Tiefe nur, wenn auch der Abstieg durch die Oberfläche mindestens mässig ist.</summary>
-    private static bool SurfaceIsModerate(DayInputs inputs, DiveIndexRules rules) => inputs.Clarity.ShoreDepth >= rules.SurfaceModerateFrom;
+    /// <summary>
+    /// Volle Punkte für die Tiefe nur, wenn auch der Abstieg durch die Oberfläche mindestens mässig ist, und zwar laut einem frischen Satellitenwert.
+    /// </summary>
+    private static bool SurfaceIsModerate(DayInputs inputs, DiveIndexRules rules) =>
+        inputs.Clarity.ShoreDepth >= rules.SurfaceModerateFrom && HasFreshClarity(inputs, rules);
 
+    private static bool HasFreshClarity(DayInputs inputs, DiveIndexRules rules) =>
+        inputs.Clarity is { ShoreDepth: not null, AgeDays: var age } && (age ?? 0) <= rules.SatelliteFullAgeDays;
+
+    /// <remarks>Die Obergrenze gilt, sobald der Satellitenwert altert. So springt der Index am Tag, an dem der Wert unbekannt wird, nicht nach oben.</remarks>
     private static double Capped(double index, DayInputs inputs, DiveIndexRules rules) =>
-        inputs.Clarity.ShoreDepth is null ? Math.Min(index, rules.MaxIndexWithoutClarity) : index;
+        HasFreshClarity(inputs, rules) ? index : Math.Min(index, rules.MaxIndexWithoutClarity);
 
     private static double WeightedMean(SubScores scores, DiveIndexRules rules)
     {

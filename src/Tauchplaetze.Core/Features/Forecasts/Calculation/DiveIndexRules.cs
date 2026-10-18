@@ -33,6 +33,11 @@ internal record DiveIndexRules
     /// <summary>Bis zu diesem Alter in Tagen zählt der Satellitenwert voll. Danach nähern sich die Punkte bis <see cref="SatelliteMaxAgeDays"/> linear <see cref="UnknownClarityScore"/>.</summary>
     public int SatelliteFullAgeDays { get; init; } = 5;
 
+    /// <summary>Tage, über die ein alter Satellitenwert zum vorsichtigen Wert wird. Braucht <see cref="SatelliteFullAgeDays"/> &lt; <see cref="SatelliteMaxAgeDays"/>.</summary>
+    public int AgingDays => SatelliteMaxAgeDays > SatelliteFullAgeDays
+        ? SatelliteMaxAgeDays - SatelliteFullAgeDays
+        : throw new InvalidOperationException($"{nameof(SatelliteFullAgeDays)} muss kleiner sein als {nameof(SatelliteMaxAgeDays)}.");
+
     /// <summary>Punkte für die Klarheit, wenn kein gültiger Satellitenwert da ist.</summary>
     public double UnknownClarityScore { get; init; } = 4;
 

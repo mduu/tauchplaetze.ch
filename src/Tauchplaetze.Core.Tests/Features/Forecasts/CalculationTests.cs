@@ -239,39 +239,79 @@ public class DiveIndexTests
     }
 
     [Fact]
-    public void Fehlt_die_Klarheit_zaehlt_sie_vorsichtig_und_die_Schichtung_hoechstens_7()
+    public void Fehlt_die_Klarheit_zaehlt_sie_vorsichtig_die_Schichtung_hoechstens_7_und_der_Index_hoechstens_6_5()
     {
         // Arrange
-        var windy = Calm with { WindMaxKmh = 24 };
-        var inputs = new DayInputs(windy, Summer, ClarityEstimate.Unknown, AlgaeLevel.Unknown, null, IsRiver: false);
+        var inputs = new DayInputs(Calm, Summer, ClarityEstimate.Unknown, AlgaeLevel.Unknown, null, IsRiver: false);
 
         // Act
         var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
 
         // Assert
         Assert.Equal((4.0, 7.0), (result.Scores.Clarity, result.Scores.Stratification));
-        Assert.Equal(Math.Round(4 * 0.35 + 4 * 0.25 + 10 * 0.20 + 7 * 0.20, 1), result.DiveIndex);
+        Assert.Equal(6.5, result.DiveIndex);
     }
 
     [Theory]
-    [InlineData(5)]
-    [InlineData(12)]
-    [InlineData(24)]
-    [InlineData(35)]
-    public void Ohne_Sichtwert_ist_der_Index_nie_besser_als_mit_maessiger_Sicht_und_hoechstens_6_5(double windKmh)
+    [InlineData(8)]
+    [InlineData(33)]
+    public void Ohne_Sichtwert_ist_der_Index_nie_besser_als_mit_frischen_4_7_m_in_Ufernaehe(double windKmh)
     {
         // Arrange
         var weather = Calm with { WindMaxKmh = windKmh };
         var unknown = new DayInputs(weather, Summer, ClarityEstimate.Unknown, AlgaeLevel.Unknown, 1.0, IsRiver: false);
-        var moderate = new DayInputs(weather, Summer, Clear(6), AlgaeLevel.Low, 1.0, IsRiver: false);
+        var moderate = new DayInputs(weather, Summer, Clear(6.72), AlgaeLevel.Low, 1.0, IsRiver: false);
 
         // Act
         var withoutClarity = DiveIndexCalculator.Calculate(unknown, DiveIndexRules.Default).DiveIndex!.Value;
         var withModerate = DiveIndexCalculator.Calculate(moderate, DiveIndexRules.Default).DiveIndex!.Value;
 
         // Assert
-        Assert.True(withoutClarity <= withModerate, $"ohne Sicht {withoutClarity}, mässig {withModerate}");
-        Assert.True(withoutClarity <= 6.5, $"ohne Sicht {withoutClarity}");
+        Assert.Equal(4.7, moderate.Clarity.ShoreDepth);
+        Assert.True(withoutClarity <= withModerate, $"ohne Sicht {withoutClarity}, 4.7 m {withModerate}");
+    }
+
+    [Theory]
+    [InlineData(4.29, 3.0, 10.0, true)]
+    [InlineData(4.14, 2.9, 7.0, false)]
+    public void Erst_ab_3_m_in_Ufernaehe_gibt_die_Schichtung_volle_Punkte(double openWater, double shore, double stratification, bool clearBelow)
+    {
+        // Arrange
+        var inputs = new DayInputs(Calm, Summer, Clear(openWater), AlgaeLevel.Low, 1.0, IsRiver: false);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Equal(shore, inputs.Clarity.ShoreDepth);
+        Assert.Equal(stratification, result.Scores.Stratification);
+        Assert.Equal(clearBelow, result.Reasons.Contains(ReasonCode.ClearBelowThermocline));
+    }
+
+    [Theory]
+    [InlineData(5, false)]
+    [InlineData(6, true)]
+    [InlineData(14, true)]
+    [InlineData(15, true)]
+    public void Sobald_der_Satellitenwert_altert_gilt_die_Obergrenze_ohne_Sichtwert(int ageDays, bool capped)
+    {
+        // Arrange
+        var result = IndexAtAge(ageDays);
+
+        // Assert
+        Assert.Equal(capped, result.DiveIndex <= 6.5);
+        Assert.Equal(capped, result.Scores.Stratification <= 7);
+    }
+
+    [Fact]
+    public void Am_Tag_an_dem_der_Satellitenwert_unbekannt_wird_springt_der_Index_nicht_nach_oben()
+    {
+        // Act
+        var lastDay = IndexAtAge(14).DiveIndex!.Value;
+        var unknown = IndexAtAge(15).DiveIndex!.Value;
+
+        // Assert
+        Assert.True(unknown <= lastDay, $"Tag 14: {lastDay}, Tag 15: {unknown}");
     }
 
     [Theory]
@@ -352,6 +392,13 @@ public class DiveIndexTests
         Assert.Null(result.Scores.Stratification);
         Assert.Equal(6.5, result.DiveIndex);
         Assert.DoesNotContain(ReasonCode.ClarityUnknown, result.Reasons);
+    }
+
+    private static DayResult IndexAtAge(int ageDays)
+    {
+        var day = new DateOnly(2026, 10, 18);
+        var clarity = ClarityEstimate.For(day, new SatelliteObservation(day.AddDays(-ageDays), 15), 0, 1, DiveIndexRules.Default);
+        return DiveIndexCalculator.Calculate(new DayInputs(Calm, Summer, clarity, AlgaeLevel.Low, 1.0, IsRiver: false), DiveIndexRules.Default);
     }
 
     private static ClarityEstimate Clear(double secchi) =>

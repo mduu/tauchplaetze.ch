@@ -115,20 +115,21 @@ Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 | Uferfaktor | Secchi aus der Seemitte × 0.7 = Secchi in Ufernähe |
 | Wind | 2 Bft → 10, 5 Bft → 1 |
 | Zuflüsse | Regen 72 h 5 mm → 10, 40 mm → 1. Abfluss 1.2 × Median → 10, 3 × Median → 1. Der tiefere Wert zählt. |
-| Schichtung | Untergrenze der Sprungschicht 20 m → 10, 30 m → 1. Bei Klarheit ab 7 Punkten mindestens 6. Durchmischter See: wenig Algen 10, mittel 6, Blüte 3. Ist die Oberfläche in Ufernähe trüber als 3 m oder unbekannt: höchstens 7. Fluss: entfällt. |
+| Schichtung | Untergrenze der Sprungschicht 20 m → 10, 30 m → 1. Bei Klarheit ab 7 Punkten mindestens 6. Durchmischter See: wenig Algen 10, mittel 6, Blüte 3. Volle Punkte nur mit frischem Satellitenwert (bis 5 Tage) und mindestens 3 m in Ufernähe. Sonst höchstens 7. Fluss: entfällt. |
 | Algen | Chlorophyll unter 4 mg/m³ wenig, unter 10 mittel, sonst Blüte |
 | Korrektur Klarheit | Regen seit dem Bild 5 mm → 100 %, 30 mm → 60 %. Abfluss 1.2 × Median → 100 %, 3 × Median → 60 %. Der tiefere Wert zählt. |
 | Sicht-Indikator | Secchi in Ufernähe ab 10 m sehr gut, ab 6 m gut, ab 3 m mässig, sonst schlecht |
-| Ohne Sichtwert | Index höchstens 6.5 |
+| Ohne frischen Sichtwert | Index höchstens 6.5 (Satellitenwert unbekannt oder älter als 5 Tage) |
 | Datenstufe 3 | Gitterpunkt des 3D-Modells höchstens 500 m vom Platz |
 
-Diese Werte sind Annahmen. Meldungen und eigene Tauchgänge prüfen sie. Zwischenwerte linear interpolieren. Die Stützpunkte und Gewichte stehen in `appsettings.json` (`Forecast:Rules`). So lassen sie sich ohne Code anpassen. Jede Änderung erhöht die `ModelVersion` (`rules-1.1`, …). **Stand 18.10.2026:** Die Werte stehen erst im Code (`DiveIndexRules`), die Bindung an `Forecast:Rules` fehlt noch.
+Diese Werte sind Annahmen. Meldungen und eigene Tauchgänge prüfen sie. Zwischenwerte linear interpolieren. Die Stützpunkte und Gewichte stehen in `appsettings.json` (`Forecast:Rules`). So lassen sie sich ohne Code anpassen. Jede Änderung erhöht die `ModelVersion` (`rules-1.1`, …). **Stand 18.10.2026:** Die Werte stehen erst im Code (`DiveIndexRules`), die Bindung an `Forecast:Rules` fehlt noch. Bei der Bindung gilt: `SatelliteFullAgeDays` muss kleiner sein als `SatelliteMaxAgeDays`, sonst wirft die Berechnung (`DiveIndexRules.AgingDays`).
 
 Für Flussplätze gilt dieselbe Formel. Die Schichtung fällt weg (Fluss ist durchmischt). Der Abfluss zählt doppelt: einmal als Zufluss, einmal als Strömung (über 1.5 × Median gibt es Abzug). Die Werte stehen ebenfalls in `Forecast:Rules`.
 
 **Fehlende Daten:**
 - Der Index braucht den Wind **und** Wasserdaten (Klarheit, Profil oder Flussstation). Fehlt eines davon, ist der Index `null`. Die Seite zeigt dann die vorhandenen Werte ohne Index. An Tagen ohne Wasserdaten heisst das «Ausblick».
-- **Fehlt nur die Klarheit**, zählt sie vorsichtig mit 4 Punkten, ihr Gewicht bleibt bei ihr. Der Index ist dann höchstens 6.5. Ein Tag ohne Sichtwert ist so nie besser als ein Tag mit mässiger Sicht. Das gilt auch für Flüsse ohne Trübungsmessung.
+- **Fehlt nur die Klarheit**, zählt sie vorsichtig mit 4 Punkten, ihr Gewicht bleibt bei ihr. Ein Tag ohne Sichtwert zählt so wie eine Sicht von rund 4.7 m in Ufernähe (mässig) und erreicht höchstens 6.5. Das gilt auch für Flüsse ohne Trübungsmessung.
+- **Alternder Satellitenwert:** Ab Tag 6 gelten dieselben Obergrenzen wie ohne Sichtwert (Index höchstens 6.5, Schichtung höchstens 7). So springt der Index an Tag 15, wenn der Wert unbekannt wird, nicht nach oben.
 - Fehlen Zuflüsse oder Schichtung (Fluss), verteilt sich ihr Gewicht auf die anderen Teilwerte.
 
 **Begründung:** Der Algorithmus speichert `ReasonCodes` (z.B. `CalmLake`, `ClearBelowThermocline`, `TurbidAfterRain`, `WindAfternoon`). Die Oberfläche bildet daraus einen Satz aus den `.resx`-Ressourcen. So ist die Begründung in allen vier Sprachen verfügbar.
