@@ -38,7 +38,7 @@ public class ImportDiveSitesTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Der_Import_uebernimmt_Tiefe_Schwierigkeit_Steilwand_und_Zugang_als_Startwerte()
+    public async Task Der_Import_uebernimmt_Tiefe_Schwierigkeit_Steilwand_Zugang_und_weitere_Namen_als_Startwerte()
     {
         // Arrange
         var editorId = await PrepareWaterBodiesAndAdmin();
@@ -51,6 +51,8 @@ public class ImportDiveSitesTests(SqlServer sql) : SqlTest(sql)
         var dbContext = scope.ServiceProvider.GetRequiredService<TauchplaetzeDbContext>();
         var site = await dbContext.DiveSites.SingleAsync(d => d.Slug == "chappeli-oberaegeri", TestContext.Current.CancellationToken);
         Assert.Equal((30, (byte?)2, (byte?)4, DiveSiteAccess.Shore), (site.MaxDepth, site.DifficultyRating, site.WallRating, site.Access));
+        var steinrad = await dbContext.DiveSites.SingleAsync(d => d.Name == "Steinrad", TestContext.Current.CancellationToken);
+        Assert.Equal("""["Grosser Parkplatz","Seeterasse"]""", steinrad.OtherNames);
     }
 
     [SqlFact]

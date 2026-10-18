@@ -1,7 +1,7 @@
 #:property PublishAot=false
 
 // Holt die Tauchplätze der Schweiz aus OpenStreetMap (ODbL) und ergänzt die Seeds der App.
-// Übernimmt nur Name, Koordinate, Gewässer, Gemeinde und Kanton, dazu Einstiege, Ausstiege und Parkplätze als Orte des Platzes.
+// Übernimmt Name, weitere Namen, Koordinate, Gewässer, Gemeinde und Kanton, dazu Einstiege und Ausstiege als Orte des Platzes.
 // Aufruf aus dem Repository: dotnet run tools/osm-import/osm-dive-sites.cs [-- --cached] [-- --exclude-source <regex>]
 // Ergebnis: neue Einträge in den Seeds (src/Tauchplaetze.Core/Features/…/Seed/*.json) und tools/osm-import/out/review.md.
 // Ablauf und Regeln: specs/data-sources.md, «OpenStreetMap».
@@ -213,7 +213,8 @@ static IEnumerable<Candidate> Candidates(JsonArray elements)
             }
 
             var (latitude, longitude) = Osm.Position(element);
-            current = new Candidate($"{type}/{element["id"]}", Osm.Tag(tags, "name"), latitude, longitude, Osm.Tag(tags, "source"), null, null, null, Facts.From(tags!));
+            var name = Osm.Tag(tags, "name") is { } osmName ? Names.Site.GetValueOrDefault(osmName, osmName) : null;
+            current = new Candidate($"{type}/{element["id"]}", name, latitude, longitude, Osm.Tag(tags, "source"), null, null, null, Facts.From(tags!), Names.OthersOf(name, Osm.Tag(tags, "alt_name")));
             waters = [];
         }
         else if (current is null)
@@ -247,9 +248,8 @@ static IEnumerable<Candidate> Candidates(JsonArray elements)
 
 static List<Site> Group(List<Candidate> candidates, Review review)
 {
-    var parkings = candidates.Where(c => Patterns.Parking.IsMatch(c.Name!)).ToList();
-    var entries = candidates.Where(c => Patterns.EntryPoint.IsMatch(c.Name!)).Except(parkings).ToList();
-    var sites = candidates.Except(entries).Except(parkings).Select(c => new Site(c.Name!, c.Latitude, c.Longitude, c.Water!, c.Municipality, c.Canton, [c.OsmId], [], c.Facts)).ToList();
+    var entries = candidates.Where(c => Patterns.EntryPoint.IsMatch(c.Name!)).ToList();
+    var sites = candidates.Except(entries).Select(c => new Site(c.Name!, c.Latitude, c.Longitude, c.Water!, c.Municipality, c.Canton, [c.OsmId], [], c.Facts, c.OtherNames ?? [])).ToList();
 
     foreach (var entry in entries.OrderBy(e => e.Name))
     {
@@ -280,23 +280,6 @@ static List<Site> Group(List<Candidate> candidates, Review review)
         review.Grouped.Add($"«{entry.Name}» → Einstieg ({kind}) von «{site.Name}»");
     }
 
-    foreach (var parking in parkings)
-    {
-        var site = sites
-            .Where(s => Distance(s.Latitude, s.Longitude, parking.Latitude, parking.Longitude) < 400)
-            .OrderBy(s => Distance(s.Latitude, s.Longitude, parking.Latitude, parking.Longitude))
-            .FirstOrDefault();
-        if (site is null)
-        {
-            review.Skipped.Add($"Parkplatz ohne Platz in 400 m: {parking.Name} ({Coordinates(parking)})");
-            continue;
-        }
-
-        site.OsmIds.Add(parking.OsmId);
-        site.EntryPoints.Add(new EntryPoint("Parking", parking.Name, parking.Latitude, parking.Longitude));
-        review.Grouped.Add($"«{parking.Name}» → Parkplatz von «{site.Name}»");
-    }
-
     return sites;
 }
 
@@ -312,6 +295,11 @@ static JsonObject ToSeed(Site site, string waterSlug)
         ["canton"] = site.Canton,
         ["osm"] = new JsonArray([.. site.OsmIds.Select(id => JsonValue.Create(id))]),
     };
+
+    if (site.OtherNames is { Count: > 0 } others)
+    {
+        seed["otherNames"] = new JsonArray([.. others.Select(n => JsonValue.Create(n))]);
+    }
 
     if (site.Facts is { IsEmpty: false } facts)
     {
@@ -406,10 +394,33 @@ static class Patterns
     /// <summary>Seegebiete ohne Gemeinde, z.B. «Lago Maggiore (TI)» oder «Lac de Neuchâtel (NE)».</summary>
     public static readonly Regex LakeTerritory = new(@"^(Lac|Lago|Lai|Lej)\b|see \([A-Z]{2}\)$", RegexOptions.IgnoreCase);
 
-    public static readonly Regex Parking = new(@"\b(Parkplatz|Parking|Parcheggio)\b", RegexOptions.IgnoreCase);
 }
 
-sealed record Candidate(string OsmId, string? Name, double Latitude, double Longitude, string? Source, Water? Water, string? Municipality, string? Canton, Facts? Facts = null);
+sealed record Candidate(string OsmId, string? Name, double Latitude, double Longitude, string? Source, Water? Water, string? Municipality, string? Canton, Facts? Facts = null, List<string>? OtherNames = null);
+
+// Namen, die Marc korrigiert oder ergänzt hat. Punkte mit sport=scuba_diving sind Tauchplätze, auch wenn sie «Parkplatz» heissen.
+static class Names
+{
+    /// <summary>OSM-Name → Name des Platzes (18.10.2026: Gemeinde und Flurname gehören nicht in den Namen).</summary>
+    public static readonly Dictionary<string, string> Site = new()
+    {
+        ["Kleiner Parkplatz Erlenbach Schipfe"] = "Kleiner Parkplatz",
+    };
+
+    /// <summary>Weitere Namen, die in OSM fehlen (Marc, 18.10.2026).</summary>
+    public static readonly Dictionary<string, string[]> Extra = new()
+    {
+        ["Steinrad"] = ["Grosser Parkplatz"],
+    };
+
+    /// <summary>`alt_name` (getrennt mit `;`) und die Ergänzungen, ohne den Namen selbst und ohne Dubletten.</summary>
+    public static List<string> OthersOf(string? name, string? altName) =>
+        [.. Extra.GetValueOrDefault(name ?? "", [])
+            .Concat((altName ?? "").Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+            .Where(n => !string.Equals(n, name, StringComparison.OrdinalIgnoreCase))
+            .DistinctBy(n => n.ToLowerInvariant())
+            .Take(5)];
+}
 
 /// <summary>Startwerte aus den OSM-Tags `scuba_diving:*` (Entscheid Marc, 18.10.2026). Alles optional.</summary>
 sealed record Facts(int? MaxDepth, int? Difficulty, int? Wall, int? Wrecks, string? Access, List<string> Features)
@@ -459,7 +470,7 @@ sealed record Facts(int? MaxDepth, int? Difficulty, int? Wall, int? Wrecks, stri
 
 sealed record EntryPoint(string Kind, string? Name, double Latitude, double Longitude);
 
-sealed record Site(string Name, double Latitude, double Longitude, Water Water, string? Municipality, string? Canton, List<string> OsmIds, List<EntryPoint> EntryPoints, Facts? Facts = null);
+sealed record Site(string Name, double Latitude, double Longitude, Water Water, string? Municipality, string? Canton, List<string> OsmIds, List<EntryPoint> EntryPoints, Facts? Facts = null, List<string>? OtherNames = null);
 
 sealed record Water(string NameDe, string? NameEn, string? NameFr, string? NameIt, string Type, double Latitude, double Longitude)
 {
