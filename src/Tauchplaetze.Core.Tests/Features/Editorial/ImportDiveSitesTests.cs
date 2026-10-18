@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Editorial;
@@ -34,6 +35,26 @@ public class ImportDiveSitesTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(DiveSiteStatus.Published, site.Status);
         Assert.Equal((1, RevisionStatus.Approved, editorId, editorId), (revision.Number, revision.Status, revision.AuthorId, revision.ReviewerId));
         Assert.Equal(revision.SnapshotHash, DiveSiteSnapshot.HashOf(await Sql.Revisions.Load(revision.SnapshotPath, TestContext.Current.CancellationToken)));
+    }
+
+    [SqlFact]
+    public async Task Ein_umbenannter_Platz_kommt_beim_naechsten_Import_nicht_wieder()
+    {
+        // Arrange
+        var editorId = await PrepareWaterBodiesAndAdmin();
+        await Command<ImportDiveSitesCommand, ImportDiveSitesResult>(new ImportDiveSitesCommand(editorId));
+        await Sql.Arrange(async db =>
+        {
+            var site = await db.DiveSites.SingleAsync(d => d.Slug == "riff-williams-herrliberg");
+            site.Slug = "riff-williams-am-zuerichsee";
+            db.SlugRedirects.Add(new SlugRedirect { OldSlug = "riff-williams-herrliberg", DiveSiteId = site.Id });
+        });
+
+        // Act
+        var result = await Command<ImportDiveSitesCommand, ImportDiveSitesResult>(new ImportDiveSitesCommand(editorId));
+
+        // Assert
+        Assert.Equal(0, result.Added);
     }
 
     private async Task<string> PrepareWaterBodiesAndAdmin()

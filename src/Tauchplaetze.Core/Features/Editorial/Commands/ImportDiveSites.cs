@@ -7,7 +7,10 @@ using Tauchplaetze.Core.Features.DiveSites;
 
 namespace Tauchplaetze.Core.Features.Editorial.Commands;
 
-/// <summary>Legt die Plätze aus `Seed/dive-sites.json` an, die noch fehlen. Jeder neue Platz bekommt eine freigegebene Version 1 mit <paramref name="EditorId"/> als Autor.</summary>
+/// <summary>
+/// Legt die Plätze aus `Seed/dive-sites.json` an, die noch fehlen, mit ihren Einstiegen. Jeder neue Platz bekommt eine freigegebene Version 1
+/// mit <paramref name="EditorId"/> als Autor. Ein Platz, dessen Slug später umbenannt wurde, kommt nicht wieder.
+/// </summary>
 public record ImportDiveSitesCommand(string EditorId);
 
 /// <summary>Ergebnis des Imports: Zahl der neu angelegten Plätze.</summary>
@@ -25,7 +28,9 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
     public async Task<ImportDiveSitesResult> Handle(ImportDiveSitesCommand command, CancellationToken ct = default)
     {
         var waterBodies = await dbContext.WaterBodies.ToDictionaryAsync(w => w.Slug, w => w.Id, ct);
-        var existingSlugs = await dbContext.DiveSites.Select(d => d.Slug).ToListAsync(ct);
+        var existingSlugs = (await dbContext.DiveSites.Select(d => d.Slug).ToListAsync(ct))
+            .Concat(await dbContext.SlugRedirects.Select(r => r.OldSlug).ToListAsync(ct))
+            .ToHashSet();
         var missing = (await ReadSeed(ct))
             .Select(seed => (seed, slug: Slugs.From($"{seed.Name} {seed.Municipality}")))
             .Where(s => !existingSlugs.Contains(s.slug))
@@ -74,7 +79,24 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
         SatelliteLatitude: null,
         SatelliteLongitude: null,
         ForecastDisabled: false,
-        Translations: []);
+        Translations: [],
+        EntryPoints: [.. (seed.EntryPoints ?? []).Select(ToEntryPoint)]);
 
-    private sealed record DiveSiteSeed(string Name, string WaterBody, double Latitude, double Longitude, string? Municipality, string? Canton);
+    private static EntryPointContent ToEntryPoint(EntryPointSeed seed) => new(
+        Guid.CreateVersion7(),
+        seed.Latitude,
+        seed.Longitude,
+        Enum.Parse<EntryPointKind>(seed.Kind),
+        seed.Name is null ? [] : [new EntryPointText("de", seed.Name, null)]);
+
+    private sealed record DiveSiteSeed(
+        string Name,
+        string WaterBody,
+        double Latitude,
+        double Longitude,
+        string? Municipality,
+        string? Canton,
+        IReadOnlyList<EntryPointSeed>? EntryPoints);
+
+    private sealed record EntryPointSeed(string Kind, string? Name, double Latitude, double Longitude);
 }
