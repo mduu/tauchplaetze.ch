@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using Tauchplaetze.Core.CrossCutting.Geo;
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Media;
 
 namespace Tauchplaetze.Core.Features.Editorial;
 
@@ -40,6 +41,11 @@ internal static partial class ContentValidation
             errors.Add(EditorialError.InvalidNotice);
         }
 
+        if (HasInvalidMedia(content))
+        {
+            errors.Add(EditorialError.InvalidMedia);
+        }
+
         if (content.SketchList.Count > SketchRules.MaxFeatures
             || content.SketchList.DistinctBy(f => f.Id).Count() != content.SketchList.Count
             || content.SketchList.Any(f => IsInvalid(f, content)))
@@ -54,6 +60,13 @@ internal static partial class ContentValidation
         string.IsNullOrWhiteSpace(notice.Texts.FirstOrDefault(t => t.Culture == "de")?.Text)
         || notice.Texts.Any(t => t.Text?.Trim().Length > NoticeRules.TextLength)
         || notice is { ValidFrom: { } from, ValidUntil: { } until } && until < from;
+
+    private static bool HasInvalidMedia(DiveSiteContent content) =>
+        content.MediaList.DistinctBy(m => m.MediaId).Count() != content.MediaList.Count
+        || content.HeroMediaId is { } hero && content.MediaList.All(m => m.MediaId != hero)
+        || content.MediaList.Any(m => !Enum.IsDefined(m.Section)
+            || (m.Section == MediaSection.EntryPoint) != (m.EntryPointId is not null)
+            || m.EntryPointId is { } entry && content.EntryPointList.All(e => e.Id != entry));
 
     private static bool IsInvalid(SketchFeature feature, DiveSiteContent content) =>
         !Enum.IsDefined(feature.Kind)

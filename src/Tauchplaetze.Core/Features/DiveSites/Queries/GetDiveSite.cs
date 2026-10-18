@@ -3,6 +3,7 @@ using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.DiveSites.Queries;
@@ -10,7 +11,7 @@ namespace Tauchplaetze.Core.Features.DiveSites.Queries;
 /// <summary>Ein öffentlicher Platz über seinen Slug, in der Sprache <paramref name="Culture"/>. Ein alter Slug ergibt eine Weiterleitung.</summary>
 public record GetDiveSiteQuery(string Slug, string Culture);
 
-internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider time) : IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>
+internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore media, TimeProvider time) : IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>
 {
     public async Task<DiveSiteLookup> Handle(GetDiveSiteQuery query, CancellationToken ct = default)
     {
@@ -29,6 +30,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider 
                 d.ContentLevel,
                 d.UpdatedAt,
                 d.Sketch,
+                d.HeroMediaId,
                 Ratings = new SiteRatings(d.DifficultyRating, d.WallRating, d.MarineLifeRating, d.WrecksRating, d.CurrentRating, d.SurroundingsRating),
                 WaterBody = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType },
             })
@@ -52,11 +54,34 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, TimeProvider 
                 await Notices(site.Id, query.Culture, ct),
                 await EntryPoints(site.Id, query.Culture, ct),
                 site.Ratings,
-                Sketch(site.Sketch, query.Culture))),
+                Sketch(site.Sketch, query.Culture),
+                await Photos(site.Id, query.Culture, ct),
+                site.HeroMediaId)),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),
         };
+    }
+
+    private async Task<IReadOnlyList<PublicPhoto>> Photos(Guid siteId, string culture, CancellationToken ct)
+    {
+        var items = await dbContext.MediaItems
+            .AsNoTracking()
+            .Include(m => m.Translations)
+            .Where(m => m.DiveSiteId == siteId && m.IsPublic && m.SortOrder != null)
+            .OrderBy(m => m.SortOrder)
+            .ToListAsync(ct);
+
+        return [.. items.Select(m =>
+        {
+            var text = m.Translations.FirstOrDefault(t => t.Culture == culture);
+            var german = m.Translations.FirstOrDefault(t => t.Culture == "de");
+            return new PublicPhoto(
+                m.Id, m.Section, m.EntryPointId, m.Width, m.Height, m.Depth, m.Photographer, m.PhotographerUrl,
+                text?.Caption ?? german?.Caption,
+                text?.AltText ?? german?.AltText,
+                [.. MediaFiles.WidthsFor(m.Width).Select(w => new MediaRendition(w, media.PublicUri(m.Id, MediaFiles.Rendition(w)).ToString()))]);
+        })];
     }
 
     private static IReadOnlyList<SiteSketchFeature> Sketch(string? json, string culture) =>

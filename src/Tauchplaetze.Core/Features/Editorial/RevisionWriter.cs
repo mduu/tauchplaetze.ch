@@ -3,11 +3,12 @@ using NetTopologySuite.Geometries;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Media;
 
 namespace Tauchplaetze.Core.Features.Editorial;
 
 /// <summary>Schreibt Versionen: zuerst den Inhalt in Blob Storage, dann die Row (ADR-008). Speichert nicht selbst. Das tut der Command.</summary>
-internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore store, TimeProvider time)
+internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore store, MediaPublisher media, TimeProvider time)
 {
     /// <summary>Ein neuer Platz als Entwurf, mit leerem Inhalt in den Tabellen bis zur Freigabe.</summary>
     public DiveSite NewDraft(DiveSiteContent content, string editorId)
@@ -64,14 +65,15 @@ internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore st
         return revision;
     }
 
-    /// <summary>Gibt eine Version frei: Ihr Inhalt geht online. Ein geänderter Slug hinterlässt einen Redirect (301).</summary>
+    /// <summary>Gibt eine Version frei: Ihr Inhalt und ihre Fotos gehen online. Ein geänderter Slug hinterlässt einen Redirect (301).</summary>
     public async Task Approve(DiveSite site, DiveSiteRevision revision, DiveSiteContent content, string reviewerId, CancellationToken ct)
     {
         var now = time.GetUtcNow();
         var oldSlug = site.Status == DiveSiteStatus.Draft ? null : site.Slug;
 
         DiveSiteContentMapping.ApplyTo(site, content);
-        site.ContentLevel = ContentLevelRule.For(content, site.HeroMediaId);
+        site.ContentLevel = ContentLevelRule.For(content, content.HeroMediaId);
+        await media.Publish(site.Id, content.MediaList, ct);
         site.Status = site.Status == DiveSiteStatus.Draft ? DiveSiteStatus.Published : site.Status;
         site.UpdatedAt = now;
         site.UpdatedBy = reviewerId;

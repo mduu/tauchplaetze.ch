@@ -421,7 +421,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Eine_Version_im_alten_Format_ohne_Einstiege_Hinweise_und_Skizze_laesst_sich_laden()
+    public async Task Eine_Version_im_alten_Format_ohne_Einstiege_Hinweise_Skizze_und_Fotos_laesst_sich_laden()
     {
         // Arrange
         var (_, _, site) = await Prepare();
@@ -439,6 +439,8 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.Empty(edit.Content.EntryPointList);
         Assert.Empty(edit.Content.NoticeList);
         Assert.Empty(edit.Content.SketchList);
+        Assert.Empty(edit.Content.MediaList);
+        Assert.Null(edit.Content.HeroMediaId);
     }
 
     private static SketchFeature Sketch(SketchKind kind, int? depth, (string Culture, string Label)[] labels, params (double Lat, double Lng)[] points) =>

@@ -1,3 +1,4 @@
+using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.DiveSites;
@@ -35,9 +36,17 @@ public record DiveSiteDetails(
     IReadOnlyList<SiteNotice> Notices,
     IReadOnlyList<SiteEntryPoint> EntryPoints,
     SiteRatings? Ratings = null,
-    IReadOnlyList<SiteSketchFeature>? Sketch = null)
+    IReadOnlyList<SiteSketchFeature>? Sketch = null,
+    IReadOnlyList<PublicPhoto>? Photos = null,
+    Guid? HeroMediaId = null)
 {
     public IReadOnlyList<SiteSketchFeature> SketchList => Sketch ?? [];
+
+    /// <summary>Die öffentlichen Fotos der freigegebenen Version, nach Abschnitt und Reihenfolge.</summary>
+    public IReadOnlyList<PublicPhoto> PhotoList => Photos ?? [];
+
+    /// <summary>Das Hero-Foto, falls gesetzt und öffentlich.</summary>
+    public PublicPhoto? Hero => PhotoList.FirstOrDefault(p => p.Id == HeroMediaId);
 }
 
 /// <summary>Ein Element der Tauchskizze mit der Beschriftung in der gewünschten Sprache, sonst auf Deutsch, sonst ohne.</summary>

@@ -8,7 +8,7 @@ namespace Tauchplaetze.Core.Features.Editorial;
 /// Speicherformat einer Version: der Inhalt als JSON mit `snapshotVersion` (ADR-008).
 /// </summary>
 /// <remarks>
-/// Format 1 vom 17.10.2026 hatte zuerst keine Einstiege, bis 18.10.2026 keine Hinweise und keine Skizze. Fehlen sie, gilt eine leere Liste.
+/// Format 1 vom 17.10.2026 hatte zuerst keine Einstiege, bis 18.10.2026 keine Hinweise, keine Skizze und keine Fotos. Fehlen sie, gilt eine leere Liste.
 /// Neue Felder nur optional anhängen.
 /// </remarks>
 internal static class DiveSiteSnapshot
@@ -23,6 +23,7 @@ internal static class DiveSiteSnapshot
         {
             Translations = [.. content.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal)],
             EntryPoints = content.EntryPointList,
+            Media = content.MediaList,
             Notices = [.. content.NoticeList.Select(n => n with { Texts = [.. n.Texts.OrderBy(t => t.Culture, StringComparer.Ordinal)] })],
             Sketch = [.. content.SketchList.Select(f => f with
             {
@@ -33,6 +34,13 @@ internal static class DiveSiteSnapshot
         node.Remove("entryPointList");
         node.Remove("noticeList");
         node.Remove("sketchList");
+        node.Remove("mediaList");
+        RemoveEmpty(node, "media");
+        if (node["heroMediaId"] is null)
+        {
+            node.Remove("heroMediaId");
+        }
+
         RemoveEmpty(node, "notices");
         RemoveEmpty(node, "sketch");
         node["snapshotVersion"] = CurrentVersion;
@@ -42,7 +50,7 @@ internal static class DiveSiteSnapshot
     public static DiveSiteContent FromJson(byte[] json)
     {
         var content = JsonSerializer.Deserialize<DiveSiteContent>(json, JsonOptions)!;
-        return content with { EntryPoints = content.EntryPoints ?? [], Notices = content.Notices ?? [], Sketch = content.Sketch ?? [] };
+        return content with { EntryPoints = content.EntryPoints ?? [], Notices = content.Notices ?? [], Sketch = content.Sketch ?? [], Media = content.Media ?? [] };
     }
 
     /// <remarks>Ohne Hinweise und Skizze bleibt das JSON wie vor dem 18.10.2026. So erkennt der Hash auch bei alten Versionen «keine Änderung».</remarks>

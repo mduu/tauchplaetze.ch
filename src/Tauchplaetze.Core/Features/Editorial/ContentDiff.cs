@@ -86,6 +86,14 @@ internal static class ContentDiff
             }
         }
 
+        foreach (var (use, index) in content.MediaList.Select((m, i) => (m, i + 1)))
+        {
+            fields[$"Media.{index}.Photo"] = use.MediaId.ToString();
+            fields[$"Media.{index}.Section"] = use.Section.ToString();
+        }
+
+        fields["HeroMediaId"] = content.HeroMediaId?.ToString();
+
         return fields.Where(f => !string.IsNullOrWhiteSpace(f.Value)).ToDictionary(f => f.Key, f => f.Value);
     }
 

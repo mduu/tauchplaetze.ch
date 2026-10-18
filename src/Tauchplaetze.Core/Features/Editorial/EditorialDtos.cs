@@ -1,4 +1,5 @@
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Media;
 
 namespace Tauchplaetze.Core.Features.Editorial;
 
@@ -28,8 +29,12 @@ public record DiveSiteContent(
     IReadOnlyList<DiveSiteContentTranslation> Translations,
     IReadOnlyList<EntryPointContent>? EntryPoints = null,
     IReadOnlyList<NoticeContent>? Notices = null,
-    IReadOnlyList<SketchFeature>? Sketch = null)
+    IReadOnlyList<SketchFeature>? Sketch = null,
+    IReadOnlyList<MediaUse>? Media = null,
+    Guid? HeroMediaId = null)
 {
+    public IReadOnlyList<MediaUse> MediaList => Media ?? [];
+
     public IReadOnlyList<EntryPointContent> EntryPointList => EntryPoints ?? [];
 
     public IReadOnlyList<NoticeContent> NoticeList => Notices ?? [];
@@ -61,6 +66,9 @@ public record NoticeContent(Guid Id, NoticeKind Kind, DateOnly? ValidFrom, DateO
 
 /// <summary>Text eines Hinweises in einer Sprache.</summary>
 public record NoticeText(string Culture, string? Text);
+
+/// <summary>Ein Foto in einer Version: Abschnitt und, bei «Einstieg», der Einstieg. Die Reihenfolge der Liste ist die Reihenfolge im Abschnitt.</summary>
+public record MediaUse(Guid MediaId, MediaSection Section, Guid? EntryPointId = null);
 
 /// <summary>Ein Element der Tauchskizze: Art, Punkte (WGS84), optional Tiefe in Metern und Beschriftung pro Sprache.</summary>
 public record SketchFeature(Guid Id, SketchKind Kind, IReadOnlyList<SketchPoint> Points, int? Depth, IReadOnlyList<SketchText> Texts);
@@ -109,6 +117,21 @@ public enum EditorialError
 
     /// <summary>Die Skizze hat zu viele Elemente, eine falsche Form, Punkte weit weg vom Platz, eine ungültige Tiefe oder zu lange Beschriftung.</summary>
     InvalidSketch,
+
+    /// <summary>Ein Foto gehört nicht zu diesem Platz, kommt doppelt vor, der Hero fehlt in der Liste oder ein Einstieg passt nicht.</summary>
+    InvalidMedia,
+
+    /// <summary>Die Rechte am Foto sind nicht bestätigt.</summary>
+    RightsNotConfirmed,
+
+    /// <summary>Fotograf fehlt oder ist zu lang.</summary>
+    InvalidPhotographer,
+
+    /// <summary>Die Datei ist kein JPEG, PNG oder WebP oder ist grösser als 25 MB.</summary>
+    InvalidImage,
+
+    /// <summary>Zu viele Uploads in der letzten Stunde.</summary>
+    TooManyUploads,
 }
 
 /// <summary>Ergebnis eines Commands der Redaktion. <see cref="NoChange"/>: Der Inhalt war gleich wie die Basis, es entstand keine Version.</summary>

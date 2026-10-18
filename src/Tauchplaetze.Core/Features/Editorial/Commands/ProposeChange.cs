@@ -43,6 +43,12 @@ internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWri
             errors.Add(EditorialError.InvalidSlug);
         }
 
+        var siteMedia = await dbContext.MediaItems.Where(m => m.DiveSiteId == site.Id).Select(m => m.Id).ToListAsync(ct);
+        if (content.MediaList.Any(m => !siteMedia.Contains(m.MediaId)) && !errors.Contains(EditorialError.InvalidMedia))
+        {
+            errors.Add(EditorialError.InvalidMedia);
+        }
+
         if (errors.Count > 0)
         {
             return new EditorialResult(errors);

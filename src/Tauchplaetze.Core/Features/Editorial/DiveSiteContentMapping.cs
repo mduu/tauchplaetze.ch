@@ -36,7 +36,8 @@ internal static class DiveSiteContentMapping
         [.. site.Notices.OrderBy(n => n.SortOrder).Select(n => new NoticeContent(
             n.Id, n.Kind, n.ValidFrom, n.ValidUntil,
             [.. n.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new NoticeText(t.Culture.Trim(), t.Text))]))],
-        SketchJson.Read(site.Sketch));
+        SketchJson.Read(site.Sketch),
+        HeroMediaId: site.HeroMediaId);
 
     public static void ApplyTo(DiveSite site, DiveSiteContent content)
     {
@@ -92,6 +93,7 @@ internal static class DiveSiteContentMapping
 
         ApplyNotices(site, content);
         site.Sketch = SketchJson.Write(content.SketchList);
+        site.HeroMediaId = content.HeroMediaId;
     }
 
     private static void ApplyNotices(DiveSite site, DiveSiteContent content)

@@ -32,6 +32,8 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
 
     public DbSet<SiteWeatherOutlook> SiteWeatherOutlooks => Set<SiteWeatherOutlook>();
 
+    public DbSet<MediaItem> MediaItems => Set<MediaItem>();
+
     public DbSet<WaterBodyHydroStation> WaterBodyHydroStations => Set<WaterBodyHydroStation>();
 
     protected override void OnModelCreating(ModelBuilder builder)

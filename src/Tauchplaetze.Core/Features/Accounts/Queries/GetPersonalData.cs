@@ -20,7 +20,14 @@ public record PersonalData(
     bool EmailConfirmed,
     DateTimeOffset? BlockedAt,
     IReadOnlyList<RevisionReference> Contributions,
-    IReadOnlyList<RevisionReference> Reviews);
+    IReadOnlyList<RevisionReference> Reviews,
+    IReadOnlyList<PhotoReference>? Photos = null)
+{
+    public IReadOnlyList<PhotoReference> PhotoList => Photos ?? [];
+}
+
+/// <summary>Ein hochgeladenes Foto mit Platz, Fotograf, Datum und ob es öffentlich ist.</summary>
+public record PhotoReference(Guid Id, string SiteSlug, string SiteName, string Photographer, DateTimeOffset UploadedAt, bool IsPublic);
 
 /// <summary>Eine Version mit Platz, Status, Datum und Notiz.</summary>
 public record RevisionReference(string SiteSlug, string SiteName, int Number, RevisionStatus Status, DateTimeOffset At, string? Comment);
@@ -47,8 +54,18 @@ internal class GetPersonalDataHandler(TauchplaetzeDbContext dbContext, UserManag
             user.EmailConfirmed,
             user.BlockedAt,
             contributions,
-            reviews);
+            reviews,
+            await PhotosOf(user.Id, ct));
     }
+
+    private async Task<IReadOnlyList<PhotoReference>> PhotosOf(string userId, CancellationToken ct) =>
+        await dbContext.MediaItems
+            .AsNoTracking()
+            .Where(m => m.UploadedBy == userId)
+            .Join(dbContext.DiveSites, m => m.DiveSiteId, d => d.Id, (m, d) => new { m.Id, d.Slug, d.Name, m.Photographer, m.UploadedAt, m.IsPublic })
+            .OrderByDescending(m => m.UploadedAt)
+            .Select(m => new PhotoReference(m.Id, m.Slug, m.Name, m.Photographer, m.UploadedAt, m.IsPublic))
+            .ToListAsync(ct);
 
     private async Task<IReadOnlyList<RevisionReference>> References(System.Linq.Expressions.Expression<Func<DiveSiteRevision, bool>> filter, CancellationToken ct) =>
         await dbContext.DiveSiteRevisions

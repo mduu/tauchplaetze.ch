@@ -7,6 +7,7 @@ using Tauchplaetze.Core.CrossCutting.Modules;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.Accounts;
+using Tauchplaetze.Core.Features.Media;
 
 namespace Tauchplaetze.Core;
 
@@ -32,6 +33,7 @@ public static class CoreRegistration
         builder.Services.Configure<MailOptions>(builder.Configuration.GetSection(MailOptions.Section));
         builder.Services.Configure<AccountsOptions>(builder.Configuration.GetSection(AccountsOptions.Section));
         builder.Services.Configure<PublicSiteOptions>(builder.Configuration.GetSection(PublicSiteOptions.Section));
+        builder.Services.Configure<MediaOptions>(builder.Configuration.GetSection(MediaOptions.Section));
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddHandlers(typeof(CoreRegistration).Assembly);
         builder.Services.AddCoreModules(typeof(CoreRegistration).Assembly);

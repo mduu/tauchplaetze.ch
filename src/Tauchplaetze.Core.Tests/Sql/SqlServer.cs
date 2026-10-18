@@ -1,3 +1,5 @@
+using Tauchplaetze.Core.Features.Accounts;
+using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
 using Tauchplaetze.Core.Features.WaterBodies;
@@ -15,6 +17,7 @@ using Tauchplaetze.Core.CrossCutting.Storage;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Core.Features.Operations.Commands;
 using Testcontainers.MsSql;
 
@@ -37,6 +40,8 @@ public sealed class SqlServer : IAsyncLifetime
     internal InMemoryRevisionStore Revisions { get; } = new();
 
     internal InMemoryRawDataStore RawData { get; } = new();
+
+    internal InMemoryMediaStore Media { get; } = new();
 
     internal InMemoryRunLock RunLock { get; } = new();
 
@@ -70,6 +75,7 @@ public sealed class SqlServer : IAsyncLifetime
         builder.AddTauchplaetzeCore();
         builder.Services.Replace(ServiceDescriptor.Singleton<IRevisionStore>(Revisions));
         builder.Services.Replace(ServiceDescriptor.Singleton<IRawDataStore>(RawData));
+        builder.Services.Replace(ServiceDescriptor.Singleton<IMediaStore>(Media));
         builder.Services.Replace(ServiceDescriptor.Singleton<IRunLock>(RunLock));
         builder.Services.Replace(ServiceDescriptor.Singleton<TimeProvider>(Time));
         builder.Services.Replace(ServiceDescriptor.Singleton<IMailSender>(Mail));
@@ -116,6 +122,7 @@ public sealed class SqlServer : IAsyncLifetime
         await dbContext.Database.ExecuteSqlRawAsync(sql);
         Revisions.Clear();
         RawData.Files.Clear();
+        Media.Clear();
         Mail.Sent.Clear();
         Sources.Failing = null;
         Time.Now = FixedTime.SpikeDay;
@@ -154,6 +161,16 @@ public abstract class SqlTest(SqlServer sql) : IAsyncLifetime
     {
         await using var scope = sql.Services.CreateAsyncScope();
         return await scope.ServiceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>().Handle(query, TestContext.Current.CancellationToken);
+    }
+
+    /// <summary>Registriert ein Konto und bestätigt die E-Mail über den Link aus der Mail.</summary>
+    protected async Task<string> RegisterConfirmed(string email, string displayName)
+    {
+        await Command<RegisterCommand, AccountResult>(new RegisterCommand(email, "Felswand-auf-25m", displayName, "de", "/c?user={user}&token={token}"));
+        var link = new Uri(sql.Mail.LinkTo(email));
+        var query = link.Query.TrimStart('?').Split('&').Select(p => p.Split('=', 2)).ToDictionary(p => p[0], p => Uri.UnescapeDataString(p[1]));
+        await Command<ConfirmEmailCommand, AccountResult>(new ConfirmEmailCommand(query["user"], query["token"]));
+        return query["user"];
     }
 
     /// <summary>Legt Riff Williams am Zürichsee an, freigegeben von <paramref name="moderatorId"/>. Die Gewässer müssen geseedet sein.</summary>
