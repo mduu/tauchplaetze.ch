@@ -51,18 +51,52 @@
     letter-spacing: -0.02em;
 }
 
-.diving-ban {
-    margin-top: 22px;
+.site-details {
+    display: grid;
+    gap: 32px 48px;
+    margin-top: 32px;
 }
 
-.diving-ban h3 {
-    margin: 0 0 8px;
-    font-size: 22px;
+@media (min-width: 900px) {
+    .site-details {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
 }
 
-.diving-ban ::deep .site-text,
+.site-details-side {
+    display: grid;
+    align-content: start;
+    gap: 28px;
+}
+
+.site-details ::deep .site-text,
+.site-hazards ::deep .site-text,
 .practical-texts ::deep .site-text {
     margin-top: 0;
+}
+
+.site-text-heading {
+    margin: 0 0 10px;
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.site-text-heading[data-tone="warning"] {
+    color: var(--color-signal);
+}
+
+.diving-ban {
+    margin: 0 0 14px;
+    padding: 16px 18px;
+}
+
+.diving-ban h4 {
+    margin: 0 0 6px;
+    font-size: 17px;
 }
 
 .practical-texts {

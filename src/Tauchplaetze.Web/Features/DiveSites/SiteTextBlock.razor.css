@@ -3,8 +3,13 @@
 }
 
 .site-text-title {
-    margin: 0 0 8px;
-    font-size: 20px;
+    margin: 0 0 10px;
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 .site-text-note {

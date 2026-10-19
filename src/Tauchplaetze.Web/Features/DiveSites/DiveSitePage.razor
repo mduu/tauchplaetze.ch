@@ -74,27 +74,36 @@
 
         <SiteLocationMap Site="site" />
 
-        @if (site.Ratings?.Rated.Count > 0 || site.Texts?.Underwater is not null)
+        @if (site.Ratings?.Rated.Count > 0 || HasSiteTexts(site))
         {
             <section class="page-section" aria-labelledby="ratings">
                 <h2 id="ratings" class="section-heading">@L["Ratings_Title"]</h2>
                 <SiteRatingsBlock Ratings="site.Ratings" />
-                <SiteTextBlock Text="site.Texts?.Underwater" Name="underwater" Title="@L["PhotoSection_Underwater"]" Markdown="true" />
-            </section>
-        }
-
-        @if (site.HasDivingBan || site.Texts?.Hazards is not null)
-        {
-            <section class="page-section" aria-labelledby="hazards">
-                <h2 id="hazards" class="section-heading">@L["PhotoSection_Hazards"]</h2>
-                @if (site.HasDivingBan)
+                @if (HasSiteTexts(site))
                 {
-                    <div class="callout diving-ban" data-diving-ban>
-                        <h3>@L["DivingBan_Title"]</h3>
-                        <SiteTextBlock Text="site.Texts?.DivingBan" Name="diving-ban" />
+                    <div class="site-details">
+                        <div class="site-details-main">
+                            <SiteTextBlock Text="site.Texts?.Underwater" Name="underwater" Title="@L["PhotoSection_Underwater"]" Markdown="true" />
+                        </div>
+                        <div class="site-details-side">
+                            @if (site.HasDivingBan || site.Texts?.Hazards is not null)
+                            {
+                                <div class="site-hazards" data-hazards>
+                                    <h3 id="hazards" class="site-text-heading" data-tone="warning">@L["PhotoSection_Hazards"]</h3>
+                                    @if (site.HasDivingBan)
+                                    {
+                                        <div class="callout diving-ban" data-diving-ban>
+                                            <h4>@L["DivingBan_Title"]</h4>
+                                            <SiteTextBlock Text="site.Texts?.DivingBan" Name="diving-ban" />
+                                        </div>
+                                    }
+                                    <SiteTextBlock Text="site.Texts?.Hazards" Name="hazards" />
+                                </div>
+                            }
+                            <SiteTextBlock Text="site.Texts?.Surroundings" Name="surroundings" Title="@L["Rating_Surroundings"]" />
+                        </div>
                     </div>
                 }
-                <SiteTextBlock Text="site.Texts?.Hazards" Name="hazards" />
             </section>
         }
 
@@ -124,11 +133,10 @@
                 </div>
             </div>
 
-            @if (site.Texts is { Surroundings: not null } or { Facilities: not null })
+            @if (site.Texts?.Facilities is not null)
             {
                 <div class="practical-texts">
-                    <SiteTextBlock Text="site.Texts?.Surroundings" Name="surroundings" Title="@L["Rating_Surroundings"]" />
-                    <SiteTextBlock Text="site.Texts?.Facilities" Name="facilities" Title="@L["Text_Facilities"]" />
+                    <SiteTextBlock Text="site.Texts.Facilities" Name="facilities" Title="@L["Text_Facilities"]" />
                 </div>
             }
 
@@ -211,6 +219,9 @@
             HttpContext.Response.StatusCode = statusCode;
         }
     }
+
+    private static bool HasSiteTexts(DiveSiteDetails site) =>
+        site.HasDivingBan || site.Texts is { Underwater: not null } or { Hazards: not null } or { Surroundings: not null };
 
     private static string MapLink(DiveSiteDetails site) =>
         string.Create(CultureInfo.InvariantCulture, $"https://map.geo.admin.ch/?lang={Language}&swisssearch={site.Latitude:0.0000},{site.Longitude:0.0000}");
