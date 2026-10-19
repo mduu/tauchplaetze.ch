@@ -56,7 +56,7 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
 - Alplakes ist langsam: 5–16 s pro Call, `mitgcm` bis 30 s. Timeout 60 s, bis 4 Retries.
 - Das 3D-Modell reicht heute plus 3 Tage. Es endet am Abend des dritten Tages.
 - **Den Zeitraum aus der Antwort von `depthtime` lesen, nicht aus den Metadaten.** `/simulations/metadata` und `/simulations/metadata/{model}/{lake}` nannten am selben Tag verschiedene Enddaten.
-- Die Strömung (`u`, `v`) ist in der Antwort enthalten, aber alle Werte sind `null`. Wir nutzen sie nicht.
+- Die Strömung (`u`, `v`, m/s) ist in der Antwort enthalten. Bis 19.10.2026 waren alle Werte `null`. Unser Beispiel-Request hat bei Eawag einen Fehler mit bestimmten Randbedingungen aufgedeckt, seit dem Fix liefert er Werte (Riff Williams 19.10.2026: alle 204 Werte gesetzt, höchstens 0.02 m/s). Wir nutzen sie noch nicht. Kandidat: Strömung am Platz anzeigen.
 - Unter 25 m liegen die Modellschichten 1.5 bis 3.5 m auseinander. Die Untergrenze der Sprungschicht springt darum von Schicht zu Schicht.
 - Satellit: Ein Bild kommt 1- bis 2-mal pro Woche, je nach Wolken. Gültige Pixel im Median 15 %. Am Ufer fehlen Pixel. Darum fragt der Job einen **Satellitenpunkt** seewärts ab, nicht die Koordinate des Platzes (`datastructure.md`).
 
@@ -69,6 +69,10 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
   3. Die Daten von Datalakes dürfen wir ebenfalls nutzen.
   4. Das Secchi-Produkt `Z490` von Sentinel-2 wird laufend verarbeitet.
   5. Zu den leeren Geschwindigkeitsfeldern `u` und `v` wünscht er einen Beispiel-Request (Antwort: `doc/mails/2026-10-19-eawag-alplakes-antwort.md`).
+- **Zweite Antwort vom 19.10.2026:**
+  - Der Beispiel-Request deckte einen Fehler auf (Zellen mit bestimmten Randbedingungen gaben `null`). Eawag hat ihn behoben, `u` und `v` liefern jetzt Werte.
+  - `Z490` ist die Secchi-Tiefe in Metern und mit `Zsd_lee` von Sentinel-3 vergleichbar.
+  - Pixel nahe am Ufer entfernt Eawag absichtlich, weil Ufer und flaches Wasser sie verfälschen. Ältere Bilder sind teils weniger streng maskiert. Jedes gelieferte Pixel gilt als gültig und darf genutzt werden.
 - Rückmeldungen von Tauchenden zu den Modellwerten teilen wir mit Eawag, darum hat er gebeten.
 - **Sentinel-2 in Ufernähe (`rules-1.2`):** `GET /remotesensing/timeseries/{lake}/sentinel2/Z490/{lat}/{lng}/{start}/{end}?window=2` an einem Punkt 100 m seewärts des Platzes (`forecast.md`, «Klarheit»), Zeitraum 30 Tage. Ein Call pro Platz an einem See mit `Z490`, Plätze am selben Punkt teilen ihn; dazu ein Call `remotesensing/metadata` pro Lauf. Heute haben 69 Plätze ein Gewässer mit Alplakes-Zuordnung (Zürichsee, Zugersee); das sind höchstens rund 69 Calls mehr pro Lauf, innerhalb der von Eawag bestätigten Frequenz. Ein Call dauert 2–5 s.
 - Quellenangabe auf jeder Seite mit Werten: «Daten: Eawag Alplakes» mit Link.
