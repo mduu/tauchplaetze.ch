@@ -32,7 +32,7 @@ internal class WaterBodyIndexWriter(TauchplaetzeDbContext dbContext)
             .GroupBy(f => (f.WaterBodyId, f.Date))
             .ToDictionary(
                 g => g.Key,
-                g => (Median: History.Median(g.Select(f => f.Index).ToList()), Sites: g.Count(), ModelVersion: g.Max(f => f.ModelVersion)!));
+                g => (Median: History.Median(g.Select(f => f.Index).ToList()), Sites: g.Count(), ModelVersion: ModelVersions.Newest(g.Select(f => f.ModelVersion))));
 
         foreach (var (key, value) in medians)
         {
