@@ -63,6 +63,23 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Der_Notfall_nennt_Sanitaet_Rega_Polizei_und_DAN_Europe_zum_Antippen()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/it/siti-di-immersione/" + Slug, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("href=\"tel:144\"", html);
+        Assert.Contains("href=\"tel:1414\"", html);
+        Assert.Contains("href=\"tel:117\"", html);
+        Assert.Contains("href=\"tel:+390642115685\"", html);
+        Assert.Contains("anche ai non soci", VisibleText.Of(html));
+    }
+
+    [Fact]
     public async Task Der_Link_zum_Bearbeiten_laedt_die_ganze_Seite_weil_der_Bearbeiten_Modus_interaktiv_ist()
     {
         // Arrange

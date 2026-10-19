@@ -17,7 +17,6 @@
   <data name="Practical" xml:space="preserve"><value>Infos pratiques</value></data>
   <data name="Map_Open" xml:space="preserve"><value>Ouvrir sur la carte nationale</value></data>
   <data name="Emergency" xml:space="preserve"><value>Urgence</value></data>
-  <data name="Emergency_Numbers" xml:space="preserve"><value>Ambulance 144 · Rega 1414 · Police 117</value></data>
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Tu connais ce site ?</value></data>
   <data name="Map_Label" xml:space="preserve"><value>Carte des sites de plongée</value></data>
   <data name="Directory_Title" xml:space="preserve"><value>Sites de plongée</value></data>
@@ -242,4 +241,7 @@
   <data name="NewSite_Nearby" xml:space="preserve"><value>Ces sites existent déjà à proximité. Le tien en fait-il partie ?</value></data>
   <data name="EditMode_Hint_Entry" xml:space="preserve"><value>Clique sur la carte pour placer le point d'entrée ou le lieu.</value></data>
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>Placer au centre de la carte</value></data>
+  <data name="Emergency_Ambulance" xml:space="preserve"><value>Ambulance</value></data>
+  <data name="Emergency_Police" xml:space="preserve"><value>Police</value></data>
+  <data name="Emergency_Dan_Note" xml:space="preserve"><value>En cas de danger de mort, appelle d'abord le 144 ou la Rega. DAN Europe conseille 24 h sur 24 en cas d'accident de plongée, aussi sans affiliation.</value></data>
 </root>

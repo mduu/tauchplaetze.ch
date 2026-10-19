@@ -17,7 +17,6 @@
   <data name="Practical" xml:space="preserve"><value>Practical</value></data>
   <data name="Map_Open" xml:space="preserve"><value>Open on the national map</value></data>
   <data name="Emergency" xml:space="preserve"><value>Emergency</value></data>
-  <data name="Emergency_Numbers" xml:space="preserve"><value>Ambulance 144 · Rega 1414 · Police 117</value></data>
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Do you know this site?</value></data>
   <data name="Map_Label" xml:space="preserve"><value>Map of dive sites</value></data>
   <data name="Directory_Title" xml:space="preserve"><value>Dive sites</value></data>
@@ -242,4 +241,7 @@
   <data name="NewSite_Nearby" xml:space="preserve"><value>These dive sites are already nearby. Is yours one of them?</value></data>
   <data name="EditMode_Hint_Entry" xml:space="preserve"><value>Click on the map to place the entry point or place.</value></data>
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>Place at map centre</value></data>
+  <data name="Emergency_Ambulance" xml:space="preserve"><value>Ambulance</value></data>
+  <data name="Emergency_Police" xml:space="preserve"><value>Police</value></data>
+  <data name="Emergency_Dan_Note" xml:space="preserve"><value>In a life-threatening situation, call 144 or Rega first. DAN Europe gives advice on diving accidents around the clock, also to non-members.</value></data>
 </root>

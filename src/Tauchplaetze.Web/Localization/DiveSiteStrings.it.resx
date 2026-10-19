@@ -17,7 +17,6 @@
   <data name="Practical" xml:space="preserve"><value>Info pratiche</value></data>
   <data name="Map_Open" xml:space="preserve"><value>Apri sulla carta nazionale</value></data>
   <data name="Emergency" xml:space="preserve"><value>Emergenza</value></data>
-  <data name="Emergency_Numbers" xml:space="preserve"><value>Ambulanza 144 · Rega 1414 · Polizia 117</value></data>
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Conosci questo sito?</value></data>
   <data name="Map_Label" xml:space="preserve"><value>Mappa dei siti d'immersione</value></data>
   <data name="Directory_Title" xml:space="preserve"><value>Siti d'immersione</value></data>
@@ -242,4 +241,7 @@
   <data name="NewSite_Nearby" xml:space="preserve"><value>Nelle vicinanze ci sono già questi siti. Il tuo è tra questi?</value></data>
   <data name="EditMode_Hint_Entry" xml:space="preserve"><value>Clicca sulla mappa per posare il punto d'entrata o il luogo.</value></data>
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>Posa al centro della mappa</value></data>
+  <data name="Emergency_Ambulance" xml:space="preserve"><value>Ambulanza</value></data>
+  <data name="Emergency_Police" xml:space="preserve"><value>Polizia</value></data>
+  <data name="Emergency_Dan_Note" xml:space="preserve"><value>In caso di pericolo di vita, chiama prima il 144 o la Rega. DAN Europe offre consulenza 24 ore su 24 sugli incidenti subacquei, anche ai non soci.</value></data>
 </root>

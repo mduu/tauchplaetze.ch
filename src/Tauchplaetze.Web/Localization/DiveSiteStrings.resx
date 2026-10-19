@@ -17,7 +17,6 @@
   <data name="Practical" xml:space="preserve"><value>Praktisch</value></data>
   <data name="Map_Open" xml:space="preserve"><value>Auf der Landeskarte öffnen</value></data>
   <data name="Emergency" xml:space="preserve"><value>Notfall</value></data>
-  <data name="Emergency_Numbers" xml:space="preserve"><value>Sanität 144 · Rega 1414 · Polizei 117</value></data>
   <data name="DirectoryOnly_Title" xml:space="preserve"><value>Kennst du diesen Platz?</value></data>
   <data name="Map_Label" xml:space="preserve"><value>Karte der Tauchplätze</value></data>
   <data name="Directory_Title" xml:space="preserve"><value>Tauchplätze</value></data>
@@ -242,4 +241,7 @@
   <data name="NewSite_Nearby" xml:space="preserve"><value>In der Nähe gibt es schon diese Plätze. Ist dein Platz vielleicht dabei?</value></data>
   <data name="EditMode_Hint_Entry" xml:space="preserve"><value>Klicke auf die Karte, um den Einstieg oder Ort zu setzen.</value></data>
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>In der Kartenmitte setzen</value></data>
+  <data name="Emergency_Ambulance" xml:space="preserve"><value>Sanität</value></data>
+  <data name="Emergency_Police" xml:space="preserve"><value>Polizei</value></data>
+  <data name="Emergency_Dan_Note" xml:space="preserve"><value>Bei Lebensgefahr zuerst 144 oder Rega. DAN Europe berät rund um die Uhr bei Tauchunfällen, auch ohne Mitgliedschaft.</value></data>
 </root>

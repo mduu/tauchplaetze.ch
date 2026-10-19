@@ -85,3 +85,24 @@
     align-items: center;
     min-height: 44px;
 }
+
+.emergency-numbers {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+}
+
+.emergency-numbers a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-weight: 600;
+}
+
+.emergency-note {
+    margin: 8px 0 0;
+    color: var(--color-text-subtle);
+    font-size: 14px;
+}
