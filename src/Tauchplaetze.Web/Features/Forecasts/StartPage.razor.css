@@ -105,18 +105,76 @@
     list-style: none;
 }
 
+.radius {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.pill-small {
+    min-height: 40px;
+    padding: 0 16px;
+    font-size: 14px;
+}
+
+/* Beste Wahl oben über die ganze Breite, darunter die Rangliste. Breit stehen Text und Querschnitt nebeneinander, die Rangliste in zwei Spalten. */
 .recommendations {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
     gap: 24px;
-    align-items: start;
 }
 
 .best-pick {
+    display: grid;
     overflow: hidden;
     background: var(--color-surface-raised);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
+}
+
+.best-pick > ::deep :not(.best-pick-text) {
+    order: -1;
+}
+
+@media (min-width: 900px) {
+    .best-pick {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: stretch;
+    }
+
+    .best-pick > ::deep :not(.best-pick-text) {
+        order: 0;
+    }
+
+    .ranking ol {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 40px;
+    }
+}
+
+.best-pick-note {
+    margin: 0;
+    font-size: 15px;
+    color: var(--color-text-muted);
+}
+
+.ranking-more {
+    margin-top: 4px;
+    border-top: 1px solid var(--color-divider);
+}
+
+.ranking-more summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    color: var(--color-primary);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ranking-more ol {
+    margin-top: 0;
 }
 
 .best-pick-text {
@@ -136,7 +194,8 @@
 
 .best-pick-head h2 {
     margin-top: 8px;
-    font-size: 44px;
+    font-size: clamp(32px, 7vw, 44px);
+    overflow-wrap: break-word;
     line-height: 1;
     letter-spacing: -0.02em;
 }
@@ -238,3 +297,67 @@
 [data-index-band="high"] { color: var(--color-index-high); }
 [data-index-band="mid"] { color: var(--color-index-mid); }
 [data-index-band="low"] { color: var(--color-index-low-text); }
+
+.coverage {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.unranked {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-divider);
+}
+
+.unranked h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.unranked ul {
+    display: grid;
+    gap: 0 40px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 900px) {
+    .unranked ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.unranked li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    text-align: left;
+    padding: 10px 0;
+    border-top: 1px solid var(--color-divider);
+}
+
+.unranked a {
+    color: var(--color-text-muted);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.unranked .where,
+.unranked-note {
+    font-size: 13px;
+    color: var(--color-text-subtle);
+}
+
+.unranked-note {
+    font-family: var(--font-mono);
+}
+
+.ranking > .unranked:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+}

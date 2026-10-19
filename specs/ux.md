@@ -43,14 +43,17 @@ Mockup: `design/start.dc.html`.
 1. Kopf: Logo, Navigation, Sprachwahl.
 2. Titel als Frage, abhängig vom gewählten Tag («… heute?», «… am Sonntag?»).
 3. Kurzer Satz, woher die Prognose kommt, mit Link «So entsteht die Prognose» auf die Seite «Über» (`#prognose`).
-4. Tagesauswahl als Pillen (heute plus 4 Tage). Tage ohne Index tragen den Zusatz «Ausblick». Umkreis-Auswahl («60 km ab Zürich · ändern»). Ohne gewählten Ort: «ganze Schweiz · Ort wählen».
-5. **Beste Wahl** (grosse Karte):
+4. Tagesauswahl als Pillen (heute plus 4 Tage). Tage ohne Index tragen den Zusatz «Ausblick». Umkreis-Auswahl («25 km ab Zürich · Ort wählen»), mit gewähltem Ort darunter die Pillen 15, 25 und 40 km (Standard 25 km; 60 km war für die Schweiz kein Umkreis mehr, Marc 19.10.2026). Ohne gewählten Ort: «ganze Schweiz · Ort wählen».
+5. **Beste Wahl** (grosse Karte über die ganze Breite; breit links der Text, rechts der Querschnitt, schmal der Querschnitt oben):
+   - Label «Beste Wahl für heute» bzw. «… für Dienstag», darunter der Satz «Der Platz mit dem höchsten Index in der Schweiz» bzw. «… im Umkreis». So ist klar, dass die Karte die Nummer 1 der Rangliste zeigt.
    - Seequerschnitt als Illustration mit Oberflächentemperatur, Temperatur auf 20 m und Sprungschicht.
    - Name, Ort, See, Tauch-Index gross.
    - Kacheln: Oberfläche, auf 20 m, Sprungschicht, Wind.
    - Begründung in einem Satz.
    - Aktionen: «Zum Tauchplatz», «Buddy für {See} finden».
-6. **Rangliste im Umkreis:** Rang, Name (Link), Ort · See, Balken, Index, Begründung.
+6. **Rangliste im Umkreis** (unter der Beste Wahl, über die ganze Breite, breit in zwei Spalten): Rang, Name (Link), Ort · See, Balken, Index, Begründung. Die ersten 10 Plätze offen, der Rest hinter «Alle {n} Plätze anzeigen».
+   - Solange weniger als 80 % der Plätze einen Index haben, steht über der Liste «Prognose bisher für Rhein, Zugersee und Zürichsee. Weitere Gewässer folgen.» Die Gewässer liefert der Core (`GetBestSites`), der Hinweis wächst und verschwindet mit dem Ausbau.
+   - Mit gewähltem Ort folgen unter der Rangliste die Plätze im Umkreis ohne Index, gedämpft und ohne Rang («noch keine Prognose»), nächster zuerst, höchstens 10, dazu «und {n} weitere Plätze ohne Prognose».
 7. Hinweis: «Der Index ist ein Indikator …».
 8. Seen im Überblick: Kachel pro See mit Temperatur, Mini-Verlauf der Klarheit und Trendtext.
 9. Buddy-Block (Akzentfarbe): Links zu den WhatsApp-Gruppen.
@@ -58,7 +61,7 @@ Mockup: `design/start.dc.html`.
 
 Die vier Schritte «Keine Meldungen nötig. Der See verrät es selbst.» stehen seit dem 18.10.2026 auf der Seite «Über» (Entscheid Marc): Die Startseite gibt zuerst die Antwort, die Erklärung ist für Neue.
 
-Tagesauswahl und Umkreis ändern die URL (`?date=`, `?lat=&lng=&r=`). Die Seite bleibt Static SSR.
+Tagesauswahl und Umkreis ändern die URL (`?tag=2026-10-20`, `?ort=zuerich`, `&km=15`; ohne `km` gilt 25, ein anderer Wert als 15, 25 oder 40 ebenfalls). Alte Links ohne `km` funktionieren weiter. Die Seite bleibt Static SSR.
 
 ### Über
 

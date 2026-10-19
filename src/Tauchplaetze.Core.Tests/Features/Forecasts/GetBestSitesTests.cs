@@ -82,6 +82,68 @@ public class GetBestSitesTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(["riff-williams"], tomorrow.Ranking.Select(r => r.Slug));
     }
 
+    [SqlFact]
+    public async Task Solange_wenige_Plaetze_einen_Index_haben_nennt_die_Rangliste_die_Gewaesser_mit_Prognose()
+    {
+        // Arrange
+        await Sql.Arrange(Seed);
+
+        // Act
+        var best = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de"));
+
+        // Assert
+        var coverage = Assert.IsType<ForecastCoverage>(best.Coverage);
+        Assert.Equal(["See"], coverage.WaterBodyNames);
+        Assert.Equal((2, 3), (coverage.SitesWithIndex, coverage.Sites));
+    }
+
+    [SqlFact]
+    public async Task Ab_80_Prozent_der_Plaetze_mit_Index_entfaellt_der_Hinweis_auf_die_Gewaesser()
+    {
+        // Arrange
+        await Sql.Arrange(db =>
+        {
+            var lake = new WaterBody { Slug = "see", NameDe = "See", WaterBodyType = WaterBodyType.Lake, Centroid = GeoPoints.Create(47, 8), IsActive = true };
+            for (var i = 0; i < 4; i++)
+            {
+                Add(db, lake, $"mit-index-{i}", 47.2 + i * 0.01, 8.6, 7m);
+            }
+
+            Add(db, lake, "ohne-index", 47.3, 8.6, null);
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var best = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de"));
+
+        // Assert
+        Assert.Null(best.Coverage);
+    }
+
+    [SqlFact]
+    public async Task Plaetze_ohne_Index_im_Umkreis_stehen_ohne_Rang_neben_der_Rangliste_naechster_zuerst()
+    {
+        // Arrange
+        await Sql.Arrange(db =>
+        {
+            var lake = new WaterBody { Slug = "see", NameDe = "See", WaterBodyType = WaterBodyType.Lake, Centroid = GeoPoints.Create(47, 8), IsActive = true };
+            Add(db, lake, "riff-williams", 47.2849, 8.6085, 8.4m);
+            Add(db, lake, "weit-weg", 47.33, 8.75, null);
+            Add(db, lake, "nah", 47.36, 8.55, null);
+            Add(db, lake, "ausserhalb", 46.21, 6.15, null);
+            return Task.CompletedTask;
+        });
+        var zurich = new Area(47.37, 8.54, 25);
+
+        // Act
+        var best = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de", Area: zurich));
+
+        // Assert
+        Assert.Equal(["riff-williams"], best.Ranking.Select(r => r.Slug));
+        Assert.Equal(["nah", "weit-weg"], best.WithoutForecast!.Select(s => s.Slug));
+        Assert.Equal(2, best.WithoutForecastCount);
+    }
+
     private static Task Seed(TauchplaetzeDbContext db)
     {
         var lake = new WaterBody { Slug = "see", NameDe = "See", WaterBodyType = WaterBodyType.Lake, Centroid = GeoPoints.Create(47, 8), IsActive = true };

@@ -5,7 +5,10 @@ internal record Place(string Key, double Latitude, double Longitude);
 
 internal static class Places
 {
-    public const int DefaultRadiusKm = 60;
+    public const int DefaultRadiusKm = 25;
+
+    /// <summary>Wählbare Umkreise in km. Ein anderer Wert in der URL fällt auf <see cref="DefaultRadiusKm"/> zurück.</summary>
+    public static readonly IReadOnlyList<int> RadiiKm = [15, 25, 40];
 
     public static readonly IReadOnlyList<Place> All =
     [
@@ -21,4 +24,6 @@ internal static class Places
     ];
 
     public static Place? Find(string? key) => All.FirstOrDefault(p => p.Key == key);
+
+    public static int Radius(int? km) => km is { } value && RadiiKm.Contains(value) ? value : DefaultRadiusKm;
 }

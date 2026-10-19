@@ -148,5 +148,16 @@
   <data name="Visibility_River" xml:space="preserve"><value>Nessun valore satellitare per i fiumi. Una portata elevata intorbidisce spesso l'acqua.</value></data>
   <data name="Tile_WaterTemperature" xml:space="preserve"><value>Temperatura dell'acqua</value></data>
   <data name="WaterTemperature_Value" xml:space="preserve"><value>{0} °C</value></data>
+  <data name="Start_Radius_Label" xml:space="preserve"><value>Scegli il raggio</value></data>
+  <data name="Start_BestPick_Today" xml:space="preserve"><value>Scelta migliore per oggi</value></data>
+  <data name="Start_BestPick_Day" xml:space="preserve"><value>Scelta migliore per {0}</value></data>
+  <data name="Start_BestPick_Note" xml:space="preserve"><value>Il sito con l’indice più alto in Svizzera.</value></data>
+  <data name="Start_BestPick_Note_Area" xml:space="preserve"><value>Il sito con l’indice più alto nel raggio.</value></data>
+  <data name="Start_Ranking_More" xml:space="preserve"><value>Mostra tutti i {0} siti</value></data>
   <data name="Reason_VisibilityLimitsIndex" xml:space="preserve"><value>la visibilità limita l'indice</value></data>
+  <data name="Start_Coverage" xml:space="preserve"><value>Previsioni finora per {0}. Seguiranno altri specchi d’acqua.</value></data>
+  <data name="Start_Coverage_And" xml:space="preserve"><value> e </value></data>
+  <data name="Start_WithoutForecast_Title" xml:space="preserve"><value>Nel raggio, ancora senza previsioni</value></data>
+  <data name="Start_WithoutForecast_Note" xml:space="preserve"><value>ancora nessuna previsione</value></data>
+  <data name="Start_WithoutForecast_More" xml:space="preserve"><value>e altri {0} siti senza previsioni</value></data>
 </root>

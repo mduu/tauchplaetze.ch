@@ -214,6 +214,12 @@ public sealed class FakeBestSites : IQueryHandler<GetBestSitesQuery, BestSites>
 
     public IReadOnlyList<RankedSite> Ranking { get; set; } = [];
 
+    public ForecastCoverage? Coverage { get; set; }
+
+    public IReadOnlyList<UnrankedSite> WithoutForecast { get; set; } = [];
+
+    public int WithoutForecastCount { get; set; }
+
     public GetBestSitesQuery? LastQuery { get; private set; }
 
     public Task<BestSites> Handle(GetBestSitesQuery query, CancellationToken ct = default)
@@ -221,7 +227,7 @@ public sealed class FakeBestSites : IQueryHandler<GetBestSitesQuery, BestSites>
         LastQuery = query;
         var days = Enumerable.Range(0, 5).Select(Today.AddDays).ToList();
         var date = query.Date is { } wanted && days.Contains(wanted) ? wanted : Today;
-        return Task.FromResult(new BestSites(date, days, Ranking));
+        return Task.FromResult(new BestSites(date, days, Ranking, Coverage, WithoutForecast, WithoutForecastCount));
     }
 }
 

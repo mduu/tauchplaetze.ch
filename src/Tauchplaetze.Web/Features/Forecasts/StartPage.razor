@@ -23,26 +23,51 @@
         <nav class="pills" aria-label="@F["Start_Days_Label"]">
             @foreach (var day in best.Days)
             {
-                <a class="pill" href="@Link(day, place)" aria-current="@(day == best.Date ? "true" : null)">@DayLabel(day)</a>
+                <a class="pill" href="@Link(day, place, radius)" aria-current="@(day == best.Date ? "true" : null)">@DayLabel(day)</a>
             }
         </nav>
         <details class="area">
             <summary class="pill pill-dashed">@F["Start_Area_Label"]: @AreaLabel · @F["Start_Area_Choose"]</summary>
             <ul>
-                <li><a href="@Link(best.Date, null)">@F["Start_Area_All"]</a></li>
+                <li><a href="@Link(best.Date, null, radius)">@F["Start_Area_All"]</a></li>
                 @foreach (var option in Places.All)
                 {
-                    <li><a href="@Link(best.Date, option)">@F["Start_Area_Radius", Places.DefaultRadiusKm, F[$"Place_{option.Key}"]]</a></li>
+                    <li><a href="@Link(best.Date, option, radius)">@F[$"Place_{option.Key}"]</a></li>
                 }
             </ul>
         </details>
+        @if (place is not null)
+        {
+            <nav class="radius" aria-label="@F["Start_Radius_Label"]">
+                @foreach (var km in Places.RadiiKm)
+                {
+                    <a class="pill pill-small" href="@Link(best.Date, place, km)" aria-current="@(km == radius ? "true" : null)">@F["Start_Distance", km]</a>
+                }
+            </nav>
+        }
     }
 </section>
 
 <section class="page-section recommendations" aria-label="@F["Start_BestPick"]">
     @if (best is { Ranking: [var top, ..] })
     {
-        <article class="best-pick">
+        <article class="best-pick" aria-labelledby="best-pick-name">
+            <div class="best-pick-text">
+                <div class="best-pick-head">
+                    <div>
+                        <p class="eyebrow signal">@BestPickLabel</p>
+                        <h2 id="best-pick-name">@top.Name</h2>
+                        <p class="where">@Where(top)</p>
+                    </div>
+                    <div class="index" data-index-band="@ForecastFormat.IndexBand(top.DiveIndex)">@ForecastFormat.Number(top.DiveIndex)</div>
+                </div>
+                <p class="best-pick-note">@(place is null ? F["Start_BestPick_Note"] : F["Start_BestPick_Note_Area"])</p>
+                @if (top.Reasons.Count > 0)
+                {
+                    <p class="reason">@string.Join(" · ", top.Reasons.Take(3).Select(r => F[$"Reason_{r}"].Value))</p>
+                }
+                <a class="button" href="@PublicRoutes.DiveSite(Language, top.Slug)">@F["Start_ToSite"]</a>
+            </div>
             @if (top.HasDepthProfile)
             {
                 <LakeCrossSection Surface="top.SurfaceTemperature" At20m="top.TemperatureAt20m" ThermoclineTop="top.ThermoclineTop" />
@@ -51,43 +76,33 @@
             {
                 <LakeCrossSection />
             }
-            <div class="best-pick-text">
-                <div class="best-pick-head">
-                    <div>
-                        <p class="eyebrow signal">@F["Start_BestPick"]</p>
-                        <h2>@top.Name</h2>
-                        <p class="where">@Where(top)</p>
-                    </div>
-                    <div class="index" data-index-band="@ForecastFormat.IndexBand(top.DiveIndex)">@ForecastFormat.Number(top.DiveIndex)</div>
-                </div>
-                @if (top.Reasons.Count > 0)
-                {
-                    <p class="reason">@string.Join(" · ", top.Reasons.Take(3).Select(r => F[$"Reason_{r}"].Value))</p>
-                }
-                <a class="button" href="@PublicRoutes.DiveSite(Language, top.Slug)">@F["Start_ToSite"]</a>
-            </div>
         </article>
 
         <div class="card ranking">
             <h2>@(place is null ? F["Start_Ranking"] : F["Start_Ranking_Area"])</h2>
+            @if (best.Coverage is { } coverage)
+            {
+                <p class="coverage" data-coverage>@F["Start_Coverage", Names(coverage.WaterBodyNames)]</p>
+            }
             <ol>
-                @foreach (var (site, rank) in best.Ranking.Select((s, i) => (s, i + 1)))
+                @foreach (var (site, rank) in RankedSites.Take(VisibleRanks))
                 {
-                    <li>
-                        <span class="rank">@rank</span>
-                        <div class="ranking-site">
-                            <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
-                            <span class="where">@Where(site)</span>
-                            <span class="bar" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)" style="width: @(FormattableString.Invariant($"{Math.Clamp(site.DiveIndex * 10, 10, 100):0}%"))"></span>
-                            @if (site.Reasons.Count > 0)
-                            {
-                                <span class="reason">@F[$"Reason_{site.Reasons[0]}"]</span>
-                            }
-                        </div>
-                        <span class="index-small" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)">@ForecastFormat.Number(site.DiveIndex)</span>
-                    </li>
+                    @RankingEntry(site, rank)
                 }
             </ol>
+            @if (best.Ranking.Count > VisibleRanks)
+            {
+                <details class="ranking-more">
+                    <summary>@F["Start_Ranking_More", best.Ranking.Count]</summary>
+                    <ol start="@(VisibleRanks + 1)">
+                        @foreach (var (site, rank) in RankedSites.Skip(VisibleRanks))
+                        {
+                            @RankingEntry(site, rank)
+                        }
+                    </ol>
+                </details>
+            }
+            @Unranked
             <p class="note">@F["Start_Indicator"]</p>
         </div>
     }
@@ -98,16 +113,30 @@
             <div class="coming-soon-text">
                 <p class="eyebrow signal">@F["Start_BestPick"]</p>
                 <p>@(place is null ? F["Start_NoIndex"] : F["Start_NoSitesInArea"])</p>
+                @if (best?.Coverage is { WaterBodyNames.Count: > 0 } coverage)
+                {
+                    <p data-coverage>@F["Start_Coverage", Names(coverage.WaterBodyNames)]</p>
+                }
             </div>
         </article>
+        @if (best is { WithoutForecast.Count: > 0 })
+        {
+            <div class="card ranking">
+                @Unranked
+            </div>
+        }
     }
 </section>
 
 
 @code {
+    private const int VisibleRanks = 10;
+
     private BestSites? best;
 
     private Place? place;
+
+    private int radius = Places.DefaultRadiusKm;
 
     [Parameter]
     public string? Lang { get; set; }
@@ -118,13 +147,64 @@
     [SupplyParameterFromQuery(Name = "ort")]
     public string? PlaceKey { get; set; }
 
+    [SupplyParameterFromQuery(Name = "km")]
+    public int? RadiusKm { get; set; }
+
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
     private string Title => best is null || best.Date == best.Days[0]
         ? L["Start_Title"]
         : F["Start_Title_Day", CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(best.Date.DayOfWeek)];
 
-    private string AreaLabel => place is null ? F["Start_Area_All"] : F["Start_Area_Radius", Places.DefaultRadiusKm, F[$"Place_{place.Key}"]];
+    private string AreaLabel => place is null ? F["Start_Area_All"] : F["Start_Area_Radius", radius, F[$"Place_{place.Key}"]];
+
+    private string BestPickLabel => best is null || best.Date == best.Days[0]
+        ? F["Start_BestPick_Today"]
+        : F["Start_BestPick_Day", CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(best.Date.DayOfWeek)];
+
+    private RenderFragment Unranked => @<text>
+        @if (best is { WithoutForecast: [_, ..] unranked })
+        {
+            <section class="unranked" aria-labelledby="unranked-title" data-unranked>
+                <h3 id="unranked-title">@F["Start_WithoutForecast_Title"]</h3>
+                <ul>
+                    @foreach (var site in unranked)
+                    {
+                        <li>
+                            <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
+                            <span class="where">@string.Join(" · ", new[] { site.Municipality, site.WaterBodyName, F["Start_Distance", site.DistanceKm].Value }.OfType<string>())</span>
+                            <span class="unranked-note">@F["Start_WithoutForecast_Note"]</span>
+                        </li>
+                    }
+                </ul>
+                @if (best.WithoutForecastCount > unranked.Count)
+                {
+                    <p class="note">@F["Start_WithoutForecast_More", best.WithoutForecastCount - unranked.Count]</p>
+                }
+            </section>
+        }
+    </text>;
+
+    private string Names(IReadOnlyList<string> names) => names.Count < 2
+        ? string.Join("", names)
+        : $"{string.Join(", ", names.Take(names.Count - 1))}{F["Start_Coverage_And"]}{names[^1]}";
+
+    private IEnumerable<(RankedSite Site, int Rank)> RankedSites => best!.Ranking.Select((s, i) => (s, i + 1));
+
+    private RenderFragment RankingEntry(RankedSite site, int rank) =>
+        @<li>
+            <span class="rank">@rank</span>
+            <div class="ranking-site">
+                <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
+                <span class="where">@Where(site)</span>
+                <span class="bar" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)" style="width: @(FormattableString.Invariant($"{Math.Clamp(site.DiveIndex * 10, 10, 100):0}%"))"></span>
+                @if (site.Reasons.Count > 0)
+                {
+                    <span class="reason">@F[$"Reason_{site.Reasons[0]}"]</span>
+                }
+            </div>
+            <span class="index-small" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)">@ForecastFormat.Number(site.DiveIndex)</span>
+        </li>;
 
     protected override async Task OnInitializedAsync()
     {
@@ -135,12 +215,13 @@
         }
 
         place = Places.Find(PlaceKey);
+        radius = Places.Radius(RadiusKm);
         var date = DateOnly.TryParseExact(Day, "yyyy-MM-dd", out var parsed) ? parsed : (DateOnly?)null;
-        var area = place is null ? null : new Area(place.Latitude, place.Longitude, Places.DefaultRadiusKm);
+        var area = place is null ? null : new Area(place.Latitude, place.Longitude, radius);
         best = await BestSitesQuery.Handle(new GetBestSitesQuery(Language, date, area));
     }
 
-    private string Link(DateOnly day, Place? area)
+    private string Link(DateOnly day, Place? area, int km)
     {
         var query = new List<string>();
         if (best is not null && day != best.Days[0])
@@ -151,6 +232,10 @@
         if (area is not null)
         {
             query.Add($"ort={area.Key}");
+            if (km != Places.DefaultRadiusKm)
+            {
+                query.Add($"km={km}");
+            }
         }
 
         return query.Count == 0 ? $"/{Language}" : $"/{Language}?{string.Join('&', query)}";
