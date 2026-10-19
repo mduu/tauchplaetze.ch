@@ -18,6 +18,8 @@ using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
 using Tauchplaetze.Core.Features.Forecasts;
+using Tauchplaetze.Core.Features.Media;
+using Tauchplaetze.Core.Features.Media.Queries;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
@@ -63,6 +65,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetDiveSiteForEditingQuery, DiveSiteForEditing?> ForEditing { get; } = new(_ => null);
 
+    public FakeQuery<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>> SiteMedia { get; } = new(_ => []);
+
     /// <summary>Empfänger des Kontaktformulars im Test. Er darf nie im HTML stehen.</summary>
     public const string OperatorEmail = "betreiber@example.org";
 
@@ -96,6 +100,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<WithdrawRevisionCommand, EditorialResult>>(Withdraw));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>>(PendingRevisions));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteForEditingQuery, DiveSiteForEditing?>>(ForEditing));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>>(SiteMedia));
         });
     }
 

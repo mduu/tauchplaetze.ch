@@ -1,0 +1,313 @@
+@inherits AdminPage
+@using Microsoft.AspNetCore.Components.Forms
+@using Tauchplaetze.Core.Features.Media
+@using Tauchplaetze.Core.Features.Media.Commands
+@using Tauchplaetze.Core.Features.Media.Queries
+@using Tauchplaetze.Web.Features.Editorial
+@using Tauchplaetze.Web.Features.Media
+@inject IStringLocalizer<DiveSiteStrings> Site
+
+<div class="photo-editor">
+    <p class="field-help">@L["Media_Help"]</p>
+
+    <fieldset class="photo-upload">
+        <legend class="edit-subtitle">@L["Media_Upload"]</legend>
+        <div class="edit-grid">
+            <FormText Label="@L["Media_Photographer"]" @bind-Value="photographer" MaxLength="120" Required="true" />
+            <FormText Label="@L["Media_PhotographerUrl"]" @bind-Value="photographerUrl" MaxLength="300" />
+            <FormSelect TValue="MediaSection" Label="@L["Media_Section"]" @bind-Value="section" Options="Sections" />
+            <FormNumber Label="@L["Media_Depth"]" @bind-Value="depth" Min="0" Max="200" Unit="m" />
+        </div>
+        <label class="check-field">
+            <input type="checkbox" checked="@rightsConfirmed" @onchange="e => rightsConfirmed = e.Value is true" />
+            <span>@L["Media_Rights"]</span>
+        </label>
+        <label class="button file-button" data-disabled="@(rightsConfirmed && !uploading ? "false" : "true")">
+            <span>@(uploading ? L["Media_Uploading"] : L["Media_Choose"])</span>
+            <InputFile OnChange="Upload" multiple accept=".jpg,.jpeg,.png,.webp" disabled="@(!rightsConfirmed || uploading || string.IsNullOrWhiteSpace(photographer))" class="visually-hidden" />
+        </label>
+        <div role="status" aria-live="polite">
+            @if (uploadMessage is not null)
+            {
+                <p class="saved-banner">@uploadMessage</p>
+            }
+            @foreach (var error in errors)
+            {
+                <p class="field-error">@error</p>
+            }
+        </div>
+    </fieldset>
+
+    <h3 class="edit-subtitle">@L["Media_InVersion"]</h3>
+    @if (Form.Media.Count == 0)
+    {
+        <p class="field-help">@L["Media_None"]</p>
+    }
+    <ol class="editor-list photo-list">
+        @foreach (var (use, index) in Form.Media.Select((u, i) => (u, i)).ToList())
+        {
+            var current = use;
+            var item = media.FirstOrDefault(m => m.Id == current.MediaId);
+            <li class="editor-item photo-item">
+                @if (item is not null)
+                {
+                    <img class="photo-thumb" src="@item.Renditions[0].Url" alt="@AltOf(item)" width="160" height="@(item.Height * 160 / Math.Max(1, item.Width))" loading="lazy" />
+                }
+                <div class="photo-item-body">
+                    <div class="editor-item-head">
+                        <span>
+                            @(index + 1).
+                            @if (item is not null)
+                            {
+                                <span>© @item.Photographer</span>
+                            }
+                            @if (item is { IsPublic: false })
+                            {
+                                <span class="badge">@L["Media_Private"]</span>
+                            }
+                        </span>
+                        <span class="editor-item-actions">
+                            <button type="button" class="link-button" disabled="@(index == 0)" aria-label="@L["Media_Up"]" @onclick="() => Move(index, -1)">↑</button>
+                            <button type="button" class="link-button" disabled="@(index == Form.Media.Count - 1)" aria-label="@L["Media_Down"]" @onclick="() => Move(index, 1)">↓</button>
+                        </span>
+                    </div>
+                    <label class="check-field">
+                        <input type="radio" name="hero-photo" checked="@(Form.HeroMediaId == current.MediaId)" @onchange="() => SetHero(current.MediaId)" />
+                        <span>@L["Media_Hero"]</span>
+                    </label>
+                    <div class="edit-grid">
+                        <FormSelect TValue="MediaSection" Label="@L["Media_Section"]" Value="current.Section" ValueChanged="@(s => SetSection(current, s))" Options="Sections" />
+                        @if (current.Section == MediaSection.EntryPoint)
+                        {
+                            <FormSelect TValue="Guid?" Label="@L["Media_EntryPoint"]" Value="current.EntryPointId" ValueChanged="@(id => SetEntryPoint(current, id))"
+                                        Options="EntryPoints" EmptyLabel="–" />
+                        }
+                    </div>
+                    <div class="editor-item-actions">
+                        @if (item is not null && CanEdit(item))
+                        {
+                            <button type="button" class="link-button" aria-expanded="@(details?.Id == item.Id ? "true" : "false")" @onclick="() => ToggleDetails(item)">@L["Media_Details"]</button>
+                        }
+                        <button type="button" class="link-button" @onclick="() => RemoveUse(current)">@L["Media_RemoveFromVersion"]</button>
+                        @if (item is not null && CanEdit(item))
+                        {
+                            <DeleteButton Item="item" Confirmed="Delete" />
+                        }
+                    </div>
+                    @if (item is not null && details?.Id == item.Id)
+                    {
+                        <div class="editor-item-body">
+                            <div class="edit-grid">
+                                <FormText Label="@L["Media_Photographer"]" @bind-Value="details.Photographer" MaxLength="120" Required="true" />
+                                <FormText Label="@L["Media_PhotographerUrl"]" @bind-Value="details.PhotographerUrl" MaxLength="300" />
+                                <FormNumber Label="@L["Media_Depth"]" @bind-Value="details.Depth" Min="0" Max="200" Unit="m" />
+                            </div>
+                            <LanguageTabs Label="@L["Media_Caption"]" @bind-Selected="textLanguage">
+                                <FormText Label="@L["Media_Caption"]" Value="@details.Texts[context].Caption" MaxLength="300"
+                                          ValueChanged="@(v => details.Texts[context] = (v, details.Texts[context].AltText))" />
+                                <FormText Label="@L["Media_AltText"]" Value="@details.Texts[context].AltText" MaxLength="300"
+                                          ValueChanged="@(v => details.Texts[context] = (details.Texts[context].Caption, v))" />
+                            </LanguageTabs>
+                            @foreach (var error in details.Errors)
+                            {
+                                <p class="field-error" role="alert">@error</p>
+                            }
+                            <div><button type="button" class="button" @onclick="() => SaveDetails(item.Id)">@L["Media_SaveDetails"]</button></div>
+                        </div>
+                    }
+                </div>
+            </li>
+        }
+    </ol>
+
+    @if (Available.Count > 0)
+    {
+        <h3 class="edit-subtitle">@L["Media_Available"]</h3>
+        <ul class="photo-available">
+            @foreach (var item in Available)
+            {
+                var current = item;
+                <li class="editor-item">
+                    <img class="photo-thumb" src="@current.Renditions[0].Url" alt="@AltOf(current)" width="160" height="@(current.Height * 160 / Math.Max(1, current.Width))" loading="lazy" />
+                    <div class="editor-item-actions">
+                        <button type="button" class="link-button" @onclick="() => AddUse(current)">@L["Media_Add"]</button>
+                        @if (CanEdit(current))
+                        {
+                            <DeleteButton Item="current" Confirmed="Delete" />
+                        }
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    private IReadOnlyList<SiteMediaItem> media = [];
+
+    private MediaSection section = MediaSection.Underwater;
+
+    private string? photographer = "";
+
+    private string? photographerUrl;
+
+    private int? depth;
+
+    private bool rightsConfirmed;
+
+    private bool uploading;
+
+    private string? uploadMessage;
+
+    private List<string> errors = [];
+
+    private MediaDetails? details;
+
+    private string textLanguage = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    [Parameter, EditorRequired]
+    public Guid SiteId { get; set; }
+
+    [Parameter, EditorRequired]
+    public SiteForm Form { get; set; } = default!;
+
+    /// <summary>Meldet jede Änderung an der Version, damit die Seite «ungespeichert» erkennt.</summary>
+    [Parameter]
+    public EventCallback Changed { get; set; }
+
+    private IReadOnlyList<(MediaSection, string)> Sections => [.. Enum.GetValues<MediaSection>().Select(s => (s, L[$"MediaSection_{s}"].Value))];
+
+    private IReadOnlyList<(Guid?, string)> EntryPoints =>
+        [.. Form.EntryPoints.Select((e, i) => ((Guid?)e.Id, $"{i + 1}. {Site[$"EntryPoint_{e.Kind}"]}" + (e.Texts.Values.Select(t => t.Name).FirstOrDefault(n => !string.IsNullOrWhiteSpace(n)) is { } name ? $" · {name}" : "")))];
+
+    private List<SiteMediaItem> Available => [.. media.Where(m => Form.Media.All(u => u.MediaId != m.Id))];
+
+    protected override async Task Load()
+    {
+        photographer = User.Identity?.Name ?? "";
+        await Reload();
+    }
+
+    private async Task Reload() =>
+        media = await Query<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>(new GetSiteMediaQuery(UserId, SiteId, MediaEndpoints.PendingPathTemplate));
+
+    private bool CanEdit(SiteMediaItem item) => IsModerator || item is { IsPublic: false, IsOwn: true };
+
+    private async Task Upload(InputFileChangeEventArgs e)
+    {
+        uploading = true;
+        errors = [];
+        uploadMessage = null;
+        StateHasChanged();
+
+        var uploaded = 0;
+        foreach (var file in e.GetMultipleFiles(20))
+        {
+            if (file.Size > MediaFiles.MaxBytes)
+            {
+                errors.Add($"{file.Name}: {L["Error_InvalidImage"]}");
+                continue;
+            }
+
+            using var buffer = new MemoryStream();
+            await using (var stream = file.OpenReadStream(MediaFiles.MaxBytes))
+            {
+                await stream.CopyToAsync(buffer);
+            }
+
+            var result = await Command<UploadMediaCommand, UploadMediaResult>(new UploadMediaCommand(
+                UserId, SiteId, buffer.ToArray(), file.ContentType, photographer ?? "", photographerUrl, section, depth, rightsConfirmed, []));
+            if (result.MediaId is { } id)
+            {
+                Form.Media.Add(new MediaUseForm { MediaId = id, Section = section });
+                uploaded++;
+            }
+            else
+            {
+                errors.AddRange(result.Errors.Select(error => $"{file.Name}: {L[$"Error_{error}"]}"));
+            }
+        }
+
+        uploading = false;
+        uploadMessage = uploaded > 0 ? L["Media_Uploaded", uploaded].Value : null;
+        await Reload();
+        await Changed.InvokeAsync();
+    }
+
+    private async Task SetHero(Guid id)
+    {
+        Form.HeroMediaId = id;
+        await Changed.InvokeAsync();
+    }
+
+    private async Task SetSection(MediaUseForm use, MediaSection value)
+    {
+        use.Section = value;
+        await Changed.InvokeAsync();
+    }
+
+    private async Task SetEntryPoint(MediaUseForm use, Guid? id)
+    {
+        use.EntryPointId = id;
+        await Changed.InvokeAsync();
+    }
+
+    private async Task Move(int index, int step)
+    {
+        (Form.Media[index], Form.Media[index + step]) = (Form.Media[index + step], Form.Media[index]);
+        await Changed.InvokeAsync();
+    }
+
+    private async Task RemoveUse(MediaUseForm use)
+    {
+        Form.Media.Remove(use);
+        if (Form.HeroMediaId == use.MediaId)
+        {
+            Form.HeroMediaId = null;
+        }
+
+        await Changed.InvokeAsync();
+    }
+
+    private async Task AddUse(SiteMediaItem item)
+    {
+        Form.Media.Add(new MediaUseForm { MediaId = item.Id, Section = item.Section });
+        await Changed.InvokeAsync();
+    }
+
+    private async Task Delete(SiteMediaItem item)
+    {
+        var result = await Command<DeleteMediaCommand, UploadMediaResult>(new DeleteMediaCommand(UserId, item.Id));
+        errors = [.. result.Errors.Select(e => L[$"Error_{e}"].Value)];
+        if (result.Succeeded)
+        {
+            Form.Media.RemoveAll(u => u.MediaId == item.Id);
+            if (Form.HeroMediaId == item.Id)
+            {
+                Form.HeroMediaId = null;
+            }
+        }
+
+        await Reload();
+        await Changed.InvokeAsync();
+    }
+
+    private void ToggleDetails(SiteMediaItem item) => details = details?.Id == item.Id ? null : MediaDetails.From(item);
+
+    private async Task SaveDetails(Guid id)
+    {
+        var result = await Command<UpdateMediaCommand, UploadMediaResult>(new UpdateMediaCommand(
+            UserId, id, details!.Photographer, details.PhotographerUrl, details.Depth, details.ToTexts()));
+        details.Errors = [.. result.Errors.Select(e => L[$"Error_{e}"].Value)];
+        if (result.Succeeded)
+        {
+            details = null;
+            await Reload();
+        }
+    }
+
+    private static string AltOf(SiteMediaItem item) =>
+        item.Texts.FirstOrDefault(t => t.Culture == CultureInfo.CurrentUICulture.TwoLetterISOLanguageName && !string.IsNullOrWhiteSpace(t.AltText))?.AltText
+        ?? item.Texts.FirstOrDefault(t => !string.IsNullOrWhiteSpace(t.AltText))?.AltText
+        ?? item.Photographer;
+}

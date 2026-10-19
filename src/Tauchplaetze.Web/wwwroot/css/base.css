@@ -1275,3 +1275,98 @@ button.chip-toggle:focus-visible {
     height: 380px;
   }
 }
+
+/* Fotos im Bearbeiten-Modus. */
+.photo-editor {
+  display: grid;
+  gap: 14px;
+}
+
+.photo-upload {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-tile-sm);
+}
+
+.edit-subtitle {
+  margin: 0;
+  font-size: 20px;
+}
+
+.check-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.check-field input {
+  margin-top: 4px;
+}
+
+.file-button {
+  justify-self: start;
+  cursor: pointer;
+}
+
+.file-button:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.file-button[data-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.photo-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.photo-item-body {
+  display: grid;
+  flex: 1;
+  gap: 10px;
+  min-width: min(100%, 280px);
+}
+
+.photo-thumb {
+  display: block;
+  max-width: 160px;
+  height: auto;
+  border-radius: var(--radius-tile-sm);
+}
+
+.photo-available {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.photo-available .editor-item {
+  display: grid;
+  gap: 6px;
+}
+
+.badge {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--color-surface-raised);
+  font-size: 13px;
+}
+
+.delete-confirm {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+

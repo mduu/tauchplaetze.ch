@@ -132,6 +132,11 @@ else
             <SiteMapEditor Id="edit-site-map" Form="form" Changed="StateHasChanged" />
         </section>
 
+        <section class="page-section edit-section" aria-labelledby="edit-photos">
+            <h2 id="edit-photos" class="edit-section-title">@Site["Photos_Title"]</h2>
+            <SitePhotoEditor SiteId="details.Id" Form="form" Changed="StateHasChanged" />
+        </section>
+
         <section class="page-section edit-section" aria-labelledby="edit-comment">
             <h2 id="edit-comment" class="edit-section-title">@Site["EditMode_Section_Comment"]</h2>
             <FormTextArea Label="@Site["EditMode_Comment"]" @bind-Value="form.Comment" Rows="2" MaxLength="500" Help="@Site["EditMode_Comment_Help"]" />

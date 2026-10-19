@@ -4,6 +4,7 @@ using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Queries;
+using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Web.Tests;
@@ -30,6 +31,7 @@ public class EditDiveSitePageTests : IClassFixture<WebApp>
             ]);
         app.DiveSites.Add("archiviert-bearbeiten", new DiveSiteLookup.Gone());
         app.ForEditing.Answer = query => query.DiveSiteId == SiteId ? new DiveSiteForEditing(SiteId, DiveSiteStatus.Published, 3, content, []) : null;
+        app.SiteMedia.Answer = _ => [];
     }
 
     [Fact]
@@ -144,6 +146,38 @@ public class EditDiveSitePageTests : IClassFixture<WebApp>
 
         // Assert
         Assert.Contains(expected, text);
+    }
+
+    [Fact]
+    public async Task Der_Bearbeiten_Modus_zeigt_die_Einstiege_und_die_Fotos_der_Version_private_ueber_den_geschuetzten_Endpunkt()
+    {
+        // Arrange
+        var entry = Guid.NewGuid();
+        var photo = Guid.NewGuid();
+        var editing = app.ForEditing.Answer(new GetDiveSiteForEditingQuery(SiteId))!;
+        var content = editing.Content with
+        {
+            EntryPoints = [new EntryPointContent(entry, 47.1301, 8.6201, EntryPointKind.EntryAndExit, [new EntryPointText("fr", "Escalier du port", null)])],
+            Media = [new MediaUse(photo, MediaSection.EntryPoint, entry)],
+            HeroMediaId = photo,
+        };
+        app.ForEditing.Answer = query => query.DiveSiteId == SiteId ? editing with { Content = content } : null;
+        app.SiteMedia.Answer = query => query.DiveSiteId == SiteId
+            ? [new SiteMediaItem(photo, MediaSection.EntryPoint, 1600, 1200, null, 6, "Lucie", null, false, true, DateTimeOffset.UtcNow,
+                [new MediaRendition(400, query.PendingPathTemplate.Replace("{id}", photo.ToString()).Replace("{file}", "400.webp"))], [])]
+            : [];
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        var html = await browser.GetStringAsync($"/fr/sites-de-plongee/{Slug}/modifier", TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains("Escalier du port", text);
+        Assert.Contains("Privée jusqu'à la validation", text);
+        Assert.Contains($"src=\"/admin/medien/{photo}/400.webp\"", html);
+        Assert.Contains("value=\"Lucie\"", html);
     }
 
     private static async Task SignIn(HttpClient browser)
