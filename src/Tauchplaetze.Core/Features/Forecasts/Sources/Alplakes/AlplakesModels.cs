@@ -4,12 +4,17 @@ using Tauchplaetze.Core.Features.Forecasts.Calculation;
 
 namespace Tauchplaetze.Core.Features.Forecasts.Sources.Alplakes;
 
-/// <summary>Temperatur über Tiefe und Zeit. <see cref="Temperatures"/> ist [Tiefe, Zeit], <c>null</c> ohne Modellwert.</summary>
+/// <summary>
+/// Temperatur über Tiefe und Zeit. <see cref="Temperatures"/> ist [Tiefe, Zeit], <c>null</c> ohne Modellwert.
+/// Das 3D-Modell liefert zusätzlich die Strömung nach Osten (<see cref="EastVelocity"/>, `u`) und nach Norden (<see cref="NorthVelocity"/>, `v`) in m/s.
+/// </summary>
 internal record DepthTimeSeries(
     IReadOnlyList<DateTimeOffset> Times,
     IReadOnlyList<double> Depths,
     double?[,] Temperatures,
-    double? DistanceToGridPoint)
+    double? DistanceToGridPoint,
+    double?[,]? EastVelocity = null,
+    double?[,]? NorthVelocity = null)
 {
     /// <remarks>3D (`temperature`) und 1D (`T`) haben dieselbe Form: Zeilen pro Tiefe, ein Wert pro Zeitschritt. Nur das 3D-Modell kennt `distance`.</remarks>
     public static DepthTimeSeries Parse(string json, string variable)
@@ -21,19 +26,42 @@ internal record DepthTimeSeries(
             .Select(t => DateTimeOffset.Parse(t.GetString()!, CultureInfo.InvariantCulture))
             .ToList();
         var depths = root.GetProperty("depth").GetProperty("data").EnumerateArray().Select(d => d.GetDouble()).ToList();
-        var rows = root.GetProperty("variables").GetProperty(variable).GetProperty("data").EnumerateArray().ToList();
+        var variables = root.GetProperty("variables");
 
-        var temperatures = new double?[depths.Count, times.Count];
-        for (var depth = 0; depth < rows.Count; depth++)
+        return new DepthTimeSeries(
+            times,
+            depths,
+            ReadGrid(variables, variable, depths.Count, times.Count)!,
+            ReadDistance(root),
+            ReadGrid(variables, "u", depths.Count, times.Count),
+            ReadGrid(variables, "v", depths.Count, times.Count));
+    }
+
+    /// <summary>Werte [Tiefe, Zeit] einer Variable, <c>null</c> ohne Modellwert. Fehlt die Variable, ist das Ergebnis <c>null</c>, ausser es ist die verlangte Hauptvariable.</summary>
+    private static double?[,]? ReadGrid(JsonElement variables, string name, int depthCount, int timeCount)
+    {
+        if (!variables.TryGetProperty(name, out var variable) || !variable.TryGetProperty("data", out var data) || data.ValueKind != JsonValueKind.Array)
         {
-            var values = rows[depth].EnumerateArray().ToList();
-            for (var time = 0; time < values.Count; time++)
+            return name is "u" or "v" ? null : throw new JsonException($"Variable {name} fehlt.");
+        }
+
+        var grid = new double?[depthCount, timeCount];
+        var rows = data.EnumerateArray().ToList();
+        for (var depth = 0; depth < Math.Min(rows.Count, depthCount); depth++)
+        {
+            if (rows[depth].ValueKind != JsonValueKind.Array)
             {
-                temperatures[depth, time] = values[time].ValueKind == JsonValueKind.Number ? values[time].GetDouble() : null;
+                continue;
+            }
+
+            var values = rows[depth].EnumerateArray().ToList();
+            for (var time = 0; time < Math.Min(values.Count, timeCount); time++)
+            {
+                grid[depth, time] = values[time].ValueKind == JsonValueKind.Number ? values[time].GetDouble() : null;
             }
         }
 
-        return new DepthTimeSeries(times, depths, temperatures, ReadDistance(root));
+        return grid;
     }
 
     /// <summary>Das Profil im Zeitschritt nächst <paramref name="time"/>, von der Oberfläche zum Grund. <c>null</c>, wenn kein Zeitschritt innerhalb von <paramref name="tolerance"/> liegt.</summary>

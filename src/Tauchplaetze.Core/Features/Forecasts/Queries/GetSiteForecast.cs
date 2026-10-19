@@ -42,7 +42,10 @@ internal class GetSiteForecastHandler(TauchplaetzeDbContext dbContext, TimeProvi
                 f.AlgaeLevel,
                 ReasonCodes.Parse(f.ReasonCodes),
                 f.SecchiDepthShore,
-                f.ClaritySource))
+                f.ClaritySource,
+                f.CurrentSpeed,
+                f.CurrentDirection,
+                f.CurrentLevel))
             .ToList();
 
         return new SiteForecast(days, rows.Count > 0 ? rows.Max(f => f.ComputedAt) : null, await Hours(query.DiveSiteId, today, ct));

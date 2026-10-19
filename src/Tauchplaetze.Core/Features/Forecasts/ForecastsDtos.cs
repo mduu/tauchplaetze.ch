@@ -41,7 +41,10 @@ public record ForecastDay(
     AlgaeLevel AlgaeLevel,
     IReadOnlyList<ReasonCode> Reasons,
     decimal? SecchiDepthShore = null,
-    ClaritySource? ClaritySource = null)
+    ClaritySource? ClaritySource = null,
+    decimal? CurrentSpeed = null,
+    int? CurrentDirection = null,
+    CurrentLevel? CurrentLevel = null)
 {
     public bool IsOutlook => DiveIndex is null;
 }

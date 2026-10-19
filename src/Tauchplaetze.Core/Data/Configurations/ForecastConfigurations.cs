@@ -26,6 +26,7 @@ internal class DailyForecastConfiguration : IEntityTypeConfiguration<DailyForeca
         builder.Property(f => f.InflowDischargeRatio).HasPrecision(5, 2);
         builder.Property(f => f.Turbidity).HasPrecision(6, 1);
         builder.Property(f => f.WeatherModel).HasMaxLength(40);
+        builder.Property(f => f.CurrentSpeed).HasPrecision(5, 3);
         builder.Property(f => f.ReasonCodes).HasMaxLength(200);
         builder.Property(f => f.ModelVersion).HasMaxLength(20);
     }

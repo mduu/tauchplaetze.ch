@@ -50,6 +50,14 @@ internal class DailyForecast
 
     public string? WeatherModel { get; set; }
 
+    /// <summary>Stärkste Strömung im Tauchfenster, über 5–30 m gemittelt, in m/s. Nur bei Seen mit 3D-Modell.</summary>
+    public decimal? CurrentSpeed { get; set; }
+
+    /// <summary>Richtung, in die die Strömung fliesst, in Grad (0 = Nord).</summary>
+    public int? CurrentDirection { get; set; }
+
+    public CurrentLevel? CurrentLevel { get; set; }
+
     public decimal? PrecipitationLast72h { get; set; }
 
     public decimal? PrecipitationOnDay { get; set; }

@@ -1,4 +1,5 @@
 using Tauchplaetze.Core.CrossCutting.Geo;
+using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
@@ -30,6 +31,24 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal((1, false), (forecast.Days[4].DataLevel, forecast.Days[4].IsOutlook));
         Assert.Equal(new DateTime(2026, 10, 17, 0, 0, 0), forecast.HourList[0].LocalTime);
         Assert.All(forecast.HourList, h => Assert.NotNull(h.WindSpeedKmh));
+    }
+
+    [SqlFact]
+    public async Task Ein_Lauf_speichert_die_Stroemung_aus_dem_Seemodell_und_ohne_Werte_bleibt_sie_leer()
+    {
+        // Arrange: Die Antwort vom 17.10.2026 hatte noch keine Strömung (alle `u`/`v` leer).
+        var siteId = await PrepareRiffWilliams();
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+        var withoutCurrent = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Sql.Sources.Overrides["simulations/depthtime/delft3d-flow/"] = WithCurrent(TestData.Read("alplakes", "depthtime-delft3d-flow-zurich.json"), east: 0.06, north: 0.08);
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Assert.Equal((null, null, null), (withoutCurrent.CurrentSpeed, withoutCurrent.CurrentDirection, withoutCurrent.CurrentLevel));
+        Assert.Equal((0.1m, 37, CurrentLevel.Noticeable), (today.CurrentSpeed, today.CurrentDirection, today.CurrentLevel));
     }
 
     [SqlFact]
@@ -251,6 +270,18 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
         var admins = await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]));
         return await AddRiffWilliams(admins.UserIds[0]);
+    }
+
+    private static string WithCurrent(string json, double east, double north)
+    {
+        var root = JsonNode.Parse(json)!;
+        var variables = root["variables"]!;
+        var rows = variables["temperature"]!["data"]!.AsArray();
+        JsonArray Filled(double value) =>
+            [.. rows.Select(row => (JsonNode)new JsonArray([.. row!.AsArray().Select(_ => (JsonNode?)value)]))];
+        variables["u"] = new JsonObject { ["data"] = Filled(east), ["unit"] = "m/s" };
+        variables["v"] = new JsonObject { ["data"] = Filled(north), ["unit"] = "m/s" };
+        return root.ToJsonString();
     }
 
     private static IEnumerable<DateOnly> Days(params int[] october) => october.Select(day => new DateOnly(2026, 10, day));

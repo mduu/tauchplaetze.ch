@@ -23,6 +23,22 @@ public class SourceContractTests
         Assert.Equal(13.42, profile.TemperatureAt(20)!.Value, 2);
     }
 
+    [Theory]
+    [InlineData("depthtime-delft3d-flow-zurich-uv-20261019.json", 9, 68)]
+    [InlineData("depthtime-mitgcm-zug-uv-20261019.json", 9, 137)]
+    public void Das_3D_Modell_liefert_die_Stroemung_nach_Osten_und_Norden_fuer_jede_Tiefe_und_Zeit(string file, int times, int depths)
+    {
+        // Act
+        var series = DepthTimeSeries.Parse(TestData.Read("alplakes", file), "temperature");
+
+        // Assert
+        Assert.Equal((times, depths), (series.Times.Count, series.Depths.Count));
+        Assert.NotNull(series.EastVelocity);
+        Assert.NotNull(series.NorthVelocity);
+        Assert.Equal(times * depths, series.EastVelocity.Cast<double?>().Count(v => v is not null));
+        Assert.Equal(times * depths, series.NorthVelocity.Cast<double?>().Count(v => v is not null));
+    }
+
     [Fact]
     public void Das_1D_Modell_hat_dieselbe_Form_ohne_Gitterpunkt()
     {

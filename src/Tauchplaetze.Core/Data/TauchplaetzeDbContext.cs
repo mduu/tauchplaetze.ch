@@ -53,6 +53,7 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
         configurationBuilder.Properties<VisibilityIndicator>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<ClaritySource>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<AlgaeLevel>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<CurrentLevel>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<ForecastRunStatus>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<HydroStationRole>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<EntryPointKind>().HaveConversion<string>().HaveMaxLength(20);

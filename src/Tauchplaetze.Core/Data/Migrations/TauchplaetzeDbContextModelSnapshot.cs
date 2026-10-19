@@ -199,6 +199,17 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.Property<DateTimeOffset>("ComputedAt")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("CurrentDirection")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CurrentLevel")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal?>("CurrentSpeed")
+                        .HasPrecision(5, 3)
+                        .HasColumnType("decimal(5,3)");
+
                     b.Property<byte>("DataLevel")
                         .HasColumnType("tinyint");
 

@@ -144,7 +144,8 @@ internal class RunForecastHandler(
         var algae = ClarityEstimate.AlgaeFor(day, siteData.Chlorophyll, rules);
 
         var inputs = new DayInputs(weather, profile, clarity, algae, waterBodyData.DischargeRatio, isRiver);
-        return new DayForecast(inputs, DiveIndexCalculator.Calculate(inputs, rules), DataLevelRule.For(false, profile?.Source));
+        var current = isRiver ? null : CurrentEstimate.For(day, siteData.Model3d, DiveWindow.Default, CurrentRules.Default);
+        return new DayForecast(inputs, DiveIndexCalculator.Calculate(inputs, rules), DataLevelRule.For(false, profile?.Source), current);
     }
 
     /// <remarks>Die Station misst nur heute. Für die Tage danach gibt es keine Wassertemperatur am Fluss.</remarks>
@@ -155,7 +156,7 @@ internal class RunForecastHandler(
 
     private void Fill(DailyForecast forecast, DayForecast day, ForecastRun run)
     {
-        var (inputs, result, dataLevel) = day;
+        var (inputs, result, dataLevel, current) = day;
         var profile = inputs.Profile?.Profile;
 
         forecast.DataLevel = dataLevel;
@@ -178,6 +179,9 @@ internal class RunForecastHandler(
         forecast.WindGustsKmh = ToDecimal(inputs.Weather.GustMaxKmh);
         forecast.WindDirection = inputs.Weather.WindDirection is { } direction ? (int)Math.Round(direction) : null;
         forecast.WeatherModel = inputs.Weather.Model;
+        forecast.CurrentSpeed = current is null ? null : Math.Round((decimal)current.Speed, 3);
+        forecast.CurrentDirection = current is null ? null : (int)Math.Round(current.DirectionToward) % 360;
+        forecast.CurrentLevel = current?.Level;
         forecast.PrecipitationLast72h = ToDecimal(inputs.Weather.PrecipitationLast72h);
         forecast.PrecipitationOnDay = ToDecimal(inputs.Weather.PrecipitationInDiveWindow);
         forecast.InflowDischargeRatio = inputs.DischargeRatio is { } ratio ? Math.Round((decimal)ratio, 2) : null;
@@ -190,5 +194,5 @@ internal class RunForecastHandler(
 
     private static decimal? ToDecimal(double? value) => value is { } v ? Math.Round((decimal)v, 1) : null;
 
-    private sealed record DayForecast(DayInputs Inputs, DayResult Result, byte DataLevel);
+    private sealed record DayForecast(DayInputs Inputs, DayResult Result, byte DataLevel, DayCurrent? Current);
 }

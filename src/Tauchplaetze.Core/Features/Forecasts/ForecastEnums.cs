@@ -19,6 +19,19 @@ public enum VisibilityIndicator
     VeryGood,
 }
 
+/// <summary>Einstufung der Strömung im Tauchbereich (`forecast.md`, «Strömung»). Information, kein Teil des Index.</summary>
+public enum CurrentLevel
+{
+    /// <summary>Ruhig.</summary>
+    Calm,
+
+    /// <summary>Spürbar.</summary>
+    Noticeable,
+
+    /// <summary>Stark.</summary>
+    Strong,
+}
+
 /// <summary>Algen aus dem Chlorophyll des Satelliten.</summary>
 public enum AlgaeLevel
 {
