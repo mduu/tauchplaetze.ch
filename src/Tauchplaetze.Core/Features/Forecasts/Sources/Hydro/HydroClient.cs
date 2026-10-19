@@ -17,13 +17,19 @@ internal class HydroClient(HttpClient httpClient)
             HydroValue.ParseList,
             ct);
 
-    /// <summary>Abfluss mehrerer Stationen in einem Call, pro Station zeitlich sortiert.</summary>
-    public Task<SourceResult<IReadOnlyDictionary<string, IReadOnlyList<HydroValue>>>> GetFlows(IEnumerable<string> stationIds, DateOnly start, DateOnly end, CancellationToken ct) =>
+    /// <summary>Abfluss und Wassertemperatur mehrerer Stationen in einem Call, pro Station zeitlich sortiert.</summary>
+    public Task<SourceResult<HydroStationSeries>> GetFlowsAndTemperatures(IEnumerable<string> stationIds, DateOnly start, DateOnly end, CancellationToken ct) =>
         SourceHttp.Get(
             httpClient,
-            $"apiv1/hydro/daterange?locations={string.Join(',', stationIds)}&parameters=flow&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
-            json => HydroValue.ParseByStation(json, "flow"),
+            $"apiv1/hydro/daterange?locations={string.Join(',', stationIds)}&parameters=flow,temperature&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
+            HydroStationSeries.Parse,
             ct);
+}
+
+/// <summary>Abfluss und Wassertemperatur pro Station. Eine Station ohne Temperatur fehlt in <see cref="Temperature"/>.</summary>
+internal record HydroStationSeries(IReadOnlyDictionary<string, IReadOnlyList<HydroValue>> Flow, IReadOnlyDictionary<string, IReadOnlyList<HydroValue>> Temperature)
+{
+    public static HydroStationSeries Parse(string json) => new(HydroValue.ParseByStation(json, "flow"), HydroValue.ParseByStation(json, "temperature"));
 }
 
 /// <summary>Ein Messwert einer Station.</summary>

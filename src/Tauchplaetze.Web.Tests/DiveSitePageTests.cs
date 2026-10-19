@@ -47,6 +47,9 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         app.DiveSites.Add(River, new DiveSiteLookup.Found(new DiveSiteDetails(
             RiverSiteId, River, "Strandbad", "rhein", "Rhein", WaterBodyType.River, "Rheinfelden", "AG", 47.55164, 7.7767, 0, DateTimeOffset.UtcNow, [], [])));
         app.Discharge.Answer = query => query.DiveSiteId == RiverSiteId ? RiverDischarge() : null;
+        app.Forecasts.Add(RiverSiteId, new SiteForecast(
+            [Day(18, 7.2m, [ReasonCode.Windy]) with { ProfileSource = ProfileSource.RiverStation, TemperatureAt10m = null, TemperatureAt20m = null, TemperatureAt30m = null, ThermoclineTop = null, ThermoclineBottom = null, SecchiDepth = null, SecchiObservedAt = null }],
+            DateTimeOffset.UtcNow, Hours(new DateTime(2030, 1, 7)), WaterBodyType.River));
         app.DiveSites.Add("alter-name", new DiveSiteLookup.Moved(Slug));
         app.DiveSites.Add("archiviert", new DiveSiteLookup.Gone());
     }
@@ -373,11 +376,11 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         2, 9m, 15m, 1.2m, AlgaeLevel.Low, reasons);
 
     [Theory]
-    [InlineData("/de/tauchplaetze/", "Abfluss", "mittel", "steigt", "Die Moderation hat die Schwellen")]
-    [InlineData("/en/dive-sites/", "Discharge", "medium", "rising", "The moderators set the thresholds")]
-    [InlineData("/fr/sites-de-plongee/", "Débit", "moyen", "en hausse", "La modération a fixé les seuils")]
-    [InlineData("/it/siti-di-immersione/", "Portata", "media", "in aumento", "La moderazione ha fissato le soglie")]
-    public async Task Ein_Flussplatz_zeigt_den_Abfluss_mit_Einordnung_Trend_Station_und_Legende_in_jeder_Sprache(string path, string tile, string level, string trend, string legend)
+    [InlineData("/de/tauchplaetze/", "Wassertemperatur", "mittel", "steigt", "Die Moderation hat die Schwellen")]
+    [InlineData("/en/dive-sites/", "Water temperature", "medium", "rising", "The moderators set the thresholds")]
+    [InlineData("/fr/sites-de-plongee/", "Température de l'eau", "moyen", "en hausse", "La modération a fixé les seuils")]
+    [InlineData("/it/siti-di-immersione/", "Temperatura dell'acqua", "media", "in aumento", "La moderazione ha fissato le soglie")]
+    public async Task Ein_Flussplatz_zeigt_Wassertemperatur_und_Abfluss_mit_Einordnung_Trend_Station_und_Legende_in_jeder_Sprache(string path, string tile, string level, string trend, string legend)
     {
         // Arrange
         using var browser = app.Browser();
@@ -393,6 +396,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("Rhein – Rheinfelden", text);
         Assert.Contains(legend, text);
         Assert.Contains("data-discharge=\"Medium\"", html);
+        Assert.Contains("data-water-temperature", html);
     }
 
     [Fact]
@@ -414,6 +418,28 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         var hours = Enumerable.Range(0, 48).Select(h => new DischargeHour(now.AddHours(h - 47), 300 + h)).ToList();
         return new SiteDischarge("2091", "Rhein – Rheinfelden", 347, now.AddMinutes(-10), false, DischargeLevel.Medium,
             new DischargeThresholds(200, 300, 600), true, 280, DischargeTrend.Rising, 14, hours,
-            [.. Enumerable.Range(0, 7).Select(d => new DischargeDay(DateOnly.FromDateTime(now.UtcDateTime).AddDays(d - 6), 290 + d))], []);
+            [.. Enumerable.Range(0, 7).Select(d => new DischargeDay(DateOnly.FromDateTime(now.UtcDateTime).AddDays(d - 6), 290 + d))], [],
+            new WaterTemperature(16.6m, now.AddMinutes(-10), false));
+    }
+
+    [Theory]
+    [InlineData("/de/tauchplaetze/", "Temperatur nach Tiefe", "See", "Algen")]
+    [InlineData("/en/dive-sites/", "Temperature by depth", "lake", "Algae")]
+    [InlineData("/fr/sites-de-plongee/", "Température selon la profondeur", "lac", "Algues")]
+    [InlineData("/it/siti-di-immersione/", "Temperatura per profondità", "lago", "Alghe")]
+    public async Task Ein_Flussplatz_zeigt_kein_Tiefenprofil_keine_Algen_und_keine_Texte_zum_See(string path, string profile, string lake, string algae)
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync(path + River, TestContext.Current.CancellationToken);
+        var conditions = VisibleText.Of(Regex.Match(html, "aria-labelledby=\"conditions\"[\\s\\S]*?class=\"sources\"[\\s\\S]*?</p>").Value);
+
+        // Assert
+        Assert.DoesNotContain(profile, conditions);
+        Assert.DoesNotContain(algae, conditions);
+        Assert.DoesNotMatch($"(?i)\\b{lake}\\b", conditions);
+        Assert.DoesNotContain("Alplakes", conditions);
     }
 }

@@ -48,7 +48,11 @@ internal class GetSiteForecastHandler(TauchplaetzeDbContext dbContext, TimeProvi
                 f.CurrentLevel))
             .ToList();
 
-        return new SiteForecast(days, rows.Count > 0 ? rows.Max(f => f.ComputedAt) : null, await Hours(query.DiveSiteId, today, ct));
+        var waterBodyType = await dbContext.DiveSites
+            .Where(s => s.Id == query.DiveSiteId)
+            .Select(s => s.WaterBody!.WaterBodyType)
+            .FirstOrDefaultAsync(ct);
+        return new SiteForecast(days, rows.Count > 0 ? rows.Max(f => f.ComputedAt) : null, await Hours(query.DiveSiteId, today, ct), waterBodyType);
     }
 
     /// <remarks>Stunden vor heute 00:00 fallen weg. Stammt die Reihe von gestern, fehlt am Ende ein Tag.</remarks>

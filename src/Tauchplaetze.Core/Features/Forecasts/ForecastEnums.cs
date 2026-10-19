@@ -77,7 +77,7 @@ public enum ProfileSource
 /// <summary>Grund für den Index. Die Oberfläche bildet daraus einen Satz aus den Ressourcen.</summary>
 public enum ReasonCode
 {
-    /// <summary>Wenig Wind im Tauchfenster.</summary>
+    /// <summary>Wenig Wind im Tauchfenster. Nur an Seen: Auf einem Fluss sagt der Wind wenig über das Wasser.</summary>
     CalmLake,
 
     /// <summary>Viel Wind im Tauchfenster.</summary>

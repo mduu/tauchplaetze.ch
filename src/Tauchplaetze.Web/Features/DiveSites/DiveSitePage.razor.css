@@ -41,6 +41,7 @@
 
 .conditions-discharge {
     display: grid;
+    gap: 12px;
     margin-top: 16px;
     max-width: 640px;
 }

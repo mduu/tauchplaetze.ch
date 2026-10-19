@@ -42,6 +42,28 @@ public class DischargeTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Die_Wassertemperatur_kommt_mit_Messzeit_von_der_Station_und_bleibt_leer_wo_die_Station_keine_misst()
+    {
+        // Arrange: echte Antwort vom 19.10.2026, 16:10 UTC. 2605 Verzasca misst keine Temperatur.
+        var (moderator, rheinfelden) = await PrepareRheinfelden();
+        Sql.Time.Now = new DateTimeOffset(2026, 10, 19, 16, 15, 0, TimeSpan.Zero);
+        var verzasca = (await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"))).Single(w => w.Slug == "verzasca").Id;
+        var posse = (await Command<ProposeDiveSiteCommand, EditorialResult>(
+            new ProposeDiveSiteCommand(moderator, "Posse 1", verzasca, 46.251083, 8.843602, "Verzasca", "TI", null))).DiveSiteId!.Value;
+        Sql.Sources.Overrides["locations=2091,2605&"] = TestData.Read("hydro", "daterange-2091-2605-flow-temperature.json");
+
+        // Act
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        var rhein = await Discharge(rheinfelden);
+        var withoutTemperature = await Discharge(posse);
+        Assert.Equal(new WaterTemperature(16.6m, new DateTimeOffset(2026, 10, 19, 16, 10, 0, TimeSpan.Zero), false), rhein!.Temperature);
+        Assert.Equal(6.17m, withoutTemperature!.Discharge);
+        Assert.Null(withoutTemperature.Temperature);
+    }
+
+    [SqlFact]
     public async Task Steigt_der_Abfluss_in_3_Stunden_auf_das_Doppelte_des_Medians_ist_er_stark_und_steigt()
     {
         // Arrange: 30 Tage 100 m³/s, in den letzten 3 Stunden 250 m³/s.

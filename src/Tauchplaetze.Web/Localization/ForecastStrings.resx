@@ -144,4 +144,8 @@
   <data name="Discharge_Legend_Site" xml:space="preserve"><value>Die Moderation hat die Schwellen für diesen Platz gesetzt.</value></data>
   <data name="Discharge_Legend_Note" xml:space="preserve"><value>Viel Abfluss bedeutet starke Strömung und oft trübes Wasser.</value></data>
   <data name="Discharge_Source" xml:space="preserve"><value>Daten: {0}</value></data>
+  <data name="Sources_River" xml:space="preserve"><value>Daten: {0} und DWD über {1}, {2}. Die Prognose ist ein Indikator, keine Garantie für die Sicht.</value></data>
+  <data name="Visibility_River" xml:space="preserve"><value>Am Fluss gibt es keinen Satellitenwert. Viel Abfluss macht das Wasser oft trüb.</value></data>
+  <data name="Tile_WaterTemperature" xml:space="preserve"><value>Wassertemperatur</value></data>
+  <data name="WaterTemperature_Value" xml:space="preserve"><value>{0} °C</value></data>
 </root>

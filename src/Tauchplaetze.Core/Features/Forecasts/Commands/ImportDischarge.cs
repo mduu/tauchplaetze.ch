@@ -12,7 +12,7 @@ using Tauchplaetze.Core.Features.WaterBodies;
 namespace Tauchplaetze.Core.Features.Forecasts.Commands;
 
 /// <summary>
-/// Holt den Abfluss der Stationen aller Flussplätze in einem Call und speichert Stundenmittel und den neuesten Messwert
+/// Holt Abfluss und Wassertemperatur der Stationen aller Flussplätze in einem Call und speichert Stundenmittel und die neuesten Messwerte
 /// (`forecast.md`, «Abfluss»). Stundenwerte älter als 30 Tage fallen weg. Ein zweiter Lauf schreibt dieselben Werte.
 /// </summary>
 public record ImportDischargeCommand;
@@ -47,12 +47,14 @@ internal class ImportDischargeHandler(TauchplaetzeDbContext dbContext, HydroClie
         var now = time.GetUtcNow();
         var from = await FetchFrom(stations, now, ct);
         var recorder = new SourceRecorder(rawData, $"discharge/{now:yyyy-MM-dd}/{now:HHmm}");
-        var values = await recorder.Record(HydroClient.Source, "flow",
-            hydro.GetFlows(stations, DateOnly.FromDateTime(from.UtcDateTime), DateOnly.FromDateTime(now.UtcDateTime).AddDays(1), ct), ct);
-        if (values is null)
+        var series = await recorder.Record(HydroClient.Source, "flow-temperature",
+            hydro.GetFlowsAndTemperatures(stations, DateOnly.FromDateTime(from.UtcDateTime), DateOnly.FromDateTime(now.UtcDateTime).AddDays(1), ct), ct);
+        if (series is null)
         {
             return new ImportDischargeResult(0, stations.Count, Failed: true);
         }
+
+        var values = series.Flow;
 
         var withValues = stations.Where(s => values.GetValueOrDefault(s) is { Count: > 0 }).ToList();
         foreach (var station in withValues)
@@ -66,7 +68,7 @@ internal class ImportDischargeHandler(TauchplaetzeDbContext dbContext, HydroClie
 
         foreach (var station in withValues)
         {
-            await SaveReading(station, values[station], now, ct);
+            await SaveReading(station, values[station], series.Temperature.GetValueOrDefault(station), now, ct);
         }
 
         await dbContext.SaveChangesAsync(ct);
@@ -130,7 +132,8 @@ internal class ImportDischargeHandler(TauchplaetzeDbContext dbContext, HydroClie
         }
     }
 
-    private async Task SaveReading(string station, IReadOnlyList<HydroValue> values, DateTimeOffset now, CancellationToken ct)
+    /// <remarks>Ohne Temperatur in diesem Call bleibt die letzte. Die Kachel zeigt sie mit Uhrzeit und nach 2 h als veraltet.</remarks>
+    private async Task SaveReading(string station, IReadOnlyList<HydroValue> values, IReadOnlyList<HydroValue>? temperatures, DateTimeOffset now, CancellationToken ct)
     {
         var latest = values[^1];
         var cutoff = now - KeepFor;
@@ -150,6 +153,12 @@ internal class ImportDischargeHandler(TauchplaetzeDbContext dbContext, HydroClie
         reading.Discharge = Math.Round((decimal)latest.Value, 2);
         reading.DischargeThreeHoursBefore = DischargeRules.Nearest(values, latest.Time - TrendSpan) is { } before ? Math.Round((decimal)before.Value, 2) : null;
         reading.Median30Days = DischargeRules.Median(hours);
+        if (temperatures is [.., var temperature])
+        {
+            reading.Temperature = Math.Round((decimal)temperature.Value, 1);
+            reading.TemperatureMeasuredAt = temperature.Time;
+        }
+
         reading.ImportedAt = now;
     }
 }

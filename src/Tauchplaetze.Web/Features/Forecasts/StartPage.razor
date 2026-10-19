@@ -43,7 +43,14 @@
     @if (best is { Ranking: [var top, ..] })
     {
         <article class="best-pick">
-            <LakeCrossSection Surface="top.SurfaceTemperature" At20m="top.TemperatureAt20m" ThermoclineTop="top.ThermoclineTop" />
+            @if (top.HasDepthProfile)
+            {
+                <LakeCrossSection Surface="top.SurfaceTemperature" At20m="top.TemperatureAt20m" ThermoclineTop="top.ThermoclineTop" />
+            }
+            else
+            {
+                <LakeCrossSection />
+            }
             <div class="best-pick-text">
                 <div class="best-pick-head">
                     <div>

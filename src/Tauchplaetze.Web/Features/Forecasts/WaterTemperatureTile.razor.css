@@ -1,0 +1,28 @@
+.stat {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-tile);
+    padding: 18px;
+}
+
+.label {
+    font-size: 11px;
+}
+
+.stat-value {
+    margin-top: 6px;
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.stat-note {
+    margin-top: 4px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.stale {
+    color: var(--color-signal);
+}

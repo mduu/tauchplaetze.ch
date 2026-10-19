@@ -1,9 +1,24 @@
+using Tauchplaetze.Core.Features.WaterBodies;
+
 namespace Tauchplaetze.Core.Features.Forecasts;
 
-/// <summary>Die Prognose eines Platzes ab heute, mit dem Wetter pro Stunde ab heute 00:00. Leer, solange kein Lauf den Platz berechnet hat.</summary>
-public record SiteForecast(IReadOnlyList<ForecastDay> Days, DateTimeOffset? ComputedAt, IReadOnlyList<WeatherHourForecast>? Hours = null)
+/// <summary>
+/// Die Prognose eines Platzes ab heute, mit dem Wetter pro Stunde ab heute 00:00. Leer, solange kein Lauf den Platz berechnet hat.
+/// <see cref="WaterBodyType"/> bestimmt, welche Blöcke gelten (`ux.md`, Tauchplatzseite).
+/// </summary>
+public record SiteForecast(
+    IReadOnlyList<ForecastDay> Days,
+    DateTimeOffset? ComputedAt,
+    IReadOnlyList<WeatherHourForecast>? Hours = null,
+    WaterBodyType WaterBodyType = WaterBodyType.Lake)
 {
     public IReadOnlyList<WeatherHourForecast> HourList => Hours ?? [];
+
+    /// <summary>Temperatur nach Tiefe gibt es nur im See. Ein Fluss ist durchmischt, die Station misst an der Oberfläche.</summary>
+    public bool HasDepthProfile => WaterBodyType != WaterBodyType.River && Days is [{ SurfaceTemperature: not null }, ..];
+
+    /// <summary>Satellitenwerte (Sicht, Algen) gibt es nur für Seen.</summary>
+    public bool HasSatellite => WaterBodyType != WaterBodyType.River;
 }
 
 /// <summary>Das Wetter einer Stunde am Platz, Lokalzeit. Sonne in Minuten der Stunde, Wind aus Richtung in Grad (0 = Nord).</summary>
@@ -70,7 +85,11 @@ public record SiteDischarge(
     decimal? ChangeThreeHours,
     IReadOnlyList<DischargeHour> Hours,
     IReadOnlyList<DischargeDay> Days,
-    IReadOnlyList<DischargeHour> ForecastHours);
+    IReadOnlyList<DischargeHour> ForecastHours,
+    WaterTemperature? Temperature = null);
+
+/// <summary>Die neueste Wassertemperatur der Station in °C. Fehlt, wenn die Station keine Temperatur misst.</summary>
+public record WaterTemperature(decimal Value, DateTimeOffset MeasuredAt, bool IsStale);
 
 /// <summary>Mittlerer Abfluss einer Stunde, Beginn in UTC.</summary>
 public record DischargeHour(DateTimeOffset Hour, decimal Discharge);

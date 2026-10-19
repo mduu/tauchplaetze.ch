@@ -115,7 +115,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 - `GET https://api.existenz.ch/apiv1/hydro/daterange?locations={station}&parameters={parameter}&startdate=…&enddate=…&app=tauchplaetze.ch`
 - Parameter: `flow` (Abfluss), `height` (Pegel), `temperature` (Wassertemperatur), an einigen Stationen Trübung.
 - 246 Stationen, Werte alle 10 min.
-- Mehrere Stationen in einem Call: `locations=2091,2288,…`. Die Antwort hat pro Wert `timestamp` (Unix, s), `loc`, `par` und `val`.
+- Mehrere Stationen und Parameter in einem Call: `locations=2091,2288,…&parameters=flow,temperature`. Eine Station ohne Temperatur liefert nur `flow` (Stand 19.10.2026 mit Temperatur: 2016, 2029, 2091, 2135, 2243, 2288; ohne: 2063, 2132, 2368, 2378, 2475, 2480, 2605; Contract Test mit `daterange-2091-2605-flow-temperature.json`). Die Antwort hat pro Wert `timestamp` (Unix, s), `loc`, `par` und `val`.
 - `startdate` und `enddate` sind UTC-Tage: Die Antwort für `startdate=2026-10-18` beginnt am 18.10.2026 um 00:00 UTC (Contract Test mit `TestData/hydro/daterange-2091-flow-height.json`).
 - Stationen mit Name, Gewässer und Lage: `GET https://api.existenz.ch/apiv1/hydro/locations?app=tauchplaetze.ch`.
 - Bedingungen: BAFU-Daten, Quelle angeben.

@@ -10,5 +10,6 @@ Echte Antworten der Quellen aus dem Spike 0.5 (Riff Williams, Zürichsee). Die C
 | `open-meteo/` | ICON-CH1, ICON-DWD (13:06), ICON-CH2 (12:57) | 17.10.2026 |
 | `hydro/` | BAFU über existenz.ch, Station 2104 Linth Weesen, Abfluss | 17.10.2026, 13:06 |
 | `hydro/` (Flussplätze) | BAFU über existenz.ch, Station 2091 Rhein – Rheinfelden, Abfluss und Pegel, `startdate=2026-10-18`, `enddate=2026-10-20` | 19.10.2026, 15:45 |
+| `hydro/` (Temperatur) | BAFU über existenz.ch, Stationen 2091 Rhein – Rheinfelden und 2605 Verzasca – Lavertezzo, `parameters=flow,temperature`, 2605 ohne Temperatur | 19.10.2026, 16:15 |
 
 Ändert eine Quelle ihr Format, kommt eine neue Antwort dazu. Die alte bleibt, solange der Parser sie lesen muss.

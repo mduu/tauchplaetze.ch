@@ -1,0 +1,22 @@
+@using Tauchplaetze.Core.Features.Forecasts
+@inject IStringLocalizer<ForecastStrings> L
+
+<div class="stat" data-water-temperature data-stale="@(Temperature.IsStale ? "true" : "false")">
+    <div class="label">@L["Tile_WaterTemperature"]</div>
+    <div class="stat-value">@L["WaterTemperature_Value", ForecastFormat.Number(Temperature.Value)]</div>
+    <div class="stat-note">
+        @L["Discharge_Station", StationName, DischargeFormat.Time(Temperature.MeasuredAt)]
+        @if (Temperature.IsStale)
+        {
+            <span class="stale">· @L["Discharge_Stale"]</span>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public WaterTemperature Temperature { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public string StationName { get; set; } = "";
+}

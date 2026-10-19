@@ -34,7 +34,12 @@ public record RankedSite(
     decimal? ThermoclineBottom,
     int? WindBeaufort,
     IReadOnlyList<ReasonCode> Reasons,
-    double? DistanceKm);
+    double? DistanceKm,
+    WaterBodyType WaterBodyType = WaterBodyType.Lake)
+{
+    /// <summary>Den Querschnitt mit Temperaturen gibt es nur im See.</summary>
+    public bool HasDepthProfile => WaterBodyType != WaterBodyType.River;
+}
 
 internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider time) : IQueryHandler<GetBestSitesQuery, BestSites>
 {
@@ -65,7 +70,7 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 x.d.Name,
                 x.d.Municipality,
                 x.d.Location,
-                Water = new { x.d.WaterBody!.NameDe, x.d.WaterBody.NameEn, x.d.WaterBody.NameFr, x.d.WaterBody.NameIt },
+                Water = new { x.d.WaterBody!.NameDe, x.d.WaterBody.NameEn, x.d.WaterBody.NameFr, x.d.WaterBody.NameIt, x.d.WaterBody.WaterBodyType },
                 x.f.DiveIndex,
                 x.f.DataLevel,
                 x.f.SurfaceTemperature,
@@ -90,7 +95,8 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 r.ThermoclineBottom,
                 r.WindBeaufort,
                 ReasonCodes.Parse(r.ReasonCodes),
-                origin is null ? null : Math.Round(Distance.Km(origin, r.Location), 0)))
+                origin is null ? null : Math.Round(Distance.Km(origin, r.Location), 0),
+                r.Water.WaterBodyType))
             .ToList();
 
         return new BestSites(date, days, ranking);

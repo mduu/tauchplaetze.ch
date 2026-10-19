@@ -144,4 +144,8 @@
   <data name="Discharge_Legend_Site" xml:space="preserve"><value>The moderators set the thresholds for this site.</value></data>
   <data name="Discharge_Legend_Note" xml:space="preserve"><value>High discharge means strong current and often murky water.</value></data>
   <data name="Discharge_Source" xml:space="preserve"><value>Data: {0}</value></data>
+  <data name="Sources_River" xml:space="preserve"><value>Data: {0} and DWD via {1}, {2}. The forecast is an indicator, not a guarantee of visibility.</value></data>
+  <data name="Visibility_River" xml:space="preserve"><value>No satellite value for rivers. High discharge often makes the water murky.</value></data>
+  <data name="Tile_WaterTemperature" xml:space="preserve"><value>Water temperature</value></data>
+  <data name="WaterTemperature_Value" xml:space="preserve"><value>{0} °C</value></data>
 </root>

@@ -276,7 +276,7 @@ Mittlerer Abfluss einer BAFU-Station pro Stunde (`forecast.md`, «Abfluss»). PK
 
 ### HydroReading
 
-Der neueste Messwert einer Station. Eine Zeile pro Station, jeder Import überschreibt sie. PK: `StationId`.
+Die neuesten Messwerte einer Station (Abfluss, Wassertemperatur). Eine Zeile pro Station, jeder Import überschreibt sie. PK: `StationId`.
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
@@ -285,6 +285,8 @@ Der neueste Messwert einer Station. Eine Zeile pro Station, jeder Import übersc
 | `Discharge` | decimal(8,2) | m³/s |
 | `DischargeThreeHoursBefore` | decimal(8,2), optional | Wert 3 h vor `MeasuredAt`, für den Trend |
 | `Median30Days` | decimal(8,2), optional | Median der Stundenwerte der letzten 30 Tage |
+| `Temperature` | decimal(4,1), optional | neueste Wassertemperatur in °C. `null`: Die Station misst keine Temperatur (nie 0). |
+| `TemperatureMeasuredAt` | DateTimeOffset, optional | Zeit des Temperaturwerts |
 | `ImportedAt` | DateTimeOffset | |
 
 ### WaterBodyConditions

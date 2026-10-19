@@ -79,6 +79,7 @@ internal class HydroReadingConfiguration : IEntityTypeConfiguration<HydroReading
         builder.Property(r => r.Discharge).HasPrecision(8, 2);
         builder.Property(r => r.DischargeThreeHoursBefore).HasPrecision(8, 2);
         builder.Property(r => r.Median30Days).HasPrecision(8, 2);
+        builder.Property(r => r.Temperature).HasPrecision(4, 1);
     }
 }
 

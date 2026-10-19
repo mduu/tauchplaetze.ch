@@ -125,4 +125,16 @@ public class SourceContractTests
         Assert.Equal(239, flows["2091"].Count);
         Assert.Equal((335.7, 325.82), (flows["2091"][0].Value, flows["2091"][^1].Value));
     }
+
+    [Fact]
+    public void Die_Wassertemperatur_kommt_nur_fuer_Stationen_die_sie_messen()
+    {
+        // Act
+        var series = HydroStationSeries.Parse(TestData.Read("hydro", "daterange-2091-2605-flow-temperature.json"));
+
+        // Assert
+        Assert.Equal(["2091", "2605"], series.Flow.Keys.Order());
+        Assert.Equal(["2091"], series.Temperature.Keys);
+        Assert.Equal(16.62, series.Temperature["2091"][^1].Value);
+    }
 }

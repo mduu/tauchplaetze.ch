@@ -62,6 +62,10 @@
                 @if (discharge is not null)
                 {
                     <div class="conditions-discharge">
+                        @if (discharge.Temperature is { } temperature)
+                        {
+                            <WaterTemperatureTile Temperature="temperature" StationName="@discharge.StationName" />
+                        }
                         <DischargeTile Discharge="discharge" ShowSource="true" />
                     </div>
                 }

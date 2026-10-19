@@ -144,4 +144,8 @@
   <data name="Discharge_Legend_Site" xml:space="preserve"><value>La moderazione ha fissato le soglie per questo sito.</value></data>
   <data name="Discharge_Legend_Note" xml:space="preserve"><value>Una portata elevata significa corrente forte e spesso acqua torbida.</value></data>
   <data name="Discharge_Source" xml:space="preserve"><value>Dati: {0}</value></data>
+  <data name="Sources_River" xml:space="preserve"><value>Dati: {0} e DWD tramite {1}, {2}. La previsione è un indicatore, non una garanzia di visibilità.</value></data>
+  <data name="Visibility_River" xml:space="preserve"><value>Nessun valore satellitare per i fiumi. Una portata elevata intorbidisce spesso l'acqua.</value></data>
+  <data name="Tile_WaterTemperature" xml:space="preserve"><value>Temperatura dell'acqua</value></data>
+  <data name="WaterTemperature_Value" xml:space="preserve"><value>{0} °C</value></data>
 </root>

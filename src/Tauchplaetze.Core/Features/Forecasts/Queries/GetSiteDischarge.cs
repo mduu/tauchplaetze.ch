@@ -6,7 +6,10 @@ using Tauchplaetze.Core.Features.Forecasts.Calculation;
 
 namespace Tauchplaetze.Core.Features.Forecasts.Queries;
 
-/// <summary>Der Abfluss an einem Flussplatz: neuester Messwert, Einordnung, Trend, 48 Stunden und 7 Tage. <c>null</c> an einem See, ohne Station oder ohne Messwert.</summary>
+/// <summary>
+/// Der Abfluss an einem Flussplatz: neuester Messwert, Einordnung, Trend, 48 Stunden und 7 Tage, dazu die Wassertemperatur der Station.
+/// <c>null</c> an einem See, ohne Station oder ohne Messwert.
+/// </summary>
 public record GetSiteDischargeQuery(Guid DiveSiteId);
 
 internal class GetSiteDischargeHandler(TauchplaetzeDbContext dbContext, TimeProvider time) : IQueryHandler<GetSiteDischargeQuery, SiteDischarge?>
@@ -67,6 +70,9 @@ internal class GetSiteDischargeHandler(TauchplaetzeDbContext dbContext, TimeProv
             [.. measured
                 .GroupBy(h => SwissTime.DayOf(h.Hour))
                 .Select(g => new DischargeDay(g.Key, Math.Round(g.Average(h => h.Discharge), 1)))],
-            [.. hours.Where(h => h.Kind == HydroSeriesKind.Forecast && h.Hour >= now).Select(h => new DischargeHour(h.Hour, h.Discharge))]);
+            [.. hours.Where(h => h.Kind == HydroSeriesKind.Forecast && h.Hour >= now).Select(h => new DischargeHour(h.Hour, h.Discharge))],
+            reading is { Temperature: { } temperature, TemperatureMeasuredAt: { } measuredAt }
+                ? new WaterTemperature(temperature, measuredAt, now - measuredAt > StaleAfter)
+                : null);
     }
 }

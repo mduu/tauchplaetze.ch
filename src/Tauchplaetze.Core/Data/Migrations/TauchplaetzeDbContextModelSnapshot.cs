@@ -774,6 +774,13 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
+                    b.Property<decimal?>("Temperature")
+                        .HasPrecision(4, 1)
+                        .HasColumnType("decimal(4,1)");
+
+                    b.Property<DateTimeOffset?>("TemperatureMeasuredAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.HasKey("StationId");
 
                     b.ToTable("HydroReadings", (string)null);

@@ -15,7 +15,7 @@
     }
 </div>
 
-<div class="conditions-grid" data-profile="@(Today.SurfaceTemperature is not null ? "true" : "false")">
+<div class="conditions-grid" data-profile="@(Forecast.HasDepthProfile ? "true" : "false")">
     <div class="tiles">
         <div class="stat">
             <div class="label">@L["Tile_Visibility"]</div>
@@ -34,10 +34,13 @@
                 <div class="stat-value">@L["Wind_Unknown"]</div>
             }
         </div>
-        <div class="stat">
-            <div class="label">@L["Tile_Algae"]</div>
-            <div class="stat-value">@L[$"Algae_{Today.AlgaeLevel}"]</div>
-        </div>
+        @if (Forecast.HasSatellite)
+        {
+            <div class="stat">
+                <div class="label">@L["Tile_Algae"]</div>
+                <div class="stat-value">@L[$"Algae_{Today.AlgaeLevel}"]</div>
+            </div>
+        }
         @if (Today is { CurrentLevel: { } level, CurrentSpeed: { } speed, CurrentDirection: { } direction })
         {
             <div class="stat" data-current="@level">
@@ -51,13 +54,17 @@
                 <div class="stat-note">@L["Current_Detail", ForecastFormat.CentimetresPerSecond(speed), L[$"Compass_{ForecastFormat.Compass(direction)}"]]</div>
             </div>
         }
+        @if (Discharge is { Temperature: { } temperature })
+        {
+            <WaterTemperatureTile Temperature="temperature" StationName="@Discharge.StationName" />
+        }
         @if (Discharge is not null)
         {
             <DischargeTile Discharge="Discharge" />
         }
     </div>
 
-    @if (Today.SurfaceTemperature is not null)
+    @if (Forecast.HasDepthProfile)
     {
         <figure class="card profile">
             <figcaption class="profile-title">@L["Profile_Title"]</figcaption>
@@ -96,7 +103,7 @@
     </div>
 </div>
 
-<p class="sources">@SourceLinks.Format(L["Sources"], SourceLinks.Alplakes(L), SourceLinks.MeteoSwiss(L), SourceLinks.OpenMeteo(L), SourceLinks.Bafu(L)) @(Forecast.ComputedAt is { } computed ? L["Computed", computed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)] : "")</p>
+<p class="sources">@Sources @(Forecast.ComputedAt is { } computed ? L["Computed", computed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)] : "")</p>
 
 @code {
     [Parameter, EditorRequired]
@@ -114,8 +121,13 @@
         ? L["Profile_Thermocline", ForecastFormat.Meters(top), ForecastFormat.Meters(bottom)]
         : L["Profile_Mixed"];
 
+    private MarkupString Sources => Forecast.HasSatellite
+        ? SourceLinks.Format(L["Sources"], SourceLinks.Alplakes(L), SourceLinks.MeteoSwiss(L), SourceLinks.OpenMeteo(L), SourceLinks.Bafu(L))
+        : SourceLinks.Format(L["Sources_River"], SourceLinks.MeteoSwiss(L), SourceLinks.OpenMeteo(L), SourceLinks.Bafu(L));
+
     private string VisibilityNote => Today switch
     {
+        _ when !Forecast.HasSatellite => L["Visibility_River"],
         { ClaritySource: ClaritySource.Sentinel2Shore, SecchiDepthShore: { } nearShore, SecchiObservedAt: { } shoreDate } =>
             L["Visibility_Sentinel2Shore", ForecastFormat.Date(shoreDate), ForecastFormat.Number(nearShore)]
             + (Today.VisibilityGoodBelow is { } shoreBelow ? $" · {L["Visibility_GoodBelow", ForecastFormat.Meters(shoreBelow)]}" : ""),

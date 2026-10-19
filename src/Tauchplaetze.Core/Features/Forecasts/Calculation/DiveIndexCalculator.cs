@@ -153,7 +153,7 @@ internal static class DiveIndexCalculator
         Add(reasons, ReasonCode.ClarityStale, secchi is not null && inputs.Clarity.AgeDays > rules.SatelliteFullAgeDays);
         Add(reasons, ReasonCode.ClearBelowThermocline, thermocline?.Bottom <= 20 && SurfaceIsModerate(inputs, rules));
         Add(reasons, ReasonCode.ClearWater, secchi >= 8);
-        Add(reasons, ReasonCode.CalmLake, bft <= 2);
+        Add(reasons, ReasonCode.CalmLake, bft <= 2 && !inputs.IsRiver);
         Add(reasons, ReasonCode.MixedLake, inputs.Profile is not null && thermocline is null && !inputs.IsRiver);
 
         return reasons;

@@ -144,4 +144,8 @@
   <data name="Discharge_Legend_Site" xml:space="preserve"><value>La modération a fixé les seuils pour ce site.</value></data>
   <data name="Discharge_Legend_Note" xml:space="preserve"><value>Un débit élevé signifie un courant fort et souvent une eau trouble.</value></data>
   <data name="Discharge_Source" xml:space="preserve"><value>Données : {0}</value></data>
+  <data name="Sources_River" xml:space="preserve"><value>Données : {0} et DWD via {1}, {2}. La prévision est un indicateur, pas une garantie de visibilité.</value></data>
+  <data name="Visibility_River" xml:space="preserve"><value>Pas de valeur satellite pour les rivières. Un débit élevé trouble souvent l'eau.</value></data>
+  <data name="Tile_WaterTemperature" xml:space="preserve"><value>Température de l'eau</value></data>
+  <data name="WaterTemperature_Value" xml:space="preserve"><value>{0} °C</value></data>
 </root>

@@ -108,6 +108,7 @@ Die Strömung ist eine Information auf der Platzseite (Kachel «Strömung»). Si
 An Flussplätzen zeigt die Platzseite die Kachel «Abfluss» (`ux.md`, Tauchplatzseite). Sie ist eine Information und fliesst nicht in den Index. Viel Abfluss heisst starke Strömung und oft trübes Wasser.
 
 - **Station:** `DiveSite.InflowStationOverride`, sonst die nächste Station mit Rolle `River` und Lage am Fluss des Platzes (`WaterBodyHydroStation.Location`). Plätze an Seen haben keine Kachel. Der Seed ordnet jedem Fluss mit Plätzen die nächsten BAFU-Stationen am selben Fluss zu (höchstens 30 km vom Platz, Stand 19.10.2026: Rhein, Aare, Areuse, Limmat, Maggia, Orbe, Töss, Verzasca). Hagneckkanal, Creugenat, Riale del Salto und Steinenbach haben keine Station.
+- **Wassertemperatur:** Derselbe Call holt `temperature`. Die Kachel «Wassertemperatur» zeigt den neuesten Wert mit Messzeit. Misst die Station keine Temperatur, bleibt sie leer (nie 0) und die Kachel fehlt. Fehlt sie in einem Call, bleibt der letzte Wert und gilt nach 2 h als veraltet. Ein Tiefenprofil gibt es an Flüssen nicht.
 - **Messwert:** der neueste 10-Minuten-Wert der Station mit Uhrzeit. Der Import läuft alle 30 Minuten. Ist der Wert älter als 2 h, zeigt die Kachel «Messwert veraltet».
 - **Einordnung (`DischargeRules`):** sehr gering, gering, mittel, stark.
   - Mit Schwellen des Platzes (`DischargeLowFrom`, `DischargeMediumFrom`, `DischargeStrongFrom` in m³/s): unter der ersten sehr gering, ab der ersten gering, ab der zweiten mittel, ab der dritten stark. Nur die Moderation setzt sie (`cms.md`).
@@ -168,7 +169,7 @@ Für Flussplätze gilt dieselbe Formel. Die Schichtung fällt weg (Fluss ist dur
 - **Alternder Satellitenwert:** Ab Tag 6 gelten dieselben Obergrenzen wie ohne Sichtwert (Index höchstens 6.5, Schichtung höchstens 7). So springt der Index an Tag 15, wenn der Wert unbekannt wird, nicht nach oben.
 - Fehlen Zuflüsse oder Schichtung (Fluss), verteilt sich ihr Gewicht auf die anderen Teilwerte.
 
-**Begründung:** Der Algorithmus speichert `ReasonCodes` (z.B. `CalmLake`, `ClearBelowThermocline`, `TurbidAfterRain`, `WindAfternoon`). Die Oberfläche bildet daraus einen Satz aus den `.resx`-Ressourcen. So ist die Begründung in allen vier Sprachen verfügbar.
+**Begründung:** Der Algorithmus speichert `ReasonCodes` (z.B. `CalmLake`, `ClearBelowThermocline`, `TurbidAfterRain`, `WindAfternoon`). Die Oberfläche bildet daraus einen Satz aus den `.resx`-Ressourcen. So ist die Begründung in allen vier Sprachen verfügbar. An Flussplätzen fallen die See-Gründe weg: `CalmLake`, `MixedLake` und `ClarityUnknown` (am Fluss gibt es keinen Satellitenwert).
 
 **Temperatur ist kein Abzug.** Kaltes Wasser ist in der Schweiz normal. Die Temperatur in der Tiefe erscheint als Information, nicht im Index.
 
@@ -201,9 +202,9 @@ Ein kleiner zweiter Job holt den Abfluss öfter als der Prognose-Lauf. Er ruft n
 
 - **Zeitplan:** beim Start der Web-App und danach alle 30 Minuten.
 - **Lock:** `locks/discharge`. Hält ein anderer Lauf den Lock, endet der zweite sofort.
-- **Ein Call:** existenz.ch `hydro/daterange` mit allen Stationen der Flussplätze und `parameters=flow` (rund 15 Stationen). `startdate` ist ein UTC-Tag. Der Call holt ab der letzten gespeicherten Stunde, mindestens die letzten 4 Stunden. Eine neue Station holt 30 Tage nach.
-- **Ablauf:** Stundenmittel schreiben (Upsert, die laufende Stunde mit den Werten bis jetzt), Stunden älter als 30 Tage löschen, pro Station den neuesten Wert mit Wert vor 3 h und Median der 30 Tage schreiben.
-- **Rohdaten:** `forecast-raw/discharge/{date}/{HHmm}/hydro/flow.json`.
+- **Ein Call:** existenz.ch `hydro/daterange` mit allen Stationen der Flussplätze und `parameters=flow,temperature` (rund 15 Stationen). `startdate` ist ein UTC-Tag. Der Call holt ab der letzten gespeicherten Stunde, mindestens die letzten 4 Stunden. Eine neue Station holt 30 Tage nach.
+- **Ablauf:** Stundenmittel schreiben (Upsert, die laufende Stunde mit den Werten bis jetzt), Stunden älter als 30 Tage löschen, pro Station den neuesten Wert mit Wert vor 3 h, Median der 30 Tage und, wo gemessen, die neueste Wassertemperatur schreiben.
+- **Rohdaten:** `forecast-raw/discharge/{date}/{HHmm}/hydro/flow-temperature.json`.
 - **Ausfall:** Scheitert der Call, bleiben die letzten Werte. Die Kachel zeigt sie mit Uhrzeit und nach 2 h als veraltet.
 
 ## Phase 2: eigenes Modell
