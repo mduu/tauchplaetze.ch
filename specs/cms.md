@@ -126,6 +126,14 @@ Mails gehen über die Mail-Queue (ADR-010), formatiert mit gemeinsamem Layout un
 
 Konto-Mails (Bestätigung, Passwort) und das Kontaktformular nutzen dasselbe Layout.
 
+**Keine Mail beim Einreichen** (Entscheid Marc, 19.10.2026): Mitwirkende erfahren im CMS, dass ihr Vorschlag angekommen ist. Eine Mail bekommen sie erst bei Freigabe oder Ablehnung.
+
+### Was Mitwirkende sehen
+
+- **Nach dem Speichern:** «Danke! Dein Vorschlag ist bei der Moderation. Du bekommst eine Mail, sobald er freigegeben oder abgelehnt ist.»
+- **Meine Vorschläge** (`/admin/meine-vorschlaege`, für alle Angemeldeten): eigene Vorschläge, neuste zuerst, mit Platz, Version, Datum, Status (wartet, freigegeben, abgelehnt mit Begründung, zurückgezogen), eigenem Kommentar und Link auf Platz und Versionen. Wartende lassen sich zurückziehen. Eigene Änderungen, die Moderatoren selbst freigegeben haben, erscheinen nicht. Query `GetMyProposals`.
+- **Beim Öffnen eines Platzes:** Hat die Person dort einen offenen Vorschlag, zeigt das CMS «Du hast hier einen offenen Vorschlag vom {Datum}» mit Link auf «Meine Vorschläge».
+
 ### Was Mitwirkende dürfen
 
 - Texte, Bewertungen, Einstiege und Lage eines bestehenden Platzes ändern.

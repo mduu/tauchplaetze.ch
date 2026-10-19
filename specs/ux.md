@@ -140,6 +140,7 @@ Use-Case: stöbern nach See («Was ist los an meinem See?»). Die Suche nach Eig
 - Eigenes Layout mit Seitenleiste, gleiche dunkle Farbwelt.
 - Platzliste mit Ausbaustufe als Badge. Schnellerfassung mit Karte.
 - Details in `cms.md`.
+- **Meine Vorschläge** für alle Angemeldeten in der Navigation, dazu der Hinweis auf einen offenen eigenen Vorschlag beim Öffnen eines Platzes (`cms.md`, «Was Mitwirkende sehen»).
 - **Plattform** (nur Admin): im selben Layout, Navigation «Plattform». Zwei Kacheln mit Zählern (in der Queue, Dead-Letter, rot umrandet, sobald nicht leer), Knöpfe «Alle erneut senden» und «Alle löschen», darunter die Dead-Letter-Mails als aufklappbare Liste mit Details und Knöpfen pro Mail. Löschen fragt nach.
 
 ## Zustände
