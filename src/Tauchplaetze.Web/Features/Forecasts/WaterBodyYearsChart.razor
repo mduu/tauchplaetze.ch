@@ -35,7 +35,7 @@
                 y.Year == CurrentYear ? "index" : "past",
                 y.Year.ToString(CultureInfo.InvariantCulture),
                 [.. y.Points.Select(p => new ChartPoint(HistoryCharts.DayOfYear(p.Date), (double)p.MedianIndex, (double?)p.SmoothedIndex))],
-                0,
-                10)),
+                HistoryCharts.IndexMin,
+                HistoryCharts.IndexMax)),
     ];
 }

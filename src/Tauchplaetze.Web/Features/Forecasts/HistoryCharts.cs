@@ -6,6 +6,12 @@ namespace Tauchplaetze.Web.Features.Forecasts;
 /// <summary>Bildet den Verlauf auf die Achsen der Diagramme ab (`design-system.md`, «Diagramme»).</summary>
 internal static class HistoryCharts
 {
+    /// <summary>Die Achse jedes Index-Diagramms ist fest 0 bis 10 (10 ist der beste Wert), nie automatisch skaliert (Entscheid Marc, 19.10.2026).</summary>
+    public const double IndexMin = 0;
+
+    /// <inheritdoc cref="IndexMin"/>
+    public const double IndexMax = 10;
+
     /// <summary>Unter so vielen Tagen steht der Hinweis, dass sich der Verlauf noch füllt.</summary>
     public const int FillingBelowDays = 14;
 

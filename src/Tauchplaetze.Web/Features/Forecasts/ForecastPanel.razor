@@ -151,7 +151,7 @@
 
             var range = HistoryCharts.RangeOf(history.Days, Today.Date);
             var series = new ChartSeries(
-                "index", L["Index_Label"], [.. history.Days.Select(d => new ChartPoint(range.X(d.Date), null, (double?)d.SmoothedIndex))], 0, 10,
+                "index", L["Index_Label"], [.. history.Days.Select(d => new ChartPoint(range.X(d.Date), null, (double?)d.SmoothedIndex))], HistoryCharts.IndexMin, HistoryCharts.IndexMax,
                 EndLabel: history.Days.LastOrDefault(d => d.SmoothedIndex is not null)?.SmoothedIndex is { } mean ? $"Ø {ForecastFormat.Number(mean)}" : null);
             var markers = history.RuleChanges.Select(c => new ChartTick(range.X(c.Date), "")).ToList();
             return new Trend(series, markers, range, L["History_Aria", ForecastFormat.Date(range.From), ForecastFormat.Date(range.To)]);

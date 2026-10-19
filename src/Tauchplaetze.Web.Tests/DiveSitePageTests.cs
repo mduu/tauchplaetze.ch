@@ -449,6 +449,25 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Das_kleine_Index_Diagramm_hat_eine_feste_Achse_von_0_bis_10_und_skaliert_nicht_auf_die_Werte()
+    {
+        // Arrange: Bei fester Achse liegen 4 und 6 nahe der Mitte. Automatisch skaliert lägen sie am unteren und oberen Rand (y 94 und 6).
+        app.SiteHistory.Answer = query => query.DiveSiteId == ForecastSiteId
+            ? new SiteIndexHistory([HistoryDay(17, 4.0m, "rules-1.3", AlgaeLevel.Low), HistoryDay(18, 6.0m, "rules-1.3", AlgaeLevel.Low)], [])
+            : new SiteIndexHistory([], []);
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithForecast, TestContext.Current.CancellationToken);
+
+        // Assert
+        var trend = html[html.IndexOf("class=\"index-trend\"", StringComparison.Ordinal)..html.IndexOf("class=\"index-label\"", StringComparison.Ordinal)];
+        var line = Regex.Match(trend, "class=\"line\" d=\"([^\"]+)\"").Groups[1].Value;
+        Assert.StartsWith("M0 58.8", line);
+        Assert.EndsWith("1000 41.2", line);
+    }
+
+    [Fact]
     public async Task Ohne_Verlauf_fehlen_das_kleine_Diagramm_neben_dem_Index_und_das_Mini_Diagramm_fuer_Sicht()
     {
         // Arrange
