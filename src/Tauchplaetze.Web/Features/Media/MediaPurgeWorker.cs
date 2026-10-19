@@ -38,7 +38,7 @@ internal class MediaPurgeWorker(IServiceScopeFactory scopes, TimeProvider time, 
                 .Handle(new PurgeUnusedMediaCommand(), ct);
             logger.LogInformation("Media purge: {Deleted} photos deleted, skipped {Skipped}", result.Deleted, result.Skipped);
         }
-        catch (Exception ex) when (ex is not OperationCanceledException)
+        catch (Exception ex) when (!ct.IsCancellationRequested)
         {
             logger.LogError(ex, "Media purge failed");
         }

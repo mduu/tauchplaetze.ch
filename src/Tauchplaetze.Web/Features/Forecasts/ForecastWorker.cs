@@ -26,7 +26,21 @@ internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSche
         }
     }
 
+    /// <remarks>Ist die Datenbank beim Start nicht erreichbar, läuft der Lauf trotzdem an. Er meldet den Fehler selbst.</remarks>
     private async Task<bool> RecentRunExists(CancellationToken ct)
+    {
+        try
+        {
+            return await LastRunIsRecent(ct);
+        }
+        catch (Exception ex) when (!ct.IsCancellationRequested)
+        {
+            logger.LogError(ex, "Last forecast run could not be read");
+            return false;
+        }
+    }
+
+    private async Task<bool> LastRunIsRecent(CancellationToken ct)
     {
         await using var scope = scopes.CreateAsyncScope();
         var runs = await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>>()
@@ -49,7 +63,7 @@ internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSche
                 .Handle(new RunForecastCommand(), ct);
             logger.LogInformation("Forecast run {RunId}: {Status}, {Sites} sites, skipped {Skipped}", result.RunId, result.Status, result.Sites, result.Skipped);
         }
-        catch (Exception ex) when (ex is not OperationCanceledException)
+        catch (Exception ex) when (!ct.IsCancellationRequested)
         {
             logger.LogError(ex, "Forecast run failed");
         }
