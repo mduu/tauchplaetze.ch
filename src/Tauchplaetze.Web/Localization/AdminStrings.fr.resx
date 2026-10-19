@@ -293,4 +293,5 @@
   <data name="Platform_Lead" xml:space="preserve"><value>Exploitation de la plateforme : comptes, calculs de prévision et file d’envoi des e-mails. Réservé aux admins.</value></data>
   <data name="Platform_BlockedCount" xml:space="preserve"><value>dont {0} bloqué(s)</value></data>
   <data name="Field_WaterBodyId_ModeratorOnly" xml:space="preserve"><value>La modération change le lac ou la rivière.</value></data>
+  <data name="MyProposals_NewSiteSubmitted" xml:space="preserve"><value>Merci ! Ta proposition de nouveau site est envoyée. Une modératrice ou un modérateur la vérifie.</value></data>
 </root>

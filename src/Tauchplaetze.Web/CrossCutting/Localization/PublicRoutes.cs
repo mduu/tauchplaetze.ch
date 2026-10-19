@@ -51,7 +51,15 @@ internal static class PublicRoutes
         ["it"] = "modifica",
     };
 
-    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions, About, Edit];
+    public static readonly IReadOnlyDictionary<string, string> New = new Dictionary<string, string>
+    {
+        ["de"] = "neu",
+        ["en"] = "new",
+        ["fr"] = "nouveau",
+        ["it"] = "nuovo",
+    };
+
+    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions, About, Edit, New];
 
     /// <summary>Die Seite «Über», optional mit Anker (`prognose`, `quellen`, `impressum`, `datenschutz`).</summary>
     public static string AboutPage(string language, string? anchor = null) => $"/{language}/{About[language]}{(anchor is null ? "" : "#" + anchor)}";
@@ -74,6 +82,18 @@ internal static class PublicRoutes
         return segments is [var language, var section, _, var edit]
             && DiveSites.TryGetValue(language, out var sites) && sites == section
             && Edit[language] == edit;
+    }
+
+    /// <summary>Die Seite «Neuen Platz vorschlagen» (`ux.md`, «Neuer Platz»). Nur angemeldet, `noindex`.</summary>
+    public static string NewDiveSite(string language) => $"/{language}/{DiveSites[language]}/{New[language]}";
+
+    /// <summary>Der Pfad ist eine interaktive Seite der Website: der Bearbeiten-Modus oder «Neuen Platz vorschlagen».</summary>
+    public static bool IsInteractive(string? path)
+    {
+        var segments = (path ?? "").Split('/', StringSplitOptions.RemoveEmptyEntries);
+        return IsDiveSiteEdit(path)
+            || (segments is [var language, var section, var name]
+                && DiveSites.TryGetValue(language, out var sites) && sites == section && New[language] == name);
     }
 
     /// <summary>Das Segment <paramref name="segment"/> einer Sprache in einer anderen Sprache. Unbekannte Segmente bleiben gleich.</summary>

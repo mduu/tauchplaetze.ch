@@ -293,4 +293,5 @@
   <data name="Platform_Lead" xml:space="preserve"><value>Running the platform: accounts, forecast runs and the mail queue. Admins only.</value></data>
   <data name="Platform_BlockedCount" xml:space="preserve"><value>{0} of them blocked</value></data>
   <data name="Field_WaterBodyId_ModeratorOnly" xml:space="preserve"><value>The moderators change the lake or river.</value></data>
+  <data name="MyProposals_NewSiteSubmitted" xml:space="preserve"><value>Thank you! Your suggestion for a new dive site has been submitted. A moderator will review it.</value></data>
 </root>

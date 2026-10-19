@@ -293,4 +293,5 @@
   <data name="Platform_Lead" xml:space="preserve"><value>Betrieb der Plattform: Konten, Prognose-Läufe und die Mail-Queue. Nur für Admins.</value></data>
   <data name="Platform_BlockedCount" xml:space="preserve"><value>davon {0} gesperrt</value></data>
   <data name="Field_WaterBodyId_ModeratorOnly" xml:space="preserve"><value>Das Gewässer ändert die Moderation.</value></data>
+  <data name="MyProposals_NewSiteSubmitted" xml:space="preserve"><value>Danke! Dein Vorschlag für einen neuen Platz ist eingereicht. Eine Moderatorin oder ein Moderator prüft ihn.</value></data>
 </root>

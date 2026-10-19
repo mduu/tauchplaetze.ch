@@ -62,6 +62,22 @@ public class AdminPageTests : IClassFixture<WebApp>
         Assert.DoesNotContain("Vérifier les propositions", VisibleText.Of(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)));
     }
 
+    [Theory]
+    [InlineData("/admin/plaetze/neu")]
+    [InlineData("/admin/plaetze/6f1c2a52-3c1e-4c55-9d0a-0f7f3f7b9d11")]
+    public async Task Mitwirkende_bearbeiten_und_schlagen_Plaetze_auf_der_Website_vor_der_Editor_im_CMS_bleibt_der_Moderation(string path)
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        using var response = await browser.GetAsync(path, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
     [Fact]
     public async Task Mitwirkende_sehen_ihre_Vorschlaege_im_Profil_mit_Status_und_der_Begruendung_einer_Ablehnung()
     {

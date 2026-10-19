@@ -229,4 +229,14 @@
   <data name="EditMode_Tools_Point" xml:space="preserve"><value>Croquis : symboles</value></data>
   <data name="EditMode_Tools_Line" xml:space="preserve"><value>Croquis : lignes</value></data>
   <data name="EditMode_Tools_Area" xml:space="preserve"><value>Croquis : surfaces</value></data>
+  <data name="NewSite_Title" xml:space="preserve"><value>Proposer un nouveau site</value></data>
+  <data name="NewSite_Lead" xml:space="preserve"><value>Un site n'a besoin que d'un nom, d'un plan d'eau et d'une coordonnée. Tu complètes le reste plus tard en mode édition, dès que le site est validé.</value></data>
+  <data name="NewSite_Location" xml:space="preserve"><value>Emplacement</value></data>
+  <data name="NewSite_Location_Help" xml:space="preserve"><value>Clique sur le point d'entrée principal sur la carte. Tu peux aussi saisir la coordonnée.</value></data>
+  <data name="NewSite_Canton_Help" xml:space="preserve"><value>Abréviation, p. ex. VD</value></data>
+  <data name="NewSite_Comment_Help" xml:space="preserve"><value>Que doivent savoir les modératrices et modérateurs ? Par exemple ta source.</value></data>
+  <data name="NewSite_Submit_Contributor" xml:space="preserve"><value>Envoyer la proposition</value></data>
+  <data name="NewSite_Submit_Moderator" xml:space="preserve"><value>Créer le site</value></data>
+  <data name="NewSite_Missing" xml:space="preserve"><value>Il manque un site ?</value></data>
+  <data name="NewSite_Link" xml:space="preserve"><value>Proposer un nouveau site</value></data>
 </root>

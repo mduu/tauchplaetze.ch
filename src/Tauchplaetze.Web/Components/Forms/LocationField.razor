@@ -1,0 +1,72 @@
+@* Koordinate per Klick in die Karte, mit Breite und Länge als Alternative. Nur auf interaktiven Seiten. *@
+@implements IAsyncDisposable
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
+@inject IStringLocalizer<DiveSiteStrings> Site
+
+<div class="location-field">
+    <div id="@Id" class="location-map location-field-map" data-contours="auto"
+         data-layer-map="@Site["Map_Layer_Map"]" data-layer-photo="@Site["Map_Layer_Photo"]" data-layer-contours="@Site["Map_Layer_Contours"]"
+         role="application" aria-label="@Label"></div>
+    <p class="field-help">@Help</p>
+    <CoordinateFields Label="@Label" Latitude="Latitude" Longitude="Longitude" Changed="Set" />
+</div>
+
+@code {
+    private DotNetObjectReference<LocationField>? reference;
+
+    private bool shown;
+
+    [Parameter, EditorRequired]
+    public string Id { get; set; } = "";
+
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public string? Help { get; set; }
+
+    [Parameter]
+    public double Latitude { get; set; }
+
+    [Parameter]
+    public double Longitude { get; set; }
+
+    [Parameter]
+    public EventCallback<(double Latitude, double Longitude)> Changed { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        reference ??= DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("tauchplaetzeAdmin.show", Id, Latitude, Longitude, reference);
+        shown = true;
+    }
+
+    [JSInvokable]
+    public async Task SetLocation(double latitude, double longitude) => await Set((Math.Round(latitude, 6), Math.Round(longitude, 6)));
+
+    private async Task Set((double Latitude, double Longitude) point)
+    {
+        (Latitude, Longitude) = point;
+        await Changed.InvokeAsync(point);
+        StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        reference?.Dispose();
+        if (!shown)
+        {
+            return;
+        }
+
+        try
+        {
+            await JS.InvokeVoidAsync("tauchplaetzeAdmin.dispose", Id);
+        }
+        catch (Exception exception) when (exception is JSDisconnectedException or OperationCanceledException)
+        {
+            return;
+        }
+    }
+}

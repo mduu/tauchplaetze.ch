@@ -1,0 +1,130 @@
+@page "/de/tauchplaetze/neu"
+@page "/en/dive-sites/new"
+@page "/fr/sites-de-plongee/nouveau"
+@page "/it/siti-di-immersione/nuovo"
+@attribute [Authorize]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Core.Features.Editorial.Commands
+@using Tauchplaetze.Core.Features.WaterBodies
+@using Tauchplaetze.Core.Features.WaterBodies.Queries
+@using Tauchplaetze.Web.Features.Editorial
+@inject IStringLocalizer<DiveSiteStrings> Site
+@inject IStringLocalizer<SharedStrings> Shared
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<PageTitle>@Site["NewSite_Title"] · @Shared["Brand"]</PageTitle>
+<HeadContent>
+    <meta name="robots" content="noindex" />
+</HeadContent>
+
+<div class="edit-mode" data-edit-mode data-edit-dirty="@(IsDirty ? "true" : "false")">
+    <header class="edit-head">
+        <h1 class="site-name">@Site["NewSite_Title"]</h1>
+        <p class="lead">@Site["NewSite_Lead"]</p>
+    </header>
+
+    @if (errors.Count > 0)
+    {
+        <div class="message error" role="alert" tabindex="-1" @ref="messageBox">
+            @foreach (var error in errors)
+            {
+                <p>@L[$"Error_{error}"]</p>
+            }
+        </div>
+    }
+
+    <section class="page-section edit-section" aria-labelledby="new-basics">
+        <h2 id="new-basics" class="edit-section-title">@Site["EditMode_Section_Basics"]</h2>
+        <div class="edit-grid">
+            <FormText Label="@L["Field_Name"]" @bind-Value="name" MaxLength="120" Required="true" />
+            <FormSelect TValue="int" Label="@L["Field_WaterBodyId"]" @bind-Value="waterBodyId" Options="@([.. waterBodies.Select(w => (w.Id, w.Name))])" EmptyLabel="–" />
+            <FormText Label="@L["Field_Municipality"]" @bind-Value="municipality" MaxLength="80" />
+            <FormText Label="@L["Field_Canton"]" @bind-Value="canton" MaxLength="2" Help="@Site["NewSite_Canton_Help"]" />
+        </div>
+    </section>
+
+    <section class="page-section edit-section" aria-labelledby="new-location">
+        <h2 id="new-location" class="edit-section-title">@Site["NewSite_Location"]</h2>
+        <LocationField Id="new-site-map" Label="@L["Field_Location"]" Help="@Site["NewSite_Location_Help"]"
+                       Latitude="latitude" Longitude="longitude" Changed="@(p => (latitude, longitude, located) = (p.Latitude, p.Longitude, true))" />
+    </section>
+
+    <section class="page-section edit-section" aria-labelledby="new-comment">
+        <h2 id="new-comment" class="edit-section-title">@Site["EditMode_Comment"]</h2>
+        <FormTextArea Label="@Site["EditMode_Comment"]" @bind-Value="comment" MaxLength="500" Rows="3" Help="@Site["NewSite_Comment_Help"]" />
+    </section>
+
+    <div class="edit-actions">
+        <a class="button secondary" href="@($"/{Language}/{PublicRoutes.DiveSites[Language]}")">@Site["EditMode_Cancel"]</a>
+        <button type="button" class="button" disabled="@saving" @onclick="Submit">
+            @(saving ? Site["EditMode_Saving"] : IsModerator ? Site["NewSite_Submit_Moderator"] : Site["NewSite_Submit_Contributor"])
+        </button>
+    </div>
+</div>
+
+@code {
+    private IReadOnlyList<WaterBodySummary> waterBodies = [];
+
+    private IReadOnlyList<EditorialError> errors = [];
+
+    private string? name;
+
+    private int waterBodyId;
+
+    private double latitude = 46.8;
+
+    private double longitude = 8.2;
+
+    private bool located;
+
+    private string? municipality;
+
+    private string? canton;
+
+    private string? comment;
+
+    private bool saving;
+
+    private ElementReference messageBox;
+
+    private bool focusMessage;
+
+    private bool IsDirty => !saving && (!string.IsNullOrWhiteSpace(name) || waterBodyId != 0 || located || municipality is { Length: > 0 } || comment is { Length: > 0 });
+
+    protected override async Task Load() =>
+        waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery(Language));
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (focusMessage)
+        {
+            focusMessage = false;
+            await messageBox.FocusAsync();
+        }
+    }
+
+    private async Task Submit()
+    {
+        if (saving)
+        {
+            return;
+        }
+
+        saving = true;
+        var result = await Command<ProposeDiveSiteCommand, EditorialResult>(new ProposeDiveSiteCommand(
+            UserId, name?.Trim() ?? "", waterBodyId, latitude, longitude, municipality?.Trim(), canton?.Trim().ToUpperInvariant(), comment));
+        errors = result.Errors;
+        focusMessage = errors.Count > 0;
+        if (result is { Succeeded: true, DiveSiteId: { } id })
+        {
+            await JS.InvokeVoidAsync("tauchplaetzeEdit.saved");
+            Navigation.NavigateTo(result.Status == RevisionStatus.Approved ? $"/admin/plaetze/{id}" : $"{AccountPaths.Proposals(Language)}?eingereicht=1", forceLoad: true);
+            return;
+        }
+
+        saving = false;
+    }
+}

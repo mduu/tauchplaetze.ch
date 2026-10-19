@@ -1370,3 +1370,24 @@ button.chip-toggle:focus-visible {
   gap: 10px;
 }
 
+.directory-propose {
+  margin: 0;
+  color: var(--color-text-subtle);
+}
+
+.edit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 24px 0 48px;
+}
+
+.location-field {
+  display: grid;
+  gap: 10px;
+}
+
+.location-field-map {
+  height: 420px;
+}

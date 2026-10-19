@@ -52,9 +52,9 @@
     private bool IsAdmin => HttpContext.Request.Path.StartsWithSegments("/admin") || HttpContext.Request.Path.StartsWithSegments("/platform");
 
     /// <summary>Der Bearbeiten-Modus eines Platzes ist interaktiv, aber im Layout der Website und ohne MudBlazor (ADR-001, Nachtrag).</summary>
-    private bool IsEditMode => PublicRoutes.IsDiveSiteEdit(HttpContext.Request.Path.Value);
+    private bool IsInteractivePage => PublicRoutes.IsInteractive(HttpContext.Request.Path.Value);
 
-    private IComponentRenderMode? PageRenderMode => IsAdmin || IsEditMode ? InteractiveServer : null;
+    private IComponentRenderMode? PageRenderMode => IsAdmin || IsInteractivePage ? InteractiveServer : null;
 
     protected override void OnInitialized()
     {

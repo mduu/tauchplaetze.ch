@@ -229,4 +229,14 @@
   <data name="EditMode_Tools_Point" xml:space="preserve"><value>Skizze: Symbole</value></data>
   <data name="EditMode_Tools_Line" xml:space="preserve"><value>Skizze: Linien</value></data>
   <data name="EditMode_Tools_Area" xml:space="preserve"><value>Skizze: Flächen</value></data>
+  <data name="NewSite_Title" xml:space="preserve"><value>Neuen Platz vorschlagen</value></data>
+  <data name="NewSite_Lead" xml:space="preserve"><value>Ein Platz braucht nur einen Namen, ein Gewässer und eine Koordinate. Alles andere ergänzt du später im Bearbeiten-Modus, sobald der Platz freigegeben ist.</value></data>
+  <data name="NewSite_Location" xml:space="preserve"><value>Lage</value></data>
+  <data name="NewSite_Location_Help" xml:space="preserve"><value>Klicke in der Karte auf den Haupteinstieg. Du kannst die Koordinate auch eintippen.</value></data>
+  <data name="NewSite_Canton_Help" xml:space="preserve"><value>Kürzel, z.B. ZH</value></data>
+  <data name="NewSite_Comment_Help" xml:space="preserve"><value>Was sollen die Moderatorinnen und Moderatoren wissen? Zum Beispiel deine Quelle.</value></data>
+  <data name="NewSite_Submit_Contributor" xml:space="preserve"><value>Vorschlag einreichen</value></data>
+  <data name="NewSite_Submit_Moderator" xml:space="preserve"><value>Platz anlegen</value></data>
+  <data name="NewSite_Missing" xml:space="preserve"><value>Fehlt ein Platz?</value></data>
+  <data name="NewSite_Link" xml:space="preserve"><value>Neuen Platz vorschlagen</value></data>
 </root>

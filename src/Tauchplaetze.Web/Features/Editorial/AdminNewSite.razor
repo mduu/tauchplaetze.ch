@@ -1,6 +1,6 @@
 @page "/admin/plaetze/neu"
 @layout AdminLayout
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Moderator,Admin")]
 @inherits AdminPage
 @using Microsoft.AspNetCore.Authorization
 @using Tauchplaetze.Core.Features.Editorial

@@ -229,4 +229,14 @@
   <data name="EditMode_Tools_Point" xml:space="preserve"><value>Sketch: symbols</value></data>
   <data name="EditMode_Tools_Line" xml:space="preserve"><value>Sketch: lines</value></data>
   <data name="EditMode_Tools_Area" xml:space="preserve"><value>Sketch: areas</value></data>
+  <data name="NewSite_Title" xml:space="preserve"><value>Suggest a new dive site</value></data>
+  <data name="NewSite_Lead" xml:space="preserve"><value>A dive site only needs a name, a water body and a coordinate. You can add everything else later in edit mode, once the site is approved.</value></data>
+  <data name="NewSite_Location" xml:space="preserve"><value>Location</value></data>
+  <data name="NewSite_Location_Help" xml:space="preserve"><value>Click the main entry point on the map. You can also type the coordinate.</value></data>
+  <data name="NewSite_Canton_Help" xml:space="preserve"><value>Abbreviation, e.g. ZH</value></data>
+  <data name="NewSite_Comment_Help" xml:space="preserve"><value>What should the moderators know? For example your source.</value></data>
+  <data name="NewSite_Submit_Contributor" xml:space="preserve"><value>Submit suggestion</value></data>
+  <data name="NewSite_Submit_Moderator" xml:space="preserve"><value>Create site</value></data>
+  <data name="NewSite_Missing" xml:space="preserve"><value>Is a site missing?</value></data>
+  <data name="NewSite_Link" xml:space="preserve"><value>Suggest a new dive site</value></data>
 </root>
