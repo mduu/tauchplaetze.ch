@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.RegularExpressions;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
@@ -88,6 +89,41 @@ public class StartPageTests : IClassFixture<WebApp>
         Assert.Contains("Ohne Prognose Küsnacht · Zürichsee · 6 km noch keine Prognose", text);
         Assert.Contains("und 3 weitere Plätze ohne Prognose", text);
         Assert.Equal(2, Regex.Matches(html, "class=\"rank\"").Count);
+    }
+
+    [Theory]
+    [InlineData(12, 18, new[] { "12 m", "18 m" })]
+    [InlineData(13, 14, new[] { "13–14 m" })]
+    public async Task Die_Beste_Wahl_zeigt_die_Sprungschicht_als_Band_und_bei_engem_Band_eine_Beschriftung(int top, int bottom, string[] labels)
+    {
+        // Arrange
+        using var browser = app.Browser();
+        var ranking = app.BestSites.Ranking;
+        app.BestSites.Ranking = [ranking[0] with { ThermoclineTop = top, ThermoclineBottom = bottom }, ranking[1]];
+
+        // Act
+        var html = await browser.GetStringAsync("/de", TestContext.Current.CancellationToken);
+
+        // Assert
+        app.BestSites.Ranking = ranking;
+        Assert.Equal(labels, Regex.Matches(html, "<text [^>]*data-thermocline-depth[^>]*>([^<]*)</text>").Select(m => WebUtility.HtmlDecode(m.Groups[1].Value)));
+    }
+
+    [Fact]
+    public async Task Ist_der_See_der_Besten_Wahl_durchmischt_zeigt_der_Querschnitt_keine_Sprungschicht()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        var ranking = app.BestSites.Ranking;
+        app.BestSites.Ranking = [ranking[0] with { ThermoclineTop = null, ThermoclineBottom = null }, ranking[1]];
+
+        // Act
+        var html = await browser.GetStringAsync("/de", TestContext.Current.CancellationToken);
+
+        // Assert
+        app.BestSites.Ranking = ranking;
+        Assert.Contains("Keine Sprungschicht, der See ist durchmischt", VisibleText.Of(html));
+        Assert.DoesNotContain("data-thermocline-depth", html);
     }
 
     [Fact]

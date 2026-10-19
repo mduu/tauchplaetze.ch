@@ -1,24 +1,48 @@
+@using Tauchplaetze.Web.Features.Forecasts
 @inject IStringLocalizer<SharedStrings> L
 @inject IStringLocalizer<ForecastStrings> F
 
-@* Querschnitt durch einen See aus dem Entwurf (design/start.html). Mit Werten zeigt er Oberfläche, 20 m und Sprungschicht. *@
+@* Querschnitt durch einen See aus dem Entwurf (design/start.html). Mit Werten zeigt er Oberfläche, 20 m und die Sprungschicht als Band mit Ober- und Unterkante wie das Tiefenprofil der Platzseite. *@
 <svg class="cross-section" viewBox="0 0 600 300" role="img" aria-label="@L["Start_CrossSection_Label"]">
     <rect x="0" y="0" width="600" height="34" fill="var(--color-surface-raised)" />
-    <rect x="0" y="34" width="600" height="106" fill="var(--color-lake-epilimnion)" />
-    <rect x="0" y="140" width="600" height="26" fill="var(--color-lake-thermocline)" />
-    <rect x="0" y="166" width="600" height="134" fill="var(--color-lake-hypolimnion)" />
+    @if (Band is var (bandTop, bandBottom))
+    {
+        <rect x="0" y="34" width="600" height="@Svg(bandTop - 34)" fill="var(--color-lake-epilimnion)" />
+        <rect x="0" y="@Svg(bandTop)" width="600" height="@Svg(bandBottom - bandTop)" fill="var(--color-lake-thermocline)" />
+        <rect x="0" y="@Svg(bandTop)" width="470" height="@Svg(bandBottom - bandTop)" fill="var(--color-signal)" opacity="0.14" />
+        <rect x="0" y="@Svg(bandBottom)" width="600" height="@Svg(300 - bandBottom)" fill="var(--color-lake-hypolimnion)" />
+        <line x1="0" y1="@Svg(bandTop)" x2="470" y2="@Svg(bandTop)" stroke="var(--color-signal)" stroke-width="1.5" />
+        <line x1="0" y1="@Svg(bandBottom)" x2="470" y2="@Svg(bandBottom)" stroke="var(--color-signal)" stroke-width="1.5" />
+        @foreach (var label in Labels)
+        {
+            <SvgText x="14" y="@Svg(label.Y + 4)" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" data-thermocline-depth Content="@label.Text" />
+        }
+        <SvgText x="@(Labels.Count == 1 ? "100" : "70")" y="@Svg((bandTop + bandBottom) / 2 + 4)" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Thermocline"]" />
+        <SvgText x="14" y="@Svg(bandBottom + 26)" fill="var(--color-bubble)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Clearer"]" />
+    }
+    else if (Surface is not null && ThermoclineTop is null)
+    {
+        <rect x="0" y="34" width="600" height="266" fill="var(--color-lake-epilimnion)" />
+        <SvgText x="20" y="160" fill="var(--color-text-muted)" font-family="IBM Plex Mono, monospace" font-size="13" data-mixed Content="@F["Profile_Mixed"]" />
+    }
+    else
+    {
+        <rect x="0" y="34" width="600" height="106" fill="var(--color-lake-epilimnion)" />
+        <rect x="0" y="140" width="600" height="26" fill="var(--color-lake-thermocline)" />
+        <rect x="0" y="166" width="600" height="134" fill="var(--color-lake-hypolimnion)" />
+        <line x1="0" y1="140" x2="470" y2="140" stroke="var(--color-signal)" stroke-width="2" stroke-dasharray="7 6" />
+        <SvgText x="20" y="132" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@ThermoclineText" />
+        <SvgText x="20" y="192" fill="var(--color-bubble)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Clearer"]" />
+    }
     <path d="M0 34 Q25 28 50 34 T100 34 T150 34 T200 34 T250 34 T300 34 T350 34 T400 34 T450 34 T500 34 T550 34 T600 34" fill="none" stroke="var(--color-primary)" stroke-width="2" />
-    <line x1="0" y1="140" x2="470" y2="140" stroke="var(--color-signal)" stroke-width="2" stroke-dasharray="7 6" />
-    <SvgText x="20" y="132" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@ThermoclineText" />
-    <SvgText x="20" y="192" fill="var(--color-bubble)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Clearer"]" />
     @if (Surface is { } surface)
     {
-        <SvgText x="210" y="80" fill="var(--color-text)" font-family="Bricolage Grotesque, sans-serif" font-size="30" font-weight="700" Content="@($"{Tauchplaetze.Web.Features.Forecasts.ForecastFormat.Number(surface)} °C")" />
+        <SvgText x="210" y="80" fill="var(--color-text)" font-family="Bricolage Grotesque, sans-serif" font-size="30" font-weight="700" Content="@($"{ForecastFormat.Number(surface)} °C")" />
         <SvgText x="210" y="100" fill="var(--color-text-muted)" font-family="IBM Plex Mono, monospace" font-size="12" Content="@F["CrossSection_Surface"]" />
     }
     @if (At20m is { } at20m)
     {
-        <SvgText x="210" y="232" fill="var(--color-text)" font-family="Bricolage Grotesque, sans-serif" font-size="30" font-weight="700" Content="@($"{Tauchplaetze.Web.Features.Forecasts.ForecastFormat.Number(at20m)} °C")" />
+        <SvgText x="210" y="232" fill="var(--color-text)" font-family="Bricolage Grotesque, sans-serif" font-size="30" font-weight="700" Content="@($"{ForecastFormat.Number(at20m)} °C")" />
         <SvgText x="210" y="252" fill="var(--color-text-muted)" font-family="IBM Plex Mono, monospace" font-size="12" Content="@F["CrossSection_At20m"]" />
     }
     <circle cx="420" cy="214" r="3.2" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
@@ -39,7 +63,23 @@
     [Parameter]
     public decimal? ThermoclineTop { get; set; }
 
+    /// <summary>Mit Ober- und Unterkante zeichnet der Querschnitt die Sprungschicht als Band in Tiefe (0 bis 40 m).</summary>
+    [Parameter]
+    public decimal? ThermoclineBottom { get; set; }
+
+    private const double LabelGap = 26;
+
+    private (double Top, double Bottom)? Band => ThermoclineTop is { } top && ThermoclineBottom is { } bottom ? (Y(top), Y(bottom)) : null;
+
+    private IReadOnlyList<ThermoclineLabels.Label> Labels => ThermoclineTop is { } top && ThermoclineBottom is { } bottom
+        ? ThermoclineLabels.For(top, bottom, Y, LabelGap)
+        : [];
+
+    private static double Y(decimal depth) => 34 + Math.Clamp((double)depth, 0, 40) * 6.6;
+
+    private static string Svg(double value) => value.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+
     private string ThermoclineText => ThermoclineTop is { } top
-        ? F["CrossSection_Thermocline", Tauchplaetze.Web.Features.Forecasts.ForecastFormat.Meters(top)]
+        ? F["CrossSection_Thermocline", ForecastFormat.Meters(top)]
         : L["Start_CrossSection_Thermocline"];
 }

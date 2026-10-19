@@ -1,7 +1,7 @@
 @using Tauchplaetze.Core.Features.Forecasts
 @inject IStringLocalizer<ForecastStrings> L
 
-@* Temperatur (x) über Tiefe (y) mit Sprungschicht als oranges Band (design-system.md, TemperatureProfileChart). *@
+@* Temperatur (x) über Tiefe (y) mit Sprungschicht als oranges Band, Ober- und Unterkante auf der Tiefenachse (design-system.md, TemperatureProfileChart). *@
 <svg class="profile-chart" viewBox="0 0 600 380" role="img" aria-label="@L["Profile_Chart_Label"]">
     @if (Day.ThermoclineTop is { } top && Day.ThermoclineBottom is { } bottom)
     {
@@ -14,9 +14,13 @@
     {
         <line x1="80" y1="@Svg(Y(depth))" x2="560" y2="@Svg(Y(depth))" stroke="var(--color-divider)" />
     }
-    @foreach (var depth in new[] { 0, 10, 20, 30, 40 })
+    @foreach (var depth in new[] { 0, 10, 20, 30, 40 }.Where(d => !ThermoclineLabels.Overlaps(Labels, Y(d), LabelGap)))
     {
         <SvgText x="70" y="@Svg(Y(depth) + 4)" fill="var(--color-text-subtle)" font-family="IBM Plex Mono, monospace" font-size="12" text-anchor="end" Content="@($"{depth} m")" />
+    }
+    @foreach (var label in Labels)
+    {
+        <SvgText x="70" y="@Svg(label.Y + 4)" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="12" text-anchor="end" data-thermocline-depth Content="@label.Text" />
     }
     @foreach (var temperature in TemperatureTicks)
     {
@@ -41,6 +45,8 @@
 
     private const double MaxTemperature = 24;
 
+    private const double LabelGap = 20;
+
     private static readonly int[] TemperatureTicks = [6, 10, 14, 18, 22];
 
     [Parameter, EditorRequired]
@@ -50,6 +56,10 @@
         new (int Depth, decimal? Temperature)[] { (0, Day.SurfaceTemperature), (10, Day.TemperatureAt10m), (20, Day.TemperatureAt20m), (30, Day.TemperatureAt30m) }
             .Where(p => p.Temperature is not null)
             .Select(p => (p.Depth, p.Temperature!.Value));
+
+    private IReadOnlyList<ThermoclineLabels.Label> Labels => Day is { ThermoclineTop: { } top, ThermoclineBottom: { } bottom }
+        ? ThermoclineLabels.For(top, bottom, Y, LabelGap)
+        : [];
 
     private string Polyline => string.Join(' ', Points.Select(p => FormattableString.Invariant($"{X(p.Temperature):0.#},{Y(p.Depth):0.#}")));
 

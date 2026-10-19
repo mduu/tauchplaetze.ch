@@ -370,6 +370,19 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("rotate(45deg)", html);
     }
 
+    [Fact]
+    public async Task Das_Tiefenprofil_beschriftet_Ober_und_Unterkante_der_Sprungschicht_auf_der_Tiefenachse()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithForecast, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(["12 m", "18 m"], Regex.Matches(html, "<text [^>]*data-thermocline-depth[^>]*>([^<]*)</text>").Select(m => m.Groups[1].Value));
+    }
+
     private static ForecastDay Day(int october, decimal? index, ReasonCode[] reasons) => new(
         new DateOnly(2026, 10, october), index is null ? (byte)1 : (byte)3, index, index is null ? null : ProfileSource.Model3d,
         index is null ? null : 15.2m, 15.0m, 11.4m, 7.9m, 12m, 18m, 7.5m, new DateOnly(2026, 10, 15), VisibilityIndicator.Good, 18m,

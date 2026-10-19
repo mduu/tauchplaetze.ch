@@ -122,11 +122,11 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 | `SiteHeader` | Logo (Kreis mit Bergen, Seeschichten und Flosse, oranger Punkt), Wortmarke «tauchplaetze.ch» in Bricolage Grotesque, Navigation, Sprachwahl |
 | `DayPills` | Tagesauswahl. Aktiv: Cyan gefüllt, dunkler Text. Inaktiv: Rahmen `--color-border-strong`. Höhe ≥ 46 px. |
 | `BestPickCard` | Seequerschnitt-Illustration oben, darunter Name, Index, Kacheln, Begründung, Aktionen |
-| `LakeCrossSection` | SVG: Schichten, Wellenlinie, gestrichelte Sprungschicht in Orange, Temperaturen, Felswand, Tiefenskala |
+| `LakeCrossSection` | SVG: Schichten, Wellenlinie, Temperaturen, Felswand. Mit Ober- und Unterkante (Beste Wahl) die Sprungschicht als Band in Signal-Orange in Tiefe (0 bis 40 m), Kanten als Linien, links die Tiefen «12 m» und «18 m» in Orange (Mono); liegen die Kanten näher als 4 m, eine Beschriftung «13–14 m». Durchmischt: kein Band, «Keine Sprungschicht, der See ist durchmischt». Ohne Werte (Platzhalter) die gestrichelte Linie als Illustration. |
 | `RankingList` | `<ol>` mit Rang, Name, Ort · See, Index-Balken, Begründung, Index |
 | `StatTile` | Label (Mono, klein, Grossbuchstaben) und Wert (Bricolage 24–26 px) |
 | `DischargeTile` | `StatTile` über die ganze Breite der Kacheln. Einordnung in den Farben des Index (sehr gering und gering `--color-index-high`, mittel `--color-index-mid`, stark `--color-index-low-text`), daneben der Wert in `--color-text-muted`. «i» und Legende wie bei `SiteRatingsBlock`. Trendpfeil, steigend in `--color-signal`. Kurve als SVG, serverseitig, 64 px hoch: Linie und Fläche (12 %) in `--color-primary`, Median gestrichelt in `--color-border-strong`, Achse «vor 48 h», «vor 24 h», «jetzt» in Mono. Tagesmittel als 7 Balken in `--color-primary` mit Wert und Wochentag. «Messwert veraltet» in `--color-signal`. |
-| `TemperatureProfileChart` | SVG: Temperatur (x) über Tiefe (y), Sprungschicht als oranges Band, Werte auf 0/20/30 m |
+| `TemperatureProfileChart` | SVG: Temperatur (x) über Tiefe (y), Sprungschicht als oranges Band, Ober- und Unterkante auf der Tiefenachse in `--color-signal` (bei weniger als 2.5 m Abstand eine Beschriftung «13–15 m»); ein Achsenwert, der eine Kante überdecken würde, entfällt. Werte auf 0/10/20/30 m. Dieselbe Regel wie `LakeCrossSection` (`ThermoclineLabels`). |
 | `WeatherChart` | SVG, serverseitig, in der Kachel «Die nächsten 5 Tage». Auf dem Desktop reicht die Kachel so weit wie die linke Spalte (Kacheln und Profil), die Grafik ist entsprechend hoch (Temperaturband rund 240 px, Symbole 26 px). Schmal scrollt sie in der Kachel: Raster von 2 Stunden, Symbol nur bei Wechsel mit gepunkteter Linie dazwischen, Wind alle 6 Stunden. Eigene Wettersymbole (Sonne, Mond, Wolke, Nebel, Niesel, Regen, Schauer, Schnee, Gewitter), Windpfeile, Sonnenbalken (`--color-sun`), Temperaturlinie (`--color-signal`), Regenbalken (`--color-rain`), Nacht in `--color-bg`. Legende darunter als Text, ohne eigene Quellenzeile (die Quellen stehen einmal unter dem Bedingungsblock). |
 | `ForecastStrip` | 5 Tage mit Index, Farbe nach Skala, Mini-Balken, Stichwort |
 | `Finder` (Verzeichnis) | Suchfeld als Pille, Eigenschaften als Chips (gewählt in `--color-primary`), Liste mit Index rechts, Karte mit Gruppen: Kreis in `--color-primary` mit Anzahl in Mono, Rand `--color-bg` |
@@ -142,7 +142,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 
 - Datenlinie in `--color-primary`, 3 px, runde Enden.
 - Achsen und Hilfslinien in `--color-border-strong` bzw. `--color-divider`.
-- Sprungschicht immer als Band in Signal-Orange (ca. 14 % Deckkraft) mit Beschriftung.
+- Sprungschicht immer als Band in Signal-Orange (ca. 14 % Deckkraft) mit Beschriftung und den Tiefen von Ober- und Unterkante.
 - Jedes Diagramm hat eine Textalternative und zeigt die Kernwerte zusätzlich als Text.
 
 ## CSS-Startpunkt
