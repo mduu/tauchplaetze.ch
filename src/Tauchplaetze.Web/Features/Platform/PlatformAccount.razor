@@ -10,6 +10,7 @@
 @using Tauchplaetze.Web.Features.Editorial
 @inject IStringLocalizer<AccountStrings> AccountL
 @inject IDialogService Dialogs
+@inject TimeProvider Time
 @inject NavigationManager Navigation
 
 <MudLink Href="/platform/konten" Class="d-inline-block mb-3">@L["Account_Back"]</MudLink>
@@ -56,7 +57,7 @@ else
                         <tr><th>@L["Account_Created"]</th><td>@(account.CreatedAt is { } created ? SwissClock.DateTime(created) : L["Account_Unknown"])</td></tr>
                         <tr><th>@L["Account_LastSignIn"]</th><td>@(account.LastSignInAt is { } last ? SwissClock.DateTime(last) : L["Account_Never"])</td></tr>
                         <tr><th>@L["Account_SignInMethods"]</th><td>@SignInMethods(account)</td></tr>
-                        <tr><th>@L["Account_FailedAttempts"]</th><td>@account.AccessFailedCount@(account.LockoutEnd is { } lockout && lockout > DateTimeOffset.UtcNow ? $" · {L["Account_LockedOutUntil", SwissClock.DateTime(lockout)]}" : "")</td></tr>
+                        <tr><th>@L["Account_FailedAttempts"]</th><td>@account.AccessFailedCount@(account.LockoutEnd is { } lockout && lockout > Time.GetUtcNow() ? $" · {L["Account_LockedOutUntil", SwissClock.DateTime(lockout)]}" : "")</td></tr>
                         @if (account.BlockedAt is { } blocked)
                         {
                             <tr><th>@L["Accounts_Blocked"]</th><td>@L["Account_BlockedBy", SwissClock.DateTime(blocked), account.BlockedByName ?? "–"]</td></tr>

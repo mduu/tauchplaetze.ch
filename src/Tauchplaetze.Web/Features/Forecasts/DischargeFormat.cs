@@ -7,7 +7,7 @@ internal static class DischargeFormat
 {
     private static readonly TimeZoneInfo Zone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Zurich");
 
-    public static DateOnly Today() => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, Zone).DateTime);
+    public static DateOnly Today(TimeProvider time) => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(time.GetUtcNow(), Zone).DateTime);
 
     public static string Amount(decimal value) => value.ToString(Pattern(value), CultureInfo.CurrentCulture);
 
@@ -19,10 +19,10 @@ internal static class DischargeFormat
     }
 
     /// <summary>Uhrzeit in Lokalzeit, mit Datum, wenn der Wert nicht von heute ist.</summary>
-    public static string Time(DateTimeOffset time)
+    public static string Time(DateTimeOffset value, TimeProvider time)
     {
-        var local = TimeZoneInfo.ConvertTime(time, Zone);
-        return local.ToString(DateOnly.FromDateTime(local.DateTime) == Today() ? "HH:mm" : "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
+        var local = TimeZoneInfo.ConvertTime(value, Zone);
+        return local.ToString(DateOnly.FromDateTime(local.DateTime) == Today(time) ? "HH:mm" : "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
     }
 
     private static string Pattern(decimal value) => Math.Abs(value) switch

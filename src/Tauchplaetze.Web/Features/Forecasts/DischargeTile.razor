@@ -1,5 +1,6 @@
 @using Tauchplaetze.Core.Features.Forecasts
 @inject IStringLocalizer<ForecastStrings> L
+@inject TimeProvider Time
 
 <div class="stat discharge" data-discharge="@(Discharge.Level?.ToString() ?? "none")" data-stale="@(Discharge.IsStale ? "true" : "false")">
     <div class="discharge-head">
@@ -24,7 +25,7 @@
         </div>
     }
     <div class="stat-note">
-        @L["Discharge_Station", Discharge.StationName, DischargeFormat.Time(Discharge.MeasuredAt)]
+        @L["Discharge_Station", Discharge.StationName, DischargeFormat.Time(Discharge.MeasuredAt, Time)]
         @if (Discharge.IsStale)
         {
             <span class="discharge-stale">· @L["Discharge_Stale"]</span>
@@ -63,7 +64,7 @@
                     <li>
                         <span class="day-bar-wrap"><span class="day-bar" style="height: @(DayHeight(day.Discharge))"></span></span>
                         <span class="day-value">@DischargeFormat.Amount(day.Discharge)</span>
-                        <span class="day-name">@(day.Date == DischargeFormat.Today() ? L["Day_Today"] : ForecastFormat.Weekday(day.Date))</span>
+                        <span class="day-name">@(day.Date == DischargeFormat.Today(Time) ? L["Day_Today"] : ForecastFormat.Weekday(day.Date))</span>
                     </li>
                 }
             </ol>
