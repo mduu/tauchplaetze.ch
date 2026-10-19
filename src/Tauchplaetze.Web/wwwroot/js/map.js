@@ -105,12 +105,12 @@ window.tauchplaetzeMap = (function () {
     map.getContainer().classList.toggle('map-labels-hidden', count > labelLimit && map.getZoom() < labelZoom);
   }
 
-  // Standard ist das Luftbild (Entscheid Marc, 19.10.2026). Wer auf die Landeskarte umschaltet, behält sie.
+  // Standard ist die Landeskarte. Wer auf das Luftbild umschaltet, behält es.
   function storedLayer() {
     try {
-      return localStorage.getItem(storageKey) === 'map' ? 'map' : 'photo';
+      return localStorage.getItem(storageKey) === 'photo' ? 'photo' : 'map';
     } catch (e) {
-      return 'photo';
+      return 'map';
     }
   }
 
@@ -118,8 +118,19 @@ window.tauchplaetzeMap = (function () {
     try {
       localStorage.setItem(storageKey, name);
     } catch (e) {
-      // Ohne Storage gilt beim nächsten Laden wieder das Luftbild.
+      // Ohne Storage gilt beim nächsten Laden wieder die Landeskarte.
     }
+  }
+
+  // Das Luftbild deckt nur die Schweiz mit Rand ab, ausserhalb liefert swisstopo weisse Kacheln.
+  // Mit dem Luftbild lässt sich darum nur so weit herauszoomen, dass der Ausschnitt in der Abdeckung bleibt.
+  const swissBounds = L.latLngBounds([[45.15, 5.0], [48.85, 11.2]]);
+  const swissMinZoom = 7;
+
+  function limitZoom(map, photo) {
+    const size = map.getSize();
+    const inside = photo && size.x > 0 && size.y > 0 ? map.getBoundsZoom(swissBounds, true) : swissMinZoom;
+    map.setMinZoom(Math.max(swissMinZoom, inside));
   }
 
   // Landeskarte und Luftbild von swisstopo mit Umschalter. Die Beschriftung kommt aus data-layer-map und data-layer-photo.
@@ -132,10 +143,23 @@ window.tauchplaetzeMap = (function () {
     labels[element.dataset.layerMap || 'Karte'] = base.map;
     labels[element.dataset.layerPhoto || 'Luftbild'] = base.photo;
 
+    map.setMinZoom(swissMinZoom);
+    map.setMaxBounds(swissBounds);
+    map.options.maxBoundsViscosity = 1;
     base[storedLayer()].addTo(map);
+    // Die Grösse der Karte steht beim ersten Laden oft noch nicht fest. Darum bei jeder Grössenänderung und nach jeder Bewegung neu prüfen.
+    map.on('resize moveend', function () {
+      limitZoom(map, map.hasLayer(base.photo));
+    });
+    if (window.ResizeObserver) {
+      const observer = new ResizeObserver(function () { map.invalidateSize(); });
+      observer.observe(map.getContainer());
+      map.on('unload', function () { observer.disconnect(); });
+    }
     map.tauchplaetzeLayers = L.control.layers(labels, null, { collapsed: false, position: 'topright' }).addTo(map);
     map.on('baselayerchange', function (event) {
       storeLayer(event.layer === base.photo ? 'photo' : 'map');
+      limitZoom(map, event.layer === base.photo);
     });
   }
 
