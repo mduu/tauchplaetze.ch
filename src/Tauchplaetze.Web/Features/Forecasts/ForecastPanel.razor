@@ -10,7 +10,16 @@
     {
         <div class="index" data-index-band="@ForecastFormat.IndexBand(index)">
             <span class="index-value">@ForecastFormat.Number(index)</span>
-            <span class="index-label">@L["Index_Label"]</span>
+            <div class="index-side">
+                @if (IndexTrend is { } trend)
+                {
+                    <div class="index-trend" title="@trend.Aria">
+                        <LineChart Series="[trend.Series]" Markers="trend.Markers" Compact="true" ShowDots="false" MaxGap="trend.Range.MaxGap" AriaLabel="@trend.Aria" />
+                        <span class="index-trend-range">@ShortDate(trend.Range.From)–@ShortDate(trend.Range.To)</span>
+                    </div>
+                }
+                <span class="index-label">@L["Index_Label"]</span>
+            </div>
         </div>
     }
 </div>
@@ -127,6 +136,27 @@
     public SiteIndexHistory? History { get; set; }
 
     private ForecastDay Today => Forecast.Days[0];
+
+    private sealed record Trend(ChartSeries Series, IReadOnlyList<ChartTick> Markers, HistoryCharts.Range Range, string Aria);
+
+    /// <summary>Der Verlauf des Index bis heute, klein neben der Zahl. Erst ab zwei Tagen mit Index, ohne Text.</summary>
+    private Trend? IndexTrend
+    {
+        get
+        {
+            if (History is not { } history || history.Days.Count(d => d.SmoothedIndex is not null) < 2)
+            {
+                return null;
+            }
+
+            var range = HistoryCharts.RangeOf(history.Days, Today.Date);
+            var series = new ChartSeries("index", L["Index_Label"], [.. history.Days.Select(d => new ChartPoint(range.X(d.Date), null, (double?)d.SmoothedIndex))], 0, 10);
+            var markers = history.RuleChanges.Select(c => new ChartTick(range.X(c.Date), "")).ToList();
+            return new Trend(series, markers, range, L["History_Aria", ForecastFormat.Date(range.From), ForecastFormat.Date(range.To)]);
+        }
+    }
+
+    private static string ShortDate(DateOnly date) => date.ToString("dd.MM.", CultureInfo.InvariantCulture);
 
     private const int SparkDays = 30;
 

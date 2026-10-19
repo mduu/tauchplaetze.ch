@@ -73,11 +73,6 @@
             }
         </section>
 
-        @if (history is { Days.Count: > 0 })
-        {
-            <IndexHistoryChart History="history" />
-        }
-
         <SiteLocationMap Site="site" />
 
         @if (site.Ratings?.Rated.Count > 0 || HasSiteTexts(site))

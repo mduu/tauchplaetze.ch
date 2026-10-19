@@ -19,6 +19,28 @@
     line-height: 0.9;
 }
 
+.index-side {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.index-trend {
+    width: 150px;
+}
+
+.index-trend ::deep .plot {
+    margin-top: 0;
+}
+
+.index-trend-range {
+    display: block;
+    margin-top: 2px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-subtle);
+}
+
 .index-label {
     font-family: var(--font-mono);
     font-size: 13px;

@@ -423,7 +423,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Der_Verlauf_zeigt_den_Index_mit_Sicht_und_Regelwechsel_und_die_Kacheln_zeigen_Mini_Diagramme()
+    public async Task Der_Verlauf_des_Index_steht_klein_neben_der_Zahl_und_die_Kacheln_zeigen_Mini_Diagramme()
     {
         // Arrange
         app.SiteHistory.Answer = query => query.DiveSiteId == ForecastSiteId
@@ -434,21 +434,22 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         using var browser = app.Browser();
 
         // Act
-        var html = await browser.GetStringAsync("/fr/sites-de-plongee/" + WithForecast, TestContext.Current.CancellationToken);
+        var html = WebUtility.HtmlDecode(await browser.GetStringAsync("/fr/sites-de-plongee/" + WithForecast, TestContext.Current.CancellationToken));
 
         // Assert
-        var text = VisibleText.Of(html);
-        Assert.Contains("Évolution", text);
-        Assert.Contains("Visibilité près de la rive", text);
-        Assert.Contains("nouvelle règle", text);
-        Assert.Contains("L'évolution se complète avec le temps. Valeurs depuis le 16.10.2026.", WebUtility.HtmlDecode(text));
-        Assert.Contains("aria-label=\"Visibilité près de la rive sur les 30 derniers jours\"", WebUtility.HtmlDecode(html));
-        Assert.Contains("aria-label=\"Vent le plus fort des 5 prochains jours\"", WebUtility.HtmlDecode(html));
-        Assert.Contains("aria-label=\"Algues sur les 30 derniers jours\"", WebUtility.HtmlDecode(html));
+        var head = html[html.IndexOf("class=\"conditions-head\"", StringComparison.Ordinal)..html.IndexOf("class=\"conditions-grid\"", StringComparison.Ordinal)];
+        Assert.Contains("class=\"index-trend\"", head);
+        Assert.Contains("aria-label=\"Indice de plongée du 16.10.2026 au 18.10.2026\"", head);
+        Assert.Contains("16.10.–18.10.", head);
+        Assert.Contains("class=\"marker\"", head);
+        Assert.DoesNotContain("id=\"history\"", html);
+        Assert.Contains("aria-label=\"Visibilité près de la rive sur les 30 derniers jours\"", html);
+        Assert.Contains("aria-label=\"Vent le plus fort des 5 prochains jours\"", html);
+        Assert.Contains("aria-label=\"Algues sur les 30 derniers jours\"", html);
     }
 
     [Fact]
-    public async Task Ohne_Verlauf_fehlt_der_Abschnitt_und_die_Kacheln_haben_kein_Mini_Diagramm_fuer_Sicht()
+    public async Task Ohne_Verlauf_fehlen_das_kleine_Diagramm_neben_dem_Index_und_das_Mini_Diagramm_fuer_Sicht()
     {
         // Arrange
         app.SiteHistory.Answer = _ => new SiteIndexHistory([], []);
@@ -458,7 +459,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithForecast, TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.DoesNotContain("id=\"history\"", html);
+        Assert.DoesNotContain("class=\"index-trend\"", html);
         Assert.DoesNotContain("Sicht in Ufernähe der letzten 30 Tage", WebUtility.HtmlDecode(html));
     }
 

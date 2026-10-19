@@ -160,14 +160,9 @@
   <data name="Start_WithoutForecast_Title" xml:space="preserve"><value>Im Umkreis, noch ohne Prognose</value></data>
   <data name="Start_WithoutForecast_Note" xml:space="preserve"><value>noch keine Prognose</value></data>
   <data name="Start_WithoutForecast_More" xml:space="preserve"><value>und {0} weitere Plätze ohne Prognose</value></data>
-  <data name="History_Title" xml:space="preserve"><value>Verlauf</value></data>
-  <data name="History_Index" xml:space="preserve"><value>Tauch-Index</value></data>
   <data name="History_Visibility" xml:space="preserve"><value>Sicht in Ufernähe</value></data>
-  <data name="History_Note" xml:space="preserve"><value>Linie: Mittel über 7 Tage. Punkte: Werte der einzelnen Tage.</value></data>
   <data name="History_Filling" xml:space="preserve"><value>Der Verlauf füllt sich mit der Zeit. Werte seit {0}.</value></data>
-  <data name="History_Empty" xml:space="preserve"><value>Für diesen Platz gibt es noch keinen Verlauf.</value></data>
   <data name="History_Aria" xml:space="preserve"><value>Verlauf des Tauch-Index vom {0} bis {1}</value></data>
-  <data name="History_RuleChange" xml:space="preserve"><value>neue Regel</value></data>
   <data name="Years_Title" xml:space="preserve"><value>Jahr über Jahr</value></data>
   <data name="Years_Note" xml:space="preserve"><value>Median des Tauch-Index aller Plätze am See, pro Tag, gemittelt über 7 Tage.</value></data>
   <data name="Years_Aria" xml:space="preserve"><value>Tauch-Index des Gewässers pro Jahr, Januar bis Dezember</value></data>
