@@ -187,7 +187,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
 | Produkt | Nutzen | Zugang | Phase |
 |---|---|---|---|
-| Landeskarte und Luftbild (WMTS: `ch.swisstopo.pixelkarte-farbe`, `ch.swisstopo.swissimage`) | Karte auf Verzeichnis, Gewässer- und Platzseite sowie im CMS, mit Umschalter Karte/Luftbild (Standard Landeskarte; die Wahl bleibt im Browser. Ausschnitt auf die Schweiz begrenzt, kleinster Zoom 7, weil das Luftbild ausserhalb weiss ist) | WMTS von geo.admin.ch, ohne Registrierung | MVP |
+| Landeskarte farbig und grau und Luftbild (WMTS: `ch.swisstopo.pixelkarte-farbe`, `ch.swisstopo.pixelkarte-grau`, `ch.swisstopo.swissimage`) | Karte auf Verzeichnis, Gewässer- und Platzseite sowie im CMS, mit Umschalter Karte/Karte grau/Luftbild (Standard Landeskarte; die Wahl bleibt im Browser. Ausschnitt auf die Schweiz begrenzt, kleinster Zoom 7, weil das Luftbild ausserhalb weiss ist) | WMTS von geo.admin.ch, ohne Registrierung | MVP |
 | swissTLM3D Gewässernetz | Stammdaten aller Seen und Flüsse (Name, Geometrie) | Download, STAC `ch.swisstopo.swisstlm3d` | MVP (Seed der Gewässer) |
 | swissBATHY3D | Tiefenlinien von 22 Seen (u.a. Zürichsee, Thunersee, Brienzersee, Walensee, Genfersee, Neuenburgersee, Vierwaldstättersee, Zugersee, Lago Maggiore, Bodensee) für Platzkarte und Tauchskizze | DTM als Download (STAC `ch.swisstopo.swissbathy3d`, ESRI ASCII Grid, LV95, 1 m); als WMTS nur Hillshade | MVP, siehe «Tiefenlinien» |
 

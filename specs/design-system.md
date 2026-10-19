@@ -72,7 +72,9 @@ Die Stufen unterscheiden sich in der **Helligkeit**, nicht nur im Farbton. Der I
 
 - Punkte: Tauchplatz in der Farbe seiner Index-Stufe (`--color-index-*`, ohne Index `--color-text-subtle`), Gewässer in `--color-primary`. Rand `--color-bg`. Im CMS ist der Pin `--color-signal`.
 - Beschriftung wie ein Tooltip, dauerhaft sichtbar: Pille in `--color-bg` mit Rahmen `--color-border-strong` und Pfeil auf den Punkt. Name in IBM Plex Sans 600, 13 px. Bei Plätzen folgt der heutige Index in IBM Plex Mono in der Farbe der Stufe (`--color-index-low-text` für tiefe Werte). Ein Klick öffnet die Seite.
-- Mehr als 10 Punkte: Beschriftungen erst ab Zoom 11, sonst überdecken sie sich.
+- Namen der Plätze (mit Index) erst ab Zoom 13 dauerhaft. Darunter nur die Punkte in der Farbe ihrer Index-Stufe; Name und Index erscheinen beim Darüberfahren oder beim ersten Antippen, das zweite Antippen öffnet den Platz.
+- Überdeckung (`map.js`, `declutter`): Nach jeder Bewegung bleiben nur Beschriftungen stehen, die keine wichtigere überdecken. Reihenfolge: der eigene Platz, Einstiege und Orte, dann der bessere Index, die Tiefen zuletzt. Gilt für alle Karten (Verzeichnis, Gewässer, Lage, Editoren). Kein zusätzliches Clustering.
+- Tiefen: Beschriftung ab Zoom 15, bis Zoom 16 nur jede zweite Linie (10, 20, 30 m), ab Zoom 17 alle.
 - Die Farben liest `map.js` aus den Tokens. Keine Farbwerte im JavaScript.
 
 ## Logo und Favicon

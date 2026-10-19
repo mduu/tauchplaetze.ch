@@ -434,8 +434,10 @@ a:hover {
 }
 
 
-.map-labels-hidden .leaflet-tooltip.map-label {
-  display: none;
+/* Beschriftungen, die eine wichtigere überdecken würden (map.js, declutter). */
+.leaflet-tooltip.map-label-covered,
+.map-depth-label span.map-label-covered {
+  visibility: hidden;
 }
 
 .leaflet-control-layers.leaflet-control {

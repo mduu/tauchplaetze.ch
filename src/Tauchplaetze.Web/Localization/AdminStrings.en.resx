@@ -379,4 +379,5 @@
   <data name="Account_Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="Account_SelfHint" xml:space="preserve"><value>This is you. You cannot block or delete your own account here; delete it in your profile.</value></data>
   <data name="Forecast_Column_Sites" xml:space="preserve"><value>Sites</value></data>
+  <data name="Map_Layer_Grey" xml:space="preserve"><value>Grey map</value></data>
 </root>

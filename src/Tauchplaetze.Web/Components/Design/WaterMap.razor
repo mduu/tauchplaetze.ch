@@ -2,7 +2,7 @@
 @using Tauchplaetze.Core.Features.WaterBodies
 @inject IStringLocalizer<DiveSiteStrings> L
 
-<div class="water-map" data-map data-waters="@Json" data-max-zoom="10" data-layer-map="@L["Map_Layer_Map"]" data-layer-photo="@L["Map_Layer_Photo"]" role="region" aria-label="@L["WaterBodies_Map_Label"]"></div>
+<div class="water-map" data-map data-waters="@Json" data-max-zoom="10" data-layer-map="@L["Map_Layer_Map"]" data-layer-grey="@L["Map_Layer_Grey"]" data-layer-photo="@L["Map_Layer_Photo"]" role="region" aria-label="@L["WaterBodies_Map_Label"]"></div>
 
 @code {
     [Parameter, EditorRequired]

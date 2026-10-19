@@ -5,11 +5,12 @@
 window.tauchplaetzeMap = (function () {
   const layers = {
     map: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg',
+    grey: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg',
     photo: 'https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg'
   };
   const storageKey = 'tauchplaetze.mapLayer';
-  const labelLimit = 10;
-  const labelZoom = 11;
+  // Namen der Plätze erst ab Zoom 13 dauerhaft, darunter nur Punkte mit Name beim Antippen oder Darüberfahren.
+  const siteLabelZoom = 13;
   let maps = [];
 
   function escapeHtml(text) {
@@ -27,17 +28,115 @@ window.tauchplaetzeMap = (function () {
     return token({ high: '--color-index-high', mid: '--color-index-mid', low: '--color-index-low' }[band] || '--color-text-subtle');
   }
 
-  // Dauerhafte Beschriftung wie ein Tooltip mit Pfeil auf den Punkt. Mit url öffnet ein Klick die Seite.
-  // Plätze und Gewässer oben beschriftet, Einstiege und Orte rechts, damit sie den Platz nicht verdecken.
-  function labelled(marker, item, html, side) {
-    marker.bindTooltip(item.url ? '<a href="' + item.url + '">' + html + '</a>' : html, {
-      permanent: true,
-      direction: side ? 'right' : 'top',
-      offset: side ? [side, 0] : [0, -8],
-      interactive: !!item.url,
-      className: 'map-label'
+  // Beschriftung wie ein Tooltip mit Pfeil auf den Punkt. Plätze und Gewässer oben beschriftet, Einstiege und Orte rechts,
+  // damit sie den Platz nicht verdecken. priority entscheidet, welche Beschriftung bei Überdeckung bleibt.
+  // Mit minZoom ist sie erst ab diesem Zoom dauerhaft, darunter erscheint sie beim Antippen oder Darüberfahren.
+  // Ein Klick auf den Punkt öffnet die Seite, wenn die Beschriftung sichtbar ist, sonst zuerst die Beschriftung.
+  function labelled(marker, item, html, side, priority, minZoom) {
+    const content = item.url ? '<a href="' + item.url + '">' + html + '</a>' : html;
+    marker.options.labelPriority = priority || 0;
+    marker.options.labelMinZoom = minZoom || 0;
+
+    function bind(permanent) {
+      marker.unbindTooltip();
+      marker.bindTooltip(content, {
+        permanent: permanent,
+        direction: side ? 'right' : 'top',
+        offset: side ? [side, 0] : [0, -8],
+        interactive: !!item.url,
+        className: 'map-label'
+      });
+      marker.labelPermanent = permanent;
+      if (permanent && marker._map) {
+        marker.openTooltip();
+      }
+    }
+
+    marker.updateLabel = function (zoom) {
+      const permanent = zoom >= marker.options.labelMinZoom;
+      if (marker.labelPermanent !== permanent) {
+        bind(permanent);
+      }
+    };
+    bind(!minZoom);
+
+    return item.url ? marker.on('click', function () {
+      const element = marker.getTooltip() && marker.getTooltip().getElement();
+      const visible = marker.labelPermanent && element && !element.classList.contains('map-label-covered');
+      if (visible) {
+        window.location.href = item.url;
+      } else {
+        marker.openTooltip();
+      }
+    }) : marker;
+  }
+
+  function overlaps(a, b) {
+    return a.left < b.right + 2 && b.left < a.right + 2 && a.top < b.bottom + 2 && b.top < a.bottom + 2;
+  }
+
+  // Blendet Beschriftungen aus, die eine wichtigere überdecken würden: zuerst der eigene Platz, dann der bessere Index,
+  // die Tiefen zuletzt. Läuft nach jeder Bewegung, sobald der Browser gezeichnet hat.
+  function declutter(map) {
+    const labels = [];
+    map.eachLayer(function (layer) {
+      const tooltip = layer.getTooltip && layer.getTooltip();
+      const element = tooltip && tooltip.getElement && tooltip.getElement();
+      if (element && layer.labelPermanent !== false && tooltip.options.permanent && element.classList.contains('map-label')) {
+        labels.push({ element: element, priority: layer.options.labelPriority || 0 });
+      } else if (layer.options && layer.options.depthLabel && layer.getElement && layer.getElement()) {
+        labels.push({ element: layer.getElement().firstChild, priority: -1 });
+      }
     });
-    return item.url ? marker.on('click', function () { window.location.href = item.url; }) : marker;
+
+    labels.forEach(function (label) { label.element.classList.remove('map-label-covered'); });
+    labels.sort(function (a, b) { return b.priority - a.priority; });
+    const kept = [];
+    labels.forEach(function (label) {
+      const box = label.element.getBoundingClientRect();
+      if (box.width === 0) {
+        return;
+      }
+
+      if (kept.some(function (other) { return overlaps(box, other); })) {
+        label.element.classList.add('map-label-covered');
+      } else {
+        kept.push(box);
+      }
+    });
+  }
+
+  function watchLabels(map) {
+    let pending = false;
+    function schedule() {
+      if (pending) {
+        return;
+      }
+
+      pending = true;
+      requestAnimationFrame(function () {
+        pending = false;
+        declutter(map);
+      });
+    }
+
+    map.on('zoomend', function () {
+      const zoom = map.getZoom();
+      const markers = [];
+      map.eachLayer(function (layer) {
+        if (layer.updateLabel) {
+          markers.push(layer);
+        }
+      });
+      markers.forEach(function (marker) { marker.updateLabel(zoom); });
+    });
+    map.on('layeradd', function (event) {
+      if (event.layer.updateLabel) {
+        event.layer.updateLabel(map.getZoom());
+      }
+    });
+    map.on('zoomend moveend layeradd tooltipclose', schedule);
+    map.tauchplaetzeDeclutter = schedule;
   }
 
   function siteMarker(site) {
@@ -49,7 +148,7 @@ window.tauchplaetzeMap = (function () {
       fillColor: bandColor(site.band),
       fillOpacity: 1
     });
-    return labelled(marker, site, escapeHtml(site.name) + index);
+    return labelled(marker, site, escapeHtml(site.name) + index, 0, site.index ? parseFloat(site.index) : 0, siteLabelZoom);
   }
 
   function waterMarker(water) {
@@ -71,7 +170,7 @@ window.tauchplaetzeMap = (function () {
       fillColor: token('--color-primary'),
       fillOpacity: 1
     });
-    return labelled(marker, site, escapeHtml(site.name));
+    return labelled(marker, site, escapeHtml(site.name), 0, 1000);
   }
 
   // Orte an Land (Parkplatz, Toilette) als Schild mit Kürzel, Einstiege als Punkt.
@@ -87,7 +186,7 @@ window.tauchplaetzeMap = (function () {
         iconSize: [24, 24],
         iconAnchor: [12, 12]
       });
-      return labelled(L.marker([point.lat, point.lng], { icon: icon, keyboard: false }), point, label, 12);
+      return labelled(L.marker([point.lat, point.lng], { icon: icon, keyboard: false }), point, label, 12, 50);
     }
 
     const marker = L.circleMarker([point.lat, point.lng], {
@@ -97,18 +196,14 @@ window.tauchplaetzeMap = (function () {
       fillColor: token('--color-text'),
       fillOpacity: 1
     });
-    return labelled(marker, point, label, 8);
+    return labelled(marker, point, label, 8, 50);
   }
 
-  // Bei vielen Punkten erscheinen die Beschriftungen erst ab Zoom 11, sonst überdecken sie sich.
-  function toggleLabels(map, count) {
-    map.getContainer().classList.toggle('map-labels-hidden', count > labelLimit && map.getZoom() < labelZoom);
-  }
-
-  // Standard ist die Landeskarte. Wer auf das Luftbild umschaltet, behält es.
+  // Standard ist die Landeskarte. Wer auf die graue Karte oder das Luftbild umschaltet, behält die Wahl.
   function storedLayer() {
     try {
-      return localStorage.getItem(storageKey) === 'photo' ? 'photo' : 'map';
+      const stored = localStorage.getItem(storageKey);
+      return stored === 'photo' || stored === 'grey' ? stored : 'map';
     } catch (e) {
       return 'map';
     }
@@ -133,14 +228,17 @@ window.tauchplaetzeMap = (function () {
     map.setMinZoom(Math.max(swissMinZoom, inside));
   }
 
-  // Landeskarte und Luftbild von swisstopo mit Umschalter. Die Beschriftung kommt aus data-layer-map und data-layer-photo.
+  // Landeskarte, graue Landeskarte und Luftbild von swisstopo mit Umschalter.
+  // Die Beschriftung kommt aus data-layer-map, data-layer-grey und data-layer-photo.
   function addBaseLayers(map, element) {
     const base = {
       map: L.tileLayer(layers.map, { attribution: '© swisstopo', maxZoom: 18 }),
+      grey: L.tileLayer(layers.grey, { attribution: '© swisstopo', maxZoom: 18 }),
       photo: L.tileLayer(layers.photo, { attribution: '© swisstopo', maxZoom: 19 })
     };
     const labels = {};
     labels[element.dataset.layerMap || 'Karte'] = base.map;
+    labels[element.dataset.layerGrey || 'Karte grau'] = base.grey;
     labels[element.dataset.layerPhoto || 'Luftbild'] = base.photo;
 
     map.setMinZoom(swissMinZoom);
@@ -158,15 +256,18 @@ window.tauchplaetzeMap = (function () {
     }
     map.tauchplaetzeLayers = L.control.layers(labels, null, { collapsed: false, position: 'topright' }).addTo(map);
     map.on('baselayerchange', function (event) {
-      storeLayer(event.layer === base.photo ? 'photo' : 'map');
+      storeLayer(Object.keys(base).find(function (name) { return base[name] === event.layer; }) || 'map');
       limitZoom(map, event.layer === base.photo);
     });
+    watchLabels(map);
   }
 
   // Tiefenlinien aus swissBATHY3D als GeoJSON-Kacheln von 1 km (tools/bathymetry/contours.cs, data-sources.md).
-  // Erst ab Zoom 13 geladen, Beschriftung der Tiefe ab Zoom 15. Kacheln bleiben im Cache, solange die Seite offen ist.
+  // Erst ab Zoom 13 geladen, Beschriftung der Tiefe ab Zoom 15, bis Zoom 16 nur jede zweite Linie (10, 20, 30 m).
+  // Kacheln bleiben im Cache, solange die Seite offen ist.
   const contourMinZoom = 13;
   const contourLabelZoom = 15;
+  const contourAllLabelsZoom = 17;
   const contourTiles = {};
   let contourIndex = null;
 
@@ -197,6 +298,7 @@ window.tauchplaetzeMap = (function () {
     const base = element.dataset.contoursBase || '/bathymetry/';
     const lines = L.layerGroup();
     const labels = L.layerGroup();
+    const minorLabels = L.layerGroup();
     const shown = {};
     const color = token('--color-depth-line');
 
@@ -208,7 +310,8 @@ window.tauchplaetzeMap = (function () {
       return L.marker([point[1], point[0]], {
         icon: L.divIcon({ className: 'map-depth-label', html: '<span>' + depth + ' m</span>', iconSize: null }),
         interactive: false,
-        keyboard: false
+        keyboard: false,
+        depthLabel: true
       });
     }
 
@@ -217,17 +320,24 @@ window.tauchplaetzeMap = (function () {
       data.features.forEach(function (feature) {
         feature.geometry.coordinates
           .filter(function (line) { return line.length >= 6; })
-          .forEach(function (line) { labels.addLayer(label(feature.properties.depth, middleOf(line))); });
+          .forEach(function (line) {
+            const group = feature.properties.depth % 10 === 0 ? labels : minorLabels;
+            group.addLayer(label(feature.properties.depth, middleOf(line)));
+          });
       });
     }
 
-    function refresh() {
-      const showLabels = map.hasLayer(lines) && map.getZoom() >= contourLabelZoom;
-      if (showLabels && !map.hasLayer(labels)) {
-        labels.addTo(map);
-      } else if (!showLabels && map.hasLayer(labels)) {
-        map.removeLayer(labels);
+    function show(group, visible) {
+      if (visible && !map.hasLayer(group)) {
+        group.addTo(map);
+      } else if (!visible && map.hasLayer(group)) {
+        map.removeLayer(group);
       }
+    }
+
+    function refresh() {
+      show(labels, map.hasLayer(lines) && map.getZoom() >= contourLabelZoom);
+      show(minorLabels, map.hasLayer(lines) && map.getZoom() >= contourAllLabelsZoom);
 
       if (!map.hasLayer(lines) || map.getZoom() < contourMinZoom) {
         return;
@@ -270,6 +380,7 @@ window.tauchplaetzeMap = (function () {
       if (event.layer === lines) {
         map.attributionControl.removeAttribution(attribution);
         map.removeLayer(labels);
+        map.removeLayer(minorLabels);
       }
     });
     map.on('moveend', refresh);
@@ -312,7 +423,6 @@ window.tauchplaetzeMap = (function () {
       markers.push(sketch);
     }
 
-    map.on('zoomend', function () { toggleLabels(map, markers.length); });
     const padding = Number(element.dataset.padding || 48);
     map.tauchplaetzeFit = function () {
       if (markers.length === 1 && markers[0].getLatLng && element.dataset.singleZoom) {

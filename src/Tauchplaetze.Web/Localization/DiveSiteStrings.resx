@@ -246,4 +246,5 @@
   <data name="Emergency_Dan_Note" xml:space="preserve"><value>Bei einem Tauchunfall die Rega 1414 anrufen und «Tauchunfall» sagen. Die Rega verbindet mit dem Tauchmediziner von DAN Suisse, rund um die Uhr und kostenlos.</value></data>
   <data name="Emergency_Factsheet" xml:space="preserve"><value>Merkblatt Tauchunfall von DAN Suisse und Rega (PDF)</value></data>
   <data name="Emergency_Factsheet_Url" xml:space="preserve"><value>https://www.bag.admin.ch/dam/de/sd-web/nCQEXh00QMPH/Anh.1_KLV_Kap.%202.1_Factsheet_Tauchunfallbehandlung_DAN%20und%20Rega%20vom%2006.07.2025.pdf</value></data>
+  <data name="Map_Layer_Grey" xml:space="preserve"><value>Karte grau</value></data>
 </root>
