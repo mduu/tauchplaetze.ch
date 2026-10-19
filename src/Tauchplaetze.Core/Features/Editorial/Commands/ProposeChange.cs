@@ -37,7 +37,8 @@ internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWri
         }
 
         var current = DiveSiteContentMapping.FromEntity(site);
-        var content = rights.IsModerator ? command.Content : Proposals.ProtectModeratorFields(command.Content, current);
+        var content = Proposals.ClearMachineTranslationOfEditedTexts(
+            rights.IsModerator ? command.Content : Proposals.ProtectModeratorFields(command.Content, current), current);
         var errors = ContentValidation.Errors(content, await dbContext.WaterBodies.AnyAsync(w => w.Id == content.WaterBodyId, ct)).ToList();
         if (content.Slug != site.Slug && await dbContext.DiveSites.AnyAsync(d => d.Slug == content.Slug && d.Id != site.Id, ct))
         {

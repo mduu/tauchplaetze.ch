@@ -9,7 +9,9 @@ using Tauchplaetze.Core.Features.DiveSites.Queries;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
+using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Commands;
+using Tauchplaetze.Core.Features.WaterBodies.Queries;
 using Tauchplaetze.Core.Tests.Sql;
 
 namespace Tauchplaetze.Core.Tests.Features.Editorial;
@@ -94,14 +96,16 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Mitwirkende_aendern_weder_Slug_noch_Prognose_ein_Moderator_schon_und_der_alte_Slug_leitet_weiter()
+    public async Task Mitwirkende_aendern_weder_Slug_noch_Gewaesser_noch_Prognose_ein_Moderator_schon_und_der_alte_Slug_leitet_weiter()
     {
         // Arrange
         var (moderator, anna, site) = await Prepare();
         var edit = await ForEditing(site);
+        var otherLake = (await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"))).First(w => w.Id != edit.Content.WaterBodyId).Id;
 
         // Act
-        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { Slug = "anderer-slug", ForecastDisabled = true, MaxDepth = 25 }, null));
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber,
+            edit.Content with { Slug = "anderer-slug", WaterBodyId = otherLake, ForecastDisabled = true, MaxDepth = 25 }, null));
         var proposedContent = await Changes(site, 1, 2);
         await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber, edit.Content with { Slug = "riff-williams" }, null));
         var lookup = await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "de"));
@@ -109,6 +113,38 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         // Assert
         Assert.Equal(["MaxDepth"], proposedContent.Select(c => c.Field));
         Assert.Equal(new DiveSiteLookup.Moved("riff-williams"), lookup);
+    }
+
+    [SqlFact]
+    public async Task Wer_einen_automatisch_uebersetzten_Text_aendert_nimmt_den_Hinweis_weg_ein_unveraenderter_behaelt_ihn()
+    {
+        // Arrange
+        var (moderator, _, site) = await Prepare();
+        var first = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, first.BaseNumber, first.Content with
+        {
+            Translations =
+            [
+                new DiveSiteContentTranslation("fr", "Paroi jusqu'à 30 m.", null, null, null, null, null, true),
+                new DiveSiteContentTranslation("it", "Parete fino a 30 m.", null, null, null, null, null, true),
+            ],
+        }, null));
+        var second = await ForEditing(site);
+
+        // Act
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, second.BaseNumber, second.Content with
+        {
+            Translations =
+            [
+                new DiveSiteContentTranslation("fr", "Paroi raide jusqu'à 30 m.", null, null, null, null, null, true),
+                new DiveSiteContentTranslation("it", "Parete fino a 30 m.", null, null, null, null, null, true),
+            ],
+        }, null));
+
+        // Assert
+        var after = (await ForEditing(site)).Content;
+        Assert.False(after.TextIn("fr")!.IsMachineTranslated);
+        Assert.True(after.TextIn("it")!.IsMachineTranslated);
     }
 
     [SqlFact]
