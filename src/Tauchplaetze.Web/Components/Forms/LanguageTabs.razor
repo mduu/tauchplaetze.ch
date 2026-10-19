@@ -5,7 +5,7 @@
     @foreach (var language in Languages.All)
     {
         var current = language;
-        <button type="button" role="tab" id="@TabId(current)" aria-controls="@panelId" class="language-tab"
+        <button type="button" role="tab" id="@TabId(current)" @ref="tabs[current]" aria-controls="@panelId" class="language-tab"
                 aria-selected="@(Selected == current ? "true" : "false")" tabindex="@(Selected == current ? 0 : -1)"
                 @onclick="() => Select(current)" @onkeydown="e => Key(e, current)">@Shared[$"Language_{current}"]</button>
     }
@@ -16,6 +16,10 @@
 
 @code {
     private readonly string id = Guid.NewGuid().ToString("N")[..8];
+
+    private readonly Dictionary<string, ElementReference> tabs = [];
+
+    private string? focus;
 
     private string panelId => $"tabs-{id}-panel";
 
@@ -41,9 +45,24 @@
         var count = Languages.All.Count;
         return e.Key switch
         {
-            "ArrowRight" => Select(Languages.All[(index + 1) % count]),
-            "ArrowLeft" => Select(Languages.All[(index + count - 1) % count]),
+            "ArrowRight" => Move(Languages.All[(index + 1) % count]),
+            "ArrowLeft" => Move(Languages.All[(index + count - 1) % count]),
             _ => Task.CompletedTask,
         };
+    }
+
+    private Task Move(string language)
+    {
+        focus = language;
+        return Select(language);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (focus is { } language && tabs.TryGetValue(language, out var tab))
+        {
+            focus = null;
+            await tab.FocusAsync();
+        }
     }
 }

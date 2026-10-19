@@ -239,4 +239,6 @@
   <data name="NewSite_Submit_Moderator" xml:space="preserve"><value>Crea il sito</value></data>
   <data name="NewSite_Missing" xml:space="preserve"><value>Manca un sito?</value></data>
   <data name="NewSite_Link" xml:space="preserve"><value>Proporre un nuovo sito</value></data>
+  <data name="EditMode_Hint_Entry" xml:space="preserve"><value>Clicca sulla mappa per posare il punto d'entrata o il luogo.</value></data>
+  <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>Posa al centro della mappa</value></data>
 </root>

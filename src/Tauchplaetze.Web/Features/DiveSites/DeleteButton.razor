@@ -6,23 +6,38 @@
 {
     <span class="delete-confirm" role="group" aria-label="@L["Media_DeleteTitle"]">
         <span>@L["Media_DeleteConfirm"]</span>
-        <button type="button" class="link-button danger" @onclick="Confirm">@L["Media_Delete"]</button>
+        <button type="button" class="link-button danger" @ref="confirmButton" @onclick="Confirm">@L["Media_Delete"]</button>
         <button type="button" class="link-button" @onclick="() => asking = false">@L["Sketch_Cancel"]</button>
     </span>
 }
 else
 {
-    <button type="button" class="link-button danger" @onclick="() => asking = true">@L["Media_Delete"]</button>
+    <button type="button" class="link-button danger" @onclick="Ask">@L["Media_Delete"]</button>
 }
 
 @code {
     private bool asking;
+
+    private bool focusConfirm;
+
+    private ElementReference confirmButton;
 
     [Parameter, EditorRequired]
     public SiteMediaItem Item { get; set; } = default!;
 
     [Parameter]
     public EventCallback<SiteMediaItem> Confirmed { get; set; }
+
+    private void Ask() => (asking, focusConfirm) = (true, true);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (focusConfirm)
+        {
+            focusConfirm = false;
+            await confirmButton.FocusAsync();
+        }
+    }
 
     private async Task Confirm()
     {

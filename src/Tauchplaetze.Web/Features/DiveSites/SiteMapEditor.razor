@@ -5,13 +5,15 @@
 @inject IJSRuntime JS
 @inject IStringLocalizer<AdminStrings> L
 @inject IStringLocalizer<DiveSiteStrings> Site
+@inject IStringLocalizer<SharedStrings> Shared
 
 <div class="map-editor">
     <ToolPicker Tools="Tools" Selected="@tool" SelectedChanged="PickTool" />
     @if (ActiveTool is { } active)
     {
         <p class="map-editor-hint" role="status">
-            @(active.Shape is "entry" or "point" ? L["Sketch_Hint_Point"] : L["Sketch_Hint_Line"])
+            @(active.Shape switch { "entry" => Site["EditMode_Hint_Entry"], "point" => L["Sketch_Hint_Point"], _ => L["Sketch_Hint_Line"] })
+            <button type="button" class="button secondary" @onclick="PlaceAtCenter">@Site["EditMode_PlaceAtCenter"]</button>
             @if (active.Shape is "line" or "area")
             {
                 <button type="button" class="button" @onclick="Finish">@L["Sketch_Finish"]</button>
@@ -41,8 +43,8 @@
                             <button type="button" class="link-button editor-item-name" aria-expanded="@(selectedEntry == current.Id ? "true" : "false")"
                                     @onclick="() => SelectEntry(current.Id)">@EntryLabel(current, index)</button>
                             <span class="editor-item-actions">
-                                <button type="button" class="link-button" disabled="@(index == 0)" aria-label="@L["Media_Up"]" @onclick="() => MoveEntryInList(index, -1)">↑</button>
-                                <button type="button" class="link-button" disabled="@(index == Form.EntryPoints.Count - 1)" aria-label="@L["Media_Down"]" @onclick="() => MoveEntryInList(index, 1)">↓</button>
+                                <button type="button" class="link-button" disabled="@(index == 0)" aria-label="@Shared["Form_MoveUp", EntryLabel(current, index)]" @onclick="() => MoveEntryInList(index, -1)">↑</button>
+                                <button type="button" class="link-button" disabled="@(index == Form.EntryPoints.Count - 1)" aria-label="@Shared["Form_MoveDown", EntryLabel(current, index)]" @onclick="() => MoveEntryInList(index, 1)">↓</button>
                                 <button type="button" class="link-button danger" @onclick="() => RemoveEntry(current)">@L["Edit_Remove"]</button>
                             </span>
                         </div>
@@ -113,6 +115,10 @@
 
     private bool initialized;
 
+    private bool initializing;
+
+    private bool disposed;
+
     private string? tool;
 
     private Guid? selectedEntry;
@@ -145,14 +151,23 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!initialized)
+        if (initialized || initializing || disposed)
         {
-            reference ??= DotNetObjectReference.Create(this);
-            var kindNames = Enum.GetValues<SketchKind>().ToDictionary(k => k.ToString(), k => Site[$"SketchKind_{k}"].Value);
-            await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.init", Id, Form.Latitude, Form.Longitude, reference, kindNames);
-            initialized = true;
-            await Render();
+            return;
         }
+
+        initializing = true;
+        reference ??= DotNetObjectReference.Create(this);
+        var kindNames = Enum.GetValues<SketchKind>().ToDictionary(k => k.ToString(), k => Site[$"SketchKind_{k}"].Value);
+        initialized = await JS.InvokeAsync<bool>("tauchplaetzeSketchEditor.init", Id, Form.Latitude, Form.Longitude, reference, kindNames);
+        initializing = false;
+        if (disposed)
+        {
+            await DisposeMap();
+            return;
+        }
+
+        await Render();
     }
 
     private async Task PickTool(string? key)
@@ -160,6 +175,8 @@
         tool = key;
         await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.setTool", Id, ActiveTool?.Kind, ActiveTool?.Shape);
     }
+
+    private async Task PlaceAtCenter() => await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.placeAtCenter", Id);
 
     private async Task Finish() => await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.finish", Id);
 
@@ -328,12 +345,23 @@
         await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.renderEntries", Id, entries, selectedEntry);
     }
 
+    /// <remarks>Läuft <c>init</c> noch, räumt <see cref="OnAfterRenderAsync"/> danach auf.</remarks>
     public async ValueTask DisposeAsync()
+    {
+        disposed = true;
+        if (!initializing)
+        {
+            await DisposeMap();
+        }
+    }
+
+    private async Task DisposeMap()
     {
         try
         {
             if (initialized)
             {
+                initialized = false;
                 await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.dispose", Id);
             }
         }

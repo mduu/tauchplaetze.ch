@@ -3,7 +3,8 @@
 window.tauchplaetzeAdmin = (function () {
   const maps = new Map();
 
-  function show(id, latitude, longitude, dotnet) {
+  // pan: die Koordinate kam aus den Feldern, die Karte folgt ihr.
+  function show(id, latitude, longitude, dotnet, pan) {
     const element = document.getElementById(id);
     if (!element) {
       return;
@@ -13,6 +14,7 @@ window.tauchplaetzeAdmin = (function () {
     if (!entry) {
       const map = L.map(element, { scrollWheelZoom: true });
       window.tauchplaetzeMap.addBaseLayers(map, element);
+      window.tauchplaetzeMap.addContours(map, element);
       const marker = L.circleMarker([latitude, longitude], { radius: 9, color: getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim(), weight: 2, fillColor: getComputedStyle(document.documentElement).getPropertyValue('--color-signal').trim(), fillOpacity: 1 }).addTo(map);
       map.on('click', function (event) {
         marker.setLatLng(event.latlng);
@@ -23,6 +25,9 @@ window.tauchplaetzeAdmin = (function () {
       map.setView([latitude, longitude], 15);
     } else {
       entry.marker.setLatLng([latitude, longitude]);
+      if (pan) {
+        entry.map.panTo([latitude, longitude]);
+      }
     }
 
     // Die Karte entsteht oft in einem Tab, der seine Grösse erst nach dem Rendern kennt.
@@ -45,16 +50,17 @@ window.tauchplaetzeAdmin = (function () {
 window.tauchplaetzeSketchEditor = (function () {
   const editors = new Map();
 
+  // Gibt zurück, ob die Karte steht. Ohne Element (Seite schon weg) false, damit Blazor nicht aufräumen muss.
   function init(id, latitude, longitude, dotnet, kindNames) {
     const element = document.getElementById(id);
     if (!element) {
-      return;
+      return false;
     }
 
     // MudTabs baut das Panel beim Tab-Wechsel neu. Ein alter Editor mit derselben Id gehört dann zu einem entfernten Element.
     const existing = editors.get(id);
     if (existing && existing.map.getContainer() === element) {
-      return;
+      return true;
     }
 
     if (existing) {
@@ -63,9 +69,7 @@ window.tauchplaetzeSketchEditor = (function () {
 
     const map = L.map(element, { scrollWheelZoom: true, doubleClickZoom: false });
     window.tauchplaetzeMap.addBaseLayers(map, element);
-    if (window.tauchplaetzeMap.addContours) {
-      window.tauchplaetzeMap.addContours(map, element);
-    }
+    window.tauchplaetzeMap.addContours(map, element);
 
     L.circleMarker([latitude, longitude], { radius: 5, color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-subtle').trim(), weight: 2, fill: false }).addTo(map);
     map.setView([latitude, longitude], 18);
@@ -76,6 +80,7 @@ window.tauchplaetzeSketchEditor = (function () {
     map.on('click', function (event) { onClick(editor, event.latlng); });
     map.on('dblclick', function () { finish(id); });
     setTimeout(function () { map.invalidateSize(); }, 150);
+    return true;
   }
 
   function onClick(editor, latlng) {
@@ -87,14 +92,13 @@ window.tauchplaetzeSketchEditor = (function () {
     const point = { lat: round(latlng.lat), lng: round(latlng.lng) };
     if (editor.tool.shape === 'entry') {
       editor.dotnet.invokeMethodAsync('AddEntry', editor.tool.kind, point.lat, point.lng);
-      editor.tool = null;
-      editor.map.getContainer().classList.remove('is-drawing');
+      stopTool(editor);
       return;
     }
 
     if (editor.tool.shape === 'point') {
       editor.dotnet.invokeMethodAsync('Add', editor.tool.kind, [point]);
-      editor.tool = null;
+      stopTool(editor);
       return;
     }
 
@@ -106,6 +110,19 @@ window.tauchplaetzeSketchEditor = (function () {
 
     editor.draft.push(point);
     drawDraft(editor);
+  }
+
+  function stopTool(editor) {
+    editor.tool = null;
+    editor.map.getContainer().classList.remove('is-drawing');
+  }
+
+  // Für die Tastatur: setzt das gewählte Werkzeug in der Mitte der Karte, wie ein Klick dort. Die Karte verschiebt man mit den Pfeiltasten.
+  function placeAtCenter(id) {
+    const editor = editors.get(id);
+    if (editor && editor.tool) {
+      onClick(editor, editor.map.getCenter());
+    }
   }
 
   function drawDraft(editor) {
@@ -198,6 +215,13 @@ window.tauchplaetzeSketchEditor = (function () {
   // Einstiege und Orte als verschiebbare Punkte. Orte an Land (Parkplatz, Toilette) als Schild wie auf der Platzseite.
   const placeSigns = { parking: 'P', toilet: 'WC' };
 
+  // Namen kommen von Mitwirkenden: nur als Text ins DOM, nie als HTML.
+  function textElement(text) {
+    const span = document.createElement('span');
+    span.textContent = text;
+    return span;
+  }
+
   function renderEntries(id, entries, selectedId) {
     const editor = editors.get(id);
     if (!editor) {
@@ -214,7 +238,7 @@ window.tauchplaetzeSketchEditor = (function () {
         iconAnchor: sign ? [12, 12] : [8, 8]
       });
       L.marker([entry.lat, entry.lng], { icon: icon, draggable: true, keyboard: false })
-        .bindTooltip(entry.label, { permanent: true, direction: 'right', offset: [12, 0], className: 'map-label' })
+        .bindTooltip(textElement(entry.label), { permanent: true, direction: 'right', offset: [12, 0], className: 'map-label' })
         .on('click', function (event) {
           L.DomEvent.stopPropagation(event);
           editor.dotnet.invokeMethodAsync('SelectEntry', entry.id);
@@ -246,5 +270,5 @@ window.tauchplaetzeSketchEditor = (function () {
     }
   });
 
-  return { init: init, setTool: setTool, finish: finish, cancel: cancel, render: render, renderEntries: renderEntries, dispose: dispose };
+  return { init: init, setTool: setTool, finish: finish, cancel: cancel, render: render, renderEntries: renderEntries, placeAtCenter: placeAtCenter, dispose: dispose };
 })();

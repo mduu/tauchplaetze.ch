@@ -43,4 +43,6 @@
   <data name="Form_Latitude" xml:space="preserve"><value>Latitudine (N)</value></data>
   <data name="Form_Longitude" xml:space="preserve"><value>Longitudine (E)</value></data>
   <data name="Form_InvalidCoordinate" xml:space="preserve"><value>Inserisci un numero con il punto, ad es. 47.284900.</value></data>
+  <data name="Form_MoveUp" xml:space="preserve"><value>Sposta «{0}» in alto</value></data>
+  <data name="Form_MoveDown" xml:space="preserve"><value>Sposta «{0}» in basso</value></data>
 </root>
