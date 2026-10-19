@@ -34,9 +34,6 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
     /// <summary>Pixel rund um den Punkt in Ufernähe. Ein Fenster von 2 fängt einzelne maskierte Pixel auf.</summary>
     private const int ShoreSatelliteWindow = 2;
 
-    /// <summary>Distanz des Punkts in Ufernähe vom Platz, in Richtung Seemitte.</summary>
-    private const double SeawardMeters = 100;
-
     private Task<RemoteSensingProducts?>? products;
 
     /// <summary>Wettermodelle nach Vorrang, mit Vorlauf in Tagen (`data-sources.md`, «Wetter: Open-Meteo»).</summary>
@@ -91,8 +88,8 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
     }
 
     /// <remarks>
-    /// Ein eigener Satellitenpunkt des Platzes gilt auch hier. Sonst 100 m vom Platz Richtung Satellitenpunkt des Sees (bzw. Mitte).
-    /// Nur ein Versuch pro Platz: Ist dort kein Wert, gilt Sentinel-3.
+    /// Ein eigener Satellitenpunkt des Platzes gilt auch hier. Sonst zuerst 50 m vom Platz Richtung Satellitenpunkt des Sees (bzw. Mitte),
+    /// bei fehlendem Wert oder zu wenigen Pixeln 100 m. Höchstens zwei Calls pro Platz. Ist kein Wert da, gilt Sentinel-3.
     /// </remarks>
     private async Task<SatelliteObservation?> ShoreSecchi(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
     {
@@ -103,12 +100,26 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             return null;
         }
 
+        if (site.SatellitePoint is { } own)
+        {
+            return await ShoreSatelliteAt(lake, own.Y, own.X, today, recorder, ct);
+        }
+
         var toward = waterBody.SatellitePoint ?? waterBody.Centroid;
-        var (latitude, longitude) = site.SatellitePoint is { } own
-            ? (own.Y, own.X)
-            : SeawardPoint.Of(site.Location.Y, site.Location.X, toward.Y, toward.X, SeawardMeters);
-        return await Satellite(AlplakesClient.ShoreSatellite, lake, AlplakesClient.ShoreSecchiVariable, latitude, longitude, ShoreSatelliteWindow, today, recorder, ct);
+        var nearPoint = SeawardPoint.Of(site.Location.Y, site.Location.X, toward.Y, toward.X, ShorePoint.NearMeters);
+        var near = await ShoreSatelliteAt(lake, nearPoint.Latitude, nearPoint.Longitude, today, recorder, ct);
+        if (!ShorePoint.NeedsFallback(near, ShorePoint.MinPixels))
+        {
+            return near;
+        }
+
+        var farPoint = SeawardPoint.Of(site.Location.Y, site.Location.X, toward.Y, toward.X, ShorePoint.FarMeters);
+        var far = await ShoreSatelliteAt(lake, farPoint.Latitude, farPoint.Longitude, today, recorder, ct);
+        return ShorePoint.Pick(near, far, ShorePoint.MinPixels);
     }
+
+    private Task<SatelliteObservation?> ShoreSatelliteAt(string lake, double latitude, double longitude, DateOnly today, SourceRecorder recorder, CancellationToken ct) =>
+        Satellite(AlplakesClient.ShoreSatellite, lake, AlplakesClient.ShoreSecchiVariable, latitude, longitude, ShoreSatelliteWindow, today, recorder, ct);
 
     /// <summary>Einmal pro Lauf: welche Seen welche Satellitenprodukte haben.</summary>
     private Task<RemoteSensingProducts?> Products(SourceRecorder recorder, CancellationToken ct) =>
@@ -132,7 +143,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
     {
         var values = await recorder.Record(AlplakesClient.Source, $"satellite-{key}",
             alplakes.GetSatelliteValues(satelliteName, lake, variable, latitude, longitude, today.AddDays(-LookbackDays), today, window, ct), ct);
-        return values is [var latest, ..] ? new SatelliteObservation(SwissTime.DayOf(latest.Time), latest.Median) : null;
+        return values is [var latest, ..] ? new SatelliteObservation(SwissTime.DayOf(latest.Time), latest.Median, latest.PixelCount) : null;
     }
 
     /// <remarks>Plätze im selben Gitterpunkt teilen sich den Call. Zwei Dezimalen sind rund 1 km, so fein wie ICON-CH1.</remarks>

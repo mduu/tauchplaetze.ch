@@ -79,6 +79,47 @@ public class ClaritySourceTests
         Assert.Equal((47.2845, 8.6082), point);
     }
 
+    [Theory]
+    [InlineData(3, null, 50)]
+    [InlineData(null, 18, 100)]
+    [InlineData(2, 18, 100)]
+    [InlineData(2, 1, 50)]
+    [InlineData(null, 2, 100)]
+    public void Der_Wert_50_m_vor_dem_Ufer_gilt_mit_genug_Pixeln_sonst_der_Wert_bei_100_m(int? nearPixels, int? farPixels, int expectedMeters)
+    {
+        // Arrange
+        var near = nearPixels is { } n ? new SatelliteObservation(Day, 5.4, n) : null;
+        var far = farPixels is { } f ? new SatelliteObservation(Day, 5.5, f) : null;
+
+        // Act
+        var picked = ShorePoint.Pick(near, far, ShorePoint.MinPixels);
+
+        // Assert
+        Assert.Same(expectedMeters == 50 ? near : far, picked);
+    }
+
+    [Fact]
+    public void Mit_genug_Pixeln_bei_50_m_braucht_es_keinen_zweiten_Call()
+    {
+        // Act
+        var enough = ShorePoint.NeedsFallback(new SatelliteObservation(Day, 5.4, 3), ShorePoint.MinPixels);
+        var tooFew = ShorePoint.NeedsFallback(new SatelliteObservation(Day, 5.4, 2), ShorePoint.MinPixels);
+
+        // Assert
+        Assert.Equal((false, true), (enough, tooFew));
+    }
+
+    [Fact]
+    public void Sentinel_2_bei_50_m_liefert_den_Wert_mit_wenigen_Pixeln()
+    {
+        // Act
+        var values = SatelliteValue.ParseList(TestData.Read("alplakes", "rs-timeseries-zurich-sentinel2-Z490-50m-w2.json"));
+
+        // Assert
+        Assert.Equal((new DateOnly(2026, 10, 15), 3), (DateOnly.FromDateTime(values[0].Time.UtcDateTime), values[0].PixelCount));
+        Assert.Equal(5.4, values[0].Median, 1);
+    }
+
     [Fact]
     public void Die_Regeln_heissen_rules_1_2()
     {

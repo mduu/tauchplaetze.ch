@@ -49,7 +49,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Die_Klarheit_kommt_von_Sentinel_2_in_Ufernaehe_ohne_Uferfaktor()
+    public async Task Die_Klarheit_kommt_von_Sentinel_2_50_m_vor_dem_Ufer_ohne_Uferfaktor_und_ohne_zweiten_Call()
     {
         // Arrange
         var siteId = await PrepareRiffWilliams();
@@ -62,8 +62,9 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(ForecastRunStatus.Succeeded, run.Status);
         Assert.Equal((ClaritySource.Sentinel2Shore, new DateOnly(2026, 10, 15)), (today.ClaritySource, today.SecchiObservedAt));
         Assert.Equal(today.SecchiDepth, today.SecchiDepthShore);
-        Assert.InRange(today.SecchiDepthShore!.Value, 4.5m, 5.6m);
-        Assert.Contains(Sql.Sources.Requests, url => url.Contains("/sentinel2/Z490/47.2843/8.6075/", StringComparison.Ordinal));
+        Assert.Equal(5.4m, today.SecchiDepthShore);
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("/sentinel2/Z490/47.2846/8.6080/", StringComparison.Ordinal));
+        Assert.DoesNotContain(Sql.Sources.Requests, url => url.Contains("/sentinel2/Z490/47.2843/8.6075/", StringComparison.Ordinal));
     }
 
     [SqlFact]

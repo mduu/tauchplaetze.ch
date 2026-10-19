@@ -1,7 +1,7 @@
 namespace Tauchplaetze.Core.Features.Forecasts.Calculation;
 
-/// <summary>Ein Wert des Satelliten an einem Tag.</summary>
-internal record SatelliteObservation(DateOnly Date, double Value);
+/// <summary>Ein Wert des Satelliten an einem Tag, aus <see cref="PixelCount"/> gültigen Pixeln (laut Eawag gilt jedes gelieferte Pixel als gültig).</summary>
+internal record SatelliteObservation(DateOnly Date, double Value, int PixelCount = 0);
 
 /// <summary>
 /// Die geschätzte Klarheit eines Tages. <see cref="SecchiDepth"/> gilt in der Seemitte (Satellitenpunkt), <see cref="ShoreDepth"/> in Ufernähe am Platz.
