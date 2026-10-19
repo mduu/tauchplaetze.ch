@@ -75,7 +75,7 @@ Der Tauchplatz. Nur `Name`, `Location` und `WaterBodyId` sind Pflicht (Ausbaustu
 | `Access` | enum, optional | `Shore`, `Boat`, `ShoreAndBoat` |
 | `Features` | flags enum | `Plateau`, `Cave`, `River`, `IceDiving`, `Training` (Wand und Wrack kommen aus den Bewertungen) |
 | `HasDivingBan` | bool | Tauchverbot (dauernd oder zeitweise) |
-| `InflowStationOverride` | string(20), optional | BAFU-Station, falls der Platz nahe einer Mündung liegt (überschreibt die Stationen des Sees). An einem Fluss die Station der Kachel «Abfluss» statt der nächsten. |
+| `InflowStationOverride` | string(20), optional | BAFU-Stationsnummer mit 4 Ziffern (die Validierung lehnt anderes ab), falls der Platz nahe einer Mündung liegt (überschreibt die Stationen des Sees). An einem Fluss die Station der Kachel «Abfluss» statt der nächsten. |
 | `DischargeLowFrom`, `DischargeMediumFrom`, `DischargeStrongFrom` | decimal(7,1), optional | Schwellen des Abflusses in m³/s für die Kachel «Abfluss»: ab hier gering, mittel, stark. Nur alle drei zusammen und steigend. Nur Moderation. Ohne sie gilt der Median der letzten 30 Tage. |
 | `SatellitePoint` | geography (Point), optional | eigener Punkt seewärts für Satellitenwerte. Ohne ihn gilt `WaterBody.SatellitePoint`. |
 | `ForecastDisabled` | bool | Prognose für den Platz ausgeschaltet (Datenstufe 0) |

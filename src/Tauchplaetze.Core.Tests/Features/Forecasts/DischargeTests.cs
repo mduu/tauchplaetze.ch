@@ -141,6 +141,28 @@ public class DischargeTests(SqlServer sql) : SqlTest(sql)
         Assert.Empty(Sql.Sources.Requests);
     }
 
+    [SqlTheory]
+    [InlineData("2091", true)]
+    [InlineData(" 2091 ", true)]
+    [InlineData("", true)]
+    [InlineData("209", false)]
+    [InlineData("20911", false)]
+    [InlineData("2091&x=1", false)]
+    [InlineData("abcd", false)]
+    public async Task Als_Station_gilt_nur_eine_BAFU_Stationsnummer_mit_vier_Ziffern(string station, bool valid)
+    {
+        // Arrange
+        var (moderator, site) = await PrepareRheinfelden();
+        var edit = (await Query<GetDiveSiteForEditingQuery, DiveSiteForEditing?>(new GetDiveSiteForEditingQuery(site)))!;
+
+        // Act
+        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber,
+            edit.Content with { InflowStationOverride = station }, null));
+
+        // Assert
+        Assert.Equal(valid ? [] : [EditorialError.InvalidStation], result.Errors);
+    }
+
     private async Task<(string Moderator, Guid Site)> PrepareRheinfelden()
     {
         Sql.Time.Now = Now;

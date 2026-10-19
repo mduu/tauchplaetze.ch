@@ -13,7 +13,7 @@ internal class HydroClient(HttpClient httpClient)
     public Task<SourceResult<IReadOnlyList<HydroValue>>> GetRange(string stationId, string parameter, DateOnly start, DateOnly end, CancellationToken ct) =>
         SourceHttp.Get(
             httpClient,
-            $"apiv1/hydro/daterange?locations={stationId}&parameters={parameter}&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
+            $"apiv1/hydro/daterange?locations={Uri.EscapeDataString(stationId)}&parameters={parameter}&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
             HydroValue.ParseList,
             ct);
 
@@ -21,7 +21,7 @@ internal class HydroClient(HttpClient httpClient)
     public Task<SourceResult<HydroStationSeries>> GetFlowsAndTemperatures(IEnumerable<string> stationIds, DateOnly start, DateOnly end, CancellationToken ct) =>
         SourceHttp.Get(
             httpClient,
-            $"apiv1/hydro/daterange?locations={string.Join(',', stationIds)}&parameters=flow,temperature&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
+            $"apiv1/hydro/daterange?locations={string.Join(',', stationIds.Select(Uri.EscapeDataString))}&parameters=flow,temperature&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
             HydroStationSeries.Parse,
             ct);
 }

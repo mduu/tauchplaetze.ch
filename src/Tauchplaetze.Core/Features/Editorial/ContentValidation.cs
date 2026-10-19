@@ -64,6 +64,11 @@ internal static partial class ContentValidation
             errors.Add(EditorialError.InvalidDischargeThresholds);
         }
 
+        if (!string.IsNullOrWhiteSpace(content.InflowStationOverride) && !StationPattern().IsMatch(content.InflowStationOverride.Trim()))
+        {
+            errors.Add(EditorialError.InvalidStation);
+        }
+
         return errors;
     }
 
@@ -101,4 +106,7 @@ internal static partial class ContentValidation
 
     [GeneratedRegex("^[a-z0-9]+(-[a-z0-9]+)*$")]
     private static partial Regex SlugPattern();
+
+    [GeneratedRegex("^[0-9]{4}$")]
+    private static partial Regex StationPattern();
 }

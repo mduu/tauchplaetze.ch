@@ -150,6 +150,9 @@ public enum EditorialError
 
     /// <summary>Die Schwellen des Abflusses steigen nicht von gering über mittel zu stark oder liegen nicht zwischen 0 und 100 000 m³/s.</summary>
     InvalidDischargeThresholds,
+
+    /// <summary>Die Station für Abfluss und Trübung ist keine BAFU-Stationsnummer (4 Ziffern).</summary>
+    InvalidStation,
 }
 
 /// <summary>Ergebnis eines Commands der Redaktion. <see cref="NoChange"/>: Der Inhalt war gleich wie die Basis, es entstand keine Version.</summary>
