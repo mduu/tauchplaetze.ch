@@ -139,7 +139,19 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
   - Vorhersagen gibt es für die Stationen, die auf Hydroweb («Hydrologische Daten und Vorhersagen») aufgeschaltet sind. Sie werden 1- bis 2-mal täglich gerechnet.
   - Keine Grenze für die Anzahl Abfragen.
   - Quellenangabe: «Bundesamt für Umwelt BAFU».
-- **Nächster Schritt:** Zugang per HTTPS beantragen (einfacher als SFTP für einen Job in Azure) und das Format der Beispieldaten prüfen. Erst dann einen Client bauen (Phase 1).
+- **Beispieldaten** (Anhang der Mail, Stand 19.10.2026): 53 Stationen in je 5 Dateien `Pqprevi_{Variante}_{Station}.txt`. Dabei sind 2104 Linth – Weesen und 2091 Rhein – Rheinfelden, nicht aber 2477 Lorze – Zug.
+
+  | Variante | Wettermodell | Reicht bis | Spalten |
+  |---|---|---|---|
+  | `ICH1` | MeteoSchweiz ICON-CH1, Ensemble | ca. 2 Tage | Steuerlauf, 10 Mitglieder, Minimum, Quartile, Median, Maximum (je Wasserstand `H_` und Abfluss `Q_`) |
+  | `ICH1_Ctrl` | ICON-CH1, Steuerlauf | ca. 2 Tage | Wasserstand, Abfluss |
+  | `ICH2` | ICON-CH2, Ensemble | ca. 5 Tage | Steuerlauf, 20 Mitglieder, Perzentile |
+  | `ICH2_Ctrl` | ICON-CH2, Steuerlauf | ca. 5 Tage | Wasserstand, Abfluss |
+  | `ECMWF` | ECMWF | ca. 10 Tage | Wasserstand, Abfluss |
+
+  Format: Text in UTF-8. Ein Kopf von rund 15 Zeilen nennt Ausgabezeit, Zeit des Wetterlaufs und den letzten Messwert (MEWZ). Danach eine Zeile pro Stunde: `dd mm yyyy hh Wasserstand Abfluss`, Wasserstand in m ü. M., Abfluss in m³/s. Die Reihe beginnt einen Tag vor der Ausgabe mit gemessenen Werten.
+- **Verwendung (geplant):** `ICH2_Ctrl` deckt die 5 Tage der Prognose ab. Der Teilwert «Zuflüsse» rechnet dann mit dem vorhergesagten statt dem aktuellen Abfluss, vor allem für Flussplätze. Das Ensemble (`ICH2`) taugt später für einen Hinweis «Abfluss unsicher».
+- **Nächster Schritt:** Zugang per HTTPS beantragen (einfacher als SFTP für einen Job in Azure). Dann einen Client mit Contract Test auf einer Beispieldatei bauen (Phase 1).
 - Nutzen: Prognose für Flussplätze. Ohne sie bleibt die Flussprognose bei Wetter und aktuellem Abfluss.
 
 ## Eawag Datalakes (Phase 1)
