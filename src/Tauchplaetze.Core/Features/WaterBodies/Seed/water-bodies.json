@@ -131,7 +131,14 @@
     "centroid": {
       "latitude": 47.1201,
       "longitude": 8.6159
-    }
+    },
+    "satellitePoint": {
+      "latitude": 47.125,
+      "longitude": 8.63
+    },
+    "alplakesLakeKey": "ageri",
+    "alplakesModel3d": "delft3d-flow",
+    "alplakesSimstratKey": "aegeri"
   },
   {
     "slug": "alter-rhein",
@@ -155,7 +162,8 @@
     "centroid": {
       "latitude": 46.389,
       "longitude": 7.2168
-    }
+    },
+    "alplakesLakeKey": "arnen"
   },
   {
     "slug": "arnisee",
@@ -179,7 +187,13 @@
     "centroid": {
       "latitude": 47.1974,
       "longitude": 8.2601
-    }
+    },
+    "satellitePoint": {
+      "latitude": 47.2,
+      "longitude": 8.26
+    },
+    "alplakesLakeKey": "baldegg",
+    "alplakesSimstratKey": "baldegg"
   },
   {
     "slug": "bielersee",
@@ -191,7 +205,14 @@
     "centroid": {
       "latitude": 47.0861,
       "longitude": 7.1544
-    }
+    },
+    "satellitePoint": {
+      "latitude": 47.09,
+      "longitude": 7.17
+    },
+    "alplakesLakeKey": "biel",
+    "alplakesModel3d": "delft3d-flow",
+    "alplakesSimstratKey": "biel"
   },
   {
     "slug": "blausee",
@@ -215,7 +236,13 @@
     "centroid": {
       "latitude": 46.723,
       "longitude": 7.9673
-    }
+    },
+    "satellitePoint": {
+      "latitude": 46.725,
+      "longitude": 7.97
+    },
+    "alplakesLakeKey": "brienz",
+    "alplakesSimstratKey": "brienz"
   },
   {
     "slug": "burgaeschisee",
@@ -227,7 +254,9 @@
     "centroid": {
       "latitude": 47.1696,
       "longitude": 7.6688
-    }
+    },
+    "alplakesLakeKey": "burgaschisee",
+    "alplakesSimstratKey": "burgaschisee"
   },
   {
     "slug": "caumasee",
@@ -251,7 +280,9 @@
     "centroid": {
       "latitude": 46.4664,
       "longitude": 9.8056
-    }
+    },
+    "alplakesLakeKey": "champfer",
+    "alplakesSimstratKey": "champfer"
   },
   {
     "slug": "davosersee",
@@ -263,7 +294,8 @@
     "centroid": {
       "latitude": 46.8198,
       "longitude": 9.8527
-    }
+    },
+    "alplakesLakeKey": "davoser"
   },
   {
     "slug": "engstlensee",
@@ -275,7 +307,8 @@
     "centroid": {
       "latitude": 46.773,
       "longitude": 8.3557
-    }
+    },
+    "alplakesLakeKey": "engstlen"
   },
   {
     "slug": "espi",
@@ -311,7 +344,14 @@
     "centroid": {
       "latitude": 46.3614,
       "longitude": 6.5395
-    }
+    },
+    "satellitePoint": {
+      "latitude": 46.45,
+      "longitude": 6.55
+    },
+    "alplakesLakeKey": "geneva",
+    "alplakesModel3d": "delft3d-flow",
+    "alplakesSimstratKey": "geneva"
   },
   {
     "slug": "greifensee",
@@ -323,7 +363,14 @@
     "centroid": {
       "latitude": 47.3474,
       "longitude": 8.68
-    }
+    },
+    "satellitePoint": {
+      "latitude": 47.35,
+      "longitude": 8.68
+    },
+    "alplakesLakeKey": "greifensee",
+    "alplakesModel3d": "delft3d-flow",
+    "alplakesSimstratKey": "greifensee"
   },
   {
     "slug": "greyerzersee",
@@ -335,7 +382,9 @@
     "centroid": {
       "latitude": 46.6648,
       "longitude": 7.0994
-    }
+    },
+    "alplakesLakeKey": "gruyere",
+    "alplakesSimstratKey": "gruyere"
   },
   {
     "slug": "hagneckkanal",
@@ -359,7 +408,14 @@
     "centroid": {
       "latitude": 47.2824,
       "longitude": 8.2157
-    }
+    },
+    "satellitePoint": {
+      "latitude": 47.28,
+      "longitude": 8.215
+    },
+    "alplakesLakeKey": "hallwil",
+    "alplakesModel3d": "delft3d-flow",
+    "alplakesSimstratKey": "hallwil"
   },
   {
     "slug": "heidsee",
@@ -383,7 +439,9 @@
     "centroid": {
       "latitude": 47.0278,
       "longitude": 8.9764
-    }
+    },
+    "alplakesLakeKey": "klontalersee",
+    "alplakesSimstratKey": "klontalersee"
   },
   {
     "slug": "l-areuse",
@@ -416,7 +474,9 @@
     "centroid": {
       "latitude": 46.6724,
       "longitude": 6.3241
-    }
+    },
+    "alplakesLakeKey": "brenet",
+    "alplakesSimstratKey": "brenet"
   },
   {
     "slug": "lac-de-geronde",
@@ -440,7 +500,8 @@
     "centroid": {
       "latitude": 46.4222,
       "longitude": 7.0504
-    }
+    },
+    "alplakesLakeKey": "hongrin"
   },
   {
     "slug": "lac-de-moiry",
@@ -452,7 +513,8 @@
     "centroid": {
       "latitude": 46.1264,
       "longitude": 7.5709
-    }
+    },
+    "alplakesLakeKey": "moiry"
   },
   {
     "slug": "lac-de-montsalvens",
@@ -464,7 +526,8 @@
     "centroid": {
       "latitude": 46.6154,
       "longitude": 7.1468
-    }
+    },
+    "alplakesLakeKey": "montsalvens"
   },
   {
     "slug": "lac-de-taney",
@@ -476,7 +539,8 @@
     "centroid": {
       "latitude": 46.3455,
       "longitude": 6.84
-    }
+    },
+    "alplakesLakeKey": "taney"
   },
   {
     "slug": "lac-lioson",
@@ -488,7 +552,9 @@
     "centroid": {
       "latitude": 46.3863,
       "longitude": 7.1287
-    }
+    },
+    "alplakesLakeKey": "lioson",
+    "alplakesSimstratKey": "lioson"
   },
   {
     "slug": "laghetto-moesola",
@@ -512,7 +578,8 @@
     "centroid": {
       "latitude": 46.4656,
       "longitude": 8.6471
-    }
+    },
+    "alplakesLakeKey": "sambuco"
   },
   {
     "slug": "lago-di-cadagno",
@@ -524,7 +591,9 @@
     "centroid": {
       "latitude": 46.5501,
       "longitude": 8.7116
-    }
+    },
+    "alplakesLakeKey": "cadagno",
+    "alplakesSimstratKey": "cadagno"
   },
   {
     "slug": "lago-di-tome",
@@ -536,7 +605,9 @@
     "centroid": {
       "latitude": 46.3632,
       "longitude": 8.6899
-    }
+    },
+    "alplakesLakeKey": "tome",
+    "alplakesSimstratKey": "tome"
   },
   {
     "slug": "lago-di-vogorno",
@@ -548,7 +619,8 @@
     "centroid": {
       "latitude": 46.2173,
       "longitude": 8.8527
-    }
+    },
+    "alplakesLakeKey": "vogorno"
   },
   {
     "slug": "lago-maggiore",
@@ -560,7 +632,13 @@
     "centroid": {
       "latitude": 45.9512,
       "longitude": 8.6731
-    }
+    },
+    "satellitePoint": {
+      "latitude": 46.13,
+      "longitude": 8.76
+    },
+    "alplakesLakeKey": "maggiore",
+    "alplakesSimstratKey": "maggiore"
   },
   {
     "slug": "lago-scuro",
@@ -629,7 +707,14 @@
     "centroid": {
       "latitude": 45.9696,
       "longitude": 8.992
-    }
+    },
+    "satellitePoint": {
+      "latitude": 45.95,
+      "longitude": 8.96
+    },
+    "alplakesLakeKey": "lugano",
+    "alplakesModel3d": "delft3d-flow",
+    "alplakesSimstratKey": "upperlugano"
   },
   {
     "slug": "lungerersee",
@@ -641,7 +726,9 @@
     "centroid": {
       "latitude": 46.7981,
       "longitude": 8.1629
-    }
+    },
+    "alplakesLakeKey": "lungern",
+    "alplakesSimstratKey": "lungern"
   },
   {
     "slug": "maggia",
@@ -681,7 +768,8 @@
     "centroid": {
       "latitude": 46.4985,
       "longitude": 9.6362
-    }
+    },
+    "alplakesLakeKey": "marmorera"
   },
   {
     "slug": "melchsee",
@@ -693,7 +781,8 @@
     "centroid": {
       "latitude": 46.7704,
       "longitude": 8.2726
-    }
+    },
+    "alplakesLakeKey": "melch"
   },
   {
     "slug": "muslen-stausee",
@@ -717,7 +806,14 @@
     "centroid": {
       "latitude": 46.9457,
       "longitude": 6.9777
-    }
+    },
+    "satellitePoint": {
+      "latitude": 46.9,
+      "longitude": 6.85
+    },
+    "alplakesLakeKey": "neuchatel",
+    "alplakesModel3d": "mitgcm",
+    "alplakesSimstratKey": "neuchatel"
   },
   {
     "slug": "oeschinensee",
@@ -729,7 +825,9 @@
     "centroid": {
       "latitude": 46.4984,
       "longitude": 7.7254
-    }
+    },
+    "alplakesLakeKey": "oeschinensee",
+    "alplakesSimstratKey": "oeschinensee"
   },
   {
     "slug": "orbe-inferieure",
@@ -762,7 +860,13 @@
     "centroid": {
       "latitude": 47.3524,
       "longitude": 8.7809
-    }
+    },
+    "satellitePoint": {
+      "latitude": 47.35,
+      "longitude": 8.78
+    },
+    "alplakesLakeKey": "pfaffikon",
+    "alplakesSimstratKey": "pfaffikon"
   },
   {
     "slug": "pumpspeicherkraftwerk-mapragg",
@@ -798,7 +902,8 @@
     "centroid": {
       "latitude": 46.5399,
       "longitude": 8.6912
-    }
+    },
+    "alplakesLakeKey": "ritom"
   },
   {
     "slug": "sanetschsee",
@@ -810,7 +915,8 @@
     "centroid": {
       "latitude": 46.3556,
       "longitude": 7.2946
-    }
+    },
+    "alplakesLakeKey": "sanetsch"
   },
   {
     "slug": "sarnersee",
@@ -822,7 +928,13 @@
     "centroid": {
       "latitude": 46.8677,
       "longitude": 8.2164
-    }
+    },
+    "satellitePoint": {
+      "latitude": 46.865,
+      "longitude": 8.205
+    },
+    "alplakesLakeKey": "sarnen",
+    "alplakesSimstratKey": "sarnen"
   },
   {
     "slug": "schiffenensee",
@@ -834,7 +946,8 @@
     "centroid": {
       "latitude": 46.8499,
       "longitude": 7.1676
-    }
+    },
+    "alplakesLakeKey": "schiffenen"
   },
   {
     "slug": "schwarzsee",
@@ -846,7 +959,8 @@
     "centroid": {
       "latitude": 46.6651,
       "longitude": 7.2818
-    }
+    },
+    "alplakesLakeKey": "schwarz"
   },
   {
     "slug": "seealpsee",
@@ -858,7 +972,8 @@
     "centroid": {
       "latitude": 47.2683,
       "longitude": 9.4012
-    }
+    },
+    "alplakesLakeKey": "seealp"
   },
   {
     "slug": "sihlsee",
@@ -870,7 +985,13 @@
     "centroid": {
       "latitude": 47.118,
       "longitude": 8.7885
-    }
+    },
+    "satellitePoint": {
+      "latitude": 47.125,
+      "longitude": 8.78
+    },
+    "alplakesLakeKey": "sihlsee",
+    "alplakesSimstratKey": "sihlsee"
   },
   {
     "slug": "silsersee",
@@ -882,7 +1003,9 @@
     "centroid": {
       "latitude": 46.4204,
       "longitude": 9.7294
-    }
+    },
+    "alplakesLakeKey": "sils",
+    "alplakesSimstratKey": "sils"
   },
   {
     "slug": "silvaplanersee",
@@ -894,7 +1017,13 @@
     "centroid": {
       "latitude": 46.4483,
       "longitude": 9.7906
-    }
+    },
+    "satellitePoint": {
+      "latitude": 46.45,
+      "longitude": 9.79
+    },
+    "alplakesLakeKey": "silvaplana",
+    "alplakesSimstratKey": "silvaplana"
   },
   {
     "slug": "stausee-garichti",
@@ -906,7 +1035,8 @@
     "centroid": {
       "latitude": 46.9555,
       "longitude": 9.0999
-    }
+    },
+    "alplakesLakeKey": "garichti"
   },
   {
     "slug": "stausee-gigerwald",
@@ -918,7 +1048,8 @@
     "centroid": {
       "latitude": 46.9155,
       "longitude": 9.3742
-    }
+    },
+    "alplakesLakeKey": "gigerwald"
   },
   {
     "slug": "steinenbach",
@@ -954,7 +1085,8 @@
     "centroid": {
       "latitude": 46.5671,
       "longitude": 9.3666
-    }
+    },
+    "alplakesLakeKey": "sufner"
   },
   {
     "slug": "talalpsee",
@@ -978,7 +1110,8 @@
     "centroid": {
       "latitude": 46.7732,
       "longitude": 8.3069
-    }
+    },
+    "alplakesLakeKey": "tannen"
   },
   {
     "slug": "thunersee",
@@ -990,7 +1123,13 @@
     "centroid": {
       "latitude": 46.7056,
       "longitude": 7.73
-    }
+    },
+    "satellitePoint": {
+      "latitude": 46.69,
+      "longitude": 7.72
+    },
+    "alplakesLakeKey": "thun",
+    "alplakesSimstratKey": "thun"
   },
   {
     "slug": "toess",
@@ -1035,7 +1174,9 @@
     "centroid": {
       "latitude": 47.2691,
       "longitude": 8.5035
-    }
+    },
+    "alplakesLakeKey": "turlersee",
+    "alplakesSimstratKey": "turlersee"
   },
   {
     "slug": "verzasca",
@@ -1068,7 +1209,14 @@
     "centroid": {
       "latitude": 46.9854,
       "longitude": 8.4519
-    }
+    },
+    "satellitePoint": {
+      "latitude": 47.03,
+      "longitude": 8.36
+    },
+    "alplakesLakeKey": "lucerne",
+    "alplakesModel3d": "mitgcm",
+    "alplakesSimstratKey": "lucernekreuztrichterandvitznauerbecken"
   },
   {
     "slug": "waegitalersee",
@@ -1092,6 +1240,12 @@
     "centroid": {
       "latitude": 47.1255,
       "longitude": 9.2005
-    }
+    },
+    "satellitePoint": {
+      "latitude": 47.125,
+      "longitude": 9.2
+    },
+    "alplakesLakeKey": "walensee",
+    "alplakesSimstratKey": "walensee"
   }
 ]

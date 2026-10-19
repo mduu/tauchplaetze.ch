@@ -10,7 +10,7 @@ namespace Tauchplaetze.Core.Features.WaterBodies.Commands;
 
 /// <summary>
 /// Legt die Gewässer und BAFU-Stationen aus `Seed/water-bodies.json` an, die noch fehlen. Bestehende bleiben unverändert,
-/// nur eine fehlende Lage einer Station kommt dazu.
+/// nur leere Angaben kommen dazu: die Lage einer Station, die Schlüssel für Alplakes und der Satellitenpunkt.
 /// </summary>
 public record SeedWaterBodiesCommand;
 
@@ -41,6 +41,7 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
         }
 
         AddMissingStationLocations(seeds, existing);
+        AddMissingAlplakesKeys(seeds, existing);
 
         await dbContext.SaveChangesAsync(ct);
 
@@ -58,6 +59,18 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
             {
                 station.Location = seed.ToEntity().Location;
             }
+        }
+    }
+
+    private static void AddMissingAlplakesKeys(IReadOnlyList<WaterBodySeed> seeds, Dictionary<string, WaterBody> existing)
+    {
+        foreach (var seed in seeds.Where(s => existing.ContainsKey(s.Slug)))
+        {
+            var waterBody = existing[seed.Slug];
+            waterBody.AlplakesLakeKey ??= seed.AlplakesLakeKey;
+            waterBody.AlplakesModel3d ??= seed.AlplakesModel3d;
+            waterBody.AlplakesSimstratKey ??= seed.AlplakesSimstratKey;
+            waterBody.SatellitePoint ??= seed.SatellitePoint?.ToPoint();
         }
     }
 

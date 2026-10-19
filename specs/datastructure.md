@@ -17,7 +17,7 @@ Diese Spec beschreibt die Entitäten in Azure SQL. Entitäten und Felder heissen
 
 ### WaterBody
 
-Stammdaten der Gewässer, schweizweit: Seen und Flüsse (Entscheid Marc, 17.10.2026). Tabelle `WaterBodies`. Der Seed steht vorerst in `Features/WaterBodies/Seed/water-bodies.json` (MVP: Zürichsee, Zugersee, Rhein). Der Command `SeedWaterBodies` legt fehlende Gewässer an und ändert bestehende nicht. Später kommt der Seed aus dem Gewässernetz von swisstopo (swissTLM3D, `data-sources.md`).
+Stammdaten der Gewässer, schweizweit: Seen und Flüsse (Entscheid Marc, 17.10.2026). Tabelle `WaterBodies`. Der Seed steht vorerst in `Features/WaterBodies/Seed/water-bodies.json` (Gewässer mit Plätzen; die Schlüssel für Alplakes seit 19.10.2026 für alle Seen mit Plätzen, die Alplakes abdeckt). Der Command `SeedWaterBodies` legt fehlende Gewässer an. Bei bestehenden füllt er nur leere Angaben: Lage einer Station, `AlplakesLakeKey`, `AlplakesModel3d`, `AlplakesSimstratKey`, `SatellitePoint`. Ein gesetzter Wert bleibt. Später kommt der Seed aus dem Gewässernetz von swisstopo (swissTLM3D, `data-sources.md`).
 
 | Feld | Typ | Bemerkung |
 |---|---|---|

@@ -21,7 +21,7 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 - #12 (Bilder): öffentlicher Blob-Container mit Cloudflare davor, `infrastructure.md`.
 - #13 (maschinelle Übersetzung): Claude API mit Glossar, Phase 1, `cms.md`.
 - #16 (Azure SQL Free Offer): für das Projekt nicht entscheidend. Bei der Einrichtung prüfen.
-- #17 (erste Gewässer): Zürichsee, Zugersee und der Rhein, `roadmap.md`.
+- #17 (erste Gewässer): zuerst Zürichsee, Zugersee und der Rhein. Seit 19.10.2026 alle Seen mit Plätzen, die Alplakes abdeckt (Entscheid Marc), `data-sources.md`.
 - #18 bis #20 (Fotos, Einstiege, Rechtliches): als Aufgaben in `roadmap.md`.
 - #5 (Tagesauswahl): 5 Tage, `forecast.md`.
 - #2 und #3 (Abdeckung und Reichweite von Alplakes): Spike 0.5, `data-sources.md`.

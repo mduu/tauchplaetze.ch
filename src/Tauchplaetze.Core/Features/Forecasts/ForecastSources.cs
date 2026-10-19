@@ -85,9 +85,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
                 alplakes.GetDepthTime(model, lake, start, end, site.Location.Y, site.Location.X, ct), ct)
             : null;
 
-        var point = site.SatellitePoint ?? waterBody.SatellitePoint ?? site.Location;
-        var secchi = waterBody.AlplakesLakeKey is { } key ? await Satellite(AlplakesClient.Satellite, key, AlplakesClient.SecchiVariable, point.Y, point.X, SatelliteWindow, today, recorder, ct) : null;
-        var chlorophyll = waterBody.AlplakesLakeKey is { } key2 ? await Satellite(AlplakesClient.Satellite, key2, AlplakesClient.ChlorophyllVariable, point.Y, point.X, SatelliteWindow, today, recorder, ct) : null;
+        var (secchi, chlorophyll) = await LakeSatellite(site, waterBody, today, recorder, ct);
 
         return new SiteData(model3d, await Weather(site.Location.Y, site.Location.X, recorder, ct), secchi, chlorophyll, await ShoreSecchi(site, waterBody, today, recorder, ct));
     }
@@ -128,6 +126,26 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
 
     private Task<SatelliteObservation?> ShoreSatelliteAt(string lake, double latitude, double longitude, DateOnly today, SourceRecorder recorder, CancellationToken ct) =>
         Satellite(AlplakesClient.ShoreSatellite, lake, AlplakesClient.ShoreSecchiVariable, latitude, longitude, ShoreSatelliteWindow, today, recorder, ct);
+
+    /// <summary>
+    /// Secchi und Chlorophyll von Sentinel-3 (300 m Pixel) am Satellitenpunkt im offenen Wasser, nur wenn Alplakes das Produkt für den See führt.
+    /// Ohne Satellitenpunkt fallen die Calls weg: Am Ufer liefert Sentinel-3 nichts.
+    /// </summary>
+    private async Task<(SatelliteObservation? Secchi, SatelliteObservation? Chlorophyll)> LakeSatellite(
+        DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
+    {
+        if (waterBody.AlplakesLakeKey is not { } lake
+            || (site.SatellitePoint ?? waterBody.SatellitePoint) is not { } point
+            || await Products(recorder, ct) is not { } available
+            || !available.Has(lake, AlplakesClient.Satellite, AlplakesClient.SecchiVariable))
+        {
+            return (null, null);
+        }
+
+        return (
+            await Satellite(AlplakesClient.Satellite, lake, AlplakesClient.SecchiVariable, point.Y, point.X, SatelliteWindow, today, recorder, ct),
+            await Satellite(AlplakesClient.Satellite, lake, AlplakesClient.ChlorophyllVariable, point.Y, point.X, SatelliteWindow, today, recorder, ct));
+    }
 
     /// <summary>Einmal pro Lauf: welche Seen welche Satellitenprodukte haben.</summary>
     private Task<RemoteSensingProducts?> Products(SourceRecorder recorder, CancellationToken ct) =>

@@ -258,6 +258,47 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Ein_bestehender_See_ohne_Schluessel_bekommt_beim_Seed_die_von_Alplakes_und_ein_eigener_Schluessel_bleibt()
+    {
+        // Arrange
+        await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
+        await Sql.Arrange(async db =>
+        {
+            var thun = await db.WaterBodies.SingleAsync(w => w.Slug == "thunersee");
+            (thun.AlplakesLakeKey, thun.AlplakesSimstratKey, thun.SatellitePoint) = (null, "thun-eigen", null);
+        });
+        await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
+        var admin = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
+        var lake = (await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"))).Single(w => w.Slug == "thunersee").Id;
+        await Command<ProposeDiveSiteCommand, EditorialResult>(new ProposeDiveSiteCommand(admin, "Spiez Bucht", lake, 46.6890, 7.6880, "Spiez", "BE", null));
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("simulations/1d/depthtime/simstrat/thun-eigen/", StringComparison.Ordinal));
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("remotesensing/timeseries/thun/sentinel2/Z490/", StringComparison.Ordinal));
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("remotesensing/timeseries/thun/sentinel3/Zsd_lee/46.6900/7.7200/", StringComparison.Ordinal));
+    }
+
+    [SqlFact]
+    public async Task Ohne_Satellitenpunkt_fragt_der_Lauf_Sentinel_3_nicht_am_Ufer_ab()
+    {
+        // Arrange
+        await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
+        var admin = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
+        var lake = (await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"))).Single(w => w.Slug == "silsersee").Id;
+        await Command<ProposeDiveSiteCommand, EditorialResult>(new ProposeDiveSiteCommand(admin, "Isola", lake, 46.4180, 9.7470, "Sils", "GR", null));
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        Assert.DoesNotContain(Sql.Sources.Requests, url => url.Contains("/sentinel3/", StringComparison.Ordinal));
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("remotesensing/timeseries/sils/sentinel2/Z490/", StringComparison.Ordinal));
+    }
+
+    [SqlFact]
     public async Task Haelt_ein_anderer_Lauf_den_Lock_rechnet_der_zweite_nicht()
     {
         // Arrange

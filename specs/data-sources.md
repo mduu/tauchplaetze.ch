@@ -39,6 +39,19 @@ Der Code der API ist öffentlich: `github.com/eawag-surface-waters-research/alpl
 
 Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulations/1d/metadata`. Die Zuordnung eines Gewässers zu den Modellen steht in `WaterBody` (`datastructure.md`).
 
+**Angebundene Seen (Seed, 19.10.2026, aus den drei Metadaten-Endpunkten, gespeichert unter `TestData/alplakes/metadata-*-20261019.json`):**
+
+| Art | Seen |
+|---|---|
+| 3D-Modell | Zürichsee, Genfersee, Luganersee, Bielersee, Ägerisee, Greifensee, Hallwilersee (`delft3d-flow`); Zugersee, Vierwaldstättersee, Neuenburgersee (`mitgcm`) |
+| 1D-Modell Simstrat | die Seen oben und Thuner-, Brienzer-, Walen-, Silser-, Silvaplaner-, Sarner-, Lungerer-, Baldegger-, Pfäffiker-, Sihl-, Türler-, Klöntaler-, Burgäschi-, Champfèrer-, Oeschinen- und Greyerzersee, Lago Maggiore, Lago di Cadagno, Lago di Tomé, Lac Brenet, Lac Lioson. Mehrere Becken: Vierwaldstättersee `lucernekreuztrichterandvitznauerbecken`, Luganersee `upperlugano` |
+| Nur Satellit (Sentinel-2) | Stauseen und Bergseen mit Plätzen, z.B. Davoser-, Arnen-, Sufner-, Tannen-, Schiffenen-, Engstlen-, Melch-, Marmorera-, Seealpsee, Lago di Vogorno, Lago del Sambuco, Lac de l'Hongrin, Moiry, Montsalvens, Taney, Ritom, Sanetsch, Garichti, Gigerwald |
+
+- Der Satellitenpunkt (Sentinel-3) liegt im offenen Wasser. Jeder Punkt ist mit einem Call geprüft (Werte im September/Oktober 2026). Ohne Satellitenpunkt oder ohne `Zsd_lee` im Angebot fragt der Lauf Sentinel-3 nicht ab, denn am Ufer liefert es nichts. Silsersee und die kleinen Seen haben darum nur Sentinel-2.
+- Ohne Schlüssel bleiben Seen ohne Angebot: u.a. Alter Rhein, Blausee, Caumasee, Arnisee, Trüebsee, Talalpsee, Heidsee, Muslen, Lac de Géronde, Espi, Duzillet, Moesola, Lago Scuro, Lej da las Culuonnas, Mapragg, Wägitalersee, Stille Reuss.
+- Zuflussstationen (BAFU) gibt es weiterhin nur an Zürichsee und Zugersee. Ohne Station zählt nur der Regen als Zufluss.
+- **Calls pro Lauf** (Schätzung 19.10.2026, 319 Plätze): bisher rund 210 an Alplakes (69 Plätze mit 3D-Modell, Satellit, 2 Simstrat), neu rund 650: 3D-Modell an 136 Plätzen, Simstrat an 31 Seen, Sentinel-2 an rund 260 Plätzen (1–2 Calls), Sentinel-3 an 18 Seen (2 Calls pro Satellitenpunkt). Dauer: `mitgcm` braucht rund 18 s pro Call, Vierwaldstättersee (31 Plätze) und Neuenburgersee (6) kosten damit rund 11 Minuten. Der ganze Lauf dauert geschätzt 20–25 Minuten.
+
 ### Endpunkte
 
 | Endpunkt | Zweck |
