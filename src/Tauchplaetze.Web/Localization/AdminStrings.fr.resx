@@ -382,4 +382,10 @@
   <data name="Map_Layer_Grey" xml:space="preserve"><value>Carte grise</value></data>
   <data name="Error_InvalidStation" xml:space="preserve"><value>La station n'est pas un numéro de station de l'OFEV : 4 chiffres, p. ex. 2091.</value></data>
   <data name="RunStatus_Aborted" xml:space="preserve"><value>interrompu</value></data>
+  <data name="Forecast_Recompute" xml:space="preserve"><value>Recalculer le passé</value></data>
+  <data name="Forecast_RecomputeTitle" xml:space="preserve"><value>Recalculer le passé ?</value></data>
+  <data name="Forecast_RecomputeText" xml:space="preserve"><value>Tous les jours enregistrés avec une règle plus ancienne reçoivent l'indice de la règle actuelle. Ensuite, la médiane par plan d'eau est recalculée pour tous les jours passés. Aucun appel aux sources externes.</value></data>
+  <data name="Forecast_RecomputeConfirm" xml:space="preserve"><value>Recalculer</value></data>
+  <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} jours recalculés, dont {1} avec un autre indice. Médiane par plan d'eau établie pour {2} jours.</value></data>
 </root>

@@ -25,7 +25,7 @@ Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätz
 | `/platform` | Übersicht: Konten (davon gesperrt), offene Vorschläge, letzter Prognose-Lauf, Mail-Queue | Admins |
 | `/platform/konten` | Konten, Rollen, Sperre, E-Mail-Adressen | Admins |
 | `/platform/konten/{id}` | Ein Konto im Detail (siehe «Konten auf der Plattform») | Admins |
-| `/platform/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten» | Admins |
+| `/platform/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten», «Vergangenheit neu rechnen» | Admins |
 | `/platform/queues` | Mail-Queue mit Dead-Letter | Admins |
 
 Alte Adressen leiten weiter: `/admin/prognose` → `/platform/prognose` (301), `/admin/meine-vorschlaege` → `/{lang}/account/proposals` (302, die Sprache hängt vom Profil ab). Links zwischen Website, Moderation und Plattform laden die ganze Seite, weil die Bereiche verschiedene Render-Modi und Skripte haben.
@@ -264,6 +264,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 - Query `GetForecastRunOverview` (nur Admins, sonst `null`): letzter Lauf, nächster Lauf nach `ForecastSchedule`, Bilanz der letzten 7 Tage, mittlere Dauer, eine Seite Läufe (optional nur mit Fehlern). Die gescheiterten Calls gruppiert der Core nach Quelle und Art (`FailureKind`: HTTP mit Status-Code, Timeout, Circuit Breaker offen, Antwort unlesbar, Netzwerk), mit Anzahl, Keys und Meldungen.
 - Fortschritt eines laufenden Laufs (Plätze fertig, Calls bisher) hält der Core nur im Speicher des Prozesses (`ForecastProgress`). Die Calls speichert der Lauf erst am Ende. Ein fertiger Lauf speichert die Zahl seiner Plätze (`Sites`, ältere Läufe ohne Wert). Steht ein Lauf seit mehr als 2 Stunden auf «läuft» und hat in diesem Prozess keinen Fortschritt, zeigt die Übersicht ihn als «abgebrochen» (nicht gespeichert); die Seite fragt dann nicht mehr alle 5 s nach.
 - Button «Lauf jetzt starten» (nur Admin). Er ruft `StartForecastRun`, das die Rolle prüft. Der Worker ruft `RunForecast` direkt.
+- Button «Vergangenheit neu rechnen» (nur Admin, mit Rückfrage). Er ruft `RecomputeForecastHistory`: gespeicherte Tage mit älterer Regel neu rechnen, Median pro Gewässer neu aufbauen, ohne externe Calls (`forecast.md`, «Verlauf»). Danach meldet die Seite, wie viele Tage neu gerechnet wurden und wie viele davon einen anderen Index haben. Läuft gerade ein Prognose-Lauf, startet nichts.
 
 ## Rollen
 

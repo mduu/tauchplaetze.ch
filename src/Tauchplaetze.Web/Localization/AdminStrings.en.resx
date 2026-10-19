@@ -382,4 +382,10 @@
   <data name="Map_Layer_Grey" xml:space="preserve"><value>Grey map</value></data>
   <data name="Error_InvalidStation" xml:space="preserve"><value>The station is not a FOEN station number: 4 digits, e.g. 2091.</value></data>
   <data name="RunStatus_Aborted" xml:space="preserve"><value>aborted</value></data>
+  <data name="Forecast_Recompute" xml:space="preserve"><value>Recompute the past</value></data>
+  <data name="Forecast_RecomputeTitle" xml:space="preserve"><value>Recompute the past?</value></data>
+  <data name="Forecast_RecomputeText" xml:space="preserve"><value>All stored days with an older rule get the index of the current rule. Then the median per water body is rebuilt for all past days. There are no calls to external sources.</value></data>
+  <data name="Forecast_RecomputeConfirm" xml:space="preserve"><value>Recompute</value></data>
+  <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} days recomputed, {1} of them with a different index. Median per water body built for {2} days.</value></data>
 </root>

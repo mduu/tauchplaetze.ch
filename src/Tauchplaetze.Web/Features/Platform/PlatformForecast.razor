@@ -10,11 +10,20 @@
 @using Tauchplaetze.Core.Features.Forecasts.Commands
 @using Tauchplaetze.Core.Features.Forecasts.Queries
 @inject IStringLocalizer<AccountStrings> AccountL
+@inject IDialogService Dialogs
 
 <div class="d-flex align-center justify-space-between flex-wrap gap-2 mb-4">
     <MudText Typo="Typo.h4">@L["Forecast_Title"]</MudText>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="RunNow" Disabled="starting">@L["Forecast_RunNow"]</MudButton>
+    <div class="d-flex gap-2 flex-wrap">
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="Recompute" Disabled="starting || recomputing">@L["Forecast_Recompute"]</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="RunNow" Disabled="starting">@L["Forecast_RunNow"]</MudButton>
+    </div>
 </div>
+
+@if (recomputed is { Error: null, Skipped: false } done)
+{
+    <MudAlert Severity="Severity.Success" Class="mb-4">@L["Forecast_RecomputeDone", done.Recomputed, done.Changed, done.Days]</MudAlert>
+}
 
 @if (error is not null)
 {
@@ -172,6 +181,10 @@ else
 
     private bool skipped;
 
+    private bool recomputing;
+
+    private RecomputeForecastHistoryResult? recomputed;
+
     private AccountError? error;
 
     private Timer? refresh;
@@ -249,6 +262,21 @@ else
         error = result.Error;
         skipped = result.Run?.Skipped ?? false;
         starting = false;
+        await Load();
+    }
+
+    private async Task Recompute()
+    {
+        if (await Dialogs.ShowMessageBoxAsync(L["Forecast_RecomputeTitle"], L["Forecast_RecomputeText"], yesText: L["Forecast_RecomputeConfirm"], cancelText: L["Forecast_RecomputeCancel"]) != true)
+        {
+            return;
+        }
+
+        recomputing = true;
+        recomputed = await Command<RecomputeForecastHistoryCommand, RecomputeForecastHistoryResult>(new RecomputeForecastHistoryCommand(UserId));
+        error = recomputed.Error;
+        skipped = recomputed.Skipped;
+        recomputing = false;
         await Load();
     }
 
