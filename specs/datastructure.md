@@ -299,6 +299,20 @@ Zusätzliche Felder am Benutzer:
 | `PreferredCulture` | string(2) | Sprache des CMS und der Mails |
 | `BlockedAt`, `BlockedBy` | optional | Konto gesperrt |
 
+## Inhaltspaket
+
+Austausch der öffentlichen Inhalte von Prod nach lokal (ADR-011). ZIP mit JSON (camelCase, Enums als Text):
+
+| Eintrag | Inhalt |
+|---|---|
+| `manifest.json` | `formatVersion` (1), `createdAt`, `source` (`PublicSite:BaseUri`), Zahl der Gewässer, Plätze, Fotos |
+| `water-bodies.json` | Gewässer mit Slug, Namen, Typ, Mittelpunkt, Satellitenpunkt, Schlüsseln von Alplakes, `isActive` und Stationen des BAFU |
+| `dive-sites/{id}.json` | Platz: `id`, Gewässer als Slug, `status` (Published, Archived), `oldSlugs`, `content` im Format der Versionen (`DiveSiteRevision`, inkl. Einstiege, Skizze, Hinweise, weitere Namen, Zuordnung der Medien, Titelbild) |
+| `photos.json` | Öffentliche Fotos der Plätze: Id, Platz, Bereich, Einstieg, Art, Grösse, Aufnahmedatum, Tiefe, Fotograf, Links, Reihenfolge, Legende und Alternativtext pro Sprache |
+| `photos/{id}/{breite}.webp` | Öffentliche Bildgrössen. Keine Originale |
+
+Nicht im Paket: Konten, Autoren, Uploader, Kommentare der Versionen, offene oder abgelehnte Vorschläge, Entwürfe, private Fotos, Mails, Prognosen.
+
 ## Indizes
 
 - `DiveSites.Location`: Spatial Index.

@@ -99,6 +99,7 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 | `BuddyGroups` (Phase 1) | Commands, Queries | Admin-Seiten, Links |
 | `Seo` | Queries `GetSitemapEntries` | `sitemap.xml`, `robots.txt`, Redirects |
 | `Mail` | Commands `ProcessMailQueue`, `ReplayDeadLetters`, `DeleteDeadLetters`, `CheckDeadLetters`; Query `GetMailQueueStatus`. Queue, Dispatcher, Vorlagen und Layout in `CrossCutting/Mail` (ADR-010) | `MailQueueWorker`, `DeadLetterMonitorWorker`, Seite `/platform/queues` |
+| `Content` | Query `ExportContent`, `GetContentSyncStatus`; Commands `ImportContent`, `PullContentFromSource` (ADR-011) | Seite `/platform/inhalt`, Endpoints `/platform/inhalt/export` und `/api/platform/content-export` |
 | `Operations` | Command `MigrateDatabase` | Start der Web-App (`Database:PrepareOnStartup`, lokal mit Aspire) |
 
 Derselbe Slice-Name in Core und Web meint dasselbe Thema.

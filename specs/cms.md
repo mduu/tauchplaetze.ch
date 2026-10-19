@@ -238,6 +238,14 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 - Löschen: eine oder alle, mit Bestätigung. Endgültig.
 - Alle Aktionen prüfen die Rolle im Core (`GetMailQueueStatus`, `ReplayDeadLetters`, `DeleteDeadLetters`).
 
+### Inhalt (Admin)
+
+- `/platform/inhalt`, nur Admin, Navigation der Plattform (ADR-011).
+- «Inhalt exportieren»: Download des Inhaltspakets als ZIP. Die Seite zeigt, ob der Abruf mit Schlüssel eingeschaltet ist.
+- «Inhalt übernehmen» nur mit `Content:ImportEnabled` (lokal): «Aus Prod übernehmen» (nur mit `Content:SourceBaseUri` und `Content:ExportKey`) oder ein ZIP hochladen.
+- Ergebnis: Gewässer neu, Plätze neu, aktualisiert, unverändert, übersprungen, Fotos neu.
+- Die Rolle und den Schalter prüft der Core (`ExportContent`, `ImportContent`, `PullContentFromSource`, `GetContentSyncStatus`).
+
 ### Prognose-Status
 
 - Letzter Lauf, Status pro Quelle, Datenalter, Fehler.
