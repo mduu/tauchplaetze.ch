@@ -9,17 +9,39 @@ internal static class History
     /// <summary>
     /// Das gleitende 7-Tage-Mittel pro Tag. Es zählt nur Tage mit Wert im Fenster (Kalendertage, nicht Listeneinträge).
     /// Am Rand und bei Lücken mittelt es über weniger Tage. <c>null</c>, wenn im Fenster kein Wert liegt.
+    /// Die Tage sind nach Datum aufsteigend sortiert. Das Fenster wandert mit, so bleibt die Rechnung linear.
     /// </summary>
-    public static IReadOnlyList<decimal?> Smooth(IReadOnlyList<(DateOnly Date, decimal? Value)> days) =>
-        days.Select(day =>
+    public static IReadOnlyList<decimal?> Smooth(IReadOnlyList<(DateOnly Date, decimal? Value)> days)
+    {
+        var sums = new decimal[days.Count + 1];
+        var counts = new int[days.Count + 1];
+        for (var i = 0; i < days.Count; i++)
+        {
+            sums[i + 1] = sums[i] + (days[i].Value ?? 0);
+            counts[i + 1] = counts[i] + (days[i].Value is null ? 0 : 1);
+        }
+
+        var result = new decimal?[days.Count];
+        var (first, last) = (0, 0);
+        for (var i = 0; i < days.Count; i++)
+        {
+            var day = days[i].Date.DayNumber;
+            while (days[first].Date.DayNumber < day - HalfWindow)
             {
-                var window = days
-                    .Where(d => d.Value is not null && Math.Abs(d.Date.DayNumber - day.Date.DayNumber) <= HalfWindow)
-                    .Select(d => d.Value!.Value)
-                    .ToList();
-                return window.Count > 0 ? Math.Round(window.Average(), 1) : (decimal?)null;
-            })
-            .ToList();
+                first++;
+            }
+
+            while (last < days.Count && days[last].Date.DayNumber <= day + HalfWindow)
+            {
+                last++;
+            }
+
+            var count = counts[last] - counts[first];
+            result[i] = count > 0 ? Math.Round((sums[last] - sums[first]) / count, 1) : null;
+        }
+
+        return result;
+    }
 
     public static decimal Median(IReadOnlyCollection<decimal> values)
     {
