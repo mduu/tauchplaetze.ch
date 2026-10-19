@@ -1,43 +1,41 @@
-.ratings-title {
-    font-size: 36px;
-    letter-spacing: -0.02em;
-}
-
 .ratings {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 14px;
-    margin: 0;
-    padding: 0;
+    grid-template-columns: 1fr;
+    column-gap: 40px;
+    margin: 22px 0 0;
+    padding: 6px 22px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-tile);
+    background: var(--color-surface);
     list-style: none;
 }
 
 .rating {
-    padding: 16px 18px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-tile);
-    background: var(--color-surface);
-}
-
-.rating-head {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 11rem) 140px minmax(0, 1fr) auto;
+    grid-template-areas: "name scale value info";
     align-items: center;
-    justify-content: space-between;
-    gap: 8px;
+    gap: 14px;
+    min-height: 56px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .rating-name {
+    grid-area: name;
     color: var(--color-text-subtle);
     font-family: var(--font-mono);
     font-size: 12px;
     letter-spacing: 0.08em;
+    line-height: 1.35;
     text-transform: uppercase;
 }
 
 .rating-scale {
+    grid-area: scale;
     display: flex;
+    align-items: center;
     gap: 6px;
-    margin: 12px 0 8px;
 }
 
 .rating-scale[data-kind="quality"] .rating-step {
@@ -48,8 +46,7 @@
 }
 
 .rating-scale[data-kind="level"] .rating-step {
-    flex: 1;
-    max-width: 28px;
+    width: 22px;
     height: 8px;
     border-radius: 4px;
     background: var(--color-border);
@@ -64,6 +61,7 @@
 }
 
 .rating-value {
+    grid-area: value;
     color: var(--color-text-body);
 }
 
@@ -71,4 +69,45 @@
     font-family: var(--font-mono);
     font-weight: 600;
     color: var(--color-text);
+}
+
+.rating-info {
+    grid-area: info;
+    justify-self: end;
+}
+
+@media (min-width: 900px) {
+    .ratings {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .rating:nth-last-child(-n + 2):nth-child(odd),
+    .rating:nth-last-child(-n + 2):nth-child(odd) ~ .rating {
+        border-bottom: none;
+    }
+}
+
+@media (max-width: 899px) {
+    .rating:last-child {
+        border-bottom: none;
+    }
+}
+
+@media (max-width: 520px) {
+    .ratings {
+        padding: 4px 16px;
+    }
+
+    .rating {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "name info"
+            "scale value";
+        gap: 6px 12px;
+    }
+
+    .rating-value {
+        justify-self: end;
+        text-align: right;
+    }
 }
