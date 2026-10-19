@@ -79,6 +79,39 @@ public class MediaTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Vor_dem_Lesen_der_Dateien_sagt_der_Core_wie_viele_Fotos_noch_gehen_die_Moderation_hat_kein_Limit_ein_gesperrtes_Konto_keins()
+    {
+        // Arrange
+        var (moderator, anna, site) = await Prepare();
+        var bert = await RegisterConfirmed("bert@example.org", "Bert");
+        await Sql.Arrange(db =>
+        {
+            for (var i = 0; i < 25; i++)
+            {
+                db.MediaItems.Add(new Tauchplaetze.Core.Data.Entities.MediaItem
+                {
+                    Id = Guid.NewGuid(), DiveSiteId = site, BlobPath = "x", Photographer = "Anna", Width = 480, Height = 320,
+                    UploadedBy = anna, UploadedAt = FixedTime.SpikeDay.AddMinutes(-30), RightsConfirmed = true,
+                });
+            }
+
+            return Task.CompletedTask;
+        });
+        await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(moderator, bert, true));
+
+        // Act
+        var contributor = await Query<GetUploadAllowanceQuery, UploadAllowance>(new GetUploadAllowanceQuery(anna));
+        var moderation = await Query<GetUploadAllowanceQuery, UploadAllowance>(new GetUploadAllowanceQuery(moderator));
+        var blocked = await Query<GetUploadAllowanceQuery, UploadAllowance>(new GetUploadAllowanceQuery(bert));
+
+        // Assert
+        Assert.Equal(new UploadAllowance(false, 5), contributor);
+        Assert.False(contributor.Allows(6));
+        Assert.Equal(new UploadAllowance(false, null), moderation);
+        Assert.False(blocked.Allows(1));
+    }
+
+    [SqlFact]
     public async Task Ein_privates_Foto_loeschen_wer_es_hochgeladen_hat_und_die_Moderation_ein_oeffentliches_nur_die_Moderation()
     {
         // Arrange

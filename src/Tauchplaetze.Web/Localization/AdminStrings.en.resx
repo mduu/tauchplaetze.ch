@@ -294,4 +294,9 @@
   <data name="Platform_BlockedCount" xml:space="preserve"><value>{0} of them blocked</value></data>
   <data name="Field_WaterBodyId_ModeratorOnly" xml:space="preserve"><value>The moderators change the lake or river.</value></data>
   <data name="MyProposals_NewSiteSubmitted" xml:space="preserve"><value>Thank you! Your suggestion for a new dive site has been submitted. A moderator will review it.</value></data>
+  <data name="Media_TooManyFiles" xml:space="preserve"><value>Please choose at most {0} photos at once.</value></data>
+  <data name="Media_Remaining" xml:space="preserve"><value>You can upload {0} more photos right now (at most 30 per hour and 100 per day). Choose fewer or try again later.</value></data>
+  <data name="Media_UploadAborted" xml:space="preserve"><value>The upload was interrupted. Please try again.</value></data>
+  <data name="Media_Choose_NeedPhotographer" xml:space="preserve"><value>Enter the photographer first.</value></data>
+  <data name="Media_Choose_NeedRights" xml:space="preserve"><value>First confirm the rights to the photos.</value></data>
 </root>

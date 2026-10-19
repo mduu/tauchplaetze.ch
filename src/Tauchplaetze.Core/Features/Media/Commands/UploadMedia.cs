@@ -49,7 +49,7 @@ internal class UploadMediaHandler(TauchplaetzeDbContext dbContext, IMediaStore s
             return new UploadMediaResult(errors);
         }
 
-        if (!rights.IsModerator && await LimitReached(command.UploaderId, ct))
+        if (!rights.IsModerator && await UploadQuota.Remaining(dbContext, time.GetUtcNow(), command.UploaderId, ct) == 0)
         {
             return Fail(EditorialError.TooManyUploads);
         }
@@ -79,13 +79,6 @@ internal class UploadMediaHandler(TauchplaetzeDbContext dbContext, IMediaStore s
         }
 
         return new UploadMediaResult([], id);
-    }
-
-    private async Task<bool> LimitReached(string uploaderId, CancellationToken ct)
-    {
-        var now = time.GetUtcNow();
-        var lastDay = await dbContext.MediaItems.Where(m => m.UploadedBy == uploaderId && m.UploadedAt > now.AddDays(-1)).Select(m => m.UploadedAt).ToListAsync(ct);
-        return lastDay.Count >= MediaRules.MaxPerDay || lastDay.Count(at => at > now.AddHours(-1)) >= MediaRules.MaxPerHour;
     }
 
     private MediaItem ToEntity(UploadMediaCommand command, Guid id, ProcessedImage image) => new()

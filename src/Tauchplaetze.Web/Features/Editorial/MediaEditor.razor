@@ -24,7 +24,7 @@
             <MudNumericField T="int?" @bind-Value="depth" Label="@L["Media_Depth"]" Min="0" Max="200" Clearable="true" Style="max-width: 160px" />
         </MudStack>
         <MudCheckBox T="bool" @bind-Value="rightsConfirmed" Class="mt-2" Label="@L["Media_Rights"]" />
-        <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="Upload" Accept=".jpg,.jpeg,.png,.webp" MaximumFileCount="20" MaxFileSize="MediaFiles.MaxBytes" Disabled="@(!rightsConfirmed || uploading)">
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="Upload" Accept=".jpg,.jpeg,.png,.webp" MaximumFileCount="MediaUpload.MaxFiles" MaxFileSize="MediaFiles.MaxBytes" Disabled="@(!rightsConfirmed || uploading)">
             <CustomContent>
                 <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload" Disabled="@(!rightsConfirmed || uploading)"
                            OnClick="@context.OpenFilePickerAsync">
@@ -190,38 +190,21 @@
         uploadErrors = [];
         uploadMessage = null;
         StateHasChanged();
-
-        var uploaded = 0;
-        foreach (var file in files)
+        try
         {
-            if (file.Size > MediaFiles.MaxBytes)
-            {
-                uploadErrors.Add($"{file.Name}: {L["Error_InvalidImage"]}");
-                continue;
-            }
-
-            using var buffer = new MemoryStream();
-            await using (var stream = file.OpenReadStream(MediaFiles.MaxBytes))
-            {
-                await stream.CopyToAsync(buffer);
-            }
-
-            var result = await Command<UploadMediaCommand, UploadMediaResult>(new UploadMediaCommand(
-                UserId, SiteId, buffer.ToArray(), file.ContentType, photographer, photographerUrl, section, depth, rightsConfirmed, []));
-            if (result.MediaId is { } id)
-            {
-                Uses.Add(new MediaUseForm { MediaId = id, Section = section });
-                uploaded++;
-            }
-            else
-            {
-                uploadErrors.AddRange(result.Errors.Select(e => $"{file.Name}: {L[$"Error_{e}"]}"));
-            }
+            var allowance = await Query<GetUploadAllowanceQuery, UploadAllowance>(new GetUploadAllowanceQuery(UserId));
+            var outcome = await MediaUpload.Run(files, allowance, (content, contentType) =>
+                Command<UploadMediaCommand, UploadMediaResult>(new UploadMediaCommand(
+                    UserId, SiteId, content, contentType, photographer, photographerUrl, section, depth, rightsConfirmed, [])), L);
+            Uses.AddRange(outcome.Uploaded.Select(id => new MediaUseForm { MediaId = id, Section = section }));
+            uploadErrors = [.. outcome.Errors];
+            uploadMessage = outcome.Uploaded.Count > 0 ? L["Media_Uploaded", outcome.Uploaded.Count].Value : null;
+            await Reload();
         }
-
-        uploading = false;
-        uploadMessage = uploaded > 0 ? L["Media_Uploaded", uploaded].Value : null;
-        await Reload();
+        finally
+        {
+            uploading = false;
+        }
     }
 
     private async Task SetHero(Guid id)

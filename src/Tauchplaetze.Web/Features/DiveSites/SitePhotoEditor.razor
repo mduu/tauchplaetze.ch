@@ -6,6 +6,7 @@
 @using Tauchplaetze.Web.Features.Editorial
 @using Tauchplaetze.Web.Features.Media
 @inject IStringLocalizer<DiveSiteStrings> Site
+@inject IStringLocalizer<SharedStrings> Shared
 
 <div class="photo-editor">
     <p class="field-help">@L["Media_Help"]</p>
@@ -22,10 +23,14 @@
             <input type="checkbox" checked="@rightsConfirmed" @onchange="e => rightsConfirmed = e.Value is true" />
             <span>@L["Media_Rights"]</span>
         </label>
-        <label class="button file-button" data-disabled="@(rightsConfirmed && !uploading ? "false" : "true")">
+        <label class="button file-button" data-disabled="@(CanChoose ? "false" : "true")">
             <span>@(uploading ? L["Media_Uploading"] : L["Media_Choose"])</span>
-            <InputFile OnChange="Upload" multiple accept=".jpg,.jpeg,.png,.webp" disabled="@(!rightsConfirmed || uploading || string.IsNullOrWhiteSpace(photographer))" class="visually-hidden" />
+            <InputFile OnChange="Upload" multiple accept=".jpg,.jpeg,.png,.webp" disabled="@(!CanChoose)" class="visually-hidden" aria-describedby="@(Missing is null ? null : "photo-upload-missing")" />
         </label>
+        @if (Missing is not null)
+        {
+            <p class="field-help" id="photo-upload-missing">@Missing</p>
+        }
         <div role="status" aria-live="polite">
             @if (uploadMessage is not null)
             {
@@ -67,8 +72,8 @@
                             }
                         </span>
                         <span class="editor-item-actions">
-                            <button type="button" class="link-button" disabled="@(index == 0)" aria-label="@L["Media_Up"]" @onclick="() => Move(index, -1)">↑</button>
-                            <button type="button" class="link-button" disabled="@(index == Form.Media.Count - 1)" aria-label="@L["Media_Down"]" @onclick="() => Move(index, 1)">↓</button>
+                            <button type="button" class="link-button" disabled="@(index == 0)" aria-label="@Shared["Form_MoveUp", PhotoName(item, index)]" @onclick="() => Move(index, -1)">↑</button>
+                            <button type="button" class="link-button" disabled="@(index == Form.Media.Count - 1)" aria-label="@Shared["Form_MoveDown", PhotoName(item, index)]" @onclick="() => Move(index, 1)">↓</button>
                         </span>
                     </div>
                     <label class="check-field">
@@ -191,6 +196,13 @@
     private async Task Reload() =>
         media = await Query<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>(new GetSiteMediaQuery(UserId, SiteId, MediaEndpoints.PendingPathTemplate));
 
+    private bool CanChoose => rightsConfirmed && !uploading && !string.IsNullOrWhiteSpace(photographer);
+
+    private string? Missing =>
+        string.IsNullOrWhiteSpace(photographer) ? L["Media_Choose_NeedPhotographer"].Value
+        : !rightsConfirmed ? L["Media_Choose_NeedRights"].Value
+        : null;
+
     private bool CanEdit(SiteMediaItem item) => IsModerator || item is { IsPublic: false, IsOwn: true };
 
     private async Task Upload(InputFileChangeEventArgs e)
@@ -199,39 +211,31 @@
         errors = [];
         uploadMessage = null;
         StateHasChanged();
-
-        var uploaded = 0;
-        foreach (var file in e.GetMultipleFiles(20))
+        try
         {
-            if (file.Size > MediaFiles.MaxBytes)
+            if (e.FileCount > MediaUpload.MaxFiles)
             {
-                errors.Add($"{file.Name}: {L["Error_InvalidImage"]}");
-                continue;
+                errors = [L["Media_TooManyFiles", MediaUpload.MaxFiles].Value];
+                return;
             }
 
-            using var buffer = new MemoryStream();
-            await using (var stream = file.OpenReadStream(MediaFiles.MaxBytes))
+            var allowance = await Query<GetUploadAllowanceQuery, UploadAllowance>(new GetUploadAllowanceQuery(UserId));
+            var outcome = await MediaUpload.Run(e.GetMultipleFiles(MediaUpload.MaxFiles), allowance, (content, contentType) =>
+                Command<UploadMediaCommand, UploadMediaResult>(new UploadMediaCommand(
+                    UserId, SiteId, content, contentType, photographer ?? "", photographerUrl, section, depth, rightsConfirmed, [])), L);
+            Form.Media.AddRange(outcome.Uploaded.Select(id => new MediaUseForm { MediaId = id, Section = section }));
+            errors = [.. outcome.Errors];
+            uploadMessage = outcome.Uploaded.Count > 0 ? L["Media_Uploaded", outcome.Uploaded.Count].Value : null;
+            if (outcome.Uploaded.Count > 0)
             {
-                await stream.CopyToAsync(buffer);
-            }
-
-            var result = await Command<UploadMediaCommand, UploadMediaResult>(new UploadMediaCommand(
-                UserId, SiteId, buffer.ToArray(), file.ContentType, photographer ?? "", photographerUrl, section, depth, rightsConfirmed, []));
-            if (result.MediaId is { } id)
-            {
-                Form.Media.Add(new MediaUseForm { MediaId = id, Section = section });
-                uploaded++;
-            }
-            else
-            {
-                errors.AddRange(result.Errors.Select(error => $"{file.Name}: {L[$"Error_{error}"]}"));
+                await Reload();
+                await Changed.InvokeAsync();
             }
         }
-
-        uploading = false;
-        uploadMessage = uploaded > 0 ? L["Media_Uploaded", uploaded].Value : null;
-        await Reload();
-        await Changed.InvokeAsync();
+        finally
+        {
+            uploading = false;
+        }
     }
 
     private async Task SetHero(Guid id)
@@ -305,6 +309,9 @@
             await Reload();
         }
     }
+
+    private string PhotoName(SiteMediaItem? item, int index) =>
+        $"{Site["Photos_Title"]} {index + 1}" + (item is null ? "" : $" ({AltOf(item)})");
 
     private static string AltOf(SiteMediaItem item) =>
         item.Texts.FirstOrDefault(t => t.Culture == CultureInfo.CurrentUICulture.TwoLetterISOLanguageName && !string.IsNullOrWhiteSpace(t.AltText))?.AltText
