@@ -84,8 +84,10 @@ internal class RunForecastHandler(
             .ToDictionaryAsync(f => (f.DiveSiteId, f.Date), ct);
         var outlooks = await dbContext.SiteWeatherOutlooks.ToDictionaryAsync(o => o.DiveSiteId, ct);
         var waterBodies = new Dictionary<int, WaterBodyData>();
+        var forecastSites = sites.Where(s => !s.ForecastDisabled).ToList();
+        await sources.PrepareWeather(forecastSites, recorder, ct);
 
-        foreach (var site in sites.Where(s => !s.ForecastDisabled))
+        foreach (var site in forecastSites)
         {
             var waterBody = site.WaterBody!;
             if (!waterBodies.TryGetValue(waterBody.Id, out var waterBodyData))

@@ -6,7 +6,11 @@ using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Commands;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
+using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Editorial.Commands;
+using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Commands;
+using Tauchplaetze.Core.Features.WaterBodies.Queries;
 using Tauchplaetze.Core.Tests.Sql;
 
 namespace Tauchplaetze.Core.Tests.Features.Forecasts;
@@ -225,6 +229,32 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         // Assert
         Assert.Contains(Sql.RawData.Files.Keys, path => path.StartsWith($"2026-10-17/{run.RunId}/alplakes/3d-delft3d-flow-", StringComparison.Ordinal));
         Assert.Contains(Sql.RawData.Files.Keys, path => path.StartsWith($"2026-10-17/{run.RunId}/open-meteo/meteoswiss_icon_ch2-", StringComparison.Ordinal));
+    }
+
+    [SqlFact]
+    public async Task Das_Wetter_aller_Plaetze_kommt_mit_einem_Call_pro_Modell_und_jeder_Platz_hat_seine_Stunden()
+    {
+        // Arrange
+        await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
+        var admin = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
+        var lake = (await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"))).Single(w => w.Slug == "zuerichsee").Id;
+        var sites = new List<Guid> { await AddRiffWilliams(admin) };
+        foreach (var (name, latitude, longitude) in new[] { ("Ermitage", 47.3360, 8.5880), ("Halbinsel Au", 47.2500, 8.6400) })
+        {
+            var proposed = await Command<ProposeDiveSiteCommand, EditorialResult>(new ProposeDiveSiteCommand(admin, name, lake, latitude, longitude, null, "ZH", null));
+            sites.Add(proposed.DiveSiteId!.Value);
+        }
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        Assert.Single(Sql.Sources.Requests, url => url.Contains("models=meteoswiss_icon_ch2", StringComparison.Ordinal));
+        foreach (var site in sites)
+        {
+            var forecast = await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(site));
+            Assert.NotEmpty(forecast.HourList);
+        }
     }
 
     [SqlFact]

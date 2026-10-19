@@ -8,16 +8,21 @@ internal class OpenMeteoClient(HttpClient httpClient)
 {
     public const string Source = "open-meteo";
 
-    /// <summary>Stündliches Wetter eines Modells am Punkt, <paramref name="pastDays"/> Tage zurück und <paramref name="forecastDays"/> voraus. Zeiten in Lokalzeit.</summary>
-    public Task<SourceResult<HourlyWeather>> GetHourly(string model, double latitude, double longitude, int pastDays, int forecastDays, CancellationToken ct) =>
+    /// <summary>
+    /// Stündliches Wetter eines Modells an mehreren Punkten in einem Call, <paramref name="pastDays"/> Tage zurück und <paramref name="forecastDays"/> voraus.
+    /// Die Liste hat die Reihenfolge der Punkte. Zeiten in Lokalzeit.
+    /// </summary>
+    public Task<SourceResult<IReadOnlyList<HourlyWeather>>> GetHourly(
+        string model, IReadOnlyList<(double Latitude, double Longitude)> points, int pastDays, int forecastDays, CancellationToken ct) =>
         SourceHttp.Get(
             httpClient,
             "v1/forecast"
-            + $"?latitude={SourceHttp.Format(latitude)}&longitude={SourceHttp.Format(longitude)}"
+            + $"?latitude={string.Join(',', points.Select(p => SourceHttp.Format(p.Latitude)))}"
+            + $"&longitude={string.Join(',', points.Select(p => SourceHttp.Format(p.Longitude)))}"
             + "&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation,temperature_2m,weather_code,sunshine_duration,is_day"
             + $"&past_days={pastDays}&forecast_days={forecastDays}"
             + $"&models={model}&wind_speed_unit=kmh&timezone=Europe%2FZurich",
-            HourlyWeather.Parse,
+            json => HourlyWeather.ParseMany(json, points.Count),
             ct);
 }
 
@@ -39,7 +44,23 @@ internal record HourlyWeather(IReadOnlyList<WeatherHour> Hours)
     public static HourlyWeather Parse(string json)
     {
         using var document = JsonDocument.Parse(json);
-        var hourly = document.RootElement.GetProperty("hourly");
+        return Of(document.RootElement);
+    }
+
+    /// <summary>Bei mehreren Punkten liefert Open-Meteo eine Liste, bei einem ein Objekt. Fehlt ein Punkt, ist die Antwort ungültig.</summary>
+    public static IReadOnlyList<HourlyWeather> ParseMany(string json, int expected)
+    {
+        using var document = JsonDocument.Parse(json);
+        var root = document.RootElement;
+        var all = root.ValueKind == JsonValueKind.Array ? root.EnumerateArray().Select(Of).ToList() : [Of(root)];
+        return all.Count == expected
+            ? all
+            : throw new FormatException($"Open-Meteo lieferte {all.Count} statt {expected} Punkte.");
+    }
+
+    private static HourlyWeather Of(JsonElement location)
+    {
+        var hourly = location.GetProperty("hourly");
         var times = hourly.GetProperty("time").EnumerateArray()
             .Select(t => DateTime.Parse(t.GetString()!, CultureInfo.InvariantCulture))
             .ToList();

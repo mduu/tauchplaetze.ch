@@ -34,4 +34,8 @@ internal class SourceRecorder(IRawDataStore rawData, string runPath)
 
         return result.Value;
     }
+
+    /// <summary>Legt eine Beilage zu den Rohdaten ab, etwa welche Punkte ein gebündelter Call abfragte. Zählt nicht als Call.</summary>
+    public Task Attach(string source, string key, string body, CancellationToken ct) =>
+        rawData.Save($"{runPath}/{source}/{key}.json", body, ct);
 }

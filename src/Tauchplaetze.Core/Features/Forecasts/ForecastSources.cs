@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.Data.Entities;
@@ -34,6 +35,9 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
 
     /// <summary>Pixel rund um den Punkt in Ufernähe. Ein Fenster von 2 fängt einzelne maskierte Pixel auf.</summary>
     private const int ShoreSatelliteWindow = 2;
+
+    /// <summary>Gitterpunkte pro Call an Open-Meteo. Die URL bleibt unter 2 KB.</summary>
+    private const int WeatherBatchSize = 50;
 
     private Task<RemoteSensingProducts?>? products;
 
@@ -150,29 +154,57 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
         return values is [var latest, ..] ? new SatelliteObservation(SwissTime.DayOf(latest.Time), latest.Median, latest.PixelCount) : null;
     }
 
-    /// <remarks>Plätze im selben Gitterpunkt teilen sich den Call. Zwei Dezimalen sind rund 1 km, so fein wie ICON-CH1.</remarks>
-    private Task<IReadOnlyList<ModelWeather>> Weather(double latitude, double longitude, SourceRecorder recorder, CancellationToken ct)
+    /// <summary>
+    /// Holt das Wetter aller Plätze vorab, pro Modell mit einem Call für bis zu <see cref="WeatherBatchSize"/> Gitterpunkte (`data-sources.md`, «Wetter: Open-Meteo»).
+    /// Die abgefragten Punkte liegen pro Call als Beilage bei den Rohdaten.
+    /// </summary>
+    public async Task PrepareWeather(IEnumerable<DiveSite> sites, SourceRecorder recorder, CancellationToken ct)
     {
-        var key = $"{Math.Round(latitude, 2):0.00}-{Math.Round(longitude, 2):0.00}";
-        if (!weather.TryGetValue(key, out var task))
+        var points = sites.Select(s => WeatherPoint.Of(s.Location.Y, s.Location.X)).Distinct().Where(p => !weather.ContainsKey(p.Key)).ToList();
+        var loaded = points.ToDictionary(p => p.Key, _ => new List<ModelWeather>());
+        foreach (var (model, days) in WeatherModels)
         {
-            task = LoadWeather(latitude, longitude, key, recorder, ct);
-            weather[key] = task;
+            foreach (var (batch, number) in points.Chunk(WeatherBatchSize).Select((batch, i) => (batch, i + 1)))
+            {
+                var key = $"{model}-batch-{number:000}";
+                await recorder.Attach(OpenMeteoClient.Source, $"{key}.points", JsonSerializer.Serialize(batch.Select(p => p.Key)), ct);
+                var hourly = await recorder.Record(OpenMeteoClient.Source, key,
+                    openMeteo.GetHourly(model, [.. batch.Select(p => (p.Latitude, p.Longitude))], PastWeatherDays, days, ct), ct);
+                foreach (var (point, values) in batch.Zip(hourly ?? []))
+                {
+                    loaded[point.Key].Add(new ModelWeather(model, values.Hours));
+                }
+            }
         }
 
-        return task;
+        foreach (var (key, models) in loaded)
+        {
+            weather[key] = Task.FromResult<IReadOnlyList<ModelWeather>>(models);
+        }
     }
 
-    private async Task<IReadOnlyList<ModelWeather>> LoadWeather(double latitude, double longitude, string key, SourceRecorder recorder, CancellationToken ct)
+    private async Task<IReadOnlyList<ModelWeather>> Weather(double latitude, double longitude, SourceRecorder recorder, CancellationToken ct)
+    {
+        var point = WeatherPoint.Of(latitude, longitude);
+        if (!weather.TryGetValue(point.Key, out var task))
+        {
+            task = LoadWeather(point, recorder, ct);
+            weather[point.Key] = task;
+        }
+
+        return await task;
+    }
+
+    private async Task<IReadOnlyList<ModelWeather>> LoadWeather(WeatherPoint point, SourceRecorder recorder, CancellationToken ct)
     {
         var models = new List<ModelWeather>();
         foreach (var (model, days) in WeatherModels)
         {
-            var hourly = await recorder.Record(OpenMeteoClient.Source, $"{model}-{key}",
-                openMeteo.GetHourly(model, latitude, longitude, PastWeatherDays, days, ct), ct);
-            if (hourly is not null)
+            var hourly = await recorder.Record(OpenMeteoClient.Source, $"{model}-{point.Key}",
+                openMeteo.GetHourly(model, [(point.Latitude, point.Longitude)], PastWeatherDays, days, ct), ct);
+            if (hourly is [var values])
             {
-                models.Add(new ModelWeather(model, hourly.Hours));
+                models.Add(new ModelWeather(model, values.Hours));
             }
         }
 
@@ -193,4 +225,12 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
         var median = sorted[sorted.Count / 2];
         return median > 0 ? Math.Round(latest.Value / median, 2) : null;
     }
+}
+
+/// <summary>Ein Gitterpunkt des Wetters. Plätze im selben Punkt teilen sich die Werte. Zwei Dezimalen sind rund 1 km, so fein wie ICON-CH1.</summary>
+internal record WeatherPoint(double Latitude, double Longitude)
+{
+    public string Key => FormattableString.Invariant($"{Latitude:0.00}-{Longitude:0.00}");
+
+    public static WeatherPoint Of(double latitude, double longitude) => new(Math.Round(latitude, 2), Math.Round(longitude, 2));
 }

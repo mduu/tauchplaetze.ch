@@ -94,7 +94,10 @@ Entscheid in ADR-007. Open-Meteo liefert die Modelle von MeteoSchweiz und andere
 - Ein Tag nimmt Wind aus dem feinsten Modell, das das Tauchfenster ganz abdeckt.
 - Regen nimmt pro Stunde den Wert des feinsten Modells mit Daten. So bleibt die Summe auch am Rand eines Modells vollständig.
 - Variablen: `wind_speed_10m`, `wind_gusts_10m`, `wind_direction_10m`, `precipitation`, dazu für die Grafik «Wetter pro Stunde» `temperature_2m`, `weather_code` (WMO 4677), `sunshine_duration` (Sekunden pro Stunde) und `is_day`. Alle drei Modelle liefern sie (geprüft 18.10.2026). Mehr Variablen heisst nicht mehr Calls.
-- Plätze im selben Gitterpunkt teilen sich den Call.
+- Plätze im selben Gitterpunkt (Koordinate auf zwei Dezimalen, rund 1 km) teilen sich die Werte.
+- **Gebündelt (seit 19.10.2026):** Der Lauf holt das Wetter aller Plätze vorab, pro Modell mit einem Call für bis zu 50 Gitterpunkte (`latitude=a,b,…&longitude=…`). Open-Meteo antwortet dann mit einer Liste in der Reihenfolge der Punkte. Fehlt ein Punkt, gilt der Call als gescheitert. Die Rohdaten liegen pro Call als `open-meteo/{modell}-batch-{nr}.json`, die abgefragten Punkte daneben als `….points.json`.
+- **Calls pro Lauf** (319 Plätze, 254 Gitterpunkte, Stand 19.10.2026): vorher 762 Calls an Open-Meteo (254 × 3 Modelle), gebündelt 18 (6 Bündel × 3 Modelle).
+- **Kontingent:** Die freie API erlaubt 600 Calls pro Minute, 5 000 pro Stunde und 10 000 pro Tag. Ein Call zählt mehrfach ab mehr als 10 Variablen oder mehr als 2 Wochen pro Punkt (wir: 8 Variablen, 10 Tage). Wie Open-Meteo mehrere Punkte in einem Call zählt, steht nicht in der Doku (open-meteo.com/en/pricing, /en/docs, geprüft 19.10.2026). Wir rechnen vorsichtig mit einem Call pro Punkt: 762 pro Lauf, rund 1 500 pro Tag bei zwei Läufen. Das Bündeln senkt sicher die Zahl der Requests und damit die Last und die 503-Antworten.
 - Open-Meteo antwortet bei Last mit HTTP 503. Retry mit Backoff.
 - **Bedingungen:** Die freie API ist nur für nicht-kommerzielle Nutzung, mit Quellenangabe (CC BY 4.0). Die Daten der Modelle sind Open Data der Wetterdienste.
 

@@ -87,7 +87,16 @@ internal sealed class FakeSources : HttpMessageHandler
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound) { Content = new StringContent("not found") });
         }
 
-        return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(TestData.Read(route.Source, route.File)) });
+        var answer = TestData.Read(route.Source, route.File);
+        return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ForEachPoint(url, answer)) });
+    }
+
+    /// <summary>Open-Meteo antwortet bei mehreren Punkten mit einer Liste: dieselbe Antwort pro Punkt.</summary>
+    private static string ForEachPoint(string url, string body)
+    {
+        var query = System.Web.HttpUtility.ParseQueryString(new Uri(url).Query);
+        var points = query["latitude"]?.Split(',').Length ?? 1;
+        return points > 1 ? $"[{string.Join(',', Enumerable.Repeat(body, points))}]" : body;
     }
 }
 

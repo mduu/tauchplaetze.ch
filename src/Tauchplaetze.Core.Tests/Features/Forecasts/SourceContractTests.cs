@@ -89,6 +89,28 @@ public class SourceContractTests
     }
 
     [Fact]
+    public void Open_Meteo_liefert_bei_mehreren_Punkten_eine_Liste_in_der_Reihenfolge_der_Anfrage()
+    {
+        // Act
+        var points = HourlyWeather.ParseMany(TestData.Read("open-meteo", "forecast-meteoswiss_icon_ch2-two-points-20261019.json"), 2);
+
+        // Assert
+        Assert.Equal(2, points.Count);
+        Assert.All(points, p => Assert.Equal(192, p.Hours.Count));
+        Assert.NotEqual(points[0].Hours[30].TemperatureC, points[1].Hours[30].TemperatureC);
+    }
+
+    [Fact]
+    public void Fehlt_bei_mehreren_Punkten_einer_ist_die_Antwort_ungueltig()
+    {
+        // Act
+        var missing = Record.Exception(() => HourlyWeather.ParseMany(TestData.Read("open-meteo", "forecast-meteoswiss_icon_ch2-two-points-20261019.json"), 3));
+
+        // Assert
+        Assert.IsType<FormatException>(missing);
+    }
+
+    [Fact]
     public void Open_Meteo_liefert_Temperatur_Wettercode_Sonne_und_Tag_pro_Stunde()
     {
         // Act
