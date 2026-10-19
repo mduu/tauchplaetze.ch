@@ -104,12 +104,17 @@ internal static class DiveIndexCalculator
             score = clarity >= 7 ? Math.Max(score, 6) : score;
         }
 
-        return SurfaceIsModerate(inputs, rules) ? score : Math.Min(score, rules.MaxStratificationWithTurbidSurface);
+        return SurfaceIsGood(inputs, rules) ? score : Math.Min(score, rules.MaxStratificationWithTurbidSurface);
     }
 
     /// <summary>
-    /// Volle Punkte für die Tiefe nur, wenn auch der Abstieg durch die Oberfläche mindestens mässig ist, und zwar laut einem frischen Satellitenwert.
+    /// Volle Punkte für die Tiefe nur, wenn auch der Abstieg durch die Oberfläche gut ist (ab 6 m in Ufernähe), und zwar laut einem frischen Satellitenwert.
+    /// «Oben naja, unten ok» gibt keine vollen Punkte (Marc, 19.10.2026).
     /// </summary>
+    private static bool SurfaceIsGood(DayInputs inputs, DiveIndexRules rules) =>
+        inputs.Clarity.ShoreDepth >= rules.SurfaceGoodFrom && HasFreshClarity(inputs, rules);
+
+    /// <summary>Für die Begründung «unten klarer»: Die Oberfläche ist laut frischem Wert mindestens mässig.</summary>
     private static bool SurfaceIsModerate(DayInputs inputs, DiveIndexRules rules) =>
         inputs.Clarity.ShoreDepth >= rules.SurfaceModerateFrom && HasFreshClarity(inputs, rules);
 

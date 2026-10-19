@@ -272,9 +272,11 @@ public class DiveIndexTests
     }
 
     [Theory]
-    [InlineData(4.29, 3.0, 10.0, true)]
+    [InlineData(8.58, 6.0, 10.0, true)]
+    [InlineData(8.43, 5.9, 7.0, true)]
+    [InlineData(4.29, 3.0, 7.0, true)]
     [InlineData(4.14, 2.9, 7.0, false)]
-    public void Erst_ab_3_m_in_Ufernaehe_gibt_die_Schichtung_volle_Punkte(double openWater, double shore, double stratification, bool clearBelow)
+    public void Erst_ab_6_m_in_Ufernaehe_gibt_die_Schichtung_volle_Punkte_unten_klarer_gilt_ab_3_m(double openWater, double shore, double stratification, bool clearBelow)
     {
         // Arrange
         var inputs = new DayInputs(Calm, Summer, Clear(openWater), AlgaeLevel.Low, 1.0, IsRiver: false);

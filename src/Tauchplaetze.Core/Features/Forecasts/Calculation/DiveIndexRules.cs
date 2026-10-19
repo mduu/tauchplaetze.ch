@@ -11,6 +11,7 @@ internal record SupportPoint(double Input, double Score);
 /// `rules-1.1` (18.10.2026): fehlende Klarheit zählt vorsichtig statt gar nicht, alte Satellitenwerte verlieren Gewicht,
 /// die Schätzung aus der Seemitte gilt in Ufernähe nur teilweise, und eine trübe Oberfläche deckelt die Schichtung.
 /// `rules-1.2` (19.10.2026): Sentinel-2 in Ufernähe ist die Hauptquelle der Klarheit, ohne Uferfaktor. Sentinel-3 bleibt Rückfall.
+/// Volle Punkte für die Schichtung erst ab guter Sicht in Ufernähe (6 m).
 /// Sie werden mit Meldungen und eigenen Tauchgängen geprüft.
 /// </remarks>
 internal record DiveIndexRules
@@ -51,7 +52,10 @@ internal record DiveIndexRules
     /// <summary>Secchi-Tiefe in Ufernähe in m, ab der die Oberfläche als «mässig» gilt.</summary>
     public double SurfaceModerateFrom { get; init; } = 3;
 
-    /// <summary>Höchste Punkte für die Schichtung, wenn die Oberfläche trüb oder unbekannt ist.</summary>
+    /// <summary>Secchi-Tiefe in Ufernähe in m, ab der die Oberfläche als «gut» gilt. Erst dann gibt die Schichtung volle Punkte (`rules-1.2`).</summary>
+    public double SurfaceGoodFrom { get; init; } = 6;
+
+    /// <summary>Höchste Punkte für die Schichtung, wenn die Oberfläche nicht gut (unter <see cref="SurfaceGoodFrom"/>) oder unbekannt ist.</summary>
     public double MaxStratificationWithTurbidSurface { get; init; } = 7;
 
     /// <summary>Secchi-Tiefe in m → Punkte.</summary>
