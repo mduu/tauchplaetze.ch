@@ -300,4 +300,24 @@
   <data name="Media_UploadAborted" xml:space="preserve"><value>Il caricamento è stato interrotto. Riprova.</value></data>
   <data name="Media_Choose_NeedPhotographer" xml:space="preserve"><value>Inserisci prima il fotografo.</value></data>
   <data name="Media_Choose_NeedRights" xml:space="preserve"><value>Conferma prima i diritti sulle foto.</value></data>
+  <data name="Platform_Content_Title" xml:space="preserve"><value>Contenuti</value></data>
+  <data name="Platform_Content_Lead" xml:space="preserve"><value>Qui porti i contenuti pubblici dalla produzione allo sviluppo locale: specchi d'acqua, siti d'immersione con l'ultima versione approvata e foto pubbliche. Account, proposte aperte e foto private non sono nel pacchetto.</value></data>
+  <data name="Platform_Content_Export" xml:space="preserve"><value>Esporta contenuti</value></data>
+  <data name="Platform_Content_ExportHint" xml:space="preserve"><value>Scarica il pacchetto di contenuti come file ZIP.</value></data>
+  <data name="Platform_Content_KeyOn" xml:space="preserve"><value>Il download con chiave è attivo.</value></data>
+  <data name="Platform_Content_KeyOff" xml:space="preserve"><value>Il download con chiave è disattivato (nessun Content:ExportKey).</value></data>
+  <data name="Platform_Content_Import" xml:space="preserve"><value>Importa contenuti</value></data>
+  <data name="Platform_Content_ImportOff" xml:space="preserve"><value>L'importazione è disattivata in questo ambiente.</value></data>
+  <data name="Platform_Content_ImportHint" xml:space="preserve"><value>L'importazione aggiunge ciò che manca e crea una versione approvata dove il contenuto è diverso. Non cancella mai nulla.</value></data>
+  <data name="Platform_Content_Pull" xml:space="preserve"><value>Importa dalla produzione ({0})</value></data>
+  <data name="Platform_Content_PullOff" xml:space="preserve"><value>Per importare dalla produzione servono Content:SourceBaseUri e Content:ExportKey nei user secrets.</value></data>
+  <data name="Platform_Content_Upload" xml:space="preserve"><value>Carica ZIP</value></data>
+  <data name="Platform_Content_Running" xml:space="preserve"><value>Importazione in corso. Con molte foto può durare alcuni minuti.</value></data>
+  <data name="Platform_Content_Result" xml:space="preserve"><value>Fatto: {0} nuovi specchi d'acqua, {1} nuovi siti, {2} aggiornati, {3} invariati, {4} saltati, {5} nuove foto.</value></data>
+  <data name="Platform_Content_Error_NotAllowed" xml:space="preserve"><value>Solo gli admin possono importare contenuti.</value></data>
+  <data name="Platform_Content_Error_Disabled" xml:space="preserve"><value>L'importazione è disattivata in questo ambiente.</value></data>
+  <data name="Platform_Content_Error_InvalidKey" xml:space="preserve"><value>La chiave non è corretta.</value></data>
+  <data name="Platform_Content_Error_InvalidPackage" xml:space="preserve"><value>Il file non è un pacchetto di contenuti valido o è troppo grande.</value></data>
+  <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Manca Content:SourceBaseUri o Content:ExportKey.</value></data>
+  <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>La produzione non ha fornito il pacchetto. Controlla indirizzo e chiave.</value></data>
 </root>

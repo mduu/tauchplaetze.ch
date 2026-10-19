@@ -300,4 +300,24 @@
   <data name="Media_UploadAborted" xml:space="preserve"><value>Der Upload wurde abgebrochen. Bitte nochmals versuchen.</value></data>
   <data name="Media_Choose_NeedPhotographer" xml:space="preserve"><value>Trage zuerst den Fotografen ein.</value></data>
   <data name="Media_Choose_NeedRights" xml:space="preserve"><value>Bestätige zuerst die Rechte an den Fotos.</value></data>
+  <data name="Platform_Content_Title" xml:space="preserve"><value>Inhalt</value></data>
+  <data name="Platform_Content_Lead" xml:space="preserve"><value>Hier holst du die öffentlichen Inhalte von Prod in die lokale Entwicklung: Gewässer, Tauchplätze mit der neuesten freigegebenen Version und öffentliche Fotos. Konten, offene Vorschläge und private Fotos sind nicht im Paket.</value></data>
+  <data name="Platform_Content_Export" xml:space="preserve"><value>Inhalt exportieren</value></data>
+  <data name="Platform_Content_ExportHint" xml:space="preserve"><value>Lädt das Inhaltspaket als ZIP herunter.</value></data>
+  <data name="Platform_Content_KeyOn" xml:space="preserve"><value>Der Abruf mit Schlüssel ist eingeschaltet.</value></data>
+  <data name="Platform_Content_KeyOff" xml:space="preserve"><value>Der Abruf mit Schlüssel ist aus (kein Content:ExportKey).</value></data>
+  <data name="Platform_Content_Import" xml:space="preserve"><value>Inhalt übernehmen</value></data>
+  <data name="Platform_Content_ImportOff" xml:space="preserve"><value>Der Import ist in dieser Umgebung ausgeschaltet.</value></data>
+  <data name="Platform_Content_ImportHint" xml:space="preserve"><value>Der Import legt an, was fehlt, und hängt eine freigegebene Version an, wo der Inhalt anders ist. Er löscht nie.</value></data>
+  <data name="Platform_Content_Pull" xml:space="preserve"><value>Aus Prod übernehmen ({0})</value></data>
+  <data name="Platform_Content_PullOff" xml:space="preserve"><value>Für den Abruf aus Prod fehlen Content:SourceBaseUri oder Content:ExportKey in den User Secrets.</value></data>
+  <data name="Platform_Content_Upload" xml:space="preserve"><value>ZIP hochladen</value></data>
+  <data name="Platform_Content_Running" xml:space="preserve"><value>Import läuft. Das kann mit vielen Fotos einige Minuten dauern.</value></data>
+  <data name="Platform_Content_Result" xml:space="preserve"><value>Fertig: {0} Gewässer neu, {1} Tauchplätze neu, {2} aktualisiert, {3} unverändert, {4} übersprungen, {5} Fotos neu.</value></data>
+  <data name="Platform_Content_Error_NotAllowed" xml:space="preserve"><value>Nur Admins dürfen Inhalte übernehmen.</value></data>
+  <data name="Platform_Content_Error_Disabled" xml:space="preserve"><value>Der Import ist in dieser Umgebung ausgeschaltet.</value></data>
+  <data name="Platform_Content_Error_InvalidKey" xml:space="preserve"><value>Der Schlüssel stimmt nicht.</value></data>
+  <data name="Platform_Content_Error_InvalidPackage" xml:space="preserve"><value>Die Datei ist kein gültiges Inhaltspaket oder zu gross.</value></data>
+  <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Content:SourceBaseUri oder Content:ExportKey fehlt.</value></data>
+  <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>Prod hat das Paket nicht geliefert. Prüfe Adresse und Schlüssel.</value></data>
 </root>

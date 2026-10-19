@@ -1,0 +1,118 @@
+@page "/platform/inhalt"
+@layout PlatformLayout
+@attribute [Authorize(Roles = Roles.Admin)]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Options
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Content
+@using Tauchplaetze.Core.Features.Content.Commands
+@using Tauchplaetze.Core.Features.Content.Queries
+@using Tauchplaetze.Web.Features.Editorial
+@inject IOptions<ContentOptions> Options
+
+<MudText Typo="Typo.h4" Class="mb-4">@L["Platform_Content_Title"]</MudText>
+<MudText Typo="Typo.body2" Class="mb-4">@L["Platform_Content_Lead"]</MudText>
+
+@if (status is null)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+else
+{
+    <MudPaper Outlined="true" Class="pa-4 mb-4">
+        <MudText Typo="Typo.h6" Class="mb-2">@L["Platform_Content_Export"]</MudText>
+        <MudText Typo="Typo.body2" Class="mb-3">@L["Platform_Content_ExportHint"]</MudText>
+        <MudButton Href="@ContentEndpoints.ExportPath" Target="_top" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Download">
+            @L["Platform_Content_Export"]
+        </MudButton>
+        <MudText Typo="Typo.caption" Class="d-block mt-3">
+            @(status.ExportKeyConfigured ? L["Platform_Content_KeyOn"] : L["Platform_Content_KeyOff"])
+        </MudText>
+    </MudPaper>
+
+    <MudPaper Outlined="true" Class="pa-4 mb-4">
+        <MudText Typo="Typo.h6" Class="mb-2">@L["Platform_Content_Import"]</MudText>
+        @if (!status.ImportEnabled)
+        {
+            <MudText Typo="Typo.body2">@L["Platform_Content_ImportOff"]</MudText>
+        }
+        else
+        {
+            <MudText Typo="Typo.body2" Class="mb-3">@L["Platform_Content_ImportHint"]</MudText>
+            <div class="d-flex flex-wrap gap-2 align-center">
+                @if (status.SourceHost is { } host && status.ExportKeyConfigured)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudDownload" OnClick="Pull" Disabled="busy">
+                        @L["Platform_Content_Pull", host]
+                    </MudButton>
+                }
+                <MudFileUpload T="IBrowserFile" FilesChanged="Upload" Accept=".zip" MaxFileSize="Options.Value.MaxPackageBytes" Disabled="busy">
+                    <CustomContent>
+                        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.UploadFile" OnClick="@context.OpenFilePickerAsync" Disabled="busy">
+                            @L["Platform_Content_Upload"]
+                        </MudButton>
+                    </CustomContent>
+                </MudFileUpload>
+            </div>
+            @if (status.SourceHost is null || !status.ExportKeyConfigured)
+            {
+                <MudText Typo="Typo.caption" Class="d-block mt-3">@L["Platform_Content_PullOff"]</MudText>
+            }
+        }
+
+        @if (busy)
+        {
+            <MudText Typo="Typo.body2" Class="mt-4">@L["Platform_Content_Running"]</MudText>
+            <MudProgressLinear Indeterminate="true" Class="mt-2" />
+        }
+
+        @if (result is not null)
+        {
+            <MudAlert Severity="@(result.Error is null ? Severity.Success : Severity.Error)" Class="mt-4" data-result="import">
+                @if (result.Error is { } error)
+                {
+                    @L[$"Platform_Content_Error_{error}"]
+                }
+                else
+                {
+                    @L["Platform_Content_Result", result.WaterBodiesAdded, result.SitesAdded, result.SitesUpdated, result.SitesUnchanged, result.SitesSkipped, result.PhotosAdded]
+                }
+            </MudAlert>
+        }
+    </MudPaper>
+}
+
+@code {
+    private ContentSyncStatus? status;
+
+    private ImportContentResult? result;
+
+    private bool busy;
+
+    protected override async Task Load() =>
+        status = await Query<GetContentSyncStatusQuery, ContentSyncStatus?>(new GetContentSyncStatusQuery(UserId));
+
+    private async Task Pull()
+    {
+        busy = true;
+        result = null;
+        result = await Command<PullContentFromSourceCommand, ImportContentResult>(new PullContentFromSourceCommand(UserId));
+        busy = false;
+    }
+
+    private async Task Upload(IBrowserFile? file)
+    {
+        if (file is null)
+        {
+            return;
+        }
+
+        busy = true;
+        result = null;
+        StateHasChanged();
+        await using var stream = file.OpenReadStream(Options.Value.MaxPackageBytes);
+        result = await Command<ImportContentCommand, ImportContentResult>(new ImportContentCommand(UserId, stream));
+        busy = false;
+    }
+}

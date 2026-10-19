@@ -33,6 +33,12 @@ internal static class ContactRateLimit
             options.OnRejected = (context, _) =>
             {
                 var request = context.HttpContext.Request;
+                if (request.Path.StartsWithSegments("/api"))
+                {
+                    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                    return ValueTask.CompletedTask;
+                }
+
                 context.HttpContext.Response.StatusCode = StatusCodes.Status303SeeOther;
                 context.HttpContext.Response.Headers.Location = $"{request.PathBase}{request.Path}?kontakt=limit#kontakt";
                 return ValueTask.CompletedTask;

@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Tauchplaetze.Core.Features.Contact.Commands;
+using Tauchplaetze.Core.Features.Content;
+using Tauchplaetze.Core.Features.Content.Queries;
 using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
@@ -65,6 +67,18 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetDiveSiteForEditingQuery, DiveSiteForEditing?> ForEditing { get; } = new(_ => null);
 
+    /// <summary>Wie der Core mit dem Schlüssel «richtig» in der Konfiguration.</summary>
+    public FakeQuery<ExportContentQuery, ExportContentResult> ContentExport { get; } = new(query =>
+    {
+        if (query.AdminId is null && query.ExportKey != "richtig")
+        {
+            return new ExportContentResult(ContentError.InvalidKey);
+        }
+
+        query.Output.Write("PK"u8);
+        return new ExportContentResult(null, 1, 1, 0);
+    });
+
     public FakeQuery<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>> SiteMedia { get; } = new(_ => []);
 
     /// <summary>Empfänger des Kontaktformulars im Test. Er darf nie im HTML stehen.</summary>
@@ -101,6 +115,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>>(PendingRevisions));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteForEditingQuery, DiveSiteForEditing?>>(ForEditing));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>>(SiteMedia));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<ExportContentQuery, ExportContentResult>>(ContentExport));
         });
     }
 

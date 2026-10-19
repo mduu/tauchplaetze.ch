@@ -26,6 +26,7 @@ builder.Services.AddHostedService<MailQueueWorker>();
 builder.Services.AddHostedService<DeadLetterMonitorWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));
 builder.Services.AddContactRateLimit(builder.Configuration);
+builder.Services.AddContentExportRateLimit();
 
 var app = builder.Build();
 
@@ -54,6 +55,7 @@ app.MapStaticAssets();
 app.MapLanguageRedirect();
 app.MapAccountEndpoints();
 app.MapMediaEndpoints();
+app.MapContentEndpoints();
 app.MapMovedPages();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 app.MapDefaultEndpoints();
