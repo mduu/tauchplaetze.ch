@@ -207,6 +207,7 @@ Ein Lauf des Prognose-Jobs.
 | `StartedAt`, `FinishedAt` | DateTimeOffset | |
 | `Status` | enum | `Running`, `Succeeded`, `PartiallySucceeded`, `Failed` |
 | `SourceStatus` | nvarchar(max) | JSON: Status und Datenalter pro Quelle |
+| `Sites` | int, optional | Plätze mit Prognose im Lauf. Leer bei Läufen vor dem 19.10.2026 |
 | `RawDataPath` | string(300) | Ordner der Rohdaten in Blob Storage |
 
 ### DailyForecast
@@ -325,6 +326,8 @@ Zusätzliche Felder am Benutzer:
 | `ShowNamePublicly` | bool | Einwilligung, den Anzeigenamen öffentlich in der History zu zeigen. Standard `false` |
 | `PreferredCulture` | string(2) | Sprache des CMS und der Mails |
 | `BlockedAt`, `BlockedBy` | optional | Konto gesperrt |
+| `CreatedAt` | DateTimeOffset, optional | Registrierung oder Anlage. Leer bei Konten vor dem 19.10.2026 |
+| `LastSignInAt` | DateTimeOffset, optional | Letzte erfolgreiche Anmeldung, gesetzt von `SignIn`. Ohne IP-Adresse und Gerät |
 
 ## Inhaltspaket
 

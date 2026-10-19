@@ -24,6 +24,7 @@ Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätz
 | `/admin/konten` | Konten sperren (ohne E-Mail-Adressen und Rollen) | Moderatoren; Admins nutzen `/platform/konten` |
 | `/platform` | Übersicht: Konten (davon gesperrt), offene Vorschläge, letzter Prognose-Lauf, Mail-Queue | Admins |
 | `/platform/konten` | Konten, Rollen, Sperre, E-Mail-Adressen | Admins |
+| `/platform/konten/{id}` | Ein Konto im Detail (siehe «Konten auf der Plattform») | Admins |
 | `/platform/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten» | Admins |
 | `/platform/queues` | Mail-Queue mit Dead-Letter | Admins |
 
@@ -112,6 +113,18 @@ Namen in einer öffentlichen History sind Personendaten (nDSG). Darum gilt **Dat
 - **Konto löschen:** Die Versionen bleiben. Autor bzw. Approver wird «gelöschtes Konto», auch im CMS.
 - **Personendaten im Inhalt:** Texte und Fotos können selbst Personendaten enthalten (z.B. Telefonnummern, erkennbare Personen). Moderatoren prüfen das vor der Freigabe. Eine Version mit solchen Daten lässt sich im Inhalt nachträglich schwärzen. Das ist die einzige Ausnahme von «Versionen sind unveränderlich». Die Schwärzung selbst steht in der History.
 - Die Datenschutzerklärung beschreibt Konto, Anzeigename, History und Aufbewahrung.
+
+### Konten auf der Plattform
+
+Die Kontenliste verlinkt jedes Konto auf `/platform/konten/{id}` (nur Admins, Query `GetAccountDetails`, sonst «gibt es nicht oder keine Berechtigung»).
+
+- **Angaben:** E-Mail und ob bestätigt, Sprache, Name öffentlich, registriert am, letzte Anmeldung (bei alten Konten «unbekannt» bzw. «noch nie»), Anmeldemethoden (Passwort ja/nein, externe Logins aus Identity, Passkeys später), Fehlversuche und Lockout von Identity, Sperre mit Datum und Person, Beiträge (Versionen, davon offen, Fotos).
+- **Rollen:** Schalter pro Rolle (`SetRole`). Die eigene Rolle Admin ist gesperrt.
+- **Aktionen**, jede mit Meldung:
+  - «E-Mail von Hand bestätigen» (`ConfirmEmailManually`), nur bei unbestätigten Konten.
+  - «Link für ein neues Passwort senden» (`SendPasswordReset`, dieselbe Mail wie «Passwort vergessen», in der Sprache des Kontos), nur bei bestätigten, nicht gesperrten Konten.
+  - «Sperren» und «Sperre aufheben» (`BlockAccount`), Sperren mit Rückfrage.
+  - «Konto löschen» (`DeleteAccountByAdmin`, mit Rückfrage), zum Beispiel für Spam-Konten. Gleiche Regeln wie die Selbstlöschung: Versionen ohne Autor, private Fotos weg, öffentliche ohne Bezug zum Konto. Nie das eigene Konto (das geht im Profil) und nie den letzten aktiven Admin.
 
 ### Auskunft und Herausgabe der eigenen Daten
 

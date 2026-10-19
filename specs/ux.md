@@ -188,6 +188,7 @@ Use-Case: stöbern nach See («Was ist los an meinem See?»). Die Suche nach Eig
 - Übersicht: vier Kacheln (Konten mit Zahl der gesperrten, offene Vorschläge, letzter Prognose-Lauf, Mail-Queue mit Dead-Letter).
 - Liefert der Core nichts (zum Beispiel ohne Recht), zeigt jede Seite eine Meldung statt eines Ladebalkens.
 - **Prognose:** Kacheln letzter Lauf (Status als farbiger Chip, Zeit, während des Laufs Fortschritt «40 von 318 Plätzen, 120 Calls bisher»), nächster Lauf nach Zeitplan, Bilanz der letzten 7 Tage (erfolgreich, Teilerfolg, fehlgeschlagen), mittlere Dauer. Darunter die Läufe als Tabelle (Start, Dauer, Status, Calls, Fehler), 20 pro Seite, Schalter «Nur Läufe mit Fehlern». Die Zahl der Fehler klappt die Gruppen auf («alplakes · 3 × Timeout»), jede Gruppe mit den betroffenen Keys und den vollständigen Meldungen. Läuft ein Lauf, lädt die Seite alle 5 s neu, sonst nicht.
+- **Konten:** Liste mit Rollen und Sperre; der Name führt auf die Detailseite mit Angaben links und rechts Rollen (Schalter) und Aktionen (Knöpfe, gefährliche in Rot, mit Rückfrage). Details in `cms.md`, «Konten auf der Plattform».
 - **Mail-Queue:** Zwei Kacheln mit Zählern (in der Queue, Dead-Letter, rot umrandet, sobald nicht leer), Knöpfe «Alle erneut senden» und «Alle löschen», darunter die Dead-Letter-Mails als aufklappbare Liste mit Details und Knöpfen pro Mail. Löschen fragt nach.
 
 ## Zustände
