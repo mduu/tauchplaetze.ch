@@ -292,4 +292,5 @@
   <data name="Nav_Moderation" xml:space="preserve"><value>Moderazione</value></data>
   <data name="Platform_Lead" xml:space="preserve"><value>Gestione della piattaforma: account, calcoli delle previsioni e coda delle e-mail. Solo per gli admin.</value></data>
   <data name="Platform_BlockedCount" xml:space="preserve"><value>di cui {0} bloccati</value></data>
+  <data name="Field_WaterBodyId_ModeratorOnly" xml:space="preserve"><value>Il lago o il fiume lo cambia la moderazione.</value></data>
 </root>

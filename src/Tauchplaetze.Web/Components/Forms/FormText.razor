@@ -1,14 +1,16 @@
 @* Einzeiliges Textfeld im Design der Website. *@
 <label class="field">
     <span class="field-label">@Label</span>
-    <input type="text" value="@Value" maxlength="@MaxLength" required="@Required" @onchange="Changed" />
+    <input type="text" value="@Value" maxlength="@MaxLength" required="@Required" aria-describedby="@(Help is null ? null : helpId)" @onchange="Changed" />
     @if (Help is not null)
     {
-        <span class="field-help">@Help</span>
+        <span class="field-help" id="@helpId">@Help</span>
     }
 </label>
 
 @code {
+    private readonly string helpId = "help-" + Guid.NewGuid().ToString("N")[..8];
+
     [Parameter, EditorRequired]
     public string Label { get; set; } = "";
 

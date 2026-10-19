@@ -39,4 +39,5 @@
   <data name="Footer_Imprint" xml:space="preserve"><value>Mentions légales</value></data>
   <data name="Footer_Privacy" xml:space="preserve"><value>Protection des données</value></data>
   <data name="Footer_Links" xml:space="preserve"><value>À propos du site</value></data>
+  <data name="Form_InvalidNumber" xml:space="preserve"><value>Indique un nombre entier de {0} à {1}.</value></data>
 </root>

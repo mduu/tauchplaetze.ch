@@ -292,4 +292,5 @@
   <data name="Nav_Moderation" xml:space="preserve"><value>Moderation</value></data>
   <data name="Platform_Lead" xml:space="preserve"><value>Running the platform: accounts, forecast runs and the mail queue. Admins only.</value></data>
   <data name="Platform_BlockedCount" xml:space="preserve"><value>{0} of them blocked</value></data>
+  <data name="Field_WaterBodyId_ModeratorOnly" xml:space="preserve"><value>The moderators change the lake or river.</value></data>
 </root>

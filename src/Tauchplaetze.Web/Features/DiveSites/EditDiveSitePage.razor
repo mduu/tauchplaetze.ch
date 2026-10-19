@@ -14,24 +14,26 @@
 @inject IStringLocalizer<DiveSiteStrings> Site
 @inject IStringLocalizer<SharedStrings> Shared
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <PageTitle>@Site["EditMode_Title", details?.Name ?? ""] · @Shared["Brand"]</PageTitle>
 <HeadContent>
     <meta name="robots" content="noindex" />
 </HeadContent>
 
-@if (details is null || form is null || editing is null)
+@if (gone)
 {
-    @if (notFound)
-    {
-        <section class="page-section">
-            <h1 class="status-title">@Site["Gone_Title"]</h1>
-        </section>
-    }
+    <section class="page-section">
+        <h1 class="status-title">@Site["Gone_Title"]</h1>
+        <p>@Site["Gone_Text"]</p>
+    </section>
+}
+else if (details is null || form is null || editing is null)
+{
 }
 else
 {
-    <div class="edit-mode" data-edit-mode>
+    <div class="edit-mode" data-edit-mode data-edit-dirty="@(IsDirty ? "true" : "false")">
         <div class="edit-bar" role="region" aria-label="@Site["EditMode_Label"]">
             <p class="edit-bar-text">
                 <strong>@Site["EditMode_Label"]</strong>
@@ -60,7 +62,7 @@ else
 
         @if (errors.Count > 0 || message is not null)
         {
-            <div class="message @(errors.Count > 0 ? "error" : "ok")" role="@(errors.Count > 0 ? "alert" : "status")">
+            <div class="message @(errors.Count > 0 ? "error" : "ok")" role="@(errors.Count > 0 ? "alert" : "status")" tabindex="-1" @ref="messageBox">
                 @foreach (var error in errors)
                 {
                     <p>@L[$"Error_{error}"]</p>
@@ -90,14 +92,16 @@ else
                 <FormSelect TValue="DiveSiteAccess?" Label="@L["Field_Access"]" @bind-Value="form.Access" EmptyLabel="@L["Rating_None"]"
                             Options="@([.. Enum.GetValues<DiveSiteAccess>().Select(a => ((DiveSiteAccess?)a, L[$"Access_{a}"].Value))])" />
             </div>
-            <p class="field-label">@L["Field_Features"]</p>
-            <div class="chips">
-                @foreach (var feature in SiteForm.AllFeatures)
-                {
-                    var current = feature;
-                    <FormChip Label="@L[$"Feature_{current}"]" Checked="form.Features.Contains(current)" CheckedChanged="@(on => Toggle(current, on))" />
-                }
-            </div>
+            <fieldset class="chips-field">
+                <legend class="field-label">@L["Field_Features"]</legend>
+                <div class="chips">
+                    @foreach (var feature in SiteForm.AllFeatures)
+                    {
+                        var current = feature;
+                        <FormChip Label="@L[$"Feature_{current}"]" Checked="form.Features.Contains(current)" CheckedChanged="@(on => Toggle(current, on))" />
+                    }
+                </div>
+            </fieldset>
             <div class="level-grid">
                 @foreach (var field in SiteForm.RatingFields)
                 {
@@ -112,15 +116,17 @@ else
 
         <section class="page-section edit-section" aria-labelledby="edit-texts">
             <h2 id="edit-texts" class="edit-section-title">@Site["EditMode_Section_Texts"]</h2>
-            <div class="language-tabs" role="tablist">
+            <div class="language-tabs" role="tablist" aria-label="@Site["EditMode_Section_Texts"]">
                 @foreach (var language in Languages.All)
                 {
                     var current = language;
-                    <button type="button" role="tab" class="language-tab" aria-selected="@(textLanguage == current ? "true" : "false")" @onclick="() => textLanguage = current">@current.ToUpperInvariant()</button>
+                    <button type="button" role="tab" id="@($"text-tab-{current}")" aria-controls="text-panel" class="language-tab"
+                            aria-selected="@(textLanguage == current ? "true" : "false")" tabindex="@(textLanguage == current ? 0 : -1)"
+                            @onclick="() => textLanguage = current" @onkeydown="e => SwitchLanguage(e, current)">@Shared[$"Language_{current}"]</button>
                 }
             </div>
             @{ var text = form.Texts[textLanguage]; }
-            <div class="edit-texts" role="tabpanel" lang="@textLanguage">
+            <div class="edit-texts" role="tabpanel" id="text-panel" aria-labelledby="@($"text-tab-{textLanguage}")" lang="@textLanguage" @key="textLanguage">
                 <FormTextArea Label="@L["Field_UnderwaterDescription"]" @bind-Value="text.UnderwaterDescription" Rows="6" />
                 <FormTextArea Label="@L["Field_HazardsInfo"]" @bind-Value="text.HazardsInfo" MaxLength="2000" />
                 <FormTextArea Label="@L["Field_ApproachInfo"]" @bind-Value="text.ApproachInfo" MaxLength="2000" />
@@ -132,7 +138,8 @@ else
         <section class="page-section edit-section" aria-labelledby="edit-more">
             <h2 id="edit-more" class="edit-section-title">@Site["EditMode_Section_More"]</h2>
             <p>@Site["EditMode_More_Text"]</p>
-            <p><a href="@($"/admin/plaetze/{details.Id}")">@Site["EditMode_More_Link"]</a></p>
+            <p><a href="@($"/admin/plaetze/{details.Id}")" data-edit-leave>@Site["EditMode_More_Link"]</a></p>
+            <p class="field-help">@Site["EditMode_More_Hint"]</p>
         </section>
 
         <section class="page-section edit-section" aria-labelledby="edit-comment">
@@ -159,7 +166,16 @@ else
 
     private bool saving;
 
-    private bool notFound;
+    private bool gone;
+
+    private string? savedContent;
+
+    private ElementReference messageBox;
+
+    private bool focusMessage;
+
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
 
     [Parameter]
     public string Slug { get; set; } = "";
@@ -172,15 +188,55 @@ else
                 details = found.Site;
                 editing = await Query<GetDiveSiteForEditingQuery, DiveSiteForEditing?>(new GetDiveSiteForEditingQuery(found.Site.Id));
                 form = editing is null ? null : SiteForm.From(editing.Content);
+                savedContent = form is null ? null : Serialized(form);
                 openProposal = (await Query<GetMyProposalsQuery, IReadOnlyList<MyProposal>>(new GetMyProposalsQuery(UserId, found.Site.Id, PendingOnly: true))).FirstOrDefault();
+                if (editing is null)
+                {
+                    Navigation.NotFound();
+                }
+
                 break;
             case DiveSiteLookup.Moved moved:
                 Navigation.NavigateTo(PublicRoutes.DiveSiteEdit(Language, moved.Slug), forceLoad: true);
                 break;
+            case DiveSiteLookup.Gone:
+                gone = true;
+                if (HttpContext is not null)
+                {
+                    HttpContext.Response.StatusCode = StatusCodes.Status410Gone;
+                }
+
+                break;
             default:
-                notFound = true;
+                Navigation.NotFound();
                 break;
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (focusMessage)
+        {
+            focusMessage = false;
+            await messageBox.FocusAsync();
+        }
+    }
+
+    /// <remarks>Steuert die Warnung beim Verlassen (`site.js`). Vergleicht den Inhalt des Formulars mit dem geladenen.</remarks>
+    private bool IsDirty => form is not null && savedContent is not null && Serialized(form) != savedContent;
+
+    private static string Serialized(SiteForm form) => System.Text.Json.JsonSerializer.Serialize(new { Content = form.ToContent(), form.Comment });
+
+    private void SwitchLanguage(KeyboardEventArgs e, string current)
+    {
+        var index = Languages.All.ToList().IndexOf(current);
+        var count = Languages.All.Count;
+        textLanguage = e.Key switch
+        {
+            "ArrowRight" => Languages.All[(index + 1) % count],
+            "ArrowLeft" => Languages.All[(index + count - 1) % count],
+            _ => textLanguage,
+        };
     }
 
     private IReadOnlyList<(string Short, string Text)> Legend(string scale) =>
@@ -200,17 +256,25 @@ else
 
     private async Task Save()
     {
+        if (saving)
+        {
+            return;
+        }
+
         saving = true;
         message = null;
         var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(UserId, details!.Id, editing!.BaseNumber, form!.ToContent(), form.Comment));
         saving = false;
         errors = result.Errors;
+        focusMessage = errors.Count > 0;
         if (result is { Succeeded: true, NoChange: true })
         {
             message = Site["EditMode_NoChange"];
         }
         else if (result.Succeeded)
         {
+            savedContent = Serialized(form);
+            await JS.InvokeVoidAsync("tauchplaetzeEdit.saved");
             var saved = result.Status == RevisionStatus.Approved ? "online" : "vorschlag";
             Navigation.NavigateTo($"{PublicRoutes.DiveSite(Language, details.Slug)}?gespeichert={saved}", forceLoad: true);
         }

@@ -225,4 +225,5 @@
   <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>The moderators change the lake or river.</value></data>
   <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Thank you! Your proposal is with the moderators. You will get an e-mail as soon as it is published or rejected.</value></data>
   <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Saved and live.</value></data>
+  <data name="EditMode_More_Hint" xml:space="preserve"><value>Save first, otherwise your changes on this page are lost.</value></data>
 </root>

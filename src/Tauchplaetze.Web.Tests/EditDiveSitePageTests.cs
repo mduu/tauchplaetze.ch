@@ -23,7 +23,12 @@ public class EditDiveSitePageTests : IClassFixture<WebApp>
         app.DiveSites.Add(Slug, new DiveSiteLookup.Found(new DiveSiteDetails(
             SiteId, Slug, "Chappeli", "aegerisee", "lac d'Ägeri", WaterBodyType.Lake, "Oberägeri", "ZG", 47.13, 8.62, 0, DateTimeOffset.UtcNow, [], [])));
         var content = new DiveSiteContent("Chappeli", Slug, 1, 47.13, 8.62, "Oberägeri", "ZG", 30, 2, 4, null, null, null, null,
-            DiveSiteAccess.Shore, DiveSiteFeatures.None, false, null, null, null, false, []);
+            DiveSiteAccess.Shore, DiveSiteFeatures.None, false, null, null, null, false,
+            [
+                new DiveSiteContentTranslation("de", "Steilwand bis 30 m.", null, null, null, null, null, false),
+                new DiveSiteContentTranslation("fr", "Tombant jusqu'à 30 m.", null, null, null, null, null, false),
+            ]);
+        app.DiveSites.Add("archiviert-bearbeiten", new DiveSiteLookup.Gone());
         app.ForEditing.Answer = query => query.DiveSiteId == SiteId ? new DiveSiteForEditing(SiteId, DiveSiteStatus.Published, 3, content, []) : null;
     }
 
@@ -77,6 +82,53 @@ public class EditDiveSitePageTests : IClassFixture<WebApp>
         // Assert
         Assert.Contains("\"type\":\"server\"", edit);
         Assert.DoesNotContain("\"type\":\"server\"", page);
+    }
+
+    [Fact]
+    public async Task Die_Texte_stehen_in_der_Sprache_der_Seite_im_Feld_selbst_damit_der_Wechsel_der_Sprache_sie_ersetzt()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        var html = await browser.GetStringAsync($"/fr/sites-de-plongee/{Slug}/modifier", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("<textarea rows=\"6\">Tombant jusqu&#x27;&#xE0; 30 m.</textarea>", html);
+        Assert.DoesNotContain("Steilwand bis 30 m.", html);
+    }
+
+    [Fact]
+    public async Task Ein_unbekannter_Platz_ergibt_404_ein_archivierter_410()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        using var unknown = await browser.GetAsync("/de/tauchplaetze/gibt-es-nicht/bearbeiten", TestContext.Current.CancellationToken);
+        using var archived = await browser.GetAsync("/de/tauchplaetze/archiviert-bearbeiten/bearbeiten", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, unknown.StatusCode);
+        Assert.Equal(HttpStatusCode.Gone, archived.StatusCode);
+    }
+
+    [Fact]
+    public async Task Nur_interaktive_Seiten_merken_sich_ihre_Sprache_fuer_die_Verbindung()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        using var edit = await browser.GetAsync($"/it/siti-di-immersione/{Slug}/modifica", TestContext.Current.CancellationToken);
+        using var page = await browser.GetAsync($"/it/siti-di-immersione/{Slug}", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains(edit.Headers.GetValues("Set-Cookie"), c => c.StartsWith("tauchplaetze.lang=it", StringComparison.Ordinal));
+        Assert.False(page.Headers.TryGetValues("Set-Cookie", out var cookies) && cookies.Any(c => c.StartsWith("tauchplaetze.lang", StringComparison.Ordinal)));
     }
 
     [Theory]

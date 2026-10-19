@@ -225,4 +225,5 @@
   <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>Il lago o il fiume lo cambia la moderazione.</value></data>
   <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Grazie! La tua proposta è alla moderazione. Riceverai un’e-mail non appena sarà pubblicata o respinta.</value></data>
   <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Salvato e online.</value></data>
+  <data name="EditMode_More_Hint" xml:space="preserve"><value>Salva prima, altrimenti le modifiche su questa pagina vanno perse.</value></data>
 </root>

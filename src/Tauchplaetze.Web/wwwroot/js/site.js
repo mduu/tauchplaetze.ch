@@ -163,3 +163,17 @@
     window.location.assign(link.href);
   }, true);
 })();
+
+// Warnung beim Verlassen, solange der Bearbeiten-Modus ungespeicherte Änderungen hat (data-edit-dirty).
+window.tauchplaetzeEdit = (function () {
+  let saved = false;
+
+  window.addEventListener('beforeunload', function (event) {
+    if (!saved && document.querySelector('[data-edit-dirty="true"]')) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  });
+
+  return { saved: function () { saved = true; } };
+})();

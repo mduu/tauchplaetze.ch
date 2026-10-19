@@ -885,13 +885,21 @@ a:hover {
 
 .level-options {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
-  margin-top: 10px;
+  margin: 10px 0 0;
+  padding: 0;
+  border: 0;
 }
 
 .level-option {
-  min-width: 40px;
-  min-height: 40px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 8px;
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-tile-sm);
   background: transparent;
@@ -912,7 +920,20 @@ a:hover {
   color: var(--color-bg);
 }
 
-.level-option.level-none[aria-checked="true"] {
+.level-option input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.level-option:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.level-option.level-none[data-checked="true"] {
   border-color: var(--color-text-muted);
   color: var(--color-text);
 }
@@ -1087,3 +1108,23 @@ a:hover {
     color: var(--color-primary);
 .rating-legend::backdrop {
     background: transparent;
+
+.field-error {
+  color: var(--color-signal);
+  font-size: 13px;
+}
+
+.field input[aria-invalid="true"] {
+  border-color: var(--color-signal);
+}
+
+.chips-field {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.chips-field legend {
+  margin-bottom: 4px;
+  padding: 0;
+}

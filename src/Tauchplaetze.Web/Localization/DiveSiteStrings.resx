@@ -225,4 +225,5 @@
   <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>Das Gewässer ändert die Moderation.</value></data>
   <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Danke! Dein Vorschlag ist bei der Moderation. Du bekommst eine Mail, sobald er freigegeben oder abgelehnt ist.</value></data>
   <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Gespeichert und online.</value></data>
+  <data name="EditMode_More_Hint" xml:space="preserve"><value>Speichere vorher, sonst gehen deine Änderungen auf dieser Seite verloren.</value></data>
 </root>

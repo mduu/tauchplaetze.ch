@@ -39,4 +39,5 @@
   <data name="Footer_Imprint" xml:space="preserve"><value>Legal notice</value></data>
   <data name="Footer_Privacy" xml:space="preserve"><value>Privacy</value></data>
   <data name="Footer_Links" xml:space="preserve"><value>About the website</value></data>
+  <data name="Form_InvalidNumber" xml:space="preserve"><value>Please enter a whole number from {0} to {1}.</value></data>
 </root>

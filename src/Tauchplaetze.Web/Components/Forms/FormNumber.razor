@@ -1,16 +1,29 @@
-@* Ganze Zahl, leer erlaubt. *@
+@* Ganze Zahl, leer erlaubt. Eine ungültige Eingabe bleibt stehen und zeigt einen Hinweis, statt still zu verschwinden. *@
+@inject IStringLocalizer<SharedStrings> L
+
 <label class="field field-short">
     <span class="field-label">@Label</span>
     <span class="field-unit-wrap">
-        <input type="number" inputmode="numeric" value="@Value" min="@Min" max="@Max" @onchange="Changed" />
+        <input type="text" inputmode="numeric" value="@(raw ?? Value?.ToString(CultureInfo.InvariantCulture))"
+               aria-invalid="@(invalid ? "true" : null)" aria-describedby="@(invalid ? errorId : null)" @onchange="Changed" />
         @if (Unit is not null)
         {
             <span class="field-unit">@Unit</span>
         }
     </span>
+    @if (invalid)
+    {
+        <span class="field-error" id="@errorId">@L["Form_InvalidNumber", Min ?? 0, Max ?? int.MaxValue]</span>
+    }
 </label>
 
 @code {
+    private readonly string errorId = "error-" + Guid.NewGuid().ToString("N")[..8];
+
+    private string? raw;
+
+    private bool invalid;
+
     [Parameter, EditorRequired]
     public string Label { get; set; } = "";
 
@@ -29,6 +42,23 @@
     [Parameter]
     public string? Unit { get; set; }
 
-    private Task Changed(ChangeEventArgs e) =>
-        ValueChanged.InvokeAsync(int.TryParse(e.Value as string, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) ? number : null);
+    private async Task Changed(ChangeEventArgs e)
+    {
+        var text = (e.Value as string)?.Trim() ?? "";
+        if (text.Length == 0)
+        {
+            (raw, invalid) = (null, false);
+            await ValueChanged.InvokeAsync(null);
+            return;
+        }
+
+        if (int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number) && number >= (Min ?? int.MinValue) && number <= (Max ?? int.MaxValue))
+        {
+            (raw, invalid) = (null, false);
+            await ValueChanged.InvokeAsync(number);
+            return;
+        }
+
+        (raw, invalid) = (text, true);
+    }
 }
