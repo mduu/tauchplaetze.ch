@@ -105,11 +105,12 @@ window.tauchplaetzeMap = (function () {
     map.getContainer().classList.toggle('map-labels-hidden', count > labelLimit && map.getZoom() < labelZoom);
   }
 
+  // Standard ist das Luftbild (Entscheid Marc, 19.10.2026). Wer auf die Landeskarte umschaltet, behält sie.
   function storedLayer() {
     try {
-      return localStorage.getItem(storageKey) === 'photo' ? 'photo' : 'map';
+      return localStorage.getItem(storageKey) === 'map' ? 'map' : 'photo';
     } catch (e) {
-      return 'map';
+      return 'photo';
     }
   }
 
@@ -117,7 +118,7 @@ window.tauchplaetzeMap = (function () {
     try {
       localStorage.setItem(storageKey, name);
     } catch (e) {
-      // Ohne Storage gilt beim nächsten Laden wieder die Landeskarte.
+      // Ohne Storage gilt beim nächsten Laden wieder das Luftbild.
     }
   }
 
