@@ -36,7 +36,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
             [Photo(HeroPhotoId, MediaSection.Underwater, "Hecht an der Felswand", "Ein Hecht vor der Felswand"), Photo(Guid.NewGuid(), MediaSection.Surroundings, null, "Steg im Abendlicht")],
             HeroPhotoId)));
         app.Forecasts.Add(ForecastSiteId, new SiteForecast(
-            [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]), Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
+            [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]) with { CurrentSpeed = 0.023m, CurrentDirection = 45, CurrentLevel = CurrentLevel.Calm }, Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
             DateTimeOffset.UtcNow,
             Hours(new DateTime(2030, 1, 7))));
         app.DiveSites.Add("alter-name", new DiveSiteLookup.Moved(Slug));
@@ -323,6 +323,23 @@ public class DiveSitePageTests : IClassFixture<WebApp>
             hour == 15 ? 15m : 6m,
             hour == 15 ? 28m : 10m,
             220))];
+
+    [Fact]
+    public async Task Die_Stroemung_erscheint_als_Kachel_mit_Einstufung_Geschwindigkeit_und_Richtung()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/fr/sites-de-plongee/" + WithForecast, TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains("Courant", text);
+        Assert.Contains("calme", text);
+        Assert.Contains("2 cm/s vers le nord-est · 5–30 m", text);
+        Assert.Contains("rotate(45deg)", html);
+    }
 
     private static ForecastDay Day(int october, decimal? index, ReasonCode[] reasons) => new(
         new DateOnly(2026, 10, october), index is null ? (byte)1 : (byte)3, index, index is null ? null : ProfileSource.Model3d,

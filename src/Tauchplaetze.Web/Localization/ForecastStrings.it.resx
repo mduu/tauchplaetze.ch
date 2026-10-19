@@ -106,4 +106,17 @@
   <data name="Visibility_SatelliteShore" xml:space="preserve"><value>Satellite del {0}: circa {1} m al largo, circa {2} m vicino alla riva</value></data>
   <data name="Reason_ClarityStale" xml:space="preserve"><value>immagine satellitare datata</value></data>
   <data name="Visibility_Sentinel2Shore" xml:space="preserve"><value>Satellite (Sentinel-2) del {0}: circa {1} m vicino alla riva</value></data>
+  <data name="Tile_Current" xml:space="preserve"><value>Corrente</value></data>
+  <data name="Current_Calm" xml:space="preserve"><value>calma</value></data>
+  <data name="Current_Noticeable" xml:space="preserve"><value>percepibile</value></data>
+  <data name="Current_Strong" xml:space="preserve"><value>forte</value></data>
+  <data name="Current_Detail" xml:space="preserve"><value>{0} cm/s verso {1} · 5–30 m</value></data>
+  <data name="Compass_N" xml:space="preserve"><value>nord</value></data>
+  <data name="Compass_NE" xml:space="preserve"><value>nord-est</value></data>
+  <data name="Compass_E" xml:space="preserve"><value>est</value></data>
+  <data name="Compass_SE" xml:space="preserve"><value>sud-est</value></data>
+  <data name="Compass_S" xml:space="preserve"><value>sud</value></data>
+  <data name="Compass_SW" xml:space="preserve"><value>sud-ovest</value></data>
+  <data name="Compass_W" xml:space="preserve"><value>ovest</value></data>
+  <data name="Compass_NW" xml:space="preserve"><value>nord-ovest</value></data>
 </root>

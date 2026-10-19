@@ -10,6 +10,14 @@ internal static class ForecastFormat
 
     public static string Meters(decimal value) => Math.Round(value).ToString("0", CultureInfo.CurrentCulture);
 
+    /// <summary>Geschwindigkeit in m/s als ganze cm/s, mindestens «&lt; 1» für sehr schwache Strömung.</summary>
+    public static string CentimetresPerSecond(decimal metresPerSecond) =>
+        metresPerSecond * 100 < 0.5m ? "< 1" : Math.Round(metresPerSecond * 100).ToString("0", CultureInfo.CurrentCulture);
+
+    /// <summary>Eine der acht Himmelsrichtungen (N, NE, E, SE, S, SW, W, NW) zur Richtung in Grad.</summary>
+    public static string Compass(int degrees) =>
+        new[] { "N", "NE", "E", "SE", "S", "SW", "W", "NW" }[(int)Math.Round(((degrees % 360) + 360) % 360 / 45.0) % 8];
+
     public static string Date(DateOnly date) => date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 
     public static string Weekday(DateOnly date) => CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedDayName(date.DayOfWeek).TrimEnd('.');

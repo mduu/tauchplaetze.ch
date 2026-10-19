@@ -106,4 +106,17 @@
   <data name="Visibility_SatelliteShore" xml:space="preserve"><value>Satellit vom {0}: ca. {1} m in der Seemitte, in Ufernähe ca. {2} m</value></data>
   <data name="Reason_ClarityStale" xml:space="preserve"><value>Satellitenbild älter</value></data>
   <data name="Visibility_Sentinel2Shore" xml:space="preserve"><value>Satellit (Sentinel-2) vom {0}: ca. {1} m in Ufernähe</value></data>
+  <data name="Tile_Current" xml:space="preserve"><value>Strömung</value></data>
+  <data name="Current_Calm" xml:space="preserve"><value>ruhig</value></data>
+  <data name="Current_Noticeable" xml:space="preserve"><value>spürbar</value></data>
+  <data name="Current_Strong" xml:space="preserve"><value>stark</value></data>
+  <data name="Current_Detail" xml:space="preserve"><value>{0} cm/s nach {1} · 5–30 m</value></data>
+  <data name="Compass_N" xml:space="preserve"><value>Norden</value></data>
+  <data name="Compass_NE" xml:space="preserve"><value>Nordosten</value></data>
+  <data name="Compass_E" xml:space="preserve"><value>Osten</value></data>
+  <data name="Compass_SE" xml:space="preserve"><value>Südosten</value></data>
+  <data name="Compass_S" xml:space="preserve"><value>Süden</value></data>
+  <data name="Compass_SW" xml:space="preserve"><value>Südwesten</value></data>
+  <data name="Compass_W" xml:space="preserve"><value>Westen</value></data>
+  <data name="Compass_NW" xml:space="preserve"><value>Nordwesten</value></data>
 </root>

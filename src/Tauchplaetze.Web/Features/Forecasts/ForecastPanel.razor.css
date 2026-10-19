@@ -214,3 +214,14 @@
 .weather-source a {
     color: inherit;
 }
+
+.current-arrow {
+    margin-right: 6px;
+    vertical-align: -2px;
+    color: var(--color-primary);
+}
+
+[data-current="Strong"] .current-arrow,
+[data-current="Strong"] .stat-value {
+    color: var(--color-signal);
+}
