@@ -9,7 +9,7 @@
                 var legendId = $"rating-legend-{scale.ToLowerInvariant()}";
                 <li class="rating" data-rating="@scale">
                     <span class="rating-name">@L[$"Rating_{scale}"]</span>
-                    <div class="rating-scale" data-kind="@(isLevel ? "level" : "quality")" role="img" aria-label="@L["Rating_Value", value]">
+                    <div class="rating-scale" data-kind="@(isLevel ? "level" : "quality")" data-value="@value" role="img" aria-label="@L["Rating_Value", value]">
                         @for (var step = 1; step <= 5; step++)
                         {
                             <span class="rating-step" data-on="@(step <= value ? "true" : "false")"></span>
@@ -24,7 +24,7 @@
                         <ol>
                             @for (var step = 1; step <= 5; step++)
                             {
-                                <li aria-current="@(step == value ? "true" : null)">
+                                <li aria-current="@(step == value ? "true" : null)" data-step="@step">
                                     <span class="rating-legend-number">@step</span>
                                     <span><strong>@L[$"Rating_{scale}_{step}"]</strong> · @L[$"Rating_{scale}_{step}_Text"]</span>
                                 </li>
@@ -41,5 +41,5 @@
     public SiteRatings? Ratings { get; set; }
 
     private IEnumerable<(string Scale, byte Value, bool IsLevel)> Rated =>
-        (Ratings?.Rated ?? []).Select(r => (r.Scale.ToString(), r.Value, r.IsLevel));
+        (Ratings?.Rated ?? []).Select(r => (r.Scale.ToString(), r.Value, r.Scale == RatingScale.Difficulty));
 }

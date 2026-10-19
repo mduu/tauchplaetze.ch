@@ -35,6 +35,9 @@
   --color-lake-hypolimnion: #0B272A;
   --color-rock: #05161A;
   --color-wood: #B88A5A;
+  --color-difficulty-easy: var(--color-primary);
+  --color-difficulty-medium: var(--color-sun);
+  --color-difficulty-hard: var(--color-signal);
 
   --font-display: "Bricolage Grotesque", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;

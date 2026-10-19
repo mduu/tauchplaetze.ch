@@ -57,7 +57,30 @@
 }
 
 .rating-scale[data-kind="level"] .rating-step[data-on="true"] {
-    background: var(--color-signal);
+    background: var(--color-difficulty-easy);
+}
+
+.rating-scale[data-kind="level"][data-value="3"] .rating-step[data-on="true"] {
+    background: var(--color-difficulty-medium);
+}
+
+.rating-scale[data-kind="level"][data-value="4"] .rating-step[data-on="true"],
+.rating-scale[data-kind="level"][data-value="5"] .rating-step[data-on="true"] {
+    background: var(--color-difficulty-hard);
+}
+
+.rating[data-rating="Difficulty"] .rating-legend li[data-step="1"] .rating-legend-number,
+.rating[data-rating="Difficulty"] .rating-legend li[data-step="2"] .rating-legend-number {
+    color: var(--color-difficulty-easy);
+}
+
+.rating[data-rating="Difficulty"] .rating-legend li[data-step="3"] .rating-legend-number {
+    color: var(--color-difficulty-medium);
+}
+
+.rating[data-rating="Difficulty"] .rating-legend li[data-step="4"] .rating-legend-number,
+.rating[data-rating="Difficulty"] .rating-legend li[data-step="5"] .rating-legend-number {
+    color: var(--color-difficulty-hard);
 }
 
 .rating-value {
