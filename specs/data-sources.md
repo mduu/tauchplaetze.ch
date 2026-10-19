@@ -53,7 +53,8 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
 
 ### Eigenheiten (aus dem Spike)
 
-- Alplakes ist langsam: 5–16 s pro Call, `mitgcm` bis 30 s. Timeout 60 s, bis 4 Retries.
+- Alplakes ist langsam: 5–16 s pro Call, `mitgcm` bis 30 s und mehr. Timeout 60 s pro Versuch, 240 s total, bis 4 Retries. Die Service Defaults legen um jeden HttpClient einen Standard-Handler mit 30 s total; für die Clients der Quellen ersetzt ihn der eigene Handler (`ForecastsModule`). Vorher brachen Calls von `mitgcm` am Zugersee nach 30 s ab (Lauf vom 19.10.2026, `PartiallySucceeded`).
+- Eine Antwort, die der Parser nicht lesen kann, ist ein gescheiterter Call (Status im Lauf), ihr Body liegt trotzdem in den Rohdaten. Der Lauf rechnet weiter.
 - Das 3D-Modell reicht heute plus 3 Tage. Es endet am Abend des dritten Tages.
 - **Den Zeitraum aus der Antwort von `depthtime` lesen, nicht aus den Metadaten.** `/simulations/metadata` und `/simulations/metadata/{model}/{lake}` nannten am selben Tag verschiedene Enddaten.
 - Die Strömung (`u`, `v`, m/s) ist in der Antwort enthalten. Bis 19.10.2026 waren alle Werte `null`. Unser Beispiel-Request hat bei Eawag einen Fehler mit bestimmten Randbedingungen aufgedeckt, seit dem Fix liefert er Werte (Riff Williams 19.10.2026: alle 204 Werte gesetzt, höchstens 0.02 m/s). Wir nutzen sie noch nicht. Kandidat: Strömung am Platz anzeigen.
