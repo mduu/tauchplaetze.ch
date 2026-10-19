@@ -30,7 +30,7 @@ flowchart LR
 |---|---|
 | Laufzeit | .NET 10 (LTS) |
 | Web | ASP.NET Core, Blazor Web App |
-| Render-Modi | Static SSR (öffentlich), Interactive Server (Admin) – ADR-001 |
+| Render-Modi | Static SSR (öffentlich), Interactive Server (Moderation, Plattform, Bearbeiten-Modus) – ADR-001 |
 | UI öffentlich | eigenes CSS mit Design Tokens (`design-system.md`), CSS Isolation, kein Komponenten-Framework |
 | UI Admin | MudBlazor mit dunklem Theme aus denselben Tokens |
 | Karten | Leaflet über schlanken JS-Interop bzw. statisches Einbinden |
@@ -91,7 +91,7 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 | `DiveSites` | Queries `GetDiveSites`, `GetDiveSite` (mit Weiterleitung bei altem Slug), `GetDiveSitesNearby`, `ResolveSlug`, `GetPublicRevisions`, `ComparePublicRevisions` | Seiten Verzeichnis, Tauchplatz, Karte |
 | `WaterBodies` | Command `SeedWaterBodies`; Queries `GetWaterBodies`, `GetWaterBody`, `GetWaterBodyConditions` | Gewässerseite, Gewässer-Übersicht |
 | `Forecasts` | Commands `RunForecast`, `RecalculateForecast` (später); Queries `GetSiteForecast`, `GetBestSites`, `GetForecastStatus`; Quellen `ForecastSources` mit `SourceRecorder` (Rohdaten, Status pro Call); Rechenkern `DiveIndexCalculator`, `ThermoclineDetector`, `DataLevelRule`; Clients `AlplakesClient`, `OpenMeteoClient`, `SwissMetNetClient`, `HydroClient` | Startseite «Wo tauchen?», `ForecastWorker` (BackgroundService, ruft `RunForecast`) |
-| `Editorial` | Commands `ImportDiveSites`, `ProposeDiveSite`, `ProposeChange`, `WithdrawRevision`, `ApproveRevision`, `RejectRevision`, `RedactRevision`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`; Queries `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetPendingRevisions`, `GetRevisions`, `CompareRevisions`, `GetMyProposals`; Speicher der Versionen in Blob Storage (`IRevisionStore`) | CMS unter `/admin` für Mitwirkende, Moderatoren und Admins |
+| `Editorial` | Commands `ImportDiveSites`, `ProposeDiveSite`, `ProposeChange`, `WithdrawRevision`, `ApproveRevision`, `RejectRevision`, `RedactRevision`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`; Queries `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetPendingRevisions`, `GetRevisions`, `CompareRevisions`, `GetMyProposals`; Speicher der Versionen in Blob Storage (`IRevisionStore`) | Bearbeiten-Modus auf der Website, «Meine Vorschläge» im Profil, Moderation unter `/admin`, Konten und Prognose unter `/platform` |
 | `Media` | Queries `GetMediaVariant`; Bildverarbeitung | Endpunkt für Bildauslieferung (falls nicht direkt aus Blob) |
 | `Accounts` | Identity-Store, Commands `Register`, `ConfirmEmail`, `UpdateProfile`, `AssignRole`, `BlockAccount`, `DeleteAccount`, `EnsureAdmins`; Query `GetPersonalData` | Login, Registrierung, Passkeys, Profil, «Meine Daten» mit Download |
 | `Reports` (Phase 1) | Commands `SubmitReport`, `HideReport`; Queries `GetReports` | Meldeformular, Admin-Liste |
@@ -190,7 +190,8 @@ Logik, die mehrere Handler eines Slice brauchen, liegt als `internal` Klasse im 
 | Öffentliche Seiten | Static SSR, Enhanced Navigation, Streaming Rendering | SEO, schnell, cachebar, keine Verbindung pro Besucher |
 | Tagesauswahl, Filter | Links mit Query-Parametern (`?date=2026-10-18`) | bleibt SSR, jede Variante ist cachebar und teilbar |
 | Karten, Galerie | kleines JavaScript-Modul, progressiv | kein WASM nötig |
-| CMS `/admin` | Interactive Server | reiche Editoren ohne JS-Framework. Auch Mitwirkende arbeiten hier. Es bleiben wenige gleichzeitige Verbindungen. |
+| Moderation `/admin`, Plattform `/platform` | Interactive Server mit MudBlazor | reiche Editoren ohne JS-Framework, wenige gleichzeitige Verbindungen |
+| Bearbeiten-Modus `/{lang}/tauchplaetze/{slug}/bearbeiten` | Interactive Server im Layout der Website, ohne MudBlazor (Formular-Bausteine `Components/Forms`) | Mitwirkende bleiben im Design der Website. Nur hinter Anmeldung, also wenige Verbindungen. Links laden die ganze Seite (`site.js`). |
 | Login | Static SSR mit Formular | Identity-Standard |
 
 Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, kommt ein Projekt `Tauchplaetze.Web.Client` dazu.

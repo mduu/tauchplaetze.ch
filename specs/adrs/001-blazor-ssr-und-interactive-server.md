@@ -72,3 +72,7 @@ Wir entscheiden uns für **eine Blazor Web App mit gemischten Render-Modi**:
 ## Nachtrag 17.10.2026
 
 Seit ADR-008 arbeiten auch Mitwirkende im CMS (Interactive Server). Es bleiben wenige gleichzeitige Verbindungen. Steigt die Zahl stark, prüfen wir das Formular für Vorschläge als Static SSR.
+
+## Nachtrag 19.10.2026
+
+Mitwirkende bearbeiten einen Platz im Bearbeiten-Modus der Website (`/{lang}/tauchplaetze/{slug}/bearbeiten`). Diese eine Seite ist Interactive Server, aber im Layout der Website und ohne MudBlazor. Sie liegt hinter der Anmeldung: Besucher bekommen weiter keine Verbindung. Die Regel «kein Interactive Server auf öffentlichen Seiten» gilt für alle Seiten ohne Anmeldung. Moderation (`/admin`) und Plattform (`/platform`) bleiben Interactive Server mit MudBlazor.

@@ -1,19 +1,32 @@
 # Redaktion (CMS)
 
-Der Redaktionsbereich liegt unter `/admin`. Er ist ein Teil der Blazor Web App mit dem Render-Modus **Interactive Server** (ADR-001). Nur Pfade unter `/admin` sind interaktiv. Die öffentlichen Seiten bleiben Static SSR.
+Es gibt drei Bereiche (Entscheid Marc, 19.10.2026: «reine Admin-Features auf /platform», wie Feldnah und Bau-Ticker):
 
-Die Oberfläche nutzt **MudBlazor** im dunklen Theme aus den Design Tokens. Seiten:
+| Bereich | Wer | Darstellung |
+|---|---|---|
+| **Website** mit Bearbeiten-Modus (`/{lang}/tauchplaetze/{slug}/bearbeiten`) und «Meine Vorschläge» im Profil | alle Angemeldeten | Layout und Design der Website. Nur die Bearbeiten-Seite ist interaktiv (ADR-001, Nachtrag 19.10.2026). |
+| **Moderation** `/admin` | Moderatoren und Admins | MudBlazor, Seitenleiste |
+| **Plattform** `/platform` | nur Admins | MudBlazor, Navigation oben, Kopf mit orangem Strich |
+
+Mitwirkende sehen die Moderation nicht. Bis Einstiege, Skizze und Fotos im Bearbeiten-Modus stehen (Etappen 2 und 3), bleibt ihnen nur der Editor eines Platzes (`/admin/plaetze/{id}`), der neue Platz (`/admin/plaetze/neu`) und die Versionen eines Platzes offen. Die Navigation der Moderation zeigt ihnen dort nur «Meine Vorschläge».
 
 | Pfad | Inhalt | Wer |
 |---|---|---|
-| `/admin` | Übersicht: Plätze, offene Vorschläge, letzter Prognose-Lauf | alle Angemeldeten |
-| `/admin/plaetze` | Liste mit Suche, Status, Ausbaustufe, Datenstufe, offenen Vorschlägen | alle Angemeldeten |
+| `/{lang}/tauchplaetze/{slug}/bearbeiten` | Bearbeiten-Modus: Name und Ort, Bewertungen mit Legende, Texte pro Sprache, Kommentar (`ux.md`, «Bearbeiten-Modus») | alle Angemeldeten |
+| `/{lang}/account/proposals` | Meine Vorschläge | alle Angemeldeten |
+| `/admin` | Übersicht: Plätze, offene Vorschläge | Moderatoren, Admins |
+| `/admin/plaetze` | Liste mit Suche, Status, Ausbaustufe, Datenstufe, offenen Vorschlägen | Moderatoren, Admins |
 | `/admin/plaetze/neu` | neuer Platz: Name, Gewässer, Koordinate (Klick in die Karte) | alle Angemeldeten |
 | `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten (mit «Auch bekannt als», Namen mit Komma getrennt), Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station) | alle Angemeldeten, Tab «nur Moderation» für Moderatoren |
 | `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | alle Angemeldeten, Wiederherstellen für Moderatoren |
 | `/admin/vorschlaege` | offene Vorschläge mit Vergleich zur Basis, Freigeben, Ablehnen mit Begründung | Moderatoren, Admins |
-| `/admin/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten» | Moderatoren; starten nur Admins |
-| `/admin/konten` | Konten, Rollen, Sperre | Moderatoren sperren Konten ausser Admin-Konten; Admins sehen zusätzlich die E-Mail-Adressen, vergeben Rollen und sperren auch Admins |
+| `/admin/konten` | Konten sperren (ohne E-Mail-Adressen und Rollen) | Moderatoren; Admins nutzen `/platform/konten` |
+| `/platform` | Übersicht: Konten (davon gesperrt), offene Vorschläge, letzter Prognose-Lauf, Mail-Queue | Admins |
+| `/platform/konten` | Konten, Rollen, Sperre, E-Mail-Adressen | Admins |
+| `/platform/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten» | Admins |
+| `/platform/queues` | Mail-Queue mit Dead-Letter | Admins |
+
+Alte Adressen leiten weiter (301): `/admin/prognose` → `/platform/prognose`, `/admin/meine-vorschlaege` → `/{lang}/account/proposals`. Links zwischen Website, Moderation und Plattform laden die ganze Seite, weil die Bereiche verschiedene Render-Modi und Skripte haben.
 
 Ohne Anmeldung führt `/admin` zur Anmeldung. Fehlt die Rolle, antwortet der Server mit 403.
 
@@ -130,9 +143,9 @@ Konto-Mails (Bestätigung, Passwort) und das Kontaktformular nutzen dasselbe Lay
 
 ### Was Mitwirkende sehen
 
-- **Nach dem Speichern:** «Danke! Dein Vorschlag ist bei der Moderation. Du bekommst eine Mail, sobald er freigegeben oder abgelehnt ist.»
-- **Meine Vorschläge** (`/admin/meine-vorschlaege`, für alle Angemeldeten): eigene Vorschläge, neuste zuerst, mit Platz, Version, Datum, Status (wartet, freigegeben, abgelehnt mit Begründung, zurückgezogen), eigenem Kommentar und Link auf Platz und Versionen. Wartende lassen sich zurückziehen. Eigene Änderungen, die Moderatoren selbst freigegeben haben, erscheinen nicht. Query `GetMyProposals`.
-- **Beim Öffnen eines Platzes:** Hat die Person dort einen offenen Vorschlag, zeigt das CMS «Du hast hier einen offenen Vorschlag vom {Datum}» mit Link auf «Meine Vorschläge».
+- **Nach dem Speichern:** «Danke! Dein Vorschlag ist bei der Moderation. Du bekommst eine Mail, sobald er freigegeben oder abgelehnt ist.» Im Bearbeiten-Modus führt das Speichern zurück auf die Platzseite, die das als Banner zeigt.
+- **Meine Vorschläge** (`/{lang}/account/proposals`, im Profil der Website, für alle Angemeldeten): eigene Vorschläge, neuste zuerst, mit Platz, Version, Datum, Status (wartet, freigegeben, abgelehnt mit Begründung, zurückgezogen), eigenem Kommentar und Link auf Platz und Versionen. Wartende lassen sich zurückziehen. Eigene Änderungen, die Moderatoren selbst freigegeben haben, erscheinen nicht. Query `GetMyProposals`.
+- **Beim Öffnen eines Platzes** (Bearbeiten-Modus und Editor): Hat die Person dort einen offenen Vorschlag, erscheint «Du hast hier einen offenen Vorschlag vom {Datum}» mit Link auf «Meine Vorschläge».
 
 ### Was Mitwirkende dürfen
 
@@ -216,7 +229,7 @@ Tab «Fotos» beim Bearbeiten eines Platzes (ADR-009).
 
 ### Plattform (Admin)
 
-- `/platform/queues`, nur Admin, im CMS unter «Plattform».
+- `/platform/queues`, nur Admin, Navigation der Plattform.
 - Zähler: Mails in der Queue, Mails in der Dead-Letter-Queue (ungefähr).
 - Liste der Dead-Letter-Mails (höchstens 32, nur diese einzeln bearbeitbar): Betreff, Empfänger, Vorlage, Versuche, letzter Fehler, Zeit, Mail-Id. Unlesbare Nachrichten erscheinen als «Unlesbare Nachricht». Dead-Letter-Mails löscht Azure nach 30 Tagen (Datenschutz).
 - Hinweis: Konto-Mails tragen Links mit Ablauf. Erneut gesendet, können sie ungültig sein.

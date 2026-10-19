@@ -189,7 +189,21 @@ body {
 }
 ```
 
+## Formulare (Bearbeiten-Modus)
+
+Bausteine in `Components/Forms`, nur Tokens, kein MudBlazor:
+
+| Baustein | Aussehen |
+|---|---|
+| `FormText`, `FormTextArea`, `FormNumber`, `FormSelect` | Label in Mono, Grossbuchstaben, `--color-text-muted`; Feld mit `--color-surface`, Rand `--color-border`, Radius `--radius-tile-sm`, mindestens 44 px hoch; Fokus mit Rand in `--color-primary` |
+| `FormChip` | Eigenschaft als Pille; an: Fläche `--color-primary`, Text `--color-bg` |
+| `LevelPicker` | Bewertung als Kachel: Name, «i» mit Legende (wie auf der Platzseite), Knöpfe «keine» und 1 bis 5. Qualität füllt die Knöpfe bis zum Wert in `--color-primary`, Stufe (Schwierigkeit, Strömung) in `--color-signal`. Darunter der Kurztext. |
+| Leiste des Bearbeiten-Modus | klebt oben, `--color-surface-raised`, unterer Rand `--color-signal`, «Bearbeitungsmodus» in `--color-signal` |
+
 ## Admin (MudBlazor)
+
+Moderation (`/admin`, Seitenleiste) und Plattform (`/platform`, Navigation oben, Kopf mit Strich in `--color-signal`) nutzen dasselbe Theme.
+
 
 Das MudBlazor-Theme übernimmt dieselben Tokens: `Background` = `--color-bg`, `Surface` = `--color-surface`, `Primary` = `--color-primary`, `Secondary` = `--color-signal`, `TextPrimary` = `--color-text`. Dark Mode fest eingestellt.
 

@@ -19,17 +19,19 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 /{lang}/tauchplaetze            Verzeichnis (Liste + Karte, Filter)
 /{lang}/tauchplaetze/{slug}     Tauchplatzseite
 /{lang}/tauchplaetze/{slug}/versionen   Versionen des Platzes (noindex)
+/{lang}/tauchplaetze/{slug}/bearbeiten  Bearbeiten-Modus (angemeldet, noindex)
 /{lang}/gewaesser               Gewässer-Übersicht (Seen und Flüsse)
 /{lang}/gewaesser/{slug}        Gewässerseite
 /{lang}/ueber                   Über, Datenquellen, Impressum, Datenschutz
 /{lang}/site/{slug}             kurzer Link auf einen Platz (Mails, CMS), 301 auf den Pfad der Sprache
-/admin/…                        Redaktion (ohne Sprachpräfix)
-/platform/queues                Plattform: Mail-Queue (nur Admin, ohne Sprachpräfix)
+/{lang}/account/…               Konto: Profil, Meine Vorschläge, Meine Daten, Konto löschen (noindex)
+/admin/…                        Moderation (Moderatoren und Admins, ohne Sprachpräfix)
+/platform/…                     Plattform: Konten, Prognose, Mail-Queue (nur Admins, ohne Sprachpräfix)
 ```
 
 Pfadsegmente pro Sprache: siehe `i18n.md`.
 
-Hauptnavigation: Prognose · Tauchplätze · Gewässer · Buddy-Gruppen. Rechts: Konto (angemeldet als Aufklappmenü mit Profil, Redaktion und Abmelden, sonst «Anmelden») und Sprachwahl als Aufklappmenü (Knopf mit dem Kürzel der aktuellen Sprache, darunter Kürzel und Name jeder Sprache). Das Menü ist ein `<details>` und geht ohne JavaScript; mit JavaScript schliesst es bei Klick daneben und mit Escape. Bis 1000 px Breite stehen Logo, Konto und Sprache in der ersten Zeile und die Navigation darunter (auf dem Handy seitlich scrollbar); bis 720 px zeigt das Konto nur das Symbol.
+Hauptnavigation: Prognose · Tauchplätze · Gewässer · Buddy-Gruppen. Rechts: Konto (angemeldet als Aufklappmenü mit Profil, Meine Vorschläge, für Moderatoren «Moderation», für Admins «Plattform» und Abmelden, sonst «Anmelden») und Sprachwahl als Aufklappmenü (Knopf mit dem Kürzel der aktuellen Sprache, darunter Kürzel und Name jeder Sprache). Das Menü ist ein `<details>` und geht ohne JavaScript; mit JavaScript schliesst es bei Klick daneben und mit Escape. Bis 1000 px Breite stehen Logo, Konto und Sprache in der ersten Zeile und die Navigation darunter (auf dem Handy seitlich scrollbar); bis 720 px zeigt das Konto nur das Symbol.
 
 ## Seiten
 
@@ -92,7 +94,25 @@ Mockup: `design/tauchplatz.dc.html`.
 7. **Praktisch:** Koordinaten mit Link auf die Landeskarte, «Hinfahren» mit Routenlinks zu Google Maps und Apple Karten (die meisten navigieren damit zum Platz), Anfahrt und Parkplatz (Text, Bilder), Umgebung (Bewertung, Text, Bilder), Restaurants und Toiletten, nächste Füllstation, Notfall.
 8. **Letzte Meldungen** (Phase 1, falls vorhanden) mit Button «Sicht melden».
 9. Buddy-Block für die Region.
-10. Fuss mit Quellen, «Zuletzt geändert am …», Links «Versionen» und «Platz bearbeiten» (führt zur Anmeldung).
+10. Fuss mit Quellen, «Zuletzt geändert am …», Links «Versionen» und «Platz bearbeiten» (Bearbeiten-Modus; ohne Anmeldung zuerst zur Anmeldung und danach zurück).
+
+Nach dem Speichern im Bearbeiten-Modus zeigt die Platzseite unter dem Hero ein Banner: für Mitwirkende «Danke! Dein Vorschlag ist bei der Moderation …», für Moderatoren «Gespeichert und online.» (`?gespeichert=vorschlag|online`).
+
+### Bearbeiten-Modus
+
+Wer einen Platz ändern will, bleibt im Design der Website (Entscheid Marc, 19.10.2026: «mehr inline, die UX ändert nicht komplett»).
+
+- Pfad `/{lang}/tauchplaetze/{slug}/bearbeiten`, nur angemeldet, `noindex`. Kopf, Fuss, Farben und Kacheln der Website.
+- Leiste oben, klebt beim Scrollen: «Bearbeitungsmodus · Deine Änderungen gehen an die Moderation» (Moderatoren: «… sind sofort online»), Knöpfe «Abbrechen» und «Vorschlag senden» bzw. «Speichern und freigeben». Unterer Rand in `--color-signal`.
+- Abschnitte in der Reihenfolge der Platzseite:
+  1. **Name und Ort:** Name, «Auch bekannt als», Gemeinde, Kanton. Das Gewässer steht nur zur Info, es ändert die Moderation.
+  2. **Der Platz:** maximale Tiefe, Zugang, Eigenschaften als Chips, die sechs Bewertungen als Stufen 1 bis 5 oder «keine», jede mit dem «i» und der Legende aus `dive-site.md`.
+  3. **Texte:** Tabs DE, EN, FR, IT mit Unter Wasser, Gefahren, Anfahrt, Umgebung, Einrichtungen.
+  4. **Einstiege, Skizze und Fotos:** vorerst ein Link in den Editor (Etappen 2 und 3 holen sie auf die Seite).
+  5. **Zu deiner Änderung:** Kommentar für die Moderation.
+- Hat die Person dort einen offenen Vorschlag, steht oben der Hinweis mit Link auf «Meine Vorschläge».
+- Speichern nutzt `ProposeChange` wie der Editor. Fehler stehen oben, «keine Änderung» als Hinweis. Danach die Platzseite mit Banner.
+- Alle Links laden die ganze Seite, weil die anderen Seiten statisch sind.
 
 Alle Angaben in den Abschnitten 4 bis 7 sind optional (siehe `dive-site.md`). Ein Abschnitt ohne Inhalt fehlt, ausser der Karte in Abschnitt 6. Fehlen die Abschnitte 4 bis 7 ganz, erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
 
@@ -135,13 +155,24 @@ Use-Case: stöbern nach See («Was ist los an meinem See?»). Die Suche nach Eig
 - Alle Plätze des Sees mit Index, sortierbar.
 - Karte mit allen Plätzen.
 
-### Redaktion (Admin)
+### Moderation (`/admin`)
 
-- Eigenes Layout mit Seitenleiste, gleiche dunkle Farbwelt.
+- Nur Moderatoren und Admins. Eigenes Layout mit Seitenleiste, gleiche dunkle Farbwelt (MudBlazor).
+- Navigation: Übersicht, Plätze, Vorschläge, für Moderatoren ohne Admin-Rolle «Konten» (sperren), dazu «Meine Vorschläge» (führt ins Profil der Website) und für Admins «Plattform».
 - Platzliste mit Ausbaustufe als Badge. Schnellerfassung mit Karte.
 - Details in `cms.md`.
-- **Meine Vorschläge** für alle Angemeldeten in der Navigation, dazu der Hinweis auf einen offenen eigenen Vorschlag beim Öffnen eines Platzes (`cms.md`, «Was Mitwirkende sehen»).
-- **Plattform** (nur Admin): im selben Layout, Navigation «Plattform». Zwei Kacheln mit Zählern (in der Queue, Dead-Letter, rot umrandet, sobald nicht leer), Knöpfe «Alle erneut senden» und «Alle löschen», darunter die Dead-Letter-Mails als aufklappbare Liste mit Details und Knöpfen pro Mail. Löschen fragt nach.
+
+### Meine Vorschläge (Profil)
+
+- Im Profil der Website (`/{lang}/account/proposals`), Navigation des Kontos. Static SSR.
+- Pro Vorschlag: Platz (Link auf die Platzseite, wenn öffentlich), Nummer, Status, eingereicht und geprüft am, eigener Kommentar, bei Ablehnung die Begründung in `--color-signal`. Link «Vergleich» auf die Versionen.
+- «Zurückziehen» bei wartenden: ein Formular für die Liste, der Knopf trägt die Version.
+
+### Plattform (`/platform`)
+
+- Nur Admins. MudBlazor im selben Theme, aber Navigation oben (Übersicht, Konten, Prognose, Mail-Queue) und ein oranger Strich unter dem Kopf, damit der Bereich nicht mit der Moderation verwechselt wird. Links «Moderation» und «Zur Website».
+- Übersicht: vier Kacheln (Konten mit Zahl der gesperrten, offene Vorschläge, letzter Prognose-Lauf, Mail-Queue mit Dead-Letter).
+- **Mail-Queue:** Zwei Kacheln mit Zählern (in der Queue, Dead-Letter, rot umrandet, sobald nicht leer), Knöpfe «Alle erneut senden» und «Alle löschen», darunter die Dead-Letter-Mails als aufklappbare Liste mit Details und Knöpfen pro Mail. Löschen fragt nach.
 
 ## Zustände
 
