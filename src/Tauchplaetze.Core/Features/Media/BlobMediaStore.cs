@@ -39,16 +39,31 @@ internal class BlobMediaStore(BlobServiceClient blobs, IOptions<MediaOptions> op
 
     public async Task Publish(Guid mediaId, IReadOnlyList<string> names, CancellationToken ct)
     {
-        await EnsureContainers(ct);
-        var target = blobs.GetBlobContainerClient(PublicContainer);
         foreach (var name in names)
         {
             var content = await LoadPending(mediaId, name, ct) ?? throw new InvalidOperationException($"Datei {mediaId}/{name} fehlt.");
-            await target.GetBlobClient($"{mediaId}/{name}").UploadAsync(
-                new BinaryData(content),
-                new BlobUploadOptions { HttpHeaders = new BlobHttpHeaders { ContentType = MediaFiles.ContentTypeOf(name), CacheControl = CacheControl } },
-                ct);
+            await SavePublic(mediaId, name, content, ct);
         }
+    }
+
+    public async Task<byte[]?> LoadPublic(Guid mediaId, string name, CancellationToken ct)
+    {
+        var blob = blobs.GetBlobContainerClient(PublicContainer).GetBlobClient($"{mediaId}/{name}");
+        if (!await blob.ExistsAsync(ct))
+        {
+            return null;
+        }
+
+        return (await blob.DownloadContentAsync(ct)).Value.Content.ToArray();
+    }
+
+    public async Task SavePublic(Guid mediaId, string name, byte[] content, CancellationToken ct)
+    {
+        await EnsureContainers(ct);
+        await blobs.GetBlobContainerClient(PublicContainer).GetBlobClient($"{mediaId}/{name}").UploadAsync(
+            new BinaryData(content),
+            new BlobUploadOptions { HttpHeaders = new BlobHttpHeaders { ContentType = MediaFiles.ContentTypeOf(name), CacheControl = CacheControl } },
+            ct);
     }
 
     public Task DeletePending(Guid mediaId, CancellationToken ct) => DeleteAll(PendingContainer, mediaId, ct);

@@ -15,6 +15,12 @@ internal interface IMediaStore
     /// <summary>Kopiert Dateien in den öffentlichen Container. Ein zweiter Aufruf überschreibt sie mit demselben Inhalt.</summary>
     Task Publish(Guid mediaId, IReadOnlyList<string> names, CancellationToken ct);
 
+    /// <summary>Lädt eine öffentliche Datei. <c>null</c>, wenn es sie nicht gibt.</summary>
+    Task<byte[]?> LoadPublic(Guid mediaId, string name, CancellationToken ct);
+
+    /// <summary>Speichert eine Datei direkt im öffentlichen Container, z.B. beim Import eines Inhaltspakets.</summary>
+    Task SavePublic(Guid mediaId, string name, byte[] content, CancellationToken ct);
+
     /// <summary>Löscht alle privaten Dateien eines Fotos, auch das Original.</summary>
     Task DeletePending(Guid mediaId, CancellationToken ct);
 

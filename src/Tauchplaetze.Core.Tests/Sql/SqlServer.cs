@@ -77,6 +77,7 @@ public sealed class SqlServer : IAsyncLifetime
             [$"ConnectionStrings:{CoreRegistration.BlobsConnectionName}"] = "UseDevelopmentStorage=true",
             ["Accounts:RegistrationOpen"] = "true",
             ["PublicSite:BaseUri"] = "https://tauchplaetze.test",
+            ["Content:ImportEnabled"] = "true",
         });
         builder.AddTauchplaetzeCore();
         builder.Services.Replace(ServiceDescriptor.Singleton<IRevisionStore>(Revisions));

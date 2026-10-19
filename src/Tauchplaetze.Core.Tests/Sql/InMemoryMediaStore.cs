@@ -28,6 +28,15 @@ internal sealed class InMemoryMediaStore : IMediaStore
         return Task.CompletedTask;
     }
 
+    public Task<byte[]?> LoadPublic(Guid mediaId, string name, CancellationToken ct) =>
+        Task.FromResult(Public.GetValueOrDefault($"{mediaId}/{name}"));
+
+    public Task SavePublic(Guid mediaId, string name, byte[] content, CancellationToken ct)
+    {
+        Public[$"{mediaId}/{name}"] = content;
+        return Task.CompletedTask;
+    }
+
     public Task DeletePending(Guid mediaId, CancellationToken ct)
     {
         foreach (var key in Pending.Keys.Where(k => k.StartsWith($"{mediaId}/", StringComparison.Ordinal)))

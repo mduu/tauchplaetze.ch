@@ -10,13 +10,13 @@ namespace Tauchplaetze.Core.Features.Editorial;
 /// <summary>Schreibt Versionen: zuerst den Inhalt in Blob Storage, dann die Row (ADR-008). Speichert nicht selbst. Das tut der Command.</summary>
 internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore store, MediaPublisher media, TimeProvider time)
 {
-    /// <summary>Ein neuer Platz als Entwurf, mit leerem Inhalt in den Tabellen bis zur Freigabe.</summary>
-    public DiveSite NewDraft(DiveSiteContent content, string editorId)
+    /// <summary>Ein neuer Platz als Entwurf, mit leerem Inhalt in den Tabellen bis zur Freigabe. <paramref name="id"/> nur beim Import eines Inhaltspakets.</summary>
+    public DiveSite NewDraft(DiveSiteContent content, string editorId, Guid? id = null)
     {
         var now = time.GetUtcNow();
         var site = new DiveSite
         {
-            Id = Guid.CreateVersion7(now),
+            Id = id ?? Guid.CreateVersion7(now),
             Slug = content.Slug,
             Name = content.Name.Trim(),
             WaterBodyId = content.WaterBodyId,
