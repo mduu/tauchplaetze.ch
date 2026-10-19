@@ -321,4 +321,23 @@
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Content:SourceBaseUri oder Content:ExportKey fehlt.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>Prod hat das Paket nicht geliefert. Prüfe Adresse und Schlüssel.</value></data>
   <data name="Platform_NoData" xml:space="preserve"><value>Keine Daten. Entweder fehlt die Berechtigung, oder dein Konto wurde neu angelegt. Melde dich ab und wieder an.</value></data>
+  <data name="Forecast_NextRun" xml:space="preserve"><value>Nächster Lauf</value></data>
+  <data name="Forecast_Week" xml:space="preserve"><value>Letzte 7 Tage</value></data>
+  <data name="Forecast_WeekValue" xml:space="preserve"><value>{0} Läufe</value></data>
+  <data name="Forecast_WeekDetail" xml:space="preserve"><value>{0} erfolgreich · {1} Teilerfolg · {2} fehlgeschlagen</value></data>
+  <data name="Forecast_AverageDuration" xml:space="preserve"><value>Mittlere Dauer</value></data>
+  <data name="Forecast_Column_Start" xml:space="preserve"><value>Start</value></data>
+  <data name="Forecast_Column_Duration" xml:space="preserve"><value>Dauer</value></data>
+  <data name="Forecast_Column_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Forecast_Column_Calls" xml:space="preserve"><value>Calls</value></data>
+  <data name="Forecast_Column_Errors" xml:space="preserve"><value>Fehler</value></data>
+  <data name="Forecast_OnlyErrors" xml:space="preserve"><value>Nur Läufe mit Fehlern</value></data>
+  <data name="Forecast_Progress" xml:space="preserve"><value>{0} von {1} Plätzen, {2} Calls bisher</value></data>
+  <data name="Forecast_Failure_Http" xml:space="preserve"><value>HTTP {0}</value></data>
+  <data name="Forecast_Failure_Timeout" xml:space="preserve"><value>Timeout</value></data>
+  <data name="Forecast_Failure_CircuitOpen" xml:space="preserve"><value>Circuit Breaker offen</value></data>
+  <data name="Forecast_Failure_Parse" xml:space="preserve"><value>Antwort unlesbar</value></data>
+  <data name="Forecast_Failure_Network" xml:space="preserve"><value>Netzwerk</value></data>
+  <data name="Forecast_Keys" xml:space="preserve"><value>Betroffen</value></data>
+  <data name="Forecast_Messages" xml:space="preserve"><value>Meldungen</value></data>
 </root>

@@ -1,5 +1,6 @@
 using MudBlazor.Services;
 using Tauchplaetze.Core;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Web.Components;
 using Tauchplaetze.Web.CrossCutting.Database;
 using Tauchplaetze.Web.CrossCutting.Localization;
@@ -22,6 +23,7 @@ builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(ForecastSchedule.Section));
 builder.Services.AddHostedService<ForecastWorker>();
+builder.Services.AddHostedService<DischargeWorker>();
 builder.Services.AddHostedService<MediaPurgeWorker>();
 builder.Services.AddHostedService<MailQueueWorker>();
 builder.Services.AddHostedService<DeadLetterMonitorWorker>();

@@ -1,4 +1,4 @@
-using Tauchplaetze.Web.Features.Forecasts;
+using Tauchplaetze.Core.Features.Forecasts;
 
 namespace Tauchplaetze.Web.Tests;
 

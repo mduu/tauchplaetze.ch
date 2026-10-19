@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Tauchplaetze.Core.CrossCutting.UseCases;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Commands;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
 

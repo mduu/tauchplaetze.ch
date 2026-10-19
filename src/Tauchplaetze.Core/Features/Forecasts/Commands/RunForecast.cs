@@ -23,6 +23,7 @@ internal class RunForecastHandler(
     ForecastSources sources,
     IRawDataStore rawData,
     IRunLock runLock,
+    ForecastProgress progress,
     TimeProvider time) : ICommandHandler<RunForecastCommand, RunForecastResult>
 {
     public const string LockName = "forecast";
@@ -55,6 +56,7 @@ internal class RunForecastHandler(
                 .Where(d => d.Status == DiveSiteStatus.Published)
                 .ToListAsync(ct);
 
+            progress.Start(run.Id, sites.Count(s => !s.ForecastDisabled));
             await Forecast(sites, today, run, recorder, ct);
             run.Status = recorder.AnyFailed ? ForecastRunStatus.PartiallySucceeded : ForecastRunStatus.Succeeded;
             return new RunForecastResult(false, run.Id, run.Status, sites.Count);
@@ -66,6 +68,7 @@ internal class RunForecastHandler(
         }
         finally
         {
+            progress.Finish(run.Id);
             run.FinishedAt = time.GetUtcNow();
             run.SourceStatus = recorder.StatusJson;
             await dbContext.SaveChangesAsync(CancellationToken.None);
@@ -102,6 +105,8 @@ internal class RunForecastHandler(
                     site.DataLevel = dayForecast.DataLevel;
                 }
             }
+
+            progress.SiteDone(run.Id, recorder.Count);
         }
     }
 

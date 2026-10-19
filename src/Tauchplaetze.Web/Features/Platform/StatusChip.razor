@@ -1,0 +1,17 @@
+@using Tauchplaetze.Core.Features.Forecasts
+@inject IStringLocalizer<AdminStrings> L
+
+<MudChip T="string" Size="Size.Small" Color="@ColorOf(Status)" Variant="Variant.Text" data-status="@Status">@L[$"RunStatus_{Status}"]</MudChip>
+
+@code {
+    [Parameter, EditorRequired]
+    public ForecastRunStatus Status { get; set; }
+
+    private static Color ColorOf(ForecastRunStatus status) => status switch
+    {
+        ForecastRunStatus.Succeeded => Color.Success,
+        ForecastRunStatus.PartiallySucceeded => Color.Warning,
+        ForecastRunStatus.Failed => Color.Error,
+        _ => Color.Info,
+    };
+}

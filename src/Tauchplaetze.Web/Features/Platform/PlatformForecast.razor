@@ -2,25 +2,19 @@
 @layout PlatformLayout
 @attribute [Authorize(Roles = Roles.Admin)]
 @inherits AdminPage
+@implements IDisposable
 @using Microsoft.AspNetCore.Authorization
 @using Tauchplaetze.Web.Features.Editorial
 @using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Forecasts
 @using Tauchplaetze.Core.Features.Forecasts.Commands
 @using Tauchplaetze.Core.Features.Forecasts.Queries
 @inject IStringLocalizer<AccountStrings> AccountL
 
-<div class="d-flex align-center justify-space-between mb-4">
+<div class="d-flex align-center justify-space-between flex-wrap gap-2 mb-4">
     <MudText Typo="Typo.h4">@L["Forecast_Title"]</MudText>
-    @if (IsAdmin)
-    {
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="RunNow" Disabled="running">@L["Forecast_RunNow"]</MudButton>
-    }
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="RunNow" Disabled="starting">@L["Forecast_RunNow"]</MudButton>
 </div>
-@if (running)
-{
-    <MudAlert Severity="Severity.Info" Class="mb-4">@L["Forecast_Running"]</MudAlert>
-    <MudProgressLinear Indeterminate="true" Class="mb-4" />
-}
 
 @if (error is not null)
 {
@@ -32,43 +26,229 @@
     <MudAlert Severity="Severity.Warning" Class="mb-4">@L["Forecast_Skipped"]</MudAlert>
 }
 
-<MudStack Spacing="3">
-    @foreach (var run in runs)
-    {
-        <MudPaper Outlined="true" Class="pa-4">
-            <MudText Typo="Typo.h6">@SwissClock.DateTime(run.StartedAt) · @L[$"RunStatus_{run.Status}"]</MudText>
-            <MudText Typo="Typo.body2">@L["Forecast_Calls", run.Calls]</MudText>
-            @if (run.Failures.Count > 0)
-            {
-                <MudText Typo="Typo.subtitle2" Class="mt-2">@L["Forecast_Failures"]</MudText>
-                @foreach (var failure in run.Failures)
+@if (overview is null && loading)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+else if (overview is null)
+{
+    <MudAlert Severity="Severity.Warning" data-no-data>@L["Platform_NoData"]</MudAlert>
+}
+else
+{
+    <MudGrid Class="mb-4">
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Outlined="true" Class="pa-4" data-tile="last">
+                <MudText Typo="Typo.overline">@L["Dashboard_LastRun"]</MudText>
+                @if (overview.LastRun is { } last)
                 {
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">@failure</MudText>
+                    <div><StatusChip Status="last.Status" /></div>
+                    <MudText Typo="Typo.body2">@SwissClock.DateTime(last.StartedAt)</MudText>
+                    @if (last.Progress is { } progress)
+                    {
+                        <MudText Typo="Typo.body2" data-progress>@L["Forecast_Progress", progress.SitesDone, progress.Sites, progress.Calls]</MudText>
+                        <MudProgressLinear Value="@(progress.Sites == 0 ? 0 : 100.0 * progress.SitesDone / progress.Sites)" Class="mt-2" />
+                    }
                 }
-            }
-        </MudPaper>
+                else
+                {
+                    <MudText>@L["Dashboard_NoRun"]</MudText>
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Outlined="true" Class="pa-4" data-tile="next">
+                <MudText Typo="Typo.overline">@L["Forecast_NextRun"]</MudText>
+                <MudText Typo="Typo.h6">@SwissClock.DateTime(overview.NextRun)</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Outlined="true" Class="pa-4" data-tile="week">
+                <MudText Typo="Typo.overline">@L["Forecast_Week"]</MudText>
+                <MudText Typo="Typo.h6">@L["Forecast_WeekValue", overview.Week.Total]</MudText>
+                <MudText Typo="Typo.body2">@L["Forecast_WeekDetail", overview.Week.Succeeded, overview.Week.PartiallySucceeded, overview.Week.Failed]</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Outlined="true" Class="pa-4" data-tile="duration">
+                <MudText Typo="Typo.overline">@L["Forecast_AverageDuration"]</MudText>
+                <MudText Typo="Typo.h6">@Duration(overview.AverageDuration)</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <MudSwitch T="bool" Value="onlyWithErrors" ValueChanged="Filter" Color="Color.Primary" Label="@L["Forecast_OnlyErrors"]" Class="mb-2" />
+
+    @if (overview.Runs.Count == 0)
+    {
+        <MudText>@L["Dashboard_NoRun"]</MudText>
     }
-</MudStack>
+    else
+    {
+        <MudTable Items="overview.Runs" Dense="true" Hover="true" Elevation="0" Outlined="true" Breakpoint="Breakpoint.Sm">
+            <HeaderContent>
+                <MudTh>@L["Forecast_Column_Start"]</MudTh>
+                <MudTh>@L["Forecast_Column_Duration"]</MudTh>
+                <MudTh>@L["Forecast_Column_Status"]</MudTh>
+                <MudTh>@L["Forecast_Column_Calls"]</MudTh>
+                <MudTh>@L["Forecast_Column_Errors"]</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="@L["Forecast_Column_Start"]">@SwissClock.DateTime(context.StartedAt)</MudTd>
+                <MudTd DataLabel="@L["Forecast_Column_Duration"]">@Duration(context.Duration)</MudTd>
+                <MudTd DataLabel="@L["Forecast_Column_Status"]"><StatusChip Status="context.Status" /></MudTd>
+                <MudTd DataLabel="@L["Forecast_Column_Calls"]">@context.Calls</MudTd>
+                <MudTd DataLabel="@L["Forecast_Column_Errors"]">
+                    @if (context.FailedCalls > 0)
+                    {
+                        var run = context;
+                        <MudButton Size="Size.Small" Variant="Variant.Text" Color="Color.Warning" OnClick="@(() => Toggle(run.Id))"
+                                   EndIcon="@(expanded.Contains(run.Id) ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)"
+                                   aria-expanded="@(expanded.Contains(run.Id) ? "true" : "false")">@context.FailedCalls</MudButton>
+                    }
+                    else
+                    {
+                        <span>0</span>
+                    }
+                </MudTd>
+            </RowTemplate>
+            <ChildRowContent>
+                @if (expanded.Contains(context.Id))
+                {
+                    <MudTr>
+                        <td colspan="5" class="pa-3" data-failures>
+                            @foreach (var group in context.Failures)
+                            {
+                                <MudExpansionPanels Elevation="0" Class="mb-1">
+                                    <MudExpansionPanel>
+                                        <TitleContent>
+                                            <MudText Typo="Typo.body2"><strong>@group.Source</strong> · @group.Count × @Kind(group)</MudText>
+                                        </TitleContent>
+                                        <ChildContent>
+                                            <MudText Typo="Typo.caption">@L["Forecast_Keys"]</MudText>
+                                            <MudText Typo="Typo.body2" Class="mb-2">@string.Join(", ", group.Keys)</MudText>
+                                            <MudText Typo="Typo.caption">@L["Forecast_Messages"]</MudText>
+                                            @foreach (var message in group.Messages)
+                                            {
+                                                <MudText Typo="Typo.body2" Class="platform-message">@message</MudText>
+                                            }
+                                        </ChildContent>
+                                    </MudExpansionPanel>
+                                </MudExpansionPanels>
+                            }
+                        </td>
+                    </MudTr>
+                }
+            </ChildRowContent>
+        </MudTable>
+
+        @if (Pages > 1)
+        {
+            <div class="d-flex justify-center mt-3">
+                <MudPagination Count="Pages" Selected="@(page + 1)" SelectedChanged="Go" />
+            </div>
+        }
+    }
+}
 
 @code {
-    private IReadOnlyList<ForecastRunSummary> runs = [];
+    private const int PageSize = 20;
 
-    private bool running;
+    private static readonly TimeSpan RefreshInterval = TimeSpan.FromSeconds(5);
+
+    private ForecastRunOverview? overview;
+
+    private readonly HashSet<Guid> expanded = [];
+
+    private bool loading = true;
+
+    private bool onlyWithErrors;
+
+    private int page;
+
+    private bool starting;
 
     private bool skipped;
 
     private AccountError? error;
 
-    protected override async Task Load() =>
-        runs = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(UserId));
+    private Timer? refresh;
+
+    private int Pages => overview is null ? 0 : (overview.TotalRuns + PageSize - 1) / PageSize;
+
+    private bool AnyRunning => overview is not null && (overview.LastRun?.Status == ForecastRunStatus.Running || overview.Runs.Any(r => r.Status == ForecastRunStatus.Running));
+
+    protected override async Task Load()
+    {
+        loading = true;
+        overview = await Query<GetForecastRunOverviewQuery, ForecastRunOverview?>(new GetForecastRunOverviewQuery(UserId, onlyWithErrors, page, PageSize));
+        loading = false;
+        SchedulePolling();
+    }
+
+    /// <remarks>Nur solange ein Lauf läuft, fragt die Seite alle 5 s nach. Ohne Lauf kein Polling.</remarks>
+    private void SchedulePolling()
+    {
+        if (!AnyRunning)
+        {
+            refresh?.Dispose();
+            refresh = null;
+            return;
+        }
+
+        refresh ??= new Timer(_ => InvokeAsync(async () =>
+        {
+            await Load();
+            StateHasChanged();
+        }), null, RefreshInterval, RefreshInterval);
+    }
+
+    private async Task Filter(bool value)
+    {
+        (onlyWithErrors, page) = (value, 0);
+        await Load();
+    }
+
+    private async Task Go(int selected)
+    {
+        page = selected - 1;
+        await Load();
+    }
+
+    private void Toggle(Guid id)
+    {
+        if (!expanded.Remove(id))
+        {
+            expanded.Add(id);
+        }
+    }
+
+    private string Kind(FailureGroup group) => group.Kind == FailureKind.Http
+        ? L["Forecast_Failure_Http", group.StatusCode ?? 0]
+        : L[$"Forecast_Failure_{group.Kind}"];
+
+    private static string Duration(TimeSpan? duration) => duration is { } d
+        ? d.TotalHours >= 1 ? d.ToString(@"h\:mm\:ss", CultureInfo.InvariantCulture) : d.ToString(@"m\:ss", CultureInfo.InvariantCulture)
+        : "–";
 
     private async Task RunNow()
     {
-        running = true;
+        starting = true;
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(TimeSpan.FromSeconds(1));
+            await InvokeAsync(async () =>
+            {
+                await Load();
+                StateHasChanged();
+            });
+        });
         var result = await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(UserId));
         error = result.Error;
         skipped = result.Run?.Skipped ?? false;
-        running = false;
+        starting = false;
         await Load();
     }
+
+    public void Dispose() => refresh?.Dispose();
 }

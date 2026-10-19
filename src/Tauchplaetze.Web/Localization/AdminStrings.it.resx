@@ -321,4 +321,23 @@
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Manca Content:SourceBaseUri o Content:ExportKey.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>La produzione non ha fornito il pacchetto. Controlla indirizzo e chiave.</value></data>
   <data name="Platform_NoData" xml:space="preserve"><value>Nessun dato. Manca l’autorizzazione oppure il tuo account è stato ricreato. Esci e accedi di nuovo.</value></data>
+  <data name="Forecast_NextRun" xml:space="preserve"><value>Prossima esecuzione</value></data>
+  <data name="Forecast_Week" xml:space="preserve"><value>Ultimi 7 giorni</value></data>
+  <data name="Forecast_WeekValue" xml:space="preserve"><value>{0} esecuzioni</value></data>
+  <data name="Forecast_WeekDetail" xml:space="preserve"><value>{0} riuscite · {1} parziali · {2} fallite</value></data>
+  <data name="Forecast_AverageDuration" xml:space="preserve"><value>Durata media</value></data>
+  <data name="Forecast_Column_Start" xml:space="preserve"><value>Inizio</value></data>
+  <data name="Forecast_Column_Duration" xml:space="preserve"><value>Durata</value></data>
+  <data name="Forecast_Column_Status" xml:space="preserve"><value>Stato</value></data>
+  <data name="Forecast_Column_Calls" xml:space="preserve"><value>Chiamate</value></data>
+  <data name="Forecast_Column_Errors" xml:space="preserve"><value>Errori</value></data>
+  <data name="Forecast_OnlyErrors" xml:space="preserve"><value>Solo esecuzioni con errori</value></data>
+  <data name="Forecast_Progress" xml:space="preserve"><value>{0} di {1} siti, {2} chiamate finora</value></data>
+  <data name="Forecast_Failure_Http" xml:space="preserve"><value>HTTP {0}</value></data>
+  <data name="Forecast_Failure_Timeout" xml:space="preserve"><value>Timeout</value></data>
+  <data name="Forecast_Failure_CircuitOpen" xml:space="preserve"><value>Circuit breaker aperto</value></data>
+  <data name="Forecast_Failure_Parse" xml:space="preserve"><value>Risposta illeggibile</value></data>
+  <data name="Forecast_Failure_Network" xml:space="preserve"><value>Rete</value></data>
+  <data name="Forecast_Keys" xml:space="preserve"><value>Interessati</value></data>
+  <data name="Forecast_Messages" xml:space="preserve"><value>Messaggi</value></data>
 </root>

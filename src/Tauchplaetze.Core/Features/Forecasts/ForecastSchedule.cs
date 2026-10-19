@@ -1,7 +1,7 @@
-namespace Tauchplaetze.Web.Features.Forecasts;
+namespace Tauchplaetze.Core.Features.Forecasts;
 
 /// <summary>Zeitplan des Prognose-Jobs in Lokalzeit (`forecast.md`, «Der Job»).</summary>
-internal class ForecastSchedule
+public class ForecastSchedule
 {
     public const string Section = "Forecast";
 

@@ -16,6 +16,7 @@ internal class ForecastsModule : ICoreModule
         AddSourceClient<OpenMeteoClient>(services, "https://api.open-meteo.com/");
         AddSourceClient<HydroClient>(services, "https://api.existenz.ch/");
         services.AddScoped<ForecastSources>();
+        services.AddSingleton<ForecastProgress>();
     }
 
     /// <remarks>

@@ -16,6 +16,8 @@ internal class SourceRecorder(IRawDataStore rawData, string runPath)
 
     public bool AnyFailed => calls.Any(c => !c.Ok);
 
+    public int Count => calls.Count;
+
     public string StatusJson => JsonSerializer.Serialize(calls, JsonOptions);
 
     public async Task<T?> Record<T>(string source, string key, Task<SourceResult<T>> call, CancellationToken ct)

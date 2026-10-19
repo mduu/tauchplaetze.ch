@@ -321,4 +321,23 @@
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Content:SourceBaseUri or Content:ExportKey is missing.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>Production did not deliver the package. Check the address and the key.</value></data>
   <data name="Platform_NoData" xml:space="preserve"><value>No data. Either the permission is missing or your account was created again. Sign out and sign in again.</value></data>
+  <data name="Forecast_NextRun" xml:space="preserve"><value>Next run</value></data>
+  <data name="Forecast_Week" xml:space="preserve"><value>Last 7 days</value></data>
+  <data name="Forecast_WeekValue" xml:space="preserve"><value>{0} runs</value></data>
+  <data name="Forecast_WeekDetail" xml:space="preserve"><value>{0} succeeded · {1} partial · {2} failed</value></data>
+  <data name="Forecast_AverageDuration" xml:space="preserve"><value>Average duration</value></data>
+  <data name="Forecast_Column_Start" xml:space="preserve"><value>Start</value></data>
+  <data name="Forecast_Column_Duration" xml:space="preserve"><value>Duration</value></data>
+  <data name="Forecast_Column_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Forecast_Column_Calls" xml:space="preserve"><value>Calls</value></data>
+  <data name="Forecast_Column_Errors" xml:space="preserve"><value>Errors</value></data>
+  <data name="Forecast_OnlyErrors" xml:space="preserve"><value>Only runs with errors</value></data>
+  <data name="Forecast_Progress" xml:space="preserve"><value>{0} of {1} sites, {2} calls so far</value></data>
+  <data name="Forecast_Failure_Http" xml:space="preserve"><value>HTTP {0}</value></data>
+  <data name="Forecast_Failure_Timeout" xml:space="preserve"><value>Timeout</value></data>
+  <data name="Forecast_Failure_CircuitOpen" xml:space="preserve"><value>Circuit breaker open</value></data>
+  <data name="Forecast_Failure_Parse" xml:space="preserve"><value>Response unreadable</value></data>
+  <data name="Forecast_Failure_Network" xml:space="preserve"><value>Network</value></data>
+  <data name="Forecast_Keys" xml:space="preserve"><value>Affected</value></data>
+  <data name="Forecast_Messages" xml:space="preserve"><value>Messages</value></data>
 </root>

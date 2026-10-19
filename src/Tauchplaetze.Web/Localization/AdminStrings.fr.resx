@@ -321,4 +321,23 @@
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Content:SourceBaseUri ou Content:ExportKey manque.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>La production n'a pas livré le paquet. Vérifie l'adresse et la clé.</value></data>
   <data name="Platform_NoData" xml:space="preserve"><value>Aucune donnée. Soit l'autorisation manque, soit ton compte a été recréé. Déconnecte-toi puis reconnecte-toi.</value></data>
+  <data name="Forecast_NextRun" xml:space="preserve"><value>Prochain passage</value></data>
+  <data name="Forecast_Week" xml:space="preserve"><value>7 derniers jours</value></data>
+  <data name="Forecast_WeekValue" xml:space="preserve"><value>{0} passages</value></data>
+  <data name="Forecast_WeekDetail" xml:space="preserve"><value>{0} réussis · {1} partiels · {2} échoués</value></data>
+  <data name="Forecast_AverageDuration" xml:space="preserve"><value>Durée moyenne</value></data>
+  <data name="Forecast_Column_Start" xml:space="preserve"><value>Début</value></data>
+  <data name="Forecast_Column_Duration" xml:space="preserve"><value>Durée</value></data>
+  <data name="Forecast_Column_Status" xml:space="preserve"><value>Statut</value></data>
+  <data name="Forecast_Column_Calls" xml:space="preserve"><value>Appels</value></data>
+  <data name="Forecast_Column_Errors" xml:space="preserve"><value>Erreurs</value></data>
+  <data name="Forecast_OnlyErrors" xml:space="preserve"><value>Seulement les passages avec erreurs</value></data>
+  <data name="Forecast_Progress" xml:space="preserve"><value>{0} sur {1} sites, {2} appels jusqu’ici</value></data>
+  <data name="Forecast_Failure_Http" xml:space="preserve"><value>HTTP {0}</value></data>
+  <data name="Forecast_Failure_Timeout" xml:space="preserve"><value>Délai dépassé</value></data>
+  <data name="Forecast_Failure_CircuitOpen" xml:space="preserve"><value>Disjoncteur ouvert</value></data>
+  <data name="Forecast_Failure_Parse" xml:space="preserve"><value>Réponse illisible</value></data>
+  <data name="Forecast_Failure_Network" xml:space="preserve"><value>Réseau</value></data>
+  <data name="Forecast_Keys" xml:space="preserve"><value>Concernés</value></data>
+  <data name="Forecast_Messages" xml:space="preserve"><value>Messages</value></data>
 </root>
