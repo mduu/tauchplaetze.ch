@@ -151,6 +151,7 @@ public sealed class SqlServer : IAsyncLifetime
         Sources.Failing = null;
         Sources.Overrides.Clear();
         Sources.Requests.Clear();
+        Sources.OnRequest = null;
         Time.Now = FixedTime.SpikeDay;
     }
 
@@ -177,10 +178,10 @@ public abstract class SqlTest(SqlServer sql) : IAsyncLifetime
 
     public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 
-    protected async Task<TResult> Command<TCommand, TResult>(TCommand command)
+    protected async Task<TResult> Command<TCommand, TResult>(TCommand command, CancellationToken? ct = null)
     {
         await using var scope = sql.Services.CreateAsyncScope();
-        return await scope.ServiceProvider.GetRequiredService<ICommandHandler<TCommand, TResult>>().Handle(command, TestContext.Current.CancellationToken);
+        return await scope.ServiceProvider.GetRequiredService<ICommandHandler<TCommand, TResult>>().Handle(command, ct ?? TestContext.Current.CancellationToken);
     }
 
     protected async Task<TResult> Query<TQuery, TResult>(TQuery query)

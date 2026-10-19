@@ -299,6 +299,32 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Bricht_der_Host_einen_Lauf_ab_bleiben_die_Werte_des_letzten_Laufs_und_er_zaehlt_nicht_als_letzter_Lauf()
+    {
+        // Arrange
+        var siteId = await PrepareRiffWilliams();
+        var complete = await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+        using var shutdown = new CancellationTokenSource();
+        Sql.Sources.OnRequest = url =>
+        {
+            if (url.Contains("alplakes", StringComparison.Ordinal) || url.Contains("simulations", StringComparison.Ordinal))
+            {
+                shutdown.Cancel();
+            }
+        };
+
+        // Act
+        var aborted = await Record.ExceptionAsync(() => Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand(), shutdown.Token));
+
+        // Assert
+        Assert.IsAssignableFrom<OperationCanceledException>(aborted);
+        var last = await Query<GetLastForecastRunQuery, LastForecastRun?>(new GetLastForecastRunQuery());
+        Assert.Equal(complete.RunId, last!.Id);
+        var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Assert.Equal(3, today.DataLevel);
+    }
+
+    [SqlFact]
     public async Task Haelt_ein_anderer_Lauf_den_Lock_rechnet_der_zweite_nicht()
     {
         // Arrange

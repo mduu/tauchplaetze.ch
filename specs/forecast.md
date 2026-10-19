@@ -196,6 +196,7 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert). Das Wetter pro Stunde in `SiteWeatherOutlook` ersetzen.
   9. Output Cache der öffentlichen Seiten invalidieren (Tag `forecast`).
   10. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
+  Stoppt der Host während eines Laufs (Neustart, Deployment), bricht der Lauf sofort ab und gilt als `Failed`. Die übrigen Plätze behalten die Werte des letzten Laufs. Ein abgebrochener Call ist kein Teilerfolg (Fehler vom 19.10.2026: Nach einem Neustart scheiterten 357 Calls in 1 ms, und der Lauf überschrieb gute Werte mit leeren).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.
 - **Ausfall einer Quelle:** Der Lauf schreibt die übrigen Werte. Die letzten gültigen Werte der ausgefallenen Quelle bleiben bis zu 48 h gültig. Die Seite zeigt das Datenalter.
 

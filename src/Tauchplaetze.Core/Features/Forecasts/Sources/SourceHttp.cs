@@ -28,7 +28,7 @@ internal static class SourceHttp
                 ? new SourceResponse(url, (int)response.StatusCode, body, null, stopwatch.Elapsed)
                 : new SourceResponse(url, (int)response.StatusCode, null, Truncate(body), stopwatch.Elapsed);
         }
-        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or TimeoutException
+        catch (Exception ex) when (!ct.IsCancellationRequested && ex is HttpRequestException or TaskCanceledException or TimeoutException
                                        or TimeoutRejectedException or BrokenCircuitException)
         {
             return new SourceResponse(url, null, null, ex.Message, stopwatch.Elapsed);

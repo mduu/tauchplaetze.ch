@@ -68,6 +68,9 @@ internal sealed class FakeSources : HttpMessageHandler
 
     public string? Failing { get; set; }
 
+    /// <summary>Läuft bei jeder Anfrage, etwa um einen Lauf mitten im Abruf abzubrechen.</summary>
+    public Action<string>? OnRequest { get; set; }
+
     /// <summary>Antworten, die für einen Teil der URL statt der Datei aus `TestData` gelten.</summary>
     public ConcurrentDictionary<string, string> Overrides { get; } = new();
 
@@ -75,6 +78,7 @@ internal sealed class FakeSources : HttpMessageHandler
     {
         var url = request.RequestUri!.ToString();
         Requests.Add(url);
+        OnRequest?.Invoke(url);
 
         if (Overrides.FirstOrDefault(o => url.Contains(o.Key, StringComparison.Ordinal)) is { Value: { } body })
         {
