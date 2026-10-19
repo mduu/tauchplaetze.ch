@@ -35,7 +35,7 @@ Der Code der API ist öffentlich: `github.com/eawag-surface-waters-research/alpl
 | 3D-Modell (Wert an der Koordinate des Platzes) | `delft3d-flow`: Ägerisee, Bielersee, Genfersee, Greifensee, Hallwilersee, Lago di Lugano, Murtensee, St. Moritzersee, Zürichsee (dazu Annecy, Bourget, Caldonazzo, Garda, Joux). `mitgcm`: Vierwaldstättersee, Neuenburgersee, Zugersee, Zürichsee |
 | 1D-Modell Simstrat (ein Profil pro See oder Becken) | rund 130 Seen, u.a. Walensee, Thunersee, Brienzersee, Sempachersee, Sarnersee, Lago Maggiore, Bodensee (`upperconstance`, `lowerconstance`), Zürichsee (`lowerzurich`, `upperzurich`), Vierwaldstättersee in vier Becken |
 | Satellit Sentinel-3 (`Zsd_lee`, `chla`) | alle grossen Seen |
-| Satellit Sentinel-2 | viele Seen gelistet, Daten oft veraltet (Zürichsee: letztes Bild November 2023) |
+| Satellit Sentinel-2 | `Z490` (Secchi, 10 m Pixel, laufend verarbeitet laut Eawag 19.10.2026), z.B. Zürichsee 15.10.2026. Das ältere `p3qaa_zSD` endet im November 2023. Auf der Koordinate eines Platzes am Ufer oft leer (Pixel maskiert), rund 100 m seewärts mit `window=2` vorhanden. |
 
 Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulations/1d/metadata`. Die Zuordnung eines Gewässers zu den Modellen steht in `WaterBody` (`datastructure.md`).
 
@@ -63,8 +63,13 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
 ### Rechtliches
 
 - Die API beschreibt sich als «as is»: keine Garantie für Genauigkeit, Vollständigkeit, Aktualität und Verfügbarkeit.
-- Explizite Nutzungsbedingungen für die Daten fehlen. Präzedenzfall: lake.lindt.one zeigt seit 2020 Wassertemperaturen aus Alplakes.
-- **Vor dem Go-Live:** Eawag anschreiben (Eawag (Alplakes)). Inhalt: Vorhaben, nicht kommerziell, Quellenangabe, etwa ein Call pro Platz und Tag. Siehe `open-questions.md`.
+- **Nutzung erlaubt** (Eawag (Alplakes), Eawag, Antwort vom 19.10.2026 auf `doc/mails/2026-10-17-eawag-alplakes.md`):
+  1. Die Nutzung ist erlaubt, einzige Bedingung ist die Quellenangabe.
+  2. Es gibt ein Rate Limit, die vorgeschlagene Frequenz (ein täglicher Lauf, höchstens etwa 1000 Calls pro Tag, höchstens 2 pro Sekunde) ist in Ordnung.
+  3. Die Daten von Datalakes dürfen wir ebenfalls nutzen.
+  4. Das Secchi-Produkt `Z490` von Sentinel-2 wird laufend verarbeitet.
+  5. Zu den leeren Geschwindigkeitsfeldern `u` und `v` wünscht er einen Beispiel-Request (Antwort: `doc/mails/2026-10-19-eawag-alplakes-antwort.md`).
+- Rückmeldungen von Tauchenden zu den Modellwerten teilen wir mit Eawag, darum hat er gebeten.
 - Quellenangabe auf jeder Seite mit Werten: «Daten: Eawag Alplakes» mit Link.
 
 ## Wetter: Open-Meteo

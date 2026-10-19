@@ -6,7 +6,6 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 
 | # | Frage | Nächster Schritt |
 |---|---|---|
-| 1 | **Dürfen wir die Daten der Alplakes API nutzen?** Unter welchen Bedingungen (Quellenangabe, Frequenz)? | Mail an Eawag (Alplakes) am 17.10.2026 gesendet (`doc/mails/2026-10-17-eawag-alplakes.md`). Antwort ausstehend. |
 | 21 | Dürfen wir die Abfluss- und Seepegelvorhersagen des BAFU nutzen? Es gibt nur ein JSON der Grafiken, keine API. | Mail an `BAFU (Hydrologie)` am 17.10.2026 gesendet (`doc/mails/2026-10-17-bafu-hydrologie.md`). Antwort ausstehend. Blockiert nur die Flussprognose in Phase 1. |
 | 26 | **Welcher Mail-Dienst versendet in Prod die Mails** (Bestätigung, Passwort, Freigabe)? Der Datenschutz muss ihn nennen, wenn er Daten ausserhalb der Schweiz bearbeitet. | Vor dem Go-Live entscheiden und in `infrastructure.md` und im Datenschutz nachtragen. |
 | 27 | **Koordinaten in der Telemetrie:** «In meiner Nähe» und der Umkreis der Startseite tragen `lat`/`lng` in der Adresse. Application Insights speichert die Adressen 30 Tage. | Vorschlag: Query-Parameter `lat`, `lng` vor dem Senden entfernen oder runden (Telemetry Processor). Dann den Satz im Datenschutz anpassen. |
