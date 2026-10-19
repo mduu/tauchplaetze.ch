@@ -239,6 +239,7 @@
   <data name="NewSite_Submit_Moderator" xml:space="preserve"><value>Platz anlegen</value></data>
   <data name="NewSite_Missing" xml:space="preserve"><value>Fehlt ein Platz?</value></data>
   <data name="NewSite_Link" xml:space="preserve"><value>Neuen Platz vorschlagen</value></data>
+  <data name="NewSite_Nearby" xml:space="preserve"><value>In der Nähe gibt es schon diese Plätze. Ist dein Platz vielleicht dabei?</value></data>
   <data name="EditMode_Hint_Entry" xml:space="preserve"><value>Klicke auf die Karte, um den Einstieg oder Ort zu setzen.</value></data>
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>In der Kartenmitte setzen</value></data>
 </root>

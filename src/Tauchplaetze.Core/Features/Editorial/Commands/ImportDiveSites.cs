@@ -33,7 +33,7 @@ internal class ImportDiveSitesHandler(TauchplaetzeDbContext dbContext, RevisionW
             .Concat(await dbContext.SlugRedirects.Select(r => r.OldSlug).ToListAsync(ct))
             .ToHashSet();
         var missing = (await ReadSeed(ct))
-            .Select(seed => (seed, slug: Slugs.From($"{seed.Name} {seed.Municipality}")))
+            .Select(seed => (seed, slug: ReservedSlugs.Avoid(Slugs.From($"{seed.Name} {seed.Municipality}"))))
             .Where(s => !existingSlugs.Contains(s.slug))
             .ToList();
 

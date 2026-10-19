@@ -239,6 +239,7 @@
   <data name="NewSite_Submit_Moderator" xml:space="preserve"><value>Create site</value></data>
   <data name="NewSite_Missing" xml:space="preserve"><value>Is a site missing?</value></data>
   <data name="NewSite_Link" xml:space="preserve"><value>Suggest a new dive site</value></data>
+  <data name="NewSite_Nearby" xml:space="preserve"><value>These dive sites are already nearby. Is yours one of them?</value></data>
   <data name="EditMode_Hint_Entry" xml:space="preserve"><value>Click on the map to place the entry point or place.</value></data>
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>Place at map centre</value></data>
 </root>

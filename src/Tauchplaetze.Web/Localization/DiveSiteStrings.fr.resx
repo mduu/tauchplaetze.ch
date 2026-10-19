@@ -239,6 +239,7 @@
   <data name="NewSite_Submit_Moderator" xml:space="preserve"><value>Créer le site</value></data>
   <data name="NewSite_Missing" xml:space="preserve"><value>Il manque un site ?</value></data>
   <data name="NewSite_Link" xml:space="preserve"><value>Proposer un nouveau site</value></data>
+  <data name="NewSite_Nearby" xml:space="preserve"><value>Ces sites existent déjà à proximité. Le tien en fait-il partie ?</value></data>
   <data name="EditMode_Hint_Entry" xml:space="preserve"><value>Clique sur la carte pour placer le point d'entrée ou le lieu.</value></data>
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>Placer au centre de la carte</value></data>
 </root>

@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.Net.Http.Headers;
+using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Web.CrossCutting.Localization;
 
 namespace Tauchplaetze.Web.Tests;
@@ -91,6 +92,11 @@ public class LanguageTests(WebApp app) : IClassFixture<WebApp>
     [InlineData("de/gewaesser/zuerichsee?tag=2026-10-18", "it", "/it/acque/zuerichsee")]
     [InlineData("fr/sites-de-plongee/riff-williams-herrliberg", "de", "/de/tauchplaetze/riff-williams-herrliberg")]
     [InlineData("admin", "en", "/en")]
+    [InlineData("fr/sites-de-plongee/nouveau", "de", "/de/tauchplaetze/neu")]
+    [InlineData("de/tauchplaetze/neu", "en", "/en/dive-sites/new")]
+    [InlineData("en/dive-sites/new", "fr", "/fr/sites-de-plongee/nouveau")]
+    [InlineData("it/siti-di-immersione/nuovo?x=1", "it", "/it/siti-di-immersione/nuovo")]
+    [InlineData("de/tauchplaetze/neu", "it", "/it/siti-di-immersione/nuovo")]
     public void Der_Sprachwechsel_behaelt_die_Seite(string relativePath, string language, string expected)
     {
         // Act
@@ -98,5 +104,15 @@ public class LanguageTests(WebApp app) : IClassFixture<WebApp>
 
         // Assert
         Assert.Equal(expected, link);
+    }
+
+    [Fact]
+    public void Die_Pfade_fuer_einen_neuen_Platz_sind_als_Slug_reserviert()
+    {
+        // Act
+        var segments = PublicRoutes.New.Values.ToHashSet();
+
+        // Assert
+        Assert.Subset(ReservedSlugs.All.ToHashSet(), segments);
     }
 }

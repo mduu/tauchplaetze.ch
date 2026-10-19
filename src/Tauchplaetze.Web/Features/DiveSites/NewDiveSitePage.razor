@@ -5,6 +5,7 @@
 @attribute [Authorize]
 @inherits AdminPage
 @using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.DiveSites.Queries
 @using Tauchplaetze.Core.Features.Editorial
 @using Tauchplaetze.Core.Features.Editorial.Commands
 @using Tauchplaetze.Core.Features.WaterBodies
@@ -26,10 +27,10 @@
         <p class="lead">@Site["NewSite_Lead"]</p>
     </header>
 
-    @if (errors.Count > 0)
+    @if (errors.Except([EditorialError.MissingLocation]).Any())
     {
         <div class="message error" role="alert" tabindex="-1" @ref="messageBox">
-            @foreach (var error in errors)
+            @foreach (var error in errors.Except([EditorialError.MissingLocation]))
             {
                 <p>@L[$"Error_{error}"]</p>
             }
@@ -49,7 +50,20 @@
     <section class="page-section edit-section" aria-labelledby="new-location">
         <h2 id="new-location" class="edit-section-title">@Site["NewSite_Location"]</h2>
         <LocationField Id="new-site-map" Label="@L["Field_Location"]" Help="@Site["NewSite_Location_Help"]"
-                       Latitude="latitude" Longitude="longitude" Changed="@(p => (latitude, longitude, located) = (p.Latitude, p.Longitude, true))" />
+                       Error="@(errors.Contains(EditorialError.MissingLocation) ? L["Error_MissingLocation"].Value : null)"
+                       Latitude="latitude" Longitude="longitude" Changed="Locate" />
+        @if (nearby.Count > 0)
+        {
+            <div class="callout" role="status" data-nearby>
+                <p>@Site["NewSite_Nearby"]</p>
+                <ul>
+                    @foreach (var site in nearby)
+                    {
+                        <li><a href="@PublicRoutes.DiveSite(Language, site.Slug)" target="_blank" rel="noopener">@site.Name</a> · @site.DistanceMeters m</li>
+                    }
+                </ul>
+            </div>
+        }
     </section>
 
     <section class="page-section edit-section" aria-labelledby="new-comment">
@@ -69,6 +83,8 @@
     private IReadOnlyList<WaterBodySummary> waterBodies = [];
 
     private IReadOnlyList<EditorialError> errors = [];
+
+    private IReadOnlyList<NearbyDiveSite> nearby = [];
 
     private string? name;
 
@@ -106,6 +122,13 @@
         }
     }
 
+    private async Task Locate((double Latitude, double Longitude) point)
+    {
+        (latitude, longitude, located) = (point.Latitude, point.Longitude, true);
+        errors = [.. errors.Except([EditorialError.MissingLocation])];
+        nearby = await Query<GetNearbyDiveSitesQuery, IReadOnlyList<NearbyDiveSite>>(new GetNearbyDiveSitesQuery(latitude, longitude));
+    }
+
     private async Task Submit()
     {
         if (saving)
@@ -113,11 +136,17 @@
             return;
         }
 
+        if (!located)
+        {
+            errors = [EditorialError.MissingLocation];
+            return;
+        }
+
         saving = true;
         var result = await Command<ProposeDiveSiteCommand, EditorialResult>(new ProposeDiveSiteCommand(
             UserId, name?.Trim() ?? "", waterBodyId, latitude, longitude, municipality?.Trim(), canton?.Trim().ToUpperInvariant(), comment));
         errors = result.Errors;
-        focusMessage = errors.Count > 0;
+        focusMessage = errors.Except([EditorialError.MissingLocation]).Any();
         if (result is { Succeeded: true, DiveSiteId: { } id })
         {
             await JS.InvokeVoidAsync("tauchplaetzeEdit.saved");

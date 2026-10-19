@@ -294,6 +294,7 @@
   <data name="Platform_BlockedCount" xml:space="preserve"><value>davon {0} gesperrt</value></data>
   <data name="Field_WaterBodyId_ModeratorOnly" xml:space="preserve"><value>Das Gewässer ändert die Moderation.</value></data>
   <data name="MyProposals_NewSiteSubmitted" xml:space="preserve"><value>Danke! Dein Vorschlag für einen neuen Platz ist eingereicht. Eine Moderatorin oder ein Moderator prüft ihn.</value></data>
+  <data name="Error_MissingLocation" xml:space="preserve"><value>Setze die Lage in der Karte oder tippe die Koordinate ein.</value></data>
   <data name="Media_TooManyFiles" xml:space="preserve"><value>Bitte höchstens {0} Fotos auf einmal wählen.</value></data>
   <data name="Media_Remaining" xml:space="preserve"><value>Du kannst im Moment noch {0} Fotos hochladen (höchstens 30 pro Stunde und 100 pro Tag). Wähle weniger oder versuche es später.</value></data>
   <data name="Media_UploadAborted" xml:space="preserve"><value>Der Upload wurde abgebrochen. Bitte nochmals versuchen.</value></data>

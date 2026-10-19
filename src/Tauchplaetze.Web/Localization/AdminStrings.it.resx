@@ -294,6 +294,7 @@
   <data name="Platform_BlockedCount" xml:space="preserve"><value>di cui {0} bloccati</value></data>
   <data name="Field_WaterBodyId_ModeratorOnly" xml:space="preserve"><value>Il lago o il fiume lo cambia la moderazione.</value></data>
   <data name="MyProposals_NewSiteSubmitted" xml:space="preserve"><value>Grazie! La tua proposta di un nuovo sito è stata inviata. Una moderatrice o un moderatore la verifica.</value></data>
+  <data name="Error_MissingLocation" xml:space="preserve"><value>Imposta la posizione sulla mappa o digita la coordinata.</value></data>
   <data name="Media_TooManyFiles" xml:space="preserve"><value>Scegli al massimo {0} foto alla volta.</value></data>
   <data name="Media_Remaining" xml:space="preserve"><value>Al momento puoi caricare ancora {0} foto (al massimo 30 all’ora e 100 al giorno). Scegline meno o riprova più tardi.</value></data>
   <data name="Media_UploadAborted" xml:space="preserve"><value>Il caricamento è stato interrotto. Riprova.</value></data>

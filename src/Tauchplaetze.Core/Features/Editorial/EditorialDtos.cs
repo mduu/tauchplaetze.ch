@@ -142,6 +142,9 @@ public enum EditorialError
 
     /// <summary>Zu viele Uploads in der letzten Stunde oder am letzten Tag.</summary>
     TooManyUploads,
+
+    /// <summary>Ein neuer Platz hat keine Koordinate.</summary>
+    MissingLocation,
 }
 
 /// <summary>Ergebnis eines Commands der Redaktion. <see cref="NoChange"/>: Der Inhalt war gleich wie die Basis, es entstand keine Version.</summary>

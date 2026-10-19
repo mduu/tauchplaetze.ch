@@ -241,6 +241,26 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Ein_neuer_Platz_braucht_eine_Koordinate_und_zeigt_vorher_die_Plaetze_im_Umkreis_von_300_m()
+    {
+        // Arrange
+        var (_, anna, site) = await Prepare();
+        var content = (await ForEditing(site)).Content;
+
+        // Act
+        var missing = await Command<ProposeDiveSiteCommand, EditorialResult>(new ProposeDiveSiteCommand(anna, "Steinbock", content.WaterBodyId, null, null, null, null, null));
+        var near = await Query<GetNearbyDiveSitesQuery, IReadOnlyList<NearbyDiveSite>>(new GetNearbyDiveSitesQuery(content.Latitude + 0.002, content.Longitude));
+        var far = await Query<GetNearbyDiveSitesQuery, IReadOnlyList<NearbyDiveSite>>(new GetNearbyDiveSitesQuery(content.Latitude + 0.004, content.Longitude));
+
+        // Assert
+        Assert.Equal([EditorialError.MissingLocation], missing.Errors);
+        var found = Assert.Single(near);
+        Assert.Equal(content.Slug, found.Slug);
+        Assert.InRange(found.DistanceMeters, 215, 230);
+        Assert.Empty(far);
+    }
+
+    [SqlFact]
     public async Task Ein_Platz_ausserhalb_der_Schweiz_wird_abgelehnt()
     {
         // Arrange

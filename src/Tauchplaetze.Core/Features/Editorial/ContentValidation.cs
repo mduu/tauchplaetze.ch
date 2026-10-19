@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using Tauchplaetze.Core.CrossCutting.Geo;
-using Tauchplaetze.Core.CrossCutting.Text;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Media;
 
@@ -32,7 +31,7 @@ internal static partial class ContentValidation
             errors.Add(EditorialError.InvalidRating);
         }
 
-        if (!SlugPattern().IsMatch(content.Slug) || content.Slug.Length > 120 || Slugs.Reserved.Contains(content.Slug))
+        if (!SlugPattern().IsMatch(content.Slug) || content.Slug.Length > 120 || ReservedSlugs.All.Contains(content.Slug))
         {
             errors.Add(EditorialError.InvalidSlug);
         }

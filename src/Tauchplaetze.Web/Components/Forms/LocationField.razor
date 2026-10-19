@@ -8,14 +8,20 @@
     <div id="@Id" class="location-map location-field-map" data-contours="auto"
          data-layer-map="@Site["Map_Layer_Map"]" data-layer-photo="@Site["Map_Layer_Photo"]" data-layer-contours="@Site["Map_Layer_Contours"]"
          role="application" aria-label="@Label"></div>
-    <p class="field-help">@Help</p>
-    <CoordinateFields Label="@Label" Latitude="Latitude" Longitude="Longitude" Changed="Set" />
+    <p class="field-help" id="@($"{Id}-help")">@Help</p>
+    @if (Error is not null)
+    {
+        <p class="field-error" id="@($"{Id}-error")" role="alert">@Error</p>
+    }
+    <CoordinateFields Label="@Label" Latitude="Latitude" Longitude="Longitude" Changed="Typed" />
 </div>
 
 @code {
     private DotNetObjectReference<LocationField>? reference;
 
     private bool shown;
+
+    private bool pan;
 
     [Parameter, EditorRequired]
     public string Id { get; set; } = "";
@@ -25,6 +31,10 @@
 
     [Parameter]
     public string? Help { get; set; }
+
+    /// <summary>Fehler am Feld, zum Beispiel «Koordinate fehlt».</summary>
+    [Parameter]
+    public string? Error { get; set; }
 
     [Parameter]
     public double Latitude { get; set; }
@@ -38,12 +48,18 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         reference ??= DotNetObjectReference.Create(this);
-        await JS.InvokeVoidAsync("tauchplaetzeAdmin.show", Id, Latitude, Longitude, reference);
-        shown = true;
+        await JS.InvokeVoidAsync("tauchplaetzeAdmin.show", Id, Latitude, Longitude, reference, pan);
+        (shown, pan) = (true, false);
     }
 
     [JSInvokable]
     public async Task SetLocation(double latitude, double longitude) => await Set((Math.Round(latitude, 6), Math.Round(longitude, 6)));
+
+    private async Task Typed((double Latitude, double Longitude) point)
+    {
+        pan = true;
+        await Set(point);
+    }
 
     private async Task Set((double Latitude, double Longitude) point)
     {
