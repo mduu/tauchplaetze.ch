@@ -12,6 +12,7 @@ internal class DiveSiteRevisionConfiguration : IEntityTypeConfiguration<DiveSite
         builder.Property(r => r.Id).ValueGeneratedNever();
         builder.HasIndex(r => new { r.DiveSiteId, r.Number }).IsUnique();
         builder.HasIndex(r => new { r.DiveSiteId, r.Status });
+        builder.HasIndex(r => new { r.AuthorId, r.Status });
         builder.Property(r => r.SnapshotPath).HasMaxLength(300);
         builder.Property(r => r.SnapshotHash).HasMaxLength(64).IsFixedLength();
         builder.Property(r => r.Comment).HasMaxLength(500);

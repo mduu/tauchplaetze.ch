@@ -611,6 +611,8 @@ namespace Tauchplaetze.Core.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId", "Status");
+
                     b.HasIndex("DiveSiteId", "Number")
                         .IsUnique();
 
