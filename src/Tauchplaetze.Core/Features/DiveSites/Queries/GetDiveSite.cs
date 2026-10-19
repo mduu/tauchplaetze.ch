@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Core.Features.WaterBodies;
@@ -33,6 +34,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 d.Sketch,
                 d.HeroMediaId,
                 d.OtherNames,
+                d.HasDivingBan,
                 Ratings = new SiteRatings(d.DifficultyRating, d.WallRating, d.MarineLifeRating, d.WrecksRating, d.CurrentRating, d.SurroundingsRating),
                 WaterBody = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType },
             })
@@ -59,7 +61,9 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 Sketch(site.Sketch, query.Culture),
                 await Photos(site.Id, query.Culture, ct),
                 site.HeroMediaId,
-                OtherNameJson.Read(site.OtherNames, logger))),
+                OtherNameJson.Read(site.OtherNames, logger),
+                await Texts(site.Id, query.Culture, ct),
+                site.HasDivingBan)),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),
@@ -85,6 +89,34 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 text?.AltText ?? german?.AltText,
                 [.. MediaFiles.WidthsFor(m.Width).Select(w => new MediaRendition(w, media.PublicUri(m.Id, MediaFiles.Rendition(w)).ToString()))]);
         })];
+    }
+
+    private async Task<SiteTexts> Texts(Guid siteId, string culture, CancellationToken ct)
+    {
+        var translations = await dbContext.DiveSiteTranslations
+            .AsNoTracking()
+            .Where(t => t.DiveSiteId == siteId && (t.Culture == culture || t.Culture == "de"))
+            .ToListAsync(ct);
+        var own = translations.FirstOrDefault(t => t.Culture == culture);
+        var german = translations.FirstOrDefault(t => t.Culture == "de");
+
+        SiteText? Pick(Func<DiveSiteTranslation, string?> field)
+        {
+            if (own is not null && !string.IsNullOrWhiteSpace(field(own)))
+            {
+                return new SiteText(field(own)!, false, own.IsMachineTranslated);
+            }
+
+            return german is not null && !string.IsNullOrWhiteSpace(field(german)) ? new SiteText(field(german)!, culture != "de", false) : null;
+        }
+
+        return new SiteTexts(
+            Pick(t => t.UnderwaterDescription),
+            Pick(t => t.SurroundingsInfo),
+            Pick(t => t.ApproachInfo),
+            Pick(t => t.HazardsInfo),
+            Pick(t => t.FacilitiesInfo),
+            Pick(t => t.DivingBanNote));
     }
 
     private static IReadOnlyList<SiteSketchFeature> Sketch(string? json, string culture) =>

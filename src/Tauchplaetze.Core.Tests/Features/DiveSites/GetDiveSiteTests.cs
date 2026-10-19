@@ -26,6 +26,42 @@ public class GetDiveSiteTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Texte_kommen_pro_Feld_in_der_Sprache_der_Seite_sonst_auf_Deutsch_mit_Hinweis()
+    {
+        // Arrange
+        await Sql.Arrange(async db =>
+        {
+            var site = await Add(db, "riff-williams-herrliberg", DiveSiteStatus.Published);
+            site.Translations.Add(new DiveSiteTranslation { Culture = "de", UnderwaterDescription = "Steilwand bis 40 m.", ApproachInfo = "Parkplatz an der Seestrasse.", HazardsInfo = " " });
+            site.Translations.Add(new DiveSiteTranslation { Culture = "fr", UnderwaterDescription = "Tombant jusqu'à 40 m.", ApproachInfo = "", IsMachineTranslated = true });
+        });
+
+        // Act
+        var french = Assert.IsType<DiveSiteLookup.Found>(await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "fr"))).Site;
+        var german = Assert.IsType<DiveSiteLookup.Found>(await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "de"))).Site;
+
+        // Assert
+        Assert.Equal(new SiteText("Tombant jusqu'à 40 m.", false, true), french.Texts!.Underwater);
+        Assert.Equal(new SiteText("Parkplatz an der Seestrasse.", true, false), french.Texts.Approach);
+        Assert.Null(french.Texts.Hazards);
+        Assert.Equal(new SiteText("Steilwand bis 40 m.", false, false), german.Texts!.Underwater);
+        Assert.False(french.IsDirectoryOnly);
+    }
+
+    [SqlFact]
+    public async Task Ein_Platz_ohne_Texte_Bewertungen_Fotos_und_Einstiege_ist_erst_im_Verzeichnis()
+    {
+        // Arrange
+        await Sql.Arrange(async db => (await Add(db, "riff-williams-herrliberg", DiveSiteStatus.Published)).Translations.Add(new DiveSiteTranslation { Culture = "de" }));
+
+        // Act
+        var site = Assert.IsType<DiveSiteLookup.Found>(await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "de"))).Site;
+
+        // Assert
+        Assert.True(site.IsDirectoryOnly);
+    }
+
+    [SqlFact]
     public async Task Einstiege_kommen_in_ihrer_Reihenfolge_mit_dem_Namen_der_Sprache_sonst_auf_Deutsch_sonst_ohne_Namen()
     {
         // Arrange

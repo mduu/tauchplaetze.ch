@@ -247,4 +247,8 @@
   <data name="Emergency_Factsheet" xml:space="preserve"><value>Scheda incidente subacqueo di DAN Suisse e Rega (PDF)</value></data>
   <data name="Emergency_Factsheet_Url" xml:space="preserve"><value>https://www.bag.admin.ch/dam/it/sd-web/nCQEXh00QMPH/All.1_OPre_cap.2.1_Scheda%20informativa_Trattamento%20degli%20incidenti%20subacquei%20_DAN%20e%20Rega%20del%2006.07.2025.pdf</value></data>
   <data name="Map_Layer_Grey" xml:space="preserve"><value>Mappa grigia</value></data>
+  <data name="DivingBan_Title" xml:space="preserve"><value>Divieto di immersione</value></data>
+  <data name="Text_Facilities" xml:space="preserve"><value>Ristoranti e servizi igienici</value></data>
+  <data name="Text_OnlyGerman" xml:space="preserve"><value>Questo testo è disponibile solo in tedesco.</value></data>
+  <data name="Text_MachineTranslated" xml:space="preserve"><value>Tradotto automaticamente.</value></data>
 </root>

@@ -17,6 +17,8 @@ public class DiveSitePageTests : IClassFixture<WebApp>
 
     private const string River = "strandbad-rheinfelden";
 
+    private const string WithTexts = "terlinden-kuesnacht-zh";
+
     private static readonly Guid RiverSiteId = Guid.NewGuid();
 
     private readonly WebApp app;
@@ -50,6 +52,17 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         app.Forecasts.Add(RiverSiteId, new SiteForecast(
             [Day(18, 7.2m, [ReasonCode.Windy]) with { ProfileSource = ProfileSource.RiverStation, TemperatureAt10m = null, TemperatureAt20m = null, TemperatureAt30m = null, ThermoclineTop = null, ThermoclineBottom = null, SecchiDepth = null, SecchiObservedAt = null }],
             DateTimeOffset.UtcNow, Hours(new DateTime(2030, 1, 7)), WaterBodyType.River));
+        app.DiveSites.Add(WithTexts, new DiveSiteLookup.Found(new DiveSiteDetails(
+            Guid.NewGuid(), WithTexts, "Terlinden", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Küsnacht", "ZH", 47.31, 8.58, 0, DateTimeOffset.UtcNow, [], [],
+            new SiteRatings(4, 5, null, null, null, null),
+            Texts: new SiteTexts(
+                new SiteText("Steilwand bis **40 m**.\n\n- Felsen\n- Hechte <script>alert(1)</script>", false, false),
+                null,
+                new SiteText("Parkplatz an der Seestrasse.", true, false),
+                new SiteText("Schiffsverkehr beachten.", false, true),
+                null,
+                new SiteText("Im Hafen ist Tauchen verboten.", false, false)),
+            HasDivingBan: true)));
         app.DiveSites.Add("alter-name", new DiveSiteLookup.Moved(Slug));
         app.DiveSites.Add("archiviert", new DiveSiteLookup.Gone());
     }
@@ -71,6 +84,29 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("Riff Williams", text);
         Assert.Contains("Herrliberg ZH", text);
         Assert.Contains(directoryOnly, text);
+    }
+
+    [Fact]
+    public async Task Die_Texte_erscheinen_in_ihren_Abschnitten_ohne_Hinweis_erst_im_Verzeichnis()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/fr/sites-de-plongee/" + WithTexts, TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains("<strong>40 m</strong>", html);
+        Assert.Contains("<li>Felsen</li>", html);
+        Assert.DoesNotContain("<script>alert(1)</script>", html);
+        Assert.Contains("Parkplatz an der Seestrasse.", text);
+        Assert.Contains("Ce texte n'est disponible qu'en allemand.", text);
+        Assert.Contains("Traduit automatiquement.", text);
+        Assert.Contains("Interdiction de plonger", text);
+        Assert.Contains("Im Hafen ist Tauchen verboten.", text);
+        Assert.True(text.IndexOf("Schiffsverkehr", StringComparison.Ordinal) < text.IndexOf("Parkplatz", StringComparison.Ordinal));
+        Assert.DoesNotContain("data-content-level=\"0\"", html);
     }
 
     [Fact]

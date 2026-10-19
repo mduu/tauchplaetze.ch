@@ -46,9 +46,30 @@
     max-width: 640px;
 }
 
-.practical-title {
+.section-heading {
     font-size: 36px;
     letter-spacing: -0.02em;
+}
+
+.diving-ban {
+    margin-top: 22px;
+}
+
+.diving-ban h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+}
+
+.diving-ban ::deep .site-text,
+.practical-texts ::deep .site-text {
+    margin-top: 0;
+}
+
+.practical-texts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px 32px;
+    margin-top: 32px;
 }
 
 .tiles {
@@ -112,4 +133,8 @@
     margin: 8px 0 0;
     color: var(--color-text-subtle);
     font-size: 14px;
+}
+
+.site-links {
+    margin-top: 32px;
 }

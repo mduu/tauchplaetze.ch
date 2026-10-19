@@ -247,4 +247,8 @@
   <data name="Emergency_Factsheet" xml:space="preserve"><value>Fiche accident de plongée de DAN Suisse et de la Rega (PDF, en allemand)</value></data>
   <data name="Emergency_Factsheet_Url" xml:space="preserve"><value>https://www.bag.admin.ch/dam/de/sd-web/nCQEXh00QMPH/Anh.1_KLV_Kap.%202.1_Factsheet_Tauchunfallbehandlung_DAN%20und%20Rega%20vom%2006.07.2025.pdf</value></data>
   <data name="Map_Layer_Grey" xml:space="preserve"><value>Carte grise</value></data>
+  <data name="DivingBan_Title" xml:space="preserve"><value>Interdiction de plonger</value></data>
+  <data name="Text_Facilities" xml:space="preserve"><value>Restaurants et toilettes</value></data>
+  <data name="Text_OnlyGerman" xml:space="preserve"><value>Ce texte n'est disponible qu'en allemand.</value></data>
+  <data name="Text_MachineTranslated" xml:space="preserve"><value>Traduit automatiquement.</value></data>
 </root>

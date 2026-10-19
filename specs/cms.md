@@ -54,7 +54,7 @@ Der Core berechnet die Ausbaustufe bei jeder Speicherung (`DiveSite.CalculateCon
 | 1 – Basis | Stufe 0 plus `MaxDepth`, `DifficultyRating`, `Access`, ein Einstieg mit Beschreibung (DE) und `ApproachInfo` (DE) |
 | 2 – Vollständig | Stufe 1 plus `UnderwaterDescription` (DE) und ein Hero-Foto |
 
-Die Stufe misst nur den Fortschritt. Sie blendet nichts aus: Die Platzseite zeigt alles, was erfasst ist, und ein Abschnitt ohne Inhalt fehlt (`ux.md`). Nur Stufe 0 zeigt zusätzlich den Hinweis «erst im Verzeichnis». Entscheid Marc, 18.10.2026.
+Die Stufe misst nur den Fortschritt. Sie blendet nichts aus: Die Platzseite zeigt alles, was erfasst ist, und ein Abschnitt ohne Inhalt fehlt (`ux.md`). Entscheid Marc, 18.10.2026. Der Hinweis «erst im Verzeichnis» hängt nicht an der Stufe, sondern daran, ob überhaupt etwas dokumentiert ist (`ux.md`). Ein Platz mit Texten, aber ohne Einstieg bleibt auf Stufe 0 und zeigt den Hinweis nicht (Fund Marc, Terlinden, 19.10.2026).
 
 Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit wartet.
 

@@ -39,7 +39,9 @@ public record DiveSiteDetails(
     IReadOnlyList<SiteSketchFeature>? Sketch = null,
     IReadOnlyList<PublicPhoto>? Photos = null,
     Guid? HeroMediaId = null,
-    IReadOnlyList<string>? OtherNames = null)
+    IReadOnlyList<string>? OtherNames = null,
+    SiteTexts? Texts = null,
+    bool HasDivingBan = false)
 {
     /// <summary>Weitere Namen («auch bekannt als»).</summary>
     public IReadOnlyList<string> OtherNameList => OtherNames ?? [];
@@ -51,7 +53,20 @@ public record DiveSiteDetails(
 
     /// <summary>Das Hero-Foto, falls gesetzt und öffentlich.</summary>
     public PublicPhoto? Hero => PhotoList.FirstOrDefault(p => p.Id == HeroMediaId);
+
+    /// <summary>Wahr, wenn ausser Name, Koordinate und Gewässer nichts erfasst ist (`ux.md`, Hinweis «erst im Verzeichnis»).</summary>
+    public bool IsDirectoryOnly =>
+        (Ratings?.Rated.Count ?? 0) == 0 && (Texts?.IsEmpty ?? true) && PhotoList.Count == 0 && EntryPoints.Count == 0 && SketchList.Count == 0 && !HasDivingBan;
 }
+
+/// <summary>Die Texte eines Platzes in der gewünschten Sprache, pro Feld sonst auf Deutsch. Leer heisst nicht erfasst.</summary>
+public record SiteTexts(SiteText? Underwater, SiteText? Surroundings, SiteText? Approach, SiteText? Hazards, SiteText? Facilities, SiteText? DivingBan)
+{
+    public bool IsEmpty => Underwater is null && Surroundings is null && Approach is null && Hazards is null && Facilities is null && DivingBan is null;
+}
+
+/// <summary>Ein Text. <paramref name="OnlyGerman"/>: die Sprache fehlt, der Text ist der deutsche. <paramref name="MachineTranslated"/>: automatisch übersetzt und noch nicht geprüft.</summary>
+public record SiteText(string Text, bool OnlyGerman, bool MachineTranslated);
 
 /// <summary>Ein Element der Tauchskizze mit der Beschriftung in der gewünschten Sprache, sonst auf Deutsch, sonst ohne.</summary>
 public record SiteSketchFeature(SketchKind Kind, IReadOnlyList<SitePoint> Points, int? Depth, string? Label);

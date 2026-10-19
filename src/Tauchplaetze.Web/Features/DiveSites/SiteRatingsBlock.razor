@@ -3,18 +3,12 @@
 
 @if (Rated.Any())
 {
-    <section class="page-section" aria-labelledby="ratings">
-        <h2 id="ratings" class="ratings-title">@L["Ratings_Title"]</h2>
         <ul class="ratings">
             @foreach (var (scale, value, isLevel) in Rated)
             {
                 var legendId = $"rating-legend-{scale.ToLowerInvariant()}";
                 <li class="rating" data-rating="@scale">
-                    <div class="rating-head">
-                        <span class="rating-name">@L[$"Rating_{scale}"]</span>
-                        <button type="button" class="rating-info" popovertarget="@legendId" data-hover-popover
-                                aria-label="@L["Rating_Info", L[$"Rating_{scale}"]]"><span aria-hidden="true">i</span></button>
-                    </div>
+                    <span class="rating-name">@L[$"Rating_{scale}"]</span>
                     <div class="rating-scale" data-kind="@(isLevel ? "level" : "quality")" role="img" aria-label="@L["Rating_Value", value]">
                         @for (var step = 1; step <= 5; step++)
                         {
@@ -22,6 +16,8 @@
                         }
                     </div>
                     <div class="rating-value"><span class="rating-number">@value</span> @L[$"Rating_{scale}_{value}"]</div>
+                    <button type="button" class="rating-info" popovertarget="@legendId" data-hover-popover
+                            aria-label="@L["Rating_Info", L[$"Rating_{scale}"]]"><span aria-hidden="true">i</span></button>
 
                     <div id="@legendId" popover class="rating-legend">
                         <p class="rating-legend-title">@L[$"Rating_{scale}"]</p>
@@ -38,7 +34,6 @@
                 </li>
             }
         </ul>
-    </section>
 }
 
 @code {

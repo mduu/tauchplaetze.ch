@@ -74,12 +74,34 @@
 
         <SiteLocationMap Site="site" />
 
-        <SiteRatingsBlock Ratings="site.Ratings" />
+        @if (site.Ratings?.Rated.Count > 0 || site.Texts?.Underwater is not null)
+        {
+            <section class="page-section" aria-labelledby="ratings">
+                <h2 id="ratings" class="section-heading">@L["Ratings_Title"]</h2>
+                <SiteRatingsBlock Ratings="site.Ratings" />
+                <SiteTextBlock Text="site.Texts?.Underwater" Name="underwater" Title="@L["PhotoSection_Underwater"]" Markdown="true" />
+            </section>
+        }
+
+        @if (site.HasDivingBan || site.Texts?.Hazards is not null)
+        {
+            <section class="page-section" aria-labelledby="hazards">
+                <h2 id="hazards" class="section-heading">@L["PhotoSection_Hazards"]</h2>
+                @if (site.HasDivingBan)
+                {
+                    <div class="callout diving-ban" data-diving-ban>
+                        <h3>@L["DivingBan_Title"]</h3>
+                        <SiteTextBlock Text="site.Texts?.DivingBan" Name="diving-ban" />
+                    </div>
+                }
+                <SiteTextBlock Text="site.Texts?.Hazards" Name="hazards" />
+            </section>
+        }
 
         <SitePhotos Photos="site.PhotoList" />
 
         <section class="page-section" aria-labelledby="practical">
-            <h2 id="practical" class="practical-title">@L["Practical"]</h2>
+            <h2 id="practical" class="section-heading">@L["Practical"]</h2>
             <div class="tiles">
                 <div class="tile">
                     <div class="tile-label">@L["Coordinates"]</div>
@@ -105,7 +127,16 @@
                 </div>
             </div>
 
-            @if (site.ContentLevel == 0)
+            @if (site.Texts is { Approach: not null } or { Surroundings: not null } or { Facilities: not null })
+            {
+                <div class="practical-texts">
+                    <SiteTextBlock Text="site.Texts?.Approach" Name="approach" Title="@L["PhotoSection_Approach"]" />
+                    <SiteTextBlock Text="site.Texts?.Surroundings" Name="surroundings" Title="@L["Rating_Surroundings"]" />
+                    <SiteTextBlock Text="site.Texts?.Facilities" Name="facilities" Title="@L["Text_Facilities"]" />
+                </div>
+            }
+
+            @if (site.IsDirectoryOnly)
             {
                 <div class="callout directory-only" data-content-level="0">
                     <h3>@L["DirectoryOnly_Title"]</h3>
