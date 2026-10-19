@@ -11,6 +11,7 @@
 @using Tauchplaetze.Core.Features.Forecasts.Queries
 @inject IStringLocalizer<AccountStrings> AccountL
 @inject IDialogService Dialogs
+@inject ILogger<PlatformForecast> Logger
 
 <div class="d-flex align-center justify-space-between flex-wrap gap-2 mb-4">
     <MudText Typo="Typo.h4">@L["Forecast_Title"]</MudText>
@@ -19,6 +20,11 @@
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="RunNow" Disabled="starting">@L["Forecast_RunNow"]</MudButton>
     </div>
 </div>
+
+@if (recomputeFailed)
+{
+    <MudAlert Severity="Severity.Error" Class="mb-4">@L["Forecast_RecomputeFailed"]</MudAlert>
+}
 
 @if (recomputed is { Error: null, Skipped: false } done)
 {
@@ -185,6 +191,8 @@ else
 
     private RecomputeForecastHistoryResult? recomputed;
 
+    private bool recomputeFailed;
+
     private AccountError? error;
 
     private Timer? refresh;
@@ -273,10 +281,24 @@ else
         }
 
         recomputing = true;
-        recomputed = await Command<RecomputeForecastHistoryCommand, RecomputeForecastHistoryResult>(new RecomputeForecastHistoryCommand(UserId));
-        error = recomputed.Error;
-        skipped = recomputed.Skipped;
-        recomputing = false;
+        recomputeFailed = false;
+        try
+        {
+            recomputed = await Command<RecomputeForecastHistoryCommand, RecomputeForecastHistoryResult>(new RecomputeForecastHistoryCommand(UserId));
+            error = recomputed.Error;
+            skipped = recomputed.Skipped;
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError(exception, "Recomputing the forecast history failed");
+            recomputed = null;
+            recomputeFailed = true;
+        }
+        finally
+        {
+            recomputing = false;
+        }
+
         await Load();
     }
 

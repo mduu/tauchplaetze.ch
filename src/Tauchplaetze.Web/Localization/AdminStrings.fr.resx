@@ -388,4 +388,5 @@
   <data name="Forecast_RecomputeConfirm" xml:space="preserve"><value>Recalculer</value></data>
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Annuler</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} jours recalculés, dont {1} avec un autre indice. Médiane par plan d'eau établie pour {2} jours.</value></data>
+  <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Le recalcul a échoué. Les détails figurent dans le journal.</value></data>
 </root>

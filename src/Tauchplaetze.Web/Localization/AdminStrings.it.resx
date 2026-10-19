@@ -388,4 +388,5 @@
   <data name="Forecast_RecomputeConfirm" xml:space="preserve"><value>Ricalcola</value></data>
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Annulla</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} giorni ricalcolati, di cui {1} con un altro indice. Mediana per specchio d'acqua costruita per {2} giorni.</value></data>
+  <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Il ricalcolo non è riuscito. I dettagli sono nel log.</value></data>
 </root>

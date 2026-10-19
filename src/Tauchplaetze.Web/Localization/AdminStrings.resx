@@ -388,4 +388,5 @@
   <data name="Forecast_RecomputeConfirm" xml:space="preserve"><value>Neu rechnen</value></data>
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Abbrechen</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} Tage neu gerechnet, davon {1} mit anderem Index. Median pro Gewässer für {2} Tage aufgebaut.</value></data>
+  <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Die Neuberechnung ist fehlgeschlagen. Details stehen im Log.</value></data>
 </root>
