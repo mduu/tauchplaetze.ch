@@ -50,7 +50,7 @@
   <data name="Reason_MixedLake" xml:space="preserve"><value>brassé</value></data>
   <data name="Reason_AlgaeBloom" xml:space="preserve"><value>efflorescence d'algues</value></data>
   <data name="Reason_ClarityUnknown" xml:space="preserve"><value>visibilité inconnue</value></data>
-  <data name="Sources" xml:space="preserve"><value>Données : {0}, {1} via {2}, {3}. La prévision est un indicateur, pas une garantie de visibilité.</value></data>
+  <data name="Sources" xml:space="preserve"><value>Données : {0}, {1} et DWD via {2}, {3}. La prévision est un indicateur, pas une garantie de visibilité.</value></data>
   <data name="Computed" xml:space="preserve"><value>Calculée le {0}</value></data>
   <data name="Start_Title_Day" xml:space="preserve"><value>Où plonger {0} ?</value></data>
   <data name="Start_Days_Label" xml:space="preserve"><value>Choisir le jour</value></data>
@@ -85,7 +85,6 @@
   <data name="Weather_Rain" xml:space="preserve"><value>Pluie mm/h</value></data>
   <data name="Weather_Sun" xml:space="preserve"><value>Soleil min/h</value></data>
   <data name="Weather_Wind" xml:space="preserve"><value>Vent km/h, flèche dans le sens du vent</value></data>
-  <data name="Weather_Source" xml:space="preserve"><value>Météo : {0} ICON-CH1 et ICON-CH2, DWD ICON, via {1}.</value></data>
   <data name="Wx_Clear" xml:space="preserve"><value>Ciel clair</value></data>
   <data name="Wx_PartlyCloudy" xml:space="preserve"><value>Partiellement nuageux</value></data>
   <data name="Wx_Cloudy" xml:space="preserve"><value>Couvert</value></data>

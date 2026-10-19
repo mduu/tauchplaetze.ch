@@ -200,18 +200,11 @@
     font-weight: 600;
 }
 
-.weather-source {
-    margin: 6px 0 0;
-    color: var(--color-text-subtle);
-    font-size: 12px;
-}
-
 .days {
     min-width: 0;
 }
 
-.sources a,
-.weather-source a {
+.sources a {
     color: inherit;
 }
 

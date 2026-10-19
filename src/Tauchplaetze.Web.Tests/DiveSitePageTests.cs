@@ -1,5 +1,6 @@
 using Tauchplaetze.Core.Features.Media;
 using System.Net;
+using System.Text.RegularExpressions;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.WaterBodies;
@@ -174,7 +175,8 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("href=\"https://open-meteo.com\"", html);
         Assert.Contains("href=\"https://www.alplakes.eawag.ch\"", html);
         Assert.Contains("href=\"https://www.hydrodaten.admin.ch/fr\"", html);
-        Assert.Matches(@"Données : Eawag Alplakes\s*,\s*MétéoSuisse via Open-Meteo\s*,\s*OFEV\s*\.", VisibleText.Of(html));
+        Assert.Matches(@"Données : Eawag Alplakes\s*,\s*MétéoSuisse et DWD via Open-Meteo\s*,\s*OFEV\s*\.", VisibleText.Of(html));
+        Assert.Single(Regex.Matches(html, "href=\"https://open-meteo.com\""));
     }
 
     [Fact]
