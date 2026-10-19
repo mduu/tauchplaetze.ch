@@ -1,0 +1,13 @@
+@* Logo und Name im Kopf von Moderation und Plattform, wie auf der Website. *@
+<span class="admin-brand">
+    <picture>
+        <source srcset="@Assets["img/logo-128.webp"]" type="image/webp" />
+        <img class="admin-brand-mark" src="@Assets["img/logo-128.png"]" width="31" height="32" alt="" />
+    </picture>
+    <span>tauchplaetze.ch · @Area</span>
+</span>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Area { get; set; } = "";
+}

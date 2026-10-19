@@ -11,13 +11,13 @@
 
 <MudLayout>
     <MudAppBar Elevation="0" Dense="true" Class="platform-bar">
-        <MudText Typo="Typo.h6" Class="admin-brand">tauchplaetze.ch · @L["Nav_Platform"]</MudText>
+        <AdminBrand Area="@L["Nav_Platform"]" />
         <nav class="platform-nav" aria-label="@L["Nav_Platform"]">
-            <MudNavLink Href="/platform" Match="NavLinkMatch.All">@L["Nav_Dashboard"]</MudNavLink>
-            <MudNavLink Href="/platform/konten">@L["Nav_Accounts"]</MudNavLink>
-            <MudNavLink Href="/platform/prognose">@L["Nav_Forecast"]</MudNavLink>
-            <MudNavLink Href="/platform/queues">@L["Platform_Queues_Title"]</MudNavLink>
-            <MudNavLink Href="/platform/inhalt">@L["Platform_Content_Title"]</MudNavLink>
+            <NavLink class="platform-link" href="/platform" Match="NavLinkMatch.All">@L["Nav_Dashboard"]</NavLink>
+            <NavLink class="platform-link" href="/platform/konten">@L["Nav_Accounts"]</NavLink>
+            <NavLink class="platform-link" href="/platform/prognose">@L["Nav_Forecast"]</NavLink>
+            <NavLink class="platform-link" href="/platform/queues">@L["Platform_Queues_Title"]</NavLink>
+            <NavLink class="platform-link" href="/platform/inhalt">@L["Platform_Content_Title"]</NavLink>
         </nav>
         <MudSpacer />
         <MudLink Href="/admin" Target="_top" Color="Color.Inherit" Underline="Underline.None" Class="mr-4">@L["Nav_Moderation"]</MudLink>

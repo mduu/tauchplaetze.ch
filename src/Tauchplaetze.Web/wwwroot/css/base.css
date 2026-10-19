@@ -714,15 +714,60 @@ a:hover {
   border-bottom: 2px solid var(--color-signal);
 }
 
-.platform-nav {
-  display: flex;
-  gap: 4px;
-  margin-left: 24px;
+.platform-bar .mud-toolbar {
+  gap: 16px;
 }
 
-.platform-nav .mud-nav-link {
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
+/* Navigation der Plattform: eine Zeile, auf schmalen Bildschirmen scrollbar statt umgebrochen. */
+.platform-nav {
+  display: flex;
+  align-self: stretch;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.platform-link {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 3px solid transparent;
+  color: var(--color-text-muted);
+  font-size: 15px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.platform-link:hover {
+  color: var(--color-text);
+}
+
+.platform-link.active {
+  border-bottom-color: var(--color-signal);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.platform-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.admin-brand {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-brand-mark {
+  display: block;
+  height: 32px;
+  width: auto;
 }
 
 /* Meine Vorschläge im Profil. */

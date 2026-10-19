@@ -13,7 +13,7 @@
 
 <MudLayout>
     <MudAppBar Elevation="0" Dense="true">
-        <MudText Typo="Typo.h6" Class="admin-brand">tauchplaetze.ch · @L["Title"]</MudText>
+        <AdminBrand Area="@L["Title"]" />
         <MudSpacer />
         <AuthorizeView>
             <MudText Typo="Typo.body2" Class="mr-4">@context.User.Identity?.Name</MudText>
