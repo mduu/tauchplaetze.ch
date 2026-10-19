@@ -1,0 +1,20 @@
+.years-title {
+    margin-bottom: 16px;
+}
+
+.years {
+    padding: 24px 24px 20px;
+}
+
+.years-note,
+.years-hint {
+    margin: 12px 0 0;
+    font-size: 13px;
+    color: var(--color-text-subtle);
+}
+
+@media (max-width: 520px) {
+    .years {
+        padding: 18px 12px 16px;
+    }
+}

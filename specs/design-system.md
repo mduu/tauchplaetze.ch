@@ -150,6 +150,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 - Achsen und Hilfslinien in `--color-border-strong` bzw. `--color-divider`.
 - Sprungschicht immer als Band in Signal-Orange (ca. 14 % Deckkraft) mit Beschriftung und den Tiefen von Ober- und Unterkante.
 - Jedes Diagramm hat eine Textalternative und zeigt die Kernwerte zusätzlich als Text.
+- **`LineChart`** (Verlauf, Jahr über Jahr, Mini-Diagramme): SVG serverseitig, ohne JavaScript. `preserveAspectRatio="none"` mit `vector-effect: non-scaling-stroke`, damit die Linie bei jeder Breite gleich dick bleibt. Tageswerte als Punkte (Linien der Länge null mit runden Enden, 35 % Deckkraft), geglättete Linie als monotone Kurve (`ChartGeometry`, schiesst nie über Minimum oder Maximum hinaus), 2.5 px. Eine Lücke von mehr als 7 Tagen bricht die Linie ab. Beschriftungen als HTML über dem SVG in Mono 11 px: Achse links für die erste Reihe, rechts für die zweite, Monate oder Wochen unten (schmal nur jede zweite). Farben pro Reihe (`data-tone`): Index `--color-primary`, Sicht `--color-rain`, Wind `--color-sun`, frühere Jahre `--color-border-strong`. Regelwechsel gestrichelt in `--color-signal`. 180 px hoch, als Mini-Diagramm in einer Kachel 36 px ohne Achsen, mit Zeitraum darunter («letzte 30 Tage»).
 
 ## CSS-Startpunkt
 

@@ -419,6 +419,49 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Equal(["12 m", "18 m"], Regex.Matches(html, "<text [^>]*data-thermocline-depth[^>]*>([^<]*)</text>").Select(m => m.Groups[1].Value));
     }
 
+    [Fact]
+    public async Task Der_Verlauf_zeigt_den_Index_mit_Sicht_und_Regelwechsel_und_die_Kacheln_zeigen_Mini_Diagramme()
+    {
+        // Arrange
+        app.SiteHistory.Answer = query => query.DiveSiteId == ForecastSiteId
+            ? new SiteIndexHistory(
+                [HistoryDay(16, 6.0m, "rules-1.2", AlgaeLevel.Low), HistoryDay(17, 7.0m, "rules-1.3", AlgaeLevel.Medium), HistoryDay(18, 8.4m, "rules-1.3", AlgaeLevel.Low)],
+                [new RuleChange(new DateOnly(2026, 10, 17), "rules-1.3")])
+            : new SiteIndexHistory([], []);
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/fr/sites-de-plongee/" + WithForecast, TestContext.Current.CancellationToken);
+
+        // Assert
+        var text = VisibleText.Of(html);
+        Assert.Contains("Évolution", text);
+        Assert.Contains("Visibilité près de la rive", text);
+        Assert.Contains("nouvelle règle", text);
+        Assert.Contains("L'évolution se complète avec le temps. Valeurs depuis le 16.10.2026.", WebUtility.HtmlDecode(text));
+        Assert.Contains("aria-label=\"Visibilité près de la rive sur les 30 derniers jours\"", WebUtility.HtmlDecode(html));
+        Assert.Contains("aria-label=\"Vent le plus fort des 5 prochains jours\"", WebUtility.HtmlDecode(html));
+        Assert.Contains("aria-label=\"Algues sur les 30 derniers jours\"", WebUtility.HtmlDecode(html));
+    }
+
+    [Fact]
+    public async Task Ohne_Verlauf_fehlt_der_Abschnitt_und_die_Kacheln_haben_kein_Mini_Diagramm_fuer_Sicht()
+    {
+        // Arrange
+        app.SiteHistory.Answer = _ => new SiteIndexHistory([], []);
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithForecast, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.DoesNotContain("id=\"history\"", html);
+        Assert.DoesNotContain("Sicht in Ufernähe der letzten 30 Tage", WebUtility.HtmlDecode(html));
+    }
+
+    private static HistoryDay HistoryDay(int october, decimal index, string modelVersion, AlgaeLevel algae) =>
+        new(new DateOnly(2026, 10, october), index, index, 5.4m, 7.7m, ClaritySource.Sentinel2Shore, 2, 12m, algae, modelVersion);
+
     private static ForecastDay Day(int october, decimal? index, ReasonCode[] reasons) => new(
         new DateOnly(2026, 10, october), index is null ? (byte)1 : (byte)3, index, index is null ? null : ProfileSource.Model3d,
         index is null ? null : 15.2m, 15.0m, 11.4m, 7.9m, 12m, 18m, 7.5m, new DateOnly(2026, 10, 15), VisibilityIndicator.Good, 18m,

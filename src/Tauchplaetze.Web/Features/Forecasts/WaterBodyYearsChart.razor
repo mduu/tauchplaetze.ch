@@ -1,0 +1,41 @@
+@using Tauchplaetze.Core.Features.Forecasts
+@inject IStringLocalizer<ForecastStrings> L
+@inject TimeProvider Time
+
+@if (Points >= 2)
+{
+    <section class="page-section" aria-labelledby="years">
+        <h2 id="years" class="section-title years-title">@L["Years_Title"]</h2>
+        <div class="card years">
+            <LineChart Series="Series" Ticks="HistoryCharts.MonthTicks()" MaxGap="7 / 364.0" Axes="1" AriaLabel="@L["Years_Aria"]" />
+            <p class="years-note">@L["Years_Note"]</p>
+            @if (Points < HistoryCharts.FillingBelowDays)
+            {
+                <p class="years-hint">@L["History_Filling", History.Years[0].Points[0].Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)]</p>
+            }
+        </div>
+    </section>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public WaterBodyIndexHistory History { get; set; } = default!;
+
+    private int Points => History.Years.Sum(y => y.Points.Count);
+
+    private int CurrentYear => DischargeFormat.Today(Time).Year;
+
+    /// <remarks>Das aktuelle Jahr zuletzt, damit seine Linie über den anderen liegt.</remarks>
+    private IReadOnlyList<ChartSeries> Series =>
+    [
+        .. History.Years
+            .OrderBy(y => y.Year == CurrentYear)
+            .ThenBy(y => y.Year)
+            .Select(y => new ChartSeries(
+                y.Year == CurrentYear ? "index" : "past",
+                y.Year.ToString(CultureInfo.InvariantCulture),
+                [.. y.Points.Select(p => new ChartPoint(HistoryCharts.DayOfYear(p.Date), (double)p.MedianIndex, (double?)p.SmoothedIndex))],
+                0,
+                10)),
+    ];
+}

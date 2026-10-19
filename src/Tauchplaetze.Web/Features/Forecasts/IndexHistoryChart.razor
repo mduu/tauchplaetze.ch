@@ -1,0 +1,43 @@
+@using Tauchplaetze.Core.Features.Forecasts
+@inject IStringLocalizer<ForecastStrings> L
+@inject TimeProvider Time
+
+<section class="page-section" aria-labelledby="history">
+    <h2 id="history" class="section-title history-title">@L["History_Title"]</h2>
+    <div class="card history">
+        @if (History.Days.Count(d => d.DiveIndex is not null) < 2)
+        {
+            <p class="history-hint">@L["History_Empty"]</p>
+        }
+        else
+        {
+            <LineChart Series="Series" Ticks="HistoryCharts.Ticks(Range)" Markers="Markers" MaxGap="Range.MaxGap"
+                       AriaLabel="@L["History_Aria", Date(Range.From), Date(Range.To)]" />
+            <p class="history-note">@L["History_Note"]</p>
+            @if (History.Days.Count < HistoryCharts.FillingBelowDays)
+            {
+                <p class="history-hint">@L["History_Filling", Date(History.Days[0].Date)]</p>
+            }
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter, EditorRequired]
+    public SiteIndexHistory History { get; set; } = default!;
+
+    private HistoryCharts.Range Range => HistoryCharts.RangeOf(History.Days, DischargeFormat.Today(Time));
+
+    private IReadOnlyList<ChartSeries> Series =>
+    [
+        new("index", L["History_Index"], [.. History.Days.Select(d => new ChartPoint(Range.X(d.Date), (double?)d.DiveIndex, (double?)d.SmoothedIndex))], 0, 10),
+        new("visibility", L["History_Visibility"],
+            [.. History.Days.Select(d => new ChartPoint(Range.X(d.Date), null, (double?)d.SecchiDepthShore))],
+            0, HistoryCharts.VisibilityMax(History.Days.Select(d => d.SecchiDepthShore)), " m"),
+    ];
+
+    private IReadOnlyList<ChartTick> Markers =>
+        [.. History.RuleChanges.Select(c => new ChartTick(Range.X(c.Date), L["History_RuleChange"]))];
+
+    private static string Date(DateOnly date) => date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+}

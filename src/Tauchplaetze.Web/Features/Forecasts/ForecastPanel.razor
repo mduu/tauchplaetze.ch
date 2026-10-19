@@ -21,6 +21,10 @@
             <div class="label">@L["Tile_Visibility"]</div>
             <div class="stat-value">@L[$"Visibility_{Today.VisibilityIndicator}"]</div>
             <div class="stat-note">@VisibilityNote</div>
+            @if (Forecast.HasSatellite && History is not null)
+            {
+                <TileSparkline Series="VisibilitySpark" Caption="@SparkCaption" AriaLabel="@L["Spark_Visibility_Aria"]" MaxGap="SparkGap" />
+            }
         </div>
         <div class="stat">
             <div class="label">@L["Tile_Wind"]</div>
@@ -28,6 +32,7 @@
             {
                 <div class="stat-value">@L["Wind_Value", bft]</div>
                 <div class="stat-note">@L["Wind_Detail", ForecastFormat.Meters(Today.WindSpeedKmh ?? 0), ForecastFormat.Meters(Today.WindGustsKmh ?? 0)]</div>
+                <TileSparkline Series="WindSpark" Caption="@L["Spark_Next5"]" AriaLabel="@L["Spark_Wind_Aria"]" ShowDots="true" />
             }
             else
             {
@@ -39,6 +44,10 @@
             <div class="stat">
                 <div class="label">@L["Tile_Algae"]</div>
                 <div class="stat-value">@L[$"Algae_{Today.AlgaeLevel}"]</div>
+                @if (History is not null)
+                {
+                    <TileSparkline Series="AlgaeSpark" Caption="@SparkCaption" AriaLabel="@L["Spark_Algae_Aria"]" MaxGap="SparkGap" />
+                }
             </div>
         }
         @if (Today is { CurrentLevel: { } level, CurrentSpeed: { } speed, CurrentDirection: { } direction })
@@ -113,7 +122,51 @@
     [Parameter]
     public SiteDischarge? Discharge { get; set; }
 
+    /// <summary>Der Verlauf bis heute für die Mini-Diagramme der Kacheln Sicht und Algen.</summary>
+    [Parameter]
+    public SiteIndexHistory? History { get; set; }
+
     private ForecastDay Today => Forecast.Days[0];
+
+    private const int SparkDays = 30;
+
+    /// <summary>Eine Lücke von mehr als 3 Tagen bricht die Linie ab.</summary>
+    private double SparkGap => 3.0 / Math.Max(1, Today.Date.DayNumber - SparkFrom.DayNumber);
+
+    private IEnumerable<HistoryDay> RecentDays => History?.Days.Where(d => d.Date >= SparkFrom) ?? [];
+
+    /// <summary>Höchstens 30 Tage zurück. Gibt es erst wenige Tage, beginnt die Achse beim ersten Tag.</summary>
+    private DateOnly SparkFrom
+    {
+        get
+        {
+            var earliest = Today.Date.AddDays(1 - SparkDays);
+            return History?.Days.FirstOrDefault(d => d.Date >= earliest)?.Date ?? earliest;
+        }
+    }
+
+    private string SparkCaption => SparkFrom > Today.Date.AddDays(1 - SparkDays)
+        ? L["Spark_Since", SparkFrom.ToString("dd.MM.", CultureInfo.InvariantCulture)]
+        : L["Spark_Past30"];
+
+    private double SparkX(DateOnly date) =>
+        SparkFrom >= Today.Date ? 1 : (double)(date.DayNumber - SparkFrom.DayNumber) / (Today.Date.DayNumber - SparkFrom.DayNumber);
+
+    private ChartSeries VisibilitySpark => new(
+        "visibility", L["History_Visibility"],
+        [.. RecentDays.Select(d => new ChartPoint(SparkX(d.Date), null, (double?)d.SecchiDepthShore))],
+        0, HistoryCharts.VisibilityMax(RecentDays.Select(d => d.SecchiDepthShore)));
+
+    private ChartSeries AlgaeSpark => new(
+        "index", L["Tile_Algae"],
+        [.. RecentDays.Select(d => new ChartPoint(SparkX(d.Date), null, HistoryCharts.Algae(d.AlgaeLevel)))],
+        1, 3);
+
+    /// <summary>Der stärkste Wind pro Prognosetag, mindestens bis 30 km/h skaliert.</summary>
+    private ChartSeries WindSpark => new(
+        "wind", L["Tile_Wind"],
+        [.. Forecast.Days.Select((d, i) => new ChartPoint(Forecast.Days.Count == 1 ? 1 : (double)i / (Forecast.Days.Count - 1), (double?)d.WindSpeedKmh, (double?)d.WindSpeedKmh))],
+        0, Math.Max(30, (double)(Forecast.Days.Max(d => d.WindSpeedKmh) ?? 0)));
 
     private string Eyebrow => Today.ProfileSource is { } source ? L[$"Profile_Source_{source}"] : L["Day_Outlook"];
 

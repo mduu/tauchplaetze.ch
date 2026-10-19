@@ -1,0 +1,26 @@
+@* Ein Mini-Diagramm unter dem Wert einer Kachel. Erscheint erst ab zwei Werten. *@
+
+@if (Series.Points.Count(p => p.Smooth is not null) >= 2)
+{
+    <div class="sparkline">
+        <LineChart Series="[Series]" Compact="true" ShowDots="ShowDots" MaxGap="MaxGap" AriaLabel="@AriaLabel" />
+        <span class="sparkline-caption">@Caption</span>
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public ChartSeries Series { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public string Caption { get; set; } = "";
+
+    [Parameter, EditorRequired]
+    public string AriaLabel { get; set; } = "";
+
+    [Parameter]
+    public bool ShowDots { get; set; }
+
+    [Parameter]
+    public double MaxGap { get; set; } = 1;
+}

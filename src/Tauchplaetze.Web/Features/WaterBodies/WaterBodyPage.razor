@@ -5,8 +5,12 @@
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.DiveSites.Queries
 @using Tauchplaetze.Core.Features.WaterBodies.Queries
+@using Tauchplaetze.Core.Features.Forecasts
+@using Tauchplaetze.Core.Features.Forecasts.Queries
 @using Tauchplaetze.Web.Features.DiveSites
+@using Tauchplaetze.Web.Features.Forecasts
 @inject IQueryHandler<GetWaterBodyQuery, WaterBodyDetails?> WaterBodyQuery
+@inject IQueryHandler<GetWaterBodyIndexHistoryQuery, WaterBodyIndexHistory> IndexHistory
 @inject IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> DiveSites
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
@@ -29,6 +33,11 @@
         <SiteMap Sites="sites" Latitude="water.Latitude" Longitude="water.Longitude" Zoom="11" />
     </section>
 
+    @if (history is not null)
+    {
+        <WaterBodyYearsChart History="history" />
+    }
+
     <section class="page-section">
         <h2 class="practical-title">@L["WaterBody_Sites"]</h2>
         @if (sites.Count == 0)
@@ -47,6 +56,8 @@
 
     private IReadOnlyList<DiveSiteListItem> sites = [];
 
+    private WaterBodyIndexHistory? history;
+
     [Parameter]
     public string Slug { get; set; } = "";
 
@@ -62,5 +73,6 @@
         }
 
         sites = await DiveSites.Handle(new GetDiveSitesQuery(Language, Slug));
+        history = await IndexHistory.Handle(new GetWaterBodyIndexHistoryQuery(water.Id));
     }
 }

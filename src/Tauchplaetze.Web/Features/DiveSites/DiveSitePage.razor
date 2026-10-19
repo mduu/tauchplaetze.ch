@@ -11,6 +11,7 @@
 @inject IQueryHandler<GetDiveSiteQuery, DiveSiteLookup> DiveSites
 @inject IQueryHandler<GetSiteForecastQuery, SiteForecast> Forecasts
 @inject IQueryHandler<GetSiteDischargeQuery, SiteDischarge?> Discharges
+@inject IQueryHandler<GetSiteIndexHistoryQuery, SiteIndexHistory> IndexHistory
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
 @inject NavigationManager Navigation
@@ -50,7 +51,7 @@
         <section class="page-section" aria-labelledby="conditions">
             @if (forecast is { Days.Count: > 0 })
             {
-                <ForecastPanel Forecast="forecast" Discharge="discharge" />
+                <ForecastPanel Forecast="forecast" Discharge="discharge" History="history" />
             }
             else
             {
@@ -71,6 +72,11 @@
                 }
             }
         </section>
+
+        @if (history is { Days.Count: > 0 })
+        {
+            <IndexHistoryChart History="history" />
+        }
 
         <SiteLocationMap Site="site" />
 
@@ -176,6 +182,8 @@
 
     private SiteDischarge? discharge;
 
+    private SiteIndexHistory? history;
+
     [Parameter]
     public string Slug { get; set; } = "";
 
@@ -193,6 +201,7 @@
             case DiveSiteLookup.Found found:
                 forecast = await Forecasts.Handle(new GetSiteForecastQuery(found.Site.Id));
                 discharge = await Discharges.Handle(new GetSiteDischargeQuery(found.Site.Id));
+                history = await IndexHistory.Handle(new GetSiteIndexHistoryQuery(found.Site.Id));
                 break;
             case DiveSiteLookup.Moved moved:
                 RedirectPermanently(PublicRoutes.DiveSite(Language, moved.Slug));

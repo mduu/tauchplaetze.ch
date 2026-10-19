@@ -1,0 +1,11 @@
+.sparkline {
+    margin-top: 10px;
+}
+
+.sparkline-caption {
+    display: block;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-subtle);
+}

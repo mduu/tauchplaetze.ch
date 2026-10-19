@@ -160,4 +160,21 @@
   <data name="Start_WithoutForecast_Title" xml:space="preserve"><value>Dans le rayon, encore sans prévisions</value></data>
   <data name="Start_WithoutForecast_Note" xml:space="preserve"><value>pas encore de prévisions</value></data>
   <data name="Start_WithoutForecast_More" xml:space="preserve"><value>et {0} autres sites sans prévisions</value></data>
+  <data name="History_Title" xml:space="preserve"><value>Évolution</value></data>
+  <data name="History_Index" xml:space="preserve"><value>Indice de plongée</value></data>
+  <data name="History_Visibility" xml:space="preserve"><value>Visibilité près de la rive</value></data>
+  <data name="History_Note" xml:space="preserve"><value>Ligne : moyenne sur 7 jours. Points : valeurs de chaque jour.</value></data>
+  <data name="History_Filling" xml:space="preserve"><value>L'évolution se complète avec le temps. Valeurs depuis le {0}.</value></data>
+  <data name="History_Empty" xml:space="preserve"><value>Il n'y a pas encore d'évolution pour ce site.</value></data>
+  <data name="History_Aria" xml:space="preserve"><value>Indice de plongée du {0} au {1}</value></data>
+  <data name="History_RuleChange" xml:space="preserve"><value>nouvelle règle</value></data>
+  <data name="Years_Title" xml:space="preserve"><value>D'une année à l'autre</value></data>
+  <data name="Years_Note" xml:space="preserve"><value>Médiane de l'indice de plongée de tous les sites du lac, par jour, moyennée sur 7 jours.</value></data>
+  <data name="Years_Aria" xml:space="preserve"><value>Indice de plongée du plan d'eau par année, de janvier à décembre</value></data>
+  <data name="Spark_Past30" xml:space="preserve"><value>30 derniers jours</value></data>
+  <data name="Spark_Next5" xml:space="preserve"><value>5 prochains jours</value></data>
+  <data name="Spark_Visibility_Aria" xml:space="preserve"><value>Visibilité près de la rive sur les 30 derniers jours</value></data>
+  <data name="Spark_Wind_Aria" xml:space="preserve"><value>Vent le plus fort des 5 prochains jours</value></data>
+  <data name="Spark_Algae_Aria" xml:space="preserve"><value>Algues sur les 30 derniers jours</value></data>
+  <data name="Spark_Since" xml:space="preserve"><value>depuis le {0}</value></data>
 </root>

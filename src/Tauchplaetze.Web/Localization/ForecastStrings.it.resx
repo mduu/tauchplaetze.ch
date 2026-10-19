@@ -160,4 +160,21 @@
   <data name="Start_WithoutForecast_Title" xml:space="preserve"><value>Nel raggio, ancora senza previsioni</value></data>
   <data name="Start_WithoutForecast_Note" xml:space="preserve"><value>ancora nessuna previsione</value></data>
   <data name="Start_WithoutForecast_More" xml:space="preserve"><value>e altri {0} siti senza previsioni</value></data>
+  <data name="History_Title" xml:space="preserve"><value>Andamento</value></data>
+  <data name="History_Index" xml:space="preserve"><value>Indice d'immersione</value></data>
+  <data name="History_Visibility" xml:space="preserve"><value>Visibilità vicino a riva</value></data>
+  <data name="History_Note" xml:space="preserve"><value>Linea: media su 7 giorni. Punti: valori dei singoli giorni.</value></data>
+  <data name="History_Filling" xml:space="preserve"><value>L'andamento si completa col tempo. Valori dal {0}.</value></data>
+  <data name="History_Empty" xml:space="preserve"><value>Per questo sito non c'è ancora un andamento.</value></data>
+  <data name="History_Aria" xml:space="preserve"><value>Indice d'immersione dal {0} al {1}</value></data>
+  <data name="History_RuleChange" xml:space="preserve"><value>nuova regola</value></data>
+  <data name="Years_Title" xml:space="preserve"><value>Anno dopo anno</value></data>
+  <data name="Years_Note" xml:space="preserve"><value>Mediana dell'indice d'immersione di tutti i siti del lago, per giorno, media su 7 giorni.</value></data>
+  <data name="Years_Aria" xml:space="preserve"><value>Indice d'immersione dello specchio d'acqua per anno, da gennaio a dicembre</value></data>
+  <data name="Spark_Past30" xml:space="preserve"><value>ultimi 30 giorni</value></data>
+  <data name="Spark_Next5" xml:space="preserve"><value>prossimi 5 giorni</value></data>
+  <data name="Spark_Visibility_Aria" xml:space="preserve"><value>Visibilità vicino a riva negli ultimi 30 giorni</value></data>
+  <data name="Spark_Wind_Aria" xml:space="preserve"><value>Vento più forte dei prossimi 5 giorni</value></data>
+  <data name="Spark_Algae_Aria" xml:space="preserve"><value>Alghe negli ultimi 30 giorni</value></data>
+  <data name="Spark_Since" xml:space="preserve"><value>dal {0}</value></data>
 </root>

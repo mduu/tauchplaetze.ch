@@ -1,6 +1,8 @@
 using System.Net;
 using System.Text.RegularExpressions;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.WaterBodies;
+using Tauchplaetze.Core.Features.WaterBodies.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -36,6 +38,44 @@ public class WaterBodiesPageTests : IClassFixture<WebApp>
         Assert.Contains("id=\"region-ticino\"", html);
         Assert.Contains("href=\"/fr/eaux/lago-di-vogorno\"", html);
         Assert.Contains("2 sites de plongée", VisibleText.Of(html));
+    }
+
+    [Fact]
+    public async Task Die_Gewaesserseite_zeigt_den_Index_Jahr_ueber_Jahr_mit_einer_Linie_pro_Jahr()
+    {
+        // Arrange
+        app.WaterBody.Answer = _ => new WaterBodyDetails(7, "zuerichsee", "Zürichsee", WaterBodyType.Lake, 47.28, 8.6);
+        app.WaterBodyHistory.Answer = _ => new WaterBodyIndexHistory(
+            [
+                new IndexYear(2025, [new IndexPoint(new DateOnly(2025, 10, 18), 6.0m, 6.0m, 40), new IndexPoint(new DateOnly(2025, 10, 19), 6.4m, 6.2m, 41)]),
+                new IndexYear(2026, [new IndexPoint(new DateOnly(2026, 10, 18), 7.0m, 7.0m, 49), new IndexPoint(new DateOnly(2026, 10, 19), 7.6m, 7.3m, 49)]),
+            ],
+            []);
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/gewaesser/zuerichsee", TestContext.Current.CancellationToken);
+
+        // Assert
+        var text = VisibleText.Of(html);
+        Assert.Contains("Jahr über Jahr", text);
+        Assert.Equal(["2025", "2026"], Regex.Matches(html, "<li data-tone=\"[a-z]+\"[^>]*><span class=\"swatch\"[^>]*></span>(\\d{4})</li>").Select(m => m.Groups[1].Value));
+        Assert.Equal(2, Regex.Matches(html, "class=\"line\"").Count);
+    }
+
+    [Fact]
+    public async Task Ohne_Werte_fehlt_Jahr_ueber_Jahr_auf_der_Gewaesserseite()
+    {
+        // Arrange
+        app.WaterBody.Answer = _ => new WaterBodyDetails(7, "zuerichsee", "Zürichsee", WaterBodyType.Lake, 47.28, 8.6);
+        app.WaterBodyHistory.Answer = _ => new WaterBodyIndexHistory([], []);
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/gewaesser/zuerichsee", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.DoesNotContain("Jahr über Jahr", VisibleText.Of(html));
     }
 
     private static WaterBodySummary Water(string slug, string name, WaterBodyType type, int sites) => new(slug.Length, slug, name, type, 46.5, 8.0, sites);

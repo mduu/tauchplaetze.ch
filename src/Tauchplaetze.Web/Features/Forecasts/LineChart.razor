@@ -1,0 +1,146 @@
+@* Ein Linien-Diagramm als SVG, serverseitig gerendert (`design-system.md`, «Diagramme»). Kompakt als Mini-Diagramm in einer Kachel. *@
+
+<figure class="line-chart" data-compact="@(Compact ? "true" : "false")">
+    @if (!Compact && Series.Count > 1)
+    {
+        <ul class="legend">
+            @foreach (var series in Series)
+            {
+                <li data-tone="@series.Tone"><span class="swatch" aria-hidden="true"></span>@series.Label</li>
+            }
+        </ul>
+    }
+    <div class="plot">
+        <svg viewBox="0 0 @Width @Height" preserveAspectRatio="none" role="img" aria-label="@AriaLabel">
+            @if (!Compact)
+            {
+                @foreach (var share in GridLines)
+                {
+                    <line class="grid" x1="0" x2="@Width" y1="@Y(share)" y2="@Y(share)" />
+                }
+            }
+            @foreach (var marker in Markers)
+            {
+                <line class="marker" x1="@X(marker.X)" x2="@X(marker.X)" y1="0" y2="@Height" />
+            }
+            @foreach (var series in Series)
+            {
+                <g data-tone="@series.Tone">
+                    @if (ShowDots)
+                    {
+                        <path class="dots" d="@ChartGeometry.Dots(series.Points.Where(p => p.Raw is not null).Select(p => Point(series, p.X, p.Raw!.Value)))" />
+                    }
+                    @foreach (var run in Runs(series))
+                    {
+                        <path class="line" d="@ChartGeometry.SmoothPath(run)" />
+                    }
+                </g>
+            }
+        </svg>
+        @if (!Compact)
+        {
+            @foreach (var (series, index) in Series.Take(Axes).Select((s, i) => (s, i)))
+            {
+                @foreach (var share in GridLines)
+                {
+                    <span class="y-label" data-side="@(index == 0 ? "left" : "right")" data-tone="@(Axes == 1 ? null : series.Tone)" style="top: @Percent(1 - Shrink(share))">@Value(series, share)</span>
+                }
+            }
+            @foreach (var marker in Markers)
+            {
+                <span class="marker-label" style="left: @Percent(marker.X)">@marker.Label</span>
+            }
+        }
+    </div>
+    @if (!Compact && Ticks.Count > 0)
+    {
+        <div class="x-axis">
+            @foreach (var tick in Ticks)
+            {
+                <span style="left: @Percent(tick.X)">@tick.Label</span>
+            }
+        </div>
+    }
+</figure>
+
+@code {
+    private const double Width = 1000;
+
+    private const double Height = 100;
+
+    /// <summary>Rand oben und unten in Anteilen der Höhe, damit Punkte am Minimum oder Maximum nicht abgeschnitten werden.</summary>
+    private const double Margin = 0.06;
+
+    private static readonly double[] GridLines = [0, 0.5, 1];
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<ChartSeries> Series { get; set; } = [];
+
+    [Parameter]
+    public IReadOnlyList<ChartTick> Ticks { get; set; } = [];
+
+    [Parameter]
+    public IReadOnlyList<ChartTick> Markers { get; set; } = [];
+
+    [Parameter, EditorRequired]
+    public string AriaLabel { get; set; } = "";
+
+    [Parameter]
+    public bool Compact { get; set; }
+
+    [Parameter]
+    public bool ShowDots { get; set; } = true;
+
+    /// <summary>Wie viele Reihen eine eigene Achse haben: die erste links, die zweite rechts. Mit 1 teilen alle Reihen die linke Achse.</summary>
+    [Parameter]
+    public int Axes { get; set; } = 2;
+
+    /// <summary>Liegen zwei Punkte weiter auseinander, bricht die Linie ab (Lücke in den Daten).</summary>
+    [Parameter]
+    public double MaxGap { get; set; } = 1;
+
+    private IEnumerable<IReadOnlyList<ChartGeometry.Point>> Runs(ChartSeries series)
+    {
+        var run = new List<ChartGeometry.Point>();
+        double? previousX = null;
+        foreach (var point in series.Points)
+        {
+            if (point.Smooth is null || (previousX is { } before && point.X - before > MaxGap))
+            {
+                if (run.Count > 0)
+                {
+                    yield return run;
+                    run = [];
+                }
+            }
+
+            if (point.Smooth is { } smooth)
+            {
+                run.Add(Point(series, point.X, smooth));
+                previousX = point.X;
+            }
+        }
+
+        if (run.Count > 0)
+        {
+            yield return run;
+        }
+    }
+
+    private static ChartGeometry.Point Point(ChartSeries series, double x, double value) =>
+        new(x * Width, Height - Shrink(Share(series, value)) * Height);
+
+    private static double Share(ChartSeries series, double value) =>
+        series.Max == series.Min ? 0.5 : Math.Clamp((value - series.Min) / (series.Max - series.Min), 0, 1);
+
+    private static double Shrink(double share) => Margin + share * (1 - 2 * Margin);
+
+    private static string X(double x) => ChartGeometry.Number(x * Width);
+
+    private static string Y(double share) => ChartGeometry.Number(Height - Shrink(share) * Height);
+
+    private static string Percent(double share) => FormattableString.Invariant($"{share * 100:0.##}%");
+
+    private static string Value(ChartSeries series, double share) =>
+        $"{(series.Min + share * (series.Max - series.Min)).ToString("0.#", CultureInfo.CurrentCulture)}{series.Unit}";
+}
