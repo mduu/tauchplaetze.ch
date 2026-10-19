@@ -46,6 +46,7 @@ Das Tauchfenster ist 08:00 bis 16:00 Uhr Lokalzeit.
 | Klarheit (Secchi-Schätzung) | Alplakes Satellit Sentinel-2 `Z490` in Ufernähe, Rückfall Sentinel-3 `Zsd_lee` am Satellitenpunkt | Klarheit | MVP |
 | Algen (Chlorophyll) | Alplakes Satellit Sentinel-3 `chla` am Satellitenpunkt | Abzug bei Klarheit | MVP |
 | Wind (Mittel, Böen, Richtung) | Open-Meteo (ICON-CH1, ICON-CH2) | Wind | MVP |
+| Strömung im Tauchbereich (`u`, `v`) | Alplakes 3D-Modell am Platz | Information, kein Teilwert | MVP |
 | Regen der letzten 72 h | SwissMetNet gemessen (vergangene Stunden), Open-Meteo (künftige Stunden) | Zuflüsse | MVP |
 | Abfluss der Zuflüsse bzw. des Flusses | BAFU | Zuflüsse | MVP |
 | Trübung des Flusses | BAFU, wo gemessen | Klarheit im Fluss | MVP |
@@ -88,6 +89,19 @@ Gemessene Secchi-Tiefen gibt es über Alplakes nicht mehr (Spike 17.10.2026). Di
 - Grundlage: die Klarheit in Ufernähe.
 - Unter der Sprungschicht ist die Sicht im Sommer meist besser. Dann setzt der Algorithmus `VisibilityGoodBelow = ThermoclineBottom`.
 - Ergebnis als Stufe: `Poor`, `Moderate`, `Good`, `VeryGood`, `Unknown`.
+
+### Strömung
+
+Die Strömung ist eine Information auf der Platzseite (Kachel «Strömung»). Sie fliesst nicht in den Index. Erst Erfahrungen zeigen, ab wann sie einen Tauchgang stört.
+
+- **Quelle:** `u` (nach Osten) und `v` (nach Norden) in m/s aus demselben 3D-Call wie das Temperaturprofil. Nur Seen mit 3D-Modell. Flüsse: siehe Zuflüsse und Abfluss.
+- **Tauchbereich:** alle Tiefen des Modells von 5 bis 30 m.
+- **Pro Zeitschritt:** Geschwindigkeit = Mittel der Geschwindigkeiten aller Tiefen im Tauchbereich. So heben sich Strömungen in entgegengesetzter Richtung nicht auf. Die Richtung kommt aus dem Mittel der Vektoren.
+- **Pro Tag:** der stärkste Zeitschritt im Tauchfenster 08–16 Uhr, wie beim Wind. Für einen Tauchgang zählt, wie stark es werden kann.
+- **Richtung:** wohin das Wasser fliesst (Konvention der Ozeanografie), in Grad von Nord. Anders als beim Wind, dessen Richtung angibt, woher er weht. Die Kachel schreibt darum «nach Nordosten» und zeigt einen Pfeil in Fliessrichtung.
+- **Einstufung (Annahmen vom 19.10.2026, `CurrentRules`):** ruhig unter 0.05 m/s, spürbar 0.05 bis 0.2 m/s, stark über 0.2 m/s. Anzeige in cm/s.
+- **Speicher:** `DailyForecast.CurrentSpeed`, `CurrentDirection`, `CurrentLevel`. Ohne Werte im Tauchfenster bleiben sie leer, und die Kachel fehlt.
+- Weil die Strömung nicht in den Index fliesst, ändert eine neue Schwelle die `ModelVersion` nicht.
 
 ## Wetter pro Stunde
 

@@ -231,6 +231,9 @@ Eine Zeile pro Platz und Tag. PK: (`DiveSiteId`, `Date`).
 | `WindSpeedKmh` | decimal(4,1), optional | dasselbe Maximum in km/h |
 | `WindGustsKmh` | decimal(4,1), optional | stärkste Böe im Tauchfenster, km/h |
 | `WindDirection` | int, optional | Grad |
+| `CurrentSpeed` | decimal(5,3), optional | stärkste Strömung im Tauchfenster, über 5–30 m gemittelt, in m/s (`forecast.md`, «Strömung»). Nur Seen mit 3D-Modell |
+| `CurrentDirection` | int, optional | Richtung, in die die Strömung fliesst, Grad von Nord |
+| `CurrentLevel` | enum, optional | `Calm`, `Noticeable`, `Strong` |
 | `WeatherModel` | string(40), optional | Wettermodell, aus dem die Werte stammen (z.B. `meteoswiss_icon_ch1`, `meteoswiss_icon_ch2`) |
 | `PrecipitationLast72h` | decimal(5,1), optional | mm, die 72 h vor dem Tag, ohne den Tag selbst |
 | `PrecipitationOnDay` | decimal(5,1), optional | mm im Tauchfenster |

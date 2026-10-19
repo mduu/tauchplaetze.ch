@@ -57,7 +57,7 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
 - Eine Antwort, die der Parser nicht lesen kann, ist ein gescheiterter Call (Status im Lauf), ihr Body liegt trotzdem in den Rohdaten. Der Lauf rechnet weiter.
 - Das 3D-Modell reicht heute plus 3 Tage. Es endet am Abend des dritten Tages.
 - **Den Zeitraum aus der Antwort von `depthtime` lesen, nicht aus den Metadaten.** `/simulations/metadata` und `/simulations/metadata/{model}/{lake}` nannten am selben Tag verschiedene Enddaten.
-- Die Strömung (`u`, `v`, m/s) ist in der Antwort enthalten. Bis 19.10.2026 waren alle Werte `null`. Unser Beispiel-Request hat bei Eawag einen Fehler mit bestimmten Randbedingungen aufgedeckt, seit dem Fix liefert er Werte (Riff Williams 19.10.2026: alle 204 Werte gesetzt, höchstens 0.02 m/s). Wir nutzen sie noch nicht. Kandidat: Strömung am Platz anzeigen.
+- Die Strömung (`u`, `v`, m/s) ist in der Antwort enthalten. Bis 19.10.2026 waren alle Werte `null`. Unser Beispiel-Request hat bei Eawag einen Fehler mit bestimmten Randbedingungen aufgedeckt, seit dem Fix liefert er Werte (Riff Williams 19.10.2026: alle 204 Werte gesetzt, höchstens 0.02 m/s). Auch `mitgcm` (Zugersee) liefert sie. **Genutzt** für die Kachel «Strömung» (`forecast.md`, «Strömung»), ohne zusätzlichen Call. `u` zeigt nach Osten, `v` nach Norden.
 - Unter 25 m liegen die Modellschichten 1.5 bis 3.5 m auseinander. Die Untergrenze der Sprungschicht springt darum von Schicht zu Schicht.
 - Satellit: Ein Bild kommt 1- bis 2-mal pro Woche, je nach Wolken. Gültige Pixel im Median 15 %. Am Ufer fehlen Pixel. Darum fragt der Job einen **Satellitenpunkt** seewärts ab, nicht die Koordinate des Platzes (`datastructure.md`).
 
