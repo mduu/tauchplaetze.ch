@@ -57,10 +57,10 @@ public class DiveSitePageTests : IClassFixture<WebApp>
             new SiteRatings(4, 5, null, null, null, null),
             Texts: new SiteTexts(
                 new SiteText("Steilwand bis **40 m**.\n\n- Felsen\n- Hechte <script>alert(1)</script>", false, false),
-                null,
+                new SiteText("Schöner Uferweg.", false, false),
                 new SiteText("Parkplatz an der Seestrasse.", true, false),
                 new SiteText("Schiffsverkehr beachten.", false, true),
-                null,
+                new SiteText("Restaurant Sonne am Hafen.", false, false),
                 new SiteText("Im Hafen ist Tauchen verboten.", false, false)),
             HasDivingBan: true)));
         app.DiveSites.Add("alter-name", new DiveSiteLookup.Moved(Slug));
@@ -87,7 +87,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Die_Texte_erscheinen_in_ihren_Abschnitten_ohne_Hinweis_erst_im_Verzeichnis()
+    public async Task Die_Texte_erscheinen_in_ihren_Abschnitten_Restaurants_und_Toiletten_rechts_unter_Umgebung_ohne_Hinweis_erst_im_Verzeichnis()
     {
         // Arrange
         using var browser = app.Browser();
@@ -105,7 +105,10 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("Traduit automatiquement.", text);
         Assert.Contains("Interdiction de plonger", text);
         Assert.Contains("Im Hafen ist Tauchen verboten.", text);
-        Assert.True(text.IndexOf("Schiffsverkehr", StringComparison.Ordinal) < text.IndexOf("Parkplatz", StringComparison.Ordinal));
+        Assert.Equal(
+            ["Schiffsverkehr", "Uferweg", "Restaurant Sonne", "Parkplatz"],
+            new[] { "Schiffsverkehr", "Uferweg", "Restaurant Sonne", "Parkplatz" }.OrderBy(t => text.IndexOf(t, StringComparison.Ordinal)));
+        Assert.Matches("class=\"site-details-side\"[\\s\\S]*Restaurant Sonne[\\s\\S]*id=\"practical\"", html);
         Assert.DoesNotContain("data-content-level=\"0\"", html);
     }
 

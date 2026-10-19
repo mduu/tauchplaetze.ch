@@ -107,6 +107,7 @@
                                 </div>
                             }
                             <SiteTextBlock Text="site.Texts?.Surroundings" Name="surroundings" Title="@L["Rating_Surroundings"]" />
+                            <SiteTextBlock Text="site.Texts?.Facilities" Name="facilities" Title="@L["Text_Facilities"]" />
                         </div>
                     </div>
                 }
@@ -138,13 +139,6 @@
                     <p class="emergency-note">@L["Emergency_Dan_Note"] <a href="@L["Emergency_Factsheet_Url"]" rel="noopener" target="_blank" data-emergency-factsheet>@L["Emergency_Factsheet"]</a></p>
                 </div>
             </div>
-
-            @if (site.Texts?.Facilities is not null)
-            {
-                <div class="practical-texts">
-                    <SiteTextBlock Text="site.Texts.Facilities" Name="facilities" Title="@L["Text_Facilities"]" />
-                </div>
-            }
 
             @if (site.IsDirectoryOnly)
             {
@@ -230,7 +224,7 @@
     }
 
     private static bool HasSiteTexts(DiveSiteDetails site) =>
-        site.HasDivingBan || site.Texts is { Underwater: not null } or { Hazards: not null } or { Surroundings: not null };
+        site.HasDivingBan || site.Texts is { Underwater: not null } or { Hazards: not null } or { Surroundings: not null } or { Facilities: not null };
 
     private static string MapLink(DiveSiteDetails site) =>
         string.Create(CultureInfo.InvariantCulture, $"https://map.geo.admin.ch/?lang={Language}&swisssearch={site.Latitude:0.0000},{site.Longitude:0.0000}");

@@ -70,8 +70,7 @@
 }
 
 .site-details ::deep .site-text,
-.site-hazards ::deep .site-text,
-.practical-texts ::deep .site-text {
+.site-hazards ::deep .site-text {
     margin-top: 0;
 }
 
@@ -97,13 +96,6 @@
 .diving-ban h4 {
     margin: 0 0 6px;
     font-size: 17px;
-}
-
-.practical-texts {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px 32px;
-    margin-top: 32px;
 }
 
 .tiles {
