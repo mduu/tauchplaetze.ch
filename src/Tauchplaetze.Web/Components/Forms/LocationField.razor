@@ -36,11 +36,12 @@
     [Parameter]
     public string? Error { get; set; }
 
+    /// <summary>null: noch nicht gesetzt. Die Karte zeigt dann die Schweiz ohne Punkt.</summary>
     [Parameter]
-    public double Latitude { get; set; }
+    public double? Latitude { get; set; }
 
     [Parameter]
-    public double Longitude { get; set; }
+    public double? Longitude { get; set; }
 
     [Parameter]
     public EventCallback<(double Latitude, double Longitude)> Changed { get; set; }

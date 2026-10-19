@@ -3,13 +3,13 @@
 
 <fieldset class="coordinate-fields">
     <legend class="field-label">@Label</legend>
-    <label class="field field-short">
+    <label class="field">
         <span class="field-label">@L["Form_Latitude"]</span>
-        <input type="text" inputmode="decimal" value="@Format(Latitude)" aria-invalid="@(invalid ? "true" : null)" @onchange="e => Edit(e, true)" />
+        <input type="text" inputmode="decimal" value="@Format(latitude)" aria-invalid="@(invalid ? "true" : null)" @onchange="e => Edit(e, true)" />
     </label>
-    <label class="field field-short">
+    <label class="field">
         <span class="field-label">@L["Form_Longitude"]</span>
-        <input type="text" inputmode="decimal" value="@Format(Longitude)" aria-invalid="@(invalid ? "true" : null)" @onchange="e => Edit(e, false)" />
+        <input type="text" inputmode="decimal" value="@Format(longitude)" aria-invalid="@(invalid ? "true" : null)" @onchange="e => Edit(e, false)" />
     </label>
     @if (invalid)
     {
@@ -20,20 +20,27 @@
 @code {
     private bool invalid;
 
+    private double? latitude;
+
+    private double? longitude;
+
     [Parameter, EditorRequired]
     public string Label { get; set; } = "";
 
+    /// <summary>null: noch nicht gesetzt, das Feld bleibt leer.</summary>
     [Parameter]
-    public double Latitude { get; set; }
+    public double? Latitude { get; set; }
 
     [Parameter]
-    public double Longitude { get; set; }
+    public double? Longitude { get; set; }
 
-    /// <summary>Neue Breite und Länge, gerundet auf 6 Dezimalen.</summary>
+    /// <summary>Neue Breite und Länge, gerundet auf 6 Dezimalen. Erst, wenn beide gesetzt sind.</summary>
     [Parameter]
     public EventCallback<(double Latitude, double Longitude)> Changed { get; set; }
 
-    private static string Format(double value) => value.ToString("0.000000", CultureInfo.InvariantCulture);
+    protected override void OnParametersSet() => (latitude, longitude) = (Latitude ?? latitude, Longitude ?? longitude);
+
+    private static string Format(double? value) => value?.ToString("0.000000", CultureInfo.InvariantCulture) ?? "";
 
     private async Task Edit(ChangeEventArgs e, bool isLatitude)
     {
@@ -46,6 +53,18 @@
 
         invalid = false;
         value = Math.Round(value, 6);
-        await Changed.InvokeAsync(isLatitude ? (value, Longitude) : (Latitude, value));
+        if (isLatitude)
+        {
+            latitude = value;
+        }
+        else
+        {
+            longitude = value;
+        }
+
+        if (latitude is { } lat && longitude is { } lng)
+        {
+            await Changed.InvokeAsync((lat, lng));
+        }
     }
 }

@@ -47,11 +47,12 @@ else
             </div>
         </div>
 
-        <header class="edit-head">
+        <header class="edit-container edit-head">
             <p class="eyebrow">@details.WaterBodyName</p>
-            <h1 class="site-name">@Site["EditMode_Title", details.Name]</h1>
+            <h1 class="page-title">@Site["EditMode_Title", details.Name]</h1>
         </header>
 
+        <div class="edit-container">
         @if (openProposal is { } open)
         {
             <p class="callout" data-open-proposal>
@@ -73,6 +74,7 @@ else
                 }
             </div>
         }
+        </div>
 
         <section class="page-section edit-section" aria-labelledby="edit-basics">
             <h2 id="edit-basics" class="edit-section-title">@Site["EditMode_Section_Basics"]</h2>

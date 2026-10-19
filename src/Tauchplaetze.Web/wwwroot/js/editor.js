@@ -3,6 +3,7 @@
 window.tauchplaetzeAdmin = (function () {
   const maps = new Map();
 
+  // Ohne Koordinate (null) zeigt die Karte die Schweiz ohne Punkt, bis jemand klickt.
   // pan: die Koordinate kam aus den Feldern, die Karte folgt ihr.
   function show(id, latitude, longitude, dotnet, pan) {
     const element = document.getElementById(id);
@@ -10,28 +11,39 @@ window.tauchplaetzeAdmin = (function () {
       return;
     }
 
+    const located = latitude != null && longitude != null;
     let entry = maps.get(id);
     if (!entry) {
       const map = L.map(element, { scrollWheelZoom: true });
       window.tauchplaetzeMap.addBaseLayers(map, element);
       window.tauchplaetzeMap.addContours(map, element);
-      const marker = L.circleMarker([latitude, longitude], { radius: 9, color: getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim(), weight: 2, fillColor: getComputedStyle(document.documentElement).getPropertyValue('--color-signal').trim(), fillOpacity: 1 }).addTo(map);
+      entry = { map: map, marker: null };
+      maps.set(id, entry);
       map.on('click', function (event) {
-        marker.setLatLng(event.latlng);
+        place(entry, event.latlng);
         dotnet.invokeMethodAsync('SetLocation', event.latlng.lat, event.latlng.lng);
       });
-      entry = { map: map, marker: marker };
-      maps.set(id, entry);
-      map.setView([latitude, longitude], 15);
-    } else {
-      entry.marker.setLatLng([latitude, longitude]);
-      if (pan) {
-        entry.map.panTo([latitude, longitude]);
-      }
+      map.setView(located ? [latitude, longitude] : [46.8, 8.2], located ? 15 : 8);
+    } else if (located && pan) {
+      entry.map.panTo([latitude, longitude]);
+    }
+
+    if (located) {
+      place(entry, [latitude, longitude]);
     }
 
     // Die Karte entsteht oft in einem Tab, der seine Grösse erst nach dem Rendern kennt.
     setTimeout(function () { entry.map.invalidateSize(); }, 150);
+  }
+
+  function place(entry, latlng) {
+    if (entry.marker) {
+      entry.marker.setLatLng(latlng);
+      return;
+    }
+
+    const style = getComputedStyle(document.documentElement);
+    entry.marker = L.circleMarker(latlng, { radius: 9, color: style.getPropertyValue('--color-bg').trim(), weight: 2, fillColor: style.getPropertyValue('--color-signal').trim(), fillOpacity: 1 }).addTo(entry.map);
   }
 
   function dispose(id) {

@@ -34,12 +34,6 @@
     text-transform: uppercase;
 }
 
-}
-
-}
-
-}
-
 .rating-scale {
     display: flex;
     gap: 6px;
@@ -77,22 +71,4 @@
     font-family: var(--font-mono);
     font-weight: 600;
     color: var(--color-text);
-}
-
-}
-
-}
-
-}
-
-}
-
-}
-
-}
-
-}
-
-}
-
 }
