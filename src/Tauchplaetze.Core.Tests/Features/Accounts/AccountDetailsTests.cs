@@ -82,6 +82,26 @@ public class AccountDetailsTests(SqlServer sql) : SqlTest(sql)
         Assert.Null(await Query<GetAccountDetailsQuery, AccountDetails?>(new GetAccountDetailsQuery(admin, bert)));
     }
 
+    [SqlFact]
+    public async Task Ein_gesperrtes_Konto_gilt_nicht_mehr_als_angemeldet_bis_die_Sperre_aufgehoben_ist()
+    {
+        // Arrange
+        var admin = await Admin();
+        var anna = await RegisterConfirmed("anna@example.org", "Anna");
+
+        // Act
+        var before = await Query<GetSignedInAccountQuery, SignedInAccount?>(new GetSignedInAccountQuery(anna));
+        await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(admin, anna, Blocked: true));
+        var blocked = await Query<GetSignedInAccountQuery, SignedInAccount?>(new GetSignedInAccountQuery(anna));
+        await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(admin, anna, Blocked: false));
+        var unblocked = await Query<GetSignedInAccountQuery, SignedInAccount?>(new GetSignedInAccountQuery(anna));
+
+        // Assert
+        Assert.Equal("Anna", before?.DisplayName);
+        Assert.Null(blocked);
+        Assert.Equal("Anna", unblocked?.DisplayName);
+    }
+
     private async Task<string> Admin() =>
         (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
 }
