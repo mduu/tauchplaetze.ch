@@ -1,85 +1,69 @@
+using Azure;
 using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
+using Microsoft.Extensions.Options;
 
 namespace Tauchplaetze.Core.CrossCutting.Mail.Queue;
 
-/// <summary>Mail-Queue auf Azure Storage Queues. Die Queues entstehen beim ersten Zugriff des Prozesses.</summary>
-internal class StorageMailQueue(QueueServiceClient service) : IMailQueue
+/// <summary>
+/// Mail-Queue auf Azure Storage Queues (ADR-010). Angelegt werden die Queues beim Start über <see cref="EnsureCreated"/>.
+/// Lesende Aufrufe legen nichts an: Fehlt eine Queue, ist sie leer.
+/// </summary>
+internal class StorageMailQueue(QueueServiceClient service, IOptions<MailOptions> options) : IMailQueue
 {
     public const string MainName = "mail-jobs";
 
     public const string DeadLetterName = "mail-jobs-deadletter";
 
-    /// <summary>Ohne Ablauf: Der Standard von Storage Queues löscht nach 7 Tagen still.</summary>
-    private static readonly TimeSpan NeverExpires = TimeSpan.FromSeconds(-1);
+    private QueueClient Main => service.GetQueueClient(MainName);
 
-    private readonly SemaphoreSlim creating = new(1, 1);
+    private QueueClient Dead => service.GetQueueClient(DeadLetterName);
 
-    private volatile bool created;
-
-    public async Task Enqueue(string body, CancellationToken ct) => await (await Main()).SendMessageAsync(body, cancellationToken: ct);
-
-    public async Task<IReadOnlyList<QueuedMessage>> Receive(int max, TimeSpan visibility, CancellationToken ct) =>
-        Map((await (await Main()).ReceiveMessagesAsync(max, visibility, ct)).Value);
-
-    public async Task Delete(QueuedMessage message, CancellationToken ct) =>
-        await (await Main()).DeleteMessageAsync(message.Id, message.PopReceipt, ct);
-
-    public async Task Postpone(QueuedMessage message, TimeSpan delay, CancellationToken ct) =>
-        await (await Main()).UpdateMessageAsync(message.Id, message.PopReceipt, visibilityTimeout: delay, cancellationToken: ct);
-
-    public async Task DeadLetter(string body, CancellationToken ct) =>
-        await (await Dead()).SendMessageAsync(body, timeToLive: NeverExpires, cancellationToken: ct);
-
-    public async Task<IReadOnlyList<QueuedMessage>> ReceiveDeadLetters(int max, TimeSpan visibility, CancellationToken ct) =>
-        Map((await (await Dead()).ReceiveMessagesAsync(max, visibility, ct)).Value);
-
-    public async Task DeleteDeadLetter(QueuedMessage message, CancellationToken ct) =>
-        await (await Dead()).DeleteMessageAsync(message.Id, message.PopReceipt, ct);
-
-    public async Task ReleaseDeadLetter(QueuedMessage message, CancellationToken ct) =>
-        await (await Dead()).UpdateMessageAsync(message.Id, message.PopReceipt, visibilityTimeout: TimeSpan.Zero, cancellationToken: ct);
-
-    public async Task<IReadOnlyList<string>> PeekDeadLetters(CancellationToken ct) =>
-        [.. (await (await Dead()).PeekMessagesAsync(32, ct)).Value.Select(m => m.Body.ToString())];
-
-    public async Task<MailQueueCounts> Counts(CancellationToken ct)
+    public async Task EnsureCreated(CancellationToken ct)
     {
-        var main = await Main();
-        var dead = await Dead();
-        var waiting = await main.GetPropertiesAsync(ct);
-        var deadLetters = await dead.GetPropertiesAsync(ct);
-        return new MailQueueCounts(waiting.Value.ApproximateMessagesCount, deadLetters.Value.ApproximateMessagesCount);
+        await Main.CreateIfNotExistsAsync(cancellationToken: ct);
+        await Dead.CreateIfNotExistsAsync(cancellationToken: ct);
     }
 
-    private async Task<QueueClient> Main() => await Created(service.GetQueueClient(MainName));
+    public async Task Enqueue(string body, CancellationToken ct) => await Main.SendMessageAsync(body, cancellationToken: ct);
 
-    private async Task<QueueClient> Dead() => await Created(service.GetQueueClient(DeadLetterName));
+    public async Task<IReadOnlyList<QueuedMessage>> Receive(int max, TimeSpan visibility, CancellationToken ct) =>
+        Map(await Missing(async () => (await Main.ReceiveMessagesAsync(max, visibility, ct)).Value, []));
 
-    /// <remarks>Scheitert das Anlegen (z.B. Azurite noch nicht bereit), versucht es der nächste Aufruf wieder.</remarks>
-    private async Task<QueueClient> Created(QueueClient client)
+    public async Task Delete(QueuedMessage message, CancellationToken ct) => await Main.DeleteMessageAsync(message.Id, message.PopReceipt, ct);
+
+    public async Task Postpone(QueuedMessage message, TimeSpan delay, CancellationToken ct) =>
+        await Main.UpdateMessageAsync(message.Id, message.PopReceipt, visibilityTimeout: delay, cancellationToken: ct);
+
+    /// <summary>Eine Dead-Letter-Mail läuft nach <see cref="MailOptions.DeadLetterRetentionDays"/> ab (Datenschutz, Standard 30 Tage).</summary>
+    public async Task DeadLetter(string body, CancellationToken ct) =>
+        await Dead.SendMessageAsync(body, timeToLive: TimeSpan.FromDays(options.Value.DeadLetterRetentionDays), cancellationToken: ct);
+
+    public async Task<IReadOnlyList<QueuedMessage>> ReceiveDeadLetters(int max, TimeSpan visibility, CancellationToken ct) =>
+        Map(await Missing(async () => (await Dead.ReceiveMessagesAsync(max, visibility, ct)).Value, []));
+
+    public async Task DeleteDeadLetter(QueuedMessage message, CancellationToken ct) => await Dead.DeleteMessageAsync(message.Id, message.PopReceipt, ct);
+
+    public async Task ReleaseDeadLetter(QueuedMessage message, CancellationToken ct) =>
+        await Dead.UpdateMessageAsync(message.Id, message.PopReceipt, visibilityTimeout: TimeSpan.Zero, cancellationToken: ct);
+
+    public async Task<IReadOnlyList<string>> PeekDeadLetters(CancellationToken ct) =>
+        await Missing<IReadOnlyList<string>>(async () => [.. (await Dead.PeekMessagesAsync(32, ct)).Value.Select(m => m.Body.ToString())], []);
+
+    public async Task<MailQueueCounts> Counts(CancellationToken ct) => new(
+        await Missing(async () => (await Main.GetPropertiesAsync(ct)).Value.ApproximateMessagesCount, 0),
+        await Missing(async () => (await Dead.GetPropertiesAsync(ct)).Value.ApproximateMessagesCount, 0));
+
+    private static async Task<T> Missing<T>(Func<Task<T>> read, T empty)
     {
-        if (created)
-        {
-            return client;
-        }
-
-        await creating.WaitAsync();
         try
         {
-            if (!created)
-            {
-                await service.GetQueueClient(MainName).CreateIfNotExistsAsync();
-                await service.GetQueueClient(DeadLetterName).CreateIfNotExistsAsync();
-                created = true;
-            }
+            return await read();
         }
-        finally
+        catch (RequestFailedException exception) when (exception.Status == 404)
         {
-            creating.Release();
+            return empty;
         }
-
-        return client;
     }
 
     private static List<QueuedMessage> Map(QueueMessage[] messages) =>

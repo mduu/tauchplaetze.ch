@@ -7,7 +7,7 @@ namespace Tauchplaetze.Core.Features.Mail.Commands;
 
 /// <summary>
 /// Schickt Dead-Letter-Mails zurück in die Queue: eine über <paramref name="MessageId"/> oder alle. Sie beginnen wieder beim ersten Versuch.
-/// Unlesbare Nachrichten bleiben liegen. Nur Admins.
+/// Unlesbare Nachrichten bleiben liegen. Nur Admins. Konto-Mails tragen Links mit Ablauf: Sie können abgelaufen sein.
 /// </summary>
 public record ReplayDeadLettersCommand(string AdminId, Guid? MessageId = null);
 
@@ -22,15 +22,14 @@ internal class ReplayDeadLettersHandler(IMailQueue queue, AccountRoles roles) : 
 
         var count = await DeadLetterScan.Apply(queue, command.MessageId, async (message, deadLetter) =>
         {
-            if (deadLetter?.Envelope is { } envelope)
+            if (deadLetter?.Envelope is not { } envelope)
             {
-                await queue.Enqueue(JsonSerializer.Serialize(envelope, MailJson.Options), ct);
-                await queue.DeleteDeadLetter(message, ct);
+                return false;
             }
-            else
-            {
-                await queue.ReleaseDeadLetter(message, ct);
-            }
+
+            await queue.Enqueue(JsonSerializer.Serialize(envelope, MailJson.Options), ct);
+            await queue.DeleteDeadLetter(message, ct);
+            return true;
         }, ct);
         return new DeadLetterActionResult(count);
     }

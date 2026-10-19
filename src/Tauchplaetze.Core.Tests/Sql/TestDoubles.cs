@@ -104,6 +104,9 @@ internal sealed class InMemoryMailQueue(TimeProvider time) : IMailQueue
 
     public bool Failing { get; set; }
 
+    /// <summary>Löschen scheitert wie bei einem abgelaufenen Pop Receipt.</summary>
+    public bool DeleteFails { get; set; }
+
     public IReadOnlyList<string> Waiting => [.. main.Select(e => e.Body)];
 
     public IReadOnlyList<string> DeadLetters => [.. dead.Select(e => e.Body)];
@@ -111,12 +114,18 @@ internal sealed class InMemoryMailQueue(TimeProvider time) : IMailQueue
     /// <summary>Wann die wartenden Mails wieder sichtbar werden.</summary>
     public IReadOnlyList<DateTimeOffset> VisibleAt => [.. main.Select(e => e.VisibleAt)];
 
+    /// <summary>Wie oft die wartenden Mails schon empfangen wurden.</summary>
+    public IReadOnlyList<long> Attempts => [.. main.Select(e => e.DequeueCount)];
+
     public void Clear()
     {
         main.Clear();
         dead.Clear();
         Failing = false;
+        DeleteFails = false;
     }
+
+    public Task EnsureCreated(CancellationToken ct) => Task.CompletedTask;
 
     public Task Enqueue(string body, CancellationToken ct)
     {
@@ -131,7 +140,8 @@ internal sealed class InMemoryMailQueue(TimeProvider time) : IMailQueue
 
     public Task<IReadOnlyList<QueuedMessage>> Receive(int max, TimeSpan visibility, CancellationToken ct) => Task.FromResult(Take(main, max, visibility));
 
-    public Task Delete(QueuedMessage message, CancellationToken ct) => Remove(main, message);
+    public Task Delete(QueuedMessage message, CancellationToken ct) =>
+        DeleteFails ? throw new Azure.RequestFailedException(404, "Pop receipt mismatch", "PopReceiptMismatch", null) : Remove(main, message);
 
     public Task Postpone(QueuedMessage message, TimeSpan delay, CancellationToken ct)
     {
@@ -149,9 +159,13 @@ internal sealed class InMemoryMailQueue(TimeProvider time) : IMailQueue
 
     public Task DeleteDeadLetter(QueuedMessage message, CancellationToken ct) => Remove(dead, message);
 
+    /// <summary>Wie Azure: Eine freigegebene Nachricht verliert ihren Platz in der Reihenfolge, sie kommt ans Ende.</summary>
     public Task ReleaseDeadLetter(QueuedMessage message, CancellationToken ct)
     {
-        Find(dead, message).VisibleAt = time.GetUtcNow();
+        var entry = Find(dead, message);
+        entry.VisibleAt = time.GetUtcNow();
+        dead.Remove(entry);
+        dead.Add(entry);
         return Task.CompletedTask;
     }
 

@@ -19,5 +19,6 @@ internal class ContactMailTemplate : MailTemplate<ContactMail>
             T(culture, "Contact_About", model.Reference ?? T(culture, "Contact_General")),
         ],
         Quote: model.Message,
-        AfterButton: [T(culture, "Contact_Reply")]);
+        AfterButton: [T(culture, "Contact_Reply")],
+        FooterKey: "Layout_Footer_Operator");
 }

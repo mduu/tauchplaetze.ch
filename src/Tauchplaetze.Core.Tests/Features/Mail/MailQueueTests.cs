@@ -56,6 +56,47 @@ public class MailQueueTests
         Assert.Equal("ProposalApproved", deadLetter.Envelope!.Template);
     }
 
+    [Theory]
+    [MemberData(nameof(TemporaryFailures))]
+    public async Task Zeitueberschreitung_volles_Postfach_oder_abgelehnter_Absender_warten_im_Backoff(Exception failure)
+    {
+        // Arrange
+        await Enqueue();
+        mail.Sender.Failing = failure;
+
+        // Act
+        var result = await mail.Process();
+
+        // Assert
+        Assert.Equal(1, result.Retried);
+        Assert.Empty(mail.Queue.DeadLetters);
+        Assert.Equal(TimeSpan.FromMinutes(1), mail.Queue.VisibleAt.Single() - mail.Time.Now);
+    }
+
+    public static TheoryData<Exception> TemporaryFailures() =>
+    [
+        new TaskCanceledException("SMTP timeout"),
+        new SmtpCommandException(SmtpErrorCode.MessageNotAccepted, SmtpStatusCode.MailboxBusy, "Mailbox busy"),
+        new SmtpCommandException(SmtpErrorCode.SenderNotAccepted, SmtpStatusCode.MailboxUnavailable, "Sender rejected"),
+        new SmtpCommandException(SmtpErrorCode.UnexpectedStatusCode, SmtpStatusCode.AuthenticationRequired, "Auth required"),
+    ];
+
+    [Fact]
+    public async Task Scheitert_das_Loeschen_nach_dem_Versand_wartet_die_Mail_nicht_im_Backoff_und_der_Durchgang_laeuft_weiter()
+    {
+        // Arrange
+        await Enqueue();
+        await Enqueue();
+        mail.Queue.DeleteFails = true;
+
+        // Act
+        var result = await mail.Process();
+
+        // Assert
+        Assert.Equal(2, result.Sent);
+        Assert.All(mail.Queue.VisibleAt, at => Assert.Equal(MailQueueRules.Processing, at - mail.Time.Now));
+    }
+
     [Fact]
     public async Task Eine_vom_Server_endgueltig_abgelehnte_Mail_geht_sofort_in_die_Dead_Letter_Queue()
     {

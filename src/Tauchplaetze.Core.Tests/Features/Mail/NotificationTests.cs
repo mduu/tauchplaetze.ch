@@ -5,6 +5,7 @@ using Tauchplaetze.Core.CrossCutting.Mail;
 using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
+using Tauchplaetze.Core.Features.Accounts.Queries;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
@@ -104,6 +105,47 @@ public class NotificationTests(SqlServer sql) : SqlTest(sql)
         Assert.Contains(Sql.Mail.Sent, m => m.Subject == "Dein Beitrag zu «Eins» ist online");
         Assert.Equal(1, deleted.Count);
         Assert.Empty(Sql.MailQueue.DeadLetters);
+    }
+
+    [SqlFact]
+    public async Task Eine_erneut_gesendete_Mail_beginnt_wieder_beim_ersten_Versuch()
+    {
+        // Arrange
+        var (admin, _, _, _) = await Prepare();
+        await Sql.MailQueue.DeadLetter(DeadLetterBody("Eins"), TestContext.Current.CancellationToken);
+
+        // Act
+        await Command<ReplayDeadLettersCommand, DeadLetterActionResult>(new ReplayDeadLettersCommand(admin));
+        var attemptsAfterReplay = Sql.MailQueue.Attempts;
+        await Sql.DeliverMail();
+
+        // Assert
+        Assert.Equal([0L], attemptsAfterReplay);
+        Assert.Contains(Sql.Mail.Sent, m => m.Subject == "Dein Beitrag zu «Eins» ist online");
+        Assert.Empty(Sql.MailQueue.DeadLetters);
+    }
+
+    [SqlFact]
+    public async Task Freigabe_und_Ablehnung_gehen_nicht_an_unbestaetigte_oder_gesperrte_Autorinnen()
+    {
+        // Arrange
+        var (admin, bert, anna, site) = await Prepare();
+        await Command<RegisterCommand, AccountResult>(new RegisterCommand("dora@example.org", "Felswand-auf-25m", "Dora", "de", "/c?user={user}&token={token}"));
+        var dora = (await Query<GetAccountsQuery, IReadOnlyList<AccountSummary>>(new GetAccountsQuery(admin))).Single(a => a.DisplayName == "Dora").UserId;
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(dora, site, edit.BaseNumber, edit.Content with { MaxDepth = 31 }, null));
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 33 }, null));
+        var pending = await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(bert));
+        await Sql.DeliverMail();
+        Sql.Mail.Sent.Clear();
+
+        // Act
+        await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(bert, pending.Single(p => p.Revision.Number == 2).Revision.Id));
+        await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(admin, anna, true));
+        await Sql.DeliverMail();
+
+        // Assert
+        Assert.DoesNotContain(Sql.Mail.Sent, m => m.To is "dora@example.org" or "anna@example.org");
     }
 
     private static string DeadLetterBody(string siteName)

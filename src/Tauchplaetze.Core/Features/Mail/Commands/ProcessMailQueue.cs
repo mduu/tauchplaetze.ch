@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Azure;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using MimeKit;
@@ -12,7 +13,7 @@ namespace Tauchplaetze.Core.Features.Mail.Commands;
 /// Sendet die sichtbaren Mails der Queue, höchstens <paramref name="Max"/> (ADR-010). Erfolg löscht die Mail.
 /// Ein Fehler wartet nach <see cref="MailQueueRules.Backoff"/>, der fünfte und jeder nicht behebbare Fehler legt sie in die Dead-Letter-Queue.
 /// </summary>
-public record ProcessMailQueueCommand(int Max = 16);
+public record ProcessMailQueueCommand(int Max = MailQueueRules.BatchSize);
 
 /// <summary>Was der Durchgang getan hat. Alles 0: Die Queue war leer.</summary>
 public record ProcessMailQueueResult(int Sent, int Retried, int DeadLettered)
@@ -46,40 +47,73 @@ internal class ProcessMailQueueHandler(IMailQueue queue, IMailSender sender, Mai
         {
             envelope = JsonSerializer.Deserialize<MailEnvelope>(message.Body, MailJson.Options) ?? throw new MailTemplateException("Leerer Umschlag.");
             await sender.Send(dispatcher.Render(envelope), ct);
-            await queue.Delete(message, ct);
-            return Outcome.Sent;
         }
-        catch (Exception exception) when (exception is not OperationCanceledException)
+        catch (Exception exception) when (!ct.IsCancellationRequested)
         {
-            if (IsPermanent(exception) || message.DequeueCount >= MailQueueRules.MaxAttempts)
-            {
-                await MoveToDeadLetter(message, envelope, exception, ct);
-                return Outcome.DeadLettered;
-            }
+            return await Failed(message, envelope, exception, ct);
+        }
 
-            var delay = MailQueueRules.DelayAfter(message.DequeueCount);
-            logger.LogWarning(exception, "Mail {MessageId} failed, attempt {Attempt}, next try in {Delay}", envelope?.MessageId, message.DequeueCount, delay);
-            await queue.Postpone(message, delay, ct);
-            return Outcome.Retried;
+        await Settle(() => queue.Delete(message, ct), envelope, "delete");
+        return Outcome.Sent;
+    }
+
+    private async Task<Outcome> Failed(QueuedMessage message, MailEnvelope? envelope, Exception exception, CancellationToken ct)
+    {
+        if (IsPermanent(exception) || message.DequeueCount >= MailQueueRules.MaxAttempts)
+        {
+            var deadLetter = new DeadLetter(envelope?.MessageId, envelope, envelope is null ? message.Body : null, (int)message.DequeueCount, Reason(exception), time.GetUtcNow());
+            await Settle(async () =>
+            {
+                await queue.DeadLetter(JsonSerializer.Serialize(deadLetter, MailJson.Options), ct);
+                await queue.Delete(message, ct);
+            }, envelope, "deadletter");
+            logger.LogError("Mail {MessageId} ({Template}) moved to deadletter after {Attempts} attempts: {Error}",
+                envelope?.MessageId, envelope?.Template, message.DequeueCount, Code(exception));
+            return Outcome.DeadLettered;
+        }
+
+        var delay = MailQueueRules.DelayAfter(message.DequeueCount);
+        logger.LogWarning("Mail {MessageId} failed, attempt {Attempt}, next try in {Delay}: {Error}", envelope?.MessageId, message.DequeueCount, delay, Code(exception));
+        await Settle(() => queue.Postpone(message, delay, ct), envelope, "postpone");
+        return Outcome.Retried;
+    }
+
+    /// <summary>
+    /// Ein Fehler der Queue nach dem Versand (z.B. abgelaufener Pop Receipt) wird nur geloggt. Die Mail erscheint dann
+    /// nach der Sichtbarkeit wieder: Sie kann doppelt kommen (at-least-once, ADR-010), aber der Durchgang läuft weiter.
+    /// </summary>
+    private async Task Settle(Func<Task> action, MailEnvelope? envelope, string step)
+    {
+        try
+        {
+            await action();
+        }
+        catch (RequestFailedException exception)
+        {
+            logger.LogWarning("Mail {MessageId}: queue {Step} failed with {Status} {Code}", envelope?.MessageId, step, exception.Status, exception.ErrorCode);
         }
     }
 
-    private async Task MoveToDeadLetter(QueuedMessage message, MailEnvelope? envelope, Exception exception, CancellationToken ct)
-    {
-        var reason = $"{exception.GetType().Name}: {exception.Message}";
-        var deadLetter = new DeadLetter(envelope?.MessageId, envelope, envelope is null ? message.Body : null, (int)message.DequeueCount, reason, time.GetUtcNow());
-        await queue.DeadLetter(JsonSerializer.Serialize(deadLetter, MailJson.Options), ct);
-        await queue.Delete(message, ct);
-        logger.LogError(exception, "Mail {MessageId} ({Template}) moved to deadletter after {Attempts} attempts", envelope?.MessageId, envelope?.Template, message.DequeueCount);
-    }
-
-    /// <summary>Unlesbar, unbekannte Vorlage, ungültige Adresse oder vom Server endgültig abgelehnt: Ein neuer Versuch hilft nicht.</summary>
-    private static bool IsPermanent(Exception exception) => exception switch
+    /// <summary>
+    /// Kein neuer Versuch hilft: unlesbar, unbekannte Vorlage, ungültige Adresse, Empfänger abgelehnt.
+    /// Andere 5xx (Absender, Anmeldung, Richtlinie) sind oft Konfiguration und bekommen den Backoff.
+    /// </summary>
+    internal static bool IsPermanent(Exception exception) => exception switch
     {
         JsonException or MailTemplateException or ParseException => true,
-        SmtpCommandException smtp => (int)smtp.StatusCode is >= 500 and < 600,
+        SmtpCommandException { ErrorCode: SmtpErrorCode.RecipientNotAccepted } => true,
         _ => false,
     };
+
+    /// <summary>Für das Log: nur Typ und Code, nie die Meldung (sie kann die Adresse enthalten).</summary>
+    private static string Code(Exception exception) => exception switch
+    {
+        SmtpCommandException smtp => $"{nameof(SmtpCommandException)} {(int)smtp.StatusCode} {smtp.ErrorCode}",
+        _ => exception.GetType().Name,
+    };
+
+    /// <summary>Für die Dead-Letter-Mail: der volle Text, nur Admins sehen ihn.</summary>
+    private static string Reason(Exception exception) => $"{Code(exception)}: {exception.Message}";
 
     private enum Outcome
     {

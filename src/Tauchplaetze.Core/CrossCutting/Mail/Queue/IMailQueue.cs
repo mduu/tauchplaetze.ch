@@ -6,6 +6,9 @@ namespace Tauchplaetze.Core.CrossCutting.Mail.Queue;
 /// </summary>
 internal interface IMailQueue
 {
+    /// <summary>Legt beide Queues an, falls sie fehlen.</summary>
+    Task EnsureCreated(CancellationToken ct);
+
     Task Enqueue(string body, CancellationToken ct);
 
     Task<IReadOnlyList<QueuedMessage>> Receive(int max, TimeSpan visibility, CancellationToken ct);
@@ -15,7 +18,7 @@ internal interface IMailQueue
     /// <summary>Macht die Nachricht erst nach <paramref name="delay"/> wieder sichtbar (Backoff).</summary>
     Task Postpone(QueuedMessage message, TimeSpan delay, CancellationToken ct);
 
-    /// <summary>Legt eine Nachricht in die Dead-Letter-Queue. Sie läuft nie ab.</summary>
+    /// <summary>Legt eine Nachricht in die Dead-Letter-Queue. Sie läuft nach der eingestellten Frist ab.</summary>
     Task DeadLetter(string body, CancellationToken ct);
 
     Task<IReadOnlyList<QueuedMessage>> ReceiveDeadLetters(int max, TimeSpan visibility, CancellationToken ct);

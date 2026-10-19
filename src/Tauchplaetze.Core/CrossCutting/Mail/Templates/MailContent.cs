@@ -10,7 +10,8 @@ internal record MailContent(
     IReadOnlyList<string> Paragraphs,
     MailButton? Button = null,
     string? Quote = null,
-    IReadOnlyList<string>? AfterButton = null);
+    IReadOnlyList<string>? AfterButton = null,
+    string FooterKey = "Layout_Footer");
 
 /// <summary>Ein Knopf mit absolutem Link.</summary>
 internal record MailButton(string Text, string Url);

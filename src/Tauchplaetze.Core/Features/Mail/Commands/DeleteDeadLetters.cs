@@ -16,7 +16,11 @@ internal class DeleteDeadLettersHandler(IMailQueue queue, AccountRoles roles) : 
             return new DeadLetterActionResult(0, NotAllowed: true);
         }
 
-        var count = await DeadLetterScan.Apply(queue, command.MessageId, (message, _) => queue.DeleteDeadLetter(message, ct), ct);
+        var count = await DeadLetterScan.Apply(queue, command.MessageId, async (message, _) =>
+        {
+            await queue.DeleteDeadLetter(message, ct);
+            return true;
+        }, ct);
         return new DeadLetterActionResult(count);
     }
 }

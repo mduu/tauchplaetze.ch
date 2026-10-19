@@ -50,7 +50,7 @@ internal static class MailLayout
             text.Append(paragraph).Append("\n\n");
         }
 
-        text.Append("tauchplaetze.ch\n").Append(siteUri).Append("\n\n").Append(Text(culture, "Layout_Footer"));
+        text.Append("tauchplaetze.ch\n").Append(siteUri).Append("\n\n").Append(Text(culture, content.FooterKey));
         return text.ToString();
     }
 
@@ -106,7 +106,7 @@ internal static class MailLayout
             <a href="{E(siteUri)}" style="font-size:20px;font-weight:800;color:#E4EFEC;text-decoration:none;">tauchplaetze<span style="color:{Accent};">.</span>ch</a>
             </td></tr>
             <tr><td style="padding:28px;">{body}</td></tr>
-            <tr><td style="padding:16px 28px 24px;border-top:1px solid {Line};font-size:12px;line-height:1.5;color:{Muted};">{E(Text(culture, "Layout_Footer"))}</td></tr>
+            <tr><td style="padding:16px 28px 24px;border-top:1px solid {Line};font-size:12px;line-height:1.5;color:{Muted};">{E(Text(culture, content.FooterKey))}</td></tr>
             </table>
             </td></tr></table>
             </body>

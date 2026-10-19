@@ -26,7 +26,7 @@ internal class GetMailQueueStatusHandler(IMailQueue queue, MailDispatcher dispat
     {
         if (DeadLetterScan.Read(body) is not { } deadLetter)
         {
-            return new DeadLetterItem(null, null, null, null, 0, "Unlesbare Dead-Letter-Nachricht", DateTimeOffset.MinValue, null);
+            return new DeadLetterItem(null, null, null, null, 0, null, null, null, Unreadable: true);
         }
 
         var envelope = deadLetter.Envelope;

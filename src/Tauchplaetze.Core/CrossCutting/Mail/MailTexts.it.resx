@@ -39,4 +39,5 @@
   <data name="Contact_Greeting" xml:space="preserve"><value>Ciao</value></data>
   <data name="Contact_NoName" xml:space="preserve"><value>(senza nome)</value></data>
   <data name="Contact_General" xml:space="preserve"><value>Generale</value></data>
+  <data name="Layout_Footer_Operator" xml:space="preserve"><value>Questo messaggio è arrivato dal modulo di contatto di tauchplaetze.ch. Il sito non lo salva.</value></data>
 </root>

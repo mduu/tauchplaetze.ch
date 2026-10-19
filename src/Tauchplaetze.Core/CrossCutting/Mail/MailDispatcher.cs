@@ -31,9 +31,9 @@ internal class MailDispatcher(
             await queue.Enqueue(JsonSerializer.Serialize(envelope, MailJson.Options), ct);
             return true;
         }
-        catch (Exception exception) when (exception is not OperationCanceledException)
+        catch (Exception exception) when (!ct.IsCancellationRequested)
         {
-            logger.LogError(exception, "Mail {MessageId} ({Template}) could not be queued", envelope.MessageId, envelope.Template);
+            logger.LogError("Mail {MessageId} ({Template}) could not be queued: {Error}", envelope.MessageId, envelope.Template, exception.GetType().Name);
             return false;
         }
     }
@@ -53,9 +53,9 @@ internal class MailDispatcher(
                 await sender.Send(message, ct);
                 return;
             }
-            catch (Exception exception) when (exception is not OperationCanceledException)
+            catch (Exception exception) when (!ct.IsCancellationRequested)
             {
-                logger.LogWarning(exception, "Immediate mail {MessageId} ({Template}) failed, attempt {Attempt}", envelope.MessageId, envelope.Template, attempt);
+                logger.LogWarning("Immediate mail {MessageId} ({Template}) failed, attempt {Attempt}: {Error}", envelope.MessageId, envelope.Template, attempt, exception.GetType().Name);
             }
         }
 
@@ -63,9 +63,9 @@ internal class MailDispatcher(
         {
             await queue.Enqueue(JsonSerializer.Serialize(envelope, MailJson.Options), ct);
         }
-        catch (Exception exception) when (exception is not OperationCanceledException)
+        catch (Exception exception) when (!ct.IsCancellationRequested)
         {
-            logger.LogError(exception, "Mail {MessageId} ({Template}) could neither be sent nor queued", envelope.MessageId, envelope.Template);
+            logger.LogError("Mail {MessageId} ({Template}) could neither be sent nor queued: {Error}", envelope.MessageId, envelope.Template, exception.GetType().Name);
         }
     }
 
