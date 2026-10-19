@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
-using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Accounts;
 
 namespace Tauchplaetze.Core.Features.Editorial.Commands;
@@ -10,7 +8,7 @@ namespace Tauchplaetze.Core.Features.Editorial.Commands;
 /// <summary>Gibt einen Vorschlag frei: Sein Inhalt geht online (`cms.md`, «Ablauf»). Nur Moderation und Admin.</summary>
 public record ApproveRevisionCommand(string ReviewerId, Guid RevisionId);
 
-internal class ApproveRevisionHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles, ReviewMails mails, UserManager<User> users)
+internal class ApproveRevisionHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles, EditorialNotifications notifications)
     : ICommandHandler<ApproveRevisionCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(ApproveRevisionCommand command, CancellationToken ct = default)
@@ -43,8 +41,7 @@ internal class ApproveRevisionHandler(TauchplaetzeDbContext dbContext, RevisionW
         await revisions.Approve(site, revision, content, command.ReviewerId, ct);
         await dbContext.SaveChangesAsync(ct);
 
-        var author = revision.AuthorId is null ? null : await users.FindByIdAsync(revision.AuthorId);
-        await mails.Send(revision, site.Name, "Approved", mails.SiteLink(author?.PreferredCulture ?? "de", site.Slug), ct);
+        await notifications.Approved(revision, site.Name, site.Slug, ct);
         return new EditorialResult([], site.Id, revision.Number, revision.Status);
     }
 }

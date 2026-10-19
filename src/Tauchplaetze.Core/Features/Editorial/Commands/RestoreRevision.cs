@@ -8,7 +8,7 @@ namespace Tauchplaetze.Core.Features.Editorial.Commands;
 /// <summary>Stellt eine frühere Version wieder her: als neue, freigegebene Version. Nichts wird überschrieben. Nur Moderation und Admin.</summary>
 public record RestoreRevisionCommand(string EditorId, Guid DiveSiteId, int Number);
 
-internal class RestoreRevisionHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles) : ICommandHandler<RestoreRevisionCommand, EditorialResult>
+internal class RestoreRevisionHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles, EditorialNotifications notifications) : ICommandHandler<RestoreRevisionCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(RestoreRevisionCommand command, CancellationToken ct = default)
     {
@@ -30,6 +30,7 @@ internal class RestoreRevisionHandler(TauchplaetzeDbContext dbContext, RevisionW
         var content = await revisions.Load(source, ct);
         var revision = await revisions.Append(site, content, latestApproved, command.EditorId, $"#{source.Number}", approve: true, ct);
         await dbContext.SaveChangesAsync(ct);
+        await notifications.ModeratorChanged(revision, site.Id, content.Name, ct);
         return new EditorialResult([], site.Id, revision.Number, revision.Status);
     }
 }

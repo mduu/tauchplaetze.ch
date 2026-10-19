@@ -33,6 +33,7 @@
     <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.6.1" />
     <PackageVersion Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="13.6.1" />
     <PackageVersion Include="Aspire.Azure.Storage.Blobs" Version="13.6.1" />
+    <PackageVersion Include="Aspire.Azure.Storage.Queues" Version="13.6.1" />
     <!-- Aspire 13.6.1 bringt MessagePack 2.5.302 mit (GHSA-qhrr-8q5h-9q3h). Die korrigierte Version festhalten. -->
     <PackageVersion Include="MessagePack" Version="2.5.307" />
   </ItemGroup>

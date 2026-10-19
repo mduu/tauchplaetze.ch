@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Layout_Footer" xml:space="preserve"><value>Tu reçois ce mail parce que tu as un compte sur tauchplaetze.ch ou que tu y contribues. tauchplaetze.ch est un projet non commercial pour les plongeuses et plongeurs en Suisse.</value></data>
+  <data name="Layout_LinkHint" xml:space="preserve"><value>Le bouton ne fonctionne pas ? Copie ce lien dans ton navigateur :</value></data>
+  <data name="Greeting" xml:space="preserve"><value>Bonjour {0}</value></data>
+  <data name="Confirm_Subject" xml:space="preserve"><value>Merci de confirmer ton adresse e-mail</value></data>
+  <data name="Confirm_Text" xml:space="preserve"><value>Merci de t’être inscrit·e sur tauchplaetze.ch. Merci de confirmer ton adresse e-mail.</value></data>
+  <data name="Confirm_Button" xml:space="preserve"><value>Confirmer l’adresse e-mail</value></data>
+  <data name="Confirm_Ignore" xml:space="preserve"><value>Tu ne t’es pas inscrit·e ? Ignore simplement ce mail.</value></data>
+  <data name="Reset_Subject" xml:space="preserve"><value>Nouveau mot de passe pour tauchplaetze.ch</value></data>
+  <data name="Reset_Text" xml:space="preserve"><value>Ce lien te permet de définir un nouveau mot de passe. Il est valable un jour.</value></data>
+  <data name="Reset_Button" xml:space="preserve"><value>Définir un nouveau mot de passe</value></data>
+  <data name="Reset_Ignore" xml:space="preserve"><value>Tu n’as pas demandé de nouveau mot de passe ? Ignore simplement ce mail.</value></data>
+  <data name="Approved_Subject" xml:space="preserve"><value>Ta contribution à «{0}» est en ligne</value></data>
+  <data name="Approved_Text" xml:space="preserve"><value>Merci ! Ta modification de «{0}» est validée et en ligne.</value></data>
+  <data name="Approved_Button" xml:space="preserve"><value>Voir le site</value></data>
+  <data name="Rejected_Subject" xml:space="preserve"><value>Ta contribution à «{0}» n’a pas été reprise</value></data>
+  <data name="Rejected_Text" xml:space="preserve"><value>Ta modification de «{0}» n’a pas été reprise. La justification de la modération :</value></data>
+  <data name="Rejected_Thanks" xml:space="preserve"><value>Merci quand même pour ta contribution. Tu peux modifier le site à tout moment.</value></data>
+  <data name="Rejected_NoReason" xml:space="preserve"><value>(sans justification)</value></data>
+  <data name="Pending_Subject" xml:space="preserve"><value>Nouvelle proposition pour «{0}» en attente de validation</value></data>
+  <data name="Pending_Text" xml:space="preserve"><value>{0} a proposé une modification de «{1}». Elle attend ta validation.</value></data>
+  <data name="Pending_NewSite" xml:space="preserve"><value>{0} a proposé le nouveau site «{1}». Il attend ta validation.</value></data>
+  <data name="Pending_Comment" xml:space="preserve"><value>Commentaire :</value></data>
+  <data name="Pending_Button" xml:space="preserve"><value>Examiner les propositions</value></data>
+  <data name="ModeratorChanged_Subject" xml:space="preserve"><value>«{0}» a été modifié par la modération</value></data>
+  <data name="ModeratorChanged_Text" xml:space="preserve"><value>{0} a modifié «{1}». La modification est en ligne sans validation (version {2}).</value></data>
+  <data name="ModeratorChanged_Button" xml:space="preserve"><value>Voir les versions</value></data>
+  <data name="ModeratorChanged_Why" xml:space="preserve"><value>Tu reçois ce mail en tant qu’admin tant que les notifications des modifications de la modération sont activées.</value></data>
+  <data name="Contact_Subject" xml:space="preserve"><value>Contact tauchplaetze.ch : {0}</value></data>
+  <data name="Contact_Intro" xml:space="preserve"><value>Nouveau message via le formulaire de contact.</value></data>
+  <data name="Contact_From" xml:space="preserve"><value>De : {0} &lt;{1}&gt;</value></data>
+  <data name="Contact_About" xml:space="preserve"><value>Concernant : {0}</value></data>
+  <data name="Contact_Reply" xml:space="preserve"><value>Réponds directement à ce mail, la réponse va à l’expéditrice ou l’expéditeur.</value></data>
+  <data name="Contact_Greeting" xml:space="preserve"><value>Bonjour</value></data>
+  <data name="Contact_NoName" xml:space="preserve"><value>(sans nom)</value></data>
+  <data name="Contact_General" xml:space="preserve"><value>Général</value></data>
+</root>

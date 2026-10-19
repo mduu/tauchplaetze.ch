@@ -61,7 +61,7 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
         await using var scope = Sql.Services.CreateAsyncScope();
         var handler = new RegisterHandler(
             scope.ServiceProvider.GetRequiredService<UserManager<User>>(),
-            scope.ServiceProvider.GetRequiredService<IMailSender>(),
+            scope.ServiceProvider.GetRequiredService<MailDispatcher>(),
             Options.Create(new AccountsOptions { RegistrationOpen = false }),
             Options.Create(new PublicSiteOptions()));
 

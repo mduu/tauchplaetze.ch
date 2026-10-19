@@ -8,7 +8,7 @@ namespace Tauchplaetze.Core.Features.Editorial.Commands;
 /// <summary>Lehnt einen Vorschlag mit Begründung ab. Die Autorin oder der Autor bekommt eine Mail. Nur Moderation und Admin.</summary>
 public record RejectRevisionCommand(string ReviewerId, Guid RevisionId, string Reason);
 
-internal class RejectRevisionHandler(TauchplaetzeDbContext dbContext, AccountRoles roles, ReviewMails mails, TimeProvider time)
+internal class RejectRevisionHandler(TauchplaetzeDbContext dbContext, AccountRoles roles, EditorialNotifications notifications, TimeProvider time)
     : ICommandHandler<RejectRevisionCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(RejectRevisionCommand command, CancellationToken ct = default)
@@ -37,7 +37,7 @@ internal class RejectRevisionHandler(TauchplaetzeDbContext dbContext, AccountRol
         await dbContext.SaveChangesAsync(ct);
 
         var siteName = await dbContext.DiveSites.Where(d => d.Id == revision.DiveSiteId).Select(d => d.Name).SingleAsync(ct);
-        await mails.Send(revision, siteName, "Rejected", revision.ReviewComment ?? "–", ct);
+        await notifications.Rejected(revision, siteName, ct);
         return new EditorialResult([], revision.DiveSiteId, revision.Number, revision.Status);
     }
 }

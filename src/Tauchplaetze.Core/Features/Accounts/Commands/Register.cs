@@ -13,7 +13,7 @@ namespace Tauchplaetze.Core.Features.Accounts.Commands;
 /// </summary>
 public record RegisterCommand(string Email, string Password, string DisplayName, string Culture, string ConfirmPathTemplate);
 
-internal class RegisterHandler(UserManager<User> users, IMailSender mail, IOptions<AccountsOptions> options, IOptions<PublicSiteOptions> site) : ICommandHandler<RegisterCommand, AccountResult>
+internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOptions<AccountsOptions> options, IOptions<PublicSiteOptions> site) : ICommandHandler<RegisterCommand, AccountResult>
 {
     public async Task<AccountResult> Handle(RegisterCommand command, CancellationToken ct = default)
     {
@@ -42,7 +42,7 @@ internal class RegisterHandler(UserManager<User> users, IMailSender mail, IOptio
 
         await users.AddToRoleAsync(user, Roles.Contributor);
         var token = await users.GenerateEmailConfirmationTokenAsync(user);
-        await mail.Send(AccountMails.Create(user.Email, user.PreferredCulture, "Confirm", displayName, site.Value.Link(AccountLinks.Build(command.ConfirmPathTemplate, user.Id, token))), ct);
+        await mail.SendNow(user.Email, user.PreferredCulture, new ConfirmEmailMail(displayName, site.Value.Link(AccountLinks.Build(command.ConfirmPathTemplate, user.Id, token))), ct);
         return AccountResult.Ok;
     }
 }

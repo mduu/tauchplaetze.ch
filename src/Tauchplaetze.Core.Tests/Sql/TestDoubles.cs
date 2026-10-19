@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Net;
 using Tauchplaetze.Core.CrossCutting.Locks;
 using Tauchplaetze.Core.CrossCutting.Mail;
+using Tauchplaetze.Core.CrossCutting.Mail.Queue;
 using Tauchplaetze.Core.CrossCutting.Storage;
 using Tauchplaetze.Core.Tests.Features.Forecasts;
 
@@ -89,7 +90,126 @@ internal sealed class InMemoryMailSender : IMailSender
         return Task.CompletedTask;
     }
 
-    /// <summary>Der Link in der letzten Mail an <paramref name="to"/>.</summary>
+    /// <summary>Der Link des Knopfs in der letzten Mail an <paramref name="to"/>: der erste Link im Text, vor dem Fuss.</summary>
     public string LinkTo(string to) =>
-        Sent.Last(m => m.To == to).Body.Split('\n').Single(line => line.StartsWith("https://", StringComparison.Ordinal)).Trim();
+        Sent.Last(m => m.To == to).Body.Split('\n').First(line => line.StartsWith("https://", StringComparison.Ordinal)).Trim();
+}
+
+/// <summary>Mail-Queue im Speicher. Sichtbarkeit und Versuche wie bei Storage Queues, die Zeit kommt von <see cref="FixedTime"/>.</summary>
+internal sealed class InMemoryMailQueue(TimeProvider time) : IMailQueue
+{
+    private readonly List<Entry> main = [];
+
+    private readonly List<Entry> dead = [];
+
+    public bool Failing { get; set; }
+
+    public IReadOnlyList<string> Waiting => [.. main.Select(e => e.Body)];
+
+    public IReadOnlyList<string> DeadLetters => [.. dead.Select(e => e.Body)];
+
+    /// <summary>Wann die wartenden Mails wieder sichtbar werden.</summary>
+    public IReadOnlyList<DateTimeOffset> VisibleAt => [.. main.Select(e => e.VisibleAt)];
+
+    public void Clear()
+    {
+        main.Clear();
+        dead.Clear();
+        Failing = false;
+    }
+
+    public Task Enqueue(string body, CancellationToken ct)
+    {
+        if (Failing)
+        {
+            throw new InvalidOperationException("Queue nicht erreichbar.");
+        }
+
+        main.Add(new Entry(body, time.GetUtcNow()));
+        return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyList<QueuedMessage>> Receive(int max, TimeSpan visibility, CancellationToken ct) => Task.FromResult(Take(main, max, visibility));
+
+    public Task Delete(QueuedMessage message, CancellationToken ct) => Remove(main, message);
+
+    public Task Postpone(QueuedMessage message, TimeSpan delay, CancellationToken ct)
+    {
+        Find(main, message).VisibleAt = time.GetUtcNow() + delay;
+        return Task.CompletedTask;
+    }
+
+    public Task DeadLetter(string body, CancellationToken ct)
+    {
+        dead.Add(new Entry(body, time.GetUtcNow()));
+        return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyList<QueuedMessage>> ReceiveDeadLetters(int max, TimeSpan visibility, CancellationToken ct) => Task.FromResult(Take(dead, max, visibility));
+
+    public Task DeleteDeadLetter(QueuedMessage message, CancellationToken ct) => Remove(dead, message);
+
+    public Task ReleaseDeadLetter(QueuedMessage message, CancellationToken ct)
+    {
+        Find(dead, message).VisibleAt = time.GetUtcNow();
+        return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyList<string>> PeekDeadLetters(CancellationToken ct) =>
+        Task.FromResult<IReadOnlyList<string>>([.. dead.Where(e => e.VisibleAt <= time.GetUtcNow()).Take(32).Select(e => e.Body)]);
+
+    public Task<MailQueueCounts> Counts(CancellationToken ct) => Task.FromResult(new MailQueueCounts(main.Count, dead.Count));
+
+    private IReadOnlyList<QueuedMessage> Take(List<Entry> entries, int max, TimeSpan visibility)
+    {
+        var now = time.GetUtcNow();
+        return [.. entries.Where(e => e.VisibleAt <= now).Take(max).Select(e =>
+        {
+            e.VisibleAt = now + visibility;
+            e.DequeueCount++;
+            e.PopReceipt = Guid.NewGuid().ToString();
+            return new QueuedMessage(e.Id, e.PopReceipt, e.Body, e.DequeueCount);
+        })];
+    }
+
+    private static Entry Find(List<Entry> entries, QueuedMessage message) =>
+        entries.Single(e => e.Id == message.Id && e.PopReceipt == message.PopReceipt);
+
+    private static Task Remove(List<Entry> entries, QueuedMessage message)
+    {
+        entries.Remove(Find(entries, message));
+        return Task.CompletedTask;
+    }
+
+    private sealed class Entry(string body, DateTimeOffset visibleAt)
+    {
+        public string Id { get; } = Guid.NewGuid().ToString();
+
+        public string Body { get; } = body;
+
+        public DateTimeOffset VisibleAt { get; set; } = visibleAt;
+
+        public long DequeueCount { get; set; }
+
+        public string PopReceipt { get; set; } = "";
+    }
+}
+
+/// <summary>Sender, der bei <see cref="Failing"/> eine Exception wirft, sonst wie <see cref="InMemoryMailSender"/>.</summary>
+internal sealed class FlakyMailSender : IMailSender
+{
+    public ConcurrentQueue<MailMessage> Sent { get; } = new();
+
+    public Exception? Failing { get; set; }
+
+    public Task Send(MailMessage message, CancellationToken ct)
+    {
+        if (Failing is { } failing)
+        {
+            throw failing;
+        }
+
+        Sent.Enqueue(message);
+        return Task.CompletedTask;
+    }
 }

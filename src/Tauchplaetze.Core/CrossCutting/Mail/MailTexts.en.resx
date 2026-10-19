@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Layout_Footer" xml:space="preserve"><value>You receive this mail because you have an account on tauchplaetze.ch or contribute to it. tauchplaetze.ch is a non-commercial project for divers in Switzerland.</value></data>
+  <data name="Layout_LinkHint" xml:space="preserve"><value>Button not working? Copy this link into your browser:</value></data>
+  <data name="Greeting" xml:space="preserve"><value>Hello {0}</value></data>
+  <data name="Confirm_Subject" xml:space="preserve"><value>Please confirm your e-mail address</value></data>
+  <data name="Confirm_Text" xml:space="preserve"><value>Thanks for signing up at tauchplaetze.ch. Please confirm your e-mail address.</value></data>
+  <data name="Confirm_Button" xml:space="preserve"><value>Confirm e-mail address</value></data>
+  <data name="Confirm_Ignore" xml:space="preserve"><value>Didn’t sign up? Then ignore this mail.</value></data>
+  <data name="Reset_Subject" xml:space="preserve"><value>New password for tauchplaetze.ch</value></data>
+  <data name="Reset_Text" xml:space="preserve"><value>Use this link to set a new password. It is valid for one day.</value></data>
+  <data name="Reset_Button" xml:space="preserve"><value>Set new password</value></data>
+  <data name="Reset_Ignore" xml:space="preserve"><value>Didn’t ask for a new password? Then ignore this mail.</value></data>
+  <data name="Approved_Subject" xml:space="preserve"><value>Your contribution to «{0}» is online</value></data>
+  <data name="Approved_Text" xml:space="preserve"><value>Thank you! Your change to «{0}» has been approved and is online.</value></data>
+  <data name="Approved_Button" xml:space="preserve"><value>View site</value></data>
+  <data name="Rejected_Subject" xml:space="preserve"><value>Your contribution to «{0}» was not accepted</value></data>
+  <data name="Rejected_Text" xml:space="preserve"><value>Your change to «{0}» was not accepted. The moderators’ reason:</value></data>
+  <data name="Rejected_Thanks" xml:space="preserve"><value>Thanks for contributing anyway. You can edit the site again at any time.</value></data>
+  <data name="Rejected_NoReason" xml:space="preserve"><value>(no reason given)</value></data>
+  <data name="Pending_Subject" xml:space="preserve"><value>New proposal for «{0}» awaits review</value></data>
+  <data name="Pending_Text" xml:space="preserve"><value>{0} proposed a change to «{1}». It is waiting for your review.</value></data>
+  <data name="Pending_NewSite" xml:space="preserve"><value>{0} proposed the new site «{1}». It is waiting for your review.</value></data>
+  <data name="Pending_Comment" xml:space="preserve"><value>Comment:</value></data>
+  <data name="Pending_Button" xml:space="preserve"><value>Review proposals</value></data>
+  <data name="ModeratorChanged_Subject" xml:space="preserve"><value>«{0}» was changed by a moderator</value></data>
+  <data name="ModeratorChanged_Text" xml:space="preserve"><value>{0} changed «{1}». The change is online without review (version {2}).</value></data>
+  <data name="ModeratorChanged_Button" xml:space="preserve"><value>View versions</value></data>
+  <data name="ModeratorChanged_Why" xml:space="preserve"><value>You receive this mail as an admin as long as notifications about moderator changes are switched on.</value></data>
+  <data name="Contact_Subject" xml:space="preserve"><value>tauchplaetze.ch contact: {0}</value></data>
+  <data name="Contact_Intro" xml:space="preserve"><value>New message from the contact form.</value></data>
+  <data name="Contact_From" xml:space="preserve"><value>From: {0} &lt;{1}&gt;</value></data>
+  <data name="Contact_About" xml:space="preserve"><value>About: {0}</value></data>
+  <data name="Contact_Reply" xml:space="preserve"><value>Reply directly to this mail; the answer goes to the sender.</value></data>
+  <data name="Contact_Greeting" xml:space="preserve"><value>Hello</value></data>
+  <data name="Contact_NoName" xml:space="preserve"><value>(no name)</value></data>
+  <data name="Contact_General" xml:space="preserve"><value>General</value></data>
+</root>

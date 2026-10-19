@@ -18,7 +18,8 @@ internal class SmtpMailSender(IOptions<MailOptions> options) : IMailSender
             mime.ReplyTo.Add(MailboxAddress.Parse(replyTo));
         }
         mime.Subject = message.Subject;
-        mime.Body = new TextPart("plain") { Text = message.Body };
+        var body = new BodyBuilder { TextBody = message.Body, HtmlBody = message.Html };
+        mime.Body = body.ToMessageBody();
 
         using var client = new SmtpClient();
         await client.ConnectAsync(settings.Host, settings.Port, settings.UseTls ? SecureSocketOptions.StartTls : SecureSocketOptions.None, ct);

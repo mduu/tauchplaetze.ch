@@ -12,6 +12,7 @@ var storage = builder.AddAzureStorage("storage")
         .WithDataVolume("tauchplaetze-azurite-data")
         .WithLifetime(ContainerLifetime.Persistent));
 var blobs = storage.AddBlobs("blobs");
+var queues = storage.AddQueues("queues");
 
 var mailpit = builder.AddContainer("mailpit", "axllent/mailpit", "v1.27")
     .WithContainerName("tauchplaetze-mailpit")
@@ -24,6 +25,7 @@ var web = builder.AddProject<Projects.Tauchplaetze_Web>("web")
     .WithReference(database)
     .WaitFor(database)
     .WithReference(blobs)
+    .WithReference(queues)
     .WithEnvironment("Database__PrepareOnStartup", "true")
     .WithEnvironment("Forecast__RunOnStartup", "true")
     .WithEnvironment("Accounts__RegistrationOpen", "true")

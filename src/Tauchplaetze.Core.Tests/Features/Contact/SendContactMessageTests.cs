@@ -2,13 +2,13 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Tauchplaetze.Core.Features.Contact;
 using Tauchplaetze.Core.Features.Contact.Commands;
-using Tauchplaetze.Core.Tests.Sql;
+using Tauchplaetze.Core.Tests.Features.Mail;
 
 namespace Tauchplaetze.Core.Tests.Features.Contact;
 
 public class SendContactMessageTests
 {
-    private readonly InMemoryMailSender mail = new();
+    private readonly TestMail mail = new();
 
     [Fact]
     public async Task Eine_Nachricht_geht_an_den_Betreiber_und_Antworten_gehen_an_die_Absenderin()
@@ -18,7 +18,7 @@ public class SendContactMessageTests
 
         // Assert
         Assert.True(result.Succeeded);
-        var sent = Assert.Single(mail.Sent);
+        var sent = Assert.Single(mail.Sender.Sent);
         Assert.Equal(("betrieb@example.org", "anna@example.org", "tauchplaetze.ch Kontakt: Riff Williams"), (sent.To, sent.ReplyTo, sent.Subject));
         Assert.Contains("Beim Riff Williams fehlt der Einstieg.", sent.Body);
     }
@@ -31,9 +31,9 @@ public class SendContactMessageTests
         await Send(new SendContactMessageCommand(null, "anna@example.org", "Eine genügend lange Nachricht.", "Riff\r\nWilliams", "de"));
 
         // Assert
-        Assert.All(mail.Sent, m => Assert.DoesNotContain('\n', m.Subject));
-        Assert.All(mail.Sent, m => Assert.DoesNotContain('\r', m.Subject));
-        Assert.Equal("tauchplaetze.ch Kontakt: Riff Williams", mail.Sent.Last().Subject);
+        Assert.All(mail.Sender.Sent, m => Assert.DoesNotContain('\n', m.Subject));
+        Assert.All(mail.Sender.Sent, m => Assert.DoesNotContain('\r', m.Subject));
+        Assert.Equal("tauchplaetze.ch Kontakt: Riff Williams", mail.Sender.Sent.Last().Subject);
     }
 
     [Theory]
@@ -48,7 +48,7 @@ public class SendContactMessageTests
 
         // Assert
         Assert.Equal([expected], result.Errors);
-        Assert.Empty(mail.Sent);
+        Assert.Empty(mail.Sender.Sent);
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class SendContactMessageTests
         // Assert
         Assert.Equal([ContactError.InvalidMessage], tooLong.Errors);
         Assert.Equal([ContactError.TooLong], longName.Errors);
-        Assert.Empty(mail.Sent);
+        Assert.Empty(mail.Sender.Sent);
     }
 
     [Fact]
@@ -72,10 +72,14 @@ public class SendContactMessageTests
 
         // Assert
         Assert.Equal([ContactError.NotSent], result.Errors);
-        Assert.Empty(mail.Sent);
+        Assert.Empty(mail.Sender.Sent);
     }
 
-    private Task<ContactResult> Send(SendContactMessageCommand command, string? recipient = "betrieb@example.org") =>
-        new SendContactMessageHandler(mail, Options.Create(new ContactOptions { Email = recipient }), NullLogger<SendContactMessageHandler>.Instance)
+    private async Task<ContactResult> Send(SendContactMessageCommand command, string? recipient = "betrieb@example.org")
+    {
+        var result = await new SendContactMessageHandler(mail.Dispatcher, Options.Create(new ContactOptions { Email = recipient }), NullLogger<SendContactMessageHandler>.Instance)
             .Handle(command, TestContext.Current.CancellationToken);
+        await mail.Process();
+        return result;
+    }
 }

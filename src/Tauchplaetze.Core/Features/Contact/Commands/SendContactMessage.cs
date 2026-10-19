@@ -1,4 +1,3 @@
-using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -49,11 +48,9 @@ public static class ContactRules
     public const int MaxEmail = 254;
 }
 
-internal class SendContactMessageHandler(IMailSender mail, IOptions<ContactOptions> options, ILogger<SendContactMessageHandler> logger)
+internal class SendContactMessageHandler(MailDispatcher mail, IOptions<ContactOptions> options, ILogger<SendContactMessageHandler> logger)
     : ICommandHandler<SendContactMessageCommand, ContactResult>
 {
-    private const string SubjectPrefix = "tauchplaetze.ch Kontakt";
-
     public async Task<ContactResult> Handle(SendContactMessageCommand command, CancellationToken ct = default)
     {
         var errors = Validate(command);
@@ -68,16 +65,11 @@ internal class SendContactMessageHandler(IMailSender mail, IOptions<ContactOptio
             return new ContactResult([ContactError.NotSent]);
         }
 
-        try
-        {
-            await mail.Send(new MailMessage(options.Value.Email, Subject(command), Body(command), command.Email.Trim()), ct);
-            return new ContactResult([]);
-        }
-        catch (Exception exception) when (exception is not OperationCanceledException)
-        {
-            logger.LogError(exception, "Contact message could not be sent");
-            return new ContactResult([ContactError.NotSent]);
-        }
+        var email = command.Email.Trim();
+        var model = new ContactMail(OneLine(command.Name), email, OneLine(command.Reference), Topic(command), command.Culture, command.Message.Trim());
+        return await mail.Enqueue(options.Value.Email, "de", model, ct, replyTo: email)
+            ? new ContactResult([])
+            : new ContactResult([ContactError.NotSent]);
     }
 
     private static List<ContactError> Validate(SendContactMessageCommand command)
@@ -102,20 +94,7 @@ internal class SendContactMessageHandler(IMailSender mail, IOptions<ContactOptio
         return errors;
     }
 
-    private static string Subject(SendContactMessageCommand command) =>
-        $"{SubjectPrefix}: {OneLine(command.Reference) ?? Shorten(OneLine(command.Message)!, 60)}";
-
-    private static string Body(SendContactMessageCommand command)
-    {
-        var body = new StringBuilder();
-        body.AppendLine($"Name: {OneLine(command.Name) ?? "–"}");
-        body.AppendLine($"E-Mail: {command.Email.Trim()}");
-        body.AppendLine($"Bezug: {OneLine(command.Reference) ?? "–"}");
-        body.AppendLine($"Sprache: {command.Culture}");
-        body.AppendLine();
-        body.AppendLine(command.Message.Trim());
-        return body.ToString();
-    }
+    private static string Topic(SendContactMessageCommand command) => OneLine(command.Reference) ?? Shorten(OneLine(command.Message)!, 60);
 
     private static string? OneLine(string? text) =>
         string.IsNullOrWhiteSpace(text) ? null : string.Join(' ', text.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));

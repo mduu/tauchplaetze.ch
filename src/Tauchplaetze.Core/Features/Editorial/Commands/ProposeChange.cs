@@ -13,7 +13,7 @@ namespace Tauchplaetze.Core.Features.Editorial.Commands;
 /// </summary>
 public record ProposeChangeCommand(string EditorId, Guid DiveSiteId, int BaseNumber, DiveSiteContent Content, string? Comment);
 
-internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles, MediaPublisher media) : ICommandHandler<ProposeChangeCommand, EditorialResult>
+internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles, MediaPublisher media, EditorialNotifications notifications) : ICommandHandler<ProposeChangeCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(ProposeChangeCommand command, CancellationToken ct = default)
     {
@@ -62,6 +62,9 @@ internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWri
 
         var revision = await revisions.Append(site, content, command.BaseNumber, command.EditorId, command.Comment, rights.IsModerator, ct);
         await dbContext.SaveChangesAsync(ct);
+        await (rights.IsModerator
+            ? notifications.ModeratorChanged(revision, site.Id, content.Name, ct)
+            : notifications.ProposalSubmitted(revision, content.Name, isNewSite: false, ct));
         return new EditorialResult([], site.Id, revision.Number, revision.Status);
     }
 

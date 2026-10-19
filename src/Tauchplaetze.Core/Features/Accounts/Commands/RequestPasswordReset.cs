@@ -12,7 +12,7 @@ namespace Tauchplaetze.Core.Features.Accounts.Commands;
 /// </summary>
 public record RequestPasswordResetCommand(string Email, string ResetPathTemplate);
 
-internal class RequestPasswordResetHandler(UserManager<User> users, IMailSender mail, IOptions<PublicSiteOptions> site) : ICommandHandler<RequestPasswordResetCommand, Unit>
+internal class RequestPasswordResetHandler(UserManager<User> users, MailDispatcher mail, IOptions<PublicSiteOptions> site) : ICommandHandler<RequestPasswordResetCommand, Unit>
 {
     public async Task<Unit> Handle(RequestPasswordResetCommand command, CancellationToken ct = default)
     {
@@ -20,7 +20,7 @@ internal class RequestPasswordResetHandler(UserManager<User> users, IMailSender 
         if (user is { EmailConfirmed: true, BlockedAt: null, Email: { } email })
         {
             var token = await users.GeneratePasswordResetTokenAsync(user);
-            await mail.Send(AccountMails.Create(email, user.PreferredCulture, "Reset", user.DisplayName, site.Value.Link(AccountLinks.Build(command.ResetPathTemplate, user.Id, token))), ct);
+            await mail.SendNow(email, user.PreferredCulture, new ResetPasswordMail(user.DisplayName, site.Value.Link(AccountLinks.Build(command.ResetPathTemplate, user.Id, token))), ct);
         }
 
         return Unit.Value;

@@ -12,7 +12,7 @@ namespace Tauchplaetze.Core.Features.Editorial.Commands;
 /// </summary>
 public record ProposeDiveSiteCommand(string EditorId, string Name, int WaterBodyId, double Latitude, double Longitude, string? Municipality, string? Canton, string? Comment);
 
-internal class ProposeDiveSiteHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles) : ICommandHandler<ProposeDiveSiteCommand, EditorialResult>
+internal class ProposeDiveSiteHandler(TauchplaetzeDbContext dbContext, RevisionWriter revisions, AccountRoles roles, EditorialNotifications notifications) : ICommandHandler<ProposeDiveSiteCommand, EditorialResult>
 {
     public async Task<EditorialResult> Handle(ProposeDiveSiteCommand command, CancellationToken ct = default)
     {
@@ -39,6 +39,9 @@ internal class ProposeDiveSiteHandler(TauchplaetzeDbContext dbContext, RevisionW
         var site = revisions.NewDraft(content, command.EditorId);
         var revision = await revisions.Append(site, content, null, command.EditorId, command.Comment, rights.IsModerator, ct);
         await dbContext.SaveChangesAsync(ct);
+        await (rights.IsModerator
+            ? notifications.ModeratorChanged(revision, site.Id, content.Name, ct)
+            : notifications.ProposalSubmitted(revision, content.Name, isNewSite: true, ct));
         return new EditorialResult([], site.Id, revision.Number, revision.Status);
     }
 

@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Tauchplaetze.Core.CrossCutting.Locks;
 using Tauchplaetze.Core.CrossCutting.Mail;
+using Tauchplaetze.Core.CrossCutting.Mail.Queue;
+using Tauchplaetze.Core.Features.Mail.Commands;
 using Tauchplaetze.Core.CrossCutting.Storage;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
@@ -49,6 +51,10 @@ public sealed class SqlServer : IAsyncLifetime
 
     internal InMemoryMailSender Mail { get; } = new();
 
+    internal InMemoryMailQueue MailQueue => mailQueue ??= new InMemoryMailQueue(Time);
+
+    private InMemoryMailQueue? mailQueue;
+
     /// <summary>Kein Test ruft eine echte Quelle auf (architecture.md, Testing).</summary>
     internal FakeSources Sources { get; } = new();
 
@@ -79,6 +85,7 @@ public sealed class SqlServer : IAsyncLifetime
         builder.Services.Replace(ServiceDescriptor.Singleton<IRunLock>(RunLock));
         builder.Services.Replace(ServiceDescriptor.Singleton<TimeProvider>(Time));
         builder.Services.Replace(ServiceDescriptor.Singleton<IMailSender>(Mail));
+        builder.Services.Replace(ServiceDescriptor.Singleton<IMailQueue>(MailQueue));
         builder.Services.ConfigureHttpClientDefaults(client => client.ConfigurePrimaryHttpMessageHandler(() => Sources));
         host = builder.Build();
 
@@ -93,6 +100,21 @@ public sealed class SqlServer : IAsyncLifetime
         if (container is not null)
         {
             await container.DisposeAsync();
+        }
+    }
+
+    /// <summary>Sendet alle wartenden Mails der Queue, wie es der Worker tut.</summary>
+    internal async Task DeliverMail()
+    {
+        while (true)
+        {
+            await using var scope = Services.CreateAsyncScope();
+            var result = await scope.ServiceProvider.GetRequiredService<ICommandHandler<ProcessMailQueueCommand, ProcessMailQueueResult>>()
+                .Handle(new ProcessMailQueueCommand(), TestContext.Current.CancellationToken);
+            if (result.Idle)
+            {
+                return;
+            }
         }
     }
 
@@ -124,6 +146,7 @@ public sealed class SqlServer : IAsyncLifetime
         RawData.Files.Clear();
         Media.Clear();
         Mail.Sent.Clear();
+        MailQueue.Clear();
         Sources.Failing = null;
         Time.Now = FixedTime.SpikeDay;
     }

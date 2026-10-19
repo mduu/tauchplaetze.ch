@@ -34,6 +34,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal((2, RevisionStatus.Pending), (proposed.Number, proposed.Status));
         Assert.Null(beforeApproval);
         Assert.Equal(32, await PublicMaxDepth(site));
+        await Sql.DeliverMail();
         Assert.Contains(Sql.Mail.Sent, m => m.To == "anna@example.org" && m.Body.Contains("https://tauchplaetze.test/de/site/riff-williams-herrliberg", StringComparison.Ordinal));
     }
 
@@ -50,6 +51,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         // Assert
         Assert.Equal(RevisionStatus.Approved, result.Status);
         Assert.Equal(30, await PublicMaxDepth(site));
+        await Sql.DeliverMail();
         Assert.DoesNotContain(Sql.Mail.Sent, m => m.Subject.Contains("online", StringComparison.Ordinal));
     }
 
@@ -103,6 +105,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         Assert.Equal(RevisionStatus.Rejected, rejected.Status);
+        await Sql.DeliverMail();
         Assert.Contains(Sql.Mail.Sent, m => m.To == "anna@example.org" && m.Body.Contains("99 m stimmt nicht.", StringComparison.Ordinal));
         Assert.Equal([EditorialError.NotFound], withdrawnByOther.Errors);
         Assert.Equal(RevisionStatus.Withdrawn, withdrawn.Status);
