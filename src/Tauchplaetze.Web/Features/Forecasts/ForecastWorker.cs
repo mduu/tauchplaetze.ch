@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Options;
 using Tauchplaetze.Core.CrossCutting.UseCases;
-using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Commands;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
 
@@ -43,9 +42,9 @@ internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSche
     private async Task<bool> LastRunIsRecent(CancellationToken ct)
     {
         await using var scope = scopes.CreateAsyncScope();
-        var runs = await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>>()
-            .Handle(new GetForecastRunsQuery(), ct);
-        var recent = runs.FirstOrDefault(r => r.Status != ForecastRunStatus.Failed && r.StartedAt > time.GetUtcNow() - schedule.Value.StartupMinAge);
+        var last = await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetLastForecastRunQuery, LastForecastRun?>>()
+            .Handle(new GetLastForecastRunQuery(), ct);
+        var recent = last is not null && last.StartedAt > time.GetUtcNow() - schedule.Value.StartupMinAge ? last : null;
         if (recent is not null)
         {
             logger.LogInformation("Startup forecast run skipped, last run {RunId} at {StartedAt}", recent.Id, recent.StartedAt);

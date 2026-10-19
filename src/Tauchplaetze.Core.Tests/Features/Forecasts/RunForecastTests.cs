@@ -127,7 +127,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Von_Hand_startet_nur_ein_Admin_den_Prognose_Lauf()
+    public async Task Von_Hand_startet_nur_ein_Admin_den_Prognose_Lauf_und_nur_Admins_sehen_die_Laeufe()
     {
         // Arrange
         await PrepareRiffWilliams();
@@ -137,13 +137,17 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
 
         // Act
         var byContributor = await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(anna));
-        var runsAfterContributor = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery());
+        var runsAfterContributor = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(admin));
         var byAdmin = await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(admin));
+        var runsForContributor = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(anna));
+        var runsForAdmin = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(admin));
 
         // Assert
         Assert.Equal((AccountError.NotAllowed, null), (byContributor.Error, byContributor.Run));
         Assert.Empty(runsAfterContributor);
         Assert.Equal(ForecastRunStatus.Succeeded, byAdmin.Run!.Status);
+        Assert.Empty(runsForContributor);
+        Assert.Single(runsForAdmin);
     }
 
     private async Task<Guid> PrepareRiffWilliams()

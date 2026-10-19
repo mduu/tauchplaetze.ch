@@ -74,7 +74,7 @@
         accounts = list.Count;
         blocked = list.Count(a => a.BlockedAt is not null);
         pending = (await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(UserId))).Count;
-        lastRun = (await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(1))).FirstOrDefault();
+        lastRun = (await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(UserId, 1))).FirstOrDefault();
         var queue = await Query<GetMailQueueStatusQuery, MailQueueStatus?>(new GetMailQueueStatusQuery(UserId));
         waiting = queue?.Waiting ?? 0;
         deadLetters = queue?.DeadLetters ?? 0;

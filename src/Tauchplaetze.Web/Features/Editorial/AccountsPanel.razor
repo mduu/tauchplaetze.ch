@@ -19,9 +19,12 @@
         {
             <MudTh>@L["Column_Email"]</MudTh>
         }
-        @foreach (var role in Roles.All)
+        @if (IsAdmin)
         {
-            <MudTh>@L[$"Role_{role}"]</MudTh>
+            @foreach (var role in Roles.All)
+            {
+                <MudTh>@L[$"Role_{role}"]</MudTh>
+            }
         }
         <MudTh></MudTh>
     </HeaderContent>
@@ -41,11 +44,14 @@
         {
             <MudTd>@context.Email</MudTd>
         }
-        @foreach (var role in Roles.All)
+        @if (IsAdmin)
         {
-            var account = context;
-            var current = role;
-            <MudTd><MudCheckBox T="bool" Value="account.Roles.Contains(current)" ValueChanged="@(on => SetRole(account, current, on))" Disabled="@(!IsAdmin || (account.UserId == UserId && current == Roles.Admin))" /></MudTd>
+            @foreach (var role in Roles.All)
+            {
+                var account = context;
+                var current = role;
+                <MudTd><MudCheckBox T="bool" Value="account.Roles.Contains(current)" ValueChanged="@(on => SetRole(account, current, on))" Disabled="@(account.UserId == UserId && current == Roles.Admin)" /></MudTd>
+            }
         }
         <MudTd>
             @if (CanBlock(context))

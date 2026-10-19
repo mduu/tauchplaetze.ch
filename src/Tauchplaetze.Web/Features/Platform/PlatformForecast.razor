@@ -60,7 +60,7 @@
     private AccountError? error;
 
     protected override async Task Load() =>
-        runs = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery());
+        runs = await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(UserId));
 
     private async Task RunNow()
     {
