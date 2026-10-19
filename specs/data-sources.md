@@ -136,7 +136,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 - Es gibt keine dokumentierte API. Nur ein JSON der Grafiken auf `hydrodaten.admin.ch` (`/plots/p_forecast/{id}_p_forecast_de.json`).
 - **Nutzung erlaubt** (BAFU (Hydrologie), Projektleiter Abt. Hydrologie, BAFU, Antwort vom 19.10.2026 auf `doc/mails/2026-10-17-bafu-hydrologie.md`):
   - Eine offizielle Schnittstelle für Vorhersagen gibt es noch nicht. Das BAFU bietet einen Zugang per SFTP oder HTTPS an, mit Beispieldaten im Anhang der Mail.
-  - Vorhersagen gibt es für die Stationen, die auf Hydroweb («Hydrologische Daten und Vorhersagen») aufgeschaltet sind. Sie werden 1- bis 2-mal täglich gerechnet.
+  - Vorhersagen gibt es für die Stationen, die auf Hydroweb aufgeschaltet sind («Hydrologische Daten und Vorhersagen», https://www.hydrodaten.admin.ch/de/aktuelle-lage). Sie werden 1- bis 2-mal täglich gerechnet.
   - Keine Grenze für die Anzahl Abfragen.
   - Quellenangabe: «Bundesamt für Umwelt BAFU».
 - **Beispieldaten** (Anhang der Mail, Stand 19.10.2026): 53 Stationen in je 5 Dateien `Pqprevi_{Variante}_{Station}.txt`. Dabei sind 2104 Linth – Weesen und 2091 Rhein – Rheinfelden, nicht aber 2477 Lorze – Zug.
