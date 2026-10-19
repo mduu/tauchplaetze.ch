@@ -14,5 +14,8 @@ internal class ForecastRun
 
     public string SourceStatus { get; set; } = "[]";
 
+    /// <summary>Plätze mit Prognose in diesem Lauf. null bei Läufen von vor dem 19.10.2026.</summary>
+    public int? Sites { get; set; }
+
     public required string RawDataPath { get; set; }
 }

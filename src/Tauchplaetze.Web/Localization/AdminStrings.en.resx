@@ -346,4 +346,37 @@
   <data name="Forecast_Failure_Network" xml:space="preserve"><value>Network</value></data>
   <data name="Forecast_Keys" xml:space="preserve"><value>Affected</value></data>
   <data name="Forecast_Messages" xml:space="preserve"><value>Messages</value></data>
+  <data name="Account_Back" xml:space="preserve"><value>← All accounts</value></data>
+  <data name="Account_NotFound" xml:space="preserve"><value>This account does not exist, or you lack the permission.</value></data>
+  <data name="Account_Confirmed" xml:space="preserve"><value>confirmed</value></data>
+  <data name="Account_Language" xml:space="preserve"><value>Language</value></data>
+  <data name="Account_ShowName" xml:space="preserve"><value>Name public</value></data>
+  <data name="Account_Yes" xml:space="preserve"><value>yes</value></data>
+  <data name="Account_No" xml:space="preserve"><value>no</value></data>
+  <data name="Account_Created" xml:space="preserve"><value>Registered</value></data>
+  <data name="Account_LastSignIn" xml:space="preserve"><value>Last sign-in</value></data>
+  <data name="Account_Unknown" xml:space="preserve"><value>unknown (account from before 19.10.2026)</value></data>
+  <data name="Account_Never" xml:space="preserve"><value>never (or before 19.10.2026)</value></data>
+  <data name="Account_SignInMethods" xml:space="preserve"><value>Sign-in methods</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Account_NoPassword" xml:space="preserve"><value>no password set</value></data>
+  <data name="Account_FailedAttempts" xml:space="preserve"><value>Failed attempts</value></data>
+  <data name="Account_LockedOutUntil" xml:space="preserve"><value>locked after failed attempts until {0}</value></data>
+  <data name="Account_BlockedBy" xml:space="preserve"><value>on {0} by {1}</value></data>
+  <data name="Account_Contributions" xml:space="preserve"><value>Contributions</value></data>
+  <data name="Account_ContributionsValue" xml:space="preserve"><value>{0} versions, {1} of them pending · {2} photos</value></data>
+  <data name="Account_Roles" xml:space="preserve"><value>Roles</value></data>
+  <data name="Account_Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Account_Confirm" xml:space="preserve"><value>Confirm email manually</value></data>
+  <data name="Account_ConfirmDone" xml:space="preserve"><value>The email address is confirmed.</value></data>
+  <data name="Account_SendReset" xml:space="preserve"><value>Send link for a new password</value></data>
+  <data name="Account_SendResetDone" xml:space="preserve"><value>The email with the link is on its way.</value></data>
+  <data name="Account_Delete" xml:space="preserve"><value>Delete account</value></data>
+  <data name="Account_DeleteTitle" xml:space="preserve"><value>Delete account?</value></data>
+  <data name="Account_DeleteText" xml:space="preserve"><value>The account “{0}” will be deleted. Its versions remain as “deleted account”, private photos are deleted, public ones stay with the photographer’s name. This cannot be undone.</value></data>
+  <data name="Account_BlockTitle" xml:space="preserve"><value>Block account?</value></data>
+  <data name="Account_BlockText" xml:space="preserve"><value>“{0}” can no longer sign in. Pending suggestions are rejected.</value></data>
+  <data name="Account_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Account_SelfHint" xml:space="preserve"><value>This is you. You cannot block or delete your own account here; delete it in your profile.</value></data>
+  <data name="Forecast_Column_Sites" xml:space="preserve"><value>Sites</value></data>
 </root>

@@ -313,6 +313,26 @@ public class MediaTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Loescht_ein_Admin_ein_Spam_Konto_verschwinden_dessen_private_Fotos_und_seine_Versionen_bleiben_ohne_Autor()
+    {
+        // Arrange
+        var (admin, anna, site) = await Prepare();
+        var photo = (await Upload(anna, site)).MediaId!.Value;
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 99 }, "Spam"));
+
+        // Act
+        var deleted = await Command<DeleteAccountByAdminCommand, AccountResult>(new DeleteAccountByAdminCommand(admin, anna));
+
+        // Assert
+        Assert.True(deleted.Succeeded);
+        Assert.Empty(Sql.Media.Pending);
+        Assert.DoesNotContain(await Query<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>(new GetSiteMediaQuery(admin, site, Pending)), m => m.Id == photo);
+        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(admin)));
+        Assert.Null(pending.Revision.AuthorId);
+    }
+
+    [SqlFact]
     public async Task Private_Fotos_ohne_Verwendung_verschwinden_nach_30_Tagen_junge_vorgeschlagene_und_oeffentliche_bleiben()
     {
         // Arrange

@@ -1,0 +1,181 @@
+@page "/platform/konten/{Id}"
+@layout PlatformLayout
+@attribute [Authorize(Roles = Roles.Admin)]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Accounts.Commands
+@using Tauchplaetze.Core.Features.Accounts.Queries
+@using Tauchplaetze.Web.Features.Accounts
+@using Tauchplaetze.Web.Features.Editorial
+@inject IStringLocalizer<AccountStrings> AccountL
+@inject IDialogService Dialogs
+@inject NavigationManager Navigation
+
+<MudLink Href="/platform/konten" Class="d-inline-block mb-3">@L["Account_Back"]</MudLink>
+
+@if (account is null && loading)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+else if (account is null)
+{
+    <MudAlert Severity="Severity.Warning" data-no-data>@L["Account_NotFound"]</MudAlert>
+}
+else
+{
+    <div class="d-flex align-center flex-wrap gap-2 mb-4">
+        <MudText Typo="Typo.h4">@account.DisplayName</MudText>
+        @if (account.BlockedAt is not null)
+        {
+            <MudChip T="string" Size="Size.Small" Color="Color.Secondary">@L["Accounts_Blocked"]</MudChip>
+        }
+        @if (!account.EmailConfirmed)
+        {
+            <MudChip T="string" Size="Size.Small">@L["Accounts_Unconfirmed"]</MudChip>
+        }
+    </div>
+
+    @foreach (var error in errors)
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-3">@error</MudAlert>
+    }
+    @if (message is not null)
+    {
+        <MudAlert Severity="Severity.Success" Class="mb-3" ShowCloseIcon="true" CloseIconClicked="@(() => message = null)">@message</MudAlert>
+    }
+
+    <MudGrid>
+        <MudItem xs="12" md="7">
+            <MudPaper Outlined="true" Class="pa-4">
+                <MudSimpleTable Dense="true" Elevation="0" data-facts>
+                    <tbody>
+                        <tr><th>@L["Column_Email"]</th><td>@account.Email · @(account.EmailConfirmed ? L["Account_Confirmed"] : L["Accounts_Unconfirmed"])</td></tr>
+                        <tr><th>@L["Account_Language"]</th><td>@account.PreferredCulture.ToUpperInvariant()</td></tr>
+                        <tr><th>@L["Account_ShowName"]</th><td>@(account.ShowNamePublicly ? L["Account_Yes"] : L["Account_No"])</td></tr>
+                        <tr><th>@L["Account_Created"]</th><td>@(account.CreatedAt is { } created ? SwissClock.DateTime(created) : L["Account_Unknown"])</td></tr>
+                        <tr><th>@L["Account_LastSignIn"]</th><td>@(account.LastSignInAt is { } last ? SwissClock.DateTime(last) : L["Account_Never"])</td></tr>
+                        <tr><th>@L["Account_SignInMethods"]</th><td>@SignInMethods(account)</td></tr>
+                        <tr><th>@L["Account_FailedAttempts"]</th><td>@account.AccessFailedCount@(account.LockoutEnd is { } lockout && lockout > DateTimeOffset.UtcNow ? $" · {L["Account_LockedOutUntil", SwissClock.DateTime(lockout)]}" : "")</td></tr>
+                        @if (account.BlockedAt is { } blocked)
+                        {
+                            <tr><th>@L["Accounts_Blocked"]</th><td>@L["Account_BlockedBy", SwissClock.DateTime(blocked), account.BlockedByName ?? "–"]</td></tr>
+                        }
+                        <tr><th>@L["Account_Contributions"]</th><td>@L["Account_ContributionsValue", account.Revisions, account.PendingProposals, account.Photos]</td></tr>
+                    </tbody>
+                </MudSimpleTable>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="5">
+            <MudPaper Outlined="true" Class="pa-4 mb-4">
+                <MudText Typo="Typo.h6" Class="mb-2">@L["Account_Roles"]</MudText>
+                @foreach (var role in Roles.All)
+                {
+                    var current = role;
+                    <MudSwitch T="bool" Value="account.Roles.Contains(current)" ValueChanged="@(on => SetRole(current, on))" Color="Color.Primary"
+                               Disabled="@(busy || (IsSelf && current == Roles.Admin))" Label="@L[$"Role_{current}"]" />
+                }
+            </MudPaper>
+            <MudPaper Outlined="true" Class="pa-4">
+                <MudText Typo="Typo.h6" Class="mb-2">@L["Account_Actions"]</MudText>
+                <MudStack Spacing="2">
+                    @if (!account.EmailConfirmed)
+                    {
+                        <MudButton Variant="Variant.Outlined" OnClick="Confirm" Disabled="busy">@L["Account_Confirm"]</MudButton>
+                    }
+                    @if (account is { EmailConfirmed: true, BlockedAt: null })
+                    {
+                        <MudButton Variant="Variant.Outlined" OnClick="SendReset" Disabled="busy">@L["Account_SendReset"]</MudButton>
+                    }
+                    @if (!IsSelf)
+                    {
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="Block" Disabled="busy">
+                            @(account.BlockedAt is null ? L["Accounts_Block"] : L["Accounts_Unblock"])
+                        </MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Delete" Disabled="busy" StartIcon="@Icons.Material.Outlined.Delete">@L["Account_Delete"]</MudButton>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2">@L["Account_SelfHint"]</MudText>
+                    }
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    private AccountDetails? account;
+
+    private IReadOnlyList<string> errors = [];
+
+    private string? message;
+
+    private bool loading = true;
+
+    private bool busy;
+
+    [Parameter]
+    public string Id { get; set; } = "";
+
+    private bool IsSelf => Id == UserId;
+
+    protected override async Task Load()
+    {
+        loading = true;
+        account = await Query<GetAccountDetailsQuery, AccountDetails?>(new GetAccountDetailsQuery(UserId, Id));
+        loading = false;
+    }
+
+    private string SignInMethods(AccountDetails details) => string.Join(" · ",
+        [details.HasPassword ? L["Account_Password"].Value : L["Account_NoPassword"].Value, .. details.ExternalLogins]);
+
+    private async Task SetRole(string role, bool granted) =>
+        await Apply(Command<SetRoleCommand, AccountResult>(new SetRoleCommand(UserId, Id, role, granted)), null);
+
+    private async Task Confirm() =>
+        await Apply(Command<ConfirmEmailManuallyCommand, AccountResult>(new ConfirmEmailManuallyCommand(UserId, Id)), L["Account_ConfirmDone"]);
+
+    private async Task SendReset() =>
+        await Apply(Command<SendPasswordResetCommand, AccountResult>(new SendPasswordResetCommand(UserId, Id, AccountPaths.ResetTemplate(account!.PreferredCulture))), L["Account_SendResetDone"]);
+
+    private async Task Block()
+    {
+        var blocking = account!.BlockedAt is null;
+        if (blocking && await Dialogs.ShowMessageBoxAsync(L["Account_BlockTitle"], L["Account_BlockText", account.DisplayName], yesText: L["Accounts_Block"], cancelText: L["Account_Cancel"]) != true)
+        {
+            return;
+        }
+
+        await Apply(Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(UserId, Id, blocking)), null);
+    }
+
+    private async Task Delete()
+    {
+        if (await Dialogs.ShowMessageBoxAsync(L["Account_DeleteTitle"], L["Account_DeleteText", account!.DisplayName], yesText: L["Account_Delete"], cancelText: L["Account_Cancel"]) != true)
+        {
+            return;
+        }
+
+        busy = true;
+        var result = await Command<DeleteAccountByAdminCommand, AccountResult>(new DeleteAccountByAdminCommand(UserId, Id));
+        busy = false;
+        if (result.Succeeded)
+        {
+            Navigation.NavigateTo("/platform/konten");
+            return;
+        }
+
+        errors = AccountText.Errors(AccountL, result);
+    }
+
+    private async Task Apply(Task<AccountResult> command, string? success)
+    {
+        busy = true;
+        var result = await command;
+        errors = AccountText.Errors(AccountL, result);
+        message = result.Succeeded ? success : null;
+        busy = false;
+        await Load();
+    }
+}

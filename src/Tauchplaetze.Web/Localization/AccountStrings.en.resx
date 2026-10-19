@@ -78,4 +78,6 @@
   <data name="MyData_PhotoPublic" xml:space="preserve"><value>public</value></data>
   <data name="MyData_PhotoPrivate" xml:space="preserve"><value>private until approval</value></data>
   <data name="Delete_Photos" xml:space="preserve"><value>Photos that are still private are deleted. Public photos remain with the photographer’s name, without a link to your account.</value></data>
+  <data name="MyData_CreatedAt" xml:space="preserve"><value>Registered</value></data>
+  <data name="MyData_LastSignInAt" xml:space="preserve"><value>Last sign-in</value></data>
 </root>

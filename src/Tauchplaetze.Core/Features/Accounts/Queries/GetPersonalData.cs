@@ -23,7 +23,9 @@ public record PersonalData(
     DateTimeOffset? BlockedAt,
     IReadOnlyList<RevisionReference> Contributions,
     IReadOnlyList<RevisionReference> Reviews,
-    IReadOnlyList<PhotoReference>? Photos = null)
+    IReadOnlyList<PhotoReference>? Photos = null,
+    DateTimeOffset? CreatedAt = null,
+    DateTimeOffset? LastSignInAt = null)
 {
     [JsonIgnore]
     public IReadOnlyList<PhotoReference> PhotoList => Photos ?? [];
@@ -58,7 +60,9 @@ internal class GetPersonalDataHandler(TauchplaetzeDbContext dbContext, UserManag
             user.BlockedAt,
             contributions,
             reviews,
-            await PhotosOf(user.Id, ct));
+            await PhotosOf(user.Id, ct),
+            user.CreatedAt,
+            user.LastSignInAt);
     }
 
     private async Task<IReadOnlyList<PhotoReference>> PhotosOf(string userId, CancellationToken ct)

@@ -346,4 +346,37 @@
   <data name="Forecast_Failure_Network" xml:space="preserve"><value>Netzwerk</value></data>
   <data name="Forecast_Keys" xml:space="preserve"><value>Betroffen</value></data>
   <data name="Forecast_Messages" xml:space="preserve"><value>Meldungen</value></data>
+  <data name="Account_Back" xml:space="preserve"><value>← Alle Konten</value></data>
+  <data name="Account_NotFound" xml:space="preserve"><value>Dieses Konto gibt es nicht, oder dir fehlt die Berechtigung.</value></data>
+  <data name="Account_Confirmed" xml:space="preserve"><value>bestätigt</value></data>
+  <data name="Account_Language" xml:space="preserve"><value>Sprache</value></data>
+  <data name="Account_ShowName" xml:space="preserve"><value>Name öffentlich</value></data>
+  <data name="Account_Yes" xml:space="preserve"><value>ja</value></data>
+  <data name="Account_No" xml:space="preserve"><value>nein</value></data>
+  <data name="Account_Created" xml:space="preserve"><value>Registriert</value></data>
+  <data name="Account_LastSignIn" xml:space="preserve"><value>Letzte Anmeldung</value></data>
+  <data name="Account_Unknown" xml:space="preserve"><value>unbekannt (Konto von vor dem 19.10.2026)</value></data>
+  <data name="Account_Never" xml:space="preserve"><value>noch nie (oder vor dem 19.10.2026)</value></data>
+  <data name="Account_SignInMethods" xml:space="preserve"><value>Anmeldemethoden</value></data>
+  <data name="Account_Password" xml:space="preserve"><value>Passwort</value></data>
+  <data name="Account_NoPassword" xml:space="preserve"><value>kein Passwort gesetzt</value></data>
+  <data name="Account_FailedAttempts" xml:space="preserve"><value>Fehlversuche</value></data>
+  <data name="Account_LockedOutUntil" xml:space="preserve"><value>nach Fehlversuchen gesperrt bis {0}</value></data>
+  <data name="Account_BlockedBy" xml:space="preserve"><value>am {0} von {1}</value></data>
+  <data name="Account_Contributions" xml:space="preserve"><value>Beiträge</value></data>
+  <data name="Account_ContributionsValue" xml:space="preserve"><value>{0} Versionen, davon {1} offen · {2} Fotos</value></data>
+  <data name="Account_Roles" xml:space="preserve"><value>Rollen</value></data>
+  <data name="Account_Actions" xml:space="preserve"><value>Aktionen</value></data>
+  <data name="Account_Confirm" xml:space="preserve"><value>E-Mail von Hand bestätigen</value></data>
+  <data name="Account_ConfirmDone" xml:space="preserve"><value>Die E-Mail-Adresse ist bestätigt.</value></data>
+  <data name="Account_SendReset" xml:space="preserve"><value>Link für ein neues Passwort senden</value></data>
+  <data name="Account_SendResetDone" xml:space="preserve"><value>Die Mail mit dem Link ist unterwegs.</value></data>
+  <data name="Account_Delete" xml:space="preserve"><value>Konto löschen</value></data>
+  <data name="Account_DeleteTitle" xml:space="preserve"><value>Konto löschen?</value></data>
+  <data name="Account_DeleteText" xml:space="preserve"><value>Das Konto «{0}» wird gelöscht. Seine Versionen bleiben als «gelöschtes Konto», private Fotos werden gelöscht, öffentliche bleiben mit dem Namen des Fotografen. Das lässt sich nicht rückgängig machen.</value></data>
+  <data name="Account_BlockTitle" xml:space="preserve"><value>Konto sperren?</value></data>
+  <data name="Account_BlockText" xml:space="preserve"><value>«{0}» kann sich nicht mehr anmelden. Offene Vorschläge werden abgelehnt.</value></data>
+  <data name="Account_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Account_SelfHint" xml:space="preserve"><value>Das bist du. Dein eigenes Konto sperrst oder löschst du nicht hier; löschen geht im Profil.</value></data>
+  <data name="Forecast_Column_Sites" xml:space="preserve"><value>Plätze</value></data>
 </root>

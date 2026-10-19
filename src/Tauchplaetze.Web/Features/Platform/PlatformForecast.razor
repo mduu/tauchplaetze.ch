@@ -90,6 +90,7 @@ else
                 <MudTh>@L["Forecast_Column_Start"]</MudTh>
                 <MudTh>@L["Forecast_Column_Duration"]</MudTh>
                 <MudTh>@L["Forecast_Column_Status"]</MudTh>
+                <MudTh>@L["Forecast_Column_Sites"]</MudTh>
                 <MudTh>@L["Forecast_Column_Calls"]</MudTh>
                 <MudTh>@L["Forecast_Column_Errors"]</MudTh>
             </HeaderContent>
@@ -97,6 +98,7 @@ else
                 <MudTd DataLabel="@L["Forecast_Column_Start"]">@SwissClock.DateTime(context.StartedAt)</MudTd>
                 <MudTd DataLabel="@L["Forecast_Column_Duration"]">@Duration(context.Duration)</MudTd>
                 <MudTd DataLabel="@L["Forecast_Column_Status"]"><StatusChip Status="context.Status" /></MudTd>
+                <MudTd DataLabel="@L["Forecast_Column_Sites"]">@(context.Progress?.Sites ?? context.Sites)</MudTd>
                 <MudTd DataLabel="@L["Forecast_Column_Calls"]">@context.Calls</MudTd>
                 <MudTd DataLabel="@L["Forecast_Column_Errors"]">
                     @if (context.FailedCalls > 0)
@@ -116,7 +118,7 @@ else
                 @if (expanded.Contains(context.Id))
                 {
                     <MudTr>
-                        <td colspan="5" class="pa-3" data-failures>
+                        <td colspan="6" class="pa-3" data-failures>
                             @foreach (var group in context.Failures)
                             {
                                 <MudExpansionPanels Elevation="0" Class="mb-1">

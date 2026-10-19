@@ -56,7 +56,8 @@ internal class RunForecastHandler(
                 .Where(d => d.Status == DiveSiteStatus.Published)
                 .ToListAsync(ct);
 
-            progress.Start(run.Id, sites.Count(s => !s.ForecastDisabled));
+            run.Sites = sites.Count(s => !s.ForecastDisabled);
+            progress.Start(run.Id, run.Sites.Value);
             await Forecast(sites, today, run, recorder, ct);
             run.Status = recorder.AnyFailed ? ForecastRunStatus.PartiallySucceeded : ForecastRunStatus.Succeeded;
             return new RunForecastResult(false, run.Id, run.Status, sites.Count);

@@ -13,7 +13,7 @@ namespace Tauchplaetze.Core.Features.Accounts.Commands;
 /// </summary>
 public record RegisterCommand(string Email, string Password, string DisplayName, string Culture, string ConfirmPathTemplate);
 
-internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOptions<AccountsOptions> options, IOptions<PublicSiteOptions> site) : ICommandHandler<RegisterCommand, AccountResult>
+internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOptions<AccountsOptions> options, IOptions<PublicSiteOptions> site, TimeProvider time) : ICommandHandler<RegisterCommand, AccountResult>
 {
     public async Task<AccountResult> Handle(RegisterCommand command, CancellationToken ct = default)
     {
@@ -33,7 +33,7 @@ internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOp
             return AccountResult.Fail(AccountError.DisplayNameTaken);
         }
 
-        var user = new User { UserName = command.Email.Trim(), Email = command.Email.Trim(), DisplayName = displayName, PreferredCulture = command.Culture };
+        var user = new User { UserName = command.Email.Trim(), Email = command.Email.Trim(), DisplayName = displayName, PreferredCulture = command.Culture, CreatedAt = time.GetUtcNow() };
         var created = AccountErrors.From(await users.CreateAsync(user, command.Password));
         if (!created.Succeeded)
         {

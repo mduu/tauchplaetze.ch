@@ -702,6 +702,9 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<int?>("Sites")
+                        .HasColumnType("int");
+
                     b.Property<string>("SourceStatus")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -938,6 +941,9 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTimeOffset?>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(60)
@@ -949,6 +955,9 @@ namespace Tauchplaetze.Core.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LastSignInAt")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");

@@ -32,6 +32,7 @@ public record ForecastRunRow(
     DateTimeOffset StartedAt,
     TimeSpan? Duration,
     ForecastRunStatus Status,
+    int? Sites,
     int Calls,
     int FailedCalls,
     IReadOnlyList<FailureGroup> Failures,
@@ -85,7 +86,7 @@ internal class GetForecastRunOverviewHandler(
         var calls = JsonSerializer.Deserialize<List<SourceCallStatus>>(run.SourceStatus, JsonOptions) ?? [];
         var running = run.Status == ForecastRunStatus.Running ? progress.Of(run.Id) : null;
         return new ForecastRunRow(
-            run.Id, run.StartedAt, run.FinishedAt - run.StartedAt, run.Status,
+            run.Id, run.StartedAt, run.FinishedAt - run.StartedAt, run.Status, run.Sites,
             running?.Calls ?? calls.Count, calls.Count(c => !c.Ok), RunFailures.Group(calls), running);
     }
 }

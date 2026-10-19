@@ -78,4 +78,6 @@
   <data name="MyData_PhotoPublic" xml:space="preserve"><value>publique</value></data>
   <data name="MyData_PhotoPrivate" xml:space="preserve"><value>privée jusqu'à la validation</value></data>
   <data name="Delete_Photos" xml:space="preserve"><value>Les photos encore privées sont supprimées. Les photos publiques restent avec le nom du photographe, sans lien avec ton compte.</value></data>
+  <data name="MyData_CreatedAt" xml:space="preserve"><value>Inscrit le</value></data>
+  <data name="MyData_LastSignInAt" xml:space="preserve"><value>Dernière connexion</value></data>
 </root>

@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.Accounts.Queries
+@using Tauchplaetze.Web.Features.Editorial
 @inject IQueryHandler<GetPersonalDataQuery, PersonalData?> PersonalDataQuery
 @inject IStringLocalizer<AccountStrings> L
 
@@ -18,6 +19,8 @@
             <dt>@L["Language"]</dt><dd>@data.PreferredCulture</dd>
             <dt>@L["MyData_Roles"]</dt><dd>@string.Join(", ", data.Roles)</dd>
             <dt>@L["MyData_Confirmed"]</dt><dd>@(data.EmailConfirmed ? L["Yes"] : L["No"])</dd>
+            <dt>@L["MyData_CreatedAt"]</dt><dd>@(data.CreatedAt is { } created ? SwissClock.DateTime(created) : "–")</dd>
+            <dt>@L["MyData_LastSignInAt"]</dt><dd>@(data.LastSignInAt is { } last ? SwissClock.DateTime(last) : "–")</dd>
         </dl>
 
         <h2 class="subtitle">@L["MyData_Contributions"]</h2>

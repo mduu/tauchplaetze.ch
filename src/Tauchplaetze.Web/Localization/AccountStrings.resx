@@ -78,4 +78,6 @@
   <data name="MyData_PhotoPublic" xml:space="preserve"><value>öffentlich</value></data>
   <data name="MyData_PhotoPrivate" xml:space="preserve"><value>privat bis zur Freigabe</value></data>
   <data name="Delete_Photos" xml:space="preserve"><value>Fotos, die noch privat sind, werden gelöscht. Öffentliche Fotos bleiben mit dem Namen des Fotografen, ohne Bezug zu deinem Konto.</value></data>
+  <data name="MyData_CreatedAt" xml:space="preserve"><value>Registriert</value></data>
+  <data name="MyData_LastSignInAt" xml:space="preserve"><value>Letzte Anmeldung</value></data>
 </root>

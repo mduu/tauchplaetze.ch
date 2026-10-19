@@ -92,6 +92,10 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetForecastRunOverviewQuery, ForecastRunOverview?> RunOverview { get; } = new(_ => null);
 
+    public FakeQuery<GetAccountDetailsQuery, AccountDetails?> AccountDetails { get; } = new(_ => null);
+
+    public FakeQuery<GetAccountsQuery, IReadOnlyList<AccountSummary>> Accounts { get; } = new(_ => []);
+
     public WebApp() => MirrorSignIn();
 
     /// <summary>Das Cookie bleibt gültig, solange das Konto der letzten Anmeldung dieselbe Id hat.</summary>
@@ -136,6 +140,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSignedInAccountQuery, SignedInAccount?>>(SignedIn));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetMailQueueStatusQuery, MailQueueStatus?>>(MailQueue));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetForecastRunOverviewQuery, ForecastRunOverview?>>(RunOverview));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetAccountDetailsQuery, AccountDetails?>>(AccountDetails));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetAccountsQuery, IReadOnlyList<AccountSummary>>>(Accounts));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<ExportContentQuery, ExportContentResult>>(ContentExport));
         });
     }

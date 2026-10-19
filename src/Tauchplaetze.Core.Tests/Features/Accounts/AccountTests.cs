@@ -63,7 +63,8 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
             scope.ServiceProvider.GetRequiredService<UserManager<User>>(),
             scope.ServiceProvider.GetRequiredService<MailDispatcher>(),
             Options.Create(new AccountsOptions { RegistrationOpen = false }),
-            Options.Create(new PublicSiteOptions()));
+            Options.Create(new PublicSiteOptions()),
+            Sql.Time);
 
         // Act
         var result = await handler.Handle(new RegisterCommand(Email, Password, "Anna", "de", ConfirmTemplate), TestContext.Current.CancellationToken);

@@ -23,8 +23,8 @@ public class PlatformForecastPageTests : IClassFixture<WebApp>
     public async Task Die_Prognose_Laeufe_zeigen_den_laufenden_Lauf_mit_Fortschritt_den_naechsten_Lauf_und_die_Bilanz_der_Woche()
     {
         // Arrange
-        var running = new ForecastRunRow(Guid.NewGuid(), At, null, ForecastRunStatus.Running, 120, 0, [], new RunProgress(318, 40, 120));
-        var partial = new ForecastRunRow(Guid.NewGuid(), At.AddHours(-13), TimeSpan.FromMinutes(12), ForecastRunStatus.PartiallySucceeded, 900, 3,
+        var running = new ForecastRunRow(Guid.NewGuid(), At, null, ForecastRunStatus.Running, 318, 120, 0, [], new RunProgress(318, 40, 120));
+        var partial = new ForecastRunRow(Guid.NewGuid(), At.AddHours(-13), TimeSpan.FromMinutes(12), ForecastRunStatus.PartiallySucceeded, 318, 900, 3,
             [new FailureGroup("alplakes", FailureKind.Timeout, null, 3, ["3d-zurich-riff"], ["timeout"])], null);
         app.RunOverview.Answer = query => query.AdminId == "admin-1"
             ? new ForecastRunOverview(running, At.AddHours(8.5), new RunBalance(14, 12, 1, 1), TimeSpan.FromSeconds(690), [running, partial], 2)

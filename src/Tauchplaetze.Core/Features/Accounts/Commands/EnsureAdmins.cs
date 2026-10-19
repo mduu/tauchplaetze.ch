@@ -13,7 +13,7 @@ public record EnsureAdminsCommand(IReadOnlyList<AdminAccount> Admins);
 /// <summary>Die Konto-IDs der Admins, in der Reihenfolge der Konfiguration.</summary>
 public record EnsureAdminsResult(IReadOnlyList<string> UserIds);
 
-internal class EnsureAdminsHandler(UserManager<User> users) : ICommandHandler<EnsureAdminsCommand, EnsureAdminsResult>
+internal class EnsureAdminsHandler(UserManager<User> users, TimeProvider time) : ICommandHandler<EnsureAdminsCommand, EnsureAdminsResult>
 {
     public async Task<EnsureAdminsResult> Handle(EnsureAdminsCommand command, CancellationToken ct = default)
     {
@@ -42,6 +42,7 @@ internal class EnsureAdminsHandler(UserManager<User> users) : ICommandHandler<En
             Email = admin.Email,
             EmailConfirmed = true,
             DisplayName = admin.DisplayName,
+            CreatedAt = time.GetUtcNow(),
         };
         Ensure(await users.CreateAsync(user));
         return user;

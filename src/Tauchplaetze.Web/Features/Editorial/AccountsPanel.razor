@@ -30,7 +30,14 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd>
-            @context.DisplayName
+            @if (IsAdmin)
+            {
+                <MudLink Href="@($"/platform/konten/{context.UserId}")" data-account-link>@context.DisplayName</MudLink>
+            }
+            else
+            {
+                @context.DisplayName
+            }
             @if (context.BlockedAt is not null)
             {
                 <MudChip T="string" Size="Size.Small" Color="Color.Secondary">@L["Accounts_Blocked"]</MudChip>
