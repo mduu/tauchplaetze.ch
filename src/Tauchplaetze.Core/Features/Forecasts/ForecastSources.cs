@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Forecasts.Calculation;
@@ -21,7 +22,7 @@ internal record SiteData(
     SatelliteObservation? ShoreSecchi = null);
 
 /// <summary>Holt die Daten aller Quellen. Plätze und Gewässer mit denselben Abfragen teilen sich den Call.</summary>
-internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMeteo, HydroClient hydro)
+internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMeteo, HydroClient hydro, ILogger<ForecastSources> logger)
 {
     public const int ForecastDays = 5;
 
@@ -88,8 +89,9 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
     }
 
     /// <remarks>
-    /// Ein eigener Satellitenpunkt des Platzes gilt auch hier. Sonst zuerst 50 m vom Platz Richtung Satellitenpunkt des Sees (bzw. Mitte),
-    /// bei fehlendem Wert oder zu wenigen Pixeln 100 m. Höchstens zwei Calls pro Platz. Ist kein Wert da, gilt Sentinel-3.
+    /// Zuerst 50 m vom Platz Richtung Seemitte, bei fehlendem, zu altem Wert oder zu wenigen Pixeln 100 m. Höchstens zwei Calls pro Platz.
+    /// Die Richtung gibt der eigene Satellitenpunkt des Platzes (für Sentinel-3 seewärts gesetzt), sonst der des Sees, sonst seine Mitte.
+    /// Ist kein Wert da, gilt Sentinel-3.
     /// </remarks>
     private async Task<SatelliteObservation?> ShoreSecchi(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
     {
@@ -100,22 +102,24 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             return null;
         }
 
-        if (site.SatellitePoint is { } own)
-        {
-            return await ShoreSatelliteAt(lake, own.Y, own.X, today, recorder, ct);
-        }
-
-        var toward = waterBody.SatellitePoint ?? waterBody.Centroid;
+        var toward = site.SatellitePoint ?? waterBody.SatellitePoint ?? waterBody.Centroid;
         var nearPoint = SeawardPoint.Of(site.Location.Y, site.Location.X, toward.Y, toward.X, ShorePoint.NearMeters);
         var near = await ShoreSatelliteAt(lake, nearPoint.Latitude, nearPoint.Longitude, today, recorder, ct);
-        if (!ShorePoint.NeedsFallback(near, ShorePoint.MinPixels))
+        var freshDays = DiveIndexRules.Default.SatelliteFullAgeDays;
+        if (!ShorePoint.NeedsFallback(near, today, ShorePoint.MinPixels, freshDays))
         {
             return near;
         }
 
         var farPoint = SeawardPoint.Of(site.Location.Y, site.Location.X, toward.Y, toward.X, ShorePoint.FarMeters);
         var far = await ShoreSatelliteAt(lake, farPoint.Latitude, farPoint.Longitude, today, recorder, ct);
-        return ShorePoint.Pick(near, far, ShorePoint.MinPixels);
+        var picked = ShorePoint.Pick(near, far, ShorePoint.MinPixels);
+        if (picked is null)
+        {
+            logger.LogInformation("Sentinel-2 has no value at 50 m or 100 m from dive site {Slug}", site.Slug);
+        }
+
+        return picked;
     }
 
     private Task<SatelliteObservation?> ShoreSatelliteAt(string lake, double latitude, double longitude, DateOnly today, SourceRecorder recorder, CancellationToken ct) =>

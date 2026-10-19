@@ -12,15 +12,23 @@ internal static class ShorePoint
     /// <summary>Mindestzahl gültiger Pixel für den neuesten Wert.</summary>
     public const int MinPixels = 3;
 
-    /// <summary>Braucht es den Rückfall? Ja, ohne Wert oder mit weniger als <paramref name="minPixels"/> Pixeln.</summary>
-    public static bool NeedsFallback(SatelliteObservation? near, int minPixels) => near is null || near.PixelCount < minPixels;
+    /// <summary>
+    /// Braucht es den Rückfall? Ja, ohne Wert, mit weniger als <paramref name="minPixels"/> Pixeln
+    /// oder wenn der Wert älter als <paramref name="freshDays"/> Tage ist.
+    /// </summary>
+    public static bool NeedsFallback(SatelliteObservation? near, DateOnly today, int minPixels, int freshDays) =>
+        near is null || near.PixelCount < minPixels || today.DayNumber - near.Date.DayNumber > freshDays;
 
     /// <summary>
-    /// Der Wert nah am Ufer, wenn er genug Pixel hat. Sonst der Rückfall, wenn er genug Pixel hat.
-    /// Haben beide zu wenige, gilt der nahe Wert (sonst der ferne): ein knapper Wert ist besser als keiner.
+    /// Zuerst der jüngere Wert. Bei gleichem Datum der nahe, ausser er hat zu wenige Pixel und der ferne genug.
+    /// Fehlt einer, gilt der andere.
     /// </summary>
-    public static SatelliteObservation? Pick(SatelliteObservation? near, SatelliteObservation? far, int minPixels) =>
-        !NeedsFallback(near, minPixels) ? near
-        : far is { } enough && enough.PixelCount >= minPixels ? far
-        : near ?? far;
+    public static SatelliteObservation? Pick(SatelliteObservation? near, SatelliteObservation? far, int minPixels) => (near, far) switch
+    {
+        (null, _) => far,
+        (_, null) => near,
+        _ when near.Date != far.Date => near.Date > far.Date ? near : far,
+        _ when near.PixelCount < minPixels && far.PixelCount >= minPixels => far,
+        _ => near,
+    };
 }

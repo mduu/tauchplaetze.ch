@@ -1,3 +1,5 @@
+using Tauchplaetze.Core.CrossCutting.Geo;
+using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Forecasts;
@@ -65,6 +67,78 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(5.4m, today.SecchiDepthShore);
         Assert.Contains(Sql.Sources.Requests, url => url.Contains("/sentinel2/Z490/47.2846/8.6080/", StringComparison.Ordinal));
         Assert.DoesNotContain(Sql.Sources.Requests, url => url.Contains("/sentinel2/Z490/47.2843/8.6075/", StringComparison.Ordinal));
+    }
+
+    [SqlFact]
+    public async Task Hat_der_Wert_50_m_vor_dem_Ufer_nur_2_Pixel_gilt_der_Wert_bei_100_m_mit_hoechstens_zwei_Calls()
+    {
+        // Arrange
+        var siteId = await PrepareRiffWilliams();
+        Sql.Sources.Overrides["/Z490/47.2846/8.6080/"] = """
+            [{"time":"2026-10-15T10:30:19+00:00","value":{"mean":4.1,"median":4.1,"min":4.0,"max":4.2,"std":0.1,"count":2}}]
+            """;
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Assert.Equal(5.5m, today.SecchiDepthShore);
+        Assert.Equal(2, Sql.Sources.Requests.Count(url => url.Contains("/sentinel2/Z490/", StringComparison.Ordinal)));
+        Assert.Equal(1, Sql.Sources.Requests.Count(url => url.Contains("remotesensing/metadata", StringComparison.Ordinal)));
+    }
+
+    [SqlFact]
+    public async Task Liefert_Sentinel_2_bei_50_und_100_m_keine_Werte_ist_das_kein_Fehler_und_Sentinel_3_gilt()
+    {
+        // Arrange
+        var siteId = await PrepareRiffWilliams();
+        Sql.Sources.Overrides["/sentinel2/Z490/"] = "[]";
+
+        // Act
+        var run = await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        Assert.Equal(ForecastRunStatus.Succeeded, run.Status);
+        var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Assert.Equal(ClaritySource.Sentinel3Lake, today.ClaritySource);
+        Assert.Equal(2, Sql.Sources.Requests.Count(url => url.Contains("/sentinel2/Z490/", StringComparison.Ordinal)));
+    }
+
+    [SqlFact]
+    public async Task Ein_eigener_Satellitenpunkt_gibt_fuer_Sentinel_2_nur_die_Richtung()
+    {
+        // Arrange
+        var siteId = await PrepareRiffWilliams();
+        await Sql.Arrange(async db =>
+        {
+            var site = await db.DiveSites.SingleAsync(d => d.Id == siteId);
+            site.SatellitePoint = GeoPoints.Create(47.2849, 8.6200);
+        });
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("/sentinel2/Z490/47.2849/8.6092/", StringComparison.Ordinal));
+        Assert.DoesNotContain(Sql.Sources.Requests, url => url.Contains("/sentinel2/Z490/47.2849/8.6200/", StringComparison.Ordinal));
+    }
+
+    [SqlFact]
+    public async Task Eine_unlesbare_Antwort_ist_ein_gescheiterter_Call_der_Lauf_rechnet_weiter_und_die_Antwort_liegt_im_Ordner_des_Laufs()
+    {
+        // Arrange
+        var siteId = await PrepareRiffWilliams();
+        Sql.Sources.Overrides["remotesensing/metadata"] = "<html>Wartung</html>";
+
+        // Act
+        var run = await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        Assert.Equal(ForecastRunStatus.PartiallySucceeded, run.Status);
+        Assert.Contains(Sql.RawData.Files.Keys, path => path.EndsWith("/alplakes/remotesensing-metadata.json", StringComparison.Ordinal));
+        var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Assert.NotNull(today.DiveIndex);
     }
 
     [SqlFact]

@@ -80,16 +80,19 @@ public class ClaritySourceTests
     }
 
     [Theory]
-    [InlineData(3, null, 50)]
-    [InlineData(null, 18, 100)]
-    [InlineData(2, 18, 100)]
-    [InlineData(2, 1, 50)]
-    [InlineData(null, 2, 100)]
-    public void Der_Wert_50_m_vor_dem_Ufer_gilt_mit_genug_Pixeln_sonst_der_Wert_bei_100_m(int? nearPixels, int? farPixels, int expectedMeters)
+    [InlineData(3, 0, null, 0, 50)]
+    [InlineData(null, 0, 18, 0, 100)]
+    [InlineData(2, 0, 18, 0, 100)]
+    [InlineData(2, 0, 1, 0, 50)]
+    [InlineData(null, 0, 2, 0, 100)]
+    [InlineData(20, 9, 3, 1, 100)]
+    [InlineData(2, 1, 18, 20, 50)]
+    public void Der_juengere_Wert_gilt_bei_gleichem_Datum_der_nahe_mit_genug_Pixeln_sonst_der_ferne(
+        int? nearPixels, int nearAge, int? farPixels, int farAge, int expectedMeters)
     {
         // Arrange
-        var near = nearPixels is { } n ? new SatelliteObservation(Day, 5.4, n) : null;
-        var far = farPixels is { } f ? new SatelliteObservation(Day, 5.5, f) : null;
+        var near = nearPixels is { } n ? new SatelliteObservation(Day.AddDays(-nearAge), 5.4, n) : null;
+        var far = farPixels is { } f ? new SatelliteObservation(Day.AddDays(-farAge), 5.5, f) : null;
 
         // Act
         var picked = ShorePoint.Pick(near, far, ShorePoint.MinPixels);
@@ -98,15 +101,55 @@ public class ClaritySourceTests
         Assert.Same(expectedMeters == 50 ? near : far, picked);
     }
 
-    [Fact]
-    public void Mit_genug_Pixeln_bei_50_m_braucht_es_keinen_zweiten_Call()
+    [Theory]
+    [InlineData(3, 5, false)]
+    [InlineData(2, 0, true)]
+    [InlineData(18, 6, true)]
+    public void Den_zweiten_Call_braucht_es_bei_zu_wenigen_Pixeln_oder_einem_gealterten_Wert(int pixels, int ageDays, bool fallback)
     {
         // Act
-        var enough = ShorePoint.NeedsFallback(new SatelliteObservation(Day, 5.4, 3), ShorePoint.MinPixels);
-        var tooFew = ShorePoint.NeedsFallback(new SatelliteObservation(Day, 5.4, 2), ShorePoint.MinPixels);
+        var needed = ShorePoint.NeedsFallback(new SatelliteObservation(Day.AddDays(-ageDays), 5.4, pixels), Day, ShorePoint.MinPixels, DiveIndexRules.Default.SatelliteFullAgeDays);
 
         // Assert
-        Assert.Equal((false, true), (enough, tooFew));
+        Assert.Equal(fallback, needed);
+    }
+
+    [Theory]
+    [InlineData(5, 0, ClaritySource.Sentinel2Shore)]
+    [InlineData(6, 0, ClaritySource.Sentinel3Lake)]
+    [InlineData(8, 8, ClaritySource.Sentinel2Shore)]
+    [InlineData(14, 15, ClaritySource.Sentinel2Shore)]
+    [InlineData(15, 14, ClaritySource.Sentinel3Lake)]
+    public void Grenzen_der_Quellwahl(int shoreAge, int lakeAge, ClaritySource expected)
+    {
+        // Act
+        var clarity = Choose(shore: Seen(shoreAge, 5.4), lake: Seen(lakeAge, 8));
+
+        // Assert
+        Assert.Equal(expected, clarity.Source);
+    }
+
+    [Fact]
+    public void Ist_Sentinel_2_zu_alt_und_fehlt_Sentinel_3_ist_die_Klarheit_unbekannt()
+    {
+        // Act
+        var clarity = Choose(shore: Seen(15, 5.4), lake: null);
+
+        // Assert
+        Assert.Equal((VisibilityIndicator.Unknown, (double?)null), (clarity.Indicator, clarity.ShoreDepth));
+    }
+
+    [Fact]
+    public void Ein_Bild_ohne_Median_faellt_beim_Lesen_weg()
+    {
+        // Act
+        var values = SatelliteValue.ParseList("""
+            [{"time":"2026-10-15T10:30:19+00:00","value":{"median":null,"count":0}},
+             {"time":"2026-10-12T10:29:11+00:00","value":{"median":7.7,"count":18}}]
+            """);
+
+        // Assert
+        Assert.Equal([7.7], values.Select(v => v.Median));
     }
 
     [Fact]
@@ -118,16 +161,6 @@ public class ClaritySourceTests
         // Assert
         Assert.Equal((new DateOnly(2026, 10, 15), 3), (DateOnly.FromDateTime(values[0].Time.UtcDateTime), values[0].PixelCount));
         Assert.Equal(5.4, values[0].Median, 1);
-    }
-
-    [Fact]
-    public void Die_Regeln_heissen_rules_1_2()
-    {
-        // Act
-        var version = DiveIndexRules.Default.ModelVersion;
-
-        // Assert
-        Assert.Equal("rules-1.2", version);
     }
 
     [Fact]
@@ -150,6 +183,7 @@ public class ClaritySourceTests
         // Assert
         Assert.True(products.Has("zurich", AlplakesClient.ShoreSatellite, AlplakesClient.ShoreSecchiVariable));
         Assert.False(products.Has("barone", AlplakesClient.ShoreSatellite, AlplakesClient.ShoreSecchiVariable));
+        Assert.True(products.Lakes.Count > 200);
         Assert.False(products.Has("unbekannt", AlplakesClient.ShoreSatellite, AlplakesClient.ShoreSecchiVariable));
     }
 
