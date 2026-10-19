@@ -148,6 +148,8 @@ public sealed class SqlServer : IAsyncLifetime
         Mail.Sent.Clear();
         MailQueue.Clear();
         Sources.Failing = null;
+        Sources.Overrides.Clear();
+        Sources.Requests.Clear();
         Time.Now = FixedTime.SpikeDay;
     }
 

@@ -35,11 +35,24 @@ internal static class SourceHttp
         }
     }
 
+    /// <summary>Ein Call mit Parser. Scheitert der Parser, ist der Call gescheitert; der Body bleibt für die Rohdaten erhalten.</summary>
     public static async Task<SourceResult<T>> Get<T>(HttpClient client, string relativeUrl, Func<string, T> parse, CancellationToken ct)
         where T : class
     {
         var response = await Get(client, relativeUrl, ct);
-        return new SourceResult<T>(response, response.IsSuccess ? parse(response.Body!) : null);
+        if (!response.IsSuccess)
+        {
+            return new SourceResult<T>(response, null);
+        }
+
+        try
+        {
+            return new SourceResult<T>(response, parse(response.Body!));
+        }
+        catch (Exception ex) when (ex is System.Text.Json.JsonException or FormatException or InvalidOperationException or KeyNotFoundException)
+        {
+            return new SourceResult<T>(response with { Error = $"Parse: {ex.GetType().Name}: {ex.Message}" }, null);
+        }
     }
 
     public static string Format(double value) => value.ToString("0.0000", CultureInfo.InvariantCulture);

@@ -74,6 +74,7 @@ internal record DepthTimeSeries(
 /// <summary>Statistik eines Satellitenprodukts in einem Fenster um einen Punkt.</summary>
 internal record SatelliteValue(DateTimeOffset Time, double Median, int PixelCount)
 {
+    /// <summary>Die Werte, neuester zuerst. Ein Bild ohne Median (z.B. <c>null</c>) fällt weg.</summary>
     public static IReadOnlyList<SatelliteValue> ParseList(string json)
     {
         using var document = JsonDocument.Parse(json);
@@ -81,11 +82,17 @@ internal record SatelliteValue(DateTimeOffset Time, double Median, int PixelCoun
             .Select(e =>
             {
                 var value = e.GetProperty("value");
+                if (!value.TryGetProperty("median", out var median) || median.ValueKind != JsonValueKind.Number)
+                {
+                    return null;
+                }
+
                 return new SatelliteValue(
                     DateTimeOffset.Parse(e.GetProperty("time").GetString()!, CultureInfo.InvariantCulture),
-                    value.GetProperty("median").GetDouble(),
-                    value.GetProperty("count").GetInt32());
+                    median.GetDouble(),
+                    value.TryGetProperty("count", out var count) && count.ValueKind == JsonValueKind.Number ? count.GetInt32() : 0);
             })
+            .OfType<SatelliteValue>()
             .OrderByDescending(v => v.Time)
             .ToList();
     }

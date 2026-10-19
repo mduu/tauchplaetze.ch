@@ -15,7 +15,7 @@ internal class AlplakesClient(HttpClient httpClient)
 
     public const string SecchiVariable = "Zsd_lee";
 
-    /// <summary>Secchi-Tiefe von Sentinel-2 (Annahme: in m wie <see cref="SecchiVariable"/>, Rückfrage an Eawag offen).</summary>
+    /// <summary>Secchi-Tiefe von Sentinel-2 in m wie <see cref="SecchiVariable"/> (von Eawag bestätigt, 19.10.2026).</summary>
     public const string ShoreSecchiVariable = "Z490";
 
     public const string ChlorophyllVariable = "chla";
