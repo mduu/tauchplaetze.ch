@@ -181,8 +181,12 @@ Use-Case: stöbern nach See («Was ist los an meinem See?»). Die Suche nach Eig
 
 ### Plattform (`/platform`)
 
-- Nur Admins. MudBlazor im selben Theme, aber Navigation oben (Übersicht, Konten, Prognose, Mail-Queue) und ein oranger Strich unter dem Kopf, damit der Bereich nicht mit der Moderation verwechselt wird. Links «Moderation» und «Zur Website».
+- Nur Admins. MudBlazor im selben Theme, aber Navigation oben (Übersicht, Konten, Prognose, Mail-Queue, Inhalt) und ein oranger Strich unter dem Kopf, damit der Bereich nicht mit der Moderation verwechselt wird. Links «Moderation» und «Zur Website».
+- Kopf von Plattform und Moderation: Logo wie auf der Website, daneben «tauchplaetze.ch · Plattform» bzw. «· Moderation».
+- Navigation: eine Zeile, vertikal zentriert, gleiche Abstände, kein Umbruch (auf schmalen Bildschirmen seitlich scrollbar). Der aktive Eintrag ist fett mit Unterstrich in `--color-signal`.
 - Übersicht: vier Kacheln (Konten mit Zahl der gesperrten, offene Vorschläge, letzter Prognose-Lauf, Mail-Queue mit Dead-Letter).
+- Liefert der Core nichts (zum Beispiel ohne Recht), zeigt jede Seite eine Meldung statt eines Ladebalkens.
+- **Prognose:** Kacheln letzter Lauf (Status als farbiger Chip, Zeit, während des Laufs Fortschritt «40 von 318 Plätzen, 120 Calls bisher»), nächster Lauf nach Zeitplan, Bilanz der letzten 7 Tage (erfolgreich, Teilerfolg, fehlgeschlagen), mittlere Dauer. Darunter die Läufe als Tabelle (Start, Dauer, Status, Calls, Fehler), 20 pro Seite, Schalter «Nur Läufe mit Fehlern». Die Zahl der Fehler klappt die Gruppen auf («alplakes · 3 × Timeout»), jede Gruppe mit den betroffenen Keys und den vollständigen Meldungen. Läuft ein Lauf, lädt die Seite alle 5 s neu, sonst nicht.
 - **Mail-Queue:** Zwei Kacheln mit Zählern (in der Queue, Dead-Letter, rot umrandet, sobald nicht leer), Knöpfe «Alle erneut senden» und «Alle löschen», darunter die Dead-Letter-Mails als aufklappbare Liste mit Details und Knöpfen pro Mail. Löschen fragt nach.
 
 ## Zustände

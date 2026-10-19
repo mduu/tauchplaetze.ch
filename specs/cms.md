@@ -31,7 +31,7 @@ Alte Adressen leiten weiter: `/admin/prognose` → `/platform/prognose` (301), `
 
 Ohne Anmeldung führt `/admin` zur Anmeldung. Fehlt die Rolle, antwortet der Server mit 403.
 
-**Rechte prüft der Core** (Entscheid Marc, 18.10.2026). Jeder Command und jede Query mit geschützten Daten bekommt die Benutzer-ID und liest Rollen und Sperre frisch aus der Datenbank. Die Rollen im Cookie und die Prüfungen der Oberfläche dienen nur der Bedienung. Ohne Recht liefert ein Command den Fehler `NotAllowed`, bei einem gesperrten Konto immer `Blocked` (die Oberfläche zeigt «Dein Konto ist gesperrt»). Eine Query liefert ohne Recht eine leere Liste.
+**Rechte prüft der Core** (Entscheid Marc, 18.10.2026). Jeder Command und jede Query mit geschützten Daten bekommt die Benutzer-ID und liest Rollen und Sperre frisch aus der Datenbank. Die Rollen im Cookie und die Prüfungen der Oberfläche dienen nur der Bedienung. Das Cookie prüft sich alle 5 Minuten gegen die Datenbank (`GetSignedInAccount`): Gibt es das Konto nicht mehr (zum Beispiel nach einem Neuaufbau der Datenbank mit neuer Id), ist es gesperrt oder unbestätigt, meldet die Web-App ab. Sonst übernimmt sie Name, Sprache und Rollen frisch. Ohne Recht liefert ein Command den Fehler `NotAllowed`, bei einem gesperrten Konto immer `Blocked` (die Oberfläche zeigt «Dein Konto ist gesperrt»). Eine Query liefert ohne Recht eine leere Liste.
 
 **Alle können beitragen, Moderatoren geben frei** (Entscheid Marc, 17.10.2026, ADR-008). Wer ein Konto hat, kann Informationen zu Tauchplätzen beisteuern. Online sichtbar wird eine Änderung erst, wenn ein Moderator oder Admin sie freigibt. Jede Änderung ergibt eine Version, wie in einem Wiki. Die History zeigt Autor und Approver.
 
@@ -248,7 +248,8 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 
 ### Prognose-Status
 
-- Letzter Lauf, Status pro Quelle, Datenalter, Fehler.
+- Query `GetForecastRunOverview` (nur Admins, sonst `null`): letzter Lauf, nächster Lauf nach `ForecastSchedule`, Bilanz der letzten 7 Tage, mittlere Dauer, eine Seite Läufe (optional nur mit Fehlern). Die gescheiterten Calls gruppiert der Core nach Quelle und Art (`FailureKind`: HTTP mit Status-Code, Timeout, Circuit Breaker offen, Antwort unlesbar, Netzwerk), mit Anzahl, Keys und Meldungen.
+- Fortschritt eines laufenden Laufs (Plätze fertig, Calls bisher) hält der Core nur im Speicher des Prozesses (`ForecastProgress`). Die Calls speichert der Lauf erst am Ende. Die Zahl der Plätze eines fertigen Laufs speichern wir noch nicht.
 - Button «Lauf jetzt starten» (nur Admin). Er ruft `StartForecastRun`, das die Rolle prüft. Der Worker ruft `RunForecast` direkt.
 
 ## Rollen
