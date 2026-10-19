@@ -126,24 +126,50 @@
 }
 
 .emergency-numbers {
-    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 12px 0 0;
     padding: 0;
     list-style: none;
-    display: grid;
-    gap: 6px;
 }
 
 .emergency-numbers a {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    min-height: 44px;
-    font-weight: 600;
+    justify-content: center;
+    min-height: 56px;
+    padding: 6px 4px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-tile-sm);
+    background: var(--color-surface-raised);
+    color: var(--color-text);
+    text-decoration: none;
 }
 
-.emergency-note {
-    margin: 8px 0 0;
+.emergency-numbers a:hover,
+.emergency-numbers a:focus-visible {
+    border-color: var(--color-primary);
+}
+
+.emergency-number {
+    font-family: var(--font-mono);
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.1;
+}
+
+.emergency-name {
     color: var(--color-text-subtle);
-    font-size: 14px;
+    font-size: 12px;
+}
+
+.tile .emergency-note {
+    margin: 10px 0 0;
+    color: var(--color-text-subtle);
+    font-size: 13px;
+    line-height: 1.45;
 }
 
 .site-links {
