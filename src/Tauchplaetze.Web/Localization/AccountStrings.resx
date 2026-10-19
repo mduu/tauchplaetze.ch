@@ -61,7 +61,6 @@
   <data name="Delete_Done" xml:space="preserve"><value>Dein Konto ist gelöscht.</value></data>
   <data name="Nav_SignIn" xml:space="preserve"><value>Anmelden</value></data>
   <data name="Nav_SignOut" xml:space="preserve"><value>Abmelden</value></data>
-  <data name="Nav_Cms" xml:space="preserve"><value>Redaktion</value></data>
   <data name="Nav_Account" xml:space="preserve"><value>Konto</value></data>
   <data name="Error_RegistrationClosed" xml:space="preserve"><value>Die Registrierung ist noch nicht offen.</value></data>
   <data name="Error_InvalidEmail" xml:space="preserve"><value>Diese E-Mail-Adresse ist ungültig.</value></data>

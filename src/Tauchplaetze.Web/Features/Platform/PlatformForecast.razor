@@ -1,8 +1,9 @@
-@page "/admin/prognose"
-@layout AdminLayout
-@attribute [Authorize(Roles = "Moderator,Admin")]
+@page "/platform/prognose"
+@layout PlatformLayout
+@attribute [Authorize(Roles = Roles.Admin)]
 @inherits AdminPage
 @using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Web.Features.Editorial
 @using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Core.Features.Forecasts.Commands
 @using Tauchplaetze.Core.Features.Forecasts.Queries

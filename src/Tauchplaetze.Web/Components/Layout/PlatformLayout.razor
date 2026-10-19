@@ -1,0 +1,34 @@
+@inherits LayoutComponentBase
+@using MudBlazor
+@inject IStringLocalizer<AdminStrings> L
+
+<MudThemeProvider Theme="AdminTheme.Dark" IsDarkMode="true" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<PageTitle>@L["Nav_Platform"] · tauchplaetze.ch</PageTitle>
+
+<MudLayout>
+    <MudAppBar Elevation="0" Dense="true" Class="platform-bar">
+        <MudText Typo="Typo.h6" Class="admin-brand">tauchplaetze.ch · @L["Nav_Platform"]</MudText>
+        <nav class="platform-nav" aria-label="@L["Nav_Platform"]">
+            <MudNavLink Href="/platform" Match="NavLinkMatch.All">@L["Nav_Dashboard"]</MudNavLink>
+            <MudNavLink Href="/platform/konten">@L["Nav_Accounts"]</MudNavLink>
+            <MudNavLink Href="/platform/prognose">@L["Nav_Forecast"]</MudNavLink>
+            <MudNavLink Href="/platform/queues">@L["Platform_Queues_Title"]</MudNavLink>
+        </nav>
+        <MudSpacer />
+        <MudLink Href="/admin" Target="_top" Color="Color.Inherit" Underline="Underline.None" Class="mr-4">@L["Nav_Moderation"]</MudLink>
+        <MudLink Href="@($"/{Language}")" Target="_top" Color="Color.Inherit" Underline="Underline.None">@L["Nav_Public"]</MudLink>
+    </MudAppBar>
+    <MudMainContent Class="admin-main">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}

@@ -8,6 +8,7 @@ using Tauchplaetze.Web.Features.Accounts;
 using Tauchplaetze.Web.Features.Forecasts;
 using Tauchplaetze.Web.Features.Mail;
 using Tauchplaetze.Web.Features.Media;
+using Tauchplaetze.Web.Features.Platform;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,7 @@ app.MapStaticAssets();
 app.MapLanguageRedirect();
 app.MapAccountEndpoints();
 app.MapMediaEndpoints();
+app.MapMovedPages();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 app.MapDefaultEndpoints();
 

@@ -1,7 +1,9 @@
 @inject IStringLocalizer<AccountStrings> L
+@inject IStringLocalizer<AdminStrings> Admin
 
 <nav class="account-nav" aria-label="@L["Nav_Account"]">
     <a href="@AccountPaths.Profile(Language)">@L["Profile_Title"]</a>
+    <a href="@AccountPaths.Proposals(Language)">@Admin["Nav_MyProposals"]</a>
     <a href="@AccountPaths.MyData(Language)">@L["MyData_Title"]</a>
     <a href="@AccountPaths.Delete(Language)">@L["Delete_Title"]</a>
 </nav>

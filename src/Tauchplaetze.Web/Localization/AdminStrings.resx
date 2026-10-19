@@ -16,7 +16,6 @@
   <data name="Dashboard_Pending" xml:space="preserve"><value>Offene Vorschläge</value></data>
   <data name="Dashboard_LastRun" xml:space="preserve"><value>Letzter Prognose-Lauf</value></data>
   <data name="Dashboard_NoRun" xml:space="preserve"><value>Noch kein Lauf.</value></data>
-  <data name="Dashboard_ContributorHint" xml:space="preserve"><value>Als Mitwirkende schlägst du Änderungen vor. Eine Moderatorin oder ein Moderator gibt sie frei.</value></data>
   <data name="Sites_Title" xml:space="preserve"><value>Plätze</value></data>
   <data name="Sites_Search" xml:space="preserve"><value>Suche nach Name</value></data>
   <data name="Sites_New" xml:space="preserve"><value>Neuer Platz</value></data>
@@ -290,4 +289,7 @@
   <data name="MyProposals_Withdraw" xml:space="preserve"><value>Zurückziehen</value></data>
   <data name="MyProposals_Withdrawn" xml:space="preserve"><value>Dein Vorschlag ist zurückgezogen.</value></data>
   <data name="Platform_ReplayHint" xml:space="preserve"><value>Mails mit Links zur Anmeldung oder zum Passwort laufen ab: Erneut gesendet, können ihre Links schon ungültig sein.</value></data>
+  <data name="Nav_Moderation" xml:space="preserve"><value>Moderation</value></data>
+  <data name="Platform_Lead" xml:space="preserve"><value>Betrieb der Plattform: Konten, Prognose-Läufe und die Mail-Queue. Nur für Admins.</value></data>
+  <data name="Platform_BlockedCount" xml:space="preserve"><value>davon {0} gesperrt</value></data>
 </root>

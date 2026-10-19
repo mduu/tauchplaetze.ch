@@ -16,7 +16,6 @@
   <data name="Dashboard_Pending" xml:space="preserve"><value>Propositions ouvertes</value></data>
   <data name="Dashboard_LastRun" xml:space="preserve"><value>Dernier calcul de prévision</value></data>
   <data name="Dashboard_NoRun" xml:space="preserve"><value>Aucun calcul pour l'instant.</value></data>
-  <data name="Dashboard_ContributorHint" xml:space="preserve"><value>En tant que contributeur, tu proposes des modifications. Un modérateur les valide.</value></data>
   <data name="Sites_Title" xml:space="preserve"><value>Sites de plongée</value></data>
   <data name="Sites_Search" xml:space="preserve"><value>Rechercher par nom</value></data>
   <data name="Sites_New" xml:space="preserve"><value>Nouveau site</value></data>
@@ -290,4 +289,7 @@
   <data name="MyProposals_Withdraw" xml:space="preserve"><value>Retirer</value></data>
   <data name="MyProposals_Withdrawn" xml:space="preserve"><value>Ta proposition a été retirée.</value></data>
   <data name="Platform_ReplayHint" xml:space="preserve"><value>Les e-mails avec des liens de connexion ou de mot de passe expirent : renvoyés, leurs liens peuvent déjà être invalides.</value></data>
+  <data name="Nav_Moderation" xml:space="preserve"><value>Modération</value></data>
+  <data name="Platform_Lead" xml:space="preserve"><value>Exploitation de la plateforme : comptes, calculs de prévision et file d’envoi des e-mails. Réservé aux admins.</value></data>
+  <data name="Platform_BlockedCount" xml:space="preserve"><value>dont {0} bloqué(s)</value></data>
 </root>

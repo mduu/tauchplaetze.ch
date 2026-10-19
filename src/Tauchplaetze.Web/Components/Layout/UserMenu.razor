@@ -1,6 +1,7 @@
 @using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Web.Features.Accounts
 @inject IStringLocalizer<AccountStrings> L
+@inject IStringLocalizer<AdminStrings> Admin
 
 <AuthorizeView>
     <Authorized>
@@ -12,9 +13,14 @@
             </summary>
             <ul class="dropdown-menu">
                 <li><a href="@AccountPaths.Profile(Language)">@L["Profile_Title"]</a></li>
-                @if (context.User.IsInRole(Roles.Moderator) || context.User.IsInRole(Roles.Admin) || context.User.IsInRole(Roles.Contributor))
+                <li><a href="@AccountPaths.Proposals(Language)">@Admin["Nav_MyProposals"]</a></li>
+                @if (context.User.IsInRole(Roles.Moderator) || context.User.IsInRole(Roles.Admin))
                 {
-                    <li><a href="/admin" data-enhance-nav="false">@L["Nav_Cms"]</a></li>
+                    <li><a href="/admin" data-enhance-nav="false">@Admin["Nav_Moderation"]</a></li>
+                }
+                @if (context.User.IsInRole(Roles.Admin))
+                {
+                    <li><a href="/platform" data-enhance-nav="false">@Admin["Nav_Platform"]</a></li>
                 }
                 <li>
                     <form method="post" action="@AccountPaths.SignOut(Language)">

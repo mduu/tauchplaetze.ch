@@ -1,0 +1,82 @@
+@page "/platform"
+@layout PlatformLayout
+@attribute [Authorize(Roles = Roles.Admin)]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.Accounts.Queries
+@using Tauchplaetze.Core.Features.Editorial.Queries
+@using Tauchplaetze.Core.Features.Forecasts.Queries
+@using Tauchplaetze.Core.Features.Mail
+@using Tauchplaetze.Core.Features.Mail.Queries
+@using Tauchplaetze.Web.Features.Editorial
+
+<MudText Typo="Typo.h4" GutterBottom="true">@L["Nav_Platform"]</MudText>
+<MudText Typo="Typo.body2" Class="mb-4">@L["Platform_Lead"]</MudText>
+
+<MudGrid>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Class="pa-4" Outlined="true">
+            <MudText Typo="Typo.overline">@L["Nav_Accounts"]</MudText>
+            <MudText Typo="Typo.h4">@accounts</MudText>
+            <MudText Typo="Typo.body2">@L["Platform_BlockedCount", blocked]</MudText>
+            <MudLink Href="/platform/konten">@L["Nav_Accounts"] →</MudLink>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Class="pa-4" Outlined="true">
+            <MudText Typo="Typo.overline">@L["Dashboard_Pending"]</MudText>
+            <MudText Typo="Typo.h4" Color="@(pending > 0 ? Color.Secondary : Color.Default)">@pending</MudText>
+            <MudLink Href="/admin/vorschlaege" Target="_top">@L["Nav_Moderation"] →</MudLink>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Class="pa-4" Outlined="true">
+            <MudText Typo="Typo.overline">@L["Dashboard_LastRun"]</MudText>
+            @if (lastRun is null)
+            {
+                <MudText>@L["Dashboard_NoRun"]</MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.h6">@L[$"RunStatus_{lastRun.Status}"]</MudText>
+                <MudText Typo="Typo.body2">@SwissClock.DateTime(lastRun.StartedAt)</MudText>
+            }
+            <MudLink Href="/platform/prognose">@L["Nav_Forecast"] →</MudLink>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12" sm="6" md="3">
+        <MudPaper Class="pa-4" Outlined="true">
+            <MudText Typo="Typo.overline">@L["Platform_DeadLetters"]</MudText>
+            <MudText Typo="Typo.h4" Color="@(deadLetters > 0 ? Color.Secondary : Color.Default)">@deadLetters</MudText>
+            <MudText Typo="Typo.body2">@L["Platform_Waiting"]: @waiting</MudText>
+            <MudLink Href="/platform/queues">@L["Platform_Queues_Title"] →</MudLink>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private int accounts;
+
+    private int blocked;
+
+    private int pending;
+
+    private int waiting;
+
+    private int deadLetters;
+
+    private ForecastRunSummary? lastRun;
+
+    protected override async Task Load()
+    {
+        var list = await Query<GetAccountsQuery, IReadOnlyList<AccountSummary>>(new GetAccountsQuery(UserId));
+        accounts = list.Count;
+        blocked = list.Count(a => a.BlockedAt is not null);
+        pending = (await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(UserId))).Count;
+        lastRun = (await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(1))).FirstOrDefault();
+        var queue = await Query<GetMailQueueStatusQuery, MailQueueStatus?>(new GetMailQueueStatusQuery(UserId));
+        waiting = queue?.Waiting ?? 0;
+        deadLetters = queue?.DeadLetters ?? 0;
+    }
+}

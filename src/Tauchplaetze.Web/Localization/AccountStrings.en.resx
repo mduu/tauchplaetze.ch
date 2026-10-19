@@ -61,7 +61,6 @@
   <data name="Delete_Done" xml:space="preserve"><value>Your account is deleted.</value></data>
   <data name="Nav_SignIn" xml:space="preserve"><value>Sign in</value></data>
   <data name="Nav_SignOut" xml:space="preserve"><value>Sign out</value></data>
-  <data name="Nav_Cms" xml:space="preserve"><value>Editing</value></data>
   <data name="Nav_Account" xml:space="preserve"><value>Account</value></data>
   <data name="Error_RegistrationClosed" xml:space="preserve"><value>Registration is not open yet.</value></data>
   <data name="Error_InvalidEmail" xml:space="preserve"><value>This email address is invalid.</value></data>

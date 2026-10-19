@@ -1,0 +1,104 @@
+@page "/{Lang}/account/proposals"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Core.Features.Editorial.Commands
+@using Tauchplaetze.Core.Features.Editorial.Queries
+@using Tauchplaetze.Web.Features.Editorial
+@inject IQueryHandler<GetMyProposalsQuery, IReadOnlyList<MyProposal>> MyProposals
+@inject ICommandHandler<WithdrawRevisionCommand, EditorialResult> Withdraw
+@inject IStringLocalizer<AdminStrings> L
+
+<AccountLayout Title="@L["MyProposals_Title"]" Lead="@L["MyProposals_Lead"]" Messages="messages" IsError="isError">
+    <AccountNav />
+    @if (proposals.Count == 0)
+    {
+        <p>@L["MyProposals_Empty"]</p>
+    }
+    else
+    {
+        <form method="post" @formname="withdraw" @onsubmit="Submit" class="proposals">
+            <AntiforgeryToken />
+            @foreach (var proposal in proposals)
+            {
+                <article class="proposal" data-proposal-status="@proposal.Status">
+                    <header class="proposal-head">
+                        <h2 class="proposal-site">
+                            @if (proposal.SiteSlug is { } slug)
+                            {
+                                <a href="@PublicRoutes.DiveSite(Language, slug)">@proposal.SiteName</a>
+                            }
+                            else
+                            {
+                                @proposal.SiteName
+                            }
+                            <span class="proposal-number">#@proposal.Number</span>
+                        </h2>
+                        <span class="proposal-status">@L[$"Revision_{proposal.Status}"]</span>
+                    </header>
+                    <p class="proposal-dates">
+                        @L["MyProposals_Submitted", SwissClock.DateTime(proposal.SubmittedAt)]
+                        @if (proposal.ReviewedAt is { } reviewed)
+                        {
+                            <span> · @L["MyProposals_Reviewed", SwissClock.DateTime(reviewed)]</span>
+                        }
+                    </p>
+                    @if (proposal.Comment is { Length: > 0 } comment)
+                    {
+                        <p>@L["MyProposals_Comment"]: @comment</p>
+                    }
+                    @if (proposal.Status == RevisionStatus.Rejected)
+                    {
+                        <p class="proposal-reason">@L["MyProposals_Reason"]: @(proposal.ReviewComment ?? "–")</p>
+                    }
+                    <p class="proposal-actions">
+                        <a href="@($"/admin/plaetze/{proposal.DiveSiteId}/versionen")" data-enhance-nav="false">@L["MyProposals_Compare"]</a>
+                        @if (proposal.Status == RevisionStatus.Pending)
+                        {
+                            <button type="submit" class="link-button" name="RevisionId" value="@proposal.RevisionId">@L["MyProposals_Withdraw"]</button>
+                        }
+                    </p>
+                </article>
+            }
+        </form>
+    }
+</AccountLayout>
+
+@code {
+    private IReadOnlyList<MyProposal> proposals = [];
+
+    private IReadOnlyList<string> messages = [];
+
+    private bool isError;
+
+    [Parameter]
+    public string? Lang { get; set; }
+
+    [SupplyParameterFromForm(FormName = "withdraw")]
+    private Guid? RevisionId { get; set; }
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string UserId => AccountCookie.UserId(HttpContext.User)!;
+
+    protected override async Task OnInitializedAsync() => await Load();
+
+    private async Task Load() => proposals = await MyProposals.Handle(new GetMyProposalsQuery(UserId));
+
+    private async Task Submit()
+    {
+        if (RevisionId is not { } id)
+        {
+            return;
+        }
+
+        var result = await Withdraw.Handle(new WithdrawRevisionCommand(UserId, id));
+        isError = !result.Succeeded;
+        messages = result.Succeeded ? [L["MyProposals_Withdrawn"].Value] : [.. result.Errors.Select(e => L[$"Error_{e}"].Value)];
+        await Load();
+    }
+}

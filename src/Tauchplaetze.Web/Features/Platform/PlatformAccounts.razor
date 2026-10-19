@@ -1,0 +1,8 @@
+@page "/platform/konten"
+@layout PlatformLayout
+@attribute [Authorize(Roles = Roles.Admin)]
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Web.Features.Editorial
+
+<AccountsPanel />

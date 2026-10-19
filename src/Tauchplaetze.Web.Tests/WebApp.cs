@@ -15,6 +15,7 @@ using Tauchplaetze.Core.Features.Accounts.Queries;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
 using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
@@ -56,6 +57,10 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?> PublicChanges { get; } = new(_ => null);
 
+    public FakeQuery<WithdrawRevisionCommand, EditorialResult> Withdraw { get; } = new(_ => new EditorialResult([]));
+
+    public FakeQuery<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>> PendingRevisions { get; } = new(_ => []);
+
     /// <summary>Empfänger des Kontaktformulars im Test. Er darf nie im HTML stehen.</summary>
     public const string OperatorEmail = "betreiber@example.org";
 
@@ -86,6 +91,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>>(SitesForEditing));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPublicRevisionsQuery, PublicRevisions?>>(PublicRevisions));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?>>(PublicChanges));
+            services.Replace(ServiceDescriptor.Singleton<ICommandHandler<WithdrawRevisionCommand, EditorialResult>>(Withdraw));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>>(PendingRevisions));
         });
     }
 

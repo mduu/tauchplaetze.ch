@@ -77,6 +77,8 @@ internal static class AccountPaths
 
     public static string MyData(string language) => $"/{language}/account/my-data";
 
+    public static string Proposals(string language) => $"/{language}/account/proposals";
+
     public static string Delete(string language) => $"/{language}/account/delete";
 
     public static string SignOut(string language) => $"/{language}/account/sign-out";

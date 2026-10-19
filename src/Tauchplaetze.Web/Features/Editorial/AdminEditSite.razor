@@ -9,6 +9,7 @@
 @using Tauchplaetze.Core.Features.Editorial.Queries
 @using Tauchplaetze.Core.Features.WaterBodies
 @using Tauchplaetze.Core.Features.WaterBodies.Queries
+@using Tauchplaetze.Web.Features.Accounts
 @inject IStringLocalizer<SharedStrings> Shared
 
 @if (site is null || form is null)
@@ -48,7 +49,7 @@ else
     {
         <MudAlert Severity="Severity.Info" Class="mb-4" data-open-proposal>
             @L["Edit_OpenProposal", SwissClock.DateTime(open.SubmittedAt)]
-            <MudLink Href="/admin/meine-vorschlaege" Class="ml-1">@L["Edit_OpenProposal_Link"]</MudLink>
+            <MudLink Href="@AccountPaths.Proposals(Language)" Target="_top" Class="ml-1">@L["Edit_OpenProposal_Link"]</MudLink>
         </MudAlert>
     }
     <ErrorList Errors="errors" />

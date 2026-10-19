@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.DiveSites;
 
 namespace Tauchplaetze.Core.Features.Editorial.Queries;
 
@@ -10,7 +11,7 @@ namespace Tauchplaetze.Core.Features.Editorial.Queries;
 /// </summary>
 public record GetMyProposalsQuery(string UserId, Guid? DiveSiteId = null, bool PendingOnly = false);
 
-/// <summary>Ein eigener Vorschlag mit Status und, bei Ablehnung, der Begründung.</summary>
+/// <summary>Ein eigener Vorschlag mit Status und, bei Ablehnung, der Begründung. <see cref="SiteSlug"/> nur bei öffentlichem Platz.</summary>
 public record MyProposal(
     Guid RevisionId,
     Guid DiveSiteId,
@@ -20,7 +21,8 @@ public record MyProposal(
     DateTimeOffset SubmittedAt,
     DateTimeOffset? ReviewedAt,
     string? Comment,
-    string? ReviewComment);
+    string? ReviewComment,
+    string? SiteSlug = null);
 
 internal class GetMyProposalsHandler(TauchplaetzeDbContext dbContext) : IQueryHandler<GetMyProposalsQuery, IReadOnlyList<MyProposal>>
 {
@@ -43,7 +45,8 @@ internal class GetMyProposalsHandler(TauchplaetzeDbContext dbContext) : IQueryHa
             .OrderByDescending(r => r.CreatedAt)
             .ThenByDescending(r => r.Number)
             .Join(dbContext.DiveSites, r => r.DiveSiteId, d => d.Id, (r, d) => new MyProposal(
-                r.Id, d.Id, d.Name, r.Number, r.Status, r.CreatedAt, r.ReviewedAt, r.Comment, r.ReviewComment))
+                r.Id, d.Id, d.Name, r.Number, r.Status, r.CreatedAt, r.ReviewedAt, r.Comment, r.ReviewComment,
+                d.Status == DiveSiteStatus.Published ? d.Slug : null))
             .ToListAsync(ct);
     }
 }

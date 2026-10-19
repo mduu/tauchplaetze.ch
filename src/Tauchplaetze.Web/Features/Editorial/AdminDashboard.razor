@@ -1,16 +1,11 @@
 @page "/admin"
 @layout AdminLayout
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Moderator,Admin")]
 @inherits AdminPage
 @using Microsoft.AspNetCore.Authorization
 @using Tauchplaetze.Core.Features.Editorial.Queries
-@using Tauchplaetze.Core.Features.Forecasts.Queries
 
 <MudText Typo="Typo.h4" GutterBottom="true">@L["Dashboard_Welcome", User.Identity?.Name ?? ""]</MudText>
-@if (!IsModerator)
-{
-    <MudAlert Severity="Severity.Info" Class="mb-4">@L["Dashboard_ContributorHint"]</MudAlert>
-}
 
 <MudGrid>
     <MudItem xs="12" sm="4">
@@ -29,21 +24,6 @@
                 <MudLink Href="/admin/vorschlaege">@L["Nav_Pending"] →</MudLink>
             </MudPaper>
         </MudItem>
-        <MudItem xs="12" sm="4">
-            <MudPaper Class="pa-4" Outlined="true">
-                <MudText Typo="Typo.overline">@L["Dashboard_LastRun"]</MudText>
-                @if (lastRun is null)
-                {
-                    <MudText>@L["Dashboard_NoRun"]</MudText>
-                }
-                else
-                {
-                    <MudText Typo="Typo.h6">@L[$"RunStatus_{lastRun.Status}"]</MudText>
-                    <MudText Typo="Typo.body2">@SwissClock.DateTime(lastRun.StartedAt)</MudText>
-                }
-                <MudLink Href="/admin/prognose">@L["Nav_Forecast"] →</MudLink>
-            </MudPaper>
-        </MudItem>
     }
 </MudGrid>
 
@@ -52,15 +32,12 @@
 
     private int pending;
 
-    private ForecastRunSummary? lastRun;
-
     protected override async Task Load()
     {
         sites = (await Query<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>(new GetDiveSitesForEditingQuery())).Count;
         if (IsModerator)
         {
             pending = (await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(UserId))).Count;
-            lastRun = (await Query<GetForecastRunsQuery, IReadOnlyList<ForecastRunSummary>>(new GetForecastRunsQuery(1))).FirstOrDefault();
         }
     }
 }

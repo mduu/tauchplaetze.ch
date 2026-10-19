@@ -2,6 +2,7 @@ using System.Net;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
 
 namespace Tauchplaetze.Web.Tests;
@@ -31,9 +32,10 @@ public class AdminPageTests : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Die_Redaktion_spricht_die_Sprache_aus_dem_Profil()
+    public async Task Die_Moderation_spricht_die_Sprache_aus_dem_Profil()
     {
         // Arrange
+        app.SignIn.Answer = _ => new SignInOutcome(SignInStatus.Succeeded, new SignedInAccount("mod-1", "Lucie", "fr", [Roles.Moderator]));
         using var browser = app.Browser();
         await SignIn(browser);
 
@@ -61,7 +63,7 @@ public class AdminPageTests : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Mitwirkende_sehen_ihre_Vorschlaege_mit_Status_und_der_Begruendung_einer_Ablehnung()
+    public async Task Mitwirkende_sehen_ihre_Vorschlaege_im_Profil_mit_Status_und_der_Begruendung_einer_Ablehnung()
     {
         // Arrange
         app.MyProposals.Answer = query => query.UserId == "user-1"
@@ -74,12 +76,84 @@ public class AdminPageTests : IClassFixture<WebApp>
         await SignIn(browser);
 
         // Act
-        var text = VisibleText.Of(await browser.GetStringAsync("/admin/meine-vorschlaege", TestContext.Current.CancellationToken));
+        var text = VisibleText.Of(await browser.GetStringAsync("/fr/account/proposals", TestContext.Current.CancellationToken));
 
         // Assert
         Assert.Contains("Ermitage", text);
         Assert.Contains("Retirer", text);
         Assert.Contains("Justification de la modération: Quelle fehlt.", text);
+    }
+
+    [Fact]
+    public async Task Ein_wartender_Vorschlag_laesst_sich_im_Profil_zurueckziehen()
+    {
+        // Arrange
+        var revision = Guid.NewGuid();
+        app.MyProposals.Answer = _ => [new MyProposal(revision, Guid.NewGuid(), "Ermitage", 4, RevisionStatus.Pending, DateTimeOffset.UtcNow, null, null, null, "ermitage-kuesnacht")];
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        using var response = await WebApp.Submit(browser, "/fr/account/proposals", "withdraw",
+            new() { ["RevisionId"] = revision.ToString() }, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(new WithdrawRevisionCommand("user-1", revision), app.Withdraw.LastQuery);
+        Assert.Contains("/fr/sites-de-plongee/ermitage-kuesnacht", await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Theory]
+    [InlineData("/admin")]
+    [InlineData("/admin/plaetze")]
+    [InlineData("/admin/vorschlaege")]
+    [InlineData("/admin/konten")]
+    public async Task Mitwirkende_kommen_nicht_in_die_Moderation(string path)
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        using var response = await browser.GetAsync(path, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("/platform")]
+    [InlineData("/platform/konten")]
+    [InlineData("/platform/prognose")]
+    [InlineData("/platform/queues")]
+    public async Task Die_Plattform_ist_nur_fuer_Admins_auch_nicht_fuer_die_Moderation(string path)
+    {
+        // Arrange
+        app.SignIn.Answer = _ => new SignInOutcome(SignInStatus.Succeeded, new SignedInAccount("mod-1", "Lucie", "fr", [Roles.Moderator]));
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        using var response = await browser.GetAsync(path, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("/admin/meine-vorschlaege", "/fr/account/proposals")]
+    [InlineData("/admin/prognose", "/platform/prognose")]
+    public async Task Alte_Adressen_aus_dem_CMS_leiten_auf_den_neuen_Ort(string old, string expected)
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        using var response = await browser.GetAsync(old, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.MovedPermanently, response.StatusCode);
+        Assert.Equal(expected, response.Headers.Location?.OriginalString);
     }
 
     [Fact]
