@@ -103,17 +103,15 @@
         <section class="page-section" aria-labelledby="practical">
             <h2 id="practical" class="section-heading">@L["Practical"]</h2>
             <div class="tiles">
-                <div class="tile">
-                    <div class="tile-label">@L["Coordinates"]</div>
-                    <p data-coordinates>@Coordinates(site)</p>
-                    <p><a href="@MapLink(site)" rel="noopener" target="_blank">@L["Map_Open"]</a></p>
-                </div>
-                <div class="tile">
+                <div class="tile approach-tile">
                     <div class="tile-label">@L["Navigate"]</div>
+                    <p data-coordinates>@Coordinates(site)</p>
                     <ul class="route-links">
+                        <li><a href="@MapLink(site)" rel="noopener" target="_blank">@L["Map_Open"]</a></li>
                         <li><a href="@GoogleRoute(site)" rel="noopener" target="_blank" data-route="google">@L["Navigate_Google"]</a></li>
                         <li><a href="@AppleRoute(site)" rel="noopener" target="_blank" data-route="apple">@L["Navigate_Apple"]</a></li>
                     </ul>
+                    <SiteTextBlock Text="site.Texts?.Approach" Name="approach" />
                 </div>
                 <div class="tile">
                     <div class="tile-label">@L["Emergency"]</div>
@@ -127,10 +125,9 @@
                 </div>
             </div>
 
-            @if (site.Texts is { Approach: not null } or { Surroundings: not null } or { Facilities: not null })
+            @if (site.Texts is { Surroundings: not null } or { Facilities: not null })
             {
                 <div class="practical-texts">
-                    <SiteTextBlock Text="site.Texts?.Approach" Name="approach" Title="@L["PhotoSection_Approach"]" />
                     <SiteTextBlock Text="site.Texts?.Surroundings" Name="surroundings" Title="@L["Rating_Surroundings"]" />
                     <SiteTextBlock Text="site.Texts?.Facilities" Name="facilities" Title="@L["Text_Facilities"]" />
                 </div>

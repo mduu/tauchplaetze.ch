@@ -100,9 +100,20 @@
     line-height: 1.5;
 }
 
+.approach-tile ::deep .site-text {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-divider);
+}
+
+.approach-tile ::deep .site-text-body {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
 .route-links {
     display: grid;
-    gap: 6px;
+    gap: 0;
     margin: 6px 0 0;
     padding: 0;
     list-style: none;

@@ -8,7 +8,6 @@
   <data name="Breadcrumb" xml:space="preserve"><value>Fil d'Ariane</value></data>
   <data name="DirectoryOnly" xml:space="preserve"><value>Ce site ne figure pour l'instant que dans l'annuaire. Description, photos et points d'entrée suivront.</value></data>
   <data name="Conditions" xml:space="preserve"><value>Conditions de plongée</value></data>
-  <data name="Coordinates" xml:space="preserve"><value>Coordonnées</value></data>
   <data name="Gone_Title" xml:space="preserve"><value>Site de plongée retiré de l'annuaire</value></data>
   <data name="Gone_Text" xml:space="preserve"><value>Ce site de plongée n'est plus public.</value></data>
   <data name="Conditions_Eyebrow" xml:space="preserve"><value>Conditions de plongée · prévision</value></data>
@@ -45,7 +44,7 @@
   <data name="History_Back" xml:space="preserve"><value>Retour au site</value></data>
   <data name="Link_Versions" xml:space="preserve"><value>Versions</value></data>
   <data name="Link_Edit" xml:space="preserve"><value>Modifier le site</value></data>
-  <data name="Navigate" xml:space="preserve"><value>S'y rendre</value></data>
+  <data name="Navigate" xml:space="preserve"><value>Accès</value></data>
   <data name="Navigate_Google" xml:space="preserve"><value>Itinéraire dans Google Maps</value></data>
   <data name="Navigate_Apple" xml:space="preserve"><value>Itinéraire dans Plans d'Apple</value></data>
   <data name="WaterBodies_Map_Label" xml:space="preserve"><value>Carte des lacs et rivières</value></data>
