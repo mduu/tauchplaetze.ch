@@ -191,7 +191,7 @@ Logik, die mehrere Handler eines Slice brauchen, liegt als `internal` Klasse im 
 | Tagesauswahl, Filter | Links mit Query-Parametern (`?date=2026-10-18`) | bleibt SSR, jede Variante ist cachebar und teilbar |
 | Karten, Galerie | kleines JavaScript-Modul, progressiv | kein WASM nötig |
 | Moderation `/admin`, Plattform `/platform` | Interactive Server mit MudBlazor | reiche Editoren ohne JS-Framework, wenige gleichzeitige Verbindungen |
-| Bearbeiten-Modus `/{lang}/tauchplaetze/{slug}/bearbeiten` | Interactive Server im Layout der Website, ohne MudBlazor (Formular-Bausteine `Components/Forms`) | Mitwirkende bleiben im Design der Website. Nur hinter Anmeldung, also wenige Verbindungen. Links laden die ganze Seite (`site.js`). |
+| Bearbeiten-Modus `/{lang}/tauchplaetze/{slug}/bearbeiten`, neuer Platz `/{lang}/tauchplaetze/neu` | Interactive Server im Layout der Website, ohne MudBlazor (Formular-Bausteine `Components/Forms`) | Mitwirkende bleiben im Design der Website. Nur hinter Anmeldung, also wenige Verbindungen. Links laden die ganze Seite (`site.js`). Die Editoren auf der Karte (`editor.js`) laden alle interaktiven Seiten, ohne MudBlazor. |
 | Login | Static SSR mit Formular | Identity-Standard |
 
 Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, kommt ein Projekt `Tauchplaetze.Web.Client` dazu.

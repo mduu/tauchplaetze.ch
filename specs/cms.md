@@ -4,20 +4,21 @@ Es gibt drei Bereiche (Entscheid Marc, 19.10.2026: «reine Admin-Features auf /p
 
 | Bereich | Wer | Darstellung |
 |---|---|---|
-| **Website** mit Bearbeiten-Modus (`/{lang}/tauchplaetze/{slug}/bearbeiten`) und «Meine Vorschläge» im Profil | alle Angemeldeten | Layout und Design der Website. Nur die Bearbeiten-Seite ist interaktiv (ADR-001, Nachtrag 19.10.2026). |
+| **Website** mit Bearbeiten-Modus (`/{lang}/tauchplaetze/{slug}/bearbeiten`), «Neuen Platz vorschlagen» (`/{lang}/tauchplaetze/neu`) und «Meine Vorschläge» im Profil | alle Angemeldeten | Layout und Design der Website. Nur diese zwei Seiten sind interaktiv (ADR-001, Nachtrag 19.10.2026). |
 | **Moderation** `/admin` | Moderatoren und Admins | MudBlazor, Seitenleiste |
 | **Plattform** `/platform` | nur Admins | MudBlazor, Navigation oben, Kopf mit orangem Strich |
 
-Mitwirkende sehen die Moderation nicht. Bis Einstiege, Skizze und Fotos im Bearbeiten-Modus stehen (Etappen 2 und 3), bleibt ihnen nur der Editor eines Platzes (`/admin/plaetze/{id}`), der neue Platz (`/admin/plaetze/neu`) und die Versionen eines Platzes offen. Die Navigation der Moderation zeigt ihnen dort nur «Meine Vorschläge».
+Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätze nur auf der Website vor. Offen bleiben ihnen nur die Versionen eines Platzes (`/admin/plaetze/{id}/versionen`), weil «Meine Vorschläge» für den Vergleich darauf verlinkt. Die Navigation der Moderation zeigt ihnen dort nur «Meine Vorschläge». Der Editor im CMS bleibt der Moderation, zum Beispiel für die Felder «nur Moderation» und die Hinweise.
 
 | Pfad | Inhalt | Wer |
 |---|---|---|
-| `/{lang}/tauchplaetze/{slug}/bearbeiten` | Bearbeiten-Modus: Name und Ort, Bewertungen mit Legende, Texte pro Sprache, Kommentar (`ux.md`, «Bearbeiten-Modus») | alle Angemeldeten |
+| `/{lang}/tauchplaetze/{slug}/bearbeiten` | Bearbeiten-Modus: Name und Ort, Bewertungen mit Legende, Texte pro Sprache, Einstiege und Orte, Tauchskizze, Fotos, Kommentar (`ux.md`, «Bearbeiten-Modus») | alle Angemeldeten |
+| `/{lang}/tauchplaetze/neu` | Neuen Platz vorschlagen: Name, Gewässer, Koordinate per Karte, Gemeinde, Kanton, Kommentar (`ux.md`, «Neuer Platz») | alle Angemeldeten |
 | `/{lang}/account/proposals` | Meine Vorschläge | alle Angemeldeten |
 | `/admin` | Übersicht: Plätze, offene Vorschläge | Moderatoren, Admins |
 | `/admin/plaetze` | Liste mit Suche, Status, Ausbaustufe, Datenstufe, offenen Vorschlägen | Moderatoren, Admins |
-| `/admin/plaetze/neu` | neuer Platz: Name, Gewässer, Koordinate (Klick in die Karte) | alle Angemeldeten |
-| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten (mit «Auch bekannt als», Namen mit Komma getrennt), Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station) | alle Angemeldeten, Tab «nur Moderation» für Moderatoren |
+| `/admin/plaetze/neu` | neuer Platz: Name, Gewässer, Koordinate (Klick in die Karte) | Moderatoren, Admins |
+| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten (mit «Auch bekannt als», Namen mit Komma getrennt), Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station) | Moderatoren, Admins |
 | `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | alle Angemeldeten, Wiederherstellen für Moderatoren |
 | `/admin/vorschlaege` | offene Vorschläge mit Vergleich zur Basis, Freigeben, Ablehnen mit Begründung | Moderatoren, Admins |
 | `/admin/konten` | Konten sperren (ohne E-Mail-Adressen und Rollen) | Moderatoren; Admins nutzen `/platform/konten` |
@@ -203,7 +204,7 @@ Konto-Mails (Bestätigung, Passwort) und das Kontaktformular nutzen dasselbe Lay
 
 ### Medien
 
-Tab «Fotos» beim Bearbeiten eines Platzes (ADR-009).
+Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderation (ADR-009). Beide nutzen dieselben Commands.
 
 - **Hochladen:** mehrere Fotos auf einmal (JPEG, PNG oder WebP, je höchstens 25 MB, höchstens 12 000 px pro Seite und 50 Megapixel; HEIC bitte als JPEG exportieren). Das Format kommt aus dem Inhalt der Datei, Endung und MIME-Type sind nur ein Vorfilter. Pflicht: Fotograf (Vorgabe: Anzeigename) und die Bestätigung «Ich habe diese Fotos selbst gemacht oder besitze die Rechte daran und erlaube tauchplaetze.ch, sie mit Namensnennung zu zeigen». Optional: Link zum Fotografen, Abschnitt, Aufnahmetiefe.
 - **Verarbeitung im Core** (Command `UploadMedia`): immer nur ein Bild gleichzeitig, grosse JPEGs verkleinert dekodiert (1/2, 1/4, 1/8), Drehen nach EXIF, Aufnahmedatum aus EXIF, Bildgrössen 480, 960, 1600 und 2400 px Breite als WebP (nie grösser als das Original). Die Bildgrössen tragen keine Metadaten, also weder Standort noch Kamera.
@@ -212,7 +213,7 @@ Tab «Fotos» beim Bearbeiten eines Platzes (ADR-009).
 - **Zuordnung ist Teil der Version:** `DiveSiteContent.Media` (Foto, Abschnitt, bei «Einstieg» der Einstieg; die Reihenfolge der Liste ist die Reihenfolge) und `HeroMediaId` (Titelbild). Ein Foto eines anderen Platzes, doppelt, ein Titelbild ausserhalb der Liste oder ein fehlender Einstieg ergibt `InvalidMedia`. Mitwirkende verwenden nur öffentliche oder eigene Fotos. Gelöschte Fotos fallen beim Speichern, Freigeben und Wiederherstellen still aus der Version, ein fehlendes Titelbild ebenso.
 - **Freigabe:** Gibt die Moderation eine Version frei (auch beim direkten Speichern, beim Wiederherstellen und beim Erstimport), kopiert der Core die Bildgrössen der verwendeten Fotos nach `media/{mediaId}/{breite}.webp` und setzt `IsPublic`. Ein schon öffentliches Foto wird nicht nochmals kopiert. Fotos, die die Version nicht verwendet, verlieren ihren Platz in der Galerie (`SortOrder = null`). Das Original wird nie öffentlich.
 - **Angaben ändern** (Command `UpdateMedia`): Fotograf, Link, Tiefe, Legende und Alternativtext pro Sprache. Bei privaten Fotos die Person, die hochgeladen hat, bei öffentlichen nur die Moderation. Diese Angaben sind nicht Teil der Version.
-- **Löschen** (Command `DeleteMedia`, Knopf «Löschen» mit Bestätigung): Die Moderation darf das immer, die Person, die hochgeladen hat, solange das Foto privat ist. Gelöscht werden der Eintrag und alle Dateien in `media-pending` und `media`; ein Titelbild darauf fällt weg. Versionen, die das Foto noch verwenden, zeigen es nicht mehr. **In Prod:** Cloudflare hält die Bildgrössen bis zu einem Jahr im Cache (`immutable`). Nach dem Löschen eines öffentlichen Fotos den Cache für `/{mediaId}/` von Hand leeren (Purge).
+- **Löschen** (Command `DeleteMedia`, Knopf «Löschen» mit Bestätigung; im Bearbeiten-Modus fragt ein zweiter Klick nach, ohne Dialog des Browsers): Die Moderation darf das immer, die Person, die hochgeladen hat, solange das Foto privat ist. Gelöscht werden der Eintrag und alle Dateien in `media-pending` und `media`; ein Titelbild darauf fällt weg. Versionen, die das Foto noch verwenden, zeigen es nicht mehr. **In Prod:** Cloudflare hält die Bildgrössen bis zu einem Jahr im Cache (`immutable`). Nach dem Löschen eines öffentlichen Fotos den Cache für `/{mediaId}/` von Hand leeren (Purge).
 - **Aufräumen** (Command `PurgeUnusedMedia`, täglich 03:30 Lokalzeit im Web-Host, Lock `locks/media-purge`): Ein privates Foto, das älter als 30 Tage ist (`Media:PurgeAfterDays`) und kein offener Vorschlag verwendet, verschwindet samt Dateien. Öffentliche Fotos und Fotos in offenen Vorschlägen bleiben.
 - **Reihenfolge** mit Pfeilen hoch und runter. Ein Foto als Titelbild wählen (Stern).
 - **Schutz:** höchstens 30 Uploads pro Stunde und 100 pro Tag und Konto (Moderation ausgenommen). Ein gesperrtes Konto lädt nichts hoch.

@@ -20,6 +20,7 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 /{lang}/tauchplaetze/{slug}     Tauchplatzseite
 /{lang}/tauchplaetze/{slug}/versionen   Versionen des Platzes (noindex)
 /{lang}/tauchplaetze/{slug}/bearbeiten  Bearbeiten-Modus (angemeldet, noindex)
+/{lang}/tauchplaetze/neu        Neuen Platz vorschlagen (angemeldet, noindex)
 /{lang}/gewaesser               Gewässer-Übersicht (Seen und Flüsse)
 /{lang}/gewaesser/{slug}        Gewässerseite
 /{lang}/ueber                   Über, Datenquellen, Impressum, Datenschutz
@@ -96,6 +97,8 @@ Mockup: `design/tauchplatz.dc.html`.
 9. Buddy-Block für die Region.
 10. Fuss mit Quellen, «Zuletzt geändert am …», Links «Versionen» und «Platz bearbeiten» (Bearbeiten-Modus; ohne Anmeldung zuerst zur Anmeldung und danach zurück).
 
+Alle Angaben in den Abschnitten 4 bis 7 sind optional (siehe `dive-site.md`). Ein Abschnitt ohne Inhalt fehlt, ausser der Karte in Abschnitt 6. Fehlen die Abschnitte 4 bis 7 ganz, erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
+
 Nach dem Speichern im Bearbeiten-Modus zeigt die Platzseite unter dem Hero ein Banner: für Mitwirkende «Danke! Dein Vorschlag ist bei der Moderation …», für Moderatoren «Gespeichert und online.» (`?gespeichert=vorschlag|online`).
 
 ### Bearbeiten-Modus
@@ -108,13 +111,19 @@ Wer einen Platz ändern will, bleibt im Design der Website (Entscheid Marc, 19.1
   1. **Name und Ort:** Name, «Auch bekannt als», Gemeinde, Kanton. Das Gewässer steht nur zur Info, es ändert die Moderation.
   2. **Der Platz:** maximale Tiefe, Zugang, Eigenschaften als Chips, die sechs Bewertungen als Stufen 1 bis 5 oder «keine», jede mit dem «i» und der Legende aus `dive-site.md`.
   3. **Texte:** Tabs DE, EN, FR, IT mit Unter Wasser, Gefahren, Anfahrt, Umgebung, Einrichtungen.
-  4. **Einstiege, Skizze und Fotos:** vorerst ein Link in den Editor (Etappen 2 und 3 holen sie auf die Seite).
+  4. **Lage und Einstiege:** die grosse Karte mit Tiefenlinien. Darüber die Werkzeuge als Knöpfe in Gruppen: Einstiege und Orte (Ein- und Ausstieg, Einstieg, Ausstieg, Parkplatz, Toilette …), Skizze: Symbole, Linien, Flächen. Ein Werkzeug wählen und in die Karte klicken setzt einen Punkt; Linien und Flächen enden mit «Fertig» oder Doppelklick, Escape bricht ab. Punkte lassen sich ziehen. Darunter zwei Listen («Einstiege und Orte», «Tauchskizze»): Wählen klappt das Element auf, mit Art, Koordinate (Breite und Länge als Alternative zum Klick), Name und Beschreibung bzw. Tiefe und Beschriftung pro Sprache (Tabs). Einstiege lassen sich nach oben und unten schieben (der erste ist der Hauptzugang). «Entfernen» löscht das Element; Fotos eines entfernten Einstiegs verlieren ihren Einstieg. Alles geht mit der Tastatur, nur der Klick in die Karte nicht.
+  5. **Fotos:** Hochladen mit Fotograf (Vorgabe: Anzeigename), Link, Abschnitt, Tiefe und der Bestätigung der Rechte; der Knopf «Fotos wählen» ist erst danach aktiv. Die Fotos der Version als Liste mit Vorschau (private über den geschützten Endpunkt), Abschnitt, bei «Einstieg» der Einstieg, Titelbild (Radio), Reihenfolge, «Aus der Version nehmen». Eigene private Fotos (Moderation: alle) haben «Angaben» (Fotograf, Link, Tiefe, Legende und Alternativtext pro Sprache, sofort gespeichert) und «Löschen» mit Rückfrage. Darunter weitere Fotos des Platzes zum Hinzufügen.
+  6. **Zu deiner Änderung:** Kommentar für die Moderation.
   5. **Zu deiner Änderung:** Kommentar für die Moderation.
 - Hat die Person dort einen offenen Vorschlag, steht oben der Hinweis mit Link auf «Meine Vorschläge».
 - Speichern nutzt `ProposeChange` wie der Editor. Fehler stehen oben, «keine Änderung» als Hinweis. Danach die Platzseite mit Banner.
 - Alle Links laden die ganze Seite, weil die anderen Seiten statisch sind.
 
-Alle Angaben in den Abschnitten 4 bis 7 sind optional (siehe `dive-site.md`). Ein Abschnitt ohne Inhalt fehlt, ausser der Karte in Abschnitt 6. Fehlen die Abschnitte 4 bis 7 ganz, erscheint ein freundlicher Hinweis: «Dieser Platz ist erst im Verzeichnis. Kennst du ihn? Schreib uns.» (mit Kontaktlink).
+### Neuer Platz
+
+- Pfad `/{lang}/tauchplaetze/neu`, nur angemeldet, `noindex`. Einstieg: Satz «Fehlt ein Platz? Neuen Platz vorschlagen» im Kopf des Verzeichnisses (für alle sichtbar, ohne Anmeldung zuerst zur Anmeldung) und Eintrag im Kontomenü.
+- Felder: Name, Gewässer, Gemeinde, Kanton; Koordinate per Klick in die Karte (mit Tiefenlinien) oder als Breite und Länge; Kommentar für die Moderation. Ein Platz im Verzeichnis braucht nicht mehr (siehe `vision.md`, «Verzeichnis zuerst»).
+- Speichern nutzt `ProposeDiveSite`. Mitwirkende landen auf «Meine Vorschläge» mit «Danke! Dein Vorschlag … ist eingereicht.», Moderatoren im Editor des neuen Platzes.
 
 ### Verzeichnis
 

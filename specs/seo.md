@@ -22,6 +22,7 @@ Siehe `i18n.md`. Grundsätze:
 - Kurz, lesbar, ohne IDs: `/de/tauchplaetze/riff-williams-herrliberg`.
 - Kleinbuchstaben, Bindestriche, keine Umlaute im Slug.
 - Ein geänderter Slug erzeugt automatisch einen 301 vom alten Slug.
+- Reserviert: `neu`, `new`, `nouveau`, `nuovo` (Seite «Neuer Platz»). Ein neuer Platz bekommt dann `-2`, ein Slug von Hand ergibt `InvalidSlug`.
 - Query-Parameter (`?date=…`, Suche und Filter im Verzeichnis `?q=…&f=…&page=…`) sind kanonisch auf die Seite ohne Parameter. Das Verzeichnis setzt `<link rel="canonical">` auf `/{lang}/tauchplaetze`. Suchergebnisse sind keine eigenen Landingpages.
 - Absolute Adressen in `canonical` und `hreflang` kommen aus `PublicSite:BaseUri`, nie aus der Anfrage (hinter Ingress und Cloudflare stimmen Schema und Host der Anfrage nicht), immer ohne Query-String.
 
@@ -47,7 +48,7 @@ Siehe `i18n.md`. Grundsätze:
 - `/sitemap.xml` als Index, darunter eine Sitemap pro Sprache. Nur veröffentlichte Plätze.
 - `lastmod` aus `DiveSite.UpdatedAt` (nicht aus der täglichen Prognose, sonst ändert sich jede Seite täglich).
 - `/robots.txt`: `/admin` und Query-Varianten ausschliessen.
-- Die Seiten der Versionen (`…/versionen`) haben `noindex` und stehen nicht in der Sitemap (Datenschutz, `cms.md`). Ebenso der Bearbeiten-Modus (`…/bearbeiten`, nur angemeldet).
+- Die Seiten der Versionen (`…/versionen`) haben `noindex` und stehen nicht in der Sitemap (Datenschutz, `cms.md`). Ebenso der Bearbeiten-Modus (`…/bearbeiten`) und «Neuen Platz vorschlagen» (`…/neu`), beide nur angemeldet.
 
 ## Performance
 

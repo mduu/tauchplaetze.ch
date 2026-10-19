@@ -189,7 +189,7 @@ body {
 }
 ```
 
-## Formulare (Bearbeiten-Modus)
+## Formulare (Bearbeiten-Modus, neuer Platz)
 
 Bausteine in `Components/Forms`, nur Tokens, kein MudBlazor:
 
@@ -198,6 +198,10 @@ Bausteine in `Components/Forms`, nur Tokens, kein MudBlazor:
 | `FormText`, `FormTextArea`, `FormNumber`, `FormSelect` | Label in Mono, Grossbuchstaben, `--color-text-muted`; Feld mit `--color-surface`, Rand `--color-border`, Radius `--radius-tile-sm`, mindestens 44 px hoch; Fokus mit Rand in `--color-primary` |
 | `FormChip` | Eigenschaft als Pille; an: Fläche `--color-primary`, Text `--color-bg` |
 | `LevelPicker` | Bewertung als Kachel: Name, «i» mit Legende (wie auf der Platzseite), Knöpfe «keine» und 1 bis 5. Qualität füllt die Knöpfe bis zum Wert in `--color-primary`, Stufe (Schwierigkeit, Strömung) in `--color-signal`. Darunter der Kurztext. |
+| `LanguageTabs` | Tabs DE, EN, FR, IT wie bei den Texten, Pfeiltasten wechseln die Sprache |
+| `ToolPicker` | Werkzeuge der Karte als Pillen in Gruppen (`FormChip`-Stil), `aria-pressed`; ein zweiter Klick hebt die Wahl auf |
+| `CoordinateFields`, `LocationField` | Breite und Länge als Textfelder mit Punkt; `LocationField` zeigt darüber die Karte zum Klicken |
+| Karten-Editor | Einstiege als weisse Punkte mit Rand, Orte als Schild wie auf der Platzseite, gewählt mit Ring in `--color-signal`; Listen als Kacheln, das gewählte Element mit Rand in `--color-signal`; «Entfernen» und «Löschen» in `--color-signal` |
 | Leiste des Bearbeiten-Modus | klebt oben, `--color-surface-raised`, unterer Rand `--color-signal`, «Bearbeitungsmodus» in `--color-signal` |
 
 ## Admin (MudBlazor)
