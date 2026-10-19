@@ -225,6 +225,22 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Ein_Platz_bekommt_nie_den_Slug_der_Seite_Neuer_Platz()
+    {
+        // Arrange
+        var (moderator, _, site) = await Prepare();
+        var edit = await ForEditing(site);
+
+        // Act
+        var proposed = await Command<ProposeDiveSiteCommand, EditorialResult>(new ProposeDiveSiteCommand(moderator, "Nuovo", edit.Content.WaterBodyId, 47.30, 8.58, null, null, null));
+        var renamed = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber, edit.Content with { Slug = "neu" }, null));
+
+        // Assert
+        Assert.Equal("nuovo-2", (await ForEditing(proposed.DiveSiteId!.Value)).Content.Slug);
+        Assert.Equal([EditorialError.InvalidSlug], renamed.Errors);
+    }
+
+    [SqlFact]
     public async Task Ein_Platz_ausserhalb_der_Schweiz_wird_abgelehnt()
     {
         // Arrange

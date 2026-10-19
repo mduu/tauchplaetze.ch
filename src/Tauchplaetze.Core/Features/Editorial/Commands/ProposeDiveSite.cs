@@ -53,7 +53,7 @@ internal class ProposeDiveSiteHandler(TauchplaetzeDbContext dbContext, RevisionW
         var slug = wanted.Length == 0 ? "platz" : wanted;
         var suffix = 2;
         var candidate = slug;
-        while (await dbContext.DiveSites.AnyAsync(d => d.Slug == candidate, ct) || await dbContext.SlugRedirects.AnyAsync(r => r.OldSlug == candidate, ct))
+        while (Slugs.Reserved.Contains(candidate) || await dbContext.DiveSites.AnyAsync(d => d.Slug == candidate, ct) || await dbContext.SlugRedirects.AnyAsync(r => r.OldSlug == candidate, ct))
         {
             candidate = $"{slug}-{suffix++}";
         }

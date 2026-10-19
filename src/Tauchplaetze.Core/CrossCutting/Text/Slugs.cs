@@ -14,6 +14,9 @@ internal static class Slugs
         ['ß'] = "ss",
     };
 
+    /// <summary>Segmente der Website neben den Slugs der Plätze (`/{sprache}/{plätze}/neu`). Ein Platz bekommt sie nie als Slug.</summary>
+    public static readonly IReadOnlySet<string> Reserved = new HashSet<string> { "neu", "new", "nouveau", "nuovo" };
+
     public static string From(string text)
     {
         var slug = new StringBuilder();

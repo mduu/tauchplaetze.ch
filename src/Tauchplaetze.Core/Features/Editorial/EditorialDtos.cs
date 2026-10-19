@@ -98,7 +98,7 @@ public enum EditorialError
     /// <summary>Eine Bewertung liegt nicht zwischen 1 und 5.</summary>
     InvalidRating,
 
-    /// <summary>Der Slug ist ungültig oder vergeben.</summary>
+    /// <summary>Der Slug ist ungültig, reserviert oder vergeben.</summary>
     InvalidSlug,
 
     /// <summary>Zu viele offene Vorschläge (höchstens 20).</summary>
