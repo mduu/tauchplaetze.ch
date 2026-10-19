@@ -243,7 +243,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 - `/platform/inhalt`, nur Admin, Navigation der Plattform (ADR-011).
 - «Inhalt exportieren»: Download des Inhaltspakets als ZIP. Die Seite zeigt, ob der Abruf mit Schlüssel eingeschaltet ist.
 - «Inhalt übernehmen» nur mit `Content:ImportEnabled` (lokal): «Aus Prod übernehmen» (nur mit `Content:SourceBaseUri` und `Content:ExportKey`) oder ein ZIP hochladen.
-- Ergebnis: Gewässer neu, Plätze neu, aktualisiert, unverändert, übersprungen, Fotos neu.
+- Ergebnis: Gewässer neu, Plätze neu, aktualisiert, unverändert, übersprungen (unlesbar, ungültig, Slug belegt), Fotos neu, Fotos übersprungen.
 - Die Rolle und den Schalter prüft der Core (`ExportContent`, `ImportContent`, `PullContentFromSource`, `GetContentSyncStatus`).
 
 ### Prognose-Status
