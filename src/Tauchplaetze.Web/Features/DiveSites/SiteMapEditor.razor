@@ -332,7 +332,10 @@
     {
         try
         {
-            await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.dispose", Id);
+            if (initialized)
+            {
+                await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.dispose", Id);
+            }
         }
         catch (Exception exception) when (exception is JSDisconnectedException or OperationCanceledException)
         {

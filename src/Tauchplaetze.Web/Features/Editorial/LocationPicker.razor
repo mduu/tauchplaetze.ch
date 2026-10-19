@@ -14,6 +14,8 @@
 @code {
     private DotNetObjectReference<LocationPicker>? reference;
 
+    private bool shown;
+
     [Parameter, EditorRequired]
     public string Id { get; set; } = "";
 
@@ -33,6 +35,7 @@
     {
         reference ??= DotNetObjectReference.Create(this);
         await JS.InvokeVoidAsync("tauchplaetzeAdmin.show", Id, Latitude, Longitude, reference);
+        shown = true;
     }
 
     [JSInvokable]
@@ -58,6 +61,11 @@
     public async ValueTask DisposeAsync()
     {
         reference?.Dispose();
+        if (!shown)
+        {
+            return;
+        }
+
         try
         {
             await JS.InvokeVoidAsync("tauchplaetzeAdmin.dispose", Id);
