@@ -35,7 +35,10 @@
     @if (IsAdmin)
     {
         <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
-        <script src="@Assets["js/admin.js"]"></script>
+    }
+    @if (PageRenderMode is not null)
+    {
+        <script src="@Assets["js/editor.js"]"></script>
     }
 </body>
 

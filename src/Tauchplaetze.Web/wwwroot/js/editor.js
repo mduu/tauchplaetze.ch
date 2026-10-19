@@ -1,4 +1,5 @@
-// Karte im CMS: Klick setzt die Koordinate (cms.md, «Platz bearbeiten»). Blazor ruft die Funktionen über JS-Interop auf.
+// Editoren auf Karten für alle interaktiven Seiten (Moderation und Bearbeiten-Modus), ohne MudBlazor.
+// Karte für eine Koordinate: Klick setzt sie (cms.md, «Platz bearbeiten»). Blazor ruft die Funktionen über JS-Interop auf.
 window.tauchplaetzeAdmin = (function () {
   const maps = new Map();
 
@@ -39,7 +40,8 @@ window.tauchplaetzeAdmin = (function () {
   return { show: show, dispose: dispose };
 })();
 
-// Editor der Tauchskizze im CMS (dive-site.md, «Tauchskizze»). Blazor hält die Elemente, die Karte zeigt sie und meldet Klicks und Verschiebungen.
+// Editor der Tauchskizze und der Einstiege (dive-site.md, «Tauchskizze», «Einstiege und Orte»).
+// Blazor hält die Elemente, die Karte zeigt sie und meldet Klicks und Verschiebungen.
 window.tauchplaetzeSketchEditor = (function () {
   const editors = new Map();
 
@@ -68,7 +70,7 @@ window.tauchplaetzeSketchEditor = (function () {
     L.circleMarker([latitude, longitude], { radius: 5, color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-subtle').trim(), weight: 2, fill: false }).addTo(map);
     map.setView([latitude, longitude], 18);
 
-    const editor = { map: map, dotnet: dotnet, kindNames: kindNames, layers: L.layerGroup().addTo(map), handles: L.layerGroup().addTo(map), draft: null, tool: null, features: [], selectedId: null };
+    const editor = { map: map, dotnet: dotnet, kindNames: kindNames, layers: L.layerGroup().addTo(map), handles: L.layerGroup().addTo(map), entries: L.layerGroup().addTo(map), draft: null, tool: null, features: [], selectedId: null };
     editors.set(id, editor);
 
     map.on('click', function (event) { onClick(editor, event.latlng); });
@@ -83,6 +85,13 @@ window.tauchplaetzeSketchEditor = (function () {
     }
 
     const point = { lat: round(latlng.lat), lng: round(latlng.lng) };
+    if (editor.tool.shape === 'entry') {
+      editor.dotnet.invokeMethodAsync('AddEntry', editor.tool.kind, point.lat, point.lng);
+      editor.tool = null;
+      editor.map.getContainer().classList.remove('is-drawing');
+      return;
+    }
+
     if (editor.tool.shape === 'point') {
       editor.dotnet.invokeMethodAsync('Add', editor.tool.kind, [point]);
       editor.tool = null;
@@ -186,6 +195,38 @@ window.tauchplaetzeSketchEditor = (function () {
     }
   }
 
+  // Einstiege und Orte als verschiebbare Punkte. Orte an Land (Parkplatz, Toilette) als Schild wie auf der Platzseite.
+  const placeSigns = { parking: 'P', toilet: 'WC' };
+
+  function renderEntries(id, entries, selectedId) {
+    const editor = editors.get(id);
+    if (!editor) {
+      return;
+    }
+
+    editor.entries.clearLayers();
+    entries.forEach(function (entry) {
+      const sign = placeSigns[entry.type];
+      const icon = L.divIcon({
+        className: (sign ? 'map-place map-place-' + entry.type : 'editor-entry') + (entry.id === selectedId ? ' is-selected' : ''),
+        html: sign ? '<span>' + sign + '</span>' : '',
+        iconSize: sign ? [24, 24] : [16, 16],
+        iconAnchor: sign ? [12, 12] : [8, 8]
+      });
+      L.marker([entry.lat, entry.lng], { icon: icon, draggable: true, keyboard: false })
+        .bindTooltip(entry.label, { permanent: true, direction: 'right', offset: [12, 0], className: 'map-label' })
+        .on('click', function (event) {
+          L.DomEvent.stopPropagation(event);
+          editor.dotnet.invokeMethodAsync('SelectEntry', entry.id);
+        })
+        .on('dragend', function (event) {
+          const latlng = event.target.getLatLng();
+          editor.dotnet.invokeMethodAsync('MoveEntry', entry.id, round(latlng.lat), round(latlng.lng));
+        })
+        .addTo(editor.entries);
+    });
+  }
+
   function dispose(id) {
     const editor = editors.get(id);
     if (editor) {
@@ -205,5 +246,5 @@ window.tauchplaetzeSketchEditor = (function () {
     }
   });
 
-  return { init: init, setTool: setTool, finish: finish, cancel: cancel, render: render, dispose: dispose };
+  return { init: init, setTool: setTool, finish: finish, cancel: cancel, render: render, renderEntries: renderEntries, dispose: dispose };
 })();

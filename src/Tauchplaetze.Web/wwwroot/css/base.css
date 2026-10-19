@@ -1128,3 +1128,17 @@ a:hover {
   margin-bottom: 4px;
   padding: 0;
 }
+
+/* Einstieg im Editor der Karte: verschiebbar. */
+.editor-entry {
+  border: 2px solid var(--color-bg);
+  border-radius: 50%;
+  background: var(--color-text);
+  cursor: move;
+}
+
+.editor-entry.is-selected,
+.map-place.is-selected {
+  outline: 3px solid var(--color-signal);
+  outline-offset: 1px;
+}
