@@ -30,6 +30,8 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
 
     public DbSet<ForecastRun> ForecastRuns => Set<ForecastRun>();
 
+    public DbSet<WaterBodyDailyIndex> WaterBodyDailyIndexes => Set<WaterBodyDailyIndex>();
+
     public DbSet<SiteWeatherOutlook> SiteWeatherOutlooks => Set<SiteWeatherOutlook>();
 
     public DbSet<MediaItem> MediaItems => Set<MediaItem>();

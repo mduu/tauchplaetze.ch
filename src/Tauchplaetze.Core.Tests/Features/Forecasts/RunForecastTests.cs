@@ -362,6 +362,23 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         Assert.Single(runsForAdmin);
     }
 
+    [SqlFact]
+    public async Task Ein_Lauf_schreibt_den_Median_des_Gewaessers_fuer_heute_und_ein_zweiter_Lauf_am_selben_Tag_keine_zweite_Zeile()
+    {
+        // Arrange
+        var siteId = await PrepareRiffWilliams();
+        var lake = (await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"))).Single(w => w.Slug == "zuerichsee").Id;
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        var point = Assert.Single((await Query<GetWaterBodyIndexHistoryQuery, WaterBodyIndexHistory>(new GetWaterBodyIndexHistoryQuery(lake))).Years.Single().Points);
+        Assert.Equal((new DateOnly(2026, 10, 17), today.DiveIndex, 1), (point.Date, (decimal?)point.MedianIndex, point.Sites));
+    }
+
     private async Task<Guid> PrepareRiffWilliams()
     {
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());

@@ -194,11 +194,26 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   6. Pro Gewässer: Abfluss, Wassertemperatur und Trübung der zugeordneten BAFU-Stationen.
   7. Rohdaten als JSON in Blob Storage ablegen (`forecast-raw/{date}/{runId}/{source}/{key}.json`).
   8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert). Das Wetter pro Stunde in `SiteWeatherOutlook` ersetzen.
-  9. Output Cache der öffentlichen Seiten invalidieren (Tag `forecast`).
-  10. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
+  9. Den Median des Index pro Gewässer für heute schreiben (`WaterBodyDailyIndex`, Upsert, siehe «Verlauf»).
+  10. Output Cache der öffentlichen Seiten invalidieren (Tag `forecast`).
+  11. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
   Stoppt der Host während eines Laufs (Neustart, Deployment), bricht der Lauf sofort ab und gilt als `Failed`. Die übrigen Plätze behalten die Werte des letzten Laufs. Ein abgebrochener Call ist kein Teilerfolg (Fehler vom 19.10.2026: Nach einem Neustart scheiterten 357 Calls in 1 ms, und der Lauf überschrieb gute Werte mit leeren).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.
 - **Ausfall einer Quelle:** Der Lauf schreibt die übrigen Werte. Die letzten gültigen Werte der ausgefallenen Quelle bleiben bis zu 48 h gültig. Die Seite zeigt das Datenalter.
+
+## Verlauf
+
+Der Index über Wochen, Monate und Jahre (Entscheid Marc, 19.10.2026). Höchste Auflösung ist ein Tag.
+
+- **Pro Platz:** Die Tage bis heute aus `DailyForecast`, höchstens 365. Pro Tag gilt die Prognose vom Morgen dieses Tages: Der Lauf überschreibt einen Tag, bis er vorbei ist. Die Seite zeigt dazu die Sicht in Ufernähe, den Wind und die Algen (Query `GetSiteIndexHistory`).
+- **Pro Gewässer:** der Median des Index aller freigegebenen Plätze mit Index an diesem Tag, in `WaterBodyDailyIndex`. Jeder Lauf schreibt den Wert für heute (Upsert). Die Zeilen bleiben unbegrenzt, so trägt die Ansicht «Jahr über Jahr» auch nach dem Löschen alter `DailyForecasts` (Query `GetWaterBodyIndexHistory`).
+- **Glättung:** gleitendes Mittel über 7 Kalendertage (3 davor, der Tag, 3 danach). Es zählen nur Tage mit Wert. Am Rand und bei Lücken mittelt es über weniger Tage. Die Rohwerte bleiben sichtbar.
+- **Regelwechsel:** Ändert die `ModelVersion` von einem Tag zum nächsten, markiert das Diagramm den Tag mit einer senkrechten Linie. Davor und danach sind die Werte nicht direkt vergleichbar.
+- **Neuberechnung** (Command `RecomputeForecastHistory`, Admin, `/platform/prognose`): rechnet jede gespeicherte Tagesprognose mit älterer `ModelVersion` mit der aktuellen Regel neu. Danach baut sie den Median pro Gewässer für alle vergangenen Tage neu auf. Sie braucht keine Rohdaten und keine externen Calls: Die Eingaben des Index stehen in der Zeile jedes Tages. Zwei Grenzen:
+  - Die Sprungschicht bleibt die gespeicherte. Aus vier Punkten des Profils (0, 10, 20, 30 m) lässt sie sich nicht neu bestimmen. Eine neue Regel für die Sprungschicht wirkt darum erst ab dem nächsten Lauf.
+  - Zeilen vor `rules-1.2` haben keinen Wert in Ufernähe. Dann gilt der Wert der Seemitte mal Uferfaktor, wie damals.
+  Sie hält den Lock `forecast` und läuft so nie neben einem Prognose-Lauf. Ein zweiter Aufruf findet nichts mehr zu rechnen und schreibt denselben Median.
+- **Später:** Rückrechnung für die Jahre vor dem Start (`roadmap.md`, Phase 2).
 
 ## Der Abfluss-Job
 

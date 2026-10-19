@@ -96,3 +96,34 @@ public record DischargeHour(DateTimeOffset Hour, decimal Discharge);
 
 /// <summary>Mittlerer Abfluss eines Schweizer Kalendertags.</summary>
 public record DischargeDay(DateOnly Date, decimal Discharge);
+
+/// <summary>
+/// Der Verlauf eines Platzes bis heute, ältester Tag zuerst. Pro Tag gilt die Prognose vom Morgen dieses Tages (der letzte Lauf des Tages).
+/// <see cref="RuleChanges"/>: Tage, an denen eine neue Regel gilt (`ModelVersion`). Davor und danach sind die Werte nicht direkt vergleichbar.
+/// </summary>
+public record SiteIndexHistory(IReadOnlyList<HistoryDay> Days, IReadOnlyList<RuleChange> RuleChanges);
+
+/// <summary>Ein Tag im Verlauf. <see cref="SmoothedIndex"/> ist das gleitende 7-Tage-Mittel.</summary>
+public record HistoryDay(
+    DateOnly Date,
+    decimal? DiveIndex,
+    decimal? SmoothedIndex,
+    decimal? SecchiDepthShore,
+    decimal? SecchiDepth,
+    ClaritySource? ClaritySource,
+    int? WindBeaufort,
+    decimal? WindGustsKmh,
+    AlgaeLevel AlgaeLevel,
+    string ModelVersion);
+
+/// <summary>Ab <see cref="Date"/> gilt <see cref="ModelVersion"/>.</summary>
+public record RuleChange(DateOnly Date, string ModelVersion);
+
+/// <summary>Der Median des Index eines Gewässers, ein Eintrag pro Jahr (ältestes zuerst), für «Jahr über Jahr».</summary>
+public record WaterBodyIndexHistory(IReadOnlyList<IndexYear> Years, IReadOnlyList<RuleChange> RuleChanges);
+
+/// <summary>Die Tage eines Jahres mit Median und gleitendem 7-Tage-Mittel.</summary>
+public record IndexYear(int Year, IReadOnlyList<IndexPoint> Points);
+
+/// <summary>Ein Tag im Jahr. <see cref="Sites"/>: Plätze mit Index an diesem Tag.</summary>
+public record IndexPoint(DateOnly Date, decimal MedianIndex, decimal? SmoothedIndex, int Sites);

@@ -1096,6 +1096,31 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.ToTable("WaterBodies", (string)null);
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.WaterBodyDailyIndex", b =>
+                {
+                    b.Property<int>("WaterBodyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<decimal>("MedianIndex")
+                        .HasPrecision(3, 1)
+                        .HasColumnType("decimal(3,1)");
+
+                    b.Property<string>("ModelVersion")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Sites")
+                        .HasColumnType("int");
+
+                    b.HasKey("WaterBodyId", "Date");
+
+                    b.ToTable("WaterBodyDailyIndexes", (string)null);
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.WaterBodyHydroStation", b =>
                 {
                     b.Property<int>("WaterBodyId")
@@ -1288,6 +1313,15 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSite", null)
                         .WithMany()
                         .HasForeignKey("DiveSiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.WaterBodyDailyIndex", b =>
+                {
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.WaterBody", null)
+                        .WithMany()
+                        .HasForeignKey("WaterBodyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

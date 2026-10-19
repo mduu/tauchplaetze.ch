@@ -24,6 +24,7 @@ internal class RunForecastHandler(
     IRawDataStore rawData,
     IRunLock runLock,
     ForecastProgress progress,
+    WaterBodyIndexWriter indexWriter,
     TimeProvider time) : ICommandHandler<RunForecastCommand, RunForecastResult>
 {
     public const string LockName = "forecast";
@@ -59,6 +60,8 @@ internal class RunForecastHandler(
             run.Sites = sites.Count(s => !s.ForecastDisabled);
             progress.Start(run.Id, run.Sites.Value);
             await Forecast(sites, today, run, recorder, ct);
+            await dbContext.SaveChangesAsync(ct);
+            await indexWriter.Write([today], ct);
             run.Status = recorder.AnyFailed ? ForecastRunStatus.PartiallySucceeded : ForecastRunStatus.Succeeded;
             return new RunForecastResult(false, run.Id, run.Status, sites.Count);
         }

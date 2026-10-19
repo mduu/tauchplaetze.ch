@@ -345,6 +345,20 @@ Austausch der öffentlichen Inhalte von Prod nach lokal (ADR-011). ZIP mit JSON 
 
 Nicht im Paket: Konten, Autoren, Uploader, Kommentare der Versionen, offene oder abgelehnte Vorschläge, Entwürfe, private Fotos, Mails, Prognosen.
 
+### WaterBodyDailyIndex
+
+Der Median des Index eines Gewässers an einem Tag, für «Jahr über Jahr» (`forecast.md`, «Verlauf»). PK: `(WaterBodyId, Date)` (FK `WaterBody`, Cascade Delete). Jeder Prognose-Lauf schreibt den Tag (Upsert). Die Neuberechnung baut alle vergangenen Tage neu auf.
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `WaterBodyId` | int | |
+| `Date` | date | Lokalzeit |
+| `MedianIndex` | decimal(3,1) | Median der Plätze mit Index; bei gerader Zahl das Mittel der beiden mittleren |
+| `Sites` | int | Plätze mit Index an diesem Tag |
+| `ModelVersion` | nvarchar(20) | Regel der Tagesprognosen; bei gemischten die neueste |
+
+Ohne Platz mit Index gibt es für den Tag keine Zeile (nie 0).
+
 ## Indizes
 
 - `DiveSites.Location`: Spatial Index.
@@ -359,5 +373,6 @@ Nicht im Paket: Konten, Autoren, Uploader, Kommentare der Versionen, offene oder
 ## Aufbewahrung
 
 - `DailyForecasts`: 2 Jahre in SQL. Danach nur noch als Rohdaten in Blob Storage.
+- `WaterBodyDailyIndexes`: unbegrenzt. Rund 30 000 Zeilen pro Jahr (80 Gewässer × 365 Tage), unter 1 MB.
 - `HydroHours`: 30 Tage. Jeder Import löscht ältere Stunden. Die Rohdaten bleiben in Blob Storage.
 - Rohdaten in Blob Storage: unbegrenzt (Trainingsdaten für Phase 2). Lifecycle-Regel: nach 90 Tagen in die Cool-Stufe.

@@ -7,7 +7,11 @@ internal record DayInputs(
     ClarityEstimate Clarity,
     AlgaeLevel Algae,
     double? DischargeRatio,
-    bool IsRiver);
+    bool IsRiver,
+    KnownThermocline? Thermocline = null);
+
+/// <summary>Die gespeicherte Sprungschicht eines Tages. Die Neuberechnung hat nur noch vier Punkte des Profils, nicht das ganze.</summary>
+internal record KnownThermocline(Thermocline? Value);
 
 /// <summary>Die Teilwerte 1 bis 10. Die Klarheit hat immer einen Wert (ohne Satellit vorsichtig), Wind, Zuflüsse und Schichtung sind <c>null</c> ohne Daten.</summary>
 internal record SubScores(double? Clarity, double? Wind, double? Inflow, double? Stratification);
@@ -25,7 +29,9 @@ internal static class DiveIndexCalculator
 {
     public static DayResult Calculate(DayInputs inputs, DiveIndexRules rules)
     {
-        var thermocline = inputs.Profile is { } profile ? ThermoclineDetector.Detect(profile.Profile, rules.ThermoclineGradient) : null;
+        var thermocline = inputs.Thermocline is { } known
+            ? known.Value
+            : inputs.Profile is { } profile ? ThermoclineDetector.Detect(profile.Profile, rules.ThermoclineGradient) : null;
         var clarity = ClarityScore(inputs, rules);
         var scores = new SubScores(
             clarity,

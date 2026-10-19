@@ -32,6 +32,18 @@ internal class DailyForecastConfiguration : IEntityTypeConfiguration<DailyForeca
     }
 }
 
+internal class WaterBodyDailyIndexConfiguration : IEntityTypeConfiguration<WaterBodyDailyIndex>
+{
+    public void Configure(EntityTypeBuilder<WaterBodyDailyIndex> builder)
+    {
+        builder.ToTable("WaterBodyDailyIndexes");
+        builder.HasKey(i => new { i.WaterBodyId, i.Date });
+        builder.HasOne<WaterBody>().WithMany().HasForeignKey(i => i.WaterBodyId).OnDelete(DeleteBehavior.Cascade);
+        builder.Property(i => i.MedianIndex).HasPrecision(3, 1);
+        builder.Property(i => i.ModelVersion).HasMaxLength(20);
+    }
+}
+
 internal class ForecastRunConfiguration : IEntityTypeConfiguration<ForecastRun>
 {
     public void Configure(EntityTypeBuilder<ForecastRun> builder)
