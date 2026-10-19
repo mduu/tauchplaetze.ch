@@ -211,7 +211,8 @@ Der Index über Wochen, Monate und Jahre (Entscheid Marc, 19.10.2026). Höchste 
 - **Regelwechsel:** Ändert die `ModelVersion` von einem Tag zum nächsten, markiert das Diagramm den Tag mit einer senkrechten Linie. Davor und danach sind die Werte nicht direkt vergleichbar.
 - **Neuberechnung** (Command `RecomputeForecastHistory`, Admin, `/platform/prognose`): rechnet jede gespeicherte Tagesprognose mit älterer `ModelVersion` mit der aktuellen Regel neu. Danach baut sie den Median pro Gewässer für alle vergangenen Tage neu auf. Sie braucht keine Rohdaten und keine externen Calls: Die Eingaben des Index stehen in der Zeile jedes Tages. Zwei Grenzen:
   - Die Sprungschicht bleibt die gespeicherte. Aus vier Punkten des Profils (0, 10, 20, 30 m) lässt sie sich nicht neu bestimmen. Eine neue Regel für die Sprungschicht wirkt darum erst ab dem nächsten Lauf.
-  - Zeilen vor `rules-1.2` haben keinen Wert in Ufernähe. Dann gilt der Wert der Seemitte mal Uferfaktor, wie damals.
+  - Zeilen vor `rules-1.2` haben keinen Wert in Ufernähe. Dann gilt der Wert der Seemitte mal Uferfaktor, wie damals. Die Zeile erhält diesen Wert und die Quelle `Sentinel3Lake`, damit Verlauf und Mini-Diagramm die Sicht zeigen.
+  - Die Neuberechnung setzt `ComputedAt` auf jetzt. `ForecastRunId` bleibt der Lauf, der die Eingaben holte.
   Sie hält den Lock `forecast` und läuft so nie neben einem Prognose-Lauf. Ein zweiter Aufruf findet nichts mehr zu rechnen und schreibt denselben Median.
 - **Später:** Rückrechnung für die Jahre vor dem Start (`roadmap.md`, Phase 2).
 

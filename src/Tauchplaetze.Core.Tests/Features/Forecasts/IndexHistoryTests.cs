@@ -79,6 +79,36 @@ public class IndexHistoryTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Eine_Zeile_vor_rules_1_2_ohne_Wert_in_Ufernaehe_rechnet_mit_der_Seemitte_mal_Uferfaktor_wie_eine_neue_Zeile()
+    {
+        // Arrange: Beide Tage haben dieselben Eingaben. Die alte Zeile kennt nur die Seemitte (8.0 m), die neue auch die Ufernähe (8.0 × 0.7 = 5.6 m).
+        var admin = await Admin();
+        var oldSiteId = Guid.CreateVersion7();
+        var newSiteId = Guid.CreateVersion7();
+        await Sql.Arrange(db =>
+        {
+            var lake = Lake();
+            var day = Today.AddDays(-1);
+            var oldRow = ModerateVisibilityDay(AddSite(db, lake, oldSiteId), day);
+            (oldRow.SecchiDepth, oldRow.SecchiDepthShore, oldRow.ClaritySource, oldRow.ModelVersion) = (8.0m, null, null, "rules-1.1");
+            var newRow = ModerateVisibilityDay(AddSite(db, lake, newSiteId), day);
+            (newRow.SecchiDepth, newRow.SecchiDepthShore, newRow.ClaritySource) = (8.0m, 5.6m, ClaritySource.Sentinel3Lake);
+            db.DailyForecasts.AddRange(oldRow, newRow);
+            return Task.CompletedTask;
+        });
+
+        // Act
+        await Command<RecomputeForecastHistoryCommand, RecomputeForecastHistoryResult>(new RecomputeForecastHistoryCommand(admin));
+
+        // Assert
+        var old = (await Query<GetSiteIndexHistoryQuery, SiteIndexHistory>(new GetSiteIndexHistoryQuery(oldSiteId))).Days.Single();
+        var current = (await Query<GetSiteIndexHistoryQuery, SiteIndexHistory>(new GetSiteIndexHistoryQuery(newSiteId))).Days.Single();
+        Assert.Equal((5.6m, ClaritySource.Sentinel3Lake, "rules-1.3"), (old.SecchiDepthShore, old.ClaritySource, old.ModelVersion));
+        Assert.NotNull(old.DiveIndex);
+        Assert.Equal(current.DiveIndex, old.DiveIndex);
+    }
+
+    [SqlFact]
     public async Task Nur_Admins_rechnen_die_Vergangenheit_neu()
     {
         // Arrange

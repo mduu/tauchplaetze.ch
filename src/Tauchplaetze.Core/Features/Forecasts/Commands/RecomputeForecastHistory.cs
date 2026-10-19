@@ -63,7 +63,7 @@ internal class RecomputeForecastHistoryHandler(
             foreach (var forecast in stale)
             {
                 var before = forecast.DiveIndex;
-                Recompute(forecast, rivers.Contains(forecast.DiveSiteId), rules);
+                Recompute(forecast, rivers.Contains(forecast.DiveSiteId), rules, time.GetUtcNow());
                 recomputed++;
                 changed += before == forecast.DiveIndex ? 0 : 1;
             }
@@ -76,9 +76,14 @@ internal class RecomputeForecastHistoryHandler(
         return new RecomputeForecastHistoryResult(null, false, recomputed, changed, dates.Count(d => d <= today));
     }
 
-    private static void Recompute(DailyForecast forecast, bool isRiver, DiveIndexRules rules)
+    /// <remarks>Eine Zeile vor `rules-1.2` erhält dabei den Wert in Ufernähe, mit dem sie gerechnet wurde, damit Verlauf und Mini-Diagramm die Sicht zeigen.</remarks>
+    private static void Recompute(DailyForecast forecast, bool isRiver, DiveIndexRules rules, DateTimeOffset now)
     {
-        var result = DiveIndexCalculator.Calculate(InputsOf(forecast, isRiver, rules), rules);
+        var inputs = InputsOf(forecast, isRiver, rules);
+        var result = DiveIndexCalculator.Calculate(inputs, rules);
+        forecast.SecchiDepthShore = inputs.Clarity.ShoreDepth is { } shore ? Math.Round((decimal)shore, 1) : null;
+        forecast.ClaritySource = inputs.Clarity.Source;
+        forecast.ComputedAt = now;
         forecast.DiveIndex = result.DiveIndex is { } index ? Math.Round((decimal)index, 1) : null;
         forecast.VisibilityGoodBelow = result.VisibilityGoodBelow is { } below ? Math.Round((decimal)below, 1) : null;
         forecast.ReasonCodes = string.Join(',', result.Reasons);
