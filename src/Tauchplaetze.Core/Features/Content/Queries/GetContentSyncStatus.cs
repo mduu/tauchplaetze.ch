@@ -17,6 +17,6 @@ internal class GetContentSyncStatusHandler(AccountRoles roles, IOptions<ContentO
         }
 
         var settings = options.Value;
-        return new ContentSyncStatus(settings.ImportEnabled, !string.IsNullOrEmpty(settings.ExportKey), settings.SourceBaseUri?.Host);
+        return new ContentSyncStatus(settings.ImportEnabled, !string.IsNullOrEmpty(settings.ExportKey), ContentRules.Source(settings)?.Host, settings.MaxPackageBytes);
     }
 }

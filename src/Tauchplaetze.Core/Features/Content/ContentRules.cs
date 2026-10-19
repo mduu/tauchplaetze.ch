@@ -15,6 +15,10 @@ internal static class ContentRules
         return options.ImportEnabled ? null : ContentError.Disabled;
     }
 
+    /// <summary>Die Quelle für den Abruf, nur über HTTPS. <c>null</c> ohne Quelle oder mit einem anderen Schema.</summary>
+    public static Uri? Source(ContentOptions options) =>
+        options.SourceBaseUri is { IsAbsoluteUri: true, Scheme: "https" } uri ? uri : null;
+
     /// <summary>
     /// Das Paket als lesbarer Stream mit Positionierung, den ZIP braucht. Ein Stream ohne Positionierung kommt in eine temporäre Datei,
     /// die beim Schliessen verschwindet. <c>null</c>, wenn das Paket grösser als <paramref name="maxBytes"/> ist.
@@ -27,6 +31,26 @@ internal static class ContentRules
         }
 
         var file = new FileStream(Path.GetTempFileName(), FileMode.Create, FileAccess.ReadWrite, FileShare.None, 81920, FileOptions.DeleteOnClose | FileOptions.Asynchronous);
+        try
+        {
+            if (!await CopyAtMost(source, file, maxBytes, ct))
+            {
+                await file.DisposeAsync();
+                return null;
+            }
+
+            file.Position = 0;
+            return file;
+        }
+        catch
+        {
+            await file.DisposeAsync();
+            throw;
+        }
+    }
+
+    private static async Task<bool> CopyAtMost(Stream source, Stream target, long maxBytes, CancellationToken ct)
+    {
         var buffer = new byte[81920];
         long total = 0;
         int read;
@@ -35,15 +59,13 @@ internal static class ContentRules
             total += read;
             if (total > maxBytes)
             {
-                await file.DisposeAsync();
-                return null;
+                return false;
             }
 
-            await file.WriteAsync(buffer.AsMemory(0, read), ct);
+            await target.WriteAsync(buffer.AsMemory(0, read), ct);
         }
 
-        file.Position = 0;
-        return file;
+        return true;
     }
 
     /// <summary>Lässt den Stream des Aufrufers offen.</summary>

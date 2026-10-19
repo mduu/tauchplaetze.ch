@@ -25,6 +25,12 @@ internal static class ContentPackage
 
     public const string PhotoFilesFolder = "photos/";
 
+    /// <summary>Grösste JSON-Datei im Paket (entpackt). Schutz gegen ZIP-Bomben.</summary>
+    public const long MaxJsonBytes = 50L * 1024 * 1024;
+
+    /// <summary>Grösste Bildgrösse im Paket (entpackt).</summary>
+    public const long MaxImageBytes = 20L * 1024 * 1024;
+
     public static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -37,37 +43,41 @@ internal static class ContentPackage
 
     public static async Task Write<T>(ZipArchive zip, string name, T value, CancellationToken ct)
     {
-        await using var stream = zip.CreateEntry(name, CompressionLevel.Optimal).Open();
+        await using var stream = await zip.CreateEntry(name, CompressionLevel.Optimal).OpenAsync(ct);
         await JsonSerializer.SerializeAsync(stream, value, JsonOptions, ct);
     }
 
     public static async Task WriteBytes(ZipArchive zip, string name, byte[] content, CancellationToken ct)
     {
-        await using var stream = zip.CreateEntry(name, CompressionLevel.NoCompression).Open();
+        await using var stream = await zip.CreateEntry(name, CompressionLevel.NoCompression).OpenAsync(ct);
         await stream.WriteAsync(content, ct);
     }
 
-    public static async Task<T?> Read<T>(ZipArchive zip, string name, CancellationToken ct)
+    /// <summary>Liest eine JSON-Datei. <c>null</c>, wenn sie fehlt. Ist sie grösser als <see cref="MaxJsonBytes"/>, gilt das Paket als ungültig.</summary>
+    public static async Task<T?> Read<T>(ZipArchive zip, string name, CancellationToken ct) =>
+        zip.GetEntry(name) is { } entry ? await Read<T>(entry, ct) : default;
+
+    public static async Task<T?> Read<T>(ZipArchiveEntry entry, CancellationToken ct)
     {
-        var entry = zip.GetEntry(name);
-        if (entry is null)
+        if (entry.Length > MaxJsonBytes)
         {
-            return default;
+            throw new InvalidDataException($"Entry {entry.FullName} is too large.");
         }
 
-        await using var stream = entry.Open();
+        await using var stream = await entry.OpenAsync(ct);
         return await JsonSerializer.DeserializeAsync<T>(stream, JsonOptions, ct);
     }
 
+    /// <summary>Liest eine Bildgrösse. <c>null</c>, wenn sie fehlt oder grösser als <see cref="MaxImageBytes"/> ist.</summary>
     public static async Task<byte[]?> ReadBytes(ZipArchive zip, string name, CancellationToken ct)
     {
         var entry = zip.GetEntry(name);
-        if (entry is null)
+        if (entry is null || entry.Length > MaxImageBytes)
         {
             return null;
         }
 
-        await using var stream = entry.Open();
+        await using var stream = await entry.OpenAsync(ct);
         using var buffer = new MemoryStream();
         await stream.CopyToAsync(buffer, ct);
         return buffer.ToArray();

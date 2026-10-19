@@ -13,7 +13,10 @@ internal class ContentModule : ICoreModule
     public void Register(IServiceCollection services)
     {
         services.AddScoped<ContentImporter>();
-        services.AddHttpClient<ContentSourceClient>(client => client.Timeout = TimeSpan.FromMinutes(15)).RemoveAllResilienceHandlers();
+        services.AddHttpClient<ContentSourceClient>(client => client.Timeout = TimeSpan.FromMinutes(15))
+            .ConfigurePrimaryHttpMessageHandler(ContentSourceClient.Handler)
+            .RedactLoggedHeaders([ContentOptions.KeyHeader])
+            .RemoveAllResilienceHandlers();
     }
 #pragma warning restore EXTEXP0001
 }

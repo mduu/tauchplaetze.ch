@@ -5,6 +5,12 @@ public class ContentOptions
 {
     public const string Section = "Content";
 
+    /// <summary>Pfad des Endpoints für den Abruf mit Schlüssel, relativ zur Basis-Adresse.</summary>
+    public const string ExportPath = "api/platform/content-export";
+
+    /// <summary>Header mit dem Schlüssel für den Abruf.</summary>
+    public const string KeyHeader = "X-Content-Export-Key";
+
     /// <summary>Erlaubt den Import eines Inhaltspakets. Nur lokal setzen, in Prod nie.</summary>
     public bool ImportEnabled { get; set; }
 

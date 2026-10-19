@@ -5,7 +5,9 @@ using Tauchplaetze.Core.Features.Accounts;
 
 namespace Tauchplaetze.Core.Features.Content.Commands;
 
-/// <summary>Holt das Inhaltspaket von Prod (`Content:SourceBaseUri`) und übernimmt es wie <see cref="ImportContentCommand"/> (ADR-011).</summary>
+/// <summary>
+/// Holt das Inhaltspaket von Prod (`Content:SourceBaseUri`, nur HTTPS) und übernimmt es wie <see cref="ImportContentCommand"/> (ADR-011).
+/// </summary>
 public record PullContentFromSourceCommand(string AdminId);
 
 internal class PullContentFromSourceHandler(
@@ -23,7 +25,7 @@ internal class PullContentFromSourceHandler(
             return ImportContentResult.Fail(error);
         }
 
-        if (settings.SourceBaseUri is not { } baseUri || string.IsNullOrEmpty(settings.ExportKey))
+        if (ContentRules.Source(settings) is not { } baseUri || string.IsNullOrEmpty(settings.ExportKey))
         {
             return ImportContentResult.Fail(ContentError.SourceNotConfigured);
         }
@@ -33,7 +35,7 @@ internal class PullContentFromSourceHandler(
         {
             package = await source.Download(baseUri, settings.ExportKey, settings.MaxPackageBytes, ct);
         }
-        catch (Exception exception) when (exception is HttpRequestException or TaskCanceledException && !ct.IsCancellationRequested)
+        catch (Exception exception) when (exception is HttpRequestException or IOException or TaskCanceledException && !ct.IsCancellationRequested)
         {
             logger.LogWarning("Content pull from {Host} failed: {Error}", baseUri.Host, exception.GetType().Name);
             package = null;

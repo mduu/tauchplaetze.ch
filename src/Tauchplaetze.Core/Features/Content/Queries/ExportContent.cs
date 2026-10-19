@@ -15,11 +15,13 @@ using Tauchplaetze.Core.Features.Media;
 namespace Tauchplaetze.Core.Features.Content.Queries;
 
 /// <summary>
-/// Schreibt das Inhaltspaket nach <paramref name="Output"/> (ADR-011): Gewässer, öffentliche und archivierte Plätze mit dem Inhalt der neuesten
-/// freigegebenen Version, Slug-Redirects und öffentliche Fotos mit ihren Bildgrössen. Keine Konten, keine offenen Vorschläge, keine privaten Fotos.
+/// Schreibt das Inhaltspaket (ADR-011): Gewässer, veröffentlichte und archivierte Plätze mit dem Inhalt der neuesten freigegebenen Version,
+/// Slug-Redirects und öffentliche Fotos mit ihren Bildgrössen. Keine Konten, keine offenen Vorschläge, keine privaten Fotos.
 /// Erlaubt für einen Admin (<paramref name="AdminId"/>) oder mit dem Schlüssel aus `Content:ExportKey` (<paramref name="ExportKey"/>).
+/// <paramref name="OpenOutput"/> läuft erst nach der Prüfung, mit der Zeit des Pakets, und liefert den Stream für das ZIP.
+/// Der Stream braucht weder Positionierung noch synchrone Schreibzugriffe, z.B. der Body der Antwort. Der Core schliesst ihn nicht.
 /// </summary>
-public record ExportContentQuery(string? AdminId, string? ExportKey, Stream Output);
+public record ExportContentQuery(string? AdminId, string? ExportKey, Func<DateTimeOffset, Stream> OpenOutput);
 
 internal class ExportContentHandler(
     TauchplaetzeDbContext dbContext,
@@ -56,32 +58,40 @@ internal class ExportContentHandler(
             .ToDictionary(g => g.Key, g => (IReadOnlyList<string>)[.. g.Select(r => r.OldSlug).Order(StringComparer.Ordinal)]);
         var photos = await Photos(siteIds, ct);
 
-        using var zip = new ZipArchive(query.Output, ZipArchiveMode.Create, leaveOpen: true);
+        var createdAt = time.GetUtcNow();
+        await using var output = new EntryBuffer(query.OpenOutput(createdAt));
         var exported = 0;
-        foreach (var entry in sites.Where(s => approved.ContainsKey(s.Id)))
+        await using (var zip = await ZipArchive.CreateAsync(output, ZipArchiveMode.Create, leaveOpen: true, entryNameEncoding: null, ct))
         {
-            var snapshot = JsonNode.Parse(await revisions.Load(approved[entry.Id], ct))!.AsObject();
-            await ContentPackage.Write(zip, ContentPackage.SiteEntry(entry.Id),
-                new PackageSite(entry.Id, slugs[entry.WaterBodyId], entry.Status, redirects.GetValueOrDefault(entry.Id) ?? [], snapshot), ct);
-            exported++;
-        }
-
-        await ContentPackage.Write(zip, ContentPackage.WaterBodiesEntry, waterBodies, ct);
-        await ContentPackage.Write(zip, ContentPackage.PhotosEntry, photos, ct);
-        foreach (var photo in photos)
-        {
-            foreach (var name in MediaFiles.WidthsFor(photo.Width).Select(MediaFiles.Rendition))
+            foreach (var entry in sites.Where(s => approved.ContainsKey(s.Id)))
             {
-                if (await media.LoadPublic(photo.Id, name, ct) is { } file)
+                var snapshot = JsonNode.Parse(await revisions.Load(approved[entry.Id], ct))!.AsObject();
+                await ContentPackage.Write(zip, ContentPackage.SiteEntry(entry.Id),
+                    new PackageSite(entry.Id, slugs[entry.WaterBodyId], entry.Status, redirects.GetValueOrDefault(entry.Id) ?? [], snapshot), ct);
+                await output.Drain(ct);
+                exported++;
+            }
+
+            await ContentPackage.Write(zip, ContentPackage.WaterBodiesEntry, waterBodies, ct);
+            await ContentPackage.Write(zip, ContentPackage.PhotosEntry, photos, ct);
+            await output.Drain(ct);
+            foreach (var photo in photos)
+            {
+                foreach (var name in MediaFiles.WidthsFor(photo.Width).Select(MediaFiles.Rendition))
                 {
-                    await ContentPackage.WriteBytes(zip, ContentPackage.PhotoFileEntry(photo.Id, name), file, ct);
+                    if (await media.LoadPublic(photo.Id, name, ct) is { } file)
+                    {
+                        await ContentPackage.WriteBytes(zip, ContentPackage.PhotoFileEntry(photo.Id, name), file, ct);
+                        await output.Drain(ct);
+                    }
                 }
             }
+
+            await ContentPackage.Write(zip, ContentPackage.ManifestEntry,
+                new PackageManifest(ContentPackage.FormatVersion, createdAt, site.Value.BaseUri, waterBodies.Count, exported, photos.Count), ct);
         }
 
-        await ContentPackage.Write(zip, ContentPackage.ManifestEntry,
-            new PackageManifest(ContentPackage.FormatVersion, time.GetUtcNow(), site.Value.BaseUri, waterBodies.Count, exported, photos.Count), ct);
-
+        await output.Drain(ct);
         return new ExportContentResult(null, waterBodies.Count, exported, photos.Count);
     }
 

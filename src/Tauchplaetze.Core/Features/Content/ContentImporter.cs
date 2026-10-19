@@ -65,21 +65,20 @@ internal class ContentImporter(
             var counts = new Counts();
             foreach (var entry in zip.Entries.Where(e => e.FullName.StartsWith(ContentPackage.SitesFolder, StringComparison.Ordinal) && e.FullName.EndsWith(".json", StringComparison.Ordinal)).ToList())
             {
-                var site = await ContentPackage.Read<PackageSite>(zip, entry.FullName, ct);
-                if (site is null || !waterBodyIds.TryGetValue(site.WaterBody, out var waterBodyId))
+                if (await ReadSite(entry, waterBodyIds, ct) is not var (site, content))
                 {
                     counts.Skipped++;
                     continue;
                 }
 
-                await ImportSite(zip, site, waterBodyId, photosBySite.GetValueOrDefault(site.Id) ?? [], adminId, comment, counts, ct);
+                await ImportSite(zip, site, content, photosBySite.GetValueOrDefault(site.Id) ?? [], adminId, comment, counts, ct);
                 dbContext.ChangeTracker.Clear();
             }
 
             logger.LogInformation(
-                "Content import: {WaterBodies} water bodies, {Added} sites added, {Updated} updated, {Unchanged} unchanged, {Skipped} skipped, {Photos} photos",
-                waterBodiesAdded, counts.Added, counts.Updated, counts.Unchanged, counts.Skipped, counts.Photos);
-            return new ImportContentResult(null, waterBodiesAdded, counts.Added, counts.Updated, counts.Unchanged, counts.Skipped, counts.Photos);
+                "Content import: {WaterBodies} water bodies, {Added} sites added, {Updated} updated, {Unchanged} unchanged, {Skipped} skipped, {Photos} photos, {PhotosSkipped} photos skipped",
+                waterBodiesAdded, counts.Added, counts.Updated, counts.Unchanged, counts.Skipped, counts.Photos, counts.PhotosSkipped);
+            return new ImportContentResult(null, waterBodiesAdded, counts.Added, counts.Updated, counts.Unchanged, counts.Skipped, counts.Photos, counts.PhotosSkipped);
         }
     }
 
@@ -120,10 +119,44 @@ internal class ContentImporter(
         return added;
     }
 
-    private async Task ImportSite(ZipArchive zip, PackageSite package, int waterBodyId, IReadOnlyList<PackagePhoto> photos, string adminId, string comment, Counts counts, CancellationToken ct)
+    /// <summary>Ein lesbarer, gültiger Platz mit bekanntem Gewässer. Sonst <c>null</c> und eine Warnung im Log.</summary>
+    private async Task<(PackageSite Site, DiveSiteContent Content)?> ReadSite(ZipArchiveEntry entry, IReadOnlyDictionary<string, int> waterBodyIds, CancellationToken ct)
     {
-        var content = DiveSiteSnapshot.FromJson(JsonSerializer.SerializeToUtf8Bytes(package.Content)) with { WaterBodyId = waterBodyId };
+        try
+        {
+            var site = await ContentPackage.Read<PackageSite>(entry, ct);
+            if (site is null || !waterBodyIds.TryGetValue(site.WaterBody, out var waterBodyId))
+            {
+                logger.LogWarning("Content import skipped {Entry}: unreadable or unknown water body", entry.FullName);
+                return null;
+            }
+
+            var content = DiveSiteSnapshot.FromJson(JsonSerializer.SerializeToUtf8Bytes(site.Content)) with { WaterBodyId = waterBodyId };
+            if (ContentValidation.Errors(content, waterBodyExists: true) is { Count: > 0 } errors)
+            {
+                logger.LogWarning("Content import skipped site {SiteId}: {Errors}", site.Id, string.Join(", ", errors));
+                return null;
+            }
+
+            return (site, content);
+        }
+        catch (Exception exception) when (exception is JsonException or InvalidDataException or NotSupportedException)
+        {
+            logger.LogWarning("Content import skipped {Entry}: {Error}", entry.FullName, exception.GetType().Name);
+            return null;
+        }
+    }
+
+    private async Task ImportSite(ZipArchive zip, PackageSite package, DiveSiteContent content, IReadOnlyList<PackagePhoto> photos, string adminId, string comment, Counts counts, CancellationToken ct)
+    {
         var hash = DiveSiteSnapshot.HashOf(DiveSiteSnapshot.ToJson(content));
+        if (await SlugTaken(content.Slug, package.Id, ct))
+        {
+            logger.LogWarning("Content import skipped site {SiteId}: slug {Slug} is used locally", package.Id, content.Slug);
+            counts.Skipped++;
+            return;
+        }
+
         var site = await dbContext.DiveSites
             .Include(d => d.Translations)
             .Include(d => d.EntryPoints).ThenInclude(e => e.Translations)
@@ -133,15 +166,8 @@ internal class ContentImporter(
 
         if (site is null)
         {
-            if (await dbContext.DiveSites.AnyAsync(d => d.Slug == content.Slug, ct) || await dbContext.SlugRedirects.AnyAsync(r => r.OldSlug == content.Slug, ct))
-            {
-                logger.LogWarning("Content import skipped site {SiteId}: slug {Slug} is used locally", package.Id, content.Slug);
-                counts.Skipped++;
-                return;
-            }
-
             site = revisions.NewDraft(content, adminId, package.Id);
-            counts.Photos += await ImportPhotos(zip, site.Id, photos, ct);
+            counts.Photos += await ImportPhotos(zip, site.Id, photos, counts, ct);
             await dbContext.SaveChangesAsync(ct);
             await revisions.Append(site, content, null, adminId, comment, approve: true, ct);
             site.Status = package.Status;
@@ -155,7 +181,7 @@ internal class ContentImporter(
             .Where(r => r.DiveSiteId == site.Id && r.Status == RevisionStatus.Approved)
             .OrderByDescending(r => r.Number)
             .FirstOrDefaultAsync(ct);
-        var photosAdded = await ImportPhotos(zip, site.Id, photos, ct);
+        var photosAdded = await ImportPhotos(zip, site.Id, photos, counts, ct);
         counts.Photos += photosAdded;
         await dbContext.SaveChangesAsync(ct);
         var changed = latest?.SnapshotHash != hash;
@@ -185,20 +211,28 @@ internal class ContentImporter(
         }
     }
 
-    /// <summary>Legt fehlende öffentliche Fotos mit ihren Dateien an. Vorhandene bleiben unverändert.</summary>
-    private async Task<int> ImportPhotos(ZipArchive zip, Guid siteId, IReadOnlyList<PackagePhoto> photos, CancellationToken ct)
+    private async Task<bool> SlugTaken(string slug, Guid siteId, CancellationToken ct) =>
+        await dbContext.DiveSites.AnyAsync(d => d.Slug == slug && d.Id != siteId, ct)
+        || await dbContext.SlugRedirects.AnyAsync(r => r.OldSlug == slug && r.DiveSiteId != siteId, ct);
+
+    /// <summary>Legt fehlende öffentliche Fotos mit ihren Dateien an. Vorhandene bleiben unverändert. Fehlt eine Bildgrösse, fehlt das Foto.</summary>
+    private async Task<int> ImportPhotos(ZipArchive zip, Guid siteId, IReadOnlyList<PackagePhoto> photos, Counts counts, CancellationToken ct)
     {
         var ids = photos.Select(p => p.Id).ToList();
         var existing = await dbContext.MediaItems.Where(m => ids.Contains(m.Id)).Select(m => m.Id).ToListAsync(ct);
         var added = 0;
         foreach (var photo in photos.Where(p => !existing.Contains(p.Id)))
         {
-            foreach (var name in MediaFiles.WidthsFor(photo.Width).Select(MediaFiles.Rendition))
+            if (await Renditions(zip, photo, ct) is not { } files)
             {
-                if (await ContentPackage.ReadBytes(zip, ContentPackage.PhotoFileEntry(photo.Id, name), ct) is { } file)
-                {
-                    await media.SavePublic(photo.Id, name, file, ct);
-                }
+                logger.LogWarning("Content import skipped photo {MediaId}: a rendition is missing or too large", photo.Id);
+                counts.PhotosSkipped++;
+                continue;
+            }
+
+            foreach (var (name, file) in files)
+            {
+                await media.SavePublic(photo.Id, name, file, ct);
             }
 
             dbContext.MediaItems.Add(new MediaItem
@@ -228,6 +262,22 @@ internal class ContentImporter(
         return added;
     }
 
+    private static async Task<IReadOnlyList<(string Name, byte[] File)>?> Renditions(ZipArchive zip, PackagePhoto photo, CancellationToken ct)
+    {
+        var files = new List<(string, byte[])>();
+        foreach (var name in MediaFiles.WidthsFor(photo.Width).Select(MediaFiles.Rendition))
+        {
+            if (await ContentPackage.ReadBytes(zip, ContentPackage.PhotoFileEntry(photo.Id, name), ct) is not { } file)
+            {
+                return null;
+            }
+
+            files.Add((name, file));
+        }
+
+        return files;
+    }
+
     private async Task<int> AddRedirects(Guid siteId, IReadOnlyList<string> oldSlugs, CancellationToken ct)
     {
         var taken = await dbContext.SlugRedirects.Where(r => oldSlugs.Contains(r.OldSlug)).Select(r => r.OldSlug).ToListAsync(ct);
@@ -248,5 +298,7 @@ internal class ContentImporter(
         public int Skipped { get; set; }
 
         public int Photos { get; set; }
+
+        public int PhotosSkipped { get; set; }
     }
 }

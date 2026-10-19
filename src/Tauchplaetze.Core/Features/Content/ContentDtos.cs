@@ -25,7 +25,10 @@ public enum ContentError
 /// <summary>Ergebnis eines Exports. Die Zahlen beschreiben den Inhalt des Pakets.</summary>
 public record ExportContentResult(ContentError? Error, int WaterBodies = 0, int DiveSites = 0, int Photos = 0);
 
-/// <summary>Ergebnis eines Imports. <see cref="SitesSkipped"/>: Gewässer unbekannt oder Slug lokal von einem anderen Platz belegt.</summary>
+/// <summary>
+/// Ergebnis eines Imports. <see cref="SitesSkipped"/>: unlesbar, ungültig, Gewässer unbekannt oder Slug lokal von einem anderen Platz belegt.
+/// <see cref="PhotosSkipped"/>: eine Bildgrösse fehlt oder ist zu gross.
+/// </summary>
 public record ImportContentResult(
     ContentError? Error,
     int WaterBodiesAdded = 0,
@@ -33,10 +36,11 @@ public record ImportContentResult(
     int SitesUpdated = 0,
     int SitesUnchanged = 0,
     int SitesSkipped = 0,
-    int PhotosAdded = 0)
+    int PhotosAdded = 0,
+    int PhotosSkipped = 0)
 {
     public static ImportContentResult Fail(ContentError error) => new(error);
 }
 
-/// <summary>Was in dieser Umgebung möglich ist, für die Seite `/platform/inhalt`.</summary>
-public record ContentSyncStatus(bool ImportEnabled, bool ExportKeyConfigured, string? SourceHost);
+/// <summary>Was in dieser Umgebung möglich ist, für die Seite `/platform/inhalt`. <see cref="SourceHost"/> nur mit einer Quelle über HTTPS.</summary>
+public record ContentSyncStatus(bool ImportEnabled, bool ExportKeyConfigured, string? SourceHost, long MaxPackageBytes);
