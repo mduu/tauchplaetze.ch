@@ -39,6 +39,29 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Mitwirkende_sehen_ihre_Vorschlaege_mit_Status_und_Begruendung_eigene_Freigaben_der_Moderation_zaehlen_nicht()
+    {
+        // Arrange
+        var (moderator, anna, site) = await Prepare();
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 99 }, "Tiefe"));
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 33 }, null));
+        var pending = await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator));
+        await Command<RejectRevisionCommand, EditorialResult>(new RejectRevisionCommand(moderator, pending.Single(p => p.Revision.Number == 2).Revision.Id, "99 m stimmt nicht."));
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber, edit.Content with { MaxDepth = 20 }, null));
+
+        // Act
+        var all = await Query<GetMyProposalsQuery, IReadOnlyList<MyProposal>>(new GetMyProposalsQuery(anna));
+        var openHere = await Query<GetMyProposalsQuery, IReadOnlyList<MyProposal>>(new GetMyProposalsQuery(anna, site, PendingOnly: true));
+        var ofModerator = await Query<GetMyProposalsQuery, IReadOnlyList<MyProposal>>(new GetMyProposalsQuery(moderator));
+
+        // Assert
+        Assert.Equal([(3, RevisionStatus.Pending, (string?)null), (2, RevisionStatus.Rejected, "99 m stimmt nicht.")], all.Select(p => (p.Number, p.Status, p.ReviewComment)));
+        Assert.Equal([3], openHere.Select(p => p.Number));
+        Assert.Empty(ofModerator);
+    }
+
+    [SqlFact]
     public async Task Eine_Aenderung_der_Moderation_ist_sofort_online_ohne_Mail()
     {
         // Arrange
