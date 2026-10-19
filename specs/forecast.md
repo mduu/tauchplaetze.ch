@@ -142,6 +142,8 @@ Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 | Zuflüsse | 20 % | < 5 mm Regen in 72 h und Abfluss unter 1.2 × Median | Starkregen oder Abfluss über 3 × Median |
 | Schichtung | 20 % | klare Schicht unter einer Sprungschicht ≤ 20 m, oder durchmischter See mit wenig Algen | Sprungschicht tiefer als 30 m bei trüber Oberfläche |
 
+**`rules-1.3`** (19.10.2026, Entscheid Marc): wie `rules-1.2`, dazu **begrenzt die Sicht den Index**. Mässige Sicht in Ufernähe (3 bis unter 6 m) erlaubt höchstens 7.0, schlechte Sicht (unter 3 m) höchstens 5.0. Gute und sehr gute Sicht begrenzen nicht. Ohne Sichtwert bleibt die Obergrenze 6.5. Grund: Am Zürichsee ergaben 5–6 m in Ufernähe bei Windstille und klarer Sprungschicht 7.5 bis 8.5. Das ist für Taucher kein Top-Tag. Greift die Grenze, steht die Begründung `VisibilityLimitsIndex` («Sicht begrenzt den Index») vorne. Die Tageswerte werden beim nächsten Lauf neu gerechnet.
+
 **`rules-1.2`** (19.10.2026, Stand vor dem ersten Push): wie `rules-1.1` mit zwei Änderungen. Erstens die Quelle der Klarheit (Sentinel-2 in Ufernähe vor Sentinel-3, zuerst 50 m, sonst 100 m vor dem Ufer, siehe «Klarheit»). Zweitens volle Punkte für die Schichtung erst ab guter Sicht in Ufernähe (6 m): «oben naja, unten ok» soll keine vollen Punkte geben (Marc, 19.10.2026). Bei 3 bis unter 6 m und darunter höchstens 7 Punkte. Die Begründung «unten klarer» gilt weiterhin ab 3 m. Eawag bestätigte am 19.10.2026, dass `Z490` laufend verarbeitet wird und die Secchi-Tiefe in Metern ist, vergleichbar mit `Zsd_lee`. Pixel am Ufer entfernt Eawag selbst, jedes gelieferte Pixel gilt als gültig; am Zürichsee lag der Wert am 15.10. bei rund 5.4 m in Ufernähe, Sentinel-3 hatte nur einen Wert vom 05.10.
 
 **Startwerte `rules-1.1`** (18.10.2026, ohne Messung, im Code `DiveIndexRules`). `rules-1.0` verteilte das Gewicht einer fehlenden Klarheit auf die anderen Teilwerte. So stieg der Index, wenn der Sichtwert fehlte, und eine trübe Oberfläche über klarem Tiefenwasser ergab volle Punkte. Marcs Erfahrung am Zürichsee im Oktober 2026 («oben naja, unten ok», seit Wochen) passte nicht dazu.
@@ -157,6 +159,7 @@ Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 | Korrektur Klarheit | Regen seit dem Bild 5 mm → 100 %, 30 mm → 60 %. Abfluss 1.2 × Median → 100 %, 3 × Median → 60 %. Der tiefere Wert zählt. |
 | Sicht-Indikator | Secchi in Ufernähe ab 10 m sehr gut, ab 6 m gut, ab 3 m mässig, sonst schlecht |
 | Ohne frischen Sichtwert | Index höchstens 6.5 (Satellitenwert unbekannt oder älter als 5 Tage) |
+| Sicht begrenzt den Index | Mässig (3 bis unter 6 m in Ufernähe) höchstens 7.0, schlecht (unter 3 m) höchstens 5.0 (`rules-1.3`) |
 | Datenstufe 3 | Gitterpunkt des 3D-Modells höchstens 500 m vom Platz |
 
 Diese Werte sind Annahmen. Meldungen und eigene Tauchgänge prüfen sie. Zwischenwerte linear interpolieren. Die Stützpunkte und Gewichte stehen in `appsettings.json` (`Forecast:Rules`). So lassen sie sich ohne Code anpassen. Jede Änderung erhöht die `ModelVersion` (`rules-1.1`, …). **Stand 18.10.2026:** Die Werte stehen erst im Code (`DiveIndexRules`), die Bindung an `Forecast:Rules` fehlt noch. Bei der Bindung gilt: `SatelliteFullAgeDays` muss kleiner sein als `SatelliteMaxAgeDays`, sonst wirft die Berechnung (`DiveIndexRules.AgingDays`).

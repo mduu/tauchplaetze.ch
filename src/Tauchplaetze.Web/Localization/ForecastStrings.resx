@@ -148,4 +148,5 @@
   <data name="Visibility_River" xml:space="preserve"><value>Am Fluss gibt es keinen Satellitenwert. Viel Abfluss macht das Wasser oft trüb.</value></data>
   <data name="Tile_WaterTemperature" xml:space="preserve"><value>Wassertemperatur</value></data>
   <data name="WaterTemperature_Value" xml:space="preserve"><value>{0} °C</value></data>
+  <data name="Reason_VisibilityLimitsIndex" xml:space="preserve"><value>Sicht begrenzt den Index</value></data>
 </root>

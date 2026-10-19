@@ -403,6 +403,55 @@ public class DiveIndexTests
         return DiveIndexCalculator.Calculate(new DayInputs(Calm, Summer, clarity, AlgaeLevel.Low, 1.0, IsRiver: false), DiveIndexRules.Default);
     }
 
+    [Theory]
+    [InlineData(2.9, 5.0, true)]
+    [InlineData(3.0, 6.6, false)]
+    [InlineData(5.9, 7.0, true)]
+    [InlineData(6.0, 8.4, false)]
+    public void Maessige_Sicht_in_Ufernaehe_begrenzt_den_Index_auf_7_schlechte_auf_5(double shore, double expected, bool limited)
+    {
+        // Arrange
+        var perfectDay = new DayInputs(Calm, Summer, Shore(shore), AlgaeLevel.Low, 1.0, IsRiver: false);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(perfectDay, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Equal(expected, result.DiveIndex!.Value, 1);
+        Assert.Equal(limited, result.Reasons.Contains(ReasonCode.VisibilityLimitsIndex));
+    }
+
+    [Fact]
+    public void Ohne_Sichtwert_bleibt_die_Obergrenze_6_5_ohne_Begruendung_der_Sicht()
+    {
+        // Arrange
+        var inputs = new DayInputs(Calm, Summer, ClarityEstimate.Unknown, AlgaeLevel.Unknown, 1.0, IsRiver: false);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Equal(6.5, result.DiveIndex);
+        Assert.DoesNotContain(ReasonCode.VisibilityLimitsIndex, result.Reasons);
+    }
+
+    [Fact]
+    public void Liegt_der_Index_schon_unter_der_Grenze_nennt_die_Begruendung_die_Sicht_nicht()
+    {
+        // Arrange
+        var stormy = new DayInputs(Calm with { WindMaxKmh = 40 }, Summer, Shore(4), AlgaeLevel.Low, 1.0, IsRiver: false);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(stormy, DiveIndexRules.Default);
+
+        // Assert
+        Assert.True(result.DiveIndex < 7, $"Index {result.DiveIndex}");
+        Assert.DoesNotContain(ReasonCode.VisibilityLimitsIndex, result.Reasons);
+    }
+
+    private static ClarityEstimate Shore(double secchi) =>
+        ClarityEstimate.Choose(new DateOnly(2026, 10, 18), new SatelliteObservation(new DateOnly(2026, 10, 17), secchi, 9), null, _ => 0, 1, DiveIndexRules.Default);
+
     private static ClarityEstimate Clear(double secchi) =>
         ClarityEstimate.For(new DateOnly(2026, 10, 18), new SatelliteObservation(new DateOnly(2026, 10, 15), secchi), 0, 1, DiveIndexRules.Default);
 }

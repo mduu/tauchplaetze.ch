@@ -20,7 +20,7 @@ internal record DayResult(
     double? VisibilityGoodBelow,
     IReadOnlyList<ReasonCode> Reasons);
 
-/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.1`, ADR-004).</summary>
+/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.3`, ADR-004).</summary>
 internal static class DiveIndexCalculator
 {
     public static DayResult Calculate(DayInputs inputs, DiveIndexRules rules)
@@ -34,9 +34,16 @@ internal static class DiveIndexCalculator
             StratificationScore(inputs, thermocline, clarity, rules));
 
         var hasWaterData = inputs.Clarity.ShoreDepth is not null || inputs.Profile is not null;
-        double? index = scores.Wind is not null && hasWaterData ? Capped(WeightedMean(scores, rules), inputs, rules) : null;
+        double? uncapped = scores.Wind is not null && hasWaterData ? Capped(WeightedMean(scores, rules), inputs, rules) : null;
+        var index = uncapped is { } value ? Math.Min(value, VisibilityCap(inputs.Clarity.Indicator, rules)) : (double?)null;
 
-        return new DayResult(index, scores, thermocline, thermocline?.Bottom, Reasons(inputs, thermocline, rules));
+        var reasons = Reasons(inputs, thermocline, rules);
+        if (index < uncapped)
+        {
+            reasons = [ReasonCode.VisibilityLimitsIndex, .. reasons];
+        }
+
+        return new DayResult(index, scores, thermocline, thermocline?.Bottom, reasons);
     }
 
     /// <remarks>Ohne gültigen Satellitenwert zählt die Klarheit vorsichtig, statt ihr Gewicht den anderen Teilwerten zu geben. Ein Fluss ohne Sichtwert ebenso.</remarks>
@@ -124,6 +131,14 @@ internal static class DiveIndexCalculator
     /// <remarks>Die Obergrenze gilt, sobald der Satellitenwert altert. So springt der Index am Tag, an dem der Wert unbekannt wird, nicht nach oben.</remarks>
     private static double Capped(double index, DayInputs inputs, DiveIndexRules rules) =>
         HasFreshClarity(inputs, rules) ? index : Math.Min(index, rules.MaxIndexWithoutClarity);
+
+    /// <summary>Gutes Wetter macht trübes Wasser nicht zu einem Top-Tag (`rules-1.3`).</summary>
+    private static double VisibilityCap(VisibilityIndicator indicator, DiveIndexRules rules) => indicator switch
+    {
+        VisibilityIndicator.Poor => rules.MaxIndexWithPoorVisibility,
+        VisibilityIndicator.Moderate => rules.MaxIndexWithModerateVisibility,
+        _ => 10,
+    };
 
     private static double WeightedMean(SubScores scores, DiveIndexRules rules)
     {

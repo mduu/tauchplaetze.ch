@@ -12,13 +12,14 @@ internal record SupportPoint(double Input, double Score);
 /// die Schätzung aus der Seemitte gilt in Ufernähe nur teilweise, und eine trübe Oberfläche deckelt die Schichtung.
 /// `rules-1.2` (19.10.2026): Sentinel-2 in Ufernähe ist die Hauptquelle der Klarheit, ohne Uferfaktor. Sentinel-3 bleibt Rückfall.
 /// Volle Punkte für die Schichtung erst ab guter Sicht in Ufernähe (6 m).
+/// `rules-1.3` (19.10.2026, Entscheid Marc): Mässige Sicht in Ufernähe begrenzt den Index auf 7, schlechte auf 5.
 /// Sie werden mit Meldungen und eigenen Tauchgängen geprüft.
 /// </remarks>
 internal record DiveIndexRules
 {
     public static readonly DiveIndexRules Default = new();
 
-    public string ModelVersion { get; init; } = "rules-1.2";
+    public string ModelVersion { get; init; } = "rules-1.3";
 
     public double ClarityWeight { get; init; } = 0.35;
 
@@ -45,6 +46,12 @@ internal record DiveIndexRules
 
     /// <summary>Höchster Index ohne Sichtwert.</summary>
     public double MaxIndexWithoutClarity { get; init; } = 6.5;
+
+    /// <summary>Höchster Index bei mässiger Sicht in Ufernähe (3 bis 6 m).</summary>
+    public double MaxIndexWithModerateVisibility { get; init; } = 7;
+
+    /// <summary>Höchster Index bei schlechter Sicht in Ufernähe (unter 3 m).</summary>
+    public double MaxIndexWithPoorVisibility { get; init; } = 5;
 
     /// <summary>Anteil der Secchi-Tiefe aus der Seemitte (Sentinel-3), der in Ufernähe gilt. Sentinel-2 misst schon in Ufernähe.</summary>
     public double ShoreFactor { get; init; } = 0.7;

@@ -106,6 +106,9 @@ public enum ReasonCode
 
     /// <summary>Der Satellitenwert ist mehr als einige Tage alt und zählt nur noch teilweise.</summary>
     ClarityStale,
+
+    /// <summary>Die Sicht in Ufernähe ist mässig oder schlecht und begrenzt den Index (`rules-1.3`).</summary>
+    VisibilityLimitsIndex,
 }
 
 /// <summary>Status eines Laufs des Prognose-Jobs.</summary>

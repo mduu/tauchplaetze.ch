@@ -148,4 +148,5 @@
   <data name="Visibility_River" xml:space="preserve"><value>Pas de valeur satellite pour les rivières. Un débit élevé trouble souvent l'eau.</value></data>
   <data name="Tile_WaterTemperature" xml:space="preserve"><value>Température de l'eau</value></data>
   <data name="WaterTemperature_Value" xml:space="preserve"><value>{0} °C</value></data>
+  <data name="Reason_VisibilityLimitsIndex" xml:space="preserve"><value>la visibilité limite l'indice</value></data>
 </root>
