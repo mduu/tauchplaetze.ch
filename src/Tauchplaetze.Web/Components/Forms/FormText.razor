@@ -1,0 +1,31 @@
+@* Einzeiliges Textfeld im Design der Website. *@
+<label class="field">
+    <span class="field-label">@Label</span>
+    <input type="text" value="@Value" maxlength="@MaxLength" required="@Required" @onchange="Changed" />
+    @if (Help is not null)
+    {
+        <span class="field-help">@Help</span>
+    }
+</label>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    [Parameter]
+    public string? Help { get; set; }
+
+    [Parameter]
+    public int? MaxLength { get; set; }
+
+    [Parameter]
+    public bool Required { get; set; }
+
+    private Task Changed(ChangeEventArgs e) => ValueChanged.InvokeAsync(e.Value as string);
+}

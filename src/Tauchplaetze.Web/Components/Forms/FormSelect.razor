@@ -1,0 +1,35 @@
+@typeparam TValue
+@* Auswahl aus festen Werten. Ein leerer Eintrag steht zuerst, wenn <see cref="EmptyLabel"/> gesetzt ist. *@
+<label class="field field-short">
+    <span class="field-label">@Label</span>
+    <select @onchange="Changed">
+        @if (EmptyLabel is not null)
+        {
+            <option value="" selected="@(Value is null)">@EmptyLabel</option>
+        }
+        @foreach (var (option, index) in Options.Select((o, i) => (o, i)))
+        {
+            <option value="@index" selected="@(EqualityComparer<TValue>.Default.Equals(option.Value, Value))">@option.Text</option>
+        }
+    </select>
+</label>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public TValue? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<TValue?> ValueChanged { get; set; }
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<(TValue Value, string Text)> Options { get; set; } = [];
+
+    [Parameter]
+    public string? EmptyLabel { get; set; }
+
+    private Task Changed(ChangeEventArgs e) =>
+        ValueChanged.InvokeAsync(int.TryParse(e.Value as string, out var index) && index >= 0 && index < Options.Count ? Options[index].Value : default);
+}

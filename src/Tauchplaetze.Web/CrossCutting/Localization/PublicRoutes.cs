@@ -43,7 +43,15 @@ internal static class PublicRoutes
         ["it"] = "chi-siamo",
     };
 
-    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions, About];
+    public static readonly IReadOnlyDictionary<string, string> Edit = new Dictionary<string, string>
+    {
+        ["de"] = "bearbeiten",
+        ["en"] = "edit",
+        ["fr"] = "modifier",
+        ["it"] = "modifica",
+    };
+
+    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions, About, Edit];
 
     /// <summary>Die Seite «Über», optional mit Anker (`prognose`, `quellen`, `impressum`, `datenschutz`).</summary>
     public static string AboutPage(string language, string? anchor = null) => $"/{language}/{About[language]}{(anchor is null ? "" : "#" + anchor)}";
@@ -55,6 +63,18 @@ internal static class PublicRoutes
     public static string DiveSite(string language, string slug) => $"/{language}/{DiveSites[language]}/{slug}";
 
     public static string DiveSiteVersions(string language, string slug) => $"{DiveSite(language, slug)}/{Versions[language]}";
+
+    /// <summary>Der Bearbeiten-Modus eines Platzes (`ux.md`, «Bearbeiten»). Nur angemeldet, `noindex`.</summary>
+    public static string DiveSiteEdit(string language, string slug) => $"{DiveSite(language, slug)}/{Edit[language]}";
+
+    /// <summary>Der Pfad ist der Bearbeiten-Modus eines Platzes: `/{sprache}/{plätze}/{slug}/{bearbeiten}`.</summary>
+    public static bool IsDiveSiteEdit(string? path)
+    {
+        var segments = (path ?? "").Split('/', StringSplitOptions.RemoveEmptyEntries);
+        return segments is [var language, var section, _, var edit]
+            && DiveSites.TryGetValue(language, out var sites) && sites == section
+            && Edit[language] == edit;
+    }
 
     /// <summary>Das Segment <paramref name="segment"/> einer Sprache in einer anderen Sprache. Unbekannte Segmente bleiben gleich.</summary>
     public static string TranslateSection(string segment, string language) =>

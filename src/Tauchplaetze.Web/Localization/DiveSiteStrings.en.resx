@@ -205,4 +205,24 @@
   <data name="Directory_Empty" xml:space="preserve"><value>No dive sites yet.</value></data>
   <data name="DirectoryOnly_Write" xml:space="preserve"><value>Write to us.</value></data>
   <data name="Site_OtherNames" xml:space="preserve"><value>also known as {0}</value></data>
+  <data name="EditMode_Label" xml:space="preserve"><value>Editing mode</value></data>
+  <data name="EditMode_Title" xml:space="preserve"><value>Edit {0}</value></data>
+  <data name="EditMode_Bar_Contributor" xml:space="preserve"><value>Your changes go to the moderators.</value></data>
+  <data name="EditMode_Bar_Moderator" xml:space="preserve"><value>Your changes go live right away.</value></data>
+  <data name="EditMode_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="EditMode_Submit_Contributor" xml:space="preserve"><value>Send proposal</value></data>
+  <data name="EditMode_Submit_Moderator" xml:space="preserve"><value>Save and publish</value></data>
+  <data name="EditMode_Saving" xml:space="preserve"><value>Saving …</value></data>
+  <data name="EditMode_Section_Basics" xml:space="preserve"><value>Name and place</value></data>
+  <data name="EditMode_Section_Texts" xml:space="preserve"><value>Texts</value></data>
+  <data name="EditMode_Section_More" xml:space="preserve"><value>Entry points, sketch and photos</value></data>
+  <data name="EditMode_More_Text" xml:space="preserve"><value>For now, you edit entry points and places, the site sketch and photos in the editor.</value></data>
+  <data name="EditMode_More_Link" xml:space="preserve"><value>Edit in the editor</value></data>
+  <data name="EditMode_Section_Comment" xml:space="preserve"><value>About your change</value></data>
+  <data name="EditMode_Comment" xml:space="preserve"><value>Comment</value></data>
+  <data name="EditMode_Comment_Help" xml:space="preserve"><value>What did you change and how do you know? This helps the moderators.</value></data>
+  <data name="EditMode_NoChange" xml:space="preserve"><value>You did not change anything, there is nothing to save.</value></data>
+  <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>The moderators change the lake or river.</value></data>
+  <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Thank you! Your proposal is with the moderators. You will get an e-mail as soon as it is published or rejected.</value></data>
+  <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Saved and live.</value></data>
 </root>

@@ -144,3 +144,22 @@
     }
   });
 })();
+
+// Bearbeiten-Modus (ux.md, «Bearbeiten»): Die Seite ist interaktiv, alle anderen Seiten statisch. Links laden darum die ganze Seite,
+// sonst würde der Router von Blazor die statischen Seiten in der Verbindung des Editors darstellen (ohne Karten-Skripte).
+(function () {
+  window.addEventListener('click', function (event) {
+    if (!document.querySelector('[data-edit-mode]') || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) {
+      return;
+    }
+
+    const link = event.target.closest && event.target.closest('a[href]');
+    if (!link || link.target || link.hasAttribute('download') || link.origin !== window.location.origin || link.getAttribute('href').startsWith('#')) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    window.location.assign(link.href);
+  }, true);
+})();

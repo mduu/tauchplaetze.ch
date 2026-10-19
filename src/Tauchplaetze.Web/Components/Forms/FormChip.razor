@@ -1,0 +1,18 @@
+@* Ein- und ausschaltbare Eigenschaft als Chip. *@
+<label class="chip-toggle" data-on="@(Checked ? "true" : "false")">
+    <input type="checkbox" checked="@Checked" @onchange="Changed" />
+    <span>@Label</span>
+</label>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public bool Checked { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> CheckedChanged { get; set; }
+
+    private Task Changed(ChangeEventArgs e) => CheckedChanged.InvokeAsync(e.Value is true);
+}

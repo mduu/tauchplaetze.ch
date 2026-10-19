@@ -205,4 +205,24 @@
   <data name="Directory_Empty" xml:space="preserve"><value>Ancora nessun sito d'immersione.</value></data>
   <data name="DirectoryOnly_Write" xml:space="preserve"><value>Scrivici.</value></data>
   <data name="Site_OtherNames" xml:space="preserve"><value>noto anche come {0}</value></data>
+  <data name="EditMode_Label" xml:space="preserve"><value>Modalità modifica</value></data>
+  <data name="EditMode_Title" xml:space="preserve"><value>Modifica {0}</value></data>
+  <data name="EditMode_Bar_Contributor" xml:space="preserve"><value>Le tue modifiche vanno alla moderazione.</value></data>
+  <data name="EditMode_Bar_Moderator" xml:space="preserve"><value>Le tue modifiche sono subito online.</value></data>
+  <data name="EditMode_Cancel" xml:space="preserve"><value>Annulla</value></data>
+  <data name="EditMode_Submit_Contributor" xml:space="preserve"><value>Invia proposta</value></data>
+  <data name="EditMode_Submit_Moderator" xml:space="preserve"><value>Salva e pubblica</value></data>
+  <data name="EditMode_Saving" xml:space="preserve"><value>Salvataggio …</value></data>
+  <data name="EditMode_Section_Basics" xml:space="preserve"><value>Nome e luogo</value></data>
+  <data name="EditMode_Section_Texts" xml:space="preserve"><value>Testi</value></data>
+  <data name="EditMode_Section_More" xml:space="preserve"><value>Punti d'entrata, schizzo e foto</value></data>
+  <data name="EditMode_More_Text" xml:space="preserve"><value>Per ora modifichi punti d’entrata e luoghi, lo schizzo e le foto nell’editor.</value></data>
+  <data name="EditMode_More_Link" xml:space="preserve"><value>Modifica nell'editor</value></data>
+  <data name="EditMode_Section_Comment" xml:space="preserve"><value>Sulla tua modifica</value></data>
+  <data name="EditMode_Comment" xml:space="preserve"><value>Commento</value></data>
+  <data name="EditMode_Comment_Help" xml:space="preserve"><value>Che cosa hai cambiato e come lo sai? Aiuta la moderazione.</value></data>
+  <data name="EditMode_NoChange" xml:space="preserve"><value>Non hai cambiato nulla, non c’è niente da salvare.</value></data>
+  <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>Il lago o il fiume lo cambia la moderazione.</value></data>
+  <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Grazie! La tua proposta è alla moderazione. Riceverai un’e-mail non appena sarà pubblicata o respinta.</value></data>
+  <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Salvato e online.</value></data>
 </root>

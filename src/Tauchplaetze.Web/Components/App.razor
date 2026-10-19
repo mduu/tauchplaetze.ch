@@ -45,8 +45,11 @@
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
 
-    /// <summary>Nur der Redaktionsbereich ist interaktiv (ADR-001). Die öffentlichen Seiten bleiben Static SSR.</summary>
+    /// <summary>Moderation und Plattform sind interaktiv mit MudBlazor (ADR-001). Die öffentlichen Seiten bleiben Static SSR.</summary>
     private bool IsAdmin => HttpContext.Request.Path.StartsWithSegments("/admin") || HttpContext.Request.Path.StartsWithSegments("/platform");
 
-    private IComponentRenderMode? PageRenderMode => IsAdmin ? InteractiveServer : null;
+    /// <summary>Der Bearbeiten-Modus eines Platzes ist interaktiv, aber im Layout der Website und ohne MudBlazor (ADR-001, Nachtrag).</summary>
+    private bool IsEditMode => PublicRoutes.IsDiveSiteEdit(HttpContext.Request.Path.Value);
+
+    private IComponentRenderMode? PageRenderMode => IsAdmin || IsEditMode ? InteractiveServer : null;
 }

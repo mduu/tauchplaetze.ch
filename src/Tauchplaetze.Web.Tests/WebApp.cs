@@ -61,6 +61,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>> PendingRevisions { get; } = new(_ => []);
 
+    public FakeQuery<GetDiveSiteForEditingQuery, DiveSiteForEditing?> ForEditing { get; } = new(_ => null);
+
     /// <summary>Empfänger des Kontaktformulars im Test. Er darf nie im HTML stehen.</summary>
     public const string OperatorEmail = "betreiber@example.org";
 
@@ -93,6 +95,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?>>(PublicChanges));
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<WithdrawRevisionCommand, EditorialResult>>(Withdraw));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>>(PendingRevisions));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteForEditingQuery, DiveSiteForEditing?>>(ForEditing));
         });
     }
 

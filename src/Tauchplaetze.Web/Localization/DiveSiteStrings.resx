@@ -205,4 +205,24 @@
   <data name="Directory_Empty" xml:space="preserve"><value>Noch keine Tauchplätze.</value></data>
   <data name="DirectoryOnly_Write" xml:space="preserve"><value>Schreib uns.</value></data>
   <data name="Site_OtherNames" xml:space="preserve"><value>auch bekannt als {0}</value></data>
+  <data name="EditMode_Label" xml:space="preserve"><value>Bearbeitungsmodus</value></data>
+  <data name="EditMode_Title" xml:space="preserve"><value>{0} bearbeiten</value></data>
+  <data name="EditMode_Bar_Contributor" xml:space="preserve"><value>Deine Änderungen gehen an die Moderation.</value></data>
+  <data name="EditMode_Bar_Moderator" xml:space="preserve"><value>Deine Änderungen sind sofort online.</value></data>
+  <data name="EditMode_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="EditMode_Submit_Contributor" xml:space="preserve"><value>Vorschlag senden</value></data>
+  <data name="EditMode_Submit_Moderator" xml:space="preserve"><value>Speichern und freigeben</value></data>
+  <data name="EditMode_Saving" xml:space="preserve"><value>Wird gespeichert …</value></data>
+  <data name="EditMode_Section_Basics" xml:space="preserve"><value>Name und Ort</value></data>
+  <data name="EditMode_Section_Texts" xml:space="preserve"><value>Texte</value></data>
+  <data name="EditMode_Section_More" xml:space="preserve"><value>Einstiege, Skizze und Fotos</value></data>
+  <data name="EditMode_More_Text" xml:space="preserve"><value>Einstiege und Orte, die Tauchskizze und Fotos bearbeitest du vorerst im Editor.</value></data>
+  <data name="EditMode_More_Link" xml:space="preserve"><value>Im Editor bearbeiten</value></data>
+  <data name="EditMode_Section_Comment" xml:space="preserve"><value>Zu deiner Änderung</value></data>
+  <data name="EditMode_Comment" xml:space="preserve"><value>Kommentar</value></data>
+  <data name="EditMode_Comment_Help" xml:space="preserve"><value>Was hast du geändert und woher weisst du es? Das hilft der Moderation.</value></data>
+  <data name="EditMode_NoChange" xml:space="preserve"><value>Du hast nichts geändert, es gibt nichts zu speichern.</value></data>
+  <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>Das Gewässer ändert die Moderation.</value></data>
+  <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Danke! Dein Vorschlag ist bei der Moderation. Du bekommst eine Mail, sobald er freigegeben oder abgelehnt ist.</value></data>
+  <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Gespeichert und online.</value></data>
 </root>

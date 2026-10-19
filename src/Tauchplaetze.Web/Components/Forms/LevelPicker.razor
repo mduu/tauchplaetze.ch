@@ -1,0 +1,58 @@
+@* Bewertung 1 bis 5 oder keine, mit der Legende der Skala hinter dem «i» (`dive-site.md`, «Bewertungen»). *@
+<fieldset class="level-picker" data-kind="@(IsLevel ? "level" : "quality")">
+    <legend class="level-head">
+        <span class="field-label">@Label</span>
+        <button type="button" class="rating-info" popovertarget="@legendId" data-hover-popover aria-label="@InfoLabel"><span aria-hidden="true">i</span></button>
+    </legend>
+    <div class="level-options" role="radiogroup" aria-label="@Label">
+        <button type="button" class="level-option level-none" role="radio" aria-checked="@(Value is null ? "true" : "false")" @onclick="() => Pick(null)">@NoneLabel</button>
+        @for (byte step = 1; step <= 5; step++)
+        {
+            var current = step;
+            <button type="button" class="level-option" role="radio" aria-checked="@(Value == current ? "true" : "false")"
+                    data-on="@(Value >= current ? "true" : "false")" title="@Legend[current - 1].Short" @onclick="() => Pick(current)">@current</button>
+        }
+    </div>
+    <p class="level-current">@(Value is { } value ? Legend[value - 1].Short : NoneLabel)</p>
+    <div id="@legendId" popover class="rating-legend">
+        <p class="rating-legend-title">@Label</p>
+        <ol>
+            @for (var step = 1; step <= 5; step++)
+            {
+                <li aria-current="@(step == Value ? "true" : null)">
+                    <span class="rating-legend-number">@step</span>
+                    <span><strong>@Legend[step - 1].Short</strong> · @Legend[step - 1].Text</span>
+                </li>
+            }
+        </ol>
+    </div>
+</fieldset>
+
+@code {
+    private readonly string legendId = "level-legend-" + Guid.NewGuid().ToString("N")[..8];
+
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public byte? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<byte?> ValueChanged { get; set; }
+
+    /// <summary>Kurztext und Bedeutung der Stufen 1 bis 5.</summary>
+    [Parameter, EditorRequired]
+    public IReadOnlyList<(string Short, string Text)> Legend { get; set; } = [];
+
+    [Parameter, EditorRequired]
+    public string NoneLabel { get; set; } = "";
+
+    [Parameter, EditorRequired]
+    public string InfoLabel { get; set; } = "";
+
+    /// <summary>Eine Stufe (mehr ist anspruchsvoller) statt einer Qualität (mehr ist besser). Ändert nur die Farbe.</summary>
+    [Parameter]
+    public bool IsLevel { get; set; }
+
+    private Task Pick(byte? value) => ValueChanged.InvokeAsync(value);
+}

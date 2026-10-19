@@ -40,6 +40,10 @@
             }
         </UnderwaterHero>
 
+        @if (Saved is "vorschlag" or "online")
+        {
+            <p class="saved-banner" role="status" data-saved="@Saved">@L[Saved == "online" ? "EditMode_Saved_Approved" : "EditMode_Saved_Pending"]</p>
+        }
         <SiteNotices Notices="site.Notices" />
 
         <section class="page-section" aria-labelledby="conditions">
@@ -94,7 +98,7 @@
 
             <p class="site-links">
                 <a href="@PublicRoutes.DiveSiteVersions(Language, site.Slug)">@L["Link_Versions"]</a>
-                <a href="/admin/plaetze/@site.Id" rel="nofollow" data-enhance-nav="false">@L["Link_Edit"]</a>
+                <a href="@PublicRoutes.DiveSiteEdit(Language, site.Slug)" rel="nofollow" data-enhance-nav="false">@L["Link_Edit"]</a>
             </p>
         </section>
         break;
@@ -110,6 +114,10 @@
 }
 
 @code {
+    /// <summary>Rückmeldung nach dem Speichern im Bearbeiten-Modus: `vorschlag` oder `online`.</summary>
+    [SupplyParameterFromQuery(Name = "gespeichert")]
+    public string? Saved { get; set; }
+
     private DiveSiteLookup? lookup;
 
     private SiteForecast? forecast;

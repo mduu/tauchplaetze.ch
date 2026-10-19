@@ -1,0 +1,218 @@
+@page "/de/tauchplaetze/{Slug}/bearbeiten"
+@page "/en/dive-sites/{Slug}/edit"
+@page "/fr/sites-de-plongee/{Slug}/modifier"
+@page "/it/siti-di-immersione/{Slug}/modifica"
+@attribute [Authorize]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.DiveSites.Queries
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Core.Features.Editorial.Commands
+@using Tauchplaetze.Core.Features.Editorial.Queries
+@using Tauchplaetze.Web.Features.Editorial
+@inject IStringLocalizer<DiveSiteStrings> Site
+@inject IStringLocalizer<SharedStrings> Shared
+@inject NavigationManager Navigation
+
+<PageTitle>@Site["EditMode_Title", details?.Name ?? ""] · @Shared["Brand"]</PageTitle>
+<HeadContent>
+    <meta name="robots" content="noindex" />
+</HeadContent>
+
+@if (details is null || form is null || editing is null)
+{
+    @if (notFound)
+    {
+        <section class="page-section">
+            <h1 class="status-title">@Site["Gone_Title"]</h1>
+        </section>
+    }
+}
+else
+{
+    <div class="edit-mode" data-edit-mode>
+        <div class="edit-bar" role="region" aria-label="@Site["EditMode_Label"]">
+            <p class="edit-bar-text">
+                <strong>@Site["EditMode_Label"]</strong>
+                <span>· @(IsModerator ? Site["EditMode_Bar_Moderator"] : Site["EditMode_Bar_Contributor"])</span>
+            </p>
+            <div class="edit-bar-actions">
+                <a class="button secondary" href="@PublicRoutes.DiveSite(Language, details.Slug)">@Site["EditMode_Cancel"]</a>
+                <button type="button" class="button" disabled="@saving" @onclick="Save">
+                    @(saving ? Site["EditMode_Saving"] : IsModerator ? Site["EditMode_Submit_Moderator"] : Site["EditMode_Submit_Contributor"])
+                </button>
+            </div>
+        </div>
+
+        <header class="edit-head">
+            <p class="eyebrow">@details.WaterBodyName</p>
+            <h1 class="site-name">@Site["EditMode_Title", details.Name]</h1>
+        </header>
+
+        @if (openProposal is { } open)
+        {
+            <p class="callout" data-open-proposal>
+                @L["Edit_OpenProposal", SwissClock.DateTime(open.SubmittedAt)]
+                <a href="@AccountPaths.Proposals(Language)">@L["Edit_OpenProposal_Link"]</a>
+            </p>
+        }
+
+        @if (errors.Count > 0 || message is not null)
+        {
+            <div class="message @(errors.Count > 0 ? "error" : "ok")" role="@(errors.Count > 0 ? "alert" : "status")">
+                @foreach (var error in errors)
+                {
+                    <p>@L[$"Error_{error}"]</p>
+                }
+                @if (message is not null)
+                {
+                    <p>@message</p>
+                }
+            </div>
+        }
+
+        <section class="page-section edit-section" aria-labelledby="edit-basics">
+            <h2 id="edit-basics" class="edit-section-title">@Site["EditMode_Section_Basics"]</h2>
+            <div class="edit-grid">
+                <FormText Label="@L["Field_Name"]" @bind-Value="form.Name" MaxLength="120" Required="true" />
+                <FormText Label="@L["Field_OtherNames"]" @bind-Value="form.OtherNames" Help="@L["Field_OtherNames_Help"]" MaxLength="450" />
+                <FormText Label="@L["Field_Municipality"]" @bind-Value="form.Municipality" MaxLength="80" />
+                <FormText Label="@L["Field_Canton"]" @bind-Value="form.Canton" MaxLength="2" />
+            </div>
+            <p class="field-help">@L["Field_WaterBodyId"]: @details.WaterBodyName · @Site["EditMode_WaterBody_Help"]</p>
+        </section>
+
+        <section class="page-section edit-section" aria-labelledby="edit-site">
+            <h2 id="edit-site" class="edit-section-title">@Site["Ratings_Title"]</h2>
+            <div class="edit-grid">
+                <FormNumber Label="@L["Field_MaxDepth"]" @bind-Value="form.MaxDepth" Min="1" Max="300" Unit="m" />
+                <FormSelect TValue="DiveSiteAccess?" Label="@L["Field_Access"]" @bind-Value="form.Access" EmptyLabel="@L["Rating_None"]"
+                            Options="@([.. Enum.GetValues<DiveSiteAccess>().Select(a => ((DiveSiteAccess?)a, L[$"Access_{a}"].Value))])" />
+            </div>
+            <p class="field-label">@L["Field_Features"]</p>
+            <div class="chips">
+                @foreach (var feature in SiteForm.AllFeatures)
+                {
+                    var current = feature;
+                    <FormChip Label="@L[$"Feature_{current}"]" Checked="form.Features.Contains(current)" CheckedChanged="@(on => Toggle(current, on))" />
+                }
+            </div>
+            <div class="level-grid">
+                @foreach (var field in SiteForm.RatingFields)
+                {
+                    var current = field;
+                    var scale = field.Replace("Rating", "");
+                    <LevelPicker Label="@Site[$"Rating_{scale}"]" Value="form.Ratings.GetValueOrDefault(current)" ValueChanged="@(value => form.Ratings[current] = value)"
+                                 Legend="Legend(scale)" NoneLabel="@L["Rating_None"]" InfoLabel="@Site["Rating_Info", Site[$"Rating_{scale}"]]"
+                                 IsLevel="@(scale is "Difficulty" or "Current")" />
+                }
+            </div>
+        </section>
+
+        <section class="page-section edit-section" aria-labelledby="edit-texts">
+            <h2 id="edit-texts" class="edit-section-title">@Site["EditMode_Section_Texts"]</h2>
+            <div class="language-tabs" role="tablist">
+                @foreach (var language in Languages.All)
+                {
+                    var current = language;
+                    <button type="button" role="tab" class="language-tab" aria-selected="@(textLanguage == current ? "true" : "false")" @onclick="() => textLanguage = current">@current.ToUpperInvariant()</button>
+                }
+            </div>
+            @{ var text = form.Texts[textLanguage]; }
+            <div class="edit-texts" role="tabpanel" lang="@textLanguage">
+                <FormTextArea Label="@L["Field_UnderwaterDescription"]" @bind-Value="text.UnderwaterDescription" Rows="6" />
+                <FormTextArea Label="@L["Field_HazardsInfo"]" @bind-Value="text.HazardsInfo" MaxLength="2000" />
+                <FormTextArea Label="@L["Field_ApproachInfo"]" @bind-Value="text.ApproachInfo" MaxLength="2000" />
+                <FormTextArea Label="@L["Field_SurroundingsInfo"]" @bind-Value="text.SurroundingsInfo" MaxLength="2000" />
+                <FormTextArea Label="@L["Field_FacilitiesInfo"]" @bind-Value="text.FacilitiesInfo" Rows="2" MaxLength="1000" />
+            </div>
+        </section>
+
+        <section class="page-section edit-section" aria-labelledby="edit-more">
+            <h2 id="edit-more" class="edit-section-title">@Site["EditMode_Section_More"]</h2>
+            <p>@Site["EditMode_More_Text"]</p>
+            <p><a href="@($"/admin/plaetze/{details.Id}")">@Site["EditMode_More_Link"]</a></p>
+        </section>
+
+        <section class="page-section edit-section" aria-labelledby="edit-comment">
+            <h2 id="edit-comment" class="edit-section-title">@Site["EditMode_Section_Comment"]</h2>
+            <FormTextArea Label="@Site["EditMode_Comment"]" @bind-Value="form.Comment" Rows="2" MaxLength="500" Help="@Site["EditMode_Comment_Help"]" />
+        </section>
+    </div>
+}
+
+@code {
+    private DiveSiteDetails? details;
+
+    private DiveSiteForEditing? editing;
+
+    private SiteForm? form;
+
+    private MyProposal? openProposal;
+
+    private IReadOnlyList<EditorialError> errors = [];
+
+    private string? message;
+
+    private string textLanguage = Language;
+
+    private bool saving;
+
+    private bool notFound;
+
+    [Parameter]
+    public string Slug { get; set; } = "";
+
+    protected override async Task Load()
+    {
+        switch (await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery(Slug, Language)))
+        {
+            case DiveSiteLookup.Found found:
+                details = found.Site;
+                editing = await Query<GetDiveSiteForEditingQuery, DiveSiteForEditing?>(new GetDiveSiteForEditingQuery(found.Site.Id));
+                form = editing is null ? null : SiteForm.From(editing.Content);
+                openProposal = (await Query<GetMyProposalsQuery, IReadOnlyList<MyProposal>>(new GetMyProposalsQuery(UserId, found.Site.Id, PendingOnly: true))).FirstOrDefault();
+                break;
+            case DiveSiteLookup.Moved moved:
+                Navigation.NavigateTo(PublicRoutes.DiveSiteEdit(Language, moved.Slug), forceLoad: true);
+                break;
+            default:
+                notFound = true;
+                break;
+        }
+    }
+
+    private IReadOnlyList<(string Short, string Text)> Legend(string scale) =>
+        [.. Enumerable.Range(1, 5).Select(step => (Site[$"Rating_{scale}_{step}"].Value, Site[$"Rating_{scale}_{step}_Text"].Value))];
+
+    private void Toggle(DiveSiteFeatures feature, bool on)
+    {
+        if (on)
+        {
+            form!.Features.Add(feature);
+        }
+        else
+        {
+            form!.Features.Remove(feature);
+        }
+    }
+
+    private async Task Save()
+    {
+        saving = true;
+        message = null;
+        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(UserId, details!.Id, editing!.BaseNumber, form!.ToContent(), form.Comment));
+        saving = false;
+        errors = result.Errors;
+        if (result is { Succeeded: true, NoChange: true })
+        {
+            message = Site["EditMode_NoChange"];
+        }
+        else if (result.Succeeded)
+        {
+            var saved = result.Status == RevisionStatus.Approved ? "online" : "vorschlag";
+            Navigation.NavigateTo($"{PublicRoutes.DiveSite(Language, details.Slug)}?gespeichert={saved}", forceLoad: true);
+        }
+    }
+}

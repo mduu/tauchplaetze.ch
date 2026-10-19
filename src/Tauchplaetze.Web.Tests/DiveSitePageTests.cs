@@ -63,7 +63,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Der_Link_ins_CMS_laedt_die_ganze_Seite_weil_das_CMS_eine_eigene_Verbindung_braucht()
+    public async Task Der_Link_zum_Bearbeiten_laedt_die_ganze_Seite_weil_der_Bearbeiten_Modus_interaktiv_ist()
     {
         // Arrange
         using var browser = app.Browser();
@@ -72,7 +72,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         var html = await browser.GetStringAsync("/de/tauchplaetze/" + Slug, TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Matches("<a href=\"/admin/plaetze/[0-9a-f-]+\"[^>]*data-enhance-nav=\"false\"", html);
+        Assert.Contains($"<a href=\"/de/tauchplaetze/{Slug}/bearbeiten\" rel=\"nofollow\" data-enhance-nav=\"false\"", html);
     }
 
     [Fact]
