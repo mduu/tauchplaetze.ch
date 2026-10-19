@@ -61,3 +61,4 @@ Ziel: Reaktion der Szene testen.
 - Benachrichtigungen («gute Bedingungen am Walensee»).
 - PWA mit Favoriten offline.
 - Native Apps nur, wenn die Web-App trägt.
+- Rückrechnung des Index für die Jahre vor dem Start, einmalig pro Gewässer: Sentinel-3 und Sentinel-2 von Alplakes (seit 2016), Simstrat-Hindcast, Wetter aus dem Archiv von Open-Meteo. Vorher die Nutzung und die Zahl der Calls mit Eawag und Open-Meteo klären (Entscheid Marc, 19.10.2026). Grundlage für Phase 2 (Trainingsdaten) und für die Ansicht «Jahr über Jahr».
