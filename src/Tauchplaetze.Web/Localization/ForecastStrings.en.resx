@@ -164,7 +164,7 @@
   <data name="History_Filling" xml:space="preserve"><value>The history fills up over time. Values since {0}.</value></data>
   <data name="History_Aria" xml:space="preserve"><value>Dive index from {0} to {1}</value></data>
   <data name="Years_Title" xml:space="preserve"><value>Year over year</value></data>
-  <data name="Years_Note" xml:space="preserve"><value>Median dive index of all sites on the lake, per day, averaged over 7 days.</value></data>
+  <data name="Years_Note" xml:space="preserve"><value>Median dive index of all sites on the water body, per day, averaged over 7 days.</value></data>
   <data name="Years_Aria" xml:space="preserve"><value>Dive index of the water per year, January to December</value></data>
   <data name="Spark_Past30" xml:space="preserve"><value>last 30 days</value></data>
   <data name="Spark_Next5" xml:space="preserve"><value>next 5 days</value></data>

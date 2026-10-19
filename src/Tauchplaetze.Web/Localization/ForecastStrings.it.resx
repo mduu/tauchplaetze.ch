@@ -164,7 +164,7 @@
   <data name="History_Filling" xml:space="preserve"><value>L'andamento si completa col tempo. Valori dal {0}.</value></data>
   <data name="History_Aria" xml:space="preserve"><value>Indice d'immersione dal {0} al {1}</value></data>
   <data name="Years_Title" xml:space="preserve"><value>Anno dopo anno</value></data>
-  <data name="Years_Note" xml:space="preserve"><value>Mediana dell'indice d'immersione di tutti i siti del lago, per giorno, media su 7 giorni.</value></data>
+  <data name="Years_Note" xml:space="preserve"><value>Mediana dell'indice d'immersione di tutti i siti dello specchio d'acqua, per giorno, media su 7 giorni.</value></data>
   <data name="Years_Aria" xml:space="preserve"><value>Indice d'immersione dello specchio d'acqua per anno, da gennaio a dicembre</value></data>
   <data name="Spark_Past30" xml:space="preserve"><value>ultimi 30 giorni</value></data>
   <data name="Spark_Next5" xml:space="preserve"><value>prossimi 5 giorni</value></data>

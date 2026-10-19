@@ -164,7 +164,7 @@
   <data name="History_Filling" xml:space="preserve"><value>L'évolution se complète avec le temps. Valeurs depuis le {0}.</value></data>
   <data name="History_Aria" xml:space="preserve"><value>Indice de plongée du {0} au {1}</value></data>
   <data name="Years_Title" xml:space="preserve"><value>D'une année à l'autre</value></data>
-  <data name="Years_Note" xml:space="preserve"><value>Médiane de l'indice de plongée de tous les sites du lac, par jour, moyennée sur 7 jours.</value></data>
+  <data name="Years_Note" xml:space="preserve"><value>Médiane de l'indice de plongée de tous les sites du plan d'eau, par jour, moyennée sur 7 jours.</value></data>
   <data name="Years_Aria" xml:space="preserve"><value>Indice de plongée du plan d'eau par année, de janvier à décembre</value></data>
   <data name="Spark_Past30" xml:space="preserve"><value>30 derniers jours</value></data>
   <data name="Spark_Next5" xml:space="preserve"><value>5 prochains jours</value></data>
