@@ -41,7 +41,8 @@ internal class GetSiteForecastHandler(TauchplaetzeDbContext dbContext, TimeProvi
                 f.PrecipitationLast72h,
                 f.AlgaeLevel,
                 ReasonCodes.Parse(f.ReasonCodes),
-                f.SecchiDepthShore))
+                f.SecchiDepthShore,
+                f.ClaritySource))
             .ToList();
 
         return new SiteForecast(days, rows.Count > 0 ? rows.Max(f => f.ComputedAt) : null, await Hours(query.DiveSiteId, today, ct));

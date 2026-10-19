@@ -90,3 +90,21 @@ internal record SatelliteValue(DateTimeOffset Time, double Median, int PixelCoun
             .ToList();
     }
 }
+
+/// <summary>Welche Produkte ein Satellit pro See liefert (`remotesensing/metadata`).</summary>
+internal record RemoteSensingProducts(IReadOnlyDictionary<string, IReadOnlyDictionary<string, IReadOnlyList<string>>> Lakes)
+{
+    public bool Has(string lake, string satellite, string variable) =>
+        Lakes.TryGetValue(lake, out var satellites) && satellites.TryGetValue(satellite, out var variables) && variables.Contains(variable);
+
+    public static RemoteSensingProducts Parse(string json)
+    {
+        using var document = JsonDocument.Parse(json);
+        var lakes = document.RootElement.EnumerateObject().ToDictionary(
+            lake => lake.Name,
+            lake => (IReadOnlyDictionary<string, IReadOnlyList<string>>)lake.Value.EnumerateObject()
+                .Where(p => p.Value.ValueKind == JsonValueKind.Array)
+                .ToDictionary(p => p.Name, p => (IReadOnlyList<string>)[.. p.Value.EnumerateArray().Select(v => v.GetString() ?? "")]));
+        return new RemoteSensingProducts(lakes);
+    }
+}

@@ -17,7 +17,8 @@ internal record SiteData(
     DepthTimeSeries? Model3d,
     IReadOnlyList<ModelWeather> Weather,
     SatelliteObservation? Secchi,
-    SatelliteObservation? Chlorophyll);
+    SatelliteObservation? Chlorophyll,
+    SatelliteObservation? ShoreSecchi = null);
 
 /// <summary>Holt die Daten aller Quellen. Plätze und Gewässer mit denselben Abfragen teilen sich den Call.</summary>
 internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMeteo, HydroClient hydro)
@@ -29,6 +30,14 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
     private const int LookbackDays = 30;
 
     private const int SatelliteWindow = 1;
+
+    /// <summary>Pixel rund um den Punkt in Ufernähe. Ein Fenster von 2 fängt einzelne maskierte Pixel auf.</summary>
+    private const int ShoreSatelliteWindow = 2;
+
+    /// <summary>Distanz des Punkts in Ufernähe vom Platz, in Richtung Seemitte.</summary>
+    private const double SeawardMeters = 100;
+
+    private Task<RemoteSensingProducts?>? products;
 
     /// <summary>Wettermodelle nach Vorrang, mit Vorlauf in Tagen (`data-sources.md`, «Wetter: Open-Meteo»).</summary>
     private static readonly (string Model, int Days)[] WeatherModels = [("meteoswiss_icon_ch1", 2), ("meteoswiss_icon_ch2", 5), ("icon_seamless", 7)];
@@ -75,18 +84,43 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             : null;
 
         var point = site.SatellitePoint ?? waterBody.SatellitePoint ?? site.Location;
-        var secchi = waterBody.AlplakesLakeKey is { } key ? await Satellite(key, AlplakesClient.SecchiVariable, point.Y, point.X, today, recorder, ct) : null;
-        var chlorophyll = waterBody.AlplakesLakeKey is { } key2 ? await Satellite(key2, AlplakesClient.ChlorophyllVariable, point.Y, point.X, today, recorder, ct) : null;
+        var secchi = waterBody.AlplakesLakeKey is { } key ? await Satellite(AlplakesClient.Satellite, key, AlplakesClient.SecchiVariable, point.Y, point.X, SatelliteWindow, today, recorder, ct) : null;
+        var chlorophyll = waterBody.AlplakesLakeKey is { } key2 ? await Satellite(AlplakesClient.Satellite, key2, AlplakesClient.ChlorophyllVariable, point.Y, point.X, SatelliteWindow, today, recorder, ct) : null;
 
-        return new SiteData(model3d, await Weather(site.Location.Y, site.Location.X, recorder, ct), secchi, chlorophyll);
+        return new SiteData(model3d, await Weather(site.Location.Y, site.Location.X, recorder, ct), secchi, chlorophyll, await ShoreSecchi(site, waterBody, today, recorder, ct));
     }
 
-    private Task<SatelliteObservation?> Satellite(string lake, string variable, double latitude, double longitude, DateOnly today, SourceRecorder recorder, CancellationToken ct)
+    /// <remarks>
+    /// Ein eigener Satellitenpunkt des Platzes gilt auch hier. Sonst 100 m vom Platz Richtung Satellitenpunkt des Sees (bzw. Mitte).
+    /// Nur ein Versuch pro Platz: Ist dort kein Wert, gilt Sentinel-3.
+    /// </remarks>
+    private async Task<SatelliteObservation?> ShoreSecchi(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
     {
-        var key = $"{lake}-{variable}-{SourceHttp.Format(latitude)}-{SourceHttp.Format(longitude)}";
+        if (waterBody.AlplakesLakeKey is not { } lake
+            || await Products(recorder, ct) is not { } available
+            || !available.Has(lake, AlplakesClient.ShoreSatellite, AlplakesClient.ShoreSecchiVariable))
+        {
+            return null;
+        }
+
+        var toward = waterBody.SatellitePoint ?? waterBody.Centroid;
+        var (latitude, longitude) = site.SatellitePoint is { } own
+            ? (own.Y, own.X)
+            : SeawardPoint.Of(site.Location.Y, site.Location.X, toward.Y, toward.X, SeawardMeters);
+        return await Satellite(AlplakesClient.ShoreSatellite, lake, AlplakesClient.ShoreSecchiVariable, latitude, longitude, ShoreSatelliteWindow, today, recorder, ct);
+    }
+
+    /// <summary>Einmal pro Lauf: welche Seen welche Satellitenprodukte haben.</summary>
+    private Task<RemoteSensingProducts?> Products(SourceRecorder recorder, CancellationToken ct) =>
+        products ??= recorder.Record(AlplakesClient.Source, "remotesensing-metadata", alplakes.GetRemoteSensingProducts(ct), ct);
+
+    private Task<SatelliteObservation?> Satellite(
+        string satelliteName, string lake, string variable, double latitude, double longitude, int window, DateOnly today, SourceRecorder recorder, CancellationToken ct)
+    {
+        var key = $"{satelliteName}-{lake}-{variable}-{SourceHttp.Format(latitude)}-{SourceHttp.Format(longitude)}";
         if (!satellite.TryGetValue(key, out var task))
         {
-            task = LoadSatellite(lake, variable, latitude, longitude, today, key, recorder, ct);
+            task = LoadSatellite(satelliteName, lake, variable, latitude, longitude, window, today, key, recorder, ct);
             satellite[key] = task;
         }
 
@@ -94,10 +128,10 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
     }
 
     private async Task<SatelliteObservation?> LoadSatellite(
-        string lake, string variable, double latitude, double longitude, DateOnly today, string key, SourceRecorder recorder, CancellationToken ct)
+        string satelliteName, string lake, string variable, double latitude, double longitude, int window, DateOnly today, string key, SourceRecorder recorder, CancellationToken ct)
     {
         var values = await recorder.Record(AlplakesClient.Source, $"satellite-{key}",
-            alplakes.GetSatelliteValues(lake, variable, latitude, longitude, today.AddDays(-LookbackDays), today, SatelliteWindow, ct), ct);
+            alplakes.GetSatelliteValues(satelliteName, lake, variable, latitude, longitude, today.AddDays(-LookbackDays), today, window, ct), ct);
         return values is [var latest, ..] ? new SatelliteObservation(SwissTime.DayOf(latest.Time), latest.Median) : null;
     }
 

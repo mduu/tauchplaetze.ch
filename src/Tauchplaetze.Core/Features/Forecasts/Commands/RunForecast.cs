@@ -134,10 +134,13 @@ internal class RunForecastHandler(
         var weather = DayWeather.For(day, siteData.Weather, DiveWindow.Default);
         var profile = isRiver ? RiverProfile(day, today, waterBodyData) : DataLevelRule.ChooseProfile(day, siteData.Model3d, waterBodyData.LakeWide);
 
-        var rainSinceImage = siteData.Secchi is { } secchi
-            ? DayWeather.RainFromBestModel(siteData.Weather, secchi.Date.ToDateTime(TimeOnly.MinValue), day.ToDateTime(TimeOnly.MinValue)) ?? weather.PrecipitationLast72h
-            : null;
-        var clarity = ClarityEstimate.For(day, siteData.Secchi, rainSinceImage, waterBodyData.DischargeRatio, rules);
+        var clarity = ClarityEstimate.Choose(
+            day,
+            siteData.ShoreSecchi,
+            siteData.Secchi,
+            imageDate => DayWeather.RainFromBestModel(siteData.Weather, imageDate.ToDateTime(TimeOnly.MinValue), day.ToDateTime(TimeOnly.MinValue)) ?? weather.PrecipitationLast72h,
+            waterBodyData.DischargeRatio,
+            rules);
         var algae = ClarityEstimate.AlgaeFor(day, siteData.Chlorophyll, rules);
 
         var inputs = new DayInputs(weather, profile, clarity, algae, waterBodyData.DischargeRatio, isRiver);
@@ -167,6 +170,7 @@ internal class RunForecastHandler(
         forecast.SecchiDepth = ToDecimal(inputs.Clarity.SecchiDepth);
         forecast.SecchiDepthShore = ToDecimal(inputs.Clarity.ShoreDepth);
         forecast.SecchiObservedAt = inputs.Clarity.ObservedAt;
+        forecast.ClaritySource = inputs.Clarity.Source;
         forecast.VisibilityIndicator = inputs.Clarity.Indicator;
         forecast.VisibilityGoodBelow = ToDecimal(result.VisibilityGoodBelow);
         forecast.WindBeaufort = inputs.Weather.WindBeaufort;

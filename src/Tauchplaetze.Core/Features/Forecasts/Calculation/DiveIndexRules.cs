@@ -10,13 +10,14 @@ internal record SupportPoint(double Input, double Score);
 /// Die Werte für Algen, die Korrektur der Klarheit und die Schichtung sind Startwerte vom 18.10.2026 ohne Messung.
 /// `rules-1.1` (18.10.2026): fehlende Klarheit zählt vorsichtig statt gar nicht, alte Satellitenwerte verlieren Gewicht,
 /// die Schätzung aus der Seemitte gilt in Ufernähe nur teilweise, und eine trübe Oberfläche deckelt die Schichtung.
+/// `rules-1.2` (19.10.2026): Sentinel-2 in Ufernähe ist die Hauptquelle der Klarheit, ohne Uferfaktor. Sentinel-3 bleibt Rückfall.
 /// Sie werden mit Meldungen und eigenen Tauchgängen geprüft.
 /// </remarks>
 internal record DiveIndexRules
 {
     public static readonly DiveIndexRules Default = new();
 
-    public string ModelVersion { get; init; } = "rules-1.1";
+    public string ModelVersion { get; init; } = "rules-1.2";
 
     public double ClarityWeight { get; init; } = 0.35;
 
@@ -44,7 +45,7 @@ internal record DiveIndexRules
     /// <summary>Höchster Index ohne Sichtwert.</summary>
     public double MaxIndexWithoutClarity { get; init; } = 6.5;
 
-    /// <summary>Anteil der Secchi-Tiefe aus der Seemitte, der in Ufernähe gilt.</summary>
+    /// <summary>Anteil der Secchi-Tiefe aus der Seemitte (Sentinel-3), der in Ufernähe gilt. Sentinel-2 misst schon in Ufernähe.</summary>
     public double ShoreFactor { get; init; } = 0.7;
 
     /// <summary>Secchi-Tiefe in Ufernähe in m, ab der die Oberfläche als «mässig» gilt.</summary>

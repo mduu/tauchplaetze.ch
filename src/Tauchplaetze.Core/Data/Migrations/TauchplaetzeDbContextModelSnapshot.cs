@@ -192,6 +192,10 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<string>("ClaritySource")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<DateTimeOffset>("ComputedAt")
                         .HasColumnType("datetimeoffset");
 

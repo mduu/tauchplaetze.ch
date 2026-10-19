@@ -55,6 +55,8 @@ internal sealed class FakeSources : HttpMessageHandler
         ("simulations/1d/depthtime/", "alplakes", "depthtime-1d-simstrat-upperzurich.json"),
         ("/Zsd_lee/", "alplakes", "rs-timeseries-zurich-sentinel3-Zsd_lee-w1.json"),
         ("/chla/", "alplakes", "rs-timeseries-zurich-sentinel3-chla-w1.json"),
+        ("/Z490/", "alplakes", "rs-timeseries-zurich-sentinel2-Z490-w2.json"),
+        ("remotesensing/metadata", "alplakes", "rs-metadata-summary.json"),
         ("models=meteoswiss_icon_ch1", "open-meteo", "forecast-meteoswiss_icon_ch1.json"),
         ("models=meteoswiss_icon_ch2", "open-meteo", "forecast-meteoswiss_icon_ch2.json"),
         ("models=icon_seamless", "open-meteo", "forecast-icon_seamless.json"),

@@ -12,7 +12,7 @@ namespace Tauchplaetze.Core.Tests.Features.Forecasts;
 public class RunForecastTests(SqlServer sql) : SqlTest(sql)
 {
     [SqlFact]
-    public async Task Ein_Lauf_berechnet_fuenf_Tage_mit_Index_solange_das_Seemodell_reicht_danach_Ausblick_und_das_Wetter_pro_Stunde()
+    public async Task Ein_Lauf_berechnet_fuenf_Tage_mit_Datenstufe_3_solange_das_Seemodell_reicht_danach_mit_Satellit_und_Wetter_und_das_Wetter_pro_Stunde()
     {
         // Arrange
         var siteId = await PrepareRiffWilliams();
@@ -25,7 +25,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         var forecast = await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId));
         Assert.Equal(Days(17, 18, 19, 20, 21), forecast.Days.Select(d => d.Date));
         Assert.All(forecast.Days.Take(4), d => Assert.Equal((3, false), (d.DataLevel, d.IsOutlook)));
-        Assert.Equal((1, true), (forecast.Days[4].DataLevel, forecast.Days[4].IsOutlook));
+        Assert.Equal((1, false), (forecast.Days[4].DataLevel, forecast.Days[4].IsOutlook));
         Assert.Equal(new DateTime(2026, 10, 17, 0, 0, 0), forecast.HourList[0].LocalTime);
         Assert.All(forecast.HourList, h => Assert.NotNull(h.WindSpeedKmh));
     }
@@ -49,17 +49,38 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Ein_Satellitenwert_aelter_als_14_Tage_macht_die_Klarheit_unbekannt_und_der_Index_bleibt()
+    public async Task Die_Klarheit_kommt_von_Sentinel_2_in_Ufernaehe_ohne_Uferfaktor()
     {
         // Arrange
         var siteId = await PrepareRiffWilliams();
 
         // Act
-        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+        var run = await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
 
         // Assert
         var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Assert.Equal(ForecastRunStatus.Succeeded, run.Status);
+        Assert.Equal((ClaritySource.Sentinel2Shore, new DateOnly(2026, 10, 15)), (today.ClaritySource, today.SecchiObservedAt));
+        Assert.Equal(today.SecchiDepth, today.SecchiDepthShore);
+        Assert.InRange(today.SecchiDepthShore!.Value, 4.5m, 5.6m);
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("/sentinel2/Z490/47.2843/8.6075/", StringComparison.Ordinal));
+    }
+
+    [SqlFact]
+    public async Task Ohne_Sentinel_2_macht_ein_Sentinel_3_Wert_aelter_als_14_Tage_die_Klarheit_unbekannt_und_der_Index_bleibt()
+    {
+        // Arrange
+        var siteId = await PrepareRiffWilliams();
+        Sql.Sources.Failing = "/Z490/";
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        var days = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days;
+        var today = days[0];
         Assert.Equal((VisibilityIndicator.Unknown, new DateOnly(2026, 9, 27)), (today.VisibilityIndicator, today.SecchiObservedAt));
+        Assert.Equal((1, true), (days[4].DataLevel, days[4].IsOutlook));
         Assert.Null(today.SecchiDepth);
         Assert.NotNull(today.DiveIndex);
         Assert.Contains(ReasonCode.ClarityUnknown, today.Reasons);

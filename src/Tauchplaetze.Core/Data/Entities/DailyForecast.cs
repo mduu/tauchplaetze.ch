@@ -33,6 +33,9 @@ internal class DailyForecast
 
     public DateOnly? SecchiObservedAt { get; set; }
 
+    /// <summary>Woher die Klarheit kommt (`rules-1.2`). Leer bei älteren Zeilen: dann Sentinel-3.</summary>
+    public ClaritySource? ClaritySource { get; set; }
+
     public VisibilityIndicator VisibilityIndicator { get; set; }
 
     public decimal? VisibilityGoodBelow { get; set; }

@@ -7,9 +7,16 @@ internal class AlplakesClient(HttpClient httpClient)
 {
     public const string Source = "alplakes";
 
+    /// <summary>Sentinel-3, 300 m Pixel. Secchi und Chlorophyll in der Seemitte.</summary>
     public const string Satellite = "sentinel3";
 
+    /// <summary>Sentinel-2, 10 m Pixel. Secchi in Ufernähe (`forecast.md`, «Klarheit»).</summary>
+    public const string ShoreSatellite = "sentinel2";
+
     public const string SecchiVariable = "Zsd_lee";
+
+    /// <summary>Secchi-Tiefe von Sentinel-2 (Annahme: in m wie <see cref="SecchiVariable"/>, Rückfrage an Eawag offen).</summary>
+    public const string ShoreSecchiVariable = "Z490";
 
     public const string ChlorophyllVariable = "chla";
 
@@ -32,12 +39,16 @@ internal class AlplakesClient(HttpClient httpClient)
 
     /// <summary>Werte eines Satellitenprodukts am Punkt, <paramref name="window"/> Pixel um den Punkt.</summary>
     public Task<SourceResult<IReadOnlyList<SatelliteValue>>> GetSatelliteValues(
-        string lake, string variable, double latitude, double longitude, DateOnly start, DateOnly end, int window, CancellationToken ct) =>
+        string satellite, string lake, string variable, double latitude, double longitude, DateOnly start, DateOnly end, int window, CancellationToken ct) =>
         SourceHttp.Get(
             httpClient,
-            $"remotesensing/timeseries/{lake}/{Satellite}/{variable}/{SourceHttp.Format(latitude)}/{SourceHttp.Format(longitude)}/{start:yyyyMMdd}/{end:yyyyMMdd}?window={window}",
+            $"remotesensing/timeseries/{lake}/{satellite}/{variable}/{SourceHttp.Format(latitude)}/{SourceHttp.Format(longitude)}/{start:yyyyMMdd}/{end:yyyyMMdd}?window={window}",
             SatelliteValue.ParseList,
             ct);
+
+    /// <summary>Die Satellitenprodukte pro See. Die API leitet auf eine Datei in S3 weiter.</summary>
+    public Task<SourceResult<RemoteSensingProducts>> GetRemoteSensingProducts(CancellationToken ct) =>
+        SourceHttp.Get(httpClient, "remotesensing/metadata", RemoteSensingProducts.Parse, ct);
 
     private static string FormatTime(DateTimeOffset time) => time.UtcDateTime.ToString("yyyyMMddHHmm", CultureInfo.InvariantCulture);
 }

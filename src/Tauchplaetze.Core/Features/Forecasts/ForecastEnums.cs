@@ -35,6 +35,16 @@ public enum AlgaeLevel
     High,
 }
 
+/// <summary>Woher die Klarheit eines Tages kommt (`forecast.md`, «Klarheit»).</summary>
+public enum ClaritySource
+{
+    /// <summary>Sentinel-3 am Satellitenpunkt in der Seemitte, in Ufernähe mit Uferfaktor.</summary>
+    Sentinel3Lake,
+
+    /// <summary>Sentinel-2 an einem Punkt in Ufernähe, ohne Uferfaktor.</summary>
+    Sentinel2Shore,
+}
+
 /// <summary>Woher das Temperaturprofil eines Tages kommt.</summary>
 public enum ProfileSource
 {
