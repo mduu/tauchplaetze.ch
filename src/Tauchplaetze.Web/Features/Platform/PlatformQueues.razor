@@ -57,7 +57,7 @@ else
     }
     else
     {
-        <MudText Typo="Typo.caption" Class="mb-2 d-block">@L["Platform_PeekLimit"]</MudText>
+        <MudText Typo="Typo.caption" Class="mb-2 d-block">@L["Platform_PeekLimit"] @L["Platform_ReplayHint"]</MudText>
         <MudExpansionPanels MultiExpansion="true">
             @foreach (var item in status.Items)
             {
@@ -67,8 +67,8 @@ else
                             <tr><th>@L["Platform_To"]</th><td>@(item.To ?? "–")</td></tr>
                             <tr><th>@L["Platform_Template"]</th><td>@(item.Template ?? "–")</td></tr>
                             <tr><th>@L["Platform_Attempts"]</th><td>@item.Attempts</td></tr>
-                            <tr><th>@L["Platform_Reason"]</th><td class="platform-reason">@item.Reason</td></tr>
-                            <tr><th>@L["Platform_FailedAt"]</th><td>@SwissClock.DateTime(item.FailedAt)</td></tr>
+                            <tr><th>@L["Platform_Reason"]</th><td class="platform-reason">@(item.Unreadable ? L["Platform_Unreadable"] : item.Reason ?? "–")</td></tr>
+                            <tr><th>@L["Platform_FailedAt"]</th><td>@(item.FailedAt is { } failed ? SwissClock.DateTime(failed) : "–")</td></tr>
                             <tr><th>@L["Platform_CreatedAt"]</th><td>@(item.CreatedAt is { } created ? SwissClock.DateTime(created) : "–")</td></tr>
                             <tr><th>@L["Platform_MessageId"]</th><td><code>@item.MessageId</code></td></tr>
                         </tbody>
@@ -100,8 +100,9 @@ else
         busy = false;
     }
 
-    private string Title(DeadLetterItem item) =>
-        $"{item.Subject ?? item.Template ?? L["Platform_Unreadable"]} · {item.To ?? "–"} · {SwissClock.DateTime(item.FailedAt)}";
+    private string Title(DeadLetterItem item) => item.Unreadable
+        ? L["Platform_Unreadable"]
+        : $"{item.Subject ?? item.Template} · {item.To ?? "–"} · {(item.FailedAt is { } failed ? SwissClock.DateTime(failed) : "–")}";
 
     private async Task Replay(Guid? id)
     {

@@ -259,7 +259,7 @@
   <data name="Platform_ReplayAll" xml:space="preserve"><value>Alle erneut senden</value></data>
   <data name="Platform_DeleteAll" xml:space="preserve"><value>Alle löschen</value></data>
   <data name="Platform_NoDeadLetters" xml:space="preserve"><value>Keine Mail in der Dead-Letter-Queue.</value></data>
-  <data name="Platform_PeekLimit" xml:space="preserve"><value>Die Liste zeigt höchstens 32 Mails.</value></data>
+  <data name="Platform_PeekLimit" xml:space="preserve"><value>Die Liste zeigt höchstens 32 Mails, nur diese lassen sich einzeln bearbeiten.</value></data>
   <data name="Platform_To" xml:space="preserve"><value>An</value></data>
   <data name="Platform_Template" xml:space="preserve"><value>Vorlage</value></data>
   <data name="Platform_Attempts" xml:space="preserve"><value>Versuche</value></data>
@@ -289,4 +289,5 @@
   <data name="MyProposals_Compare" xml:space="preserve"><value>Versionen ansehen</value></data>
   <data name="MyProposals_Withdraw" xml:space="preserve"><value>Zurückziehen</value></data>
   <data name="MyProposals_Withdrawn" xml:space="preserve"><value>Dein Vorschlag ist zurückgezogen.</value></data>
+  <data name="Platform_ReplayHint" xml:space="preserve"><value>Mails mit Links zur Anmeldung oder zum Passwort laufen ab: Erneut gesendet, können ihre Links schon ungültig sein.</value></data>
 </root>

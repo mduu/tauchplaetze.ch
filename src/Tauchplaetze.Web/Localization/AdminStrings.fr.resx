@@ -259,7 +259,7 @@
   <data name="Platform_ReplayAll" xml:space="preserve"><value>Tout renvoyer</value></data>
   <data name="Platform_DeleteAll" xml:space="preserve"><value>Tout supprimer</value></data>
   <data name="Platform_NoDeadLetters" xml:space="preserve"><value>Aucun e-mail dans la file des messages morts.</value></data>
-  <data name="Platform_PeekLimit" xml:space="preserve"><value>La liste affiche au plus 32 e-mails.</value></data>
+  <data name="Platform_PeekLimit" xml:space="preserve"><value>La liste affiche au plus 32 e-mails ; seuls ceux-ci peuvent être traités un par un.</value></data>
   <data name="Platform_To" xml:space="preserve"><value>À</value></data>
   <data name="Platform_Template" xml:space="preserve"><value>Modèle</value></data>
   <data name="Platform_Attempts" xml:space="preserve"><value>Tentatives</value></data>
@@ -289,4 +289,5 @@
   <data name="MyProposals_Compare" xml:space="preserve"><value>Voir les versions</value></data>
   <data name="MyProposals_Withdraw" xml:space="preserve"><value>Retirer</value></data>
   <data name="MyProposals_Withdrawn" xml:space="preserve"><value>Ta proposition a été retirée.</value></data>
+  <data name="Platform_ReplayHint" xml:space="preserve"><value>Les e-mails avec des liens de connexion ou de mot de passe expirent : renvoyés, leurs liens peuvent déjà être invalides.</value></data>
 </root>

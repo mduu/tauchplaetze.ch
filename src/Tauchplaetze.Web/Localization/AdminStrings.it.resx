@@ -259,7 +259,7 @@
   <data name="Platform_ReplayAll" xml:space="preserve"><value>Reinvia tutte</value></data>
   <data name="Platform_DeleteAll" xml:space="preserve"><value>Elimina tutte</value></data>
   <data name="Platform_NoDeadLetters" xml:space="preserve"><value>Nessuna e-mail nella coda dei messaggi non recapitati.</value></data>
-  <data name="Platform_PeekLimit" xml:space="preserve"><value>L’elenco mostra al massimo 32 e-mail.</value></data>
+  <data name="Platform_PeekLimit" xml:space="preserve"><value>L’elenco mostra al massimo 32 e-mail; solo queste si possono gestire singolarmente.</value></data>
   <data name="Platform_To" xml:space="preserve"><value>A</value></data>
   <data name="Platform_Template" xml:space="preserve"><value>Modello</value></data>
   <data name="Platform_Attempts" xml:space="preserve"><value>Tentativi</value></data>
@@ -289,4 +289,5 @@
   <data name="MyProposals_Compare" xml:space="preserve"><value>Vedi le versioni</value></data>
   <data name="MyProposals_Withdraw" xml:space="preserve"><value>Ritira</value></data>
   <data name="MyProposals_Withdrawn" xml:space="preserve"><value>La tua proposta è stata ritirata.</value></data>
+  <data name="Platform_ReplayHint" xml:space="preserve"><value>Le e-mail con link di accesso o di password scadono: se reinviate, i loro link potrebbero non essere più validi.</value></data>
 </root>
