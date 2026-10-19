@@ -250,4 +250,30 @@
   <data name="Field_OtherNames" xml:space="preserve"><value>Noto anche come</value></data>
   <data name="Field_OtherNames_Help" xml:space="preserve"><value>Altri nomi, separati da virgole, p. es. «Grosser Parkplatz, Seeterasse». Al massimo 5.</value></data>
   <data name="Error_InvalidOtherNames" xml:space="preserve"><value>Gli altri nomi non sono validi: al massimo 5, ognuno al massimo 80 caratteri, nessun doppione né uguale al nome.</value></data>
+  <data name="Nav_Platform" xml:space="preserve"><value>Piattaforma</value></data>
+  <data name="Platform_Queues_Title" xml:space="preserve"><value>Coda delle e-mail</value></data>
+  <data name="Platform_Queues_Lead" xml:space="preserve"><value>Tutte le e-mail passano dalla coda. Se una e-mail fallisce cinque volte o in modo definitivo, finisce nella coda dei messaggi non recapitati e ti aspetta qui.</value></data>
+  <data name="Platform_Refresh" xml:space="preserve"><value>Aggiorna</value></data>
+  <data name="Platform_Waiting" xml:space="preserve"><value>In coda</value></data>
+  <data name="Platform_DeadLetters" xml:space="preserve"><value>Non recapitati</value></data>
+  <data name="Platform_ReplayAll" xml:space="preserve"><value>Reinvia tutte</value></data>
+  <data name="Platform_DeleteAll" xml:space="preserve"><value>Elimina tutte</value></data>
+  <data name="Platform_NoDeadLetters" xml:space="preserve"><value>Nessuna e-mail nella coda dei messaggi non recapitati.</value></data>
+  <data name="Platform_PeekLimit" xml:space="preserve"><value>L’elenco mostra al massimo 32 e-mail.</value></data>
+  <data name="Platform_To" xml:space="preserve"><value>A</value></data>
+  <data name="Platform_Template" xml:space="preserve"><value>Modello</value></data>
+  <data name="Platform_Attempts" xml:space="preserve"><value>Tentativi</value></data>
+  <data name="Platform_Reason" xml:space="preserve"><value>Errore</value></data>
+  <data name="Platform_FailedAt" xml:space="preserve"><value>Fallita il</value></data>
+  <data name="Platform_CreatedAt" xml:space="preserve"><value>Creata il</value></data>
+  <data name="Platform_MessageId" xml:space="preserve"><value>Id della e-mail</value></data>
+  <data name="Platform_Replay" xml:space="preserve"><value>Reinvia</value></data>
+  <data name="Platform_Delete" xml:space="preserve"><value>Elimina</value></data>
+  <data name="Platform_Cancel" xml:space="preserve"><value>Annulla</value></data>
+  <data name="Platform_Unreadable" xml:space="preserve"><value>Messaggio illeggibile</value></data>
+  <data name="Platform_Replayed" xml:space="preserve"><value>{0} e-mail di nuovo in coda.</value></data>
+  <data name="Platform_Deleted" xml:space="preserve"><value>{0} e-mail eliminate.</value></data>
+  <data name="Platform_Delete_Title" xml:space="preserve"><value>Eliminare la e-mail?</value></data>
+  <data name="Platform_DeleteAll_Title" xml:space="preserve"><value>Eliminare tutte le e-mail non recapitate?</value></data>
+  <data name="Platform_Delete_Text" xml:space="preserve"><value>Le e-mail eliminate non si possono ripristinare.</value></data>
 </root>

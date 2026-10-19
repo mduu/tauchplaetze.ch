@@ -697,3 +697,14 @@ a:hover {
   font-weight: 600;
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
+
+/* Plattform (/platform/queues): Dead-Letter hervorheben. */
+.platform-alert {
+  border-color: var(--color-notice-closure) !important;
+}
+
+.platform-reason {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  word-break: break-word;
+}

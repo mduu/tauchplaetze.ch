@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
@@ -67,6 +68,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
         }));
         builder.ConfigureTestServices(services =>
         {
+            services.RemoveAll<IHostedService>();
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetBestSitesQuery, BestSites>>(BestSites));

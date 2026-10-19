@@ -58,6 +58,23 @@ public class AdminPageTests : IClassFixture<WebApp>
         Assert.DoesNotContain("Vérifier les propositions", VisibleText.Of(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)));
     }
 
+    [Fact]
+    public async Task Die_Plattform_mit_der_Mail_Queue_ist_nur_fuer_Admins()
+    {
+        // Arrange
+        using var anonymous = app.Browser();
+        using var contributor = app.Browser();
+        await SignIn(contributor);
+
+        // Act
+        using var withoutSignIn = await anonymous.GetAsync("/platform/queues", TestContext.Current.CancellationToken);
+        using var asContributor = await contributor.GetAsync("/platform/queues", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.StartsWith("/de/account/sign-in?returnUrl=%2Fplatform%2Fqueues", withoutSignIn.Headers.Location?.OriginalString);
+        Assert.Equal(HttpStatusCode.Forbidden, asContributor.StatusCode);
+    }
+
     [Theory]
     [InlineData("/de/site/riff-williams", "/de/tauchplaetze/riff-williams")]
     [InlineData("/it/site/riff-williams", "/it/siti-di-immersione/riff-williams")]

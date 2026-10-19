@@ -250,4 +250,30 @@
   <data name="Field_OtherNames" xml:space="preserve"><value>Auch bekannt als</value></data>
   <data name="Field_OtherNames_Help" xml:space="preserve"><value>Weitere Namen, mit Komma getrennt, z.B. «Grosser Parkplatz, Seeterasse». Höchstens 5.</value></data>
   <data name="Error_InvalidOtherNames" xml:space="preserve"><value>Die weiteren Namen sind ungültig: höchstens 5, je höchstens 80 Zeichen, keiner doppelt oder gleich wie der Name.</value></data>
+  <data name="Nav_Platform" xml:space="preserve"><value>Plattform</value></data>
+  <data name="Platform_Queues_Title" xml:space="preserve"><value>Mail-Queue</value></data>
+  <data name="Platform_Queues_Lead" xml:space="preserve"><value>Alle Mails gehen über die Queue. Scheitert eine Mail fünfmal oder endgültig, landet sie in der Dead-Letter-Queue und wartet hier auf dich.</value></data>
+  <data name="Platform_Refresh" xml:space="preserve"><value>Aktualisieren</value></data>
+  <data name="Platform_Waiting" xml:space="preserve"><value>In der Queue</value></data>
+  <data name="Platform_DeadLetters" xml:space="preserve"><value>Dead-Letter</value></data>
+  <data name="Platform_ReplayAll" xml:space="preserve"><value>Alle erneut senden</value></data>
+  <data name="Platform_DeleteAll" xml:space="preserve"><value>Alle löschen</value></data>
+  <data name="Platform_NoDeadLetters" xml:space="preserve"><value>Keine Mail in der Dead-Letter-Queue.</value></data>
+  <data name="Platform_PeekLimit" xml:space="preserve"><value>Die Liste zeigt höchstens 32 Mails.</value></data>
+  <data name="Platform_To" xml:space="preserve"><value>An</value></data>
+  <data name="Platform_Template" xml:space="preserve"><value>Vorlage</value></data>
+  <data name="Platform_Attempts" xml:space="preserve"><value>Versuche</value></data>
+  <data name="Platform_Reason" xml:space="preserve"><value>Fehler</value></data>
+  <data name="Platform_FailedAt" xml:space="preserve"><value>Gescheitert am</value></data>
+  <data name="Platform_CreatedAt" xml:space="preserve"><value>Erstellt am</value></data>
+  <data name="Platform_MessageId" xml:space="preserve"><value>Mail-Id</value></data>
+  <data name="Platform_Replay" xml:space="preserve"><value>Erneut senden</value></data>
+  <data name="Platform_Delete" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Platform_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Platform_Unreadable" xml:space="preserve"><value>Unlesbare Nachricht</value></data>
+  <data name="Platform_Replayed" xml:space="preserve"><value>{0} Mail(s) wieder in der Queue.</value></data>
+  <data name="Platform_Deleted" xml:space="preserve"><value>{0} Mail(s) gelöscht.</value></data>
+  <data name="Platform_Delete_Title" xml:space="preserve"><value>Mail löschen?</value></data>
+  <data name="Platform_DeleteAll_Title" xml:space="preserve"><value>Alle Dead-Letter-Mails löschen?</value></data>
+  <data name="Platform_Delete_Text" xml:space="preserve"><value>Gelöschte Mails lassen sich nicht wiederherstellen.</value></data>
 </root>

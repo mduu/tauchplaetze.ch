@@ -250,4 +250,30 @@
   <data name="Field_OtherNames" xml:space="preserve"><value>Aussi appelé</value></data>
   <data name="Field_OtherNames_Help" xml:space="preserve"><value>Autres noms, séparés par des virgules, p. ex. «Grosser Parkplatz, Seeterasse». 5 au plus.</value></data>
   <data name="Error_InvalidOtherNames" xml:space="preserve"><value>Les autres noms sont invalides : 5 au plus, 80 caractères au plus chacun, sans doublon ni identique au nom.</value></data>
+  <data name="Nav_Platform" xml:space="preserve"><value>Plateforme</value></data>
+  <data name="Platform_Queues_Title" xml:space="preserve"><value>File d’attente des e-mails</value></data>
+  <data name="Platform_Queues_Lead" xml:space="preserve"><value>Tous les e-mails passent par la file d’attente. Si un e-mail échoue cinq fois ou définitivement, il atterrit dans la file des messages morts et t’attend ici.</value></data>
+  <data name="Platform_Refresh" xml:space="preserve"><value>Actualiser</value></data>
+  <data name="Platform_Waiting" xml:space="preserve"><value>Dans la file</value></data>
+  <data name="Platform_DeadLetters" xml:space="preserve"><value>Messages morts</value></data>
+  <data name="Platform_ReplayAll" xml:space="preserve"><value>Tout renvoyer</value></data>
+  <data name="Platform_DeleteAll" xml:space="preserve"><value>Tout supprimer</value></data>
+  <data name="Platform_NoDeadLetters" xml:space="preserve"><value>Aucun e-mail dans la file des messages morts.</value></data>
+  <data name="Platform_PeekLimit" xml:space="preserve"><value>La liste affiche au plus 32 e-mails.</value></data>
+  <data name="Platform_To" xml:space="preserve"><value>À</value></data>
+  <data name="Platform_Template" xml:space="preserve"><value>Modèle</value></data>
+  <data name="Platform_Attempts" xml:space="preserve"><value>Tentatives</value></data>
+  <data name="Platform_Reason" xml:space="preserve"><value>Erreur</value></data>
+  <data name="Platform_FailedAt" xml:space="preserve"><value>Échec le</value></data>
+  <data name="Platform_CreatedAt" xml:space="preserve"><value>Créé le</value></data>
+  <data name="Platform_MessageId" xml:space="preserve"><value>Id de l’e-mail</value></data>
+  <data name="Platform_Replay" xml:space="preserve"><value>Renvoyer</value></data>
+  <data name="Platform_Delete" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="Platform_Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Platform_Unreadable" xml:space="preserve"><value>Message illisible</value></data>
+  <data name="Platform_Replayed" xml:space="preserve"><value>{0} e-mail(s) de nouveau dans la file.</value></data>
+  <data name="Platform_Deleted" xml:space="preserve"><value>{0} e-mail(s) supprimé(s).</value></data>
+  <data name="Platform_Delete_Title" xml:space="preserve"><value>Supprimer l’e-mail ?</value></data>
+  <data name="Platform_DeleteAll_Title" xml:space="preserve"><value>Supprimer tous les messages morts ?</value></data>
+  <data name="Platform_Delete_Text" xml:space="preserve"><value>Les e-mails supprimés ne peuvent pas être restaurés.</value></data>
 </root>

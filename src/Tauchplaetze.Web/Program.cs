@@ -6,6 +6,7 @@ using Tauchplaetze.Web.CrossCutting.Localization;
 using Tauchplaetze.Web.Features.About;
 using Tauchplaetze.Web.Features.Accounts;
 using Tauchplaetze.Web.Features.Forecasts;
+using Tauchplaetze.Web.Features.Mail;
 using Tauchplaetze.Web.Features.Media;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,8 @@ builder.Services.AddMudServices();
 builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(ForecastSchedule.Section));
 builder.Services.AddHostedService<ForecastWorker>();
 builder.Services.AddHostedService<MediaPurgeWorker>();
+builder.Services.AddHostedService<MailQueueWorker>();
+builder.Services.AddHostedService<DeadLetterMonitorWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));
 builder.Services.AddContactRateLimit(builder.Configuration);
 

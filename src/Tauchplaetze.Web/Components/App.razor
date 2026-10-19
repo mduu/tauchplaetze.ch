@@ -46,7 +46,7 @@
     private HttpContext HttpContext { get; set; } = default!;
 
     /// <summary>Nur der Redaktionsbereich ist interaktiv (ADR-001). Die öffentlichen Seiten bleiben Static SSR.</summary>
-    private bool IsAdmin => HttpContext.Request.Path.StartsWithSegments("/admin");
+    private bool IsAdmin => HttpContext.Request.Path.StartsWithSegments("/admin") || HttpContext.Request.Path.StartsWithSegments("/platform");
 
     private IComponentRenderMode? PageRenderMode => IsAdmin ? InteractiveServer : null;
 }

@@ -28,6 +28,9 @@
                 <MudNavLink Href="/admin/prognose" Icon="@Icons.Material.Outlined.WaterDrop">@L["Nav_Forecast"]</MudNavLink>
                 <MudNavLink Href="/admin/konten" Icon="@Icons.Material.Outlined.People">@L["Nav_Accounts"]</MudNavLink>
             </AuthorizeView>
+            <AuthorizeView Roles="@Roles.Admin">
+                <MudNavLink Href="/platform/queues" Icon="@Icons.Material.Outlined.Outbox">@L["Nav_Platform"]</MudNavLink>
+            </AuthorizeView>
         </MudNavMenu>
     </MudDrawer>
     <MudMainContent Class="admin-main">
