@@ -150,7 +150,9 @@
             }
 
             var range = HistoryCharts.RangeOf(history.Days, Today.Date);
-            var series = new ChartSeries("index", L["Index_Label"], [.. history.Days.Select(d => new ChartPoint(range.X(d.Date), null, (double?)d.SmoothedIndex))], 0, 10);
+            var series = new ChartSeries(
+                "index", L["Index_Label"], [.. history.Days.Select(d => new ChartPoint(range.X(d.Date), null, (double?)d.SmoothedIndex))], 0, 10,
+                EndLabel: history.Days.LastOrDefault(d => d.SmoothedIndex is not null)?.SmoothedIndex is { } mean ? $"Ø {ForecastFormat.Number(mean)}" : null);
             var markers = history.RuleChanges.Select(c => new ChartTick(range.X(c.Date), "")).ToList();
             return new Trend(series, markers, range, L["History_Aria", ForecastFormat.Date(range.From), ForecastFormat.Date(range.To)]);
         }
@@ -185,18 +187,21 @@
     private ChartSeries VisibilitySpark => new(
         "visibility", L["History_Visibility"],
         [.. RecentDays.Select(d => new ChartPoint(SparkX(d.Date), null, (double?)d.SecchiDepthShore))],
-        0, HistoryCharts.VisibilityMax(RecentDays.Select(d => d.SecchiDepthShore)));
+        0, HistoryCharts.VisibilityMax(RecentDays.Select(d => d.SecchiDepthShore)),
+        EndLabel: RecentDays.LastOrDefault(d => d.SecchiDepthShore is not null)?.SecchiDepthShore is { } depth ? $"{ForecastFormat.Number(depth)} m" : null);
 
     private ChartSeries AlgaeSpark => new(
         "index", L["Tile_Algae"],
         [.. RecentDays.Select(d => new ChartPoint(SparkX(d.Date), null, HistoryCharts.Algae(d.AlgaeLevel)))],
-        1, 3);
+        1, 3,
+        EndLabel: RecentDays.LastOrDefault(d => HistoryCharts.Algae(d.AlgaeLevel) is not null) is { } algae ? L[$"Algae_{algae.AlgaeLevel}"].Value : null);
 
     /// <summary>Der stärkste Wind pro Prognosetag, mindestens bis 30 km/h skaliert.</summary>
     private ChartSeries WindSpark => new(
         "wind", L["Tile_Wind"],
         [.. Forecast.Days.Select((d, i) => new ChartPoint(Forecast.Days.Count == 1 ? 1 : (double)i / (Forecast.Days.Count - 1), (double?)d.WindSpeedKmh, (double?)d.WindSpeedKmh))],
-        0, Math.Max(30, (double)(Forecast.Days.Max(d => d.WindSpeedKmh) ?? 0)));
+        0, Math.Max(30, (double)(Forecast.Days.Max(d => d.WindSpeedKmh) ?? 0)),
+        EndLabel: Forecast.Days.LastOrDefault(d => d.WindSpeedKmh is not null)?.WindSpeedKmh is { } wind ? $"{ForecastFormat.Meters(wind)} km/h" : null);
 
     private string Eyebrow => Today.ProfileSource is { } source ? L[$"Profile_Source_{source}"] : L["Day_Outlook"];
 

@@ -26,10 +26,10 @@
 }
 
 .index-trend {
-    width: 150px;
+    width: 200px;
 }
 
-.index-trend ::deep .plot {
+.index-trend ::deep .panel {
     margin-top: 0;
 }
 

@@ -29,6 +29,8 @@ Es gibt im MVP **nur das dunkle Schema**. Ein helles Schema ist nicht geplant.
 | `--color-primary-hover` | `#B8F2EA` | Hover von Links |
 | `--color-signal` | `#FF9A4D` | Signal-Orange: Sprungschicht, «Beste Wahl»-Label, Buddy-Block, Warnungen, Entwurf-Badge |
 | `--color-bubble` | `#9FE9DF` | Luftblasen, Hinweis «darunter klarer» |
+| `--color-chart-surface` | `rgb(127 227 214 / 0.05)` | Hinterlegte Fläche der Mini-Diagramme |
+| `--color-chart-grid` | `rgb(127 227 214 / 0.1)` | Hilfslinien der Mini-Diagramme |
 
 ### Hinweise
 
@@ -150,7 +152,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 - Achsen und Hilfslinien in `--color-border-strong` bzw. `--color-divider`.
 - Sprungschicht immer als Band in Signal-Orange (ca. 14 % Deckkraft) mit Beschriftung und den Tiefen von Ober- und Unterkante.
 - Jedes Diagramm hat eine Textalternative und zeigt die Kernwerte zusätzlich als Text.
-- **`LineChart`** (Verlauf des Index, Jahr über Jahr, Mini-Diagramme): SVG serverseitig, ohne JavaScript. `preserveAspectRatio="none"` mit `vector-effect: non-scaling-stroke`, damit die Linie bei jeder Breite gleich dick bleibt. Tageswerte als Punkte (Linien der Länge null mit runden Enden, 35 % Deckkraft), geglättete Linie als monotone Kurve (`ChartGeometry`, schiesst nie über Minimum oder Maximum hinaus), 2.5 px. Eine Lücke von mehr als 7 Tagen bricht die Linie ab. Beschriftungen als HTML über dem SVG in Mono 11 px: Achse links für die erste Reihe, rechts für die zweite, Monate oder Wochen unten (schmal nur jede zweite). Farben pro Reihe (`data-tone`): Index `--color-primary`, Sicht `--color-rain`, Wind `--color-sun`, frühere Jahre `--color-border-strong`. Regelwechsel gestrichelt in `--color-signal`. 180 px hoch (Jahr über Jahr), als Mini-Diagramm 36 px ohne Achsen: in einer Kachel mit Zeitraum darunter («letzte 30 Tage»), im Kopf des Bedingungsblocks 150 px breit neben dem Index mit Start- und Enddatum in Mono 10 px.
+- **`LineChart`** (Verlauf des Index, Jahr über Jahr, Mini-Diagramme): SVG serverseitig, ohne JavaScript. `preserveAspectRatio="none"` mit `vector-effect: non-scaling-stroke`, damit die Linie bei jeder Breite gleich dick bleibt. Tageswerte als Punkte (Linien der Länge null mit runden Enden, 35 % Deckkraft), geglättete Linie als monotone Kurve (`ChartGeometry`, schiesst nie über Minimum oder Maximum hinaus), 2.5 px. Eine Lücke von mehr als 7 Tagen bricht die Linie ab. Beschriftungen als HTML über dem SVG in Mono 11 px: Achse links für die erste Reihe, rechts für die zweite, Monate oder Wochen unten (schmal nur jede zweite). Farben pro Reihe (`data-tone`): Index `--color-primary`, Sicht `--color-rain`, Wind `--color-sun`, frühere Jahre `--color-border-strong`. Regelwechsel gestrichelt in `--color-signal`. 180 px hoch (Jahr über Jahr), als Mini-Diagramm 36 px ohne Achsen (Entscheid Marc, 19.10.2026): auf einer hinterlegten Fläche (`--color-chart-surface`, Radius 10 px), zwei feine Hilfslinien (`--color-chart-grid`), Fläche unter der Kurve mit Verlauf in der Linienfarbe von 25 % nach 0 %, Endpunkt als Punkt mit dem letzten Wert rechts daneben in Mono 11 px in der Linienfarbe (Index «Ø 6.4» als Mittel über 7 Tage, Sicht «5.4 m», Wind «30 km/h», Algen als Stufe). In einer Kachel mit Zeitraum darunter («letzte 30 Tage»), im Kopf des Bedingungsblocks 200 px breit neben dem Index mit Start- und Enddatum in Mono 10 px. Die Linienfarben erreichen auf der Fläche mehr als 4.5:1.
 
 ## CSS-Startpunkt
 

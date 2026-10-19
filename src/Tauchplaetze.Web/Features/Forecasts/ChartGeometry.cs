@@ -35,6 +35,10 @@ internal static class ChartGeometry
         return path.ToString();
     }
 
+    /// <summary>Die Fläche unter der Kurve bis zur Grundlinie <paramref name="bottom"/>.</summary>
+    public static string AreaPath(IReadOnlyList<Point> points, double bottom) =>
+        points.Count < 2 ? "" : $"{SmoothPath(points)}L{Number(points[^1].X)} {Number(bottom)}L{Number(points[0].X)} {Number(bottom)}Z";
+
     /// <summary>Einzelne Punkte als Linien der Länge null. Mit runden Enden erscheinen sie als Kreise, auch wenn das SVG verzerrt skaliert.</summary>
     public static string Dots(IEnumerable<Point> points) =>
         string.Concat(points.Select(p => $"M{Number(p.X)} {Number(p.Y)}h0"));

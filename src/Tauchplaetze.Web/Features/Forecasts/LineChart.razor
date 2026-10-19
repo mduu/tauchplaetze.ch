@@ -10,22 +10,33 @@
             }
         </ul>
     }
+    <div class="panel">
     <div class="plot">
         <svg viewBox="0 0 @Width @Height" preserveAspectRatio="none" role="img" aria-label="@AriaLabel">
-            @if (!Compact)
+            @foreach (var share in Compact ? CompactGridLines : GridLines)
             {
-                @foreach (var share in GridLines)
-                {
-                    <line class="grid" x1="0" x2="@Width" y1="@Y(share)" y2="@Y(share)" />
-                }
+                <line class="grid" x1="0" x2="@Width" y1="@Y(share)" y2="@Y(share)" />
             }
             @foreach (var marker in Markers)
             {
                 <line class="marker" x1="@X(marker.X)" x2="@X(marker.X)" y1="0" y2="@Height" />
             }
-            @foreach (var series in Series)
+            @foreach (var (series, seriesIndex) in Series.Select((s, i) => (s, i)))
             {
                 <g data-tone="@series.Tone">
+                    @if (Compact)
+                    {
+                        <defs>
+                            <linearGradient id="@AreaId(seriesIndex)" x1="0" y1="0" x2="0" y2="1">
+                                <stop class="area-top" offset="0" />
+                                <stop class="area-bottom" offset="1" />
+                            </linearGradient>
+                        </defs>
+                        @foreach (var run in Runs(series))
+                        {
+                            <path class="area" fill="url(#@AreaId(seriesIndex))" d="@ChartGeometry.AreaPath(run, Height)" />
+                        }
+                    }
                     @if (ShowDots)
                     {
                         <path class="dots" d="@ChartGeometry.Dots(series.Points.Where(p => p.Raw is not null).Select(p => Point(series, p.X, p.Raw!.Value)))" />
@@ -34,9 +45,23 @@
                     {
                         <path class="line" d="@ChartGeometry.SmoothPath(run)" />
                     }
+                    @if (Compact && LastPoint(series) is { } last)
+                    {
+                        <path class="end" d="@ChartGeometry.Dots([last])" />
+                    }
                 </g>
             }
         </svg>
+        @if (Compact)
+        {
+            @foreach (var series in Series)
+            {
+                @if (series.EndLabel is { } endLabel && LastPoint(series) is { } last)
+                {
+                    <span class="end-label" data-tone="@series.Tone" style="top: @Percent(last.Y / Height)">@endLabel</span>
+                }
+            }
+        }
         @if (!Compact)
         {
             @foreach (var (series, index) in Series.Take(Axes).Select((s, i) => (s, i)))
@@ -51,6 +76,7 @@
                 <span class="marker-label" style="left: @Percent(marker.X)">@marker.Label</span>
             }
         }
+    </div>
     </div>
     @if (!Compact && Ticks.Count > 0)
     {
@@ -72,6 +98,10 @@
     private const double Margin = 0.06;
 
     private static readonly double[] GridLines = [0, 0.5, 1];
+
+    private static readonly double[] CompactGridLines = [0, 0.5];
+
+    private readonly string chartId = Guid.NewGuid().ToString("N")[..8];
 
     [Parameter, EditorRequired]
     public IReadOnlyList<ChartSeries> Series { get; set; } = [];
@@ -126,6 +156,10 @@
             yield return run;
         }
     }
+
+    private string AreaId(int seriesIndex) => $"area-{chartId}-{seriesIndex}";
+
+    private ChartGeometry.Point? LastPoint(ChartSeries series) => Runs(series).LastOrDefault()?[^1];
 
     private static ChartGeometry.Point Point(ChartSeries series, double x, double value) =>
         new(x * Width, Height - Shrink(Share(series, value)) * Height);

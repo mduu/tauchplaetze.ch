@@ -35,6 +35,8 @@
   --color-lake-hypolimnion: #0B272A;
   --color-rock: #05161A;
   --color-wood: #B88A5A;
+  --color-chart-surface: rgb(127 227 214 / 0.05);
+  --color-chart-grid: rgb(127 227 214 / 0.1);
   --color-difficulty-easy: var(--color-primary);
   --color-difficulty-medium: var(--color-sun);
   --color-difficulty-hard: var(--color-signal);

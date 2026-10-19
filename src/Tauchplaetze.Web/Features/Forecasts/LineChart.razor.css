@@ -8,9 +8,53 @@
     margin: 0 36px;
 }
 
+.line-chart[data-compact="true"] .panel {
+    margin-top: 8px;
+    padding: 6px 60px 6px 8px;
+    border-radius: 10px;
+    background: var(--color-chart-surface);
+}
+
 .line-chart[data-compact="true"] .plot {
     height: 36px;
-    margin: 8px 0 0;
+    margin: 0;
+}
+
+.line-chart[data-compact="true"] .grid {
+    stroke: var(--color-chart-grid);
+}
+
+.area-top {
+    stop-color: var(--tone);
+    stop-opacity: 0.25;
+}
+
+.area-bottom {
+    stop-color: var(--tone);
+    stop-opacity: 0;
+}
+
+.area {
+    stroke: none;
+}
+
+.end {
+    fill: none;
+    stroke: var(--tone);
+    stroke-width: 6;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.end-label {
+    position: absolute;
+    left: calc(100% + 8px);
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1;
+    color: var(--tone);
+    white-space: nowrap;
 }
 
 svg {
