@@ -26,7 +26,7 @@ Mitwirkende sehen die Moderation nicht. Bis Einstiege, Skizze und Fotos im Bearb
 | `/platform/prognose` | Prognose-Läufe mit Fehlern, «Lauf jetzt starten» | Admins |
 | `/platform/queues` | Mail-Queue mit Dead-Letter | Admins |
 
-Alte Adressen leiten weiter (301): `/admin/prognose` → `/platform/prognose`, `/admin/meine-vorschlaege` → `/{lang}/account/proposals`. Links zwischen Website, Moderation und Plattform laden die ganze Seite, weil die Bereiche verschiedene Render-Modi und Skripte haben.
+Alte Adressen leiten weiter: `/admin/prognose` → `/platform/prognose` (301), `/admin/meine-vorschlaege` → `/{lang}/account/proposals` (302, die Sprache hängt vom Profil ab). Links zwischen Website, Moderation und Plattform laden die ganze Seite, weil die Bereiche verschiedene Render-Modi und Skripte haben.
 
 Ohne Anmeldung führt `/admin` zur Anmeldung. Fehlt die Rolle, antwortet der Server mit 403.
 
@@ -152,7 +152,7 @@ Konto-Mails (Bestätigung, Passwort) und das Kontaktformular nutzen dasselbe Lay
 - Texte, Bewertungen, Einstiege und Lage eines bestehenden Platzes ändern.
 - Einen neuen Platz vorschlagen (Name, Koordinate, Gewässer).
 - Fotos hochladen. Dabei bestätigen sie, dass sie die Rechte haben und tauchplaetze.ch das Foto mit Namensnennung zeigen darf. Ein Foto ist erst nach der Freigabe der Version öffentlich, die es verwendet.
-- Nicht: archivieren, Slugs ändern, Prognose ausschalten, Satellitenpunkt setzen, Gewässer und Stationen ändern.
+- Nicht: archivieren, Slugs ändern, Prognose ausschalten, Satellitenpunkt setzen, Gewässer und Stationen ändern. Der Core übernimmt diese Felder bei Vorschlägen von Mitwirkenden aus der aktuellen Version (`Proposals.ProtectModeratorFields`).
 
 ### Schutz gegen Missbrauch
 

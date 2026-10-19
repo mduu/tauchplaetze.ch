@@ -140,9 +140,9 @@ public class AdminPageTests : IClassFixture<WebApp>
     }
 
     [Theory]
-    [InlineData("/admin/meine-vorschlaege", "/fr/account/proposals")]
-    [InlineData("/admin/prognose", "/platform/prognose")]
-    public async Task Alte_Adressen_aus_dem_CMS_leiten_auf_den_neuen_Ort(string old, string expected)
+    [InlineData("/admin/meine-vorschlaege", "/fr/account/proposals", HttpStatusCode.Redirect)]
+    [InlineData("/admin/prognose", "/platform/prognose", HttpStatusCode.MovedPermanently)]
+    public async Task Alte_Adressen_aus_dem_CMS_leiten_auf_den_neuen_Ort(string old, string expected, HttpStatusCode status)
     {
         // Arrange
         using var browser = app.Browser();
@@ -152,7 +152,7 @@ public class AdminPageTests : IClassFixture<WebApp>
         using var response = await browser.GetAsync(old, TestContext.Current.CancellationToken);
 
         // Assert
-        Assert.Equal(HttpStatusCode.MovedPermanently, response.StatusCode);
+        Assert.Equal(status, response.StatusCode);
         Assert.Equal(expected, response.Headers.Location?.OriginalString);
     }
 
