@@ -50,6 +50,17 @@ Quelle: Microsoft Learn, «Azure SQL Database free offer».
 | `models` | ML-Modelle (Phase 2) | privat |
 | `locks` | Blob Leases für Job-Sperren | privat |
 
+## Storage Queues
+
+| Queue | Inhalt |
+|---|---|
+| `mail-jobs` | Mails, die auf den Versand warten (ADR-010) |
+| `mail-jobs-deadletter` | Mails nach fünf Fehlversuchen oder einem nicht behebbaren Fehler, ohne Ablauf |
+
+- Im bestehenden Storage Account. Lokal legt Aspire die Ressource `queues` an (Azurite), die Queues entstehen beim ersten Zugriff.
+- Kosten: Der Worker pollt alle 5 s, rund 520 000 Transaktionen pro Monat, wenige Rappen.
+- **Alert vor dem Go-Live:** Log-Suche auf «moved to deadletter» und «awaiting investigation» (Application Insights), Benachrichtigung an Marc.
+
 Lifecycle-Regel: `forecast-raw` nach 90 Tagen in die Cool-Stufe. `revisions` bleibt in der Hot-Stufe (kleine Dateien, selten gelesen, aber die History soll schnell laden).
 
 ## Kosten (Schätzung, vor dem Start im Azure Pricing Calculator prüfen)
@@ -58,7 +69,7 @@ Lifecycle-Regel: `forecast-raw` nach 90 Tagen in die Cool-Stufe. `revisions` ble
 |---|---|
 | App Service B1 Linux | CHF 10–15 |
 | Azure SQL Free Offer | CHF 0 |
-| Blob Storage (einige GB) | unter CHF 1 |
+| Blob Storage (einige GB) und Storage Queues | unter CHF 1 |
 | Application Insights (mit Limit) | CHF 0–3 |
 | Cloudflare, GitHub | CHF 0 |
 | **Total** | **ca. CHF 11–19** |
@@ -97,5 +108,5 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 ## Betrieb
 
 - Health Checks: `/health` (App), `/health/ready` (DB erreichbar, letzter Prognose-Lauf jünger als 30 h).
-- Alerts: Health Check fehlgeschlagen, Prognose-Lauf `Failed`, Free-Offer-Kontingent unter 10 %.
+- Alerts: Health Check fehlgeschlagen, Prognose-Lauf `Failed`, Free-Offer-Kontingent unter 10 %, Mail in der Dead-Letter-Queue (ADR-010).
 - Backups: Point-in-time Restore der Datenbank (7 Tage). Medien zusätzlich lokal bei Marc (Originale).

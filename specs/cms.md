@@ -76,7 +76,7 @@ Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit
 5. **Ablehnen:** Die Version wird `Rejected`, mit einer kurzen Begründung. Die Autorin oder der Autor sieht sie.
 6. **Veraltete Basis:** Wurde seit der Basis eine andere Version freigegeben, zeigt das CMS beide Vergleiche. Der Moderator übernimmt die Änderung von Hand (bearbeitet und gibt frei) oder lehnt ab. Keine automatische Zusammenführung.
 7. **Moderatoren und Admins** geben ihre eigenen Änderungen beim Speichern selbst frei. In der History steht dann Autor = Approver (Entscheid Marc, 17.10.2026).
-8. Mitwirkende werden per E-Mail über Freigabe oder Ablehnung informiert (Phase 1).
+8. Mitwirkende werden per E-Mail über Freigabe oder Ablehnung informiert (siehe «Benachrichtigungen»).
 
 ### History
 
@@ -112,6 +112,19 @@ Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer D
 - **Konto löschen:** wie oben unter «Konto löschen». Die Seite sagt vorher, was bleibt (Versionen ohne Namen) und was gelöscht wird (Konto, E-Mail, Passkeys, Anzeigename, Fotos im Status `Pending`).
 - **Anfrage per E-Mail:** Kommt eine Anfrage ohne Konto oder per Post, erzeugt ein Admin denselben Bericht im CMS (Konto suchen, «Auskunft erstellen»). Antwort innerhalb von 30 Tagen. Jede erstellte Auskunft steht im Log des Kontos.
 - **Logs:** Application Insights speichert IP-Adressen nicht. Die Aufbewahrung der Logs steht in `infrastructure.md`.
+
+### Benachrichtigungen
+
+Mails gehen über die Mail-Queue (ADR-010), formatiert mit gemeinsamem Layout und Textfassung, in der Sprache der Empfängerin. Empfänger sind nur aktive Konten (E-Mail bestätigt, nicht gesperrt), nie die Person, die gehandelt hat (Entscheid Marc, 19.10.2026).
+
+| Ereignis | Empfänger | Inhalt |
+|---|---|---|
+| Mitwirkende schlagen eine Änderung oder einen neuen Platz vor | alle Moderatoren und Admins | Platz, Autorin, Kommentar, Link auf «Vorschläge» |
+| Ein Vorschlag wird freigegeben | Autorin oder Autor | Link auf den Platz |
+| Ein Vorschlag wird abgelehnt | Autorin oder Autor | Begründung als Zitat |
+| Die Moderation ändert einen Platz direkt (speichern, neuer Platz, wiederherstellen) | alle übrigen Admins, solange `Notifications:NotifyAdminsOnModeratorChanges` gilt (Standard an, gedacht für die Anfangsphase) | Platz, Version, Link auf die Versionen |
+
+Konto-Mails (Bestätigung, Passwort) und das Kontaktformular nutzen dasselbe Layout.
 
 ### Was Mitwirkende dürfen
 
@@ -192,6 +205,15 @@ Tab «Fotos» beim Bearbeiten eines Platzes (ADR-009).
 ### Meldungen (Phase 1)
 
 - Liste der neuen Meldungen. Aktion «Ausblenden» bei Missbrauch.
+
+### Plattform (Admin)
+
+- `/platform/queues`, nur Admin, im CMS unter «Plattform».
+- Zähler: Mails in der Queue, Mails in der Dead-Letter-Queue (ungefähr).
+- Liste der Dead-Letter-Mails (höchstens 32): Betreff, Empfänger, Vorlage, Versuche, letzter Fehler, Zeit, Mail-Id.
+- Erneut senden: eine oder alle. Sie beginnen wieder beim ersten Versuch.
+- Löschen: eine oder alle, mit Bestätigung. Endgültig.
+- Alle Aktionen prüfen die Rolle im Core (`GetMailQueueStatus`, `ReplayDeadLetters`, `DeleteDeadLetters`).
 
 ### Prognose-Status
 

@@ -98,6 +98,7 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 | `DiveShops` (Phase 1) | Commands, Queries für Tauchshops und Füllstationen | Admin-Seiten, Anzeige auf Platzseite |
 | `BuddyGroups` (Phase 1) | Commands, Queries | Admin-Seiten, Links |
 | `Seo` | Queries `GetSitemapEntries` | `sitemap.xml`, `robots.txt`, Redirects |
+| `Mail` | Commands `ProcessMailQueue`, `ReplayDeadLetters`, `DeleteDeadLetters`, `CheckDeadLetters`; Query `GetMailQueueStatus`. Queue, Dispatcher, Vorlagen und Layout in `CrossCutting/Mail` (ADR-010) | `MailQueueWorker`, `DeadLetterMonitorWorker`, Seite `/platform/queues` |
 | `Operations` | Command `MigrateDatabase` | Start der Web-App (`Database:PrepareOnStartup`, lokal mit Aspire) |
 
 Derselbe Slice-Name in Core und Web meint dasselbe Thema.

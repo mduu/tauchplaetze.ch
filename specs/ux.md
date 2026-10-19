@@ -24,6 +24,7 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 /{lang}/ueber                   Über, Datenquellen, Impressum, Datenschutz
 /{lang}/site/{slug}             kurzer Link auf einen Platz (Mails, CMS), 301 auf den Pfad der Sprache
 /admin/…                        Redaktion (ohne Sprachpräfix)
+/platform/queues                Plattform: Mail-Queue (nur Admin, ohne Sprachpräfix)
 ```
 
 Pfadsegmente pro Sprache: siehe `i18n.md`.
@@ -139,6 +140,7 @@ Use-Case: stöbern nach See («Was ist los an meinem See?»). Die Suche nach Eig
 - Eigenes Layout mit Seitenleiste, gleiche dunkle Farbwelt.
 - Platzliste mit Ausbaustufe als Badge. Schnellerfassung mit Karte.
 - Details in `cms.md`.
+- **Plattform** (nur Admin): im selben Layout, Navigation «Plattform». Zwei Kacheln mit Zählern (in der Queue, Dead-Letter, rot umrandet, sobald nicht leer), Knöpfe «Alle erneut senden» und «Alle löschen», darunter die Dead-Letter-Mails als aufklappbare Liste mit Details und Knöpfen pro Mail. Löschen fragt nach.
 
 ## Zustände
 
