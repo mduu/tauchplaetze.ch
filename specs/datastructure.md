@@ -269,7 +269,7 @@ Mittlerer Abfluss einer BAFU-Station pro Stunde (`forecast.md`, «Abfluss»). PK
 | Feld | Typ | Bemerkung |
 |---|---|---|
 | `StationId` | string(20) | BAFU-Stationsnummer, ohne FK: Eine Station kann an mehreren Gewässern hängen. |
-| `Kind` | enum | `Measured` (gemessen), `Forecast` (Vorhersage des BAFU, vorbereitet) |
+| `Kind` | enum als int (Teil des Primary Key) | `Measured` = 0 (gemessen), `Forecast` = 1 (Vorhersage des BAFU, vorbereitet). Anders als die übrigen Enums als int gespeichert: Werte nie umordnen, neue nur hinten anhängen. |
 | `Hour` | DateTimeOffset | Beginn der Stunde in UTC |
 | `Discharge` | decimal(8,2) | m³/s. Die laufende Stunde hat das Mittel der Werte bis zum Import. |
 | `ImportedAt` | DateTimeOffset | |
