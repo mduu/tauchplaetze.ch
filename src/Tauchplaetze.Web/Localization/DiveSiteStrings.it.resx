@@ -243,5 +243,5 @@
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>Posa al centro della mappa</value></data>
   <data name="Emergency_Ambulance" xml:space="preserve"><value>Ambulanza</value></data>
   <data name="Emergency_Police" xml:space="preserve"><value>Polizia</value></data>
-  <data name="Emergency_Dan_Note" xml:space="preserve"><value>In caso di pericolo di vita, chiama prima il 144 o la Rega. DAN Europe offre consulenza 24 ore su 24 sugli incidenti subacquei, anche ai non soci.</value></data>
+  <data name="Emergency_Dan_Note" xml:space="preserve"><value>In caso di incidente subacqueo, chiama la Rega al 1414 e di' «incidente subacqueo». La Rega ti mette in contatto con il medico subacqueo di DAN Suisse, 24 ore su 24 e gratuitamente.</value></data>
 </root>

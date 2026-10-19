@@ -243,5 +243,5 @@
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>Placer au centre de la carte</value></data>
   <data name="Emergency_Ambulance" xml:space="preserve"><value>Ambulance</value></data>
   <data name="Emergency_Police" xml:space="preserve"><value>Police</value></data>
-  <data name="Emergency_Dan_Note" xml:space="preserve"><value>En cas de danger de mort, appelle d'abord le 144 ou la Rega. DAN Europe conseille 24 h sur 24 en cas d'accident de plongée, aussi sans affiliation.</value></data>
+  <data name="Emergency_Dan_Note" xml:space="preserve"><value>En cas d'accident de plongée, appelle la Rega au 1414 et dis « accident de plongée ». La Rega te met en contact avec le médecin de plongée de DAN Suisse, 24 h sur 24 et gratuitement.</value></data>
 </root>

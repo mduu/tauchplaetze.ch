@@ -243,5 +243,5 @@
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>Place at map centre</value></data>
   <data name="Emergency_Ambulance" xml:space="preserve"><value>Ambulance</value></data>
   <data name="Emergency_Police" xml:space="preserve"><value>Police</value></data>
-  <data name="Emergency_Dan_Note" xml:space="preserve"><value>In a life-threatening situation, call 144 or Rega first. DAN Europe gives advice on diving accidents around the clock, also to non-members.</value></data>
+  <data name="Emergency_Dan_Note" xml:space="preserve"><value>After a diving accident, call Rega 1414 and say «diving accident». Rega connects you to the diving physician of DAN Suisse, around the clock and free of charge.</value></data>
 </root>

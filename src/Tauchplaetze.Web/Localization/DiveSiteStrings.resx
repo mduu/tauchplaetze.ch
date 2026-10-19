@@ -243,5 +243,5 @@
   <data name="EditMode_PlaceAtCenter" xml:space="preserve"><value>In der Kartenmitte setzen</value></data>
   <data name="Emergency_Ambulance" xml:space="preserve"><value>Sanität</value></data>
   <data name="Emergency_Police" xml:space="preserve"><value>Polizei</value></data>
-  <data name="Emergency_Dan_Note" xml:space="preserve"><value>Bei Lebensgefahr zuerst 144 oder Rega. DAN Europe berät rund um die Uhr bei Tauchunfällen, auch ohne Mitgliedschaft.</value></data>
+  <data name="Emergency_Dan_Note" xml:space="preserve"><value>Bei einem Tauchunfall die Rega 1414 anrufen und «Tauchunfall» sagen. Die Rega verbindet mit dem Tauchmediziner von DAN Suisse, rund um die Uhr und kostenlos.</value></data>
 </root>

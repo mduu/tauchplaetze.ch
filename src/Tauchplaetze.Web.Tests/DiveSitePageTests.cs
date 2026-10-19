@@ -74,7 +74,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Der_Notfall_nennt_Sanitaet_Rega_Polizei_und_DAN_Europe_zum_Antippen()
+    public async Task Der_Notfall_nennt_Sanitaet_Rega_und_Polizei_zum_Antippen_und_die_Rega_als_Hotline_fuer_Tauchunfaelle()
     {
         // Arrange
         using var browser = app.Browser();
@@ -86,8 +86,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("href=\"tel:144\"", html);
         Assert.Contains("href=\"tel:1414\"", html);
         Assert.Contains("href=\"tel:117\"", html);
-        Assert.Contains("href=\"tel:+390642115685\"", html);
-        Assert.Contains("anche ai non soci", VisibleText.Of(html));
+        Assert.Contains("«incidente subacqueo»", VisibleText.Of(html));
     }
 
     [Fact]
