@@ -52,4 +52,12 @@
     private bool IsEditMode => PublicRoutes.IsDiveSiteEdit(HttpContext.Request.Path.Value);
 
     private IComponentRenderMode? PageRenderMode => IsAdmin || IsEditMode ? InteractiveServer : null;
+
+    protected override void OnInitialized()
+    {
+        if (PageRenderMode is not null)
+        {
+            CircuitCultureProvider.Remember(HttpContext, CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
+        }
+    }
 }

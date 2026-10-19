@@ -12,7 +12,7 @@ internal static class LocalizationSetup
             options.DefaultRequestCulture = new RequestCulture(Languages.CultureOf(Languages.Default));
             options.SupportedCultures = [.. Languages.Cultures];
             options.SupportedUICultures = [.. Languages.Cultures];
-            options.RequestCultureProviders = [new PathRequestCultureProvider(), new ClaimRequestCultureProvider()];
+            options.RequestCultureProviders = [new PathRequestCultureProvider(), new CircuitCultureProvider(), new ClaimRequestCultureProvider()];
         });
 
         return services;
