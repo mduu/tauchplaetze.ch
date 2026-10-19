@@ -134,7 +134,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 | `SiteSketch` | Ebene auf der Leaflet-Karte (`sketch.js`): Symbole als runde Schilder (`--color-surface-raised`, Farbe pro Art: Baumstamm `--color-wood`, Besonderheit `--color-signal`, Gefahr `--color-notice-closure`, sonst `--color-primary`), Steilwand dick und Kante gestrichelt in `--color-sketch-wall`, Route gepunktet in `--color-primary`, Leine in `--color-sketch-line`, Pflanzenfeld als Fläche in `--color-sketch-plants`. Die Linienfarben sind dunkel, weil Landeskarte und Luftbild hell sind. |
 | `SitePhotos` | Galerie: Titel wie «Der Platz», Abschnitt als Mono-Label in Grossbuchstaben, Raster `repeat(auto-fill, minmax(min(100%, 280px), 1fr))`, Bild 3:2 mit `object-fit: cover`, Rahmen `--color-border`, Radius `--radius-tile`. Legende in `--color-text-body`, Fotograf in `--color-text-subtle`. |
 | `PracticalTile` | Label in Cyan oder Orange (Achtung), Text |
-| `BuddyCallout` | Fläche in Signal-Orange, dunkler Text, Buttons dunkel |
+| `BuddyCallout` (`.callout`, alle Hinweisboxen: «Kennst du diesen Platz?», «Über» › Prognose, offener Vorschlag, Plätze in der Nähe) | Fläche `--color-surface`, Rahmen 2 px in `--color-signal`, Text `--color-text-body`, Titel in `--color-signal`, Links fett und unterstrichen in `--color-primary`. Keine orange Fläche: Sie blendete und wurde übersehen (Marc, 19.10.2026). Kontrast Text 13:1, Titel 8:1 (WCAG AA) |
 | `DataSourceFooter` | Quellen, Sicherheitshinweis, Notfallnummern |
 | `PhotoPlaceholder` | gestrichelter Rahmen mit Beschreibung, bis echte Fotos da sind |
 

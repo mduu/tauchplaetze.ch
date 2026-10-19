@@ -148,15 +148,22 @@ a:hover {
 }
 
 .callout {
-  background: var(--color-signal);
-  color: var(--color-bg);
+  background: var(--color-surface);
+  color: var(--color-text-body);
+  border: 2px solid var(--color-signal);
   border-radius: var(--radius-card);
-  padding: 30px;
+  padding: 28px 30px;
 }
 
 .callout h2,
 .callout h3 {
-  color: var(--color-bg);
+  color: var(--color-signal);
+}
+
+.callout a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .page-title {
@@ -173,6 +180,7 @@ a:hover {
 
 .leaflet-container {
   font-family: var(--font-body);
+  background: var(--color-surface);
 }
 
 .form {
@@ -1477,4 +1485,28 @@ button.chip-toggle:focus-visible {
 
 .location-field-map {
   height: 420px;
+}
+
+/* Kacheln im Bedingungsblock: sechs Spuren, drei Kacheln je Zeile, bei zwei oder vier Kacheln zwei je Zeile. So steht nie eine Kachel allein. Der Abfluss nimmt die ganze Breite, schmal jede Kachel. Global, weil die Kacheln aus mehreren Komponenten kommen. */
+.conditions-grid > .tiles {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 521px) {
+  .conditions-grid > .tiles {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .conditions-grid > .tiles > .stat {
+    grid-column: span 2;
+  }
+
+  .conditions-grid > .tiles:has(> :nth-child(2 of .stat:not(.discharge))):not(:has(> :nth-child(3 of .stat:not(.discharge)))) > .stat:not(.discharge),
+  .conditions-grid > .tiles:has(> :nth-child(4 of .stat:not(.discharge))) > .stat:not(.discharge) {
+    grid-column: span 3;
+  }
+
+  .conditions-grid > .tiles > .stat.discharge {
+    grid-column: 1 / -1;
+  }
 }
