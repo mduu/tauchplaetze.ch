@@ -55,10 +55,13 @@ Quelle: Microsoft Learn, «Azure SQL Database free offer».
 | Queue | Inhalt |
 |---|---|
 | `mail-jobs` | Mails, die auf den Versand warten (ADR-010) |
-| `mail-jobs-deadletter` | Mails nach fünf Fehlversuchen oder einem nicht behebbaren Fehler, ohne Ablauf |
+| `mail-jobs-deadletter` | Mails nach fünf Fehlversuchen oder einem nicht behebbaren Fehler, Ablauf nach 30 Tagen (`Mail:DeadLetterRetentionDays`, Datenschutz) |
 
 - Im bestehenden Storage Account. Lokal legt Aspire die Ressource `queues` an (Azurite), die Queues entstehen beim ersten Zugriff.
-- Kosten: Der Worker pollt alle 5 s, rund 520 000 Transaktionen pro Monat, wenige Rappen.
+- Kosten: Der Worker pollt alle 5 s, bei leerer Queue bis alle 30 s. Höchstens rund 520 000 Receive-Aufrufe pro Monat, das sind etwa 20 Rappen (Storage-Transaktionen um CHF 0.0004 pro 10 000).
+- **Prod-Konfiguration:** Connection `queues` auf den Queue-Endpoint des Storage Accounts (`https://{account}.queue.core.windows.net`), Zugriff über Managed Identity der App mit der Rolle «Storage Queue Data Contributor». Kein Schlüssel in der Konfiguration.
+- **SMTP:** `Mail:TimeoutSeconds` (Standard 20). Die Queue verarbeitet 4 Mails pro Durchgang mit 5 Minuten Sichtbarkeit (ADR-010).
+- **Health-Check:** `/health/ready` prüft die Queue noch nicht. Offener Punkt #30.
 - **Alert vor dem Go-Live:** Log-Suche auf «moved to deadletter» und «awaiting investigation» (Application Insights), Benachrichtigung an Marc.
 
 Lifecycle-Regel: `forecast-raw` nach 90 Tagen in die Cool-Stufe. `revisions` bleibt in der Hot-Stufe (kleine Dateien, selten gelesen, aber die History soll schnell laden).

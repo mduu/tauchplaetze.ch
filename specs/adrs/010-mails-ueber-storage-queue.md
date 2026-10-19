@@ -17,13 +17,16 @@ Wir entscheiden uns für **Azure Storage Queues** im bestehenden Storage Account
 
 - **Umschlag:** Die Queue trägt einen `MailEnvelope` (Vorlage, Modell als JSON, Empfänger, Sprache, Reply-To, `MessageId`). Gerendert wird erst beim Senden. Nur Modelle mit einer Vorlage im Code kommen in die Queue (Whitelist, wie Feldnah).
 - **Vorlagen:** Bausteine (`MailContent`: Anrede, Absätze, Knopf, Zitat) statt Razor-Komponenten. Ein Layout (`MailLayout`) macht daraus HTML (Tabelle, Inline-CSS, hell) und die Textfassung. Grund: Der Core ist kein Razor-Projekt. Mit Bausteinen sehen alle Mails gleich aus, und die Textfassung entsteht ohne Umweg über HTML. Texte in `MailTexts.resx` in vier Sprachen, Sprache aus dem Konto.
-- **Worker:** `MailQueueWorker` ruft den Command `ProcessMailQueue` (bis 16 Mails, Sichtbarkeit 2 min). Leer: 5 s warten.
+- **Worker:** `MailQueueWorker` ruft den Command `ProcessMailQueue`: 4 Mails pro Durchgang, Sichtbarkeit 5 min, SMTP-Timeout 20 s pro Befehl. So ist das Paket gesendet, bevor eine Mail wieder sichtbar wird. Ist die Queue leer, wartet der Worker 5 s und verdoppelt bis 30 s. Ein Fehler beendet die Schleife nie. Die Queues legt der Worker beim Start an (Command `CreateMailQueues`); lesende Queries legen nichts an.
+- **Nach dem Versand:** Die Mail wird nur noch gelöscht, nie zurückgestellt. Scheitert das Löschen (abgelaufener Pop Receipt), loggt der Core das, und die Mail kann nach der Sichtbarkeit doppelt kommen. Ein Fehler beim Trennen von SMTP nach dem Senden wird nur geloggt.
 - **Wiederholen:** Nach einem Fehler wird die Mail erst nach 1, 5, 15 bzw. 60 Minuten wieder sichtbar (Backoff über die Sichtbarkeit). Der fünfte Fehler legt sie in die Dead-Letter-Queue.
-- **Sofort Dead-Letter** bei Fehlern, die kein neuer Versuch behebt: unlesbarer Umschlag, unbekannte Vorlage, ungültige Adresse, SMTP-Antwort 5xx.
-- **Dead-Letter** mit Umschlag, Zahl der Versuche, letztem Fehler und Zeit, ohne Ablauf (Storage Queues löschen sonst nach 7 Tagen still).
+- **Sofort Dead-Letter** nur bei Fehlern, die kein neuer Versuch behebt: unlesbarer Umschlag, unbekannte Vorlage, ungültige Adresse (Parse-Fehler), Empfänger vom Server abgelehnt (`RecipientNotAccepted`). Andere 5xx (Absender, Anmeldung, Richtlinie) sind oft Konfiguration, sie bekommen wie 4xx und Timeouts den Backoff.
+- **Dead-Letter** mit Umschlag, Zahl der Versuche, letztem Fehler und Zeit. Sie laufen nach `Mail:DeadLetterRetentionDays` ab (Standard 30 Tage), weil der Umschlag Adressen und Inhalte trägt (Datenschutz).
+- **Logs ohne Personendaten:** Im Log stehen nur Mail-Id, Vorlage, Typ und Code des Fehlers. Der volle Fehlertext steht nur in der Dead-Letter-Mail, die nur Admins sehen.
 - **Konto-Mails** (Bestätigung, Passwort) sendet der Core sofort (2 Versuche). Scheitert das, gehen sie in die Queue.
 - **Plattform:** `/platform/queues` (nur Admin) zeigt die Zähler, die Dead-Letter-Mails (höchstens 32, Grenze von Peek) mit Fehler, sendet einzeln oder alle erneut, löscht einzeln oder alle.
-- **Einzelaktionen:** Storage Queues finden keine Nachricht über ihre Id. Der Core empfängt die Dead-Letter-Queue in Paketen (Sichtbarkeit 30 s), handelt bei der passenden `MessageId` und gibt alle übrigen sofort wieder frei. Bei wenigen Dead-Letter-Mails ist das schnell genug.
+- **Einzelaktionen:** Storage Queues finden keine Nachricht über ihre Id. Der Core empfängt die Dead-Letter-Queue in Paketen von 32 (Sichtbarkeit 2 min), handelt bei der passenden `MessageId` und gibt alle übrigen wieder frei, auch nach einem Fehler. Die Seite zeigt nur die ersten 32 (Grenze von Peek); nur diese lassen sich einzeln bearbeiten. «Alle» bearbeitet höchstens so viele, wie beim Start da waren.
+- **Konto-Mails beim erneuten Senden:** Ihre Links (Bestätigung, Passwort) laufen ab. Die Seite weist darauf hin.
 - **Überwachung:** `DeadLetterMonitorWorker` ruft alle 15 Minuten `CheckDeadLetters`. Liegt etwas in der Dead-Letter-Queue, schreibt der Core einen Fehler ins Log («Deadletter queue … awaiting investigation»). Darauf hört in Prod ein Alert (`infrastructure.md`).
 
 ## Optionen
@@ -55,8 +58,8 @@ Wir entscheiden uns für **Azure Storage Queues** im bestehenden Storage Account
 ### Negative Auswirkungen / Risiken
 
 - **Keine Outbox:** Der Command speichert zuerst und reiht danach ein. Scheitert das Einreihen, loggt der Core einen Fehler, und die Mail fehlt. Bewusst in Kauf genommen (Option B).
-- **At-least-once:** Gelingt der Versand, aber das Löschen nicht, kommt die Mail ein zweites Mal. Für Benachrichtigungen vertretbar.
-- Der Worker pollt alle 5 s: rund 520 000 Transaktionen pro Monat, Kosten wenige Rappen.
+- **At-least-once:** Gelingt der Versand, aber das Löschen nicht, kommt die Mail ein zweites Mal. Ebenso beim erneuten Senden aus der Dead-Letter-Queue: zuerst einreihen, dann löschen. Scheitert das Löschen, liegt die Mail in beiden Queues. Für Benachrichtigungen vertretbar.
+- Der Worker pollt höchstens alle 5 s, bei leerer Queue alle 30 s: unter 520 000 Transaktionen pro Monat, rund 20 Rappen.
 
 ## Referenzen
 

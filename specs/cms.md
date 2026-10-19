@@ -218,7 +218,8 @@ Tab «Fotos» beim Bearbeiten eines Platzes (ADR-009).
 
 - `/platform/queues`, nur Admin, im CMS unter «Plattform».
 - Zähler: Mails in der Queue, Mails in der Dead-Letter-Queue (ungefähr).
-- Liste der Dead-Letter-Mails (höchstens 32): Betreff, Empfänger, Vorlage, Versuche, letzter Fehler, Zeit, Mail-Id.
+- Liste der Dead-Letter-Mails (höchstens 32, nur diese einzeln bearbeitbar): Betreff, Empfänger, Vorlage, Versuche, letzter Fehler, Zeit, Mail-Id. Unlesbare Nachrichten erscheinen als «Unlesbare Nachricht». Dead-Letter-Mails löscht Azure nach 30 Tagen (Datenschutz).
+- Hinweis: Konto-Mails tragen Links mit Ablauf. Erneut gesendet, können sie ungültig sein.
 - Erneut senden: eine oder alle. Sie beginnen wieder beim ersten Versuch.
 - Löschen: eine oder alle, mit Bestätigung. Endgültig.
 - Alle Aktionen prüfen die Rolle im Core (`GetMailQueueStatus`, `ReplayDeadLetters`, `DeleteDeadLetters`).
