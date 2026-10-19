@@ -20,6 +20,8 @@ using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
 using Tauchplaetze.Core.Features.Forecasts;
+using Tauchplaetze.Core.Features.Mail;
+using Tauchplaetze.Core.Features.Mail.Queries;
 using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Core.Features.Media.Queries;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
@@ -81,6 +83,17 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>> SiteMedia { get; } = new(_ => []);
 
+    /// <summary>Wie der Core beim Prüfen des Cookies: Ohne eigene Antwort gilt das Konto der letzten Anmeldung.</summary>
+    public FakeQuery<GetSignedInAccountQuery, SignedInAccount?> SignedIn { get; } = new(_ => null);
+
+    public FakeQuery<GetMailQueueStatusQuery, MailQueueStatus?> MailQueue { get; } = new(_ => null);
+
+    public WebApp() => MirrorSignIn();
+
+    /// <summary>Das Cookie bleibt gültig, solange das Konto der letzten Anmeldung dieselbe Id hat.</summary>
+    public void MirrorSignIn() =>
+        SignedIn.Answer = query => SignIn.LastQuery is { } last && SignIn.Answer(last).Account is { } account && account.UserId == query.UserId ? account : null;
+
     /// <summary>Empfänger des Kontaktformulars im Test. Er darf nie im HTML stehen.</summary>
     public const string OperatorEmail = "betreiber@example.org";
 
@@ -115,6 +128,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>>(PendingRevisions));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteForEditingQuery, DiveSiteForEditing?>>(ForEditing));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>>(SiteMedia));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSignedInAccountQuery, SignedInAccount?>>(SignedIn));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetMailQueueStatusQuery, MailQueueStatus?>>(MailQueue));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<ExportContentQuery, ExportContentResult>>(ContentExport));
         });
     }

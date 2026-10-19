@@ -320,4 +320,5 @@
   <data name="Platform_Content_Error_InvalidPackage" xml:space="preserve"><value>Il file non è un pacchetto di contenuti valido o è troppo grande.</value></data>
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Manca Content:SourceBaseUri o Content:ExportKey.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>La produzione non ha fornito il pacchetto. Controlla indirizzo e chiave.</value></data>
+  <data name="Platform_NoData" xml:space="preserve"><value>Nessun dato. Manca l’autorizzazione oppure il tuo account è stato ricreato. Esci e accedi di nuovo.</value></data>
 </root>

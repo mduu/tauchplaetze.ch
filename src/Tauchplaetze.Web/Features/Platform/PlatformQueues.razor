@@ -21,9 +21,13 @@
     <MudAlert Severity="Severity.Info" Class="mb-4" ShowCloseIcon="true" CloseIconClicked="@(() => message = null)">@message</MudAlert>
 }
 
-@if (status is null)
+@if (status is null && busy)
 {
     <MudProgressLinear Indeterminate="true" />
+}
+else if (status is null)
+{
+    <MudAlert Severity="Severity.Warning" data-no-data>@L["Platform_NoData"]</MudAlert>
 }
 else
 {
@@ -90,7 +94,7 @@ else
 
     private string? message;
 
-    private bool busy;
+    private bool busy = true;
 
     protected override async Task Load()
     {

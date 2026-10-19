@@ -1,7 +1,10 @@
+using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.Accounts;
+using Tauchplaetze.Core.Features.Accounts.Queries;
 using Tauchplaetze.Web.CrossCutting.Localization;
 
 namespace Tauchplaetze.Web.Features.Accounts;
@@ -27,6 +30,7 @@ internal static class AccountCookie
                     context.Response.Redirect($"{AccountPaths.SignIn(LanguageOf(context.HttpContext))}?returnUrl={Uri.EscapeDataString(context.Request.Path + context.Request.QueryString)}");
                     return Task.CompletedTask;
                 };
+                options.Events.OnValidatePrincipal = Revalidate;
                 options.Events.OnRedirectToAccessDenied = context =>
                 {
                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -38,7 +42,42 @@ internal static class AccountCookie
         return services;
     }
 
-    public static Task SignIn(HttpContext context, SignedInAccount account)
+    /// <summary>So lange gilt ein geprüftes Cookie, bevor es wieder gegen die Datenbank geprüft wird.</summary>
+    public static readonly TimeSpan RevalidateAfter = TimeSpan.FromMinutes(5);
+
+    private const string ValidatedAt = "validated";
+
+    public static Task SignIn(HttpContext context, SignedInAccount account) =>
+        context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, Principal(account), new AuthenticationProperties { IsPersistent = true });
+
+    /// <summary>
+    /// Das Cookie trägt Id und Rollen bis zu 14 Tage. Wird ein Konto gelöscht, neu angelegt (neue Id), gesperrt oder bekommt es andere Rollen,
+    /// stimmt das Cookie nicht mehr mit der Datenbank überein. Darum prüft es sich alle <see cref="RevalidateAfter"/> gegen den Core.
+    /// </summary>
+    private static async Task Revalidate(CookieValidatePrincipalContext context)
+    {
+        var now = context.HttpContext.RequestServices.GetRequiredService<TimeProvider>().GetUtcNow();
+        if (context.Properties.Items.TryGetValue(ValidatedAt, out var at) && DateTimeOffset.TryParse(at, CultureInfo.InvariantCulture, out var validated) && now - validated < RevalidateAfter)
+        {
+            return;
+        }
+
+        var account = UserId(context.Principal!) is { } id
+            ? await context.HttpContext.RequestServices.GetRequiredService<IQueryHandler<GetSignedInAccountQuery, SignedInAccount?>>().Handle(new GetSignedInAccountQuery(id))
+            : null;
+        if (account is null)
+        {
+            context.RejectPrincipal();
+            await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return;
+        }
+
+        context.ReplacePrincipal(Principal(account));
+        context.Properties.Items[ValidatedAt] = now.ToString("O", CultureInfo.InvariantCulture);
+        context.ShouldRenew = true;
+    }
+
+    private static ClaimsPrincipal Principal(SignedInAccount account)
     {
         Claim[] claims =
         [
@@ -47,8 +86,7 @@ internal static class AccountCookie
             new(CultureClaim, account.Culture),
             .. account.Roles.Select(role => new Claim(ClaimTypes.Role, role)),
         ];
-        var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
-        return context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = true });
+        return new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
     }
 
     public static string? UserId(ClaimsPrincipal user) => user.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -320,4 +320,5 @@
   <data name="Platform_Content_Error_InvalidPackage" xml:space="preserve"><value>Die Datei ist kein gültiges Inhaltspaket oder zu gross.</value></data>
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Content:SourceBaseUri oder Content:ExportKey fehlt.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>Prod hat das Paket nicht geliefert. Prüfe Adresse und Schlüssel.</value></data>
+  <data name="Platform_NoData" xml:space="preserve"><value>Keine Daten. Entweder fehlt die Berechtigung, oder dein Konto wurde neu angelegt. Melde dich ab und wieder an.</value></data>
 </root>

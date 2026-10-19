@@ -4,6 +4,7 @@ using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
+using Tauchplaetze.Core.Features.Mail;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -15,6 +16,8 @@ public class AdminPageTests : IClassFixture<WebApp>
     {
         this.app = app;
         app.SignIn.Answer = _ => new SignInOutcome(SignInStatus.Succeeded, new SignedInAccount("user-1", "Lucie", "fr", [Roles.Contributor]));
+        app.MirrorSignIn();
+        app.MailQueue.Answer = _ => null;
     }
 
     [Fact]
@@ -170,6 +173,58 @@ public class AdminPageTests : IClassFixture<WebApp>
         // Assert
         Assert.Equal(status, response.StatusCode);
         Assert.Equal(expected, response.Headers.Location?.OriginalString);
+    }
+
+    [Fact]
+    public async Task Ein_Cookie_mit_einem_Konto_das_es_in_der_Datenbank_nicht_mehr_gibt_fuehrt_zur_Anmeldung()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+        app.SignedIn.Answer = _ => null;
+
+        // Act
+        using var response = await browser.GetAsync("/fr/account/proposals", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.StartsWith("/fr/account/sign-in", response.Headers.Location?.OriginalString);
+    }
+
+    [Fact]
+    public async Task Neue_Rollen_aus_der_Datenbank_gelten_ohne_neue_Anmeldung()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+        app.SignedIn.Answer = query => new SignedInAccount(query.UserId, "Lucie", "fr", [Roles.Moderator]);
+
+        // Act
+        using var response = await browser.GetAsync("/admin", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Die_Mail_Queue_zeigt_Admins_die_Zahlen_und_ohne_Ergebnis_eine_Meldung_statt_eines_Ladebalkens()
+    {
+        // Arrange
+        app.SignIn.Answer = _ => new SignInOutcome(SignInStatus.Succeeded, new SignedInAccount("admin-1", "Marc", "de", [Roles.Admin]));
+        using var browser = app.Browser();
+        await SignIn(browser);
+        app.MailQueue.Answer = query => query.AdminId == "admin-1" ? new MailQueueStatus(3, 1, []) : null;
+        var withStatus = await browser.GetStringAsync("/platform/queues", TestContext.Current.CancellationToken);
+        app.MailQueue.Answer = _ => null;
+
+        // Act
+        var withoutStatus = await browser.GetStringAsync("/platform/queues", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Matches("data-count=\"waiting\"[^>]*>3<", withStatus);
+        Assert.DoesNotContain("data-no-data", withStatus);
+        Assert.Contains("data-no-data", withoutStatus);
+        Assert.DoesNotContain("mud-progress-linear", withoutStatus);
     }
 
     [Fact]
