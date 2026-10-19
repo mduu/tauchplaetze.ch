@@ -1,6 +1,8 @@
 using System.Net;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
+using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Editorial.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -56,6 +58,28 @@ public class AdminPageTests : IClassFixture<WebApp>
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         Assert.DoesNotContain("Vérifier les propositions", VisibleText.Of(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)));
+    }
+
+    [Fact]
+    public async Task Mitwirkende_sehen_ihre_Vorschlaege_mit_Status_und_der_Begruendung_einer_Ablehnung()
+    {
+        // Arrange
+        app.MyProposals.Answer = query => query.UserId == "user-1"
+            ? [
+                new MyProposal(Guid.NewGuid(), Guid.NewGuid(), "Ermitage", 4, RevisionStatus.Pending, DateTimeOffset.UtcNow, null, "Tiefe ergänzt", null),
+                new MyProposal(Guid.NewGuid(), Guid.NewGuid(), "Bocchiaplatz", 2, RevisionStatus.Rejected, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow, null, "Quelle fehlt."),
+            ]
+            : [];
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        var text = VisibleText.Of(await browser.GetStringAsync("/admin/meine-vorschlaege", TestContext.Current.CancellationToken));
+
+        // Assert
+        Assert.Contains("Ermitage", text);
+        Assert.Contains("Retirer", text);
+        Assert.Contains("Justification de la modération: Quelle fehlt.", text);
     }
 
     [Fact]

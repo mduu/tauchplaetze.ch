@@ -1,0 +1,88 @@
+@page "/admin/meine-vorschlaege"
+@layout AdminLayout
+@attribute [Authorize]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Core.Features.Editorial.Commands
+@using Tauchplaetze.Core.Features.Editorial.Queries
+
+<MudText Typo="Typo.h4" Class="mb-2">@L["MyProposals_Title"]</MudText>
+<MudText Typo="Typo.body2" Class="mb-4">@L["MyProposals_Lead"]</MudText>
+
+@if (message is not null)
+{
+    <MudAlert Severity="Severity.Success" Class="mb-4">@message</MudAlert>
+}
+<ErrorList Errors="errors" />
+
+@if (proposals is null)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+else if (proposals.Count == 0)
+{
+    <MudText Typo="Typo.body1">@L["MyProposals_Empty"]</MudText>
+}
+else
+{
+    <MudStack Spacing="3">
+        @foreach (var proposal in proposals)
+        {
+            <MudPaper Outlined="true" Class="pa-4" data-proposal-status="@proposal.Status">
+                <div class="d-flex justify-space-between align-center flex-wrap gap-2">
+                    <MudText Typo="Typo.h6"><MudLink Href="@($"/admin/plaetze/{proposal.DiveSiteId}")">@proposal.SiteName</MudLink> · #@proposal.Number</MudText>
+                    <MudChip T="string" Size="Size.Small" Color="@ColorOf(proposal.Status)">@L[$"Revision_{proposal.Status}"]</MudChip>
+                </div>
+                <MudText Typo="Typo.body2">@L["MyProposals_Submitted", SwissClock.DateTime(proposal.SubmittedAt)]
+                    @if (proposal.ReviewedAt is { } reviewed)
+                    {
+                        <span> · @L["MyProposals_Reviewed", SwissClock.DateTime(reviewed)]</span>
+                    }
+                </MudText>
+                @if (proposal.Comment is { Length: > 0 } comment)
+                {
+                    <MudText Typo="Typo.body2" Class="mt-1">@L["MyProposals_Comment"]: @comment</MudText>
+                }
+                @if (proposal.Status == RevisionStatus.Rejected)
+                {
+                    <MudAlert Severity="Severity.Warning" Dense="true" Class="mt-2">@L["MyProposals_Reason"]: @(proposal.ReviewComment ?? "–")</MudAlert>
+                }
+                <MudStack Row="true" Class="mt-3">
+                    <MudButton Href="@($"/admin/plaetze/{proposal.DiveSiteId}/versionen")" Variant="Variant.Outlined" Size="Size.Small">@L["MyProposals_Compare"]</MudButton>
+                    @if (proposal.Status == RevisionStatus.Pending)
+                    {
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Small" OnClick="@(() => Withdraw(proposal))">@L["MyProposals_Withdraw"]</MudButton>
+                    }
+                </MudStack>
+            </MudPaper>
+        }
+    </MudStack>
+}
+
+@code {
+    private IReadOnlyList<MyProposal>? proposals;
+
+    private IReadOnlyList<EditorialError> errors = [];
+
+    private string? message;
+
+    protected override async Task Load() =>
+        proposals = await Query<GetMyProposalsQuery, IReadOnlyList<MyProposal>>(new GetMyProposalsQuery(UserId));
+
+    private async Task Withdraw(MyProposal proposal)
+    {
+        var result = await Command<WithdrawRevisionCommand, EditorialResult>(new WithdrawRevisionCommand(UserId, proposal.RevisionId));
+        errors = result.Errors;
+        message = result.Succeeded ? L["MyProposals_Withdrawn"].Value : null;
+        await Load();
+    }
+
+    private static Color ColorOf(RevisionStatus status) => status switch
+    {
+        RevisionStatus.Pending => Color.Info,
+        RevisionStatus.Approved => Color.Success,
+        RevisionStatus.Rejected => Color.Warning,
+        _ => Color.Default,
+    };
+}

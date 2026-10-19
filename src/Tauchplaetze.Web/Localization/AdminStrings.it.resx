@@ -88,7 +88,7 @@
   <data name="Edit_Remove" xml:space="preserve"><value>Rimuovi</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Salva come proposta</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Salva e approva</value></data>
-  <data name="Edit_Saved_Pending" xml:space="preserve"><value>Salvato. La tua proposta attende l'approvazione.</value></data>
+  <data name="Edit_Saved_Pending" xml:space="preserve"><value>Grazie! La tua proposta è presso la moderazione. Riceverai una e-mail appena sarà approvata o respinta.</value></data>
   <data name="Edit_Saved_Approved" xml:space="preserve"><value>Salvato e online.</value></data>
   <data name="Edit_NoChange" xml:space="preserve"><value>Nessuna modifica.</value></data>
   <data name="Edit_BaseInfo" xml:space="preserve"><value>Stai modificando la versione {0}.</value></data>
@@ -276,4 +276,17 @@
   <data name="Platform_Delete_Title" xml:space="preserve"><value>Eliminare la e-mail?</value></data>
   <data name="Platform_DeleteAll_Title" xml:space="preserve"><value>Eliminare tutte le e-mail non recapitate?</value></data>
   <data name="Platform_Delete_Text" xml:space="preserve"><value>Le e-mail eliminate non si possono ripristinare.</value></data>
+  <data name="Edit_OpenProposal" xml:space="preserve"><value>Qui hai una proposta in attesa del {0}.</value></data>
+  <data name="Edit_OpenProposal_Link" xml:space="preserve"><value>Le mie proposte</value></data>
+  <data name="Nav_MyProposals" xml:space="preserve"><value>Le mie proposte</value></data>
+  <data name="MyProposals_Title" xml:space="preserve"><value>Le mie proposte</value></data>
+  <data name="MyProposals_Lead" xml:space="preserve"><value>Le tue proposte e il loro stato. Ricevi anche una e-mail quando una è approvata o respinta.</value></data>
+  <data name="MyProposals_Empty" xml:space="preserve"><value>Non hai ancora proposto nulla.</value></data>
+  <data name="MyProposals_Submitted" xml:space="preserve"><value>Inviata il {0}</value></data>
+  <data name="MyProposals_Reviewed" xml:space="preserve"><value>esaminata il {0}</value></data>
+  <data name="MyProposals_Comment" xml:space="preserve"><value>Il tuo commento</value></data>
+  <data name="MyProposals_Reason" xml:space="preserve"><value>Motivazione della moderazione</value></data>
+  <data name="MyProposals_Compare" xml:space="preserve"><value>Vedi le versioni</value></data>
+  <data name="MyProposals_Withdraw" xml:space="preserve"><value>Ritira</value></data>
+  <data name="MyProposals_Withdrawn" xml:space="preserve"><value>La tua proposta è stata ritirata.</value></data>
 </root>

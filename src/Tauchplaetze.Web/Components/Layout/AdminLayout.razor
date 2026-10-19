@@ -23,6 +23,7 @@
         <MudNavMenu>
             <MudNavLink Href="/admin" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">@L["Nav_Dashboard"]</MudNavLink>
             <MudNavLink Href="/admin/plaetze" Icon="@Icons.Material.Outlined.Place">@L["Nav_Sites"]</MudNavLink>
+            <MudNavLink Href="/admin/meine-vorschlaege" Icon="@Icons.Material.Outlined.Inbox">@L["Nav_MyProposals"]</MudNavLink>
             <AuthorizeView Roles="@($"{Roles.Moderator},{Roles.Admin}")">
                 <MudNavLink Href="/admin/vorschlaege" Icon="@Icons.Material.Outlined.FactCheck">@L["Nav_Pending"]</MudNavLink>
                 <MudNavLink Href="/admin/prognose" Icon="@Icons.Material.Outlined.WaterDrop">@L["Nav_Forecast"]</MudNavLink>

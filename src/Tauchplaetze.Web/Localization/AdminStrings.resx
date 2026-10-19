@@ -88,7 +88,7 @@
   <data name="Edit_Remove" xml:space="preserve"><value>Entfernen</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Als Vorschlag speichern</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Speichern und freigeben</value></data>
-  <data name="Edit_Saved_Pending" xml:space="preserve"><value>Gespeichert. Dein Vorschlag wartet auf Freigabe.</value></data>
+  <data name="Edit_Saved_Pending" xml:space="preserve"><value>Danke! Dein Vorschlag ist bei der Moderation. Du bekommst eine Mail, sobald er freigegeben oder abgelehnt ist.</value></data>
   <data name="Edit_Saved_Approved" xml:space="preserve"><value>Gespeichert und online.</value></data>
   <data name="Edit_NoChange" xml:space="preserve"><value>Nichts geändert.</value></data>
   <data name="Edit_BaseInfo" xml:space="preserve"><value>Du bearbeitest Version {0}.</value></data>
@@ -276,4 +276,17 @@
   <data name="Platform_Delete_Title" xml:space="preserve"><value>Mail löschen?</value></data>
   <data name="Platform_DeleteAll_Title" xml:space="preserve"><value>Alle Dead-Letter-Mails löschen?</value></data>
   <data name="Platform_Delete_Text" xml:space="preserve"><value>Gelöschte Mails lassen sich nicht wiederherstellen.</value></data>
+  <data name="Edit_OpenProposal" xml:space="preserve"><value>Du hast hier einen offenen Vorschlag vom {0}.</value></data>
+  <data name="Edit_OpenProposal_Link" xml:space="preserve"><value>Meine Vorschläge</value></data>
+  <data name="Nav_MyProposals" xml:space="preserve"><value>Meine Vorschläge</value></data>
+  <data name="MyProposals_Title" xml:space="preserve"><value>Meine Vorschläge</value></data>
+  <data name="MyProposals_Lead" xml:space="preserve"><value>Deine Vorschläge und ihr Stand. Über Freigabe oder Ablehnung informiert dich zusätzlich eine Mail.</value></data>
+  <data name="MyProposals_Empty" xml:space="preserve"><value>Du hast noch nichts vorgeschlagen.</value></data>
+  <data name="MyProposals_Submitted" xml:space="preserve"><value>Eingereicht am {0}</value></data>
+  <data name="MyProposals_Reviewed" xml:space="preserve"><value>geprüft am {0}</value></data>
+  <data name="MyProposals_Comment" xml:space="preserve"><value>Dein Kommentar</value></data>
+  <data name="MyProposals_Reason" xml:space="preserve"><value>Begründung der Moderation</value></data>
+  <data name="MyProposals_Compare" xml:space="preserve"><value>Versionen ansehen</value></data>
+  <data name="MyProposals_Withdraw" xml:space="preserve"><value>Zurückziehen</value></data>
+  <data name="MyProposals_Withdrawn" xml:space="preserve"><value>Dein Vorschlag ist zurückgezogen.</value></data>
 </root>

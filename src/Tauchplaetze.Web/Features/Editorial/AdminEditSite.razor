@@ -44,6 +44,13 @@ else
     {
         <MudAlert Severity="Severity.Success" Class="mb-4">@message</MudAlert>
     }
+    @if (myOpenProposal is { } open)
+    {
+        <MudAlert Severity="Severity.Info" Class="mb-4" data-open-proposal>
+            @L["Edit_OpenProposal", SwissClock.DateTime(open.SubmittedAt)]
+            <MudLink Href="/admin/meine-vorschlaege" Class="ml-1">@L["Edit_OpenProposal_Link"]</MudLink>
+        </MudAlert>
+    }
     <ErrorList Errors="errors" />
 
     <MudTabs Outlined="true" Elevation="0">
@@ -228,6 +235,8 @@ else
 
     private bool saving;
 
+    private MyProposal? myOpenProposal;
+
     [Parameter]
     public Guid Id { get; set; }
 
@@ -236,6 +245,7 @@ else
         waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery(Language));
         site = await Query<GetDiveSiteForEditingQuery, DiveSiteForEditing?>(new GetDiveSiteForEditingQuery(Id));
         form = site is null ? null : SiteForm.From(site.Content);
+        myOpenProposal = (await Query<GetMyProposalsQuery, IReadOnlyList<MyProposal>>(new GetMyProposalsQuery(UserId, Id, PendingOnly: true))).FirstOrDefault();
     }
 
     private void Toggle(Tauchplaetze.Core.Features.DiveSites.DiveSiteFeatures feature, bool on)

@@ -88,7 +88,7 @@
   <data name="Edit_Remove" xml:space="preserve"><value>Retirer</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Enregistrer comme proposition</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Enregistrer et valider</value></data>
-  <data name="Edit_Saved_Pending" xml:space="preserve"><value>Enregistré. Ta proposition attend la validation.</value></data>
+  <data name="Edit_Saved_Pending" xml:space="preserve"><value>Merci ! Ta proposition est chez la modération. Tu recevras un e-mail dès qu’elle sera validée ou refusée.</value></data>
   <data name="Edit_Saved_Approved" xml:space="preserve"><value>Enregistré et en ligne.</value></data>
   <data name="Edit_NoChange" xml:space="preserve"><value>Rien n'a changé.</value></data>
   <data name="Edit_BaseInfo" xml:space="preserve"><value>Tu modifies la version {0}.</value></data>
@@ -276,4 +276,17 @@
   <data name="Platform_Delete_Title" xml:space="preserve"><value>Supprimer l’e-mail ?</value></data>
   <data name="Platform_DeleteAll_Title" xml:space="preserve"><value>Supprimer tous les messages morts ?</value></data>
   <data name="Platform_Delete_Text" xml:space="preserve"><value>Les e-mails supprimés ne peuvent pas être restaurés.</value></data>
+  <data name="Edit_OpenProposal" xml:space="preserve"><value>Tu as ici une proposition en attente du {0}.</value></data>
+  <data name="Edit_OpenProposal_Link" xml:space="preserve"><value>Mes propositions</value></data>
+  <data name="Nav_MyProposals" xml:space="preserve"><value>Mes propositions</value></data>
+  <data name="MyProposals_Title" xml:space="preserve"><value>Mes propositions</value></data>
+  <data name="MyProposals_Lead" xml:space="preserve"><value>Tes propositions et leur état. Tu reçois aussi un e-mail lorsqu’une proposition est validée ou refusée.</value></data>
+  <data name="MyProposals_Empty" xml:space="preserve"><value>Tu n’as encore rien proposé.</value></data>
+  <data name="MyProposals_Submitted" xml:space="preserve"><value>Envoyée le {0}</value></data>
+  <data name="MyProposals_Reviewed" xml:space="preserve"><value>examinée le {0}</value></data>
+  <data name="MyProposals_Comment" xml:space="preserve"><value>Ton commentaire</value></data>
+  <data name="MyProposals_Reason" xml:space="preserve"><value>Justification de la modération</value></data>
+  <data name="MyProposals_Compare" xml:space="preserve"><value>Voir les versions</value></data>
+  <data name="MyProposals_Withdraw" xml:space="preserve"><value>Retirer</value></data>
+  <data name="MyProposals_Withdrawn" xml:space="preserve"><value>Ta proposition a été retirée.</value></data>
 </root>

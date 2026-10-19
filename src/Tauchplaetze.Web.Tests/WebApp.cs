@@ -52,6 +52,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetPublicRevisionsQuery, PublicRevisions?> PublicRevisions { get; } = new(_ => null);
 
+    public FakeQuery<GetMyProposalsQuery, IReadOnlyList<MyProposal>> MyProposals { get; } = new(_ => []);
+
     public FakeQuery<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?> PublicChanges { get; } = new(_ => null);
 
     /// <summary>Empfänger des Kontaktformulars im Test. Er darf nie im HTML stehen.</summary>
@@ -80,6 +82,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SignInCommand, SignInOutcome>>(SignIn));
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SendContactMessageCommand, ContactResult>>(Contact));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPersonalDataQuery, PersonalData?>>(PersonalData));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetMyProposalsQuery, IReadOnlyList<MyProposal>>>(MyProposals));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>>(SitesForEditing));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPublicRevisionsQuery, PublicRevisions?>>(PublicRevisions));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?>>(PublicChanges));
