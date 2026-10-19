@@ -8,8 +8,7 @@ internal class BlobRawDataStore(BlobServiceClient blobs) : IRawDataStore
 
     public async Task Save(string path, string content, CancellationToken ct)
     {
-        var container = blobs.GetBlobContainerClient(ContainerName);
-        await container.CreateIfNotExistsAsync(cancellationToken: ct);
+        var container = await BlobContainers.Ensure(blobs.GetBlobContainerClient(ContainerName), ct);
         await container.GetBlobClient(path).UploadAsync(BinaryData.FromString(content), overwrite: true, ct);
     }
 }

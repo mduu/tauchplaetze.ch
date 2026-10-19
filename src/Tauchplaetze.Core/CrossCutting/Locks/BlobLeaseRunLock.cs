@@ -1,6 +1,7 @@
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Specialized;
+using Tauchplaetze.Core.CrossCutting.Storage;
 
 namespace Tauchplaetze.Core.CrossCutting.Locks;
 
@@ -15,8 +16,7 @@ internal class BlobLeaseRunLock(BlobServiceClient blobs) : IRunLock
 
     public async Task<IAsyncDisposable?> TryAcquire(string name, CancellationToken ct)
     {
-        var container = blobs.GetBlobContainerClient(ContainerName);
-        await container.CreateIfNotExistsAsync(cancellationToken: ct);
+        var container = await BlobContainers.Ensure(blobs.GetBlobContainerClient(ContainerName), ct);
         var blob = container.GetBlobClient(name);
         if (!await blob.ExistsAsync(ct))
         {
