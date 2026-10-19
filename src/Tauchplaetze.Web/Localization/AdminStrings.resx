@@ -313,7 +313,7 @@
   <data name="Platform_Content_PullOff" xml:space="preserve"><value>Für den Abruf aus Prod fehlen Content:SourceBaseUri oder Content:ExportKey in den User Secrets.</value></data>
   <data name="Platform_Content_Upload" xml:space="preserve"><value>ZIP hochladen</value></data>
   <data name="Platform_Content_Running" xml:space="preserve"><value>Import läuft. Das kann mit vielen Fotos einige Minuten dauern.</value></data>
-  <data name="Platform_Content_Result" xml:space="preserve"><value>Fertig: {0} Gewässer neu, {1} Tauchplätze neu, {2} aktualisiert, {3} unverändert, {4} übersprungen, {5} Fotos neu.</value></data>
+  <data name="Platform_Content_Result" xml:space="preserve"><value>Fertig: {0} Gewässer neu, {1} Tauchplätze neu, {2} aktualisiert, {3} unverändert, {4} übersprungen, {5} Fotos neu, {6} Fotos übersprungen.</value></data>
   <data name="Platform_Content_Error_NotAllowed" xml:space="preserve"><value>Nur Admins dürfen Inhalte übernehmen.</value></data>
   <data name="Platform_Content_Error_Disabled" xml:space="preserve"><value>Der Import ist in dieser Umgebung ausgeschaltet.</value></data>
   <data name="Platform_Content_Error_InvalidKey" xml:space="preserve"><value>Der Schlüssel stimmt nicht.</value></data>

@@ -75,7 +75,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             return new ExportContentResult(ContentError.InvalidKey);
         }
 
-        query.Output.Write("PK"u8);
+        query.OpenOutput(new DateTimeOffset(2026, 10, 19, 14, 30, 0, TimeSpan.Zero));
         return new ExportContentResult(null, 1, 1, 0);
     });
 

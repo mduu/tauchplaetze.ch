@@ -313,7 +313,7 @@
   <data name="Platform_Content_PullOff" xml:space="preserve"><value>Pour reprendre de la production, il faut Content:SourceBaseUri et Content:ExportKey dans les user secrets.</value></data>
   <data name="Platform_Content_Upload" xml:space="preserve"><value>Téléverser un ZIP</value></data>
   <data name="Platform_Content_Running" xml:space="preserve"><value>Import en cours. Avec beaucoup de photos, cela peut prendre quelques minutes.</value></data>
-  <data name="Platform_Content_Result" xml:space="preserve"><value>Terminé : {0} nouveaux plans d'eau, {1} nouveaux sites, {2} mis à jour, {3} inchangés, {4} ignorés, {5} nouvelles photos.</value></data>
+  <data name="Platform_Content_Result" xml:space="preserve"><value>Terminé : {0} nouveaux plans d'eau, {1} nouveaux sites, {2} mis à jour, {3} inchangés, {4} ignorés, {5} nouvelles photos, {6} photos ignorées.</value></data>
   <data name="Platform_Content_Error_NotAllowed" xml:space="preserve"><value>Seuls les admins peuvent importer du contenu.</value></data>
   <data name="Platform_Content_Error_Disabled" xml:space="preserve"><value>L'import est désactivé dans cet environnement.</value></data>
   <data name="Platform_Content_Error_InvalidKey" xml:space="preserve"><value>La clé est incorrecte.</value></data>

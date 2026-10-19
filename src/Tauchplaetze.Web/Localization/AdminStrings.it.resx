@@ -313,7 +313,7 @@
   <data name="Platform_Content_PullOff" xml:space="preserve"><value>Per importare dalla produzione servono Content:SourceBaseUri e Content:ExportKey nei user secrets.</value></data>
   <data name="Platform_Content_Upload" xml:space="preserve"><value>Carica ZIP</value></data>
   <data name="Platform_Content_Running" xml:space="preserve"><value>Importazione in corso. Con molte foto può durare alcuni minuti.</value></data>
-  <data name="Platform_Content_Result" xml:space="preserve"><value>Fatto: {0} nuovi specchi d'acqua, {1} nuovi siti, {2} aggiornati, {3} invariati, {4} saltati, {5} nuove foto.</value></data>
+  <data name="Platform_Content_Result" xml:space="preserve"><value>Fatto: {0} nuovi specchi d'acqua, {1} nuovi siti, {2} aggiornati, {3} invariati, {4} saltati, {5} nuove foto, {6} foto saltate.</value></data>
   <data name="Platform_Content_Error_NotAllowed" xml:space="preserve"><value>Solo gli admin possono importare contenuti.</value></data>
   <data name="Platform_Content_Error_Disabled" xml:space="preserve"><value>L'importazione è disattivata in questo ambiente.</value></data>
   <data name="Platform_Content_Error_InvalidKey" xml:space="preserve"><value>La chiave non è corretta.</value></data>

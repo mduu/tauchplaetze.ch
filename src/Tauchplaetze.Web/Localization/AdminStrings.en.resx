@@ -313,7 +313,7 @@
   <data name="Platform_Content_PullOff" xml:space="preserve"><value>To import from production, set Content:SourceBaseUri and Content:ExportKey in the user secrets.</value></data>
   <data name="Platform_Content_Upload" xml:space="preserve"><value>Upload ZIP</value></data>
   <data name="Platform_Content_Running" xml:space="preserve"><value>Import is running. With many photos this can take some minutes.</value></data>
-  <data name="Platform_Content_Result" xml:space="preserve"><value>Done: {0} new water bodies, {1} new dive sites, {2} updated, {3} unchanged, {4} skipped, {5} new photos.</value></data>
+  <data name="Platform_Content_Result" xml:space="preserve"><value>Done: {0} new water bodies, {1} new dive sites, {2} updated, {3} unchanged, {4} skipped, {5} new photos, {6} photos skipped.</value></data>
   <data name="Platform_Content_Error_NotAllowed" xml:space="preserve"><value>Only admins may import content.</value></data>
   <data name="Platform_Content_Error_Disabled" xml:space="preserve"><value>Import is off in this environment.</value></data>
   <data name="Platform_Content_Error_InvalidKey" xml:space="preserve"><value>The key is wrong.</value></data>

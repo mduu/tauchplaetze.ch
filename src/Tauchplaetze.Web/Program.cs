@@ -3,6 +3,7 @@ using Tauchplaetze.Core;
 using Tauchplaetze.Web.Components;
 using Tauchplaetze.Web.CrossCutting.Database;
 using Tauchplaetze.Web.CrossCutting.Localization;
+using Tauchplaetze.Web.CrossCutting.RateLimiting;
 using Tauchplaetze.Web.Features.About;
 using Tauchplaetze.Web.Features.Accounts;
 using Tauchplaetze.Web.Features.Forecasts;
@@ -25,8 +26,7 @@ builder.Services.AddHostedService<MediaPurgeWorker>();
 builder.Services.AddHostedService<MailQueueWorker>();
 builder.Services.AddHostedService<DeadLetterMonitorWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));
-builder.Services.AddContactRateLimit(builder.Configuration);
-builder.Services.AddContentExportRateLimit();
+builder.Services.AddRateLimits(builder.Configuration);
 
 var app = builder.Build();
 

@@ -3,13 +3,11 @@
 @attribute [Authorize(Roles = Roles.Admin)]
 @inherits AdminPage
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.Extensions.Options
 @using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Core.Features.Content
 @using Tauchplaetze.Core.Features.Content.Commands
 @using Tauchplaetze.Core.Features.Content.Queries
 @using Tauchplaetze.Web.Features.Editorial
-@inject IOptions<ContentOptions> Options
 
 <MudText Typo="Typo.h4" Class="mb-4">@L["Platform_Content_Title"]</MudText>
 <MudText Typo="Typo.body2" Class="mb-4">@L["Platform_Content_Lead"]</MudText>
@@ -47,7 +45,7 @@ else
                         @L["Platform_Content_Pull", host]
                     </MudButton>
                 }
-                <MudFileUpload T="IBrowserFile" FilesChanged="Upload" Accept=".zip" MaxFileSize="Options.Value.MaxPackageBytes" Disabled="busy">
+                <MudFileUpload T="IBrowserFile" FilesChanged="Upload" Accept=".zip" MaxFileSize="status.MaxPackageBytes" Disabled="busy">
                     <CustomContent>
                         <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.UploadFile" OnClick="@context.OpenFilePickerAsync" Disabled="busy">
                             @L["Platform_Content_Upload"]
@@ -76,7 +74,7 @@ else
                 }
                 else
                 {
-                    @L["Platform_Content_Result", result.WaterBodiesAdded, result.SitesAdded, result.SitesUpdated, result.SitesUnchanged, result.SitesSkipped, result.PhotosAdded]
+                    @L["Platform_Content_Result", result.WaterBodiesAdded, result.SitesAdded, result.SitesUpdated, result.SitesUnchanged, result.SitesSkipped, result.PhotosAdded, result.PhotosSkipped]
                 }
             </MudAlert>
         }
@@ -93,26 +91,39 @@ else
     protected override async Task Load() =>
         status = await Query<GetContentSyncStatusQuery, ContentSyncStatus?>(new GetContentSyncStatusQuery(UserId));
 
-    private async Task Pull()
-    {
-        busy = true;
-        result = null;
-        result = await Command<PullContentFromSourceCommand, ImportContentResult>(new PullContentFromSourceCommand(UserId));
-        busy = false;
-    }
+    private Task Pull() =>
+        Run(() => Command<PullContentFromSourceCommand, ImportContentResult>(new PullContentFromSourceCommand(UserId)));
 
     private async Task Upload(IBrowserFile? file)
     {
-        if (file is null)
+        if (file is null || status is null)
         {
             return;
         }
 
+        await Run(async () =>
+        {
+            await using var stream = file.OpenReadStream(status.MaxPackageBytes);
+            return await Command<ImportContentCommand, ImportContentResult>(new ImportContentCommand(UserId, stream));
+        });
+    }
+
+    private async Task Run(Func<Task<ImportContentResult>> import)
+    {
         busy = true;
         result = null;
         StateHasChanged();
-        await using var stream = file.OpenReadStream(Options.Value.MaxPackageBytes);
-        result = await Command<ImportContentCommand, ImportContentResult>(new ImportContentCommand(UserId, stream));
-        busy = false;
+        try
+        {
+            result = await import();
+        }
+        catch (IOException)
+        {
+            result = ImportContentResult.Fail(ContentError.InvalidPackage);
+        }
+        finally
+        {
+            busy = false;
+        }
     }
 }

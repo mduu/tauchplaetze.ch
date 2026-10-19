@@ -27,7 +27,7 @@ public class ContentExportTests(WebApp app) : IClassFixture<WebApp>
         if (expected == HttpStatusCode.OK)
         {
             Assert.Equal("application/zip", response.Content.Headers.ContentType?.MediaType);
-            Assert.Equal("PK", await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+            Assert.Equal("tauchplaetze-inhalt-2026-10-19-1430.zip", response.Content.Headers.ContentDisposition?.FileNameStar);
         }
     }
 
