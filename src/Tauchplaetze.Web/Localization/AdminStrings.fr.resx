@@ -381,4 +381,5 @@
   <data name="Forecast_Column_Sites" xml:space="preserve"><value>Sites</value></data>
   <data name="Map_Layer_Grey" xml:space="preserve"><value>Carte grise</value></data>
   <data name="Error_InvalidStation" xml:space="preserve"><value>La station n'est pas un numéro de station de l'OFEV : 4 chiffres, p. ex. 2091.</value></data>
+  <data name="RunStatus_Aborted" xml:space="preserve"><value>interrompu</value></data>
 </root>

@@ -71,6 +71,34 @@ public class ForecastRunOverviewTests(SqlServer sql) : SqlTest(sql)
         Assert.Null(overview);
     }
 
+    [SqlFact]
+    public async Task Ein_Lauf_der_seit_ueber_2_Stunden_ohne_Fortschritt_laeuft_gilt_als_abgebrochen()
+    {
+        // Arrange
+        var admin = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
+        var now = FixedTime.SpikeDay;
+        await Sql.Arrange(db =>
+        {
+            db.ForecastRuns.AddRange(
+                Running(now.AddHours(-3)),
+                Running(now.AddMinutes(-30)));
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var overview = (await Query<GetForecastRunOverviewQuery, ForecastRunOverview?>(new GetForecastRunOverviewQuery(admin)))!;
+
+        // Assert
+        Assert.Equal([ForecastRunStatus.Running, ForecastRunStatus.Aborted], overview.Runs.Select(r => r.Status));
+    }
+
+    private static ForecastRun Running(DateTimeOffset startedAt)
+    {
+        var run = Run(startedAt, 0, ForecastRunStatus.Running);
+        run.FinishedAt = null;
+        return run;
+    }
+
     private static ForecastRun Run(DateTimeOffset startedAt, int minutes, ForecastRunStatus status, string calls = "[]") => new()
     {
         Id = Guid.CreateVersion7(startedAt),

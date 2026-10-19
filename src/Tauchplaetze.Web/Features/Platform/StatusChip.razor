@@ -11,7 +11,7 @@
     {
         ForecastRunStatus.Succeeded => Color.Success,
         ForecastRunStatus.PartiallySucceeded => Color.Warning,
-        ForecastRunStatus.Failed => Color.Error,
+        ForecastRunStatus.Failed or ForecastRunStatus.Aborted => Color.Error,
         _ => Color.Info,
     };
 }

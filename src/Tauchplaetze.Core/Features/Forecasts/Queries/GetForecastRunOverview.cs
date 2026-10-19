@@ -47,6 +47,8 @@ internal class GetForecastRunOverviewHandler(
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
+    private static readonly TimeSpan AbortedAfter = TimeSpan.FromHours(2);
+
     public async Task<ForecastRunOverview?> Handle(GetForecastRunOverviewQuery query, CancellationToken ct = default)
     {
         if (!(await roles.Of(query.AdminId)).CanAdminister)
@@ -69,7 +71,7 @@ internal class GetForecastRunOverviewHandler(
         var last = await dbContext.ForecastRuns.AsNoTracking().OrderByDescending(r => r.StartedAt).FirstOrDefaultAsync(ct);
 
         return new ForecastRunOverview(
-            last is null ? null : Row(last),
+            last is null ? null : Row(last, now),
             schedule.Value.NextRun(now),
             new RunBalance(
                 week.Count,
@@ -77,16 +79,17 @@ internal class GetForecastRunOverviewHandler(
                 week.Count(r => r.Status == ForecastRunStatus.PartiallySucceeded),
                 week.Count(r => r.Status == ForecastRunStatus.Failed)),
             durations.Count == 0 ? null : TimeSpan.FromSeconds(Math.Round(durations.Average())),
-            [.. page.Select(Row)],
+            [.. page.Select(r => Row(r, now))],
             total);
     }
 
-    private ForecastRunRow Row(ForecastRun run)
+    private ForecastRunRow Row(ForecastRun run, DateTimeOffset now)
     {
         var calls = JsonSerializer.Deserialize<List<SourceCallStatus>>(run.SourceStatus, JsonOptions) ?? [];
         var running = run.Status == ForecastRunStatus.Running ? progress.Of(run.Id) : null;
+        var status = run.Status == ForecastRunStatus.Running && running is null && now - run.StartedAt > AbortedAfter ? ForecastRunStatus.Aborted : run.Status;
         return new ForecastRunRow(
-            run.Id, run.StartedAt, run.FinishedAt - run.StartedAt, run.Status, run.Sites,
+            run.Id, run.StartedAt, run.FinishedAt - run.StartedAt, status, run.Sites,
             running?.Calls ?? calls.Count, calls.Count(c => !c.Ok), RunFailures.Group(calls), running);
     }
 }

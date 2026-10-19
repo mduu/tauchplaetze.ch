@@ -262,7 +262,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 ### Prognose-Status
 
 - Query `GetForecastRunOverview` (nur Admins, sonst `null`): letzter Lauf, nächster Lauf nach `ForecastSchedule`, Bilanz der letzten 7 Tage, mittlere Dauer, eine Seite Läufe (optional nur mit Fehlern). Die gescheiterten Calls gruppiert der Core nach Quelle und Art (`FailureKind`: HTTP mit Status-Code, Timeout, Circuit Breaker offen, Antwort unlesbar, Netzwerk), mit Anzahl, Keys und Meldungen.
-- Fortschritt eines laufenden Laufs (Plätze fertig, Calls bisher) hält der Core nur im Speicher des Prozesses (`ForecastProgress`). Die Calls speichert der Lauf erst am Ende. Ein fertiger Lauf speichert die Zahl seiner Plätze (`Sites`, ältere Läufe ohne Wert).
+- Fortschritt eines laufenden Laufs (Plätze fertig, Calls bisher) hält der Core nur im Speicher des Prozesses (`ForecastProgress`). Die Calls speichert der Lauf erst am Ende. Ein fertiger Lauf speichert die Zahl seiner Plätze (`Sites`, ältere Läufe ohne Wert). Steht ein Lauf seit mehr als 2 Stunden auf «läuft» und hat in diesem Prozess keinen Fortschritt, zeigt die Übersicht ihn als «abgebrochen» (nicht gespeichert); die Seite fragt dann nicht mehr alle 5 s nach.
 - Button «Lauf jetzt starten» (nur Admin). Er ruft `StartForecastRun`, das die Rolle prüft. Der Worker ruft `RunForecast` direkt.
 
 ## Rollen

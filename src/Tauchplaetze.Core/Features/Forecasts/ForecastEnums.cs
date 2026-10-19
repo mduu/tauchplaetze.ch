@@ -125,6 +125,12 @@ public enum ForecastRunStatus
 
     /// <summary>Der Lauf brach ab.</summary>
     Failed,
+
+    /// <summary>
+    /// Nur in der Übersicht, nie gespeichert: Ein Lauf steht seit mehr als 2 Stunden auf <see cref="Running"/>, ohne Fortschritt in diesem Prozess.
+    /// Der Prozess endete vermutlich während des Laufs.
+    /// </summary>
+    Aborted,
 }
 
 
