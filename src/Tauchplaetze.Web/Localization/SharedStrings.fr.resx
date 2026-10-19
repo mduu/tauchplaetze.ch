@@ -40,4 +40,7 @@
   <data name="Footer_Privacy" xml:space="preserve"><value>Protection des données</value></data>
   <data name="Footer_Links" xml:space="preserve"><value>À propos du site</value></data>
   <data name="Form_InvalidNumber" xml:space="preserve"><value>Indique un nombre entier de {0} à {1}.</value></data>
+  <data name="Form_Latitude" xml:space="preserve"><value>Latitude (N)</value></data>
+  <data name="Form_Longitude" xml:space="preserve"><value>Longitude (E)</value></data>
+  <data name="Form_InvalidCoordinate" xml:space="preserve"><value>Indique un nombre avec un point, p. ex. 47.284900.</value></data>
 </root>

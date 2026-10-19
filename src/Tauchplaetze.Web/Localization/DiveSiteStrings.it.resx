@@ -215,9 +215,6 @@
   <data name="EditMode_Saving" xml:space="preserve"><value>Salvataggio …</value></data>
   <data name="EditMode_Section_Basics" xml:space="preserve"><value>Nome e luogo</value></data>
   <data name="EditMode_Section_Texts" xml:space="preserve"><value>Testi</value></data>
-  <data name="EditMode_Section_More" xml:space="preserve"><value>Punti d'entrata, schizzo e foto</value></data>
-  <data name="EditMode_More_Text" xml:space="preserve"><value>Per ora modifichi punti d’entrata e luoghi, lo schizzo e le foto nell’editor.</value></data>
-  <data name="EditMode_More_Link" xml:space="preserve"><value>Modifica nell'editor</value></data>
   <data name="EditMode_Section_Comment" xml:space="preserve"><value>Sulla tua modifica</value></data>
   <data name="EditMode_Comment" xml:space="preserve"><value>Commento</value></data>
   <data name="EditMode_Comment_Help" xml:space="preserve"><value>Che cosa hai cambiato e come lo sai? Aiuta la moderazione.</value></data>
@@ -225,5 +222,11 @@
   <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>Il lago o il fiume lo cambia la moderazione.</value></data>
   <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Grazie! La tua proposta è alla moderazione. Riceverai un’e-mail non appena sarà pubblicata o respinta.</value></data>
   <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Salvato e online.</value></data>
-  <data name="EditMode_More_Hint" xml:space="preserve"><value>Salva prima, altrimenti le modifiche su questa pagina vanno perse.</value></data>
+  <data name="EditMode_Map_Label" xml:space="preserve"><value>Mappa per modificare punti d’entrata, luoghi e schizzo</value></data>
+  <data name="EditMode_Map_Help" xml:space="preserve"><value>Scegli uno strumento qui sopra e clicca sulla mappa. I punti si possono trascinare. Nell’elenco qui sotto puoi anche scegliere, spostare (coordinate) e rimuovere ogni elemento.</value></data>
+  <data name="EditMode_EntryPoints" xml:space="preserve"><value>Punti d'entrata e luoghi</value></data>
+  <data name="EditMode_EntryPoints_None" xml:space="preserve"><value>Ancora nessun punto d'entrata o luogo.</value></data>
+  <data name="EditMode_Tools_Point" xml:space="preserve"><value>Schizzo: simboli</value></data>
+  <data name="EditMode_Tools_Line" xml:space="preserve"><value>Schizzo: linee</value></data>
+  <data name="EditMode_Tools_Area" xml:space="preserve"><value>Schizzo: superfici</value></data>
 </root>

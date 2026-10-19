@@ -215,9 +215,6 @@
   <data name="EditMode_Saving" xml:space="preserve"><value>Saving …</value></data>
   <data name="EditMode_Section_Basics" xml:space="preserve"><value>Name and place</value></data>
   <data name="EditMode_Section_Texts" xml:space="preserve"><value>Texts</value></data>
-  <data name="EditMode_Section_More" xml:space="preserve"><value>Entry points, sketch and photos</value></data>
-  <data name="EditMode_More_Text" xml:space="preserve"><value>For now, you edit entry points and places, the site sketch and photos in the editor.</value></data>
-  <data name="EditMode_More_Link" xml:space="preserve"><value>Edit in the editor</value></data>
   <data name="EditMode_Section_Comment" xml:space="preserve"><value>About your change</value></data>
   <data name="EditMode_Comment" xml:space="preserve"><value>Comment</value></data>
   <data name="EditMode_Comment_Help" xml:space="preserve"><value>What did you change and how do you know? This helps the moderators.</value></data>
@@ -225,5 +222,11 @@
   <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>The moderators change the lake or river.</value></data>
   <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Thank you! Your proposal is with the moderators. You will get an e-mail as soon as it is published or rejected.</value></data>
   <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Saved and live.</value></data>
-  <data name="EditMode_More_Hint" xml:space="preserve"><value>Save first, otherwise your changes on this page are lost.</value></data>
+  <data name="EditMode_Map_Label" xml:space="preserve"><value>Map for editing entry points, places and sketch</value></data>
+  <data name="EditMode_Map_Help" xml:space="preserve"><value>Choose a tool above and click on the map. Points can be dragged. You can also select, move (coordinates) and remove every element in the list below.</value></data>
+  <data name="EditMode_EntryPoints" xml:space="preserve"><value>Entry points and places</value></data>
+  <data name="EditMode_EntryPoints_None" xml:space="preserve"><value>No entry points or places yet.</value></data>
+  <data name="EditMode_Tools_Point" xml:space="preserve"><value>Sketch: symbols</value></data>
+  <data name="EditMode_Tools_Line" xml:space="preserve"><value>Sketch: lines</value></data>
+  <data name="EditMode_Tools_Area" xml:space="preserve"><value>Sketch: areas</value></data>
 </root>

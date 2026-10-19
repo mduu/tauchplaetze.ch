@@ -1,0 +1,51 @@
+@* Breite und Länge als Zahlen (WGS84, Punkt als Dezimaltrenner): die Alternative zum Klick in die Karte. *@
+@inject IStringLocalizer<SharedStrings> L
+
+<fieldset class="coordinate-fields">
+    <legend class="field-label">@Label</legend>
+    <label class="field field-short">
+        <span class="field-label">@L["Form_Latitude"]</span>
+        <input type="text" inputmode="decimal" value="@Format(Latitude)" aria-invalid="@(invalid ? "true" : null)" @onchange="e => Edit(e, true)" />
+    </label>
+    <label class="field field-short">
+        <span class="field-label">@L["Form_Longitude"]</span>
+        <input type="text" inputmode="decimal" value="@Format(Longitude)" aria-invalid="@(invalid ? "true" : null)" @onchange="e => Edit(e, false)" />
+    </label>
+    @if (invalid)
+    {
+        <span class="field-error">@L["Form_InvalidCoordinate"]</span>
+    }
+</fieldset>
+
+@code {
+    private bool invalid;
+
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public double Latitude { get; set; }
+
+    [Parameter]
+    public double Longitude { get; set; }
+
+    /// <summary>Neue Breite und Länge, gerundet auf 6 Dezimalen.</summary>
+    [Parameter]
+    public EventCallback<(double Latitude, double Longitude)> Changed { get; set; }
+
+    private static string Format(double value) => value.ToString("0.000000", CultureInfo.InvariantCulture);
+
+    private async Task Edit(ChangeEventArgs e, bool isLatitude)
+    {
+        var text = (e.Value as string)?.Trim().Replace(',', '.') ?? "";
+        if (!double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) || (isLatitude ? value is < -90 or > 90 : value is < -180 or > 180))
+        {
+            invalid = true;
+            return;
+        }
+
+        invalid = false;
+        value = Math.Round(value, 6);
+        await Changed.InvokeAsync(isLatitude ? (value, Longitude) : (Latitude, value));
+    }
+}

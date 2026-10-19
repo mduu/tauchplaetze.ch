@@ -1,0 +1,346 @@
+@implements IAsyncDisposable
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.Editorial
+@using Tauchplaetze.Web.Features.Editorial
+@inject IJSRuntime JS
+@inject IStringLocalizer<AdminStrings> L
+@inject IStringLocalizer<DiveSiteStrings> Site
+
+<div class="map-editor">
+    <ToolPicker Tools="Tools" Selected="@tool" SelectedChanged="PickTool" />
+    @if (ActiveTool is { } active)
+    {
+        <p class="map-editor-hint" role="status">
+            @(active.Shape is "entry" or "point" ? L["Sketch_Hint_Point"] : L["Sketch_Hint_Line"])
+            @if (active.Shape is "line" or "area")
+            {
+                <button type="button" class="button" @onclick="Finish">@L["Sketch_Finish"]</button>
+            }
+            <button type="button" class="link-button" @onclick="() => PickTool(null)">@L["Sketch_Cancel"]</button>
+        </p>
+    }
+
+    <div id="@Id" class="location-map editor-map" data-contours="auto"
+         data-layer-map="@Site["Map_Layer_Map"]" data-layer-photo="@Site["Map_Layer_Photo"]" data-layer-contours="@Site["Map_Layer_Contours"]"
+         role="application" aria-label="@Site["EditMode_Map_Label"]"></div>
+    <p class="field-help">@Site["EditMode_Map_Help"]</p>
+
+    <div class="editor-lists">
+        <section aria-labelledby="@($"{Id}-entries")">
+            <h3 id="@($"{Id}-entries")" class="editor-list-title">@Site["EditMode_EntryPoints"]</h3>
+            @if (Form.EntryPoints.Count == 0)
+            {
+                <p class="field-help">@Site["EditMode_EntryPoints_None"]</p>
+            }
+            <ol class="editor-list">
+                @foreach (var (entry, index) in Form.EntryPoints.Select((e, i) => (e, i)).ToList())
+                {
+                    var current = entry;
+                    <li class="editor-item" data-selected="@(selectedEntry == current.Id ? "true" : "false")">
+                        <div class="editor-item-head">
+                            <button type="button" class="link-button editor-item-name" aria-expanded="@(selectedEntry == current.Id ? "true" : "false")"
+                                    @onclick="() => SelectEntry(current.Id)">@EntryLabel(current, index)</button>
+                            <span class="editor-item-actions">
+                                <button type="button" class="link-button" disabled="@(index == 0)" aria-label="@L["Media_Up"]" @onclick="() => MoveEntryInList(index, -1)">↑</button>
+                                <button type="button" class="link-button" disabled="@(index == Form.EntryPoints.Count - 1)" aria-label="@L["Media_Down"]" @onclick="() => MoveEntryInList(index, 1)">↓</button>
+                                <button type="button" class="link-button danger" @onclick="() => RemoveEntry(current)">@L["Edit_Remove"]</button>
+                            </span>
+                        </div>
+                        @if (selectedEntry == current.Id)
+                        {
+                            <div class="editor-item-body">
+                                <FormSelect TValue="EntryPointKind" Label="@L["Field_EntryKind"]" Value="current.Kind" ValueChanged="@(kind => SetEntryKind(current, kind))"
+                                            Options="@([.. Enum.GetValues<EntryPointKind>().Select(k => (k, Site[$"EntryPoint_{k}"].Value))])" />
+                                <CoordinateFields Label="@L["Field_Location"]" Latitude="current.Latitude" Longitude="current.Longitude"
+                                                  Changed="@(p => MoveEntry(current.Id, p.Latitude, p.Longitude))" />
+                                <LanguageTabs Label="@L["Field_EntryName"]" @bind-Selected="textLanguage">
+                                    <FormText Label="@L["Field_EntryName"]" Value="@current.Texts[context].Name" MaxLength="80"
+                                              ValueChanged="@(v => SetEntryText(current, context, v, current.Texts[context].Description))" />
+                                    <FormTextArea Label="@L["Field_EntryDescription"]" Value="@current.Texts[context].Description" MaxLength="1000" Rows="3"
+                                                  ValueChanged="@(v => SetEntryText(current, context, current.Texts[context].Name, v))" />
+                                </LanguageTabs>
+                            </div>
+                        }
+                    </li>
+                }
+            </ol>
+        </section>
+
+        <section aria-labelledby="@($"{Id}-sketch")">
+            <h3 id="@($"{Id}-sketch")" class="editor-list-title">@Site["Map_Layer_Sketch"]</h3>
+            @if (Form.Sketch.Count == 0)
+            {
+                <p class="field-help">@L["Sketch_Empty"]</p>
+            }
+            <ol class="editor-list">
+                @foreach (var (item, index) in Form.Sketch.Select((f, i) => (f, i)).ToList())
+                {
+                    var current = item;
+                    <li class="editor-item" data-selected="@(selectedSketch == current.Id ? "true" : "false")">
+                        <div class="editor-item-head">
+                            <button type="button" class="link-button editor-item-name" aria-expanded="@(selectedSketch == current.Id ? "true" : "false")"
+                                    @onclick="() => Select(current.Id)">@(index + 1). @Site[$"SketchKind_{current.Kind}"] @(LabelOf(current) is { } label ? $"· {label}" : "")</button>
+                            <span class="editor-item-actions">
+                                <button type="button" class="link-button danger" @onclick="() => RemoveSketch(current)">@L["Edit_Remove"]</button>
+                            </span>
+                        </div>
+                        @if (selectedSketch == current.Id)
+                        {
+                            <div class="editor-item-body">
+                                <FormSelect TValue="SketchKind" Label="@L["Sketch_Kind"]" Value="current.Kind" ValueChanged="@(kind => SetSketchKind(current, kind))"
+                                            Options="@([.. Enum.GetValues<SketchKind>().Where(k => k.ShapeOf() == current.Kind.ShapeOf()).Select(k => (k, Site[$"SketchKind_{k}"].Value))])" />
+                                <FormNumber Label="@L["Sketch_Depth"]" Value="current.Depth" ValueChanged="@(depth => SetSketchDepth(current, depth))" Min="0" Max="SketchRules.MaxDepth" Unit="m" />
+                                @if (current.Kind.ShapeOf() == SketchShape.Point && current.Points.Count == 1)
+                                {
+                                    <CoordinateFields Label="@L["Field_Location"]" Latitude="current.Points[0].Latitude" Longitude="current.Points[0].Longitude"
+                                                      Changed="@(p => MovePoint(current, p.Latitude, p.Longitude))" />
+                                }
+                                <LanguageTabs Label="@L["Sketch_Label"]" @bind-Selected="textLanguage">
+                                    <FormText Label="@L["Sketch_Label"]" Value="@current.Labels[context]" MaxLength="SketchRules.LabelLength"
+                                              ValueChanged="@(v => SetSketchLabel(current, context, v))" />
+                                </LanguageTabs>
+                            </div>
+                        }
+                    </li>
+                }
+            </ol>
+        </section>
+    </div>
+</div>
+
+@code {
+    private DotNetObjectReference<SiteMapEditor>? reference;
+
+    private bool initialized;
+
+    private string? tool;
+
+    private Guid? selectedEntry;
+
+    private Guid? selectedSketch;
+
+    private string textLanguage = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    [Parameter, EditorRequired]
+    public string Id { get; set; } = "";
+
+    [Parameter, EditorRequired]
+    public SiteForm Form { get; set; } = default!;
+
+    /// <summary>Meldet jede Änderung, damit die Seite «ungespeichert» erkennt.</summary>
+    [Parameter]
+    public EventCallback Changed { get; set; }
+
+    private IReadOnlyList<(string Key, string Text, string Group)> Tools =>
+    [
+        .. Enum.GetValues<EntryPointKind>().Select(k => ($"entry:{k}", Site[$"EntryPoint_{k}"].Value, Site["EditMode_EntryPoints"].Value)),
+        .. Enum.GetValues<SketchKind>().Select(k => ($"sketch:{k}", Site[$"SketchKind_{k}"].Value, ShapeGroup(k.ShapeOf()))),
+    ];
+
+    private (string Kind, string Shape)? ActiveTool => tool?.Split(':') is [var type, var kind]
+        ? (kind, type == "entry" ? "entry" : Enum.Parse<SketchKind>(kind).ShapeOf().ToString().ToLowerInvariant())
+        : null;
+
+    private string ShapeGroup(SketchShape shape) => Site[$"EditMode_Tools_{shape}"];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!initialized)
+        {
+            reference ??= DotNetObjectReference.Create(this);
+            var kindNames = Enum.GetValues<SketchKind>().ToDictionary(k => k.ToString(), k => Site[$"SketchKind_{k}"].Value);
+            await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.init", Id, Form.Latitude, Form.Longitude, reference, kindNames);
+            initialized = true;
+            await Render();
+        }
+    }
+
+    private async Task PickTool(string? key)
+    {
+        tool = key;
+        await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.setTool", Id, ActiveTool?.Kind, ActiveTool?.Shape);
+    }
+
+    private async Task Finish() => await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.finish", Id);
+
+    [JSInvokable]
+    public void ToolStopped()
+    {
+        tool = null;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task AddEntry(string kind, double latitude, double longitude)
+    {
+        var entry = new EntryForm { Kind = Enum.Parse<EntryPointKind>(kind), Latitude = latitude, Longitude = longitude };
+        Form.EntryPoints.Add(entry);
+        (selectedEntry, selectedSketch, tool) = (entry.Id, null, null);
+        await Changes();
+    }
+
+    [JSInvokable]
+    public async Task SelectEntry(Guid? id)
+    {
+        (selectedEntry, selectedSketch) = (selectedEntry == id ? null : id, null);
+        await Render();
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task MoveEntry(Guid id, double latitude, double longitude)
+    {
+        if (Form.EntryPoints.FirstOrDefault(e => e.Id == id) is { } entry)
+        {
+            (entry.Latitude, entry.Longitude) = (Math.Round(latitude, 6), Math.Round(longitude, 6));
+            await Changes();
+        }
+    }
+
+    [JSInvokable]
+    public async Task Add(string kind, List<SketchEditor.JsPoint> points)
+    {
+        var item = new SketchForm { Kind = Enum.Parse<SketchKind>(kind), Points = [.. points.Select(p => new SketchPoint(p.Lat, p.Lng))] };
+        Form.Sketch.Add(item);
+        (selectedSketch, selectedEntry, tool) = (item.Id, null, null);
+        await Changes();
+    }
+
+    [JSInvokable]
+    public async Task Select(Guid? id)
+    {
+        (selectedSketch, selectedEntry) = (selectedSketch == id ? null : id, null);
+        await Render();
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task Move(Guid id, List<SketchEditor.JsPoint> points)
+    {
+        if (Form.Sketch.FirstOrDefault(i => i.Id == id) is { } item)
+        {
+            item.Points = [.. points.Select(p => new SketchPoint(p.Lat, p.Lng))];
+            await Changes();
+        }
+    }
+
+    private async Task MoveEntryInList(int index, int step)
+    {
+        (Form.EntryPoints[index], Form.EntryPoints[index + step]) = (Form.EntryPoints[index + step], Form.EntryPoints[index]);
+        await Changes();
+    }
+
+    private async Task RemoveEntry(EntryForm entry)
+    {
+        Form.EntryPoints.Remove(entry);
+        selectedEntry = null;
+        foreach (var use in Form.Media.Where(m => m.EntryPointId == entry.Id))
+        {
+            use.EntryPointId = null;
+        }
+
+        await Changes();
+    }
+
+    private async Task SetEntryKind(EntryForm entry, EntryPointKind kind)
+    {
+        entry.Kind = kind;
+        await Changes();
+    }
+
+    private async Task SetEntryText(EntryForm entry, string language, string? name, string? description)
+    {
+        entry.Texts[language] = (name, description);
+        await Changes();
+    }
+
+    private async Task RemoveSketch(SketchForm item)
+    {
+        Form.Sketch.Remove(item);
+        selectedSketch = null;
+        await Changes();
+    }
+
+    private async Task SetSketchKind(SketchForm item, SketchKind kind)
+    {
+        item.Kind = kind;
+        await Changes();
+    }
+
+    private async Task SetSketchDepth(SketchForm item, int? depth)
+    {
+        item.Depth = depth;
+        await Changes();
+    }
+
+    private async Task MovePoint(SketchForm item, double latitude, double longitude)
+    {
+        item.Points = [new SketchPoint(latitude, longitude)];
+        await Changes();
+    }
+
+    private async Task SetSketchLabel(SketchForm item, string language, string? label)
+    {
+        item.Labels[language] = label;
+        await Changes();
+    }
+
+    private async Task Changes()
+    {
+        await Render();
+        await Changed.InvokeAsync();
+        StateHasChanged();
+    }
+
+    private string EntryLabel(EntryForm entry, int index) =>
+        $"{index + 1}. {Site[$"EntryPoint_{entry.Kind}"]}" + (EntryName(entry) is { } name ? $" · {name}" : "");
+
+    private string? EntryName(EntryForm entry) =>
+        entry.Texts.GetValueOrDefault(textLanguage).Name is { Length: > 0 } name ? name : entry.Texts.Values.Select(t => t.Name).FirstOrDefault(n => !string.IsNullOrWhiteSpace(n));
+
+    private string? LabelOf(SketchForm item) =>
+        item.Labels.GetValueOrDefault(textLanguage) is { Length: > 0 } label ? label : item.Labels.Values.FirstOrDefault(v => !string.IsNullOrWhiteSpace(v));
+
+    private async Task Render()
+    {
+        if (!initialized)
+        {
+            return;
+        }
+
+        var features = Form.Sketch.Select(i => new
+        {
+            id = i.Id,
+            kind = i.Kind.ToString(),
+            points = i.Points.Select(p => new { lat = p.Latitude, lng = p.Longitude }),
+            depth = i.Depth,
+            label = LabelOf(i),
+        });
+        var entries = Form.EntryPoints.Select((e, index) => new
+        {
+            id = e.Id,
+            lat = e.Latitude,
+            lng = e.Longitude,
+            type = e.Kind.IsWaterAccess() ? "entry" : e.Kind.ToString().ToLowerInvariant(),
+            label = EntryLabel(e, index),
+        });
+        await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.render", Id, features, selectedSketch);
+        await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.renderEntries", Id, entries, selectedEntry);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("tauchplaetzeSketchEditor.dispose", Id);
+        }
+        catch (Exception exception) when (exception is JSDisconnectedException or OperationCanceledException)
+        {
+            // Die Verbindung ist schon weg, die Karte mit ihr.
+        }
+        finally
+        {
+            reference?.Dispose();
+        }
+    }
+}

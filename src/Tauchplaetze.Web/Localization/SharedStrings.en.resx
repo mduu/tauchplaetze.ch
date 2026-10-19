@@ -40,4 +40,7 @@
   <data name="Footer_Privacy" xml:space="preserve"><value>Privacy</value></data>
   <data name="Footer_Links" xml:space="preserve"><value>About the website</value></data>
   <data name="Form_InvalidNumber" xml:space="preserve"><value>Please enter a whole number from {0} to {1}.</value></data>
+  <data name="Form_Latitude" xml:space="preserve"><value>Latitude (N)</value></data>
+  <data name="Form_Longitude" xml:space="preserve"><value>Longitude (E)</value></data>
+  <data name="Form_InvalidCoordinate" xml:space="preserve"><value>Please enter a number with a point, e.g. 47.284900.</value></data>
 </root>

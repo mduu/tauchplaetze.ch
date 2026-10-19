@@ -116,30 +116,20 @@ else
 
         <section class="page-section edit-section" aria-labelledby="edit-texts">
             <h2 id="edit-texts" class="edit-section-title">@Site["EditMode_Section_Texts"]</h2>
-            <div class="language-tabs" role="tablist" aria-label="@Site["EditMode_Section_Texts"]">
-                @foreach (var language in Languages.All)
-                {
-                    var current = language;
-                    <button type="button" role="tab" id="@($"text-tab-{current}")" aria-controls="text-panel" class="language-tab"
-                            aria-selected="@(textLanguage == current ? "true" : "false")" tabindex="@(textLanguage == current ? 0 : -1)"
-                            @onclick="() => textLanguage = current" @onkeydown="e => SwitchLanguage(e, current)">@Shared[$"Language_{current}"]</button>
-                }
-            </div>
-            @{ var text = form.Texts[textLanguage]; }
-            <div class="edit-texts" role="tabpanel" id="text-panel" aria-labelledby="@($"text-tab-{textLanguage}")" lang="@textLanguage" @key="textLanguage">
-                <FormTextArea Label="@L["Field_UnderwaterDescription"]" @bind-Value="text.UnderwaterDescription" Rows="6" />
-                <FormTextArea Label="@L["Field_HazardsInfo"]" @bind-Value="text.HazardsInfo" MaxLength="2000" />
-                <FormTextArea Label="@L["Field_ApproachInfo"]" @bind-Value="text.ApproachInfo" MaxLength="2000" />
-                <FormTextArea Label="@L["Field_SurroundingsInfo"]" @bind-Value="text.SurroundingsInfo" MaxLength="2000" />
-                <FormTextArea Label="@L["Field_FacilitiesInfo"]" @bind-Value="text.FacilitiesInfo" Rows="2" MaxLength="1000" />
-            </div>
+            <LanguageTabs Label="@Site["EditMode_Section_Texts"]" @bind-Selected="textLanguage">
+                <div class="edit-texts">
+                    <FormTextArea Label="@L["Field_UnderwaterDescription"]" @bind-Value="form.Texts[context].UnderwaterDescription" Rows="6" />
+                    <FormTextArea Label="@L["Field_HazardsInfo"]" @bind-Value="form.Texts[context].HazardsInfo" MaxLength="2000" />
+                    <FormTextArea Label="@L["Field_ApproachInfo"]" @bind-Value="form.Texts[context].ApproachInfo" MaxLength="2000" />
+                    <FormTextArea Label="@L["Field_SurroundingsInfo"]" @bind-Value="form.Texts[context].SurroundingsInfo" MaxLength="2000" />
+                    <FormTextArea Label="@L["Field_FacilitiesInfo"]" @bind-Value="form.Texts[context].FacilitiesInfo" Rows="2" MaxLength="1000" />
+                </div>
+            </LanguageTabs>
         </section>
 
-        <section class="page-section edit-section" aria-labelledby="edit-more">
-            <h2 id="edit-more" class="edit-section-title">@Site["EditMode_Section_More"]</h2>
-            <p>@Site["EditMode_More_Text"]</p>
-            <p><a href="@($"/admin/plaetze/{details.Id}")" data-edit-leave>@Site["EditMode_More_Link"]</a></p>
-            <p class="field-help">@Site["EditMode_More_Hint"]</p>
+        <section class="page-section edit-section" aria-labelledby="edit-map">
+            <h2 id="edit-map" class="edit-section-title">@Site["Location_Title_EntryPoints"]</h2>
+            <SiteMapEditor Id="edit-site-map" Form="form" Changed="StateHasChanged" />
         </section>
 
         <section class="page-section edit-section" aria-labelledby="edit-comment">
@@ -227,17 +217,6 @@ else
 
     private static string Serialized(SiteForm form) => System.Text.Json.JsonSerializer.Serialize(new { Content = form.ToContent(), form.Comment });
 
-    private void SwitchLanguage(KeyboardEventArgs e, string current)
-    {
-        var index = Languages.All.ToList().IndexOf(current);
-        var count = Languages.All.Count;
-        textLanguage = e.Key switch
-        {
-            "ArrowRight" => Languages.All[(index + 1) % count],
-            "ArrowLeft" => Languages.All[(index + count - 1) % count],
-            _ => textLanguage,
-        };
-    }
 
     private IReadOnlyList<(string Short, string Text)> Legend(string scale) =>
         [.. Enumerable.Range(1, 5).Select(step => (Site[$"Rating_{scale}_{step}"].Value, Site[$"Rating_{scale}_{step}_Text"].Value))];

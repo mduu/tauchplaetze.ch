@@ -215,9 +215,6 @@
   <data name="EditMode_Saving" xml:space="preserve"><value>Enregistrement …</value></data>
   <data name="EditMode_Section_Basics" xml:space="preserve"><value>Nom et lieu</value></data>
   <data name="EditMode_Section_Texts" xml:space="preserve"><value>Textes</value></data>
-  <data name="EditMode_Section_More" xml:space="preserve"><value>Points d'entrée, croquis et photos</value></data>
-  <data name="EditMode_More_Text" xml:space="preserve"><value>Pour l’instant, tu modifies les points d’entrée et lieux, le croquis et les photos dans l’éditeur.</value></data>
-  <data name="EditMode_More_Link" xml:space="preserve"><value>Modifier dans l'éditeur</value></data>
   <data name="EditMode_Section_Comment" xml:space="preserve"><value>À propos de ta modification</value></data>
   <data name="EditMode_Comment" xml:space="preserve"><value>Commentaire</value></data>
   <data name="EditMode_Comment_Help" xml:space="preserve"><value>Qu’as-tu modifié et comment le sais-tu ? Cela aide la modération.</value></data>
@@ -225,5 +222,11 @@
   <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>La modération change le lac ou la rivière.</value></data>
   <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Merci ! Ta proposition est chez la modération. Tu recevras un e-mail dès qu’elle sera publiée ou refusée.</value></data>
   <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Enregistré et en ligne.</value></data>
-  <data name="EditMode_More_Hint" xml:space="preserve"><value>Enregistre d’abord, sinon tes modifications sur cette page sont perdues.</value></data>
+  <data name="EditMode_Map_Label" xml:space="preserve"><value>Carte pour modifier points d’entrée, lieux et croquis</value></data>
+  <data name="EditMode_Map_Help" xml:space="preserve"><value>Choisis un outil ci-dessus et clique sur la carte. Les points se déplacent à la souris. Dans la liste ci-dessous, tu peux aussi choisir, déplacer (coordonnées) et retirer chaque élément.</value></data>
+  <data name="EditMode_EntryPoints" xml:space="preserve"><value>Points d'entrée et lieux</value></data>
+  <data name="EditMode_EntryPoints_None" xml:space="preserve"><value>Pas encore de points d'entrée ni de lieux.</value></data>
+  <data name="EditMode_Tools_Point" xml:space="preserve"><value>Croquis : symboles</value></data>
+  <data name="EditMode_Tools_Line" xml:space="preserve"><value>Croquis : lignes</value></data>
+  <data name="EditMode_Tools_Area" xml:space="preserve"><value>Croquis : surfaces</value></data>
 </root>

@@ -1,0 +1,30 @@
+@* Werkzeuge einer Karte in Gruppen, als Knöpfe mit aria-pressed. Ein zweiter Klick auf das gewählte Werkzeug hebt die Wahl auf. *@
+<div class="tool-picker">
+    @foreach (var group in Tools.GroupBy(t => t.Group))
+    {
+        <fieldset class="tool-group">
+            <legend class="field-label">@group.Key</legend>
+            <div class="chips">
+                @foreach (var tool in group)
+                {
+                    var current = tool;
+                    <button type="button" class="chip-toggle" data-on="@(Selected == current.Key ? "true" : "false")" aria-pressed="@(Selected == current.Key ? "true" : "false")"
+                            @onclick="() => Pick(current.Key)">@current.Text</button>
+                }
+            </div>
+        </fieldset>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public IReadOnlyList<(string Key, string Text, string Group)> Tools { get; set; } = [];
+
+    [Parameter]
+    public string? Selected { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> SelectedChanged { get; set; }
+
+    private Task Pick(string key) => SelectedChanged.InvokeAsync(Selected == key ? null : key);
+}

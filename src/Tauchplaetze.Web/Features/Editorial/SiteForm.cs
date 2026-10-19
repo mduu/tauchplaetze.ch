@@ -6,7 +6,7 @@ using Tauchplaetze.Web.CrossCutting.Localization;
 namespace Tauchplaetze.Web.Features.Editorial;
 
 /// <summary>Bearbeitbare Fassung eines <see cref="DiveSiteContent"/> für die Formulare des CMS. Texte gibt es für alle vier Sprachen.</summary>
-internal class SiteForm
+public class SiteForm
 {
     public string Name { get; set; } = "";
 
@@ -146,7 +146,7 @@ internal class SiteForm
         new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));
 }
 
-internal class TextForm
+public class TextForm
 {
     public string? UnderwaterDescription { get; set; }
 
@@ -163,7 +163,7 @@ internal class TextForm
     public bool IsMachineTranslated { get; set; }
 }
 
-internal class EntryForm
+public class EntryForm
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -192,7 +192,7 @@ internal class EntryForm
             .Select(t => new EntryPointText(t.Key, t.Value.Name, t.Value.Description))]);
 }
 
-internal class NoticeForm
+public class NoticeForm
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 

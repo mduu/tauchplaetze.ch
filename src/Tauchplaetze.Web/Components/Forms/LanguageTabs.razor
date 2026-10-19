@@ -1,0 +1,49 @@
+@* Sprach-Tabs DE, EN, FR, IT mit Pfeiltasten. Der Inhalt wird pro Sprache neu aufgebaut (@key), damit Felder den Text der Sprache zeigen. *@
+@inject IStringLocalizer<SharedStrings> Shared
+
+<div class="language-tabs" role="tablist" aria-label="@Label">
+    @foreach (var language in Languages.All)
+    {
+        var current = language;
+        <button type="button" role="tab" id="@TabId(current)" aria-controls="@panelId" class="language-tab"
+                aria-selected="@(Selected == current ? "true" : "false")" tabindex="@(Selected == current ? 0 : -1)"
+                @onclick="() => Select(current)" @onkeydown="e => Key(e, current)">@Shared[$"Language_{current}"]</button>
+    }
+</div>
+<div role="tabpanel" id="@panelId" aria-labelledby="@TabId(Selected)" lang="@Selected" @key="Selected" class="language-panel">
+    @ChildContent(Selected)
+</div>
+
+@code {
+    private readonly string id = Guid.NewGuid().ToString("N")[..8];
+
+    private string panelId => $"tabs-{id}-panel";
+
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public string Selected { get; set; } = Languages.Default;
+
+    [Parameter]
+    public EventCallback<string> SelectedChanged { get; set; }
+
+    [Parameter, EditorRequired]
+    public RenderFragment<string> ChildContent { get; set; } = default!;
+
+    private string TabId(string language) => $"tabs-{id}-{language}";
+
+    private Task Select(string language) => SelectedChanged.InvokeAsync(language);
+
+    private Task Key(KeyboardEventArgs e, string current)
+    {
+        var index = Languages.All.ToList().IndexOf(current);
+        var count = Languages.All.Count;
+        return e.Key switch
+        {
+            "ArrowRight" => Select(Languages.All[(index + 1) % count]),
+            "ArrowLeft" => Select(Languages.All[(index + count - 1) % count]),
+            _ => Task.CompletedTask,
+        };
+    }
+}
