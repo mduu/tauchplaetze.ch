@@ -118,4 +118,30 @@
   <data name="Compass_SW" xml:space="preserve"><value>Südwesten</value></data>
   <data name="Compass_W" xml:space="preserve"><value>Westen</value></data>
   <data name="Compass_NW" xml:space="preserve"><value>Nordwesten</value></data>
+  <data name="Tile_Discharge" xml:space="preserve"><value>Abfluss</value></data>
+  <data name="Discharge_VeryLow" xml:space="preserve"><value>sehr gering</value></data>
+  <data name="Discharge_Low" xml:space="preserve"><value>gering</value></data>
+  <data name="Discharge_Medium" xml:space="preserve"><value>mittel</value></data>
+  <data name="Discharge_Strong" xml:space="preserve"><value>stark</value></data>
+  <data name="Discharge_Value" xml:space="preserve"><value>{0} m³/s</value></data>
+  <data name="Discharge_Trend" xml:space="preserve"><value>{0} · {1} m³/s in 3 Stunden</value></data>
+  <data name="Discharge_Trend_Rising" xml:space="preserve"><value>steigt</value></data>
+  <data name="Discharge_Trend_Steady" xml:space="preserve"><value>gleich</value></data>
+  <data name="Discharge_Trend_Falling" xml:space="preserve"><value>fällt</value></data>
+  <data name="Discharge_Station" xml:space="preserve"><value>Station {0} · gemessen {1}</value></data>
+  <data name="Discharge_Stale" xml:space="preserve"><value>Messwert veraltet</value></data>
+  <data name="Discharge_Info" xml:space="preserve"><value>Erläuterung zum Abfluss</value></data>
+  <data name="Discharge_Hours_Title" xml:space="preserve"><value>Letzte 48 Stunden</value></data>
+  <data name="Discharge_Days_Title" xml:space="preserve"><value>Tagesmittel der letzten 7 Tage</value></data>
+  <data name="Discharge_Chart_Label" xml:space="preserve"><value>Abfluss der letzten 48 Stunden, zwischen {0} und {1} m³/s</value></data>
+  <data name="Discharge_Range" xml:space="preserve"><value>zwischen {0} und {1} m³/s · gestrichelt: Median 30 Tage</value></data>
+  <data name="Discharge_HoursAgo" xml:space="preserve"><value>vor {0} h</value></data>
+  <data name="Discharge_Now" xml:space="preserve"><value>jetzt</value></data>
+  <data name="Discharge_Legend_Below" xml:space="preserve"><value>unter {0} m³/s</value></data>
+  <data name="Discharge_Legend_Range" xml:space="preserve"><value>{0} bis {1} m³/s</value></data>
+  <data name="Discharge_Legend_From" xml:space="preserve"><value>ab {0} m³/s</value></data>
+  <data name="Discharge_Legend_Median" xml:space="preserve"><value>Die Schwellen kommen aus dem Median der letzten 30 Tage ({0} m³/s): die Hälfte, gleich viel und das Doppelte.</value></data>
+  <data name="Discharge_Legend_Site" xml:space="preserve"><value>Die Moderation hat die Schwellen für diesen Platz gesetzt.</value></data>
+  <data name="Discharge_Legend_Note" xml:space="preserve"><value>Viel Abfluss bedeutet starke Strömung und oft trübes Wasser.</value></data>
+  <data name="Discharge_Source" xml:space="preserve"><value>Daten: {0}</value></data>
 </root>

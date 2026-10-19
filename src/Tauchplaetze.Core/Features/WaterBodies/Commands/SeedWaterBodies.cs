@@ -8,7 +8,10 @@ using Tauchplaetze.Core.Data.Entities;
 
 namespace Tauchplaetze.Core.Features.WaterBodies.Commands;
 
-/// <summary>Legt die Gewässer und BAFU-Stationen aus `Seed/water-bodies.json` an, die noch fehlen. Bestehende bleiben unverändert.</summary>
+/// <summary>
+/// Legt die Gewässer und BAFU-Stationen aus `Seed/water-bodies.json` an, die noch fehlen. Bestehende bleiben unverändert,
+/// nur eine fehlende Lage einer Station kommt dazu.
+/// </summary>
 public record SeedWaterBodiesCommand;
 
 /// <summary>Ergebnis des Seeds: Zahl der neu angelegten Gewässer und Stationen.</summary>
@@ -37,9 +40,25 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
             waterBody.HydroStations.Add(station.ToEntity());
         }
 
+        AddMissingStationLocations(seeds, existing);
+
         await dbContext.SaveChangesAsync(ct);
 
         return new SeedWaterBodiesResult(missing.Count, missing.Sum(m => m.HydroStations?.Count ?? 0) + missingStations.Count);
+    }
+
+    private static void AddMissingStationLocations(IReadOnlyList<WaterBodySeed> seeds, Dictionary<string, WaterBody> existing)
+    {
+        var located = seeds
+            .Where(s => existing.ContainsKey(s.Slug))
+            .SelectMany(s => (s.HydroStations ?? []).Where(h => h.Latitude is not null).Select(h => (WaterBody: existing[s.Slug], Seed: h)));
+        foreach (var (waterBody, seed) in located)
+        {
+            if (waterBody.HydroStations.FirstOrDefault(h => h.StationId == seed.Id) is { Location: null } station)
+            {
+                station.Location = seed.ToEntity().Location;
+            }
+        }
     }
 
     private static async Task<IReadOnlyList<WaterBodySeed>> ReadSeed(CancellationToken ct)
@@ -80,9 +99,15 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
         string? AlplakesSimstratKey,
         IReadOnlyList<HydroStationSeed>? HydroStations);
 
-    private sealed record HydroStationSeed(string Id, string Name, string Role)
+    private sealed record HydroStationSeed(string Id, string Name, string Role, double? Latitude, double? Longitude)
     {
-        public WaterBodyHydroStation ToEntity() => new() { StationId = Id, Name = Name, Role = Enum.Parse<HydroStationRole>(Role) };
+        public WaterBodyHydroStation ToEntity() => new()
+        {
+            StationId = Id,
+            Name = Name,
+            Role = Enum.Parse<HydroStationRole>(Role),
+            Location = Latitude is { } lat && Longitude is { } lng ? GeoPoints.Create(lat, lng) : null,
+        };
     }
 
     private sealed record Coordinate(double Latitude, double Longitude)

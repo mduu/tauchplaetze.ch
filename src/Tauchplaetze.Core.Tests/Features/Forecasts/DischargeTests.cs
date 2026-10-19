@@ -1,0 +1,154 @@
+using System.Globalization;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Tauchplaetze.Core.Features.Accounts.Commands;
+using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Editorial.Commands;
+using Tauchplaetze.Core.Features.Editorial.Queries;
+using Tauchplaetze.Core.Features.Forecasts;
+using Tauchplaetze.Core.Features.Forecasts.Commands;
+using Tauchplaetze.Core.Features.Forecasts.Queries;
+using Tauchplaetze.Core.Features.WaterBodies;
+using Tauchplaetze.Core.Features.WaterBodies.Commands;
+using Tauchplaetze.Core.Features.WaterBodies.Queries;
+using Tauchplaetze.Core.Tests.Sql;
+
+namespace Tauchplaetze.Core.Tests.Features.Forecasts;
+
+/// <remarks>Der Platz liegt beim Strandbad Rheinfelden, 2 km von der Station 2091. Die Uhr steht auf dem 19.10.2026, 15:45 UTC. Die echte Antwort beginnt am 18.10.2026 um 00:00 UTC.</remarks>
+public class DischargeTests(SqlServer sql) : SqlTest(sql)
+{
+    private static readonly DateTimeOffset Now = new(2026, 10, 19, 15, 45, 0, TimeSpan.Zero);
+
+    [SqlFact]
+    public async Task Der_Import_liest_die_echte_Antwort_von_existenz_ch_und_der_Platz_zeigt_den_neuesten_Messwert_der_naechsten_Station()
+    {
+        // Arrange
+        var (_, site) = await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+
+        // Act
+        var result = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        var discharge = await Discharge(site);
+        Assert.Equal((1, 0, false), (result.Stations, result.StationsWithoutValues, result.Failed));
+        Assert.Equal(("2091", 325.82m), (discharge!.StationId, discharge.Discharge));
+        Assert.Equal(new DateTimeOffset(2026, 10, 19, 15, 40, 0, TimeSpan.Zero), discharge.MeasuredAt);
+        Assert.False(discharge.IsStale);
+        Assert.Equal(40, discharge.Hours.Count);
+        Assert.Equal([new DateOnly(2026, 10, 18), new DateOnly(2026, 10, 19)], discharge.Days.Select(d => d.Date));
+        Assert.Contains(Sql.RawData.Files.Keys, path => path.StartsWith("discharge/2026-10-19/1545/hydro/", StringComparison.Ordinal));
+    }
+
+    [SqlFact]
+    public async Task Steigt_der_Abfluss_in_3_Stunden_auf_das_Doppelte_des_Medians_ist_er_stark_und_steigt()
+    {
+        // Arrange: 30 Tage 100 m³/s, in den letzten 3 Stunden 250 m³/s.
+        var (_, site) = await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = Flow(Now.AddDays(-30), Now, t => t > Now.AddHours(-3) ? 250 : 100);
+
+        // Act
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        var discharge = await Discharge(site);
+        Assert.Equal((100m, DischargeLevel.Strong, false), (discharge!.Median30Days, discharge.Level, discharge.UsesSiteThresholds));
+        Assert.Equal((DischargeTrend.Rising, 150m), (discharge.Trend, discharge.ChangeThreeHours));
+        Assert.Equal(new DischargeThresholds(50, 100, 200), discharge.Thresholds);
+    }
+
+    [SqlFact]
+    public async Task Die_Schwellen_der_Moderation_ordnen_den_Abfluss_ein_und_muessen_steigen()
+    {
+        // Arrange
+        var (moderator, site) = await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = Flow(Now.AddDays(-30), Now, _ => 250);
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        var edit = (await Query<GetDiveSiteForEditingQuery, DiveSiteForEditing?>(new GetDiveSiteForEditingQuery(site)))!;
+
+        // Act
+        var falling = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber,
+            edit.Content with { Discharge = new DischargeThresholds(300, 200, 800) }, null));
+        var rising = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber,
+            edit.Content with { Discharge = new DischargeThresholds(200, 400, 800) }, null));
+
+        // Assert
+        var discharge = await Discharge(site);
+        Assert.Equal([EditorialError.InvalidDischargeThresholds], falling.Errors);
+        Assert.True(rising.Succeeded);
+        Assert.Equal((DischargeLevel.Low, true), (discharge!.Level, discharge.UsesSiteThresholds));
+    }
+
+    [SqlFact]
+    public async Task Ein_zweiter_Import_schreibt_dieselben_Stunden_und_Stunden_aelter_als_30_Tage_fallen_weg()
+    {
+        // Arrange
+        await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = Flow(Now.AddDays(-30), Now, _ => 100);
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        var first = await HourCount();
+
+        // Act
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        var second = await HourCount();
+        Sql.Time.Now = Now.AddDays(10);
+        Sql.Sources.Overrides["locations=2091&"] = Flow(Now.AddDays(9), Now.AddDays(10), _ => 100);
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        Assert.Equal(first, second);
+        Assert.Equal(1, Sql.Sources.Requests.Count(url => url.Contains("startdate=2026-09-19", StringComparison.Ordinal)));
+        await Sql.Arrange(async db => Assert.False(await db.HydroHours.AnyAsync(h => h.Hour < Now.AddDays(-20), TestContext.Current.CancellationToken)));
+    }
+
+    [SqlFact]
+    public async Task Ein_Platz_am_See_hat_keinen_Abfluss_und_der_Import_fragt_keine_Station_an()
+    {
+        // Arrange
+        await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
+        var admins = await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]));
+        var site = await AddRiffWilliams(admins.UserIds[0]);
+
+        // Act
+        var result = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        Assert.Equal(0, result.Stations);
+        Assert.Null(await Discharge(site));
+        Assert.Empty(Sql.Sources.Requests);
+    }
+
+    private async Task<(string Moderator, Guid Site)> PrepareRheinfelden()
+    {
+        Sql.Time.Now = Now;
+        await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
+        var moderator = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
+        var rhein = (await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"))).Single(w => w.Slug == "rhein").Id;
+        var result = await Command<ProposeDiveSiteCommand, EditorialResult>(
+            new ProposeDiveSiteCommand(moderator, "Strandbad", rhein, 47.55164, 7.7767, "Rheinfelden", "AG", null));
+        return (moderator, result.DiveSiteId!.Value);
+    }
+
+    private Task<SiteDischarge?> Discharge(Guid site) => Query<GetSiteDischargeQuery, SiteDischarge?>(new GetSiteDischargeQuery(site));
+
+    private async Task<int> HourCount()
+    {
+        var count = 0;
+        await Sql.Arrange(async db => count = await db.HydroHours.CountAsync(TestContext.Current.CancellationToken));
+        return count;
+    }
+
+    /// <summary>Eine Antwort von existenz.ch für die Station 2091 mit einem Wert alle 10 Minuten.</summary>
+    private static string Flow(DateTimeOffset from, DateTimeOffset to, Func<DateTimeOffset, double> value)
+    {
+        var values = new StringBuilder();
+        for (var time = from; time <= to; time = time.AddMinutes(10))
+        {
+            values.Append(values.Length > 0 ? "," : "")
+                .Append(CultureInfo.InvariantCulture, $$"""{"timestamp":{{time.ToUnixTimeSeconds()}},"loc":"2091","par":"flow","val":{{value(time)}}}""");
+        }
+
+        return $$"""{"source":"BAFU","payload":[{{values}}]}""";
+    }
+}

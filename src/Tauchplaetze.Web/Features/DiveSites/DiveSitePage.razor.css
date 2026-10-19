@@ -39,6 +39,12 @@
     color: var(--color-text-muted);
 }
 
+.conditions-discharge {
+    display: grid;
+    margin-top: 16px;
+    max-width: 640px;
+}
+
 .practical-title {
     font-size: 36px;
     letter-spacing: -0.02em;

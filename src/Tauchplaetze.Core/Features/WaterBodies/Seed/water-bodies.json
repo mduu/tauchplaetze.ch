@@ -66,7 +66,16 @@
       {
         "id": "2091",
         "name": "Rhein – Rheinfelden",
-        "role": "River"
+        "role": "River",
+        "latitude": 47.5607,
+        "longitude": 7.7999
+      },
+      {
+        "id": "2288",
+        "name": "Rhein – Neuhausen, Flurlingerbrücke",
+        "role": "River",
+        "latitude": 47.6815,
+        "longitude": 8.6263
       }
     ]
   },
@@ -80,7 +89,37 @@
     "centroid": {
       "latitude": 47.2537,
       "longitude": 7.7008
-    }
+    },
+    "hydroStations": [
+      {
+        "id": "2016",
+        "name": "Aare – Brugg",
+        "role": "River",
+        "latitude": 47.4825,
+        "longitude": 8.1949
+      },
+      {
+        "id": "2029",
+        "name": "Aare – Brügg, Aegerten",
+        "role": "River",
+        "latitude": 47.1221,
+        "longitude": 7.2834
+      },
+      {
+        "id": "2063",
+        "name": "Aare – Murgenthal",
+        "role": "River",
+        "latitude": 47.2661,
+        "longitude": 7.8288
+      },
+      {
+        "id": "2135",
+        "name": "Aare – Bern, Schönau",
+        "role": "River",
+        "latitude": 46.9331,
+        "longitude": 7.448
+      }
+    ]
   },
   {
     "slug": "aegerisee",
@@ -356,7 +395,16 @@
     "centroid": {
       "latitude": 46.9626,
       "longitude": 6.8211
-    }
+    },
+    "hydroStations": [
+      {
+        "id": "2480",
+        "name": "Areuse – Boudry",
+        "role": "River",
+        "latitude": 46.949,
+        "longitude": 6.839
+      }
+    ]
   },
   {
     "slug": "lac-brenet",
@@ -560,7 +608,16 @@
     "centroid": {
       "latitude": 47.4545,
       "longitude": 8.3298
-    }
+    },
+    "hydroStations": [
+      {
+        "id": "2243",
+        "name": "Limmat – Baden, Limmatpromenade",
+        "role": "River",
+        "latitude": 47.4757,
+        "longitude": 8.3094
+      }
+    ]
   },
   {
     "slug": "luganersee",
@@ -596,7 +653,23 @@
     "centroid": {
       "latitude": 46.2688,
       "longitude": 8.6888
-    }
+    },
+    "hydroStations": [
+      {
+        "id": "2368",
+        "name": "Maggia – Locarno, Solduno",
+        "role": "River",
+        "latitude": 46.1683,
+        "longitude": 8.7736
+      },
+      {
+        "id": "2475",
+        "name": "Maggia – Bignasco, Ponte nuovo",
+        "role": "River",
+        "latitude": 46.3383,
+        "longitude": 8.6081
+      }
+    ]
   },
   {
     "slug": "marmorerasee",
@@ -668,7 +741,16 @@
     "centroid": {
       "latitude": 46.698,
       "longitude": 6.3455
-    }
+    },
+    "hydroStations": [
+      {
+        "id": "2378",
+        "name": "Orbe – Orbe, Le Chalet",
+        "role": "River",
+        "latitude": 46.7276,
+        "longitude": 6.5239
+      }
+    ]
   },
   {
     "slug": "pfaeffikersee",
@@ -920,7 +1002,16 @@
     "centroid": {
       "latitude": 47.5521,
       "longitude": 8.5546
-    }
+    },
+    "hydroStations": [
+      {
+        "id": "2132",
+        "name": "Töss – Neftenbach",
+        "role": "River",
+        "latitude": 47.5188,
+        "longitude": 8.653
+      }
+    ]
   },
   {
     "slug": "trueebsee",
@@ -956,7 +1047,16 @@
     "centroid": {
       "latitude": 46.2476,
       "longitude": 8.8361
-    }
+    },
+    "hydroStations": [
+      {
+        "id": "2605",
+        "name": "Verzasca – Lavertezzo, Campiöi",
+        "role": "River",
+        "latitude": 46.249,
+        "longitude": 8.8446
+      }
+    ]
   },
   {
     "slug": "vierwaldstaettersee",

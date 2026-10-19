@@ -210,6 +210,13 @@ else
                         <MudNumericField @bind-Value="form.SatelliteLongitude" Label="@L["Field_SatelliteLongitude"]" Format="0.00000" />
                     </MudStack>
                     <MudTextField @bind-Value="form.InflowStationOverride" Label="@L["Field_InflowStationOverride"]" MaxLength="20" />
+                    <MudText Typo="Typo.subtitle2">@L["Field_Discharge"]</MudText>
+                    <MudStack Row="true">
+                        <MudNumericField @bind-Value="form.DischargeLowFrom" Label="@L["Field_DischargeLowFrom"]" Min="0m" />
+                        <MudNumericField @bind-Value="form.DischargeMediumFrom" Label="@L["Field_DischargeMediumFrom"]" Min="0m" />
+                        <MudNumericField @bind-Value="form.DischargeStrongFrom" Label="@L["Field_DischargeStrongFrom"]" Min="0m" />
+                    </MudStack>
+                    <MudText Typo="Typo.caption">@L["Field_Discharge_Help"]</MudText>
                 </MudStack>
             </MudTabPanel>
         }

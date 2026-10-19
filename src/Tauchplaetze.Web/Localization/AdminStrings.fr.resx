@@ -321,6 +321,12 @@
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Content:SourceBaseUri ou Content:ExportKey manque.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>La production n'a pas livré le paquet. Vérifie l'adresse et la clé.</value></data>
   <data name="Platform_NoData" xml:space="preserve"><value>Aucune donnée. Soit l'autorisation manque, soit ton compte a été recréé. Déconnecte-toi puis reconnecte-toi.</value></data>
+  <data name="Field_Discharge" xml:space="preserve"><value>Seuils du débit</value></data>
+  <data name="Field_DischargeLowFrom" xml:space="preserve"><value>Faible dès (m³/s)</value></data>
+  <data name="Field_DischargeMediumFrom" xml:space="preserve"><value>Moyen dès (m³/s)</value></data>
+  <data name="Field_DischargeStrongFrom" xml:space="preserve"><value>Fort dès (m³/s)</value></data>
+  <data name="Field_Discharge_Help" xml:space="preserve"><value>Sites en rivière seulement. Vide : la classification vient de la médiane des 30 derniers jours. En dessous de la première valeur, le débit est très faible.</value></data>
+  <data name="Error_InvalidDischargeThresholds" xml:space="preserve"><value>Les seuils du débit sont invalides : remplir les trois, chacun plus grand que le précédent, 100 000 m³/s au plus.</value></data>
   <data name="Forecast_NextRun" xml:space="preserve"><value>Prochain passage</value></data>
   <data name="Forecast_Week" xml:space="preserve"><value>7 derniers jours</value></data>
   <data name="Forecast_WeekValue" xml:space="preserve"><value>{0} passages</value></data>

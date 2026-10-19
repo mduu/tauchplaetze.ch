@@ -10,6 +10,7 @@
 @using Tauchplaetze.Core.Features.Editorial
 @using Tauchplaetze.Core.Features.Editorial.Commands
 @using Tauchplaetze.Core.Features.Editorial.Queries
+@using Tauchplaetze.Core.Features.WaterBodies
 @using Tauchplaetze.Web.Features.Editorial
 @inject IStringLocalizer<DiveSiteStrings> Site
 @inject IStringLocalizer<SharedStrings> Shared
@@ -138,6 +139,19 @@ else
             <h2 id="edit-photos" class="edit-section-title">@Site["Photos_Title"]</h2>
             <SitePhotoEditor SiteId="details.Id" Form="form" Changed="StateHasChanged" />
         </section>
+
+        @if (IsModerator && details.WaterBodyType == WaterBodyType.River)
+        {
+            <section class="page-section edit-section" aria-labelledby="edit-moderation" data-edit-moderation>
+                <h2 id="edit-moderation" class="edit-section-title">@L["Edit_Tab_Moderation"] · @L["Field_Discharge"]</h2>
+                <div class="edit-grid">
+                    <FormDecimal Label="@L["Field_DischargeLowFrom"]" @bind-Value="form.DischargeLowFrom" Unit="m³/s" />
+                    <FormDecimal Label="@L["Field_DischargeMediumFrom"]" @bind-Value="form.DischargeMediumFrom" Unit="m³/s" />
+                    <FormDecimal Label="@L["Field_DischargeStrongFrom"]" @bind-Value="form.DischargeStrongFrom" Unit="m³/s" />
+                </div>
+                <p class="field-help">@L["Field_Discharge_Help"]</p>
+            </section>
+        }
 
         <section class="page-section edit-section" aria-labelledby="edit-comment">
             <h2 id="edit-comment" class="edit-section-title">@Site["EditMode_Section_Comment"]</h2>

@@ -53,6 +53,32 @@ internal class WaterBodyHydroStationConfiguration : IEntityTypeConfiguration<Wat
         builder.Property(s => s.StationId).HasMaxLength(20);
         builder.Property(s => s.Name).HasMaxLength(100);
         builder.Property(s => s.Weight).HasPrecision(4, 2);
+        builder.Property(s => s.Location).HasColumnType("geography");
+    }
+}
+
+internal class HydroHourConfiguration : IEntityTypeConfiguration<HydroHour>
+{
+    public void Configure(EntityTypeBuilder<HydroHour> builder)
+    {
+        builder.ToTable("HydroHours");
+        builder.HasKey(h => new { h.StationId, h.Kind, h.Hour });
+        builder.HasIndex(h => h.Hour);
+        builder.Property(h => h.StationId).HasMaxLength(20);
+        builder.Property(h => h.Discharge).HasPrecision(8, 2);
+    }
+}
+
+internal class HydroReadingConfiguration : IEntityTypeConfiguration<HydroReading>
+{
+    public void Configure(EntityTypeBuilder<HydroReading> builder)
+    {
+        builder.ToTable("HydroReadings");
+        builder.HasKey(r => r.StationId);
+        builder.Property(r => r.StationId).HasMaxLength(20);
+        builder.Property(r => r.Discharge).HasPrecision(8, 2);
+        builder.Property(r => r.DischargeThreeHoursBefore).HasPrecision(8, 2);
+        builder.Property(r => r.Median30Days).HasPrecision(8, 2);
     }
 }
 

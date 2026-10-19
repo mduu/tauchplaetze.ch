@@ -1,4 +1,5 @@
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Media;
 
 namespace Tauchplaetze.Core.Features.Editorial;
@@ -32,7 +33,8 @@ public record DiveSiteContent(
     IReadOnlyList<SketchFeature>? Sketch = null,
     IReadOnlyList<MediaUse>? Media = null,
     Guid? HeroMediaId = null,
-    IReadOnlyList<string>? OtherNames = null)
+    IReadOnlyList<string>? OtherNames = null,
+    DischargeThresholds? Discharge = null)
 {
     public IReadOnlyList<MediaUse> MediaList => Media ?? [];
 
@@ -145,6 +147,9 @@ public enum EditorialError
 
     /// <summary>Ein neuer Platz hat keine Koordinate.</summary>
     MissingLocation,
+
+    /// <summary>Die Schwellen des Abflusses steigen nicht von gering über mittel zu stark oder liegen nicht zwischen 0 und 100 000 m³/s.</summary>
+    InvalidDischargeThresholds,
 }
 
 /// <summary>Ergebnis eines Commands der Redaktion. <see cref="NoChange"/>: Der Inhalt war gleich wie die Basis, es entstand keine Version.</summary>

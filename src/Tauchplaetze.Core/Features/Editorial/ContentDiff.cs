@@ -41,6 +41,9 @@ internal static class ContentDiff
             ["InflowStationOverride"] = content.InflowStationOverride,
             ["SatellitePoint"] = content is { SatelliteLatitude: { } lat, SatelliteLongitude: { } lng } ? Coordinate(lat, lng) : null,
             ["ForecastDisabled"] = content.ForecastDisabled.ToString(),
+            ["Discharge"] = content.Discharge is { } discharge
+                ? string.Create(CultureInfo.InvariantCulture, $"{discharge.LowFrom} / {discharge.MediumFrom} / {discharge.StrongFrom} m³/s")
+                : null,
             ["OtherNames"] = string.Join(", ", OtherNames.Normalize(content.OtherNameList)),
         };
 

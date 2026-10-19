@@ -118,4 +118,30 @@
   <data name="Compass_SW" xml:space="preserve"><value>sud-ovest</value></data>
   <data name="Compass_W" xml:space="preserve"><value>ovest</value></data>
   <data name="Compass_NW" xml:space="preserve"><value>nord-ovest</value></data>
+  <data name="Tile_Discharge" xml:space="preserve"><value>Portata</value></data>
+  <data name="Discharge_VeryLow" xml:space="preserve"><value>molto bassa</value></data>
+  <data name="Discharge_Low" xml:space="preserve"><value>bassa</value></data>
+  <data name="Discharge_Medium" xml:space="preserve"><value>media</value></data>
+  <data name="Discharge_Strong" xml:space="preserve"><value>forte</value></data>
+  <data name="Discharge_Value" xml:space="preserve"><value>{0} m³/s</value></data>
+  <data name="Discharge_Trend" xml:space="preserve"><value>{0} · {1} m³/s in 3 ore</value></data>
+  <data name="Discharge_Trend_Rising" xml:space="preserve"><value>in aumento</value></data>
+  <data name="Discharge_Trend_Steady" xml:space="preserve"><value>stabile</value></data>
+  <data name="Discharge_Trend_Falling" xml:space="preserve"><value>in calo</value></data>
+  <data name="Discharge_Station" xml:space="preserve"><value>Stazione {0} · misurato {1}</value></data>
+  <data name="Discharge_Stale" xml:space="preserve"><value>misura non aggiornata</value></data>
+  <data name="Discharge_Info" xml:space="preserve"><value>Spiegazione della portata</value></data>
+  <data name="Discharge_Hours_Title" xml:space="preserve"><value>Ultime 48 ore</value></data>
+  <data name="Discharge_Days_Title" xml:space="preserve"><value>Media giornaliera degli ultimi 7 giorni</value></data>
+  <data name="Discharge_Chart_Label" xml:space="preserve"><value>Portata delle ultime 48 ore, tra {0} e {1} m³/s</value></data>
+  <data name="Discharge_Range" xml:space="preserve"><value>tra {0} e {1} m³/s · tratteggio: mediana di 30 giorni</value></data>
+  <data name="Discharge_HoursAgo" xml:space="preserve"><value>{0} h fa</value></data>
+  <data name="Discharge_Now" xml:space="preserve"><value>ora</value></data>
+  <data name="Discharge_Legend_Below" xml:space="preserve"><value>sotto {0} m³/s</value></data>
+  <data name="Discharge_Legend_Range" xml:space="preserve"><value>da {0} a {1} m³/s</value></data>
+  <data name="Discharge_Legend_From" xml:space="preserve"><value>da {0} m³/s</value></data>
+  <data name="Discharge_Legend_Median" xml:space="preserve"><value>Le soglie vengono dalla mediana degli ultimi 30 giorni ({0} m³/s): la metà, uguale e il doppio.</value></data>
+  <data name="Discharge_Legend_Site" xml:space="preserve"><value>La moderazione ha fissato le soglie per questo sito.</value></data>
+  <data name="Discharge_Legend_Note" xml:space="preserve"><value>Una portata elevata significa corrente forte e spesso acqua torbida.</value></data>
+  <data name="Discharge_Source" xml:space="preserve"><value>Dati: {0}</value></data>
 </root>

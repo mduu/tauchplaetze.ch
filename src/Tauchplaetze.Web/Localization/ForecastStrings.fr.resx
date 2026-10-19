@@ -118,4 +118,30 @@
   <data name="Compass_SW" xml:space="preserve"><value>le sud-ouest</value></data>
   <data name="Compass_W" xml:space="preserve"><value>l'ouest</value></data>
   <data name="Compass_NW" xml:space="preserve"><value>le nord-ouest</value></data>
+  <data name="Tile_Discharge" xml:space="preserve"><value>Débit</value></data>
+  <data name="Discharge_VeryLow" xml:space="preserve"><value>très faible</value></data>
+  <data name="Discharge_Low" xml:space="preserve"><value>faible</value></data>
+  <data name="Discharge_Medium" xml:space="preserve"><value>moyen</value></data>
+  <data name="Discharge_Strong" xml:space="preserve"><value>fort</value></data>
+  <data name="Discharge_Value" xml:space="preserve"><value>{0} m³/s</value></data>
+  <data name="Discharge_Trend" xml:space="preserve"><value>{0} · {1} m³/s en 3 heures</value></data>
+  <data name="Discharge_Trend_Rising" xml:space="preserve"><value>en hausse</value></data>
+  <data name="Discharge_Trend_Steady" xml:space="preserve"><value>stable</value></data>
+  <data name="Discharge_Trend_Falling" xml:space="preserve"><value>en baisse</value></data>
+  <data name="Discharge_Station" xml:space="preserve"><value>Station {0} · mesuré {1}</value></data>
+  <data name="Discharge_Stale" xml:space="preserve"><value>mesure ancienne</value></data>
+  <data name="Discharge_Info" xml:space="preserve"><value>Explication du débit</value></data>
+  <data name="Discharge_Hours_Title" xml:space="preserve"><value>48 dernières heures</value></data>
+  <data name="Discharge_Days_Title" xml:space="preserve"><value>Moyenne journalière des 7 derniers jours</value></data>
+  <data name="Discharge_Chart_Label" xml:space="preserve"><value>Débit des 48 dernières heures, entre {0} et {1} m³/s</value></data>
+  <data name="Discharge_Range" xml:space="preserve"><value>entre {0} et {1} m³/s · pointillé : médiane sur 30 jours</value></data>
+  <data name="Discharge_HoursAgo" xml:space="preserve"><value>il y a {0} h</value></data>
+  <data name="Discharge_Now" xml:space="preserve"><value>maintenant</value></data>
+  <data name="Discharge_Legend_Below" xml:space="preserve"><value>moins de {0} m³/s</value></data>
+  <data name="Discharge_Legend_Range" xml:space="preserve"><value>{0} à {1} m³/s</value></data>
+  <data name="Discharge_Legend_From" xml:space="preserve"><value>dès {0} m³/s</value></data>
+  <data name="Discharge_Legend_Median" xml:space="preserve"><value>Les seuils viennent de la médiane des 30 derniers jours ({0} m³/s) : la moitié, autant et le double.</value></data>
+  <data name="Discharge_Legend_Site" xml:space="preserve"><value>La modération a fixé les seuils pour ce site.</value></data>
+  <data name="Discharge_Legend_Note" xml:space="preserve"><value>Un débit élevé signifie un courant fort et souvent une eau trouble.</value></data>
+  <data name="Discharge_Source" xml:space="preserve"><value>Données : {0}</value></data>
 </root>

@@ -48,7 +48,7 @@ Das Tauchfenster ist 08:00 bis 16:00 Uhr Lokalzeit.
 | Wind (Mittel, Böen, Richtung) | Open-Meteo (ICON-CH1, ICON-CH2) | Wind | MVP |
 | Strömung im Tauchbereich (`u`, `v`) | Alplakes 3D-Modell am Platz | Information, kein Teilwert | MVP |
 | Regen der letzten 72 h | SwissMetNet gemessen (vergangene Stunden), Open-Meteo (künftige Stunden) | Zuflüsse | MVP |
-| Abfluss der Zuflüsse bzw. des Flusses | BAFU | Zuflüsse | MVP |
+| Abfluss der Zuflüsse bzw. des Flusses | BAFU | Zuflüsse, Kachel «Abfluss» an Flussplätzen | MVP |
 | Trübung des Flusses | BAFU, wo gemessen | Klarheit im Fluss | MVP |
 | Gemessenes Temperaturprofil | Eawag Datalakes | ersetzt das Modell für heute, wo eine Messstation nah ist | Phase 1 |
 | Abflussprognose | BAFU-Vorhersagen | Zuflüsse an künftigen Tagen | Phase 1, nach Klärung |
@@ -102,6 +102,23 @@ Die Strömung ist eine Information auf der Platzseite (Kachel «Strömung»). Si
 - **Einstufung (Annahmen vom 19.10.2026, `CurrentRules`):** ruhig unter 0.05 m/s, spürbar 0.05 bis 0.2 m/s, stark über 0.2 m/s. Anzeige in cm/s.
 - **Speicher:** `DailyForecast.CurrentSpeed`, `CurrentDirection`, `CurrentLevel`. Ohne Werte im Tauchfenster bleiben sie leer, und die Kachel fehlt.
 - Weil die Strömung nicht in den Index fliesst, ändert eine neue Schwelle die `ModelVersion` nicht.
+
+### Abfluss
+
+An Flussplätzen zeigt die Platzseite die Kachel «Abfluss» (`ux.md`, Tauchplatzseite). Sie ist eine Information und fliesst nicht in den Index. Viel Abfluss heisst starke Strömung und oft trübes Wasser.
+
+- **Station:** `DiveSite.InflowStationOverride`, sonst die nächste Station mit Rolle `River` und Lage am Fluss des Platzes (`WaterBodyHydroStation.Location`). Plätze an Seen haben keine Kachel. Der Seed ordnet jedem Fluss mit Plätzen die nächsten BAFU-Stationen am selben Fluss zu (höchstens 30 km vom Platz, Stand 19.10.2026: Rhein, Aare, Areuse, Limmat, Maggia, Orbe, Töss, Verzasca). Hagneckkanal, Creugenat, Riale del Salto und Steinenbach haben keine Station.
+- **Messwert:** der neueste 10-Minuten-Wert der Station mit Uhrzeit. Der Import läuft alle 30 Minuten. Ist der Wert älter als 2 h, zeigt die Kachel «Messwert veraltet».
+- **Einordnung (`DischargeRules`):** sehr gering, gering, mittel, stark.
+  - Mit Schwellen des Platzes (`DischargeLowFrom`, `DischargeMediumFrom`, `DischargeStrongFrom` in m³/s): unter der ersten sehr gering, ab der ersten gering, ab der zweiten mittel, ab der dritten stark. Nur die Moderation setzt sie (`cms.md`).
+  - Ohne Schwellen: Verhältnis zum Median der Stundenwerte der letzten 30 Tage. Unter 0.5 × sehr gering, unter 1 × gering, unter 2 × mittel, sonst stark.
+  - Ohne Median und ohne Schwellen zeigt die Kachel nur den Wert.
+- **Legende («i»):** die vier Stufen mit den Grenzen in m³/s und der Herkunft der Schwellen.
+- **Trend:** neuester Wert gegen den Wert 3 h davor (höchstens 30 min daneben). Innerhalb von 5 % «gleich», sonst «steigt» oder «fällt». Die Kachel zeigt die Änderung in m³/s.
+- **Verlauf:** die Stundenmittel der letzten 48 Stunden als Kurve, mit dem Median gestrichelt. Darunter die Tagesmittel der letzten 7 Tage (Schweizer Kalendertage, heute bis jetzt).
+- **Vorhersage:** `HydroHour.Kind = Forecast` ist vorbereitet. Die Quelle fehlt noch (`data-sources.md`, «Phase 1: Vorhersagen des BAFU»). Die Query liefert die künftigen Stunden schon mit (`SiteDischarge.ForecastHours`).
+- **Speicher:** `HydroHour` (Stundenmittel pro Station, 30 Tage) und `HydroReading` (neuester Wert mit Wert vor 3 h und Median). Die Seite liest nur diese Tabellen.
+- Weil der Abfluss als Kachel nicht in den Index fliesst, ändert eine neue Schwelle die `ModelVersion` nicht. Das Verhältnis zum Median im Index (Zuflüsse) bleibt Teil von `RunForecast`.
 
 ## Wetter pro Stunde
 
@@ -177,6 +194,17 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   10. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.
 - **Ausfall einer Quelle:** Der Lauf schreibt die übrigen Werte. Die letzten gültigen Werte der ausgefallenen Quelle bleiben bis zu 48 h gültig. Die Seite zeigt das Datenalter.
+
+## Der Abfluss-Job
+
+Ein kleiner zweiter Job holt den Abfluss öfter als der Prognose-Lauf. Er ruft nur den Command `ImportDischarge` (`DischargeWorker`, ADR-006).
+
+- **Zeitplan:** beim Start der Web-App und danach alle 30 Minuten.
+- **Lock:** `locks/discharge`. Hält ein anderer Lauf den Lock, endet der zweite sofort.
+- **Ein Call:** existenz.ch `hydro/daterange` mit allen Stationen der Flussplätze und `parameters=flow` (rund 15 Stationen). `startdate` ist ein UTC-Tag. Der Call holt ab der letzten gespeicherten Stunde, mindestens die letzten 4 Stunden. Eine neue Station holt 30 Tage nach.
+- **Ablauf:** Stundenmittel schreiben (Upsert, die laufende Stunde mit den Werten bis jetzt), Stunden älter als 30 Tage löschen, pro Station den neuesten Wert mit Wert vor 3 h und Median der 30 Tage schreiben.
+- **Rohdaten:** `forecast-raw/discharge/{date}/{HHmm}/hydro/flow.json`.
+- **Ausfall:** Scheitert der Call, bleiben die letzten Werte. Die Kachel zeigt sie mit Uhrzeit und nach 2 h als veraltet.
 
 ## Phase 2: eigenes Modell
 

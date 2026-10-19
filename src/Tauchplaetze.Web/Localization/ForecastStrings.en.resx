@@ -118,4 +118,30 @@
   <data name="Compass_SW" xml:space="preserve"><value>south-west</value></data>
   <data name="Compass_W" xml:space="preserve"><value>west</value></data>
   <data name="Compass_NW" xml:space="preserve"><value>north-west</value></data>
+  <data name="Tile_Discharge" xml:space="preserve"><value>Discharge</value></data>
+  <data name="Discharge_VeryLow" xml:space="preserve"><value>very low</value></data>
+  <data name="Discharge_Low" xml:space="preserve"><value>low</value></data>
+  <data name="Discharge_Medium" xml:space="preserve"><value>medium</value></data>
+  <data name="Discharge_Strong" xml:space="preserve"><value>strong</value></data>
+  <data name="Discharge_Value" xml:space="preserve"><value>{0} m³/s</value></data>
+  <data name="Discharge_Trend" xml:space="preserve"><value>{0} · {1} m³/s in 3 hours</value></data>
+  <data name="Discharge_Trend_Rising" xml:space="preserve"><value>rising</value></data>
+  <data name="Discharge_Trend_Steady" xml:space="preserve"><value>steady</value></data>
+  <data name="Discharge_Trend_Falling" xml:space="preserve"><value>falling</value></data>
+  <data name="Discharge_Station" xml:space="preserve"><value>Station {0} · measured {1}</value></data>
+  <data name="Discharge_Stale" xml:space="preserve"><value>reading out of date</value></data>
+  <data name="Discharge_Info" xml:space="preserve"><value>Explanation of the discharge</value></data>
+  <data name="Discharge_Hours_Title" xml:space="preserve"><value>Last 48 hours</value></data>
+  <data name="Discharge_Days_Title" xml:space="preserve"><value>Daily mean of the last 7 days</value></data>
+  <data name="Discharge_Chart_Label" xml:space="preserve"><value>Discharge over the last 48 hours, between {0} and {1} m³/s</value></data>
+  <data name="Discharge_Range" xml:space="preserve"><value>between {0} and {1} m³/s · dashed: 30-day median</value></data>
+  <data name="Discharge_HoursAgo" xml:space="preserve"><value>{0} h ago</value></data>
+  <data name="Discharge_Now" xml:space="preserve"><value>now</value></data>
+  <data name="Discharge_Legend_Below" xml:space="preserve"><value>below {0} m³/s</value></data>
+  <data name="Discharge_Legend_Range" xml:space="preserve"><value>{0} to {1} m³/s</value></data>
+  <data name="Discharge_Legend_From" xml:space="preserve"><value>from {0} m³/s</value></data>
+  <data name="Discharge_Legend_Median" xml:space="preserve"><value>The thresholds come from the median of the last 30 days ({0} m³/s): half, the same and double.</value></data>
+  <data name="Discharge_Legend_Site" xml:space="preserve"><value>The moderators set the thresholds for this site.</value></data>
+  <data name="Discharge_Legend_Note" xml:space="preserve"><value>High discharge means strong current and often murky water.</value></data>
+  <data name="Discharge_Source" xml:space="preserve"><value>Data: {0}</value></data>
 </root>

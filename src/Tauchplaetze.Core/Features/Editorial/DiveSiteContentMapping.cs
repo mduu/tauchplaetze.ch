@@ -1,6 +1,7 @@
 using Tauchplaetze.Core.CrossCutting.Geo;
 using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Forecasts;
 
 namespace Tauchplaetze.Core.Features.Editorial;
 
@@ -39,7 +40,10 @@ internal static class DiveSiteContentMapping
             [.. n.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new NoticeText(t.Culture.Trim(), t.Text))]))],
         SketchJson.Read(site.Sketch),
         HeroMediaId: site.HeroMediaId,
-        OtherNames: OtherNameJson.Read(site.OtherNames));
+        OtherNames: OtherNameJson.Read(site.OtherNames),
+        Discharge: site is { DischargeLowFrom: { } low, DischargeMediumFrom: { } medium, DischargeStrongFrom: { } strong }
+            ? new DischargeThresholds(low, medium, strong)
+            : null);
 
     public static void ApplyTo(DiveSite site, DiveSiteContent content)
     {
@@ -62,6 +66,9 @@ internal static class DiveSiteContentMapping
         site.InflowStationOverride = Blank(content.InflowStationOverride);
         site.SatellitePoint = content is { SatelliteLatitude: { } lat, SatelliteLongitude: { } lng } ? GeoPoints.Create(lat, lng) : null;
         site.ForecastDisabled = content.ForecastDisabled;
+        site.DischargeLowFrom = content.Discharge?.LowFrom;
+        site.DischargeMediumFrom = content.Discharge?.MediumFrom;
+        site.DischargeStrongFrom = content.Discharge?.StrongFrom;
 
         site.Translations.Clear();
         site.Translations.AddRange(content.Translations.Where(HasText).Select(t => new DiveSiteTranslation

@@ -115,6 +115,9 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 - `GET https://api.existenz.ch/apiv1/hydro/daterange?locations={station}&parameters={parameter}&startdate=…&enddate=…&app=tauchplaetze.ch`
 - Parameter: `flow` (Abfluss), `height` (Pegel), `temperature` (Wassertemperatur), an einigen Stationen Trübung.
 - 246 Stationen, Werte alle 10 min.
+- Mehrere Stationen in einem Call: `locations=2091,2288,…`. Die Antwort hat pro Wert `timestamp` (Unix, s), `loc`, `par` und `val`.
+- `startdate` und `enddate` sind UTC-Tage: Die Antwort für `startdate=2026-10-18` beginnt am 18.10.2026 um 00:00 UTC (Contract Test mit `TestData/hydro/daterange-2091-flow-height.json`).
+- Stationen mit Name, Gewässer und Lage: `GET https://api.existenz.ch/apiv1/hydro/locations?app=tauchplaetze.ch`.
 - Bedingungen: BAFU-Daten, Quelle angeben.
 
 ### Ziel: offizielle BAFU-Datenplattform
@@ -126,6 +129,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 ### Verwendung
 
 - **Stationen im MVP** (Seed, vor Ort prüfen): Zürichsee 2104 Linth – Weesen (Zufluss), Zugersee 2477 Lorze – Zug, Letzi (Zufluss), Rhein 2091 Rhein – Rheinfelden (Fluss).
+- **Flussplätze** (Seed vom 19.10.2026, aus `hydro/locations`): pro Fluss die Stationen, die einem Platz am nächsten liegen, höchstens 30 km entfernt, mit Lage. Rhein 2091, 2288 Neuhausen (2392 Rheinau misst im Oberwasser nur den Pegel, ohne Abfluss). Aare 2016 Brugg, 2029 Brügg-Aegerten, 2063 Murgenthal, 2135 Bern-Schönau. Areuse 2480 Boudry. Limmat 2243 Baden. Maggia 2368 Locarno-Solduno, 2475 Bignasco. Orbe 2378 Orbe. Töss 2132 Neftenbach. Verzasca 2605 Lavertezzo. Der Abfluss-Job holt sie alle 30 Minuten (`forecast.md`, «Abfluss»).
 - **Seen:** Jedes Gewässer hat eine Liste relevanter Stationen (Hauptzuflüsse). Ein Platz kann die Zuordnung überschreiben (z.B. nahe einer Mündung). Der Abfluss geteilt durch den Median der letzten 30 Tage ergibt `InflowDischargeRatio`.
 - **Flüsse:** Die Station des Flusses liefert Abfluss, Wassertemperatur und, wo vorhanden, Trübung am Platz. Das ist die Datenstufe «Gewässer» für Flussplätze (`forecast.md`).
 - **Seepegel:** Information auf der Gewässerseite und bei Einstiegen, kein Teil des Index.
@@ -150,7 +154,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
   | `ECMWF` | ECMWF | ca. 10 Tage | Wasserstand, Abfluss |
 
   Format: Text in UTF-8. Ein Kopf von rund 15 Zeilen nennt Ausgabezeit, Zeit des Wetterlaufs und den letzten Messwert (MEWZ). Danach eine Zeile pro Stunde: `dd mm yyyy hh Wasserstand Abfluss`, Wasserstand in m ü. M., Abfluss in m³/s. Die Reihe beginnt einen Tag vor der Ausgabe mit gemessenen Werten.
-- **Verwendung (geplant):** `ICH2_Ctrl` deckt die 5 Tage der Prognose ab. Der Teilwert «Zuflüsse» rechnet dann mit dem vorhergesagten statt dem aktuellen Abfluss, vor allem für Flussplätze. Das Ensemble (`ICH2`) taugt später für einen Hinweis «Abfluss unsicher».
+- **Verwendung (geplant):** `ICH2_Ctrl` deckt die 5 Tage der Prognose ab. Die Stunden kommen als `HydroHour` mit `Kind = Forecast` in dieselbe Tabelle wie die Messwerte. Die Kachel «Abfluss» zeigt sie dann nach der gemessenen Kurve. Der Teilwert «Zuflüsse» rechnet dann mit dem vorhergesagten statt dem aktuellen Abfluss, vor allem für Flussplätze. Das Ensemble (`ICH2`) taugt später für einen Hinweis «Abfluss unsicher».
 - **Nächster Schritt:** Zugang per HTTPS beantragen (einfacher als SFTP für einen Job in Azure). Dann einen Client mit Contract Test auf einer Beispieldatei bauen (Phase 1).
 - Nutzen: Prognose für Flussplätze. Ohne sie bleibt die Flussprognose bei Wetter und aktuellem Abfluss.
 

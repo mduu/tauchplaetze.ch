@@ -16,6 +16,14 @@ internal class HydroClient(HttpClient httpClient)
             $"apiv1/hydro/daterange?locations={stationId}&parameters={parameter}&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
             HydroValue.ParseList,
             ct);
+
+    /// <summary>Abfluss mehrerer Stationen in einem Call, pro Station zeitlich sortiert.</summary>
+    public Task<SourceResult<IReadOnlyDictionary<string, IReadOnlyList<HydroValue>>>> GetFlows(IEnumerable<string> stationIds, DateOnly start, DateOnly end, CancellationToken ct) =>
+        SourceHttp.Get(
+            httpClient,
+            $"apiv1/hydro/daterange?locations={string.Join(',', stationIds)}&parameters=flow&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
+            json => HydroValue.ParseByStation(json, "flow"),
+            ct);
 }
 
 /// <summary>Ein Messwert einer Station.</summary>
@@ -34,5 +42,25 @@ internal record HydroValue(DateTimeOffset Time, double Value)
             .Select(e => new HydroValue(DateTimeOffset.FromUnixTimeSeconds(e.GetProperty("timestamp").GetInt64()), e.GetProperty("val").GetDouble()))
             .OrderBy(v => v.Time)
             .ToList();
+    }
+
+    /// <summary>Die Werte des Parameters <paramref name="parameter"/>, gruppiert nach Station (`loc`).</summary>
+    public static IReadOnlyDictionary<string, IReadOnlyList<HydroValue>> ParseByStation(string json, string parameter)
+    {
+        using var document = JsonDocument.Parse(json);
+        if (!document.RootElement.TryGetProperty("payload", out var payload) || payload.ValueKind != JsonValueKind.Array)
+        {
+            return new Dictionary<string, IReadOnlyList<HydroValue>>();
+        }
+
+        return payload.EnumerateArray()
+            .Where(e => e.GetProperty("par").GetString() == parameter && e.GetProperty("val").ValueKind == JsonValueKind.Number)
+            .GroupBy(e => e.GetProperty("loc").GetString() ?? "")
+            .ToDictionary(
+                g => g.Key,
+                g => (IReadOnlyList<HydroValue>)g
+                    .Select(e => new HydroValue(DateTimeOffset.FromUnixTimeSeconds(e.GetProperty("timestamp").GetInt64()), e.GetProperty("val").GetDouble()))
+                    .OrderBy(v => v.Time)
+                    .ToList());
     }
 }

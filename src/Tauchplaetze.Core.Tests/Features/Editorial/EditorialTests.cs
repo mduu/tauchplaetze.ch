@@ -9,6 +9,7 @@ using Tauchplaetze.Core.Features.DiveSites.Queries;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Commands;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
@@ -96,7 +97,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Mitwirkende_aendern_weder_Slug_noch_Gewaesser_noch_Prognose_ein_Moderator_schon_und_der_alte_Slug_leitet_weiter()
+    public async Task Mitwirkende_aendern_weder_Slug_noch_Gewaesser_noch_Prognose_noch_Abfluss_Schwellen_ein_Moderator_schon_und_der_alte_Slug_leitet_weiter()
     {
         // Arrange
         var (moderator, anna, site) = await Prepare();
@@ -105,7 +106,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
 
         // Act
         await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber,
-            edit.Content with { Slug = "anderer-slug", WaterBodyId = otherLake, ForecastDisabled = true, MaxDepth = 25 }, null));
+            edit.Content with { Slug = "anderer-slug", WaterBodyId = otherLake, ForecastDisabled = true, Discharge = new DischargeThresholds(100, 300, 600), MaxDepth = 25 }, null));
         var proposedContent = await Changes(site, 1, 2);
         await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber, edit.Content with { Slug = "riff-williams" }, null));
         var lookup = await Query<GetDiveSiteQuery, DiveSiteLookup>(new GetDiveSiteQuery("riff-williams-herrliberg", "de"));

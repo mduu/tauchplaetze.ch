@@ -1,0 +1,163 @@
+@using Tauchplaetze.Core.Features.Forecasts
+@inject IStringLocalizer<ForecastStrings> L
+
+<div class="stat discharge" data-discharge="@(Discharge.Level?.ToString() ?? "none")" data-stale="@(Discharge.IsStale ? "true" : "false")">
+    <div class="discharge-head">
+        <span class="label">@L["Tile_Discharge"]</span>
+        @if (Discharge.Thresholds is not null)
+        {
+            <button type="button" class="rating-info" popovertarget="discharge-legend" data-hover-popover
+                    aria-label="@L["Discharge_Info"]"><span aria-hidden="true">i</span></button>
+        }
+    </div>
+    <div class="stat-value">
+        @if (Discharge.Level is { } level)
+        {
+            <span class="discharge-level" data-band="@Band(level)">@L[$"Discharge_{level}"]</span>
+        }
+        <span class="discharge-amount">@L["Discharge_Value", DischargeFormat.Amount(Discharge.Discharge)]</span>
+    </div>
+    @if (Discharge is { Trend: { } trend, ChangeThreeHours: { } change })
+    {
+        <div class="stat-note" data-trend="@trend">
+            <span class="trend-arrow" aria-hidden="true">@Arrow(trend)</span> @L["Discharge_Trend", L[$"Discharge_Trend_{trend}"], DischargeFormat.Change(change)]
+        </div>
+    }
+    <div class="stat-note">
+        @L["Discharge_Station", Discharge.StationName, DischargeFormat.Time(Discharge.MeasuredAt)]
+        @if (Discharge.IsStale)
+        {
+            <span class="discharge-stale">· @L["Discharge_Stale"]</span>
+        }
+    </div>
+
+    @if (Discharge.Hours.Count > 1)
+    {
+        <figure class="discharge-curve">
+            <figcaption>@L["Discharge_Hours_Title"]</figcaption>
+            <svg viewBox="0 0 @Width @Height" preserveAspectRatio="none" role="img"
+                 aria-label="@L["Discharge_Chart_Label", DischargeFormat.Amount(Low), DischargeFormat.Amount(High)]">
+                @if (Discharge.Median30Days is { } median && median >= Low && median <= High)
+                {
+                    <line class="median" x1="0" x2="@Width" y1="@Y(median)" y2="@Y(median)" />
+                }
+                <polygon class="area" points="@AreaPoints" />
+                <polyline class="line" points="@LinePoints" />
+            </svg>
+            <div class="curve-axis">
+                <span>@L["Discharge_HoursAgo", 48]</span>
+                <span>@L["Discharge_HoursAgo", 24]</span>
+                <span>@L["Discharge_Now"]</span>
+            </div>
+            <div class="curve-range">@L["Discharge_Range", DischargeFormat.Amount(Low), DischargeFormat.Amount(High)]</div>
+        </figure>
+    }
+
+    @if (Discharge.Days.Count > 0)
+    {
+        <div class="discharge-days">
+            <div class="discharge-days-title">@L["Discharge_Days_Title"]</div>
+            <ol>
+                @foreach (var day in Discharge.Days)
+                {
+                    <li>
+                        <span class="day-bar-wrap"><span class="day-bar" style="height: @(DayHeight(day.Discharge))"></span></span>
+                        <span class="day-value">@DischargeFormat.Amount(day.Discharge)</span>
+                        <span class="day-name">@(day.Date == DischargeFormat.Today() ? L["Day_Today"] : ForecastFormat.Weekday(day.Date))</span>
+                    </li>
+                }
+            </ol>
+        </div>
+    }
+
+    @if (ShowSource)
+    {
+        <p class="discharge-source">@SourceLinks.Format(L["Discharge_Source"], SourceLinks.Bafu(L))</p>
+    }
+
+    @if (Discharge.Thresholds is { } thresholds)
+    {
+        <div id="discharge-legend" popover class="rating-legend">
+            <p class="rating-legend-title">@L["Tile_Discharge"]</p>
+            <ol>
+                @foreach (var (step, range) in Ranges(thresholds))
+                {
+                    <li aria-current="@(step == Discharge.Level ? "true" : null)">
+                        <span class="rating-legend-number" data-band="@Band(step)">@((int)step + 1)</span>
+                        <span><strong>@L[$"Discharge_{step}"]</strong> · @range</span>
+                    </li>
+                }
+            </ol>
+            <p class="discharge-legend-note">
+                @(Discharge.UsesSiteThresholds
+                    ? L["Discharge_Legend_Site"]
+                    : L["Discharge_Legend_Median", DischargeFormat.Amount(Discharge.Median30Days ?? 0)])
+                @L["Discharge_Legend_Note"]
+            </p>
+        </div>
+    }
+</div>
+
+@code {
+    private const int Width = 300;
+
+    private const int Height = 64;
+
+    [Parameter, EditorRequired]
+    public SiteDischarge Discharge { get; set; } = default!;
+
+    /// <summary>Quelle in der Kachel zeigen. Im Prognoseblock steht das BAFU schon in der Quellenzeile.</summary>
+    [Parameter]
+    public bool ShowSource { get; set; }
+
+    private decimal Low => Discharge.Hours.Min(h => h.Discharge);
+
+    private decimal High => Discharge.Hours.Max(h => h.Discharge);
+
+    private DateTimeOffset Start => Discharge.Hours[^1].Hour.AddHours(-47);
+
+    private string LinePoints => string.Join(' ', Discharge.Hours.Select(h => Point(h)));
+
+    private string AreaPoints => $"{X(Discharge.Hours[0].Hour)},{Height} {LinePoints} {X(Discharge.Hours[^1].Hour)},{Height}";
+
+    private string Point(DischargeHour hour) => FormattableString.Invariant($"{X(hour.Hour)},{Y(hour.Discharge)}");
+
+    private string X(DateTimeOffset hour) => FormattableString.Invariant($"{Math.Clamp((hour - Start).TotalHours / 47 * Width, 0, Width):0.#}");
+
+    /// <summary>Oben und unten bleibt Rand, damit die Linie nicht am Rand klebt. Eine flache Kurve liegt in der Mitte.</summary>
+    private string Y(decimal discharge)
+    {
+        var span = High - Low;
+        var share = span == 0 ? 0.5m : (discharge - Low) / span;
+        return FormattableString.Invariant($"{Height - 6 - share * (Height - 12):0.#}");
+    }
+
+    private string DayHeight(decimal discharge)
+    {
+        var max = Discharge.Days.Max(d => d.Discharge);
+        return FormattableString.Invariant($"{(max == 0 ? 0 : Math.Max(8, discharge / max * 100)):0}%");
+    }
+
+    private IEnumerable<(DischargeLevel Level, string Range)> Ranges(DischargeThresholds t) =>
+    [
+        (DischargeLevel.VeryLow, L["Discharge_Legend_Below", DischargeFormat.Amount(t.LowFrom)]),
+        (DischargeLevel.Low, L["Discharge_Legend_Range", DischargeFormat.Amount(t.LowFrom), DischargeFormat.Amount(t.MediumFrom)]),
+        (DischargeLevel.Medium, L["Discharge_Legend_Range", DischargeFormat.Amount(t.MediumFrom), DischargeFormat.Amount(t.StrongFrom)]),
+        (DischargeLevel.Strong, L["Discharge_Legend_From", DischargeFormat.Amount(t.StrongFrom)]),
+    ];
+
+    /// <summary>Für Taucher ist wenig Abfluss gut: dieselben Farben wie der Index.</summary>
+    private static string Band(DischargeLevel level) => level switch
+    {
+        DischargeLevel.VeryLow or DischargeLevel.Low => "high",
+        DischargeLevel.Medium => "mid",
+        _ => "low",
+    };
+
+    private static string Arrow(DischargeTrend trend) => trend switch
+    {
+        DischargeTrend.Rising => "↗",
+        DischargeTrend.Falling => "↘",
+        _ => "→",
+    };
+}

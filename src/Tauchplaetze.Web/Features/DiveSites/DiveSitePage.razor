@@ -10,6 +10,7 @@
 @using Tauchplaetze.Web.Features.Forecasts
 @inject IQueryHandler<GetDiveSiteQuery, DiveSiteLookup> DiveSites
 @inject IQueryHandler<GetSiteForecastQuery, SiteForecast> Forecasts
+@inject IQueryHandler<GetSiteDischargeQuery, SiteDischarge?> Discharges
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
 @inject NavigationManager Navigation
@@ -49,7 +50,7 @@
         <section class="page-section" aria-labelledby="conditions">
             @if (forecast is { Days.Count: > 0 })
             {
-                <ForecastPanel Forecast="forecast" />
+                <ForecastPanel Forecast="forecast" Discharge="discharge" />
             }
             else
             {
@@ -58,6 +59,12 @@
                 <div class="card pending">
                     <p>@L["Conditions_Soon_Text"]</p>
                 </div>
+                @if (discharge is not null)
+                {
+                    <div class="conditions-discharge">
+                        <DischargeTile Discharge="discharge" ShowSource="true" />
+                    </div>
+                }
             }
         </section>
 
@@ -128,6 +135,8 @@
 
     private SiteForecast? forecast;
 
+    private SiteDischarge? discharge;
+
     [Parameter]
     public string Slug { get; set; } = "";
 
@@ -144,6 +153,7 @@
         {
             case DiveSiteLookup.Found found:
                 forecast = await Forecasts.Handle(new GetSiteForecastQuery(found.Site.Id));
+                discharge = await Discharges.Handle(new GetSiteDischargeQuery(found.Site.Id));
                 break;
             case DiveSiteLookup.Moved moved:
                 RedirectPermanently(PublicRoutes.DiveSite(Language, moved.Slug));

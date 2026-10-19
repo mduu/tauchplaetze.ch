@@ -113,4 +113,16 @@ public class SourceContractTests
         Assert.Equal(14.93, values[^1].Value);
         Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(1792241400), values[^1].Time);
     }
+
+    [Fact]
+    public void Die_Hydrodaten_mehrerer_Parameter_ergeben_den_Abfluss_pro_Station()
+    {
+        // Act
+        var flows = HydroValue.ParseByStation(TestData.Read("hydro", "daterange-2091-flow-height.json"), "flow");
+
+        // Assert
+        Assert.Equal(["2091"], flows.Keys);
+        Assert.Equal(239, flows["2091"].Count);
+        Assert.Equal((335.7, 325.82), (flows["2091"][0].Value, flows["2091"][^1].Value));
+    }
 }

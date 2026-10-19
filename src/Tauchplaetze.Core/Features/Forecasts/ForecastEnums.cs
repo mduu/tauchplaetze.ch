@@ -124,3 +124,42 @@ public enum ForecastRunStatus
     Failed,
 }
 
+
+/// <summary>Einordnung des Abflusses an einem Flussplatz (`forecast.md`, «Abfluss»).</summary>
+public enum DischargeLevel
+{
+    /// <summary>Sehr gering.</summary>
+    VeryLow,
+
+    /// <summary>Gering.</summary>
+    Low,
+
+    /// <summary>Mittel.</summary>
+    Medium,
+
+    /// <summary>Stark.</summary>
+    Strong,
+}
+
+/// <summary>Entwicklung des Abflusses über die letzten 3 Stunden.</summary>
+public enum DischargeTrend
+{
+    /// <summary>Steigt.</summary>
+    Rising,
+
+    /// <summary>Bleibt gleich.</summary>
+    Steady,
+
+    /// <summary>Fällt.</summary>
+    Falling,
+}
+
+/// <summary>Herkunft eines Stundenwerts des Abflusses.</summary>
+public enum HydroSeriesKind
+{
+    /// <summary>Gemessen an der Station.</summary>
+    Measured,
+
+    /// <summary>Vorhersage des BAFU. Noch ohne Quelle (`data-sources.md`, «Phase 1: Vorhersagen des BAFU»).</summary>
+    Forecast,
+}

@@ -356,6 +356,18 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.Property<byte?>("DifficultyRating")
                         .HasColumnType("tinyint");
 
+                    b.Property<decimal?>("DischargeLowFrom")
+                        .HasPrecision(7, 1)
+                        .HasColumnType("decimal(7,1)");
+
+                    b.Property<decimal?>("DischargeMediumFrom")
+                        .HasPrecision(7, 1)
+                        .HasColumnType("decimal(7,1)");
+
+                    b.Property<decimal?>("DischargeStrongFrom")
+                        .HasPrecision(7, 1)
+                        .HasColumnType("decimal(7,1)");
+
                     b.Property<int>("Features")
                         .HasColumnType("int");
 
@@ -709,6 +721,61 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.ToTable("ForecastRuns", (string)null);
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.HydroHour", b =>
+                {
+                    b.Property<string>("StationId")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("Hour")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal>("Discharge")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<DateTimeOffset>("ImportedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("StationId", "Kind", "Hour");
+
+                    b.HasIndex("Hour");
+
+                    b.ToTable("HydroHours", (string)null);
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.HydroReading", b =>
+                {
+                    b.Property<string>("StationId")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<decimal>("Discharge")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<decimal?>("DischargeThreeHoursBefore")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<DateTimeOffset>("ImportedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("MeasuredAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal?>("Median30Days")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.HasKey("StationId");
+
+                    b.ToTable("HydroReadings", (string)null);
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.MediaItem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1021,6 +1088,9 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.Property<string>("StationId")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<Point>("Location")
+                        .HasColumnType("geography");
 
                     b.Property<string>("Name")
                         .IsRequired()

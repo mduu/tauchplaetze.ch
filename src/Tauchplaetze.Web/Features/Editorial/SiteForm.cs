@@ -1,5 +1,6 @@
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Web.CrossCutting.Localization;
 
@@ -43,6 +44,12 @@ public class SiteForm
 
     public bool ForecastDisabled { get; set; }
 
+    public decimal? DischargeLowFrom { get; set; }
+
+    public decimal? DischargeMediumFrom { get; set; }
+
+    public decimal? DischargeStrongFrom { get; set; }
+
     public Dictionary<string, TextForm> Texts { get; } = Languages.All.ToDictionary(l => l, _ => new TextForm());
 
     public List<EntryForm> EntryPoints { get; } = [];
@@ -79,6 +86,9 @@ public class SiteForm
             SatelliteLatitude = content.SatelliteLatitude,
             SatelliteLongitude = content.SatelliteLongitude,
             ForecastDisabled = content.ForecastDisabled,
+            DischargeLowFrom = content.Discharge?.LowFrom,
+            DischargeMediumFrom = content.Discharge?.MediumFrom,
+            DischargeStrongFrom = content.Discharge?.StrongFrom,
         };
         form.Ratings["DifficultyRating"] = content.DifficultyRating;
         form.Ratings["WallRating"] = content.WallRating;
@@ -140,7 +150,13 @@ public class SiteForm
         [.. Sketch.Select(f => f.ToContent())],
         [.. Media.Select(m => new MediaUse(m.MediaId, m.Section, m.Section == MediaSection.EntryPoint ? m.EntryPointId : null))],
         Media.Any(m => m.MediaId == HeroMediaId) ? HeroMediaId : null,
-        (OtherNames ?? "").Split(','));
+        (OtherNames ?? "").Split(','),
+        Discharge);
+
+    /// <summary>Leer ohne Schwellen. Fehlt nur eine, gilt sie als 0 und die Prüfung im Core meldet den Fehler.</summary>
+    private DischargeThresholds? Discharge => DischargeLowFrom is null && DischargeMediumFrom is null && DischargeStrongFrom is null
+        ? null
+        : new DischargeThresholds(DischargeLowFrom ?? 0, DischargeMediumFrom ?? 0, DischargeStrongFrom ?? 0);
 
     private static bool HasText(DiveSiteContentTranslation t) =>
         new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));

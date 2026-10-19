@@ -36,6 +36,10 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
 
     public DbSet<WaterBodyHydroStation> WaterBodyHydroStations => Set<WaterBodyHydroStation>();
 
+    public DbSet<HydroHour> HydroHours => Set<HydroHour>();
+
+    public DbSet<HydroReading> HydroReadings => Set<HydroReading>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

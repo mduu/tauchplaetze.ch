@@ -47,6 +47,15 @@ internal class DiveSite
 
     public bool ForecastDisabled { get; set; }
 
+    /// <summary>Ab diesem Abfluss in m³/s gilt er als gering statt sehr gering. Die drei Schwellen gibt es nur zusammen.</summary>
+    public decimal? DischargeLowFrom { get; set; }
+
+    /// <summary>Ab diesem Abfluss in m³/s gilt er als mittel.</summary>
+    public decimal? DischargeMediumFrom { get; set; }
+
+    /// <summary>Ab diesem Abfluss in m³/s gilt er als stark.</summary>
+    public decimal? DischargeStrongFrom { get; set; }
+
     public byte? DataLevel { get; set; }
 
     public DiveSiteStatus Status { get; set; }

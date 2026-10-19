@@ -48,3 +48,32 @@ public record ForecastDay(
 {
     public bool IsOutlook => DiveIndex is null;
 }
+
+/// <summary>Schwellen des Abflusses in m³/s: ab <see cref="LowFrom"/> gering, ab <see cref="MediumFrom"/> mittel, ab <see cref="StrongFrom"/> stark.</summary>
+public record DischargeThresholds(decimal LowFrom, decimal MediumFrom, decimal StrongFrom);
+
+/// <summary>
+/// Der Abfluss an einem Flussplatz von der zugeordneten BAFU-Station. <see cref="Thresholds"/>: die Schwellen, mit denen
+/// <see cref="Level"/> eingeordnet ist, vom Platz (<see cref="UsesSiteThresholds"/>) oder aus dem Median der letzten 30 Tage.
+/// </summary>
+public record SiteDischarge(
+    string StationId,
+    string StationName,
+    decimal Discharge,
+    DateTimeOffset MeasuredAt,
+    bool IsStale,
+    DischargeLevel? Level,
+    DischargeThresholds? Thresholds,
+    bool UsesSiteThresholds,
+    decimal? Median30Days,
+    DischargeTrend? Trend,
+    decimal? ChangeThreeHours,
+    IReadOnlyList<DischargeHour> Hours,
+    IReadOnlyList<DischargeDay> Days,
+    IReadOnlyList<DischargeHour> ForecastHours);
+
+/// <summary>Mittlerer Abfluss einer Stunde, Beginn in UTC.</summary>
+public record DischargeHour(DateTimeOffset Hour, decimal Discharge);
+
+/// <summary>Mittlerer Abfluss eines Schweizer Kalendertags.</summary>
+public record DischargeDay(DateOnly Date, decimal Discharge);

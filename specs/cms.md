@@ -18,7 +18,7 @@ Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätz
 | `/admin` | Übersicht: Plätze, offene Vorschläge | Moderatoren, Admins |
 | `/admin/plaetze` | Liste mit Suche, Status, Ausbaustufe, Datenstufe, offenen Vorschlägen | Moderatoren, Admins |
 | `/admin/plaetze/neu` | neuer Platz: Name, Gewässer, Koordinate (Klick in die Karte) | Moderatoren, Admins |
-| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten (mit «Auch bekannt als», Namen mit Komma getrennt), Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station) | Moderatoren, Admins |
+| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten (mit «Auch bekannt als», Namen mit Komma getrennt), Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station, Schwellen des Abflusses) | Moderatoren, Admins |
 | `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | alle Angemeldeten, Wiederherstellen für Moderatoren |
 | `/admin/vorschlaege` | offene Vorschläge mit Vergleich zur Basis, Freigeben, Ablehnen mit Begründung | Moderatoren, Admins |
 | `/admin/konten` | Konten sperren (ohne E-Mail-Adressen und Rollen) | Moderatoren; Admins nutzen `/platform/konten` |
@@ -153,7 +153,7 @@ Konto-Mails (Bestätigung, Passwort) und das Kontaktformular nutzen dasselbe Lay
 - Texte, Bewertungen, Einstiege und Lage eines bestehenden Platzes ändern.
 - Einen neuen Platz vorschlagen (Name, Koordinate, Gewässer).
 - Fotos hochladen. Dabei bestätigen sie, dass sie die Rechte haben und tauchplaetze.ch das Foto mit Namensnennung zeigen darf. Ein Foto ist erst nach der Freigabe der Version öffentlich, die es verwendet.
-- Nicht: archivieren, Slugs ändern, Prognose ausschalten, Satellitenpunkt setzen, Gewässer und Stationen ändern. Der Core übernimmt diese Felder bei Vorschlägen von Mitwirkenden aus der aktuellen Version (`Proposals.ProtectModeratorFields`).
+- Nicht: archivieren, Slugs ändern, Prognose ausschalten, Satellitenpunkt setzen, Gewässer und Stationen ändern, Schwellen des Abflusses setzen. Der Core übernimmt diese Felder bei Vorschlägen von Mitwirkenden aus der aktuellen Version (`Proposals.ProtectModeratorFields`).
 
 ### Schutz gegen Missbrauch
 

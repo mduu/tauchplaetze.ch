@@ -58,6 +58,12 @@ internal static partial class ContentValidation
             errors.Add(EditorialError.InvalidSketch);
         }
 
+        if (content.Discharge is { } discharge && !(discharge.LowFrom > 0 && discharge.LowFrom < discharge.MediumFrom
+                && discharge.MediumFrom < discharge.StrongFrom && discharge.StrongFrom <= MaxDischarge))
+        {
+            errors.Add(EditorialError.InvalidDischargeThresholds);
+        }
+
         return errors;
     }
 
@@ -88,6 +94,8 @@ internal static partial class ContentValidation
 
     /// <remarks>Grob die Landesgrenze mit etwas Rand, damit Plätze an der Grenze (Bodensee, Genfersee, Rhein bei Basel) gelten.</remarks>
     private static bool InSwitzerland(double latitude, double longitude) => latitude is >= 45.7 and <= 47.9 && longitude is >= 5.8 and <= 10.6;
+
+    private const decimal MaxDischarge = 100_000;
 
     private static readonly HashSet<string> Cultures = ["de", "en", "fr", "it"];
 

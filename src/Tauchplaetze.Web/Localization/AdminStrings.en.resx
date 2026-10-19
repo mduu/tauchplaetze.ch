@@ -321,6 +321,12 @@
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Content:SourceBaseUri or Content:ExportKey is missing.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>Production did not deliver the package. Check the address and the key.</value></data>
   <data name="Platform_NoData" xml:space="preserve"><value>No data. Either the permission is missing or your account was created again. Sign out and sign in again.</value></data>
+  <data name="Field_Discharge" xml:space="preserve"><value>Discharge thresholds</value></data>
+  <data name="Field_DischargeLowFrom" xml:space="preserve"><value>Low from (m³/s)</value></data>
+  <data name="Field_DischargeMediumFrom" xml:space="preserve"><value>Medium from (m³/s)</value></data>
+  <data name="Field_DischargeStrongFrom" xml:space="preserve"><value>Strong from (m³/s)</value></data>
+  <data name="Field_Discharge_Help" xml:space="preserve"><value>River sites only. Empty: the classification comes from the median of the last 30 days. Below the first value the discharge is very low.</value></data>
+  <data name="Error_InvalidDischargeThresholds" xml:space="preserve"><value>The discharge thresholds are invalid: set all three, each greater than the one before, at most 100,000 m³/s.</value></data>
   <data name="Forecast_NextRun" xml:space="preserve"><value>Next run</value></data>
   <data name="Forecast_Week" xml:space="preserve"><value>Last 7 days</value></data>
   <data name="Forecast_WeekValue" xml:space="preserve"><value>{0} runs</value></data>

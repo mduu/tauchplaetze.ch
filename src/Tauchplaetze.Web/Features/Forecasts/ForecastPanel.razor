@@ -51,6 +51,10 @@
                 <div class="stat-note">@L["Current_Detail", ForecastFormat.CentimetresPerSecond(speed), L[$"Compass_{ForecastFormat.Compass(direction)}"]]</div>
             </div>
         }
+        @if (Discharge is not null)
+        {
+            <DischargeTile Discharge="Discharge" />
+        }
     </div>
 
     @if (Today.SurfaceTemperature is not null)
@@ -98,6 +102,9 @@
     [Parameter, EditorRequired]
     public SiteForecast Forecast { get; set; } = default!;
 
+    /// <summary>Der Abfluss an einem Flussplatz, sonst <c>null</c>.</summary>
+    [Parameter]
+    public SiteDischarge? Discharge { get; set; }
 
     private ForecastDay Today => Forecast.Days[0];
 

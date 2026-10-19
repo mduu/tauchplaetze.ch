@@ -321,6 +321,12 @@
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Content:SourceBaseUri oder Content:ExportKey fehlt.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>Prod hat das Paket nicht geliefert. Prüfe Adresse und Schlüssel.</value></data>
   <data name="Platform_NoData" xml:space="preserve"><value>Keine Daten. Entweder fehlt die Berechtigung, oder dein Konto wurde neu angelegt. Melde dich ab und wieder an.</value></data>
+  <data name="Field_Discharge" xml:space="preserve"><value>Schwellen des Abflusses</value></data>
+  <data name="Field_DischargeLowFrom" xml:space="preserve"><value>Gering ab (m³/s)</value></data>
+  <data name="Field_DischargeMediumFrom" xml:space="preserve"><value>Mittel ab (m³/s)</value></data>
+  <data name="Field_DischargeStrongFrom" xml:space="preserve"><value>Stark ab (m³/s)</value></data>
+  <data name="Field_Discharge_Help" xml:space="preserve"><value>Nur an Flussplätzen. Leer: Die Einordnung kommt aus dem Median der letzten 30 Tage. Darunter gilt der Abfluss als sehr gering.</value></data>
+  <data name="Error_InvalidDischargeThresholds" xml:space="preserve"><value>Die Schwellen des Abflusses sind ungültig: alle drei setzen, jede grösser als die vorherige, höchstens 100 000 m³/s.</value></data>
   <data name="Forecast_NextRun" xml:space="preserve"><value>Nächster Lauf</value></data>
   <data name="Forecast_Week" xml:space="preserve"><value>Letzte 7 Tage</value></data>
   <data name="Forecast_WeekValue" xml:space="preserve"><value>{0} Läufe</value></data>

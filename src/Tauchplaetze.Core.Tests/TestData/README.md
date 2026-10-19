@@ -9,5 +9,6 @@ Echte Antworten der Quellen aus dem Spike 0.5 (Riff Williams, Zürichsee). Die C
 | `alplakes/` (Strömung) | 3D `delft3d-flow` Zürichsee bei Riff Williams (47.2849/8.6085) und `mitgcm` Zugersee (47.13/8.49), je 19.10.2026 00:00–24:00 UTC, mit `u` und `v` nach dem Fix von Eawag | 19.10.2026 |
 | `open-meteo/` | ICON-CH1, ICON-DWD (13:06), ICON-CH2 (12:57) | 17.10.2026 |
 | `hydro/` | BAFU über existenz.ch, Station 2104 Linth Weesen, Abfluss | 17.10.2026, 13:06 |
+| `hydro/` (Flussplätze) | BAFU über existenz.ch, Station 2091 Rhein – Rheinfelden, Abfluss und Pegel, `startdate=2026-10-18`, `enddate=2026-10-20` | 19.10.2026, 15:45 |
 
 Ändert eine Quelle ihr Format, kommt eine neue Antwort dazu. Die alte bleibt, solange der Parser sie lesen muss.

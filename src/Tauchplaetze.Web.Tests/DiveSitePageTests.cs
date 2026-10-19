@@ -15,6 +15,10 @@ public class DiveSitePageTests : IClassFixture<WebApp>
 
     private static readonly Guid ForecastSiteId = Guid.NewGuid();
 
+    private const string River = "strandbad-rheinfelden";
+
+    private static readonly Guid RiverSiteId = Guid.NewGuid();
+
     private readonly WebApp app;
 
     private static readonly Guid HeroPhotoId = Guid.NewGuid();
@@ -40,6 +44,9 @@ public class DiveSitePageTests : IClassFixture<WebApp>
             [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]) with { CurrentSpeed = 0.023m, CurrentDirection = 45, CurrentLevel = CurrentLevel.Calm }, Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
             DateTimeOffset.UtcNow,
             Hours(new DateTime(2030, 1, 7))));
+        app.DiveSites.Add(River, new DiveSiteLookup.Found(new DiveSiteDetails(
+            RiverSiteId, River, "Strandbad", "rhein", "Rhein", WaterBodyType.River, "Rheinfelden", "AG", 47.55164, 7.7767, 0, DateTimeOffset.UtcNow, [], [])));
+        app.Discharge.Answer = query => query.DiveSiteId == RiverSiteId ? RiverDischarge() : null;
         app.DiveSites.Add("alter-name", new DiveSiteLookup.Moved(Slug));
         app.DiveSites.Add("archiviert", new DiveSiteLookup.Gone());
     }
@@ -364,4 +371,49 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         new DateOnly(2026, 10, october), index is null ? (byte)1 : (byte)3, index, index is null ? null : ProfileSource.Model3d,
         index is null ? null : 15.2m, 15.0m, 11.4m, 7.9m, 12m, 18m, 7.5m, new DateOnly(2026, 10, 15), VisibilityIndicator.Good, 18m,
         2, 9m, 15m, 1.2m, AlgaeLevel.Low, reasons);
+
+    [Theory]
+    [InlineData("/de/tauchplaetze/", "Abfluss", "mittel", "steigt", "Die Moderation hat die Schwellen")]
+    [InlineData("/en/dive-sites/", "Discharge", "medium", "rising", "The moderators set the thresholds")]
+    [InlineData("/fr/sites-de-plongee/", "Débit", "moyen", "en hausse", "La modération a fixé les seuils")]
+    [InlineData("/it/siti-di-immersione/", "Portata", "media", "in aumento", "La moderazione ha fissato le soglie")]
+    public async Task Ein_Flussplatz_zeigt_den_Abfluss_mit_Einordnung_Trend_Station_und_Legende_in_jeder_Sprache(string path, string tile, string level, string trend, string legend)
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync(path + River, TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains(tile, text);
+        Assert.Contains(level, text);
+        Assert.Contains(trend, text);
+        Assert.Contains("Rhein – Rheinfelden", text);
+        Assert.Contains(legend, text);
+        Assert.Contains("data-discharge=\"Medium\"", html);
+    }
+
+    [Fact]
+    public async Task Ein_Platz_am_See_zeigt_keinen_Abfluss()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + Slug, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.DoesNotContain("data-discharge", html);
+    }
+
+    private static SiteDischarge RiverDischarge()
+    {
+        var now = DateTimeOffset.UtcNow;
+        var hours = Enumerable.Range(0, 48).Select(h => new DischargeHour(now.AddHours(h - 47), 300 + h)).ToList();
+        return new SiteDischarge("2091", "Rhein – Rheinfelden", 347, now.AddMinutes(-10), false, DischargeLevel.Medium,
+            new DischargeThresholds(200, 300, 600), true, 280, DischargeTrend.Rising, 14, hours,
+            [.. Enumerable.Range(0, 7).Select(d => new DischargeDay(DateOnly.FromDateTime(now.UtcDateTime).AddDays(d - 6), 290 + d))], []);
+    }
 }

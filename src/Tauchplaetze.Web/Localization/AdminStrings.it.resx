@@ -321,6 +321,12 @@
   <data name="Platform_Content_Error_SourceNotConfigured" xml:space="preserve"><value>Manca Content:SourceBaseUri o Content:ExportKey.</value></data>
   <data name="Platform_Content_Error_SourceFailed" xml:space="preserve"><value>La produzione non ha fornito il pacchetto. Controlla indirizzo e chiave.</value></data>
   <data name="Platform_NoData" xml:space="preserve"><value>Nessun dato. Manca l’autorizzazione oppure il tuo account è stato ricreato. Esci e accedi di nuovo.</value></data>
+  <data name="Field_Discharge" xml:space="preserve"><value>Soglie della portata</value></data>
+  <data name="Field_DischargeLowFrom" xml:space="preserve"><value>Bassa da (m³/s)</value></data>
+  <data name="Field_DischargeMediumFrom" xml:space="preserve"><value>Media da (m³/s)</value></data>
+  <data name="Field_DischargeStrongFrom" xml:space="preserve"><value>Forte da (m³/s)</value></data>
+  <data name="Field_Discharge_Help" xml:space="preserve"><value>Solo siti fluviali. Vuoto: la classificazione viene dalla mediana degli ultimi 30 giorni. Sotto il primo valore la portata è molto bassa.</value></data>
+  <data name="Error_InvalidDischargeThresholds" xml:space="preserve"><value>Le soglie della portata non sono valide: impostarle tutte e tre, ognuna maggiore della precedente, al massimo 100 000 m³/s.</value></data>
   <data name="Forecast_NextRun" xml:space="preserve"><value>Prossima esecuzione</value></data>
   <data name="Forecast_Week" xml:space="preserve"><value>Ultimi 7 giorni</value></data>
   <data name="Forecast_WeekValue" xml:space="preserve"><value>{0} esecuzioni</value></data>

@@ -45,6 +45,7 @@ Zuordnung der BAFU-Stationen zu einem Gewässer. PK: (`WaterBodyId`, `StationId`
 | `Name` | string(100) | |
 | `Role` | enum | `Inflow` (Zufluss eines Sees), `River` (Station am Fluss selbst, für Flussplätze) |
 | `Weight` | decimal, optional | Anteil am Teilwert «Zuflüsse», nur bei `Inflow` |
+| `Location` | geography (Point), optional | Lage der Station. Ein Flussplatz nimmt die nächste Station mit Rolle `River` (`forecast.md`, «Abfluss»). Der Seed ergänzt eine fehlende Lage. |
 
 ### WaterBodyWeatherStation
 
@@ -74,7 +75,8 @@ Der Tauchplatz. Nur `Name`, `Location` und `WaterBodyId` sind Pflicht (Ausbaustu
 | `Access` | enum, optional | `Shore`, `Boat`, `ShoreAndBoat` |
 | `Features` | flags enum | `Plateau`, `Cave`, `River`, `IceDiving`, `Training` (Wand und Wrack kommen aus den Bewertungen) |
 | `HasDivingBan` | bool | Tauchverbot (dauernd oder zeitweise) |
-| `InflowStationOverride` | string(20), optional | BAFU-Station, falls der Platz nahe einer Mündung liegt (überschreibt die Stationen des Sees) |
+| `InflowStationOverride` | string(20), optional | BAFU-Station, falls der Platz nahe einer Mündung liegt (überschreibt die Stationen des Sees). An einem Fluss die Station der Kachel «Abfluss» statt der nächsten. |
+| `DischargeLowFrom`, `DischargeMediumFrom`, `DischargeStrongFrom` | decimal(7,1), optional | Schwellen des Abflusses in m³/s für die Kachel «Abfluss»: ab hier gering, mittel, stark. Nur alle drei zusammen und steigend. Nur Moderation. Ohne sie gilt der Median der letzten 30 Tage. |
 | `SatellitePoint` | geography (Point), optional | eigener Punkt seewärts für Satellitenwerte. Ohne ihn gilt `WaterBody.SatellitePoint`. |
 | `ForecastDisabled` | bool | Prognose für den Platz ausgeschaltet (Datenstufe 0) |
 | `DataLevel` | tinyint (0–3), optional | vom Job berechnet, Stand des letzten Laufs, siehe `forecast.md`. `null` bis zum ersten Lauf (noch nicht berechnet). Nicht Teil der Revision. |
@@ -259,6 +261,31 @@ Das Wetter pro Stunde eines Platzes für die Grafik auf der Platzseite (`forecas
 
 JSON statt einer Zeile pro Stunde: Die Seite liest die Stunden immer zusammen, und ein Lauf schreibt so eine Zeile statt 120 pro Platz. Ein neues Symbol im Enum lässt alte Zeilen lesbar; ein Symbol entfernen bricht sie.
 
+### HydroHour
+
+Mittlerer Abfluss einer BAFU-Station pro Stunde (`forecast.md`, «Abfluss»). PK: (`StationId`, `Kind`, `Hour`). Index auf `Hour` für das Löschen.
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `StationId` | string(20) | BAFU-Stationsnummer, ohne FK: Eine Station kann an mehreren Gewässern hängen. |
+| `Kind` | enum | `Measured` (gemessen), `Forecast` (Vorhersage des BAFU, vorbereitet) |
+| `Hour` | DateTimeOffset | Beginn der Stunde in UTC |
+| `Discharge` | decimal(8,2) | m³/s. Die laufende Stunde hat das Mittel der Werte bis zum Import. |
+| `ImportedAt` | DateTimeOffset | |
+
+### HydroReading
+
+Der neueste Messwert einer Station. Eine Zeile pro Station, jeder Import überschreibt sie. PK: `StationId`.
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `StationId` | string(20) | |
+| `MeasuredAt` | DateTimeOffset | Zeit des 10-Minuten-Werts |
+| `Discharge` | decimal(8,2) | m³/s |
+| `DischargeThreeHoursBefore` | decimal(8,2), optional | Wert 3 h vor `MeasuredAt`, für den Trend |
+| `Median30Days` | decimal(8,2), optional | Median der Stundenwerte der letzten 30 Tage |
+| `ImportedAt` | DateTimeOffset | |
+
 ### WaterBodyConditions
 
 Eine Zeile pro Gewässer und Tag für die Gewässerseite und die Seen-Übersicht. PK: (`WaterBodyId`, `Date`). Felder: `SurfaceTemperature`, `ClarityTrend` (enum `Rising`, `Stable`, `Falling`, `Unknown`), `LatestSecchiDepth` und `LatestSecchiDate` (aus dem Satellit am `WaterBody.SatellitePoint`), `WaterLevel` (Pegel in m ü. M., optional).
@@ -321,9 +348,11 @@ Nicht im Paket: Konten, Autoren, Uploader, Kommentare der Versionen, offene oder
 - `DiveSiteNotices (DiveSiteId, SortOrder)`.
 - `MediaItems (DiveSiteId, Section, SortOrder)`.
 - `DailyForecasts (Date, DiveIndex DESC)` für die Rangliste.
+- `HydroHours (Hour)` für das Löschen nach 30 Tagen.
 - `Reports (DiveSiteId, DiveDate)`.
 
 ## Aufbewahrung
 
 - `DailyForecasts`: 2 Jahre in SQL. Danach nur noch als Rohdaten in Blob Storage.
+- `HydroHours`: 30 Tage. Jeder Import löscht ältere Stunden. Die Rohdaten bleiben in Blob Storage.
 - Rohdaten in Blob Storage: unbegrenzt (Trainingsdaten für Phase 2). Lifecycle-Regel: nach 90 Tagen in die Cool-Stufe.

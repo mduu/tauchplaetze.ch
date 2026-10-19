@@ -37,6 +37,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeSiteForecasts Forecasts { get; } = new();
 
+    public FakeQuery<GetSiteDischargeQuery, SiteDischarge?> Discharge { get; } = new(_ => null);
+
     public FakeBestSites BestSites { get; } = new();
 
     public FakeQuery<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> SiteList { get; } = new(_ => []);
@@ -113,6 +115,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.RemoveAll<IHostedService>();
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteDischargeQuery, SiteDischarge?>>(Discharge));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetBestSitesQuery, BestSites>>(BestSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>>>(SiteList));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<FindDiveSitesQuery, FoundDiveSites>>(Finder));

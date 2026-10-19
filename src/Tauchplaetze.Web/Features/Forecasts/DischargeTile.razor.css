@@ -1,0 +1,171 @@
+/* Die Kachel nimmt die ganze Breite der Kacheln ein: Wert, Trend, Verlauf und Tagesmittel brauchen Platz. */
+.discharge {
+    grid-column: 1 / -1;
+}
+
+.stat {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-tile);
+    padding: 18px;
+}
+
+.discharge-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.label {
+    font-size: 11px;
+}
+
+.stat-value {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    margin-top: 6px;
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.discharge-amount {
+    font-size: 18px;
+    color: var(--color-text-muted);
+}
+
+[data-band="high"] { color: var(--color-index-high); }
+[data-band="mid"] { color: var(--color-index-mid); }
+[data-band="low"] { color: var(--color-index-low-text); }
+
+.stat-note {
+    margin-top: 4px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.trend-arrow {
+    font-weight: 700;
+}
+
+[data-trend="Rising"] .trend-arrow { color: var(--color-signal); }
+
+.discharge-stale {
+    color: var(--color-signal);
+}
+
+.discharge-curve {
+    margin: 16px 0 0;
+}
+
+.discharge-curve figcaption,
+.discharge-days-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.discharge-curve svg {
+    display: block;
+    width: 100%;
+    height: 64px;
+    margin-top: 8px;
+}
+
+.discharge-curve .line {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    stroke-linejoin: round;
+}
+
+.discharge-curve .area {
+    fill: var(--color-primary);
+    opacity: 0.12;
+}
+
+.discharge-curve .median {
+    stroke: var(--color-border-strong);
+    stroke-dasharray: 4 4;
+    vector-effect: non-scaling-stroke;
+}
+
+.curve-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-subtle);
+}
+
+.curve-range {
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--color-text-subtle);
+}
+
+.discharge-days {
+    margin-top: 16px;
+}
+
+.discharge-days ol {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+}
+
+.discharge-days li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+}
+
+.day-bar-wrap {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 28px;
+    height: 40px;
+}
+
+.day-bar {
+    width: 100%;
+    border-radius: 3px 3px 0 0;
+    background: var(--color-primary);
+    opacity: 0.7;
+}
+
+.day-value {
+    font-size: 12px;
+    color: var(--color-text-body);
+    white-space: nowrap;
+}
+
+.day-name {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-subtle);
+}
+
+.discharge-source {
+    margin: 14px 0 0;
+    font-size: 13px;
+    color: var(--color-text-subtle);
+}
+
+.discharge-legend-note {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
