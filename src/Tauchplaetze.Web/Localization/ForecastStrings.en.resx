@@ -105,4 +105,5 @@
   <data name="Source_Bafu_Url" xml:space="preserve"><value>https://www.hydrodaten.admin.ch/en</value></data>
   <data name="Visibility_SatelliteShore" xml:space="preserve"><value>Satellite of {0}: approx. {1} m in open water, approx. {2} m near the shore</value></data>
   <data name="Reason_ClarityStale" xml:space="preserve"><value>older satellite image</value></data>
+  <data name="Visibility_Sentinel2Shore" xml:space="preserve"><value>Satellite (Sentinel-2) of {0}: approx. {1} m near the shore</value></data>
 </root>

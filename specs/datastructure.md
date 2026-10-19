@@ -221,9 +221,10 @@ Eine Zeile pro Platz und Tag. PK: (`DiveSiteId`, `Date`).
 | `SurfaceTemperature` | decimal(4,1), optional | °C |
 | `TemperatureAt10m`, `TemperatureAt20m`, `TemperatureAt30m` | decimal(4,1), optional | °C |
 | `ThermoclineTop`, `ThermoclineBottom` | decimal(4,1), optional | m |
-| `SecchiDepth` | decimal(4,1), optional | geschätzte Sichttiefe aus dem Satellit, m |
+| `SecchiDepth` | decimal(4,1), optional | geschätzte Sichttiefe aus dem Satellit am Punkt der Quelle, m (Sentinel-3: Seemitte, Sentinel-2: Ufernähe) |
 | `SecchiDepthShore` | decimal(4,1), optional | Secchi-Schätzung in Ufernähe (`rules-1.1`, Uferfaktor). Leer bei Rows von `rules-1.0`. |
 | `SecchiObservedAt` | DateOnly, optional | Datum des Satellitenbilds |
+| `ClaritySource` | enum, optional | `Sentinel2Shore` (Sentinel-2 in Ufernähe, ohne Uferfaktor) oder `Sentinel3Lake` (Sentinel-3 in der Seemitte, mit Uferfaktor), `rules-1.2`. Leer bei älteren Rows: dann Sentinel-3. |
 | `VisibilityIndicator` | enum | `Unknown`, `Poor`, `Moderate`, `Good`, `VeryGood` |
 | `VisibilityGoodBelow` | decimal(4,1), optional | ab dieser Tiefe besser (meist unter der Sprungschicht) |
 | `WindBeaufort` | int, optional | Maximum im Tauchfenster 08–16 Uhr |

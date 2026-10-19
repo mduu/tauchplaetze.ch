@@ -35,7 +35,7 @@ Der Code der API ist öffentlich: `github.com/eawag-surface-waters-research/alpl
 | 3D-Modell (Wert an der Koordinate des Platzes) | `delft3d-flow`: Ägerisee, Bielersee, Genfersee, Greifensee, Hallwilersee, Lago di Lugano, Murtensee, St. Moritzersee, Zürichsee (dazu Annecy, Bourget, Caldonazzo, Garda, Joux). `mitgcm`: Vierwaldstättersee, Neuenburgersee, Zugersee, Zürichsee |
 | 1D-Modell Simstrat (ein Profil pro See oder Becken) | rund 130 Seen, u.a. Walensee, Thunersee, Brienzersee, Sempachersee, Sarnersee, Lago Maggiore, Bodensee (`upperconstance`, `lowerconstance`), Zürichsee (`lowerzurich`, `upperzurich`), Vierwaldstättersee in vier Becken |
 | Satellit Sentinel-3 (`Zsd_lee`, `chla`) | alle grossen Seen |
-| Satellit Sentinel-2 | `Z490` (Secchi, 10 m Pixel, laufend verarbeitet laut Eawag 19.10.2026), z.B. Zürichsee 15.10.2026. Das ältere `p3qaa_zSD` endet im November 2023. Auf der Koordinate eines Platzes am Ufer oft leer (Pixel maskiert), rund 100 m seewärts mit `window=2` vorhanden. |
+| Satellit Sentinel-2 | **genutzt seit `rules-1.2`:** `Z490` (Secchi, 10 m Pixel, laufend verarbeitet laut Eawag 19.10.2026), z.B. Zürichsee 15.10.2026. Das ältere `p3qaa_zSD` endet im November 2023. Auf der Koordinate eines Platzes am Ufer oft leer (Pixel maskiert), rund 100 m seewärts mit `window=2` vorhanden. |
 
 Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulations/1d/metadata`. Die Zuordnung eines Gewässers zu den Modellen steht in `WaterBody` (`datastructure.md`).
 
@@ -47,7 +47,7 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
 | `GET /simulations/depthtime/{model}/{lake}/{start}/{end}/{lat}/{lng}` | Temperatur über Tiefe und Zeit am Gitterpunkt nächst der Koordinate. **Hauptquelle** (ein Call pro Platz). Zeiten als `yyyyMMddHHmm` (UTC). |
 | `GET /simulations/1d/metadata` | 1D-Modelle, Seen, Zeitraum, Variablen |
 | `GET /simulations/1d/depthtime/simstrat/{lake}/{start}/{end}` | Profil über Tiefe und Zeit für den ganzen See. Enthält die Variable `Thermocline`. |
-| `GET /remotesensing/metadata` | Satellitenprodukte pro See |
+| `GET /remotesensing/metadata` | Satellitenprodukte pro See. Leitet auf eine Datei in S3 weiter. Einmal pro Lauf. |
 | `GET /remotesensing/products/{lake}/{satellite}/{variable}?start_date=yyyyMMdd` | Liste der Bilder mit Anteil gültiger Pixel |
 | `GET /remotesensing/timeseries/{lake}/{satellite}/{variable}/{lat}/{lng}/{start}/{end}?window={n}` | Werte am Punkt über die Zeit. `window` mittelt über n Pixel um den Punkt. |
 
@@ -70,6 +70,7 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
   4. Das Secchi-Produkt `Z490` von Sentinel-2 wird laufend verarbeitet.
   5. Zu den leeren Geschwindigkeitsfeldern `u` und `v` wünscht er einen Beispiel-Request (Antwort: `doc/mails/2026-10-19-eawag-alplakes-antwort.md`).
 - Rückmeldungen von Tauchenden zu den Modellwerten teilen wir mit Eawag, darum hat er gebeten.
+- **Sentinel-2 in Ufernähe (`rules-1.2`):** `GET /remotesensing/timeseries/{lake}/sentinel2/Z490/{lat}/{lng}/{start}/{end}?window=2` an einem Punkt 100 m seewärts des Platzes (`forecast.md`, «Klarheit»), Zeitraum 30 Tage. Ein Call pro Platz an einem See mit `Z490`, Plätze am selben Punkt teilen ihn; dazu ein Call `remotesensing/metadata` pro Lauf. Heute haben 69 Plätze ein Gewässer mit Alplakes-Zuordnung (Zürichsee, Zugersee); das sind höchstens rund 69 Calls mehr pro Lauf, innerhalb der von Eawag bestätigten Frequenz. Ein Call dauert 2–5 s.
 - Quellenangabe auf jeder Seite mit Werten: «Daten: Eawag Alplakes» mit Link.
 
 ## Wetter: Open-Meteo

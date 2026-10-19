@@ -97,6 +97,9 @@
 
     private string VisibilityNote => Today switch
     {
+        { ClaritySource: ClaritySource.Sentinel2Shore, SecchiDepthShore: { } nearShore, SecchiObservedAt: { } shoreDate } =>
+            L["Visibility_Sentinel2Shore", ForecastFormat.Date(shoreDate), ForecastFormat.Number(nearShore)]
+            + (Today.VisibilityGoodBelow is { } shoreBelow ? $" · {L["Visibility_GoodBelow", ForecastFormat.Meters(shoreBelow)]}" : ""),
         { SecchiDepth: { } depth, SecchiDepthShore: { } shore, SecchiObservedAt: { } date } =>
             L["Visibility_SatelliteShore", ForecastFormat.Date(date), ForecastFormat.Number(depth), ForecastFormat.Number(shore)]
             + (Today.VisibilityGoodBelow is { } goodBelow ? $" · {L["Visibility_GoodBelow", ForecastFormat.Meters(goodBelow)]}" : ""),

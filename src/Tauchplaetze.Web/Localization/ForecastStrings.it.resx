@@ -105,4 +105,5 @@
   <data name="Source_Bafu_Url" xml:space="preserve"><value>https://www.hydrodaten.admin.ch/it</value></data>
   <data name="Visibility_SatelliteShore" xml:space="preserve"><value>Satellite del {0}: circa {1} m al largo, circa {2} m vicino alla riva</value></data>
   <data name="Reason_ClarityStale" xml:space="preserve"><value>immagine satellitare datata</value></data>
+  <data name="Visibility_Sentinel2Shore" xml:space="preserve"><value>Satellite (Sentinel-2) del {0}: circa {1} m vicino alla riva</value></data>
 </root>

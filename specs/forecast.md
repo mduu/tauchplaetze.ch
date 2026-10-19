@@ -43,7 +43,7 @@ Das Tauchfenster ist 08:00 bis 16:00 Uhr Lokalzeit.
 | Temperaturprofil am Platz | Alplakes 3D (`depthtime` an der Koordinate) | Temperatur auf 0/10/20/30 m, Sprungschicht | MVP |
 | Temperaturprofil des Sees | Alplakes 1D Simstrat (Rückfall ohne 3D) | dito, seeweit | MVP |
 | Wassertemperatur des Flusses | BAFU-Station des Flusses | Temperatur | MVP |
-| Klarheit (Secchi-Schätzung) | Alplakes Satellit Sentinel-3 `Zsd_lee` am Satellitenpunkt | Klarheit | MVP |
+| Klarheit (Secchi-Schätzung) | Alplakes Satellit Sentinel-2 `Z490` in Ufernähe, Rückfall Sentinel-3 `Zsd_lee` am Satellitenpunkt | Klarheit | MVP |
 | Algen (Chlorophyll) | Alplakes Satellit Sentinel-3 `chla` am Satellitenpunkt | Abzug bei Klarheit | MVP |
 | Wind (Mittel, Böen, Richtung) | Open-Meteo (ICON-CH1, ICON-CH2) | Wind | MVP |
 | Regen der letzten 72 h | SwissMetNet gemessen (vergangene Stunden), Open-Meteo (künftige Stunden) | Zuflüsse | MVP |
@@ -72,11 +72,14 @@ Die Endpunkte stehen in `data-sources.md`.
 
 Gemessene Secchi-Tiefen gibt es über Alplakes nicht mehr (Spike 17.10.2026). Die Klarheit stützt sich auf den Satellit. Sie ist **keine Prognose**, sondern der letzte beobachtete Wert, korrigiert um das, was seither geschah.
 
-- **Satellitenpunkt:** Der Job fragt den Satellit an einem Punkt seewärts ab. Der Platz kann einen eigenen Punkt haben (`DiveSite.SatellitePoint`). Sonst gilt der Standardpunkt des Gewässers (`WaterBody.SatellitePoint`). Grund: Am Ufer fehlen die Pixel.
+- **Zwei Quellen (`rules-1.2`, 19.10.2026):**
+  - **Sentinel-2 `Z490` in Ufernähe** (10 m Pixel, Hauptquelle): an einem Punkt 100 m vom Platz Richtung Satellitenpunkt des Gewässers (sonst Mitte des Gewässers), mit `window=2`. Grund: Auf der Koordinate eines Platzes am Ufer ist das Pixel meist als Land maskiert. Ein eigener `DiveSite.SatellitePoint` gilt auch hier. Nur ein Versuch pro Platz; ist dort kein Wert, gilt Sentinel-3. Nur für Seen, die `Z490` laut `remotesensing/metadata` haben. Annahme: `Z490` ist die Secchi-Tiefe in m wie `Zsd_lee` (Rückfrage an Eawag offen).
+  - **Sentinel-3 `Zsd_lee` in der Seemitte** (300 m Pixel, Rückfall): am Satellitenpunkt des Platzes bzw. des Gewässers, mit Uferfaktor.
+- **Wahl:** Sentinel-2 gilt, solange es frisch ist (höchstens 5 Tage). Sonst gilt der jüngere gültige Wert der beiden, bei gleichem Alter Sentinel-2. Ist keiner höchstens 14 Tage alt, ist die Klarheit unbekannt; die Seite zeigt das Datum des jüngsten Bilds. Gespeichert in `DailyForecast.ClaritySource`.
 - **Alter:** Ein Satellitenwert zählt bis 5 Tage voll. Danach nähern sich seine Punkte linear bis Tag 14 dem vorsichtigen Wert von 4 Punkten (ein schlechterer Wert wird durch das Alter nicht besser). Älter als 14 Tage: Die Klarheit ist unbekannt. Begründung `ClarityStale` ab Tag 6.
-- **Ufernähe:** Der Satellitenpunkt liegt in der Seemitte, getaucht wird in Ufernähe. Dort ist das Wasser meist trüber. Die Schätzung gilt am Platz darum nur mit dem Uferfaktor 0.7. Klarheit, Sicht-Indikator und die Regel zur Oberfläche rechnen mit dem Wert in Ufernähe. Die Seite zeigt beide («ca. 6.3 m in der Seemitte, in Ufernähe ca. 4.4 m»). Gespeichert in `DailyForecast.SecchiDepth` (Seemitte) und `SecchiDepthShore` (Ufernähe).
+- **Ufernähe:** Der Satellitenpunkt von Sentinel-3 liegt in der Seemitte, getaucht wird in Ufernähe. Dort ist das Wasser meist trüber. Die Schätzung von Sentinel-3 gilt am Platz darum nur mit dem Uferfaktor 0.7. Sentinel-2 misst schon in Ufernähe und gilt ohne Faktor (Seite: «Satellit (Sentinel-2) vom 15.10.: ca. 5.4 m in Ufernähe»). Klarheit, Sicht-Indikator und die Regel zur Oberfläche rechnen mit dem Wert in Ufernähe. Die Seite zeigt beide («ca. 6.3 m in der Seemitte, in Ufernähe ca. 4.4 m»). Gespeichert in `DailyForecast.SecchiDepth` (Seemitte) und `SecchiDepthShore` (Ufernähe).
 - **Korrektur:** Fällt seit dem Bild viel Regen oder steigt der Abfluss stark, sinkt die geschätzte Klarheit. Die Stützpunkte stehen in `Forecast:Rules`.
-- **Ohne Wert:** Die Klarheit ist unbekannt. Ihr Gewicht geht auf die anderen Teilwerte.
+- **Ohne Wert:** Die Klarheit ist unbekannt und zählt vorsichtig (siehe «Fehlende Daten»).
 - **Anzeige:** Die Seite zeigt immer das Datum des Satellitenbilds («Satellit vom 05.10.: ca. 6 m»).
 - **Flüsse:** Wo eine BAFU-Station Trübung misst, ersetzt die Trübung den Satellitenwert.
 
@@ -96,7 +99,7 @@ Die Platzseite zeigt unter den fünf Tagen eine Grafik mit dem Wetter pro Stunde
 - **Symbol:** Wettercode nach WMO 4677: 0 klar, 1–2 teilweise bewölkt, 3 bedeckt, 45/48 Nebel, 51–57 Niesel, 61–67 Regen, 80–82 Schauer, 71–77 und 85–86 Schnee, 95–99 Gewitter. Die Reihenfolge ist die Schwere. Ein unbekannter Code ergibt kein Symbol.
 - **Speicher:** `SiteWeatherOutlook` pro Platz, bei jedem Lauf ersetzt (`datastructure.md`).
 
-## Der regelbasierte Index (`rules-1.1`)
+## Der regelbasierte Index (`rules-1.2`)
 
 Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 
@@ -107,12 +110,14 @@ Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 | Zuflüsse | 20 % | < 5 mm Regen in 72 h und Abfluss unter 1.2 × Median | Starkregen oder Abfluss über 3 × Median |
 | Schichtung | 20 % | klare Schicht unter einer Sprungschicht ≤ 20 m, oder durchmischter See mit wenig Algen | Sprungschicht tiefer als 30 m bei trüber Oberfläche |
 
+**`rules-1.2`** (19.10.2026): wie `rules-1.1`, nur die Quelle der Klarheit ändert (Sentinel-2 in Ufernähe vor Sentinel-3, siehe «Klarheit»). Eawag bestätigte am 19.10.2026, dass `Z490` laufend verarbeitet wird; am Zürichsee lag der Wert am 15.10. bei rund 5.4 m in Ufernähe, Sentinel-3 hatte nur einen Wert vom 05.10.
+
 **Startwerte `rules-1.1`** (18.10.2026, ohne Messung, im Code `DiveIndexRules`). `rules-1.0` verteilte das Gewicht einer fehlenden Klarheit auf die anderen Teilwerte. So stieg der Index, wenn der Sichtwert fehlte, und eine trübe Oberfläche über klarem Tiefenwasser ergab volle Punkte. Marcs Erfahrung am Zürichsee im Oktober 2026 («oben naja, unten ok», seit Wochen) passte nicht dazu.
 
 | Regel | Stützpunkte |
 |---|---|
 | Klarheit | Secchi in Ufernähe 2 m → 1, 10 m → 10. Mittlere Algen −2 Punkte. Algenblüte höchstens 3 Punkte. Alter: bis 5 Tage voll, bis Tag 14 linear zu 4 Punkten. Unbekannt: 4 Punkte. |
-| Uferfaktor | Secchi aus der Seemitte × 0.7 = Secchi in Ufernähe |
+| Uferfaktor | Secchi aus der Seemitte (Sentinel-3) × 0.7 = Secchi in Ufernähe; Sentinel-2 ohne Faktor (`rules-1.2`) |
 | Wind | 2 Bft → 10, 5 Bft → 1 |
 | Zuflüsse | Regen 72 h 5 mm → 10, 40 mm → 1. Abfluss 1.2 × Median → 10, 3 × Median → 1. Der tiefere Wert zählt. |
 | Schichtung | Untergrenze der Sprungschicht 20 m → 10, 30 m → 1. Bei Klarheit ab 7 Punkten mindestens 6. Durchmischter See: wenig Algen 10, mittel 6, Blüte 3. Volle Punkte nur mit frischem Satellitenwert (bis 5 Tage) und mindestens 3 m in Ufernähe. Sonst höchstens 7. Fluss: entfällt. |
@@ -149,7 +154,7 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   1. `ForecastRun` mit Status `Running` anlegen.
   2. Pro aktivem Gewässer: Abdeckung der Alplakes-Modelle laden (3D und 1D).
   3. Pro Platz mit 3D-Abdeckung: Temperatur über Tiefe und Zeit mit **einem** Call holen (`depthtime`, ganzer Prognosezeitraum). Pro See ohne 3D: ein Call auf das 1D-Modell.
-  4. Pro Satellitenpunkt: Secchi und Chlorophyll der letzten 14 Tage.
+  4. Pro Satellitenpunkt: Secchi und Chlorophyll (Sentinel-3) der letzten 30 Tage. Einmal pro Lauf die Produkte pro See (`remotesensing/metadata`), dann pro Platz Secchi von Sentinel-2 in Ufernähe der letzten 30 Tage. Plätze am selben Punkt teilen den Call.
   5. Pro Gitterpunkt: Wetterprognose (Open-Meteo, ICON-CH1, ICON-CH2, DWD ICON, je 3 Tage zurück). Plätze im selben Gitterpunkt (zwei Dezimalen) teilen sich den Call. Pro zugeordneter Station: gemessener Wind und Regen (SwissMetNet). **Stand 18.10.2026:** SwissMetNet fehlt noch. Der Regen der vergangenen Tage kommt aus `past_days` von Open-Meteo.
   6. Pro Gewässer: Abfluss, Wassertemperatur und Trübung der zugeordneten BAFU-Stationen.
   7. Rohdaten als JSON in Blob Storage ablegen (`forecast-raw/{date}/{runId}/{source}/{key}.json`).
