@@ -87,6 +87,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("href=\"tel:1414\"", html);
         Assert.Contains("href=\"tel:117\"", html);
         Assert.Contains("«incidente subacqueo»", VisibleText.Of(html));
+        Assert.Contains("Scheda%20informativa_Trattamento%20degli%20incidenti%20subacquei", html);
     }
 
     [Fact]

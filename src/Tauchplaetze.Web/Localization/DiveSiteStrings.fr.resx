@@ -244,4 +244,6 @@
   <data name="Emergency_Ambulance" xml:space="preserve"><value>Ambulance</value></data>
   <data name="Emergency_Police" xml:space="preserve"><value>Police</value></data>
   <data name="Emergency_Dan_Note" xml:space="preserve"><value>En cas d'accident de plongée, appelle la Rega au 1414 et dis « accident de plongée ». La Rega te met en contact avec le médecin de plongée de DAN Suisse, 24 h sur 24 et gratuitement.</value></data>
+  <data name="Emergency_Factsheet" xml:space="preserve"><value>Fiche accident de plongée de DAN Suisse et de la Rega (PDF, en allemand)</value></data>
+  <data name="Emergency_Factsheet_Url" xml:space="preserve"><value>https://www.bag.admin.ch/dam/de/sd-web/nCQEXh00QMPH/Anh.1_KLV_Kap.%202.1_Factsheet_Tauchunfallbehandlung_DAN%20und%20Rega%20vom%2006.07.2025.pdf</value></data>
 </root>

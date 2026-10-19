@@ -244,4 +244,6 @@
   <data name="Emergency_Ambulance" xml:space="preserve"><value>Ambulanza</value></data>
   <data name="Emergency_Police" xml:space="preserve"><value>Polizia</value></data>
   <data name="Emergency_Dan_Note" xml:space="preserve"><value>In caso di incidente subacqueo, chiama la Rega al 1414 e di' «incidente subacqueo». La Rega ti mette in contatto con il medico subacqueo di DAN Suisse, 24 ore su 24 e gratuitamente.</value></data>
+  <data name="Emergency_Factsheet" xml:space="preserve"><value>Scheda incidente subacqueo di DAN Suisse e Rega (PDF)</value></data>
+  <data name="Emergency_Factsheet_Url" xml:space="preserve"><value>https://www.bag.admin.ch/dam/it/sd-web/nCQEXh00QMPH/All.1_OPre_cap.2.1_Scheda%20informativa_Trattamento%20degli%20incidenti%20subacquei%20_DAN%20e%20Rega%20del%2006.07.2025.pdf</value></data>
 </root>
