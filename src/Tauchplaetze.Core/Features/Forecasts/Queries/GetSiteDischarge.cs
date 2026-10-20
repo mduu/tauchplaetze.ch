@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Forecasts.Calculation;
 
 namespace Tauchplaetze.Core.Features.Forecasts.Queries;
@@ -53,6 +54,7 @@ internal class GetSiteDischargeHandler(TauchplaetzeDbContext dbContext, TimeProv
             : null;
         var thresholds = DischargeRules.ThresholdsFor(siteThresholds, reading.Median30Days);
         var curveStart = DischargeRules.StartOfHour(now).AddHours(1 - CurveHours);
+        var forecastHours = hours.Where(h => h.Kind == HydroSeriesKind.Forecast && h.Hour >= DischargeRules.StartOfHour(now)).ToList();
 
         return new SiteDischarge(
             stationId,
@@ -70,9 +72,28 @@ internal class GetSiteDischargeHandler(TauchplaetzeDbContext dbContext, TimeProv
             [.. measured
                 .GroupBy(h => SwissTime.DayOf(h.Hour))
                 .Select(g => new DischargeDay(g.Key, Math.Round(g.Average(h => h.Discharge), 1)))],
-            [.. hours.Where(h => h.Kind == HydroSeriesKind.Forecast && h.Hour >= now).Select(h => new DischargeHour(h.Hour, h.Discharge))],
+            [.. forecastHours.Select(h => new DischargeHour(h.Hour, h.Discharge))],
             reading is { Temperature: { } temperature, TemperatureMeasuredAt: { } measuredAt }
                 ? new WaterTemperature(temperature, measuredAt, now - measuredAt > StaleAfter)
-                : null);
+                : null,
+            Forecast(reading, forecastHours, thresholds));
     }
+
+    private static DischargeForecast? Forecast(HydroReading reading, List<HydroHour> hours, DischargeThresholds? thresholds)
+    {
+        if (reading.ForecastIssuedAt is not { } issuedAt || hours.Count == 0)
+        {
+            return null;
+        }
+
+        return new DischargeForecast(
+            issuedAt,
+            reading.ForecastOfficial ?? true,
+            [.. hours
+                .GroupBy(h => SwissTime.DayOf(h.Hour))
+                .Select(g => Day(g.Key, Math.Round(g.Average(h => h.Discharge), 1), thresholds))]);
+    }
+
+    private static DischargeForecastDay Day(DateOnly date, decimal mean, DischargeThresholds? thresholds) =>
+        new(date, mean, thresholds is null ? null : DischargeRules.LevelOf(mean, thresholds));
 }

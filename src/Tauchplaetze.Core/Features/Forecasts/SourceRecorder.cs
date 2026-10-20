@@ -20,7 +20,7 @@ internal class SourceRecorder(IRawDataStore rawData, string runPath)
 
     public string StatusJson => JsonSerializer.Serialize(calls, JsonOptions);
 
-    public async Task<T?> Record<T>(string source, string key, Task<SourceResult<T>> call, CancellationToken ct)
+    public async Task<T?> Record<T>(string source, string key, Task<SourceResult<T>> call, CancellationToken ct, string extension = "json")
         where T : class
     {
         var result = await call;
@@ -29,7 +29,7 @@ internal class SourceRecorder(IRawDataStore rawData, string runPath)
 
         if (response.Body is { } body)
         {
-            await rawData.Save($"{runPath}/{source}/{key}.json", body, ct);
+            await rawData.Save($"{runPath}/{source}/{key}.{extension}", body, ct);
         }
 
         return result.Value;

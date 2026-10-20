@@ -764,6 +764,15 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
 
+                    b.Property<DateTimeOffset?>("ForecastFetchedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("ForecastIssuedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool?>("ForecastOfficial")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset>("ImportedAt")
                         .HasColumnType("datetimeoffset");
 

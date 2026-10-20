@@ -10,6 +10,7 @@ using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Content;
 using Tauchplaetze.Core.Features.Contact;
 using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Forecasts.Sources.Hydro;
 using Tauchplaetze.Core.Features.Media;
 
 namespace Tauchplaetze.Core;
@@ -44,6 +45,7 @@ public static class CoreRegistration
         builder.Services.Configure<ContactOptions>(builder.Configuration.GetSection(ContactOptions.Section));
         builder.Services.Configure<NotificationOptions>(builder.Configuration.GetSection(NotificationOptions.Section));
         builder.Services.Configure<ContentOptions>(builder.Configuration.GetSection(ContentOptions.Section));
+        builder.Services.Configure<BafuForecastOptions>(builder.Configuration.GetSection(BafuForecastOptions.Section));
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddHandlers(typeof(CoreRegistration).Assembly);
         builder.Services.AddCoreModules(typeof(CoreRegistration).Assembly);

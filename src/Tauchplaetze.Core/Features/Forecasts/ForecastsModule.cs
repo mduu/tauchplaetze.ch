@@ -1,4 +1,7 @@
+using System.Net.Http.Headers;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Tauchplaetze.Core.CrossCutting.Modules;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Alplakes;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Hydro;
@@ -15,6 +18,16 @@ internal class ForecastsModule : ICoreModule
         AddSourceClient<AlplakesClient>(services, "https://alplakes-api.eawag.ch/");
         AddSourceClient<OpenMeteoClient>(services, "https://api.open-meteo.com/");
         AddSourceClient<HydroClient>(services, "https://api.existenz.ch/");
+        AddSourceClient<BafuForecastClient>(services, (provider, client) =>
+        {
+            var options = provider.GetRequiredService<IOptions<BafuForecastOptions>>().Value;
+            client.BaseAddress = new Uri(options.BaseUrl);
+            if (options.HasCredentials)
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                    Convert.ToBase64String(Encoding.UTF8.GetBytes($"{options.Username}:{options.Password}")));
+            }
+        });
         services.AddScoped<ForecastSources>();
         services.AddScoped<WaterBodyIndexWriter>();
         services.AddSingleton<ForecastProgress>();
@@ -28,11 +41,16 @@ internal class ForecastsModule : ICoreModule
 #pragma warning disable EXTEXP0001 // RemoveAllResilienceHandlers ist experimentell, aber der einzige Weg, den Handler der Service Defaults pro Client zu ersetzen.
     private static void AddSourceClient<TClient>(IServiceCollection services, string baseAddress)
         where TClient : class =>
-        services.AddHttpClient<TClient>(client =>
+        AddSourceClient<TClient>(services, (_, client) => client.BaseAddress = new Uri(baseAddress));
+
+    private static void AddSourceClient<TClient>(IServiceCollection services, Action<IServiceProvider, HttpClient> configure)
+        where TClient : class =>
+        services.AddHttpClient<TClient>((provider, client) =>
             {
-                client.BaseAddress = new Uri(baseAddress);
+                configure(provider, client);
                 client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
             })
+            .RedactLoggedHeaders(_ => true)
             .RemoveAllResilienceHandlers()
             .AddStandardResilienceHandler(options =>
             {

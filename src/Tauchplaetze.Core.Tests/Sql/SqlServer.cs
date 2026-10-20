@@ -78,6 +78,8 @@ public sealed class SqlServer : IAsyncLifetime
             ["Accounts:RegistrationOpen"] = "true",
             ["PublicSite:BaseUri"] = "https://tauchplaetze.test",
             ["Content:ImportEnabled"] = "true",
+            ["Hydro:Forecast:Username"] = "test-user",
+            ["Hydro:Forecast:Password"] = "test-password",
         });
         builder.AddTauchplaetzeCore();
         builder.Services.Replace(ServiceDescriptor.Singleton<IRevisionStore>(Revisions));

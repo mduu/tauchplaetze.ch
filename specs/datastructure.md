@@ -289,7 +289,7 @@ Die neuesten Messwerte einer Station (Abfluss, Wassertemperatur). Eine Zeile pro
 | `TemperatureMeasuredAt` | DateTimeOffset, optional | Zeit des Temperaturwerts |
 | `ForecastIssuedAt` | DateTimeOffset, optional | Ausgabezeit der gespeicherten BAFU-Vorhersage. `null`: keine Vorhersage. |
 | `ForecastOfficial` | bool, optional | `true`: aus `pqprevi-official` (kontrolliert), `false`: aus `pqprevi-unofficial` (nur automatisch gerechnet) |
-| `ForecastFetchedAt` | DateTimeOffset, optional | letzter erfolgreicher Abruf der Vorhersage, für den Abstand von 3 Stunden |
+| `ForecastFetchedAt` | DateTimeOffset, optional | letzter Abruf der Vorhersage, auch ohne Datei, für den Abstand von 3 Stunden |
 | `ImportedAt` | DateTimeOffset | |
 
 ### WaterBodyConditions

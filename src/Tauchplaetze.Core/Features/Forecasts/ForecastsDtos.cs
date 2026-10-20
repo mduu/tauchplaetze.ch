@@ -86,7 +86,17 @@ public record SiteDischarge(
     IReadOnlyList<DischargeHour> Hours,
     IReadOnlyList<DischargeDay> Days,
     IReadOnlyList<DischargeHour> ForecastHours,
-    WaterTemperature? Temperature = null);
+    WaterTemperature? Temperature = null,
+    DischargeForecast? Forecast = null);
+
+/// <summary>
+/// Die Vorhersage des BAFU für die Station. <see cref="Official"/>: vom BAFU kontrolliert, sonst nur automatisch gerechnet.
+/// <see cref="Days"/>: Tagesmittel der vorhergesagten Stunden pro Schweizer Kalendertag, ab heute.
+/// </summary>
+public record DischargeForecast(DateTimeOffset IssuedAt, bool Official, IReadOnlyList<DischargeForecastDay> Days);
+
+/// <summary>Vorhergesagtes Tagesmittel mit Einordnung wie der Messwert. <see cref="Level"/> fehlt ohne Schwellen.</summary>
+public record DischargeForecastDay(DateOnly Date, decimal Discharge, DischargeLevel? Level);
 
 /// <summary>Die neueste Wassertemperatur der Station in °C. Fehlt, wenn die Station keine Temperatur misst.</summary>
 public record WaterTemperature(decimal Value, DateTimeOffset MeasuredAt, bool IsStale);

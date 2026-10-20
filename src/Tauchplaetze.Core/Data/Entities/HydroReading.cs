@@ -21,5 +21,14 @@ internal class HydroReading
 
     public DateTimeOffset? TemperatureMeasuredAt { get; set; }
 
+    /// <summary>Ausgabezeit der gespeicherten BAFU-Vorhersage. <c>null</c>: keine Vorhersage.</summary>
+    public DateTimeOffset? ForecastIssuedAt { get; set; }
+
+    /// <summary><c>true</c>: aus dem kontrollierten Ordner `official`, <c>false</c>: nur automatisch gerechnet.</summary>
+    public bool? ForecastOfficial { get; set; }
+
+    /// <summary>Letzter Abruf der Vorhersage, auch ohne Datei. Bestimmt den Abstand von 3 Stunden.</summary>
+    public DateTimeOffset? ForecastFetchedAt { get; set; }
+
     public DateTimeOffset ImportedAt { get; set; }
 }

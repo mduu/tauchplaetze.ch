@@ -141,6 +141,72 @@ public class DischargeTests(SqlServer sql) : SqlTest(sql)
         Assert.Empty(Sql.Sources.Requests);
     }
 
+    [SqlFact]
+    public async Task Die_Vorhersage_des_BAFU_kommt_aus_der_echten_Datei_nach_dem_letzten_Messwert_und_gilt_als_kontrolliert()
+    {
+        // Arrange: Datei ausgegeben 19.10.2026, 07:12 MEWZ, gemessen bis 06:00 MEWZ.
+        var (_, site) = await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+        Sql.Sources.Overrides["pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt"] = TestData.Read("hydro", "pqprevi-official-ICH2_Ctrl-2091-20261019.txt");
+
+        // Act
+        var result = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        var discharge = (await Discharge(site))!;
+        Assert.Equal(1, result.ForecastStations);
+        Assert.Equal(new DateTimeOffset(2026, 10, 19, 6, 12, 0, TimeSpan.Zero), discharge.Forecast!.IssuedAt);
+        Assert.True(discharge.Forecast.Official);
+        Assert.Equal(new DischargeHour(new DateTimeOffset(2026, 10, 19, 15, 0, 0, TimeSpan.Zero), 326.2m), discharge.ForecastHours[0]);
+        Assert.Equal(new DateTimeOffset(2026, 10, 23, 23, 0, 0, TimeSpan.Zero), discharge.ForecastHours[^1].Hour);
+        Assert.Equal(Enumerable.Range(19, 6).Select(d => new DateOnly(2026, 10, d)), discharge.Forecast.Days.Select(d => d.Date));
+        Assert.Contains(Sql.RawData.Files.Keys, path => path.EndsWith("/bafu/official-ICH2_Ctrl-2091.txt", StringComparison.Ordinal));
+    }
+
+    [SqlFact]
+    public async Task Ohne_kontrollierte_Vorhersage_gilt_die_automatisch_gerechnete_und_ist_so_gekennzeichnet()
+    {
+        // Arrange
+        var (_, site) = await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+        Sql.Sources.Overrides["pqprevi-unofficial/Pqprevi_ICH2_Ctrl_2091.txt"] = TestData.Read("hydro", "pqprevi-official-ICH2_Ctrl-2091-20261019.txt");
+
+        // Act
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        var discharge = (await Discharge(site))!;
+        Assert.False(discharge.Forecast!.Official);
+        Assert.Equal(326.2m, discharge.ForecastHours[0].Discharge);
+    }
+
+    [SqlFact]
+    public async Task Die_Vorhersage_kommt_ab_8_Uhr_15_hoechstens_alle_3_Stunden_und_eine_neue_ersetzt_die_alte()
+    {
+        // Arrange: 08:00 Schweizer Zeit (06:00 UTC), noch vor der Ausgabe.
+        var (_, site) = await PrepareRheinfelden();
+        var file = TestData.Read("hydro", "pqprevi-official-ICH2_Ctrl-2091-20261019.txt");
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+        Sql.Sources.Overrides["pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt"] = file;
+        Sql.Time.Now = new DateTimeOffset(2026, 10, 19, 6, 0, 0, TimeSpan.Zero);
+
+        // Act
+        var beforePublication = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        Sql.Time.Now = new DateTimeOffset(2026, 10, 19, 6, 20, 0, TimeSpan.Zero);
+        var first = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        Sql.Time.Now = new DateTimeOffset(2026, 10, 19, 8, 0, 0, TimeSpan.Zero);
+        var tooSoon = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        Sql.Sources.Overrides["pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt"] = file.Replace("   326.2", "   400.0", StringComparison.Ordinal);
+        Sql.Time.Now = new DateTimeOffset(2026, 10, 19, 9, 30, 0, TimeSpan.Zero);
+        var second = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        var forecast = (await Discharge(site))!.ForecastHours;
+        Assert.Equal((0, 1, 0, 1), (beforePublication.ForecastStations, first.ForecastStations, tooSoon.ForecastStations, second.ForecastStations));
+        Assert.Equal(400.0m, forecast.Single(h => h.Hour == new DateTimeOffset(2026, 10, 19, 15, 0, 0, TimeSpan.Zero)).Discharge);
+        Assert.Equal(forecast.Count, forecast.Select(h => h.Hour).Distinct().Count());
+    }
+
     [SqlTheory]
     [InlineData("2091", true)]
     [InlineData(" 2091 ", true)]

@@ -25,8 +25,8 @@ internal class DischargeWorker(IServiceScopeFactory scopes, TimeProvider time, I
             await using var scope = scopes.CreateAsyncScope();
             var result = await scope.ServiceProvider.GetRequiredService<ICommandHandler<ImportDischargeCommand, ImportDischargeResult>>()
                 .Handle(new ImportDischargeCommand(), ct);
-            logger.LogInformation("Discharge import: {Stations} stations, {Missing} without values, failed {Failed}, skipped {Skipped}",
-                result.Stations, result.StationsWithoutValues, result.Failed, result.Skipped);
+            logger.LogInformation("Discharge import: {Stations} stations, {Missing} without values, {Forecasts} new forecasts, failed {Failed}, skipped {Skipped}",
+                result.Stations, result.StationsWithoutValues, result.ForecastStations, result.Failed, result.Skipped);
         }
         catch (Exception ex) when (!ct.IsCancellationRequested)
         {

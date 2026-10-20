@@ -26,6 +26,7 @@
   <ItemGroup>
     <!-- Echte Antworten der Quellen aus dem Spike 0.5 (17.10.2026). Nur so fallen Formatänderungen auf. -->
     <Content Include="TestData/**/*.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="TestData/**/*.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
