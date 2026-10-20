@@ -10,18 +10,23 @@ Die Datenbank läuft auf **Basic** (5 DTU, 2 GB, pausiert nie, rund CHF 4.50 im 
 
 ```bash
 az login
-az account set --subscription d7088f29-7c73-47ea-9b93-961edf4a5431
+az account set --subscription "<Subscription-ID>"
 az group create --name rg-tauchplaetze-prod --location switzerlandnorth --tags project=tauchplaetze environment=prod
 ```
 
 ## 2. GitHub-Anmeldung bei Azure (OIDC)
 
-Eine App-Registrierung für GitHub Actions, ohne Passwort. Zwei Federated Credentials: Branch `main` (what-if) und Environment `prod` (Deploy).
+Eine App-Registrierung für GitHub Actions, ohne Passwort. Zwei Federated Credentials, eine pro Environment:
+
+- `prod-app`: Deploy der App und what-if der Infrastruktur, **ohne Freigabe**.
+- `prod`: Deploy der Infrastruktur, **mit Freigabe**.
+
+Eine Credential für den Branch `main` braucht es nicht: Jeder Job mit Azure läuft in einem der beiden Environments.
 
 ```bash
 APP_ID=$(az ad app create --display-name "github-tauchplaetze-prod" --query appId -o tsv)
 az ad sp create --id "$APP_ID"
-for subject in "repo:mduu/tauchplaetze.ch:ref:refs/heads/main" "repo:mduu/tauchplaetze.ch:environment:prod"; do
+for subject in "repo:mduu/tauchplaetze.ch:environment:prod-app" "repo:mduu/tauchplaetze.ch:environment:prod"; do
   az ad app federated-credential create --id "$APP_ID" --parameters "{\"name\":\"$(echo "$subject" | tr ':/' '--')\",\"issuer\":\"https://token.actions.githubusercontent.com\",\"subject\":\"$subject\",\"audiences\":[\"api://AzureADTokenExchange\"]}"
 done
 ```
@@ -34,7 +39,16 @@ RG_ID=$(az group show -n rg-tauchplaetze-prod --query id -o tsv)
 az role assignment create --assignee-object-id "$SP_ID" --assignee-principal-type ServicePrincipal --role Contributor --scope "$RG_ID"
 ```
 
-In GitHub (Settings → Environments): Environment **`prod`** anlegen und dich unter **«Required reviewers»** eintragen. Das Repository ist öffentlich, die Funktion ist darum ohne bezahlten Plan verfügbar. Jeder Deploy der Infrastruktur und der App wartet dann auf deine Freigabe.
+In GitHub (Settings → Environments) zwei Environments anlegen:
+
+| Environment | Required reviewers | Deployment branches | Wofür |
+|---|---|---|---|
+| `prod-app` | keine | «Selected branches»: nur `main` | Deploy der App nach grüner CI (Entscheid Marc, 20.10.2026), what-if der Infrastruktur |
+| `prod` | **du** | «Selected branches»: nur `main` | Deploy der Infrastruktur |
+
+Das Repository ist öffentlich, Required Reviewers sind darum ohne bezahlten Plan verfügbar. «Deployment branches: main» verhindert, dass ein «Run workflow» auf einem anderen Branch deployt.
+
+Vereinfachung (Ein-Personen-Repository): Beide Environments nutzen denselben Service Principal mit Contributor auf der Resource Group. Der what-if-Job in `prod-app` hätte damit dieselben Rechte wie der Deploy. Strenger wäre ein zweiter Service Principal mit «Reader» für `prod-app`, der App-Deploy bräuchte dann «Website Contributor» auf der Web App.
 
 In GitHub (Settings → Secrets and variables → Actions):
 
@@ -124,7 +138,7 @@ Host, Port und TLS stehen in den App Settings, Benutzer und Passwort im Key Vaul
 
 ## 8. Erster Deploy der App
 
-Nach Schritt 2–7: GitHub → Actions → **Deploy** → «Run workflow» (oder ein Push auf `main` mit grüner CI). Der Workflow prüft danach `/alive` und `/de`.
+Nach Schritt 2–7: GitHub → Actions → **Deploy** → «Run workflow» (oder ein Push auf `main` mit grüner CI, ohne Freigabe). Der Workflow prüft danach `/alive` und `/de`. Er deployt nur Pushes auf `main` dieses Repositorys, nie einen Pull Request aus einem Fork.
 
 Beim ersten Start migriert die App die Datenbank, legt Gewässer, den Admin und die Plätze aus dem Seed an. Die erste Prognose rechnet der Worker zum nächsten Termin.
 

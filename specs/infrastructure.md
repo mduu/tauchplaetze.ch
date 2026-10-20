@@ -106,7 +106,9 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 
 ## IaC
 
-- Azure Bicep in `/deploy` (wie feldnah), **Resource-Group-Scope**. Infra-Deploy manuell über `infra.yml` (`workflow_dispatch`): Standard what-if, Deploy erst nach Freigabe durch den Required Reviewer (Marc) im Environment `prod`.
+- Azure Bicep in `/deploy` (wie feldnah), **Resource-Group-Scope**. Infra-Deploy manuell über `infra.yml` (`workflow_dispatch`): Standard what-if (Environment `prod-app`), Deploy erst nach Freigabe durch den Required Reviewer (Marc) im Environment `prod`.
+- **Environments in GitHub** (Entscheid Marc, 20.10.2026): `prod-app` ohne Freigabe für den App-Deploy und das what-if, `prod` mit Marc als Required Reviewer für den Infra-Deploy. Beide nur vom Branch `main`. OIDC mit je einer Federated Credential pro Environment, keine für den Branch.
+- **Key Vault mit Purge Protection:** Gelöschte Secrets lassen sich 90 Tage nicht endgültig löschen und bleiben wiederherstellbar. Kostet nichts. Nicht umkehrbar: Der Key Vault lässt sich danach nicht mehr ohne diese Frist entfernen.
 - **Von Hand, nicht im Template** (Entscheid Marc, 20.10.2026): die Resource Group, die Rollen der Managed Identity und der SQL-Benutzer der App (`doc/go-live.md`). Der GitHub-Service-Principal hat nur Contributor auf der Resource Group und vergibt keine Rechte.
 - Persönliche Werte (Object ID des SQL-Admins, Adresse für Alerts) kommen aus Umgebungsvariablen (`readEnvironmentVariable` in `main.bicepparam`), in GitHub aus Variablen und Secrets.
 - **Keine Secrets im Template.** Bicep legt keine Key-Vault-Secrets an, ein Deploy würde sonst gesetzte Werte überschreiben. Marc setzt sie einmal.
@@ -122,7 +124,7 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 | Workflow | Auslöser | Schritte |
 |---|---|---|
 | `ci.yml` | Push auf `main`, Pull Request | Restore, Build (`TreatWarningsAsErrors`), Tests (inkl. Testcontainers), Prüfung der `.resx`-Vollständigkeit |
-| `deploy.yml` | grüne CI auf `main` (`workflow_run`), manuell | Publish, Deploy auf App Service (OIDC, kein Secret), Prüfung von `/alive` und `/de`. Läuft erst, wenn `AZURE_CLIENT_ID` gesetzt ist. |
+| `deploy.yml` | grüne CI eines Pushes auf `main` in diesem Repository (`workflow_run`), manuell | Publish, Deploy auf App Service (OIDC, Environment `prod-app` ohne Freigabe), Prüfung von `/alive` und `/de`. Läuft erst, wenn `AZURE_CLIENT_ID` gesetzt ist. `workflow_run` mit `branches: [main]` prüft nur den Namen: Der Job prüft darum zusätzlich Ereignis `push` und das eigene Repository, sonst könnte ein Pull Request aus einem Fork mit einem Branch «main» deployen. Actions sind auf Commit-SHAs gepinnt. |
 | `infra.yml` | manuell | what-if (Zusammenfassung im Job), Deploy nach Freigabe |
 
 - Anmeldung bei Azure über OpenID Connect (Federated Credential für `main` und das Environment `prod`). Keine Secrets im Repository.
@@ -130,6 +132,6 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 
 ## Betrieb
 
-- Health Checks: `/alive` und `/health` prüfen nur die App, **ohne Datenbank**. App Service fragt `/alive` jede Minute ab. Mit der Datenbank könnte Serverless nie pausieren. `/health/ready` prüft zusätzlich die Datenbank und einen brauchbaren Prognose-Lauf jünger als 30 h (`GetReadiness`). Er weckt die Datenbank, darum fragt ihn kein Dienst regelmässig ab.
+- Health Checks: `/alive` und `/health` prüfen nur die App, **ohne Datenbank**. App Service fragt `/alive` jede Minute ab, eine Abfrage der Datenbank jede Minute wäre unnötige Last (und mit der Option Free liesse sie Serverless nie pausieren). `/health/ready` prüft zusätzlich die Datenbank und einen brauchbaren Prognose-Lauf jünger als 30 h (`GetReadiness`). Der Endpoint ist öffentlich. Das Ergebnis gilt 30 s, so fragen viele Aufrufe die Datenbank höchstens zweimal pro Minute.
 - Alerts (`deploy/modules/alerts.bicep`, an `ALERT_EMAIL`): Health Check von App Service unter 100 %; Prognose-Lauf gescheitert; seit 30 h kein brauchbarer Lauf; Mail in der Dead-Letter-Queue (ADR-010); Free-Offer-Kontingent unter 10 000 vCore-Sekunden (nur mit `sqlPlan = 'Free'`). Die Log-Alerts suchen die Texte der Logs aus `ForecastWorker` und `ProcessMailQueue` in `AppTraces` und prüfen stündlich. Budget der Resource Group (Standard 25 im Monat): Mail bei 80 % und bei 100 % der Prognose.
 - Backups: Point-in-time Restore der Datenbank (7 Tage). Medien zusätzlich lokal bei Marc (Originale).

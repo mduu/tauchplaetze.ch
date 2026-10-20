@@ -31,6 +31,8 @@ env:
 jobs:
   what-if:
     runs-on: ubuntu-latest
+    # Ohne Freigabe, nur lesend. Das Environment liefert die OIDC-Anmeldung, eine Credential für den Branch braucht es so nicht.
+    environment: prod-app
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 

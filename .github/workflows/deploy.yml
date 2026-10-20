@@ -1,4 +1,5 @@
 # Deploy der App auf prod, nach einer grünen CI auf main (infrastructure.md, CI/CD).
+# Environment prod-app: ohne Freigabe (Entscheid Marc, 20.10.2026), nur vom Branch main.
 # Die App migriert die Datenbank beim Start und legt fehlende Stammdaten an (Database__PrepareOnStartup).
 # Läuft erst, wenn die Repository-Variable AZURE_CLIENT_ID gesetzt ist (doc/go-live.md, OIDC).
 
@@ -35,7 +36,7 @@ jobs:
           github.event.workflow_run.head_repository.full_name == github.repository &&
           github.event.workflow_run.conclusion == 'success'))
     runs-on: ubuntu-latest
-    environment: prod
+    environment: prod-app
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
