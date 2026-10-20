@@ -471,6 +471,21 @@ public class DiveIndexTests
     }
 
     [Fact]
+    public void Der_Abzug_fuer_die_Stroemung_hebt_einen_Index_unter_1_nie_an()
+    {
+        // Arrange: ein Index von 0.5 vor dem Abzug.
+        var river = new DayProfile(Profiles.Of((0, 12)), ProfileSource.RiverStation);
+        var inputs = new DayInputs(Calm with { WindMaxKmh = 60 }, river, ClarityEstimate.Unknown, AlgaeLevel.Unknown, 5.0, IsRiver: true);
+        var rules = DiveIndexRules.Default with { MaxIndexWithoutClarity = 0.5 };
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, rules);
+
+        // Assert
+        Assert.Equal(0.5, result.DiveIndex);
+    }
+
+    [Fact]
     public void Am_See_gibt_viel_Zufluss_keinen_Abzug_fuer_die_Stroemung()
     {
         // Arrange

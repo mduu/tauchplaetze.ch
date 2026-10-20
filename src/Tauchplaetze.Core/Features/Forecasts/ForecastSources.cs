@@ -11,6 +11,9 @@ using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.Forecasts;
 
+/// <summary>Neuester Abfluss geteilt durch den Median der letzten 30 Tage, und der Median selbst (mindestens <see cref="DischargeRules.MinMedian"/>).</summary>
+internal record StationFlowRatio(double Ratio, double Median);
+
 /// <summary>
 /// Die Daten eines Gewässers für einen Lauf. <see cref="Ratios"/>: neuester Abfluss geteilt durch den Median pro Station.
 /// <see cref="Medians"/>: Median des Abflusses der letzten 30 Tage pro Station, mindestens <see cref="DischargeRules.MinMedian"/>.
@@ -55,6 +58,8 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
 
     private readonly Dictionary<string, Task<IReadOnlyList<ModelWeather>>> weather = [];
 
+    private readonly Dictionary<string, Task<StationFlowRatio?>> stationFlows = [];
+
     public async Task<WaterBodyData> ForWaterBody(WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
     {
         var (start, end) = ModelPeriod(today);
@@ -67,13 +72,10 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
         double? riverTemperature = null;
         foreach (var station in waterBody.HydroStations)
         {
-            var flow = await recorder.Record(HydroClient.Source, $"{station.StationId}-flow",
-                hydro.GetRange(station.StationId, "flow", today.AddDays(-LookbackDays), today.AddDays(1), ct), ct);
-            if (flow is [.., var newest])
+            if (await StationFlow(station.StationId, today, recorder, ct) is { } flow)
             {
-                var median = Median(flow);
-                ratios[station.StationId] = Math.Round(newest.Value / median, 2);
-                medians[station.StationId] = median;
+                ratios[station.StationId] = flow.Ratio;
+                medians[station.StationId] = flow.Median;
             }
 
             if (station.Role == HydroStationRole.River)
@@ -85,6 +87,34 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
         }
 
         return new WaterBodyData(lakeWide, ratios, riverTemperature, medians);
+    }
+
+    /// <summary>
+    /// Quotient und Median einer Station, die nicht am Gewässer hängt, etwa die eingetragene Station eines Flussplatzes.
+    /// Pro Lauf höchstens ein Call pro Station.
+    /// </summary>
+    public async Task<StationFlowRatio?> StationFlow(string stationId, DateOnly today, SourceRecorder recorder, CancellationToken ct)
+    {
+        if (!stationFlows.TryGetValue(stationId, out var task))
+        {
+            task = LoadStationFlow(stationId, today, recorder, ct);
+            stationFlows[stationId] = task;
+        }
+
+        return await task;
+    }
+
+    private async Task<StationFlowRatio?> LoadStationFlow(string stationId, DateOnly today, SourceRecorder recorder, CancellationToken ct)
+    {
+        var flow = await recorder.Record(HydroClient.Source, $"{stationId}-flow",
+            hydro.GetRange(stationId, "flow", today.AddDays(-LookbackDays), today.AddDays(1), ct), ct);
+        if (flow is not [.., var newest])
+        {
+            return null;
+        }
+
+        var median = Median(flow);
+        return new StationFlowRatio(Math.Round(newest.Value / median, 2), median);
     }
 
     public async Task<SiteData> ForSite(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)

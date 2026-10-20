@@ -415,6 +415,30 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(before[2].DiveIndex, after[2].DiveIndex);
     }
 
+    [SqlFact]
+    public async Task Ein_Flussplatz_rechnet_mit_der_Station_seiner_Kachel_auch_wenn_sie_nicht_am_Gewaesser_haengt()
+    {
+        // Arrange: Strandbad Rheinfelden mit eingetragener Station 2104 (Linth, Zufluss des Zürichsees). Dort fliesst gerade das Vierfache des Üblichen.
+        await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
+        var admins = await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]));
+        var rhein = (await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"))).Single(w => w.Slug == "rhein").Id;
+        var siteId = (await Command<ProposeDiveSiteCommand, EditorialResult>(
+            new ProposeDiveSiteCommand(admins.UserIds[0], "Strandbad", rhein, 47.55164, 7.7767, "Rheinfelden", "AG", null))).DiveSiteId!.Value;
+        await Sql.Arrange(async db =>
+        {
+            (await db.DiveSites.SingleAsync(s => s.Id == siteId)).InflowStationOverride = "2104";
+            await db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        });
+        Sql.Sources.Overrides["locations=2104&parameters=flow"] = WithLatestFlow(TestData.Read("hydro", "daterange-2104-flow.json"), times: 4);
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Assert.Contains(ReasonCode.StrongCurrent, today.Reasons);
+    }
+
     private async Task<Guid> AddSiteAtZuerichsee(string name, double latitude, double longitude, string municipality, string canton)
     {
         var waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"));
@@ -430,6 +454,15 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
         var admins = await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]));
         return await AddRiffWilliams(admins.UserIds[0]);
+    }
+
+    private static string WithLatestFlow(string json, double times)
+    {
+        var root = JsonNode.Parse(json)!;
+        var payload = root["payload"]!.AsArray();
+        var latest = payload[^1]!;
+        latest["val"] = latest["val"]!.GetValue<double>() * times;
+        return root.ToJsonString();
     }
 
     private static string WithCurrent(string json, double east, double north)

@@ -104,11 +104,12 @@ internal class RunForecastHandler(
 
             var siteData = await sources.ForSite(site, waterBody, today, recorder, ct);
             var inflows = SiteInflows.For(site, waterBody);
+            var (measured, forecastRatios) = await StationsOf(inflows, waterBodyData, inflowForecasts[waterBody.Id], forecastHours, today, recorder, ct);
             SaveOutlook(outlooks.GetValueOrDefault(site.Id) ?? AddOutlook(site.Id), today, siteData, run);
             foreach (var day in days)
             {
                 var forecast = existing.GetValueOrDefault((site.Id, day)) ?? Add(site.Id, day);
-                var dischargeRatio = SiteInflows.Ratio(inflows, day, today, waterBodyData.Ratios, inflowForecasts[waterBody.Id]);
+                var dischargeRatio = SiteInflows.Ratio(inflows, day, today, measured, forecastRatios);
                 var dayForecast = DayFor(day, today, waterBody, waterBodyData, dischargeRatio, siteData);
                 Fill(forecast, dayForecast, run);
                 if (day == today)
@@ -119,6 +120,45 @@ internal class RunForecastHandler(
 
             progress.SiteDone(run.Id, recorder.Count);
         }
+    }
+
+    /// <summary>
+    /// Die Quotienten der Stationen des Platzes. Eine eingetragene Station, die nicht am Gewässer hängt, holt der Lauf dazu.
+    /// So rechnet ein Flussplatz mit derselben Station wie seine Kachel «Abfluss».
+    /// </summary>
+    private async Task<(IReadOnlyDictionary<string, double> Measured, IReadOnlyDictionary<(string StationId, DateOnly Day), double> Forecast)> StationsOf(
+        IReadOnlyList<SiteInflow> inflows,
+        WaterBodyData waterBodyData,
+        IReadOnlyDictionary<(string StationId, DateOnly Day), double> forecast,
+        List<ForecastHour> forecastHours,
+        DateOnly today,
+        SourceRecorder recorder,
+        CancellationToken ct)
+    {
+        var missing = inflows.Select(i => i.StationId).Where(id => !waterBodyData.Ratios.ContainsKey(id)).Distinct().ToList();
+        if (missing.Count == 0)
+        {
+            return (waterBodyData.Ratios, forecast);
+        }
+
+        var measured = new Dictionary<string, double>(waterBodyData.Ratios);
+        var medians = new Dictionary<string, double>();
+        foreach (var stationId in missing)
+        {
+            if (await sources.StationFlow(stationId, today, recorder, ct) is { } flow)
+            {
+                measured[stationId] = flow.Ratio;
+                medians[stationId] = flow.Median;
+            }
+        }
+
+        var forecastRatios = new Dictionary<(string StationId, DateOnly Day), double>(forecast);
+        foreach (var (key, value) in InflowForecast.Ratios(medians, forecastHours))
+        {
+            forecastRatios[key] = value;
+        }
+
+        return (measured, forecastRatios);
     }
 
     private SiteWeatherOutlook AddOutlook(Guid diveSiteId)

@@ -44,7 +44,7 @@ internal static class DiveIndexCalculator
         var capped = uncapped is { } value ? Math.Min(value, VisibilityCap(inputs.Clarity.Indicator, rules)) : (double?)null;
         var penalty = CurrentPenalty(inputs, rules);
         var index = capped is { } beforePenalty && penalty > 0
-            ? Math.Round(Math.Max(beforePenalty - penalty, rules.MinIndexAfterCurrentPenalty), 1)
+            ? Math.Round(Math.Min(beforePenalty, Math.Max(beforePenalty - penalty, rules.MinIndexAfterCurrentPenalty)), 1)
             : capped;
 
         var reasons = Reasons(inputs, thermocline, rules);
