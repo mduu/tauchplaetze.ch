@@ -70,5 +70,5 @@ resource database 'Microsoft.Sql/servers/databases@2023-08-01-preview' = {
 
 output serverFqdn string = server.properties.fullyQualifiedDomainName
 output databaseId string = database.id
-// Serverless (Free) braucht nach einer Pause bis zu einer Minute. Darum der lange Timeout.
+// Der lange Timeout gilt für die Option Free: Serverless braucht nach einer Pause bis zu einer Minute.
 output connectionString string = 'Server=tcp:${server.properties.fullyQualifiedDomainName},1433;Database=${databaseName};Authentication=Active Directory Default;Encrypt=True;TrustServerCertificate=False;Connect Timeout=90;'

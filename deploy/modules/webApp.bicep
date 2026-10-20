@@ -1,5 +1,5 @@
 // App Service Plan Linux B1 und die Web App (.NET 10). Eine Instanz, Always On für die Worker.
-// Health Check auf /alive: ohne Datenbank (/health/ready weckt sie und würde Serverless nie pausieren lassen).
+// Health Check auf /alive: ohne Datenbank. App Service fragt jede Minute, /health/ready prüft die Datenbank und ist dafür zu teuer.
 // Secrets als Key-Vault-Referenzen: App Service löst sie mit der Managed Identity auf (Rolle «Key Vault Secrets User», doc/go-live.md).
 // Data Protection ohne eigene Konfiguration: App Service legt die Schlüssel unter $HOME/ASP.NET/DataProtection-Keys ab (infrastructure.md).
 

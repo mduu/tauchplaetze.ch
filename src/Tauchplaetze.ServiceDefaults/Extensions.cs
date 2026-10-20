@@ -100,7 +100,7 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Maps `/health` and `/alive`. Both run only the liveness check: no database call, so the serverless database can pause.
+    /// Maps `/health` and `/alive`. Both run only the liveness check, without a database call: App Service polls `/alive` every minute.
     /// </summary>
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
