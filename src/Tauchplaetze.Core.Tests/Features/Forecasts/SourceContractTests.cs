@@ -159,4 +159,43 @@ public class SourceContractTests
         Assert.Equal(["2091"], series.Temperature.Keys);
         Assert.Equal(16.62, series.Temperature["2091"][^1].Value);
     }
+
+    [Fact]
+    public void Die_automatisch_gerechnete_Vorhersage_des_BAFU_hat_dasselbe_Format_und_beginnt_nach_dem_letzten_Messwert()
+    {
+        // Act: ausgegeben 20.10.2026, 12:56 MEWZ, gemessen bis 12:00 MEWZ.
+        var file = BafuForecastFile.Parse(TestData.Read("hydro", "pqprevi-unofficial-ICH2_Ctrl-2605-20261020.txt"));
+
+        // Assert
+        Assert.Equal(new DateTimeOffset(2026, 10, 20, 11, 56, 0, TimeSpan.Zero), file.IssuedAt);
+        Assert.Equal(new DateTimeOffset(2026, 10, 20, 11, 0, 0, TimeSpan.Zero), file.MeasuredUntil);
+        Assert.Equal(file.MeasuredUntil, file.Hours[0].Hour);
+        Assert.All(file.Hours, h => Assert.True(h.Discharge >= 0));
+    }
+
+    [Theory]
+    [InlineData("dd mm yyyy hh Wasserstand Abfluss", "20 10 2026 07  261.20   353.7", 353.7)]
+    [InlineData("dd mm yyyy hh Abfluss", "20 10 2026 07  353.7", 353.7)]
+    [InlineData("dd mm yyyy hh Niveau Débits", "20 10 2026 07  261.20   353.7", 353.7)]
+    [InlineData("dd mm yyyy hh Wasserstand Abfluss", "20 10 2026 07  261.20   NaN", null)]
+    [InlineData("dd mm yyyy hh Wasserstand Abfluss", "20 10 2026 07  261.20   -9999", null)]
+    [InlineData("dd mm yyyy hh Wasserstand Abfluss", "20 10 2026 07  261.20", null)]
+    public void Der_Parser_liest_den_Abfluss_aus_der_Spalte_Abfluss_oder_Debits_und_ueberspringt_fehlende_und_negative_Werte(
+        string header, string row, double? expected)
+    {
+        // Arrange
+        var text = $"""
+            Ausgegeben am / Emission:           20.10.2026, 07.12 h MEWZ / HHEC
+            Gemessene Werte bis / Valeurs mesurées jusqu'au: 20.10.2026, 06.00 MEWZ / HHEC
+
+            {header}
+            {row}
+            """;
+
+        // Act
+        var file = BafuForecastFile.Parse(text);
+
+        // Assert
+        Assert.Equal(expected, file.Hours.Select(h => (double?)h.Discharge).SingleOrDefault());
+    }
 }

@@ -71,6 +71,9 @@ internal sealed class FakeSources : HttpMessageHandler
     /// <summary>Läuft bei jeder Anfrage, etwa um einen Lauf mitten im Abruf abzubrechen.</summary>
     public Action<string>? OnRequest { get; set; }
 
+    /// <summary>Statuscodes, die für einen Teil der URL statt einer Antwort gelten, etwa 503 für einen Ausfall.</summary>
+    public ConcurrentDictionary<string, HttpStatusCode> Statuses { get; } = new();
+
     /// <summary>Antworten, die für einen Teil der URL statt der Datei aus `TestData` gelten.</summary>
     public ConcurrentDictionary<string, string> Overrides { get; } = new();
 
@@ -79,6 +82,11 @@ internal sealed class FakeSources : HttpMessageHandler
         var url = request.RequestUri!.ToString();
         Requests.Add(url);
         OnRequest?.Invoke(url);
+
+        if (Statuses.FirstOrDefault(o => url.Contains(o.Key, StringComparison.Ordinal)) is { Key: not null, Value: var status })
+        {
+            return Task.FromResult(new HttpResponseMessage(status) { Content = new StringContent("unavailable") });
+        }
 
         if (Overrides.FirstOrDefault(o => url.Contains(o.Key, StringComparison.Ordinal)) is { Value: { } body })
         {

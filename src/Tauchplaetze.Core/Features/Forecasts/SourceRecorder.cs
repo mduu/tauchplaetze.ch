@@ -18,6 +18,9 @@ internal class SourceRecorder(IRawDataStore rawData, string runPath)
 
     public int Count => calls.Count;
 
+    /// <summary>Der Status des letzten Calls. <c>null</c> vor dem ersten.</summary>
+    public SourceCallStatus? LastCall => calls.Count > 0 ? calls[^1] : null;
+
     public string StatusJson => JsonSerializer.Serialize(calls, JsonOptions);
 
     public async Task<T?> Record<T>(string source, string key, Task<SourceResult<T>> call, CancellationToken ct, string extension = "json")

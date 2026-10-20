@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Commands;
@@ -207,6 +208,109 @@ public class DischargeTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(forecast.Count, forecast.Select(h => h.Hour).Distinct().Count());
     }
 
+    [SqlFact]
+    public async Task Die_Vorhersage_beginnt_mit_der_Stunde_nach_dem_letzten_Messwert_die_Zeile_hh_ist_das_Mittel_der_Stunde_bis_hh()
+    {
+        // Arrange: gemessen bis 06:00 MEWZ = 05:00 UTC. Zeile 06 (365.3) ist das gemessene Mittel 05–06 MEWZ, Zeile 07 (353.7) das erste vorhergesagte, 06–07 MEWZ.
+        await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+        Sql.Sources.Overrides["pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt"] = TestData.Read("hydro", "pqprevi-official-ICH2_Ctrl-2091-20261019.txt");
+
+        // Act
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        var first = await FirstForecastHour();
+        Assert.Equal((new DateTimeOffset(2026, 10, 19, 5, 0, 0, TimeSpan.Zero), 353.7m), (first.Hour, first.Discharge));
+    }
+
+    [SqlFact]
+    public async Task Eine_Vorhersage_von_gestern_zaehlt_nicht_und_der_naechste_Lauf_versucht_es_wieder()
+    {
+        // Arrange
+        var (_, site) = await PrepareRheinfelden();
+        var file = TestData.Read("hydro", "pqprevi-official-ICH2_Ctrl-2091-20261019.txt");
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+        Sql.Sources.Overrides["pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt"] = file.Replace("Emission:           19.10.2026", "Emission:           18.10.2026", StringComparison.Ordinal);
+
+        // Act
+        var yesterday = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        Sql.Sources.Overrides["pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt"] = file;
+        Sql.Time.Now = Now.AddMinutes(30);
+        var retry = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        Assert.Equal((0, 1), (yesterday.ForecastStations, retry.ForecastStations));
+        Assert.Equal(new DateTimeOffset(2026, 10, 19, 6, 12, 0, TimeSpan.Zero), (await Discharge(site))!.Forecast!.IssuedAt);
+    }
+
+    [SqlFact]
+    public async Task Faellt_das_BAFU_aus_hoert_der_Abruf_nach_dem_ersten_Fehler_auf_und_der_naechste_Lauf_versucht_es_wieder()
+    {
+        // Arrange
+        await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+        Sql.Sources.Statuses["pqprevi-"] = System.Net.HttpStatusCode.ServiceUnavailable;
+
+        // Act
+        var outage = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        var duringOutage = Sql.Sources.Requests.Where(url => url.Contains("pqprevi-", StringComparison.Ordinal)).Distinct().ToList();
+        Sql.Sources.Statuses.Clear();
+        Sql.Sources.Overrides["pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt"] = TestData.Read("hydro", "pqprevi-official-ICH2_Ctrl-2091-20261019.txt");
+        Sql.Time.Now = Now.AddMinutes(30);
+        var after = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        Assert.Equal((0, 1), (outage.ForecastStations, after.ForecastStations));
+        Assert.Equal("https://www.hydrodata.ch/data/pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt", Assert.Single(duringOutage));
+    }
+
+    [SqlFact]
+    public async Task Kommt_keine_neue_Vorhersage_faellt_eine_ueber_einen_Tag_alte_weg()
+    {
+        // Arrange
+        var (_, site) = await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+        Sql.Sources.Overrides["pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt"] = TestData.Read("hydro", "pqprevi-official-ICH2_Ctrl-2091-20261019.txt");
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        Sql.Sources.Overrides.TryRemove("pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt", out _);
+
+        // Act
+        Sql.Time.Now = new DateTimeOffset(2026, 10, 20, 7, 0, 0, TimeSpan.Zero);
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Assert
+        var discharge = (await Discharge(site))!;
+        Assert.Null(discharge.Forecast);
+        Assert.Empty(discharge.ForecastHours);
+    }
+
+    [SqlFact]
+    public async Task Ohne_Zugangsdaten_holt_der_Import_keine_Vorhersage()
+    {
+        // Arrange
+        await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+        var options = Sql.Services.GetRequiredService<Microsoft.Extensions.Options.IOptions<Tauchplaetze.Core.Features.Forecasts.Sources.Hydro.BafuForecastOptions>>().Value;
+        var password = options.Password;
+        options.Password = null;
+
+        // Act
+        ImportDischargeResult result;
+        try
+        {
+            result = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+        }
+        finally
+        {
+            options.Password = password;
+        }
+
+        // Assert
+        Assert.Equal((1, 0), (result.Stations, result.ForecastStations));
+        Assert.DoesNotContain(Sql.Sources.Requests, url => url.Contains("pqprevi-", StringComparison.Ordinal));
+    }
+
     [SqlTheory]
     [InlineData("2091", true)]
     [InlineData(" 2091 ", true)]
@@ -238,6 +342,17 @@ public class DischargeTests(SqlServer sql) : SqlTest(sql)
         var result = await Command<ProposeDiveSiteCommand, EditorialResult>(
             new ProposeDiveSiteCommand(moderator, "Strandbad", rhein, 47.55164, 7.7767, "Rheinfelden", "AG", null));
         return (moderator, result.DiveSiteId!.Value);
+    }
+
+    private async Task<(DateTimeOffset Hour, decimal Discharge)> FirstForecastHour()
+    {
+        (DateTimeOffset, decimal) first = default;
+        await Sql.Arrange(async db => first = await db.HydroHours
+            .Where(h => h.Kind == HydroSeriesKind.Forecast)
+            .OrderBy(h => h.Hour)
+            .Select(h => new ValueTuple<DateTimeOffset, decimal>(h.Hour, h.Discharge))
+            .FirstAsync(TestContext.Current.CancellationToken));
+        return first;
     }
 
     private Task<SiteDischarge?> Discharge(Guid site) => Query<GetSiteDischargeQuery, SiteDischarge?>(new GetSiteDischargeQuery(site));

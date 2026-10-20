@@ -13,6 +13,7 @@ Echte Antworten der Quellen aus dem Spike 0.5 (Riff Williams, Zürichsee). Die C
 | `hydro/` | BAFU über existenz.ch, Station 2104 Linth Weesen, Abfluss | 17.10.2026, 13:06 |
 | `hydro/` (Flussplätze) | BAFU über existenz.ch, Station 2091 Rhein – Rheinfelden, Abfluss und Pegel, `startdate=2026-10-18`, `enddate=2026-10-20` | 19.10.2026, 15:45 |
 | `hydro/` (Vorhersage) | BAFU-Abflussvorhersage `Pqprevi_ICH2_Ctrl_2091.txt` (Rhein – Rheinfelden), ausgegeben 19.10.2026, 07:12 MEWZ, aus dem Anhang der Mail des BAFU | 19.10.2026 |
+| `hydro/` (Vorhersage, unkontrolliert) | BAFU-Abflussvorhersage `pqprevi-unofficial/Pqprevi_ICH2_Ctrl_2605.txt` (Verzasca – Lavertezzo), ausgegeben 20.10.2026, 12:56 MEWZ, aus den Rohdaten des lokalen Abfluss-Jobs | 20.10.2026, 14:23 |
 | `hydro/` (Temperatur) | BAFU über existenz.ch, Stationen 2091 Rhein – Rheinfelden und 2605 Verzasca – Lavertezzo, `parameters=flow,temperature`, 2605 ohne Temperatur | 19.10.2026, 16:15 |
 
 Ändert eine Quelle ihr Format, kommt eine neue Antwort dazu. Die alte bleibt, solange der Parser sie lesen muss.

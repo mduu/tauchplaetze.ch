@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Http.Resilience;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Editorial.Commands;
@@ -90,6 +91,7 @@ public sealed class SqlServer : IAsyncLifetime
         builder.Services.Replace(ServiceDescriptor.Singleton<IMailSender>(Mail));
         builder.Services.Replace(ServiceDescriptor.Singleton<IMailQueue>(MailQueue));
         builder.Services.ConfigureHttpClientDefaults(client => client.ConfigurePrimaryHttpMessageHandler(() => Sources));
+        builder.Services.PostConfigureAll<HttpStandardResilienceOptions>(options => options.Retry.Delay = TimeSpan.Zero);
         host = builder.Build();
 
         await using var scope = Services.CreateAsyncScope();

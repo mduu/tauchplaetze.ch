@@ -18,6 +18,7 @@ namespace Tauchplaetze.Core.Features.Forecasts.Commands;
 /// Holt Abfluss und Wassertemperatur der Stationen aller Flussplätze in einem Call und speichert Stundenmittel und die neuesten Messwerte
 /// (`forecast.md`, «Abfluss»). Stundenwerte älter als 30 Tage fallen weg. Ein zweiter Lauf schreibt dieselben Werte.
 /// Ab 08:15 und danach höchstens alle 3 Stunden holt er auch die Vorhersage des BAFU pro Station und ersetzt die alte.
+/// Eine Datei, die vor heute 00:00 ausgegeben wurde, zählt nicht; der nächste Lauf versucht es wieder. Fällt das BAFU aus (5xx, Timeout), hört der Abruf für diesen Lauf auf.
 /// </summary>
 public record ImportDischargeCommand;
 
@@ -121,10 +122,12 @@ internal class ImportDischargeHandler(
         var due = readings.Where(r => ForecastDue(r.ForecastFetchedAt, now)).OrderBy(r => r.StationId, StringComparer.Ordinal).ToList();
         var imported = 0;
         var calls = 0;
+        var issuedFrom = SwissTime.ToUtc(SwissTime.Today(time), 0);
         foreach (var reading in due)
         {
             BafuForecastFile? file = null;
             var official = false;
+            var stale = false;
             foreach (var (folder, variant) in BafuForecastClient.Candidates)
             {
                 if (calls++ > 0)
@@ -132,17 +135,35 @@ internal class ImportDischargeHandler(
                     await Task.Delay(BetweenCalls, time, ct);
                 }
 
-                file = await recorder.Record(BafuForecastClient.Source, $"{folder}-{variant}-{reading.StationId}",
+                var candidate = await recorder.Record(BafuForecastClient.Source, $"{folder}-{variant}-{reading.StationId}",
                     bafu.Get(folder, variant, reading.StationId, ct), ct, "txt");
-                if (file is { Hours.Count: > 0 })
+                if (recorder.LastCall is { } call && IsOutage(call))
                 {
+                    logger.LogWarning("BAFU forecast stopped for this run: {Status} {Error}", call.StatusCode, call.Error);
+                    await dbContext.SaveChangesAsync(ct);
+                    return imported;
+                }
+
+                if (candidate is { Hours.Count: > 0 } && candidate.IssuedAt < issuedFrom)
+                {
+                    stale = true;
+                    continue;
+                }
+
+                if (candidate is { Hours.Count: > 0 })
+                {
+                    file = candidate;
                     official = folder == "official";
                     break;
                 }
             }
 
-            reading.ForecastFetchedAt = now;
-            if (file is { Hours.Count: > 0 })
+            if (file is not null || !stale)
+            {
+                reading.ForecastFetchedAt = now;
+            }
+
+            if (file is not null)
             {
                 await ReplaceForecast(reading.StationId, file.Hours, now, ct);
                 reading.ForecastIssuedAt = file.IssuedAt;
@@ -161,6 +182,9 @@ internal class ImportDischargeHandler(
 
         return imported;
     }
+
+    /// <summary>Ausfall des BAFU (5xx, Timeout, kein Netz). Eine fehlende Datei (404) ist kein Ausfall: Nicht jede Station hat jede Variante.</summary>
+    private static bool IsOutage(SourceCallStatus call) => !call.Ok && call.StatusCode is null or >= 500;
 
     /// <summary>Fällig ab <see cref="ForecastFrom"/> Schweizer Zeit, wenn heute seither noch kein Abruf lief oder der letzte <see cref="ForecastEvery"/> zurückliegt.</summary>
     private bool ForecastDue(DateTimeOffset? fetchedAt, DateTimeOffset now)
