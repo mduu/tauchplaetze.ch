@@ -2,7 +2,7 @@
 
 Ziel: Betrieb unter **CHF 20 pro Monat**. Region: **Switzerland North** (Entscheid Marc, 20.10.2026; Rückfall West Europe). Serverless und das Free Offer sind dort verfügbar (geprüft 20.10.2026 mit `az sql db list-editions`).
 
-Bicep: `deploy/main.bicep` (Subscription-Scope, legt die Resource Group an), Module in `deploy/modules/`, Werte in `deploy/main.bicepparam`. Schritte zum Go-live: `doc/go-live.md`.
+Bicep: `deploy/main.bicep` (Resource-Group-Scope, die Resource Group legt Marc von Hand an), Module in `deploy/modules/`, Werte in `deploy/main.bicepparam`. Schritte zum Go-live: `doc/go-live.md`.
 
 ## Azure-Ressourcen
 
@@ -12,10 +12,10 @@ Bicep: `deploy/main.bicep` (Subscription-Scope, legt die Resource Group an), Mod
 | App Service Plan | `asp-tauchplaetze-prod` | Linux, Basic B1 | eine Instanz, «Always On» für den Worker |
 | Web App | `app-tauchplaetze-prod` | .NET 10 | System-assigned Managed Identity |
 | SQL Server (logisch) | `sql-tauchplaetze-prod` | – | nur Entra-Authentifizierung |
-| SQL Database | `sqldb-tauchplaetze` | General Purpose Serverless, **Free Offer** | siehe unten |
+| SQL Database | `sqldb-tauchplaetze` | **Basic, 5 DTU, 2 GB** (Entscheid Marc, 20.10.2026); Free Offer als Option `sqlPlan = 'Free'` | siehe unten |
 | Storage Account | `sttauchplaetzeprod` | Standard LRS | Container `media`, `forecast-raw`, `models`, `locks` |
 | Log Analytics + Application Insights | `log-tauchplaetze-prod`, `appi-tauchplaetze-prod` | Pay-as-you-go | Tageslimit 0.15 GB (unter dem Gratisvolumen von 5 GB im Monat), Sampling 50 % der Traces, Aufbewahrung 30 Tage, IP-Adressen nicht speichern (Standard von Application Insights, nicht ändern) |
-| Key Vault | `kv-tauchplaetze-prod` | Standard, RBAC | Secrets der App, Key `dataprotection` |
+| Key Vault | `kv-tauchplaetze-prod` | Standard, RBAC | Secrets der App, als Key-Vault-Referenzen in den App Settings |
 | Action Group, Alerts, Budget | `ag-tauchplaetze-prod`, `alert-*`, `budget-tauchplaetze-prod` | – | nur mit `ALERT_EMAIL`, siehe «Betrieb» |
 
 Ausserhalb von Azure:
@@ -82,10 +82,10 @@ Lifecycle-Regel: `forecast-raw` nach 90 Tagen in die Cool-Stufe. `revisions` ble
 | Log Analytics mit Tageslimit 0.15 GB | im Gratisvolumen | CHF 0 |
 | Alerts (2–3 Metrik-Alerts, 3 Log-Alerts stündlich) | | CHF 0.50–2 |
 | Cloudflare, GitHub | | CHF 0 |
-| **Total mit Free Offer** | | **ca. CHF 13–15** |
-| **Total mit Basic** | | **ca. CHF 18–20** |
+| **Total mit Basic (Standard)** | | **ca. CHF 18–20** |
+| Total mit Free Offer | | ca. CHF 13–15 |
 
-**Risiko Free Offer (20.10.2026):** 100 000 vCore-Sekunden sind bei 0.5 vCore rund 55 Stunden online im Monat. Jeder Zugriff hält die Datenbank mindestens 15 Minuten wach (`autoPauseDelay`). Der Abfluss-Job schreibt alle 30 Minuten, dazu kommen Besucher und Prognose-Läufe. Die Datenbank wäre so fast immer online, das Kontingent nach wenigen Tagen aufgebraucht. Mit «Auto-pause» ist die Datenbank dann bis Monatsende nicht erreichbar. Empfehlung: `sqlPlan = 'Basic'` in `main.bicepparam` (eine Zeile, Entscheid Marc offen).
+**Risiko Free Offer (20.10.2026):** 100 000 vCore-Sekunden sind bei 0.5 vCore rund 55 Stunden online im Monat. Jeder Zugriff hält die Datenbank mindestens 15 Minuten wach (`autoPauseDelay`). Der Abfluss-Job schreibt alle 30 Minuten, dazu kommen Besucher und Prognose-Läufe. Die Datenbank wäre so fast immer online, das Kontingent nach wenigen Tagen aufgebraucht. Mit «Auto-pause» ist die Datenbank dann bis Monatsende nicht erreichbar. Darum Basic als Standard (Entscheid Marc, 20.10.2026).
 
 Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos DB (unnötig), Premium-SKUs.
 
@@ -106,12 +106,15 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 
 ## IaC
 
-- Azure Bicep in `/deploy` (wie feldnah). Infra-Deploy manuell über `infra.yml` (`workflow_dispatch`: what-if, dann Deploy mit Freigabe im Environment `prod`).
+- Azure Bicep in `/deploy` (wie feldnah), **Resource-Group-Scope**. Infra-Deploy manuell über `infra.yml` (`workflow_dispatch`): Standard what-if, Deploy erst nach Freigabe durch den Required Reviewer (Marc) im Environment `prod`.
+- **Von Hand, nicht im Template** (Entscheid Marc, 20.10.2026): die Resource Group, die Rollen der Managed Identity und der SQL-Benutzer der App (`doc/go-live.md`). Der GitHub-Service-Principal hat nur Contributor auf der Resource Group und vergibt keine Rechte.
 - Persönliche Werte (Object ID des SQL-Admins, Adresse für Alerts) kommen aus Umgebungsvariablen (`readEnvironmentVariable` in `main.bicepparam`), in GitHub aus Variablen und Secrets.
-- **Keine Secrets im Template.** Bicep legt keine Key-Vault-Secrets an, ein Deploy würde sonst gesetzte Werte überschreiben. Marc setzt sie einmal (`doc/go-live.md`).
-- **Zugriff nur über Entra:** SQL nur mit Entra-Anmeldung, Storage ohne Schlüssel (`allowSharedKeyAccess: false`), Deploy ohne Basic-Auth für FTP und SCM. Die Managed Identity der App hat «Storage Blob Data Contributor», «Storage Queue Data Contributor», «Key Vault Secrets User» und «Key Vault Crypto User». Den SQL-Benutzer legt Marc per SQL an (`db_owner`, weil die App migriert).
-- **App Settings (prod):** Connection Strings `tauchplaetze` (`Authentication=Active Directory Default`, Timeout 90 s wegen Serverless), `blobs` und `queues` als Endpoint-Adresse (Aspire nimmt dann die Managed Identity). `KeyVault__Uri`: Die App liest die Secrets beim Start selbst (`--` wird `:`), fehlende Secrets fehlen nur als Wert. `DataProtection__KeysBlobUri` (`dataprotection/keys.xml`) und `DataProtection__KeyVaultKeyUri`: Schlüssel der Data Protection in Blob, geschützt mit dem Key (offener Punkt #29 erledigt). `APPLICATIONINSIGHTS_CONNECTION_STRING`. `Database__PrepareOnStartup=true`. Mail über Hostpoint (ADR-012).
-- **Secrets im Key Vault:** `Accounts--Admins--0--Email`, `Operator--Email`, `Mail--UserName`, `Mail--Password`, `Hydro--Forecast--Username`, `Hydro--Forecast--Password`, `Content--ExportKey`.
+- **Keine Secrets im Template.** Bicep legt keine Key-Vault-Secrets an, ein Deploy würde sonst gesetzte Werte überschreiben. Marc setzt sie einmal.
+- **Zugriff nur über Entra:** SQL nur mit Entra-Anmeldung, Storage ohne Schlüssel (`allowSharedKeyAccess: false`), Deploy ohne Basic-Auth für FTP und SCM. Rollen der Managed Identity: «Storage Blob Data Contributor» und «Storage Queue Data Contributor» auf dem Storage Account, «Key Vault Secrets User» auf dem Key Vault. SQL-Benutzer per SQL mit `db_owner`, weil die App migriert.
+- **App Settings (prod):** Connection Strings `tauchplaetze` (`Authentication=Active Directory Default`, Timeout 90 s), `blobs` und `queues` als Endpoint-Adresse (Aspire nimmt dann die Managed Identity). `APPLICATIONINSIGHTS_CONNECTION_STRING`. `Database__PrepareOnStartup=true`. Mail-Host, Port und TLS (ADR-012).
+- **Secrets als Key-Vault-Referenzen** (`@Microsoft.KeyVault(VaultName=kv-tauchplaetze-prod;SecretName=…)`, `keyVaultReferenceIdentity: SystemAssigned`): `Accounts--Admins--0--Email`, `Operator--Email`, `Mail--UserName`, `Mail--Password`, `Hydro--Forecast--Username`, `Hydro--Forecast--Password`, `Content--ExportKey`. App Service löst sie auf. Fehlt ein Secret oder die Rolle, bleibt der Text stehen: Der Start bricht dann ab und nennt nur den Key (`KeyVaultReferences`).
+- **Data Protection ohne eigene Konfiguration** (wie feldnah, Entscheid Marc, 20.10.2026): App Service legt die Schlüssel automatisch unter `$HOME/ASP.NET/DataProtection-Keys` ab. Vertretbar, weil es eine Instanz gibt. Die Schlüssel liegen unverschlüsselt im Dateispeicher der App. Wird die Web App neu angelegt, sind sie weg: Anmeldungen und Links in offenen Mails werden dann ungültig (offener Punkt #29 erledigt).
+- **Budget** auf der Resource Group (`deploy/modules/budget.bicep`).
 - **Entra-Anmeldung an SQL:** Ab SqlClient 7 braucht sie das Paket `Microsoft.Data.SqlClient.Extensions.Azure` (im Core referenziert).
 
 ## CI/CD (GitHub Actions)

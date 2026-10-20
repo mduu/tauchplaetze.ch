@@ -66,4 +66,4 @@ Wir entscheiden uns für **Azure SQL Database mit dem Free Offer** für alle str
 
 ## Nachtrag 20.10.2026
 
-Beim Bau der IaC gerechnet: Das Kontingent reicht bei 0.5 vCore für rund 55 Stunden online im Monat. Der Abfluss-Job (alle 30 Minuten) und die Besucher halten die Datenbank fast immer wach. Das Kontingent wäre nach wenigen Tagen aufgebraucht, danach pausiert die Datenbank bis Monatsende. Das Bicep kann darum auch Basic (5 DTU, rund CHF 4.50 im Monat): `sqlPlan` in `deploy/main.bicepparam`. Der Entscheid liegt bei Marc (`infrastructure.md`, Kosten).
+Beim Bau der IaC gerechnet: Das Kontingent reicht bei 0.5 vCore für rund 55 Stunden online im Monat. Der Abfluss-Job (alle 30 Minuten) und die Besucher halten die Datenbank fast immer wach. Das Kontingent wäre nach wenigen Tagen aufgebraucht, danach pausiert die Datenbank bis Monatsende. **Entscheid Marc (20.10.2026): Basic** (5 DTU, 2 GB, rund CHF 4.50 im Monat), Standard in `deploy/main.bicepparam`. Das Free Offer bleibt als Option (`sqlPlan = 'Free'`).
