@@ -754,6 +754,9 @@
         "mouthLatitude": 46.16,
         "mouthLongitude": 8.784
       }
+    ],
+    "removedHydroStations": [
+      "2068"
     ]
   },
   {
@@ -1343,6 +1346,9 @@
         "mouthLatitude": 46.693,
         "mouthLongitude": 7.665
       }
+    ],
+    "removedHydroStations": [
+      "2469"
     ]
   },
   {

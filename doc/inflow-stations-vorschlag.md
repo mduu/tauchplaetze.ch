@@ -30,6 +30,7 @@ Seit `rules-1.5` zählt ein Zufluss nach der Distanz zwischen Platz und Mündung
 ## Bewusst ohne Station
 
 - **Hallwilersee:** 2416 Aabach – Hitzkirch hatte einen Median von 0.01 m³/s und ergab unsinnige Quotienten. Am 20.10.2026 entfernt (Entscheid Marc).
+- **Ausgemustert:** 2068 Ticino – Riazzino (misst keinen Abfluss) und 2469 Kander – Hondrich (bei existenz.ch ohne Abfluss) stehen unter `removedHydroStations`, damit der Seed sie aus bestehenden Datenbanken entfernt.
 
 - **Sarnersee:** 2102 Sarner Aa – Sarnen misst den Abfluss des Sees, nicht den Zufluss.
 - **Vierwaldstättersee, Muota (2084 Ingenbohl):** möglicher dritter Zufluss bei Brunnen. Weggelassen, damit ein Zufluss am Rand nicht den ganzen See abwertet.
