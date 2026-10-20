@@ -1,6 +1,7 @@
 // App Service Plan Linux B1 und die Web App (.NET 10). Eine Instanz, Always On für die Worker.
-// Health Check auf /alive: ohne Datenbank, damit die Serverless-Datenbank pausieren kann (/health/ready weckt sie).
-// Secrets liest die App selbst aus dem Key Vault (`KeyVault__Uri`), darum keine Key-Vault-Referenzen in den App Settings.
+// Health Check auf /alive: ohne Datenbank (/health/ready weckt sie und würde Serverless nie pausieren lassen).
+// Secrets als Key-Vault-Referenzen: App Service löst sie mit der Managed Identity auf (Rolle «Key Vault Secrets User», doc/go-live.md).
+// Data Protection ohne eigene Konfiguration: App Service legt die Schlüssel unter $HOME/ASP.NET/DataProtection-Keys ab (infrastructure.md).
 
 param location string
 param planName string
@@ -9,8 +10,7 @@ param appInsightsConnectionString string
 param sqlConnectionString string
 param blobEndpoint string
 param queueEndpoint string
-param keyVaultUri string
-param dataProtectionKeyUri string
+param keyVaultName string
 param mailFrom string
 param publicSiteBaseUri string
 param mediaPublicBaseUri string
@@ -30,12 +30,21 @@ resource plan 'Microsoft.Web/serverfarms@2023-12-01' = {
   }
 }
 
-var settings = union({
+var secretNames = [
+  'Accounts--Admins--0--Email'
+  'Operator--Email'
+  'Mail--UserName'
+  'Mail--Password'
+  'Hydro--Forecast--Username'
+  'Hydro--Forecast--Password'
+  'Content--ExportKey'
+]
+
+var secretSettings = toObject(secretNames, name => replace(name, '--', '__'), name => '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=${name})')
+
+var settings = union(secretSettings, {
   APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
   ASPNETCORE_ENVIRONMENT: 'Production'
-  KeyVault__Uri: keyVaultUri
-  DataProtection__KeysBlobUri: '${blobEndpoint}dataprotection/keys.xml'
-  DataProtection__KeyVaultKeyUri: dataProtectionKeyUri
   Database__PrepareOnStartup: 'true'
   Accounts__Admins__0__DisplayName: adminDisplayName
   Mail__Host: 'asmtp.mail.hostpoint.ch'
@@ -56,6 +65,7 @@ resource site 'Microsoft.Web/sites@2023-12-01' = {
   }
   properties: {
     serverFarmId: plan.id
+    keyVaultReferenceIdentity: 'SystemAssigned'
     httpsOnly: true
     clientAffinityEnabled: true
     siteConfig: {

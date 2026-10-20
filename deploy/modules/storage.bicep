@@ -11,7 +11,6 @@ var privateContainers = [
   'models'
   'locks'
   'content-export'
-  'dataprotection'
 ]
 
 var queues = [

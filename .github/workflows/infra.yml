@@ -1,6 +1,6 @@
-# Infrastruktur von prod (deploy/main.bicep). Nur manuell.
-# what-if zeigt die geplanten Änderungen. deploy wendet sie an, nach Freigabe im Environment prod.
-# Variablen und Secrets: doc/go-live.md.
+# Infrastruktur von prod (deploy/main.bicep) in der Resource Group rg-tauchplaetze-prod. Nur manuell.
+# Standard what-if: zeigt die geplanten Änderungen. deploy wendet sie an, erst nach Freigabe durch den Required Reviewer im Environment prod.
+# Resource Group, Rollen, Variablen und Secrets: doc/go-live.md.
 
 name: Infra
 
@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  LOCATION: switzerlandnorth
+  RESOURCE_GROUP: rg-tauchplaetze-prod
   SQL_ADMIN_LOGIN: ${{ vars.SQL_ADMIN_LOGIN }}
   SQL_ADMIN_OBJECT_ID: ${{ vars.SQL_ADMIN_OBJECT_ID }}
   SQL_ADMIN_PRINCIPAL_TYPE: ${{ vars.SQL_ADMIN_PRINCIPAL_TYPE }}
@@ -42,8 +42,8 @@ jobs:
 
       - name: What-if
         run: |
-          az deployment sub what-if \
-            --location "$LOCATION" \
+          az deployment group what-if \
+            --resource-group "$RESOURCE_GROUP" \
             --name "tauchplaetze-${{ github.run_number }}" \
             --template-file deploy/main.bicep \
             --parameters deploy/main.bicepparam \
@@ -74,8 +74,8 @@ jobs:
 
       - name: Deploy
         run: |
-          az deployment sub create \
-            --location "$LOCATION" \
+          az deployment group create \
+            --resource-group "$RESOURCE_GROUP" \
             --name "tauchplaetze-${{ github.run_number }}" \
             --template-file deploy/main.bicep \
             --parameters deploy/main.bicepparam \

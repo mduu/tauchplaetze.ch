@@ -1,5 +1,5 @@
 // SQL Server nur mit Entra-Anmeldung, eine Datenbank (infrastructure.md, Azure SQL Free Offer).
-// Free: Serverless GP_S_Gen5_2 mit Free Offer, pausiert am Limit bis Monatsende. Basic: 5 DTU, 2 GB, feste Kosten.
+// Basic (Standard): 5 DTU, 2 GB, feste Kosten, pausiert nie. Free: Serverless GP_S_Gen5_2 mit Free Offer, pausiert am Limit bis Monatsende.
 // Die App verbindet sich über ihre Managed Identity. Den Benutzer dafür legt Marc einmal per SQL an (doc/go-live.md).
 
 param location string
@@ -70,5 +70,5 @@ resource database 'Microsoft.Sql/servers/databases@2023-08-01-preview' = {
 
 output serverFqdn string = server.properties.fullyQualifiedDomainName
 output databaseId string = database.id
-// Serverless braucht nach einer Pause bis zu einer Minute. Darum der lange Timeout.
+// Serverless (Free) braucht nach einer Pause bis zu einer Minute. Darum der lange Timeout.
 output connectionString string = 'Server=tcp:${server.properties.fullyQualifiedDomainName},1433;Database=${databaseName};Authentication=Active Directory Default;Encrypt=True;TrustServerCertificate=False;Connect Timeout=90;'

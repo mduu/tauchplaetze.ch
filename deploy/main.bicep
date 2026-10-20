@@ -1,18 +1,18 @@
 // Infrastruktur von tauchplaetze.ch (specs/infrastructure.md). Eine Umgebung: prod.
+// Die Resource Group legt Marc von Hand an, ebenso die Rollen der Managed Identity (doc/go-live.md). Das Template vergibt keine Rechte.
 //
-// Prüfen:   az deployment sub what-if  -l switzerlandnorth -f deploy/main.bicep -p deploy/main.bicepparam
-// Anwenden: az deployment sub create   -l switzerlandnorth -f deploy/main.bicep -p deploy/main.bicepparam
-// Die Werte ohne Default kommen aus Umgebungsvariablen (main.bicepparam). Secrets setzt Marc im Key Vault (doc/go-live.md).
+// Prüfen:   az deployment group what-if -g rg-tauchplaetze-prod -f deploy/main.bicep -p deploy/main.bicepparam
+// Anwenden: az deployment group create  -g rg-tauchplaetze-prod -f deploy/main.bicep -p deploy/main.bicepparam
 
-targetScope = 'subscription'
+targetScope = 'resourceGroup'
 
 @description('Region aller Ressourcen. Rückfall West Europe, falls eine Ressource in Switzerland North fehlt.')
 @allowed(['switzerlandnorth', 'westeurope'])
 param location string = 'switzerlandnorth'
 
-@description('Free: Azure SQL Free Offer (Serverless, pausiert am Limit). Basic: 5 DTU, feste Kosten, pausiert nie.')
-@allowed(['Free', 'Basic'])
-param sqlPlan string = 'Free'
+@description('Basic: 5 DTU, 2 GB, pausiert nie (Entscheid Marc, 20.10.2026). Free: Azure SQL Free Offer, pausiert am Kontingent bis Monatsende.')
+@allowed(['Basic', 'Free'])
+param sqlPlan string = 'Basic'
 
 @description('Entra-Admin des SQL Servers: Anzeigename des Benutzers oder der Gruppe.')
 param sqlAdminLogin string
@@ -33,7 +33,7 @@ param budgetStartDate string = '2026-11-01'
 @description('Budget pro Monat in der Währung der Subscription (Ziel CHF 20).')
 param monthlyBudget int = 25
 
-@description('Absender der Mails (Postfach bei Hostpoint).')
+@description('Absender der Mails (Postfach beim E-Mail-Anbieter).')
 param mailFrom string = 'tauchplaetze.ch <noreply@tauchplaetze.ch>'
 
 @description('Öffentliche Adresse der Website, für Links in Mails.')
@@ -46,7 +46,6 @@ param mediaPublicBaseUri string = ''
 param adminDisplayName string = 'Marc'
 
 var names = {
-  resourceGroup: 'rg-tauchplaetze-prod'
   plan: 'asp-tauchplaetze-prod'
   webApp: 'app-tauchplaetze-prod'
   sqlServer: 'sql-tauchplaetze-prod'
@@ -58,28 +57,55 @@ var names = {
   actionGroup: 'ag-tauchplaetze-prod'
 }
 
-resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
-  name: names.resourceGroup
-  location: location
-  tags: {
-    project: 'tauchplaetze'
-    environment: 'prod'
+module monitoring 'modules/monitoring.bicep' = {
+  name: 'monitoring'
+  params: {
+    location: location
+    logsName: names.logs
+    insightsName: names.insights
   }
 }
 
-module resources 'modules/resources.bicep' = {
-  scope: rg
-  name: 'tauchplaetze-resources'
+module storage 'modules/storage.bicep' = {
+  name: 'storage'
   params: {
     location: location
-    names: names
-    sqlPlan: sqlPlan
-    sqlAdminLogin: sqlAdminLogin
-    sqlAdminObjectId: sqlAdminObjectId
-    sqlAdminPrincipalType: sqlAdminPrincipalType
-    alertEmail: alertEmail
-    budgetStartDate: budgetStartDate
-    monthlyBudget: monthlyBudget
+    name: names.storage
+  }
+}
+
+module keyVault 'modules/keyVault.bicep' = {
+  name: 'keyVault'
+  params: {
+    location: location
+    name: names.keyVault
+  }
+}
+
+module sql 'modules/sql.bicep' = {
+  name: 'sql'
+  params: {
+    location: location
+    serverName: names.sqlServer
+    databaseName: names.database
+    plan: sqlPlan
+    adminLogin: sqlAdminLogin
+    adminObjectId: sqlAdminObjectId
+    adminPrincipalType: sqlAdminPrincipalType
+  }
+}
+
+module webApp 'modules/webApp.bicep' = {
+  name: 'webApp'
+  params: {
+    location: location
+    planName: names.plan
+    name: names.webApp
+    appInsightsConnectionString: monitoring.outputs.connectionString
+    sqlConnectionString: sql.outputs.connectionString
+    blobEndpoint: storage.outputs.blobEndpoint
+    queueEndpoint: storage.outputs.queueEndpoint
+    keyVaultName: keyVault.outputs.name
     mailFrom: mailFrom
     publicSiteBaseUri: publicSiteBaseUri
     mediaPublicBaseUri: mediaPublicBaseUri
@@ -87,10 +113,30 @@ module resources 'modules/resources.bicep' = {
   }
 }
 
-output resourceGroup string = rg.name
-output webAppName string = resources.outputs.webAppName
-output webAppHostName string = resources.outputs.webAppHostName
-output webAppPrincipalId string = resources.outputs.webAppPrincipalId
-output keyVaultName string = resources.outputs.keyVaultName
-output sqlServerFqdn string = resources.outputs.sqlServerFqdn
-output storageAccountName string = resources.outputs.storageAccountName
+module alerts 'modules/alerts.bicep' = if (!empty(alertEmail)) {
+  name: 'alerts'
+  params: {
+    actionGroupName: names.actionGroup
+    alertEmail: alertEmail
+    webAppId: webApp.outputs.id
+    workspaceId: monitoring.outputs.workspaceId
+    databaseId: sql.outputs.databaseId
+    freeOffer: sqlPlan == 'Free'
+  }
+}
+
+module budget 'modules/budget.bicep' = if (!empty(alertEmail)) {
+  name: 'budget'
+  params: {
+    alertEmail: alertEmail
+    amount: monthlyBudget
+    startDate: budgetStartDate
+  }
+}
+
+output webAppName string = webApp.outputs.name
+output webAppHostName string = webApp.outputs.defaultHostName
+output webAppPrincipalId string = webApp.outputs.principalId
+output keyVaultName string = keyVault.outputs.name
+output sqlServerFqdn string = sql.outputs.serverFqdn
+output storageAccountName string = storage.outputs.name

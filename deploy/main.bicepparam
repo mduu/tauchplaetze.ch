@@ -4,7 +4,7 @@
 using './main.bicep'
 
 param location = 'switzerlandnorth'
-param sqlPlan = 'Free'
+param sqlPlan = 'Basic'
 param sqlAdminLogin = readEnvironmentVariable('SQL_ADMIN_LOGIN')
 param sqlAdminObjectId = readEnvironmentVariable('SQL_ADMIN_OBJECT_ID')
 param sqlAdminPrincipalType = readEnvironmentVariable('SQL_ADMIN_PRINCIPAL_TYPE', 'User')
