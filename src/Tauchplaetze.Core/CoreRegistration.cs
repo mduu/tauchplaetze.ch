@@ -31,7 +31,7 @@ public static class CoreRegistration
     /// <summary>Meldet Datenbank, Handler und die Module aller Slices an.</summary>
     public static IHostApplicationBuilder AddTauchplaetzeCore(this IHostApplicationBuilder builder)
     {
-        AzureHosting.AddKeyVaultSecrets(builder);
+        KeyVaultReferences.EnsureResolved(builder.Configuration);
 
         var connectionString = builder.Configuration.GetConnectionString(DatabaseConnectionName)
             ?? throw new InvalidOperationException($"Connection String «{DatabaseConnectionName}» fehlt.");
@@ -55,7 +55,6 @@ public static class CoreRegistration
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddHandlers(typeof(CoreRegistration).Assembly);
         builder.Services.AddCoreModules(typeof(CoreRegistration).Assembly);
-        AzureHosting.PersistDataProtectionKeys(builder);
 
         return builder;
     }

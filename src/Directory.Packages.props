@@ -28,11 +28,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="10.0.13" />
   </ItemGroup>
 
-  <ItemGroup Label="Betrieb in Azure: Managed Identity, Key Vault, Data Protection, Entra-Anmeldung an SQL">
-    <PackageVersion Include="Azure.Identity" Version="1.21.0" />
-    <PackageVersion Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.1" />
-    <PackageVersion Include="Azure.Extensions.AspNetCore.DataProtection.Blobs" Version="1.5.3" />
-    <PackageVersion Include="Azure.Extensions.AspNetCore.DataProtection.Keys" Version="1.6.3" />
+  <ItemGroup Label="Betrieb in Azure: Entra-Anmeldung an SQL, Application Insights">
     <!-- Ab SqlClient 7 liegt die Anmeldung mit Entra (`Authentication=Active Directory Default`) in diesem Paket. Version wie SqlClient. -->
     <PackageVersion Include="Microsoft.Data.SqlClient.Extensions.Azure" Version="7.0.2" />
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.5.0" />
