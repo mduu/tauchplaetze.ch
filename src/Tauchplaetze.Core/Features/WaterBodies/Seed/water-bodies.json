@@ -212,7 +212,16 @@
     },
     "alplakesLakeKey": "biel",
     "alplakesModel3d": "delft3d-flow",
-    "alplakesSimstratKey": "biel"
+    "alplakesSimstratKey": "biel",
+    "hydroStations": [
+      {
+        "id": "2085",
+        "name": "Aare – Hagneck",
+        "role": "Inflow",
+        "latitude": 47.0556,
+        "longitude": 7.1844
+      }
+    ]
   },
   {
     "slug": "blausee",
@@ -242,7 +251,23 @@
       "longitude": 7.97
     },
     "alplakesLakeKey": "brienz",
-    "alplakesSimstratKey": "brienz"
+    "alplakesSimstratKey": "brienz",
+    "hydroStations": [
+      {
+        "id": "2019",
+        "name": "Aare – Brienzwiler",
+        "role": "Inflow",
+        "latitude": 46.7457,
+        "longitude": 8.092
+      },
+      {
+        "id": "2109",
+        "name": "Lütschine – Gsteig",
+        "role": "Inflow",
+        "latitude": 46.6642,
+        "longitude": 7.8715
+      }
+    ]
   },
   {
     "slug": "burgaeschisee",
@@ -351,7 +376,16 @@
     },
     "alplakesLakeKey": "geneva",
     "alplakesModel3d": "delft3d-flow",
-    "alplakesSimstratKey": "geneva"
+    "alplakesSimstratKey": "geneva",
+    "hydroStations": [
+      {
+        "id": "2009",
+        "name": "Rhône – Porte du Scex",
+        "role": "Inflow",
+        "latitude": 46.3496,
+        "longitude": 6.8886
+      }
+    ]
   },
   {
     "slug": "greifensee",
@@ -384,7 +418,16 @@
       "longitude": 7.0994
     },
     "alplakesLakeKey": "gruyere",
-    "alplakesSimstratKey": "gruyere"
+    "alplakesSimstratKey": "gruyere",
+    "hydroStations": [
+      {
+        "id": "2160",
+        "name": "Sarine – Broc, Château d'en bas",
+        "role": "Inflow",
+        "latitude": 46.6028,
+        "longitude": 7.093
+      }
+    ]
   },
   {
     "slug": "hagneckkanal",
@@ -415,7 +458,16 @@
     },
     "alplakesLakeKey": "hallwil",
     "alplakesModel3d": "delft3d-flow",
-    "alplakesSimstratKey": "hallwil"
+    "alplakesSimstratKey": "hallwil",
+    "hydroStations": [
+      {
+        "id": "2416",
+        "name": "Aabach – Hitzkirch, Richensee",
+        "role": "Inflow",
+        "latitude": 47.2201,
+        "longitude": 8.2491
+      }
+    ]
   },
   {
     "slug": "heidsee",
@@ -638,7 +690,23 @@
       "longitude": 8.76
     },
     "alplakesLakeKey": "maggiore",
-    "alplakesSimstratKey": "maggiore"
+    "alplakesSimstratKey": "maggiore",
+    "hydroStations": [
+      {
+        "id": "2068",
+        "name": "Ticino – Riazzino",
+        "role": "Inflow",
+        "latitude": 46.1634,
+        "longitude": 8.9103
+      },
+      {
+        "id": "2368",
+        "name": "Maggia – Locarno, Solduno",
+        "role": "Inflow",
+        "latitude": 46.1683,
+        "longitude": 8.7736
+      }
+    ]
   },
   {
     "slug": "lago-scuro",
@@ -714,7 +782,23 @@
     },
     "alplakesLakeKey": "lugano",
     "alplakesModel3d": "delft3d-flow",
-    "alplakesSimstratKey": "upperlugano"
+    "alplakesSimstratKey": "upperlugano",
+    "hydroStations": [
+      {
+        "id": "2629",
+        "name": "Vedeggio – Agno",
+        "role": "Inflow",
+        "latitude": 46.003,
+        "longitude": 8.9117
+      },
+      {
+        "id": "2321",
+        "name": "Cassarate – Pregassona",
+        "role": "Inflow",
+        "latitude": 46.0177,
+        "longitude": 8.9625
+      }
+    ]
   },
   {
     "slug": "lungerersee",
@@ -813,7 +897,23 @@
     },
     "alplakesLakeKey": "neuchatel",
     "alplakesModel3d": "mitgcm",
-    "alplakesSimstratKey": "neuchatel"
+    "alplakesSimstratKey": "neuchatel",
+    "hydroStations": [
+      {
+        "id": "2480",
+        "name": "Areuse – Boudry",
+        "role": "Inflow",
+        "latitude": 46.949,
+        "longitude": 6.839
+      },
+      {
+        "id": "2378",
+        "name": "Orbe – Orbe, Le Chalet",
+        "role": "Inflow",
+        "latitude": 46.7276,
+        "longitude": 6.5239
+      }
+    ]
   },
   {
     "slug": "oeschinensee",
@@ -947,7 +1047,16 @@
       "latitude": 46.8499,
       "longitude": 7.1676
     },
-    "alplakesLakeKey": "schiffenen"
+    "alplakesLakeKey": "schiffenen",
+    "hydroStations": [
+      {
+        "id": "2119",
+        "name": "Sarine – Fribourg",
+        "role": "Inflow",
+        "latitude": 46.8039,
+        "longitude": 7.169
+      }
+    ]
   },
   {
     "slug": "schwarzsee",
@@ -1129,7 +1238,23 @@
       "longitude": 7.72
     },
     "alplakesLakeKey": "thun",
-    "alplakesSimstratKey": "thun"
+    "alplakesSimstratKey": "thun",
+    "hydroStations": [
+      {
+        "id": "2457",
+        "name": "Aare – Ringgenberg, Goldswil",
+        "role": "Inflow",
+        "latitude": 46.694,
+        "longitude": 7.8796
+      },
+      {
+        "id": "2469",
+        "name": "Kander – Hondrich",
+        "role": "Inflow",
+        "latitude": 46.6666,
+        "longitude": 7.6711
+      }
+    ]
   },
   {
     "slug": "toess",
@@ -1216,7 +1341,23 @@
     },
     "alplakesLakeKey": "lucerne",
     "alplakesModel3d": "mitgcm",
-    "alplakesSimstratKey": "lucernekreuztrichterandvitznauerbecken"
+    "alplakesSimstratKey": "lucernekreuztrichterandvitznauerbecken",
+    "hydroStations": [
+      {
+        "id": "2056",
+        "name": "Reuss – Seedorf",
+        "role": "Inflow",
+        "latitude": 46.8839,
+        "longitude": 8.6206
+      },
+      {
+        "id": "2481",
+        "name": "Engelberger Aa – Buochs, Flugplatz",
+        "role": "Inflow",
+        "latitude": 46.9728,
+        "longitude": 8.4053
+      }
+    ]
   },
   {
     "slug": "waegitalersee",
@@ -1246,6 +1387,22 @@
       "longitude": 9.2
     },
     "alplakesLakeKey": "walensee",
-    "alplakesSimstratKey": "walensee"
+    "alplakesSimstratKey": "walensee",
+    "hydroStations": [
+      {
+        "id": "2372",
+        "name": "Linth – Mollis, Linthbrücke",
+        "role": "Inflow",
+        "latitude": 47.1011,
+        "longitude": 9.072
+      },
+      {
+        "id": "2426",
+        "name": "Seez – Mels",
+        "role": "Inflow",
+        "latitude": 47.0465,
+        "longitude": 9.4182
+      }
+    ]
   }
 ]

@@ -49,7 +49,7 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
 
 - Der Satellitenpunkt (Sentinel-3) liegt im offenen Wasser. Jeder Punkt ist mit einem Call geprüft (Werte im September/Oktober 2026). Ohne Satellitenpunkt oder ohne `Zsd_lee` im Angebot fragt der Lauf Sentinel-3 nicht ab, denn am Ufer liefert es nichts. Silsersee und die kleinen Seen haben darum nur Sentinel-2.
 - Ohne Schlüssel bleiben Seen ohne Angebot: u.a. Alter Rhein, Blausee, Caumasee, Arnisee, Trüebsee, Talalpsee, Heidsee, Muslen, Lac de Géronde, Espi, Duzillet, Moesola, Lago Scuro, Lej da las Culuonnas, Mapragg, Wägitalersee, Stille Reuss.
-- Zuflussstationen (BAFU) gibt es weiterhin nur an Zürichsee und Zugersee. Ohne Station zählt nur der Regen als Zufluss.
+- Zuflussstationen (BAFU, Rolle `Inflow`, seit 20.10.2026 für `rules-1.4`): Zürich-, Zuger-, Bieler-, Brienzer-, Thuner-, Genfer-, Hallwiler-, Greyerzer-, Schiffenen-, Neuenburger-, Vierwaldstätter- und Walensee, Lago Maggiore und Luganersee, je 1–2 Hauptzuflüsse. Liste und Begründung: `doc/inflow-stations-vorschlag.md` (von Marc zu prüfen). Ohne Station zählt nur der Regen als Zufluss.
 - **Calls pro Lauf** (Schätzung 19.10.2026, 319 Plätze): bisher rund 210 an Alplakes (69 Plätze mit 3D-Modell, Satellit, 2 Simstrat), neu rund 650: 3D-Modell an 136 Plätzen, Simstrat an 31 Seen, Sentinel-2 an rund 260 Plätzen (1–2 Calls), Sentinel-3 an 18 Seen (2 Calls pro Satellitenpunkt). Dauer: `mitgcm` braucht rund 18 s pro Call, Vierwaldstättersee (31 Plätze) und Neuenburgersee (6) kosten damit rund 11 Minuten. Der ganze Lauf dauert geschätzt 20–25 Minuten.
 
 ### Endpunkte
