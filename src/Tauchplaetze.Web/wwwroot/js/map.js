@@ -141,7 +141,8 @@ window.tauchplaetzeMap = (function () {
   }
 
   function siteMarker(site) {
-    const index = site.index ? ' <span class="map-label-index map-label-' + (site.band || 'none') + '">' + escapeHtml(site.index) + '</span>' : '';
+    const band = ['high', 'mid', 'low'].includes(site.band) ? site.band : 'none';
+    const index = site.index ? ' <span class="map-label-index map-label-' + band + '">' + escapeHtml(site.index) + '</span>' : '';
     const marker = L.circleMarker([site.lat, site.lng], {
       radius: 8,
       color: token('--color-bg'),

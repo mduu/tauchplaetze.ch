@@ -35,8 +35,18 @@ internal class ReadinessCheck(IQueryHandler<GetReadinessQuery, Readiness> readin
         services.AddHealthChecks().AddCheck<ReadinessCheck>(Tag, tags: [Tag]);
     }
 
+    /// <remarks>`no-store`, damit kein Cache (Cloudflare, Browser) ein altes Ergebnis zeigt.</remarks>
     public static void Map(WebApplication app) =>
-        app.MapHealthChecks(Path, new HealthCheckOptions { Predicate = r => r.Tags.Contains(Tag) });
+        app.MapHealthChecks(Path, new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains(Tag),
+            ResponseWriter = async (context, report) =>
+            {
+                context.Response.Headers.CacheControl = "no-store";
+                context.Response.ContentType = "text/plain";
+                await context.Response.WriteAsync(report.Status.ToString());
+            },
+        });
 
     /// <summary>Das letzte Ergebnis, für alle Aufrufe gemeinsam.</summary>
     internal sealed class Cache

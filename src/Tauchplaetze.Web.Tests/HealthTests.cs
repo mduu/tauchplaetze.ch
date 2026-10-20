@@ -27,6 +27,22 @@ public class HealthTests
     }
 
     [Fact]
+    public async Task Health_ready_darf_nirgends_zwischengespeichert_werden()
+    {
+        // Arrange
+        await using var app = new WebApp();
+        using var client = app.Browser();
+
+        // Act
+        using var response = await client.GetAsync("/health/ready", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.True(response.Headers.CacheControl?.NoStore);
+        Assert.Equal("Healthy", await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
     public async Task Alive_prueft_nur_die_App_ohne_Datenbank()
     {
         // Arrange

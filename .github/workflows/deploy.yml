@@ -62,7 +62,8 @@ jobs:
           app-name: ${{ env.APP_NAME }}
           package: ./publish
 
-      # /alive prüft die App, /de zusätzlich die Datenbank.
+      # /alive prüft die App, /de zusätzlich die Datenbank. /health/ready (Datenbank und Prognose-Lauf jünger als 30 h) nur als Warnung:
+      # Nach dem ersten Deploy gibt es noch keinen Lauf, und ein voller Lauf dauert rund 25 Minuten.
       - name: Health
         run: |
           check() {
@@ -77,6 +78,10 @@ jobs:
           }
           check /alive
           check /de
+          ready=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$APP_URL/health/ready" || echo 000)
+          if [ "$ready" != "200" ]; then
+            echo "::warning::/health/ready answers HTTP $ready (no recent forecast run or database problem)"
+          fi
 
       - name: Logout
         if: always()

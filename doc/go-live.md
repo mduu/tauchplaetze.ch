@@ -156,12 +156,16 @@ Prüfen:
    - `tauchplaetze.ch` CNAME (Flattening) auf `app-tauchplaetze-prod.azurewebsites.net`, zuerst **ohne** Proxy (grau), bis das Zertifikat steht.
    - `www` CNAME auf `app-tauchplaetze-prod.azurewebsites.net`.
 3. App Service → Certificates → «App Service Managed Certificate» für beide Namen, dann Binding SNI SSL.
-4. Cloudflare-Proxy einschalten (orange), SSL/TLS «Full (strict)».
+4. **Proxy an und Zugriff einschränken direkt nacheinander:**
+   1. Cloudflare-Proxy einschalten (orange), SSL/TLS «Full (strict)».
+   2. Sofort danach in `main.bicepparam` `restrictToCloudflare = true` und `infra.yml` (what-if, deploy). Das setzt die Access Restrictions auf die IP-Bereiche von Cloudflare (Default Deny) und `Contact__TrustCloudflareHeader=true`. Die SCM-Site bleibt offen, der Deploy über OIDC geht weiter.
+   3. GitHub-Variable `PUBLIC_BASE_URL` = `https://tauchplaetze.ch` setzen. Der Health Check in `deploy.yml` ruft sonst die gesperrte Adresse `azurewebsites.net` auf.
+
+   Warum direkt nacheinander: Mit Proxy, aber ohne Schalter zählen alle Rate Limits die IP der Edge von Cloudflare. Wenige Besucher über dieselbe Edge sperren dann alle anderen (Kontakt, Anmeldung). Ohne Einschränkung wären WAF und Rate Limits zudem über `azurewebsites.net` umgehbar, und `CF-Connecting-IP` liesse sich fälschen.
 5. Redirect Rules in Cloudflare: `www.tauchplaetze.ch/*` und `sichtweiten.ch/*`, `www.sichtweiten.ch/*` → `https://tauchplaetze.ch/$1` (301).
-6. Später: `media.tauchplaetze.ch` vor dem Container `media` (infrastructure.md), dann `mediaPublicBaseUri` in `main.bicepparam` setzen.
-7. **Nur noch Cloudflare zulassen**, wenn die Website über Cloudflare läuft: in `main.bicepparam` `restrictToCloudflare = true`, dann `infra.yml` (what-if, deploy). Das setzt die Access Restrictions auf die IP-Bereiche von Cloudflare (Default Deny) und `Contact__TrustCloudflareHeader=true`. Ohne diese Einschränkung wären WAF und Rate Limits über `app-tauchplaetze-prod.azurewebsites.net` umgehbar, und `CF-Connecting-IP` liesse sich fälschen. Die SCM-Site bleibt offen, der Deploy über OIDC geht weiter.
-8. GitHub-Variable `PUBLIC_BASE_URL` = `https://tauchplaetze.ch` setzen. Der Health Check in `deploy.yml` ruft sonst die gesperrte Adresse `azurewebsites.net` auf.
-9. Das App Service Managed Certificate erneuert sich nicht immer hinter dem Proxy von Cloudflare. Schlägt die Erneuerung fehl: Cloudflare Origin Certificate (15 Jahre) erzeugen und in App Service hochladen.
+6. Bot-Regeln: Der Health Check aus GitHub Actions kommt von Rechenzentren. «Bot Fight Mode» oder eine Challenge kann ihn blockieren (HTTP 403 oder 503 im Schritt «Health»). Dann eine Custom Rule «Skip» für die Pfade `/alive` und `/health/ready` anlegen, nicht für die ganze Website.
+7. Später: `media.tauchplaetze.ch` vor dem Container `media` (infrastructure.md), dann `mediaPublicBaseUri` in `main.bicepparam` setzen.
+8. Das App Service Managed Certificate erneuert sich nicht immer hinter dem Proxy von Cloudflare. Schlägt die Erneuerung fehl: Cloudflare Origin Certificate (15 Jahre) erzeugen und in App Service hochladen.
 
 ## 10. Zurück auf eine frühere Version
 
