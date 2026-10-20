@@ -51,7 +51,7 @@ Das Tauchfenster ist 08:00 bis 16:00 Uhr Lokalzeit.
 | Abfluss der Zuflüsse bzw. des Flusses | BAFU | Zuflüsse, Kachel «Abfluss» an Flussplätzen | MVP |
 | Trübung des Flusses | BAFU, wo gemessen | Klarheit im Fluss | MVP |
 | Gemessenes Temperaturprofil | Eawag Datalakes | ersetzt das Modell für heute, wo eine Messstation nah ist | Phase 1 |
-| Abflussprognose | BAFU-Vorhersagen | Zuflüsse an künftigen Tagen | Phase 1, nach Klärung |
+| Abflussprognose | BAFU-Vorhersagen | Kachel «Abfluss» und Tagesleiste an Flussplätzen (seit 20.10.2026); Zuflüsse an künftigen Tagen offen | Phase 1 |
 
 Die Endpunkte stehen in `data-sources.md`.
 
@@ -117,7 +117,8 @@ An Flussplätzen zeigt die Platzseite die Kachel «Abfluss» (`ux.md`, Tauchplat
 - **Legende («i»):** die vier Stufen mit den Grenzen in m³/s und der Herkunft der Schwellen.
 - **Trend:** neuester Wert gegen den Wert 3 h davor (höchstens 30 min daneben). Innerhalb von 5 % «gleich», sonst «steigt» oder «fällt». Die Kachel zeigt die Änderung in m³/s.
 - **Verlauf:** die Stundenmittel der letzten 48 Stunden als Kurve, mit dem Median gestrichelt. Darunter die Tagesmittel der letzten 7 Tage (Schweizer Kalendertage, heute bis jetzt).
-- **Vorhersage:** `HydroHour.Kind = Forecast` ist vorbereitet. Die Quelle fehlt noch (`data-sources.md`, «Phase 1: Vorhersagen des BAFU»). Die Query liefert die künftigen Stunden schon mit (`SiteDischarge.ForecastHours`).
+- **Vorhersage (BAFU, 20.10.2026):** `HydroHour.Kind = Forecast`, Stundenmittel bis 5 Tage voraus (`data-sources.md`, «Phase 1: Vorhersagen des BAFU»). Die Kachel setzt die Kurve der letzten 48 Stunden gestrichelt fort, bis zum Ende der Vorhersage, beschriftet «Vorhersage BAFU». Die Tagesleiste der Prognose zeigt an Flussplätzen pro Tag die Einordnung des vorhergesagten Tagesmittels (gleiche Regel wie der Messwert). Ohne Vorhersage fehlt beides. Ausgabezeit und Ordner (`official` oder `unofficial`) stehen in `HydroReading`.
+- **Nicht im Index:** Die Vorhersage fliesst noch nicht in den Teilwert «Zuflüsse». Der Index rechnet weiter mit dem aktuellen Verhältnis zum Median. Vorschlag für `rules-1.4`: An künftigen Tagen das vorhergesagte Tagesmittel durch den Median teilen. Dafür müsste der Job auch die Zuflussstationen der Seen holen. Entscheid offen.
 - **Speicher:** `HydroHour` (Stundenmittel pro Station, 30 Tage) und `HydroReading` (neuester Wert mit Wert vor 3 h und Median). Die Seite liest nur diese Tabellen.
 - Weil der Abfluss als Kachel nicht in den Index fliesst, ändert eine neue Schwelle die `ModelVersion` nicht. Das Verhältnis zum Median im Index (Zuflüsse) bleibt Teil von `RunForecast`.
 

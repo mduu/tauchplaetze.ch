@@ -269,7 +269,7 @@ Mittlerer Abfluss einer BAFU-Station pro Stunde (`forecast.md`, «Abfluss»). PK
 | Feld | Typ | Bemerkung |
 |---|---|---|
 | `StationId` | string(20) | BAFU-Stationsnummer, ohne FK: Eine Station kann an mehreren Gewässern hängen. |
-| `Kind` | enum als int (Teil des Primary Key) | `Measured` = 0 (gemessen), `Forecast` = 1 (Vorhersage des BAFU, vorbereitet). Anders als die übrigen Enums als int gespeichert: Werte nie umordnen, neue nur hinten anhängen. |
+| `Kind` | enum als int (Teil des Primary Key) | `Measured` = 0 (gemessen), `Forecast` = 1 (Vorhersage des BAFU, nur Stunden nach dem letzten Messwert der Datei; eine neue Vorhersage ersetzt die alte der Station). Anders als die übrigen Enums als int gespeichert: Werte nie umordnen, neue nur hinten anhängen. |
 | `Hour` | DateTimeOffset | Beginn der Stunde in UTC |
 | `Discharge` | decimal(8,2) | m³/s. Die laufende Stunde hat das Mittel der Werte bis zum Import. |
 | `ImportedAt` | DateTimeOffset | |
@@ -287,6 +287,9 @@ Die neuesten Messwerte einer Station (Abfluss, Wassertemperatur). Eine Zeile pro
 | `Median30Days` | decimal(8,2), optional | Median der Stundenwerte der letzten 30 Tage |
 | `Temperature` | decimal(4,1), optional | neueste Wassertemperatur in °C. `null`: Die Station misst keine Temperatur (nie 0). |
 | `TemperatureMeasuredAt` | DateTimeOffset, optional | Zeit des Temperaturwerts |
+| `ForecastIssuedAt` | DateTimeOffset, optional | Ausgabezeit der gespeicherten BAFU-Vorhersage. `null`: keine Vorhersage. |
+| `ForecastOfficial` | bool, optional | `true`: aus `pqprevi-official` (kontrolliert), `false`: aus `pqprevi-unofficial` (nur automatisch gerechnet) |
+| `ForecastFetchedAt` | DateTimeOffset, optional | letzter erfolgreicher Abruf der Vorhersage, für den Abstand von 3 Stunden |
 | `ImportedAt` | DateTimeOffset | |
 
 ### WaterBodyConditions

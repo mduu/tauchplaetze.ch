@@ -16,7 +16,7 @@ Das Projekt ist **nicht kommerziell** (`vision.md`, «Finanzierung»). Mehrere Q
 | BAFU Hydrodaten (über existenz.ch, Ziel: BAFU-Datenplattform) | Abfluss, Pegel, Wassertemperatur, an einigen Stationen Trübung | Zuflüsse, Flussplätze | MVP | ✅ Spike |
 | swisstopo | Kartenkacheln, Gewässernetz (swissTLM3D), Bathymetrie (swissBATHY3D) | Karte, Stammdaten aller Gewässer, Tiefenkarten | MVP | ✅ |
 | Eawag Datalakes | In-situ-Messungen: Temperaturketten, Bojen, Profile, Secchi (LéXPLORE) | aktueller Stand, Kontrolle der Modelle | Phase 1 | ✅ |
-| BAFU Abfluss- und Seepegelvorhersagen | Prognose für etwa 50–60 Stationen | Prognose für Flussplätze | Phase 1, nach Klärung | ⚠️ |
+| BAFU Abfluss- und Seepegelvorhersagen | Prognose für etwa 50–60 Stationen | Prognose für Flussplätze | Phase 1 | ✅ Zugang HTTPS |
 | OpenStreetMap (Overpass API) | Tauchplätze (`sport=scuba_diving`) mit Name und Koordinate, Gewässer, Gemeinde, Kanton | Erstbestand des Verzeichnisses | MVP | ✅ Skript |
 | Eigenes Archiv (tauchfotos.ch, tauchvideos.ch) | Fotos, Videos | Dokumentation | MVP | Rechte bei Marc |
 
@@ -172,7 +172,16 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
   Format: Text in UTF-8. Ein Kopf von rund 15 Zeilen nennt Ausgabezeit, Zeit des Wetterlaufs und den letzten Messwert (MEWZ). Danach eine Zeile pro Stunde: `dd mm yyyy hh Wasserstand Abfluss`, Wasserstand in m ü. M., Abfluss in m³/s. Die Reihe beginnt einen Tag vor der Ausgabe mit gemessenen Werten.
 - **Verwendung (geplant):** `ICH2_Ctrl` deckt die 5 Tage der Prognose ab. Die Stunden kommen als `HydroHour` mit `Kind = Forecast` in dieselbe Tabelle wie die Messwerte. Die Kachel «Abfluss» zeigt sie dann nach der gemessenen Kurve. Der Teilwert «Zuflüsse» rechnet dann mit dem vorhergesagten statt dem aktuellen Abfluss, vor allem für Flussplätze. Das Ensemble (`ICH2`) taugt später für einen Hinweis «Abfluss unsicher».
-- **Nächster Schritt:** Zugang per HTTPS beantragen (einfacher als SFTP für einen Job in Azure). Dann einen Client mit Contract Test auf einer Beispieldatei bauen (Phase 1).
+- **Zugang per HTTPS** (BAFU (Hydrologie), BAFU, Antwort vom 20.10.2026 auf `doc/mails/2026-10-19-bafu-hydrologie-antwort.md`):
+  - `https://www.hydrodata.ch/data/pqprevi-official/`: die Vorhersagen, die das BAFU auf hydrodaten.admin.ch publiziert. Täglich von den Prognostikern kontrolliert.
+  - `https://www.hydrodata.ch/data/pqprevi-unofficial/`: nur automatisch gerechnet, nicht kontrolliert und nicht publiziert. Dort liegen weitere Stationen, z.B. 2477 Lorze – Zug.
+  - Basic Auth (Prüfung vom 20.10.2026: `401` mit `WWW-Authenticate: Basic`). Benutzername und Passwort kamen in zwei Mails. Sie liegen nur in der Konfiguration: lokal als User Secrets des Web-Projekts (`Hydro:Forecast:Username`, `Hydro:Forecast:Password`), in Prod als Secret. Nie im Repository, nie im Log.
+  - Die Vorhersagen sind ab 08:00 verfügbar. Bei Hochwasser rechnet das BAFU sie 3- bis 4-mal pro Tag neu.
+  - Fragen zu Inhalt und Format: BAFU (Abflussvorhersage).
+- **Verwendung (umgesetzt 20.10.2026):** Der Abfluss-Job (`ImportDischarge`) holt die Vorhersage der Stationen aller Flussplätze ab 08:15 und danach höchstens alle 3 Stunden. Pro Station in dieser Reihenfolge, bis eine Datei kommt: `official` `ICH2_Ctrl`, `official` `ICH1_Ctrl`, `unofficial` `ICH2_Ctrl`, `unofficial` `ICH1_Ctrl`. Zwischen zwei Calls liegen 500 ms (höchstens 2 pro Sekunde). Pro Station also 1 bis 4 Calls, bei 13 Stationen rund 13 bis 52 Calls pro Abruf, rund 6 Abrufe pro Tag. Rohdaten wie die Messwerte in Blob Storage.
+  - Die Zeiten der Datei sind MEWZ, also immer UTC+1, auch im Sommer. Die Zeile `hh` ist das Mittel der Stunde, die um `hh` endet (Annahme wie bei den Stundenmitteln auf hydrodaten.admin.ch, beim BAFU nachfragen). Gespeichert wird nur die Zeit nach «Gemessene Werte bis».
+  - Eine neue Vorhersage ersetzt die alte der Station ganz. Stammt sie aus `unofficial`, zeigt die Kachel «automatisch gerechnet, nicht geprüft».
+  - Fehlen die Zugangsdaten, holt der Job keine Vorhersage und schreibt einmal pro Prozess eine Warnung, ohne Werte.
 - Nutzen: Prognose für Flussplätze. Ohne sie bleibt die Flussprognose bei Wetter und aktuellem Abfluss.
 
 ## Eawag Datalakes (Phase 1)
