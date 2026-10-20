@@ -533,8 +533,31 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         var hours = Enumerable.Range(0, 48).Select(h => new DischargeHour(now.AddHours(h - 47), 300 + h)).ToList();
         return new SiteDischarge("2091", "Rhein – Rheinfelden", 347, now.AddMinutes(-10), false, DischargeLevel.Medium,
             new DischargeThresholds(200, 300, 600), true, 280, DischargeTrend.Rising, 14, hours,
-            [.. Enumerable.Range(0, 7).Select(d => new DischargeDay(DateOnly.FromDateTime(now.UtcDateTime).AddDays(d - 6), 290 + d))], [],
-            new WaterTemperature(16.6m, now.AddMinutes(-10), false));
+            [.. Enumerable.Range(0, 7).Select(d => new DischargeDay(DateOnly.FromDateTime(now.UtcDateTime).AddDays(d - 6), 290 + d))],
+            [.. Enumerable.Range(1, 72).Select(h => new DischargeHour(now.AddHours(h), 340 - h))],
+            new WaterTemperature(16.6m, now.AddMinutes(-10), false),
+            new DischargeForecast(now.AddHours(-4), false, [new DischargeForecastDay(new DateOnly(2026, 10, 18), 250, DischargeLevel.Low)]));
+    }
+
+    [Theory]
+    [InlineData("/de/tauchplaetze/", "Vorhersage BAFU", "nicht geprüft", "Abfluss gering")]
+    [InlineData("/en/dive-sites/", "BAFU forecast", "not checked", "Discharge low")]
+    [InlineData("/fr/sites-de-plongee/", "Prévision de l'OFEV", "non vérifiée", "Débit faible")]
+    [InlineData("/it/siti-di-immersione/", "Previsione UFAM", "non verificata", "Portata bassa")]
+    public async Task Ein_Flussplatz_zeigt_die_Vorhersage_des_BAFU_gestrichelt_mit_Hinweis_und_den_Abfluss_pro_Tag(string path, string forecast, string note, string day)
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync(path + River, TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains("class=\"forecast\"", html);
+        Assert.Contains(forecast, text);
+        Assert.Contains(note, text);
+        Assert.Contains(day, text);
     }
 
     [Theory]

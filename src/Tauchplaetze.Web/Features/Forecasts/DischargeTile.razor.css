@@ -104,6 +104,50 @@
     color: var(--color-text-subtle);
 }
 
+.discharge-curve .forecast {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+    stroke-dasharray: 5 4;
+    vector-effect: non-scaling-stroke;
+    stroke-linejoin: round;
+    opacity: 0.85;
+}
+
+.discharge-curve .now {
+    stroke: var(--color-border-strong);
+    vector-effect: non-scaling-stroke;
+}
+
+.curve-axis[data-forecast] {
+    position: relative;
+    height: 14px;
+}
+
+.curve-axis[data-forecast] .axis-now {
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+.curve-forecast {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--color-text-subtle);
+}
+
+.forecast-key {
+    width: 18px;
+    border-top: 2px dashed var(--color-primary);
+}
+
+.forecast-unchecked {
+    color: var(--color-signal);
+}
+
 .curve-range {
     margin-top: 2px;
     font-size: 12px;

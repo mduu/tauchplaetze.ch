@@ -9,6 +9,9 @@ internal static class DischargeFormat
 
     public static DateOnly Today(TimeProvider time) => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(time.GetUtcNow(), Zone).DateTime);
 
+    /// <summary>Der Schweizer Kalendertag eines Zeitpunkts.</summary>
+    public static DateOnly Day(DateTimeOffset value) => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(value, Zone).DateTime);
+
     public static string Amount(decimal value) => value.ToString(Pattern(value), CultureInfo.CurrentCulture);
 
     /// <summary>Mit Vorzeichen, zum Beispiel «+14» oder «−3,5».</summary>

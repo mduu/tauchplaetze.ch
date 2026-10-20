@@ -172,4 +172,8 @@
   <data name="Spark_Wind_Aria" xml:space="preserve"><value>Höchster Wind der nächsten 5 Tage</value></data>
   <data name="Spark_Algae_Aria" xml:space="preserve"><value>Algen der letzten 30 Tage</value></data>
   <data name="Spark_Since" xml:space="preserve"><value>seit {0}</value></data>
+  <data name="Discharge_Hours_Forecast_Title" xml:space="preserve"><value>Letzte 48 Stunden und Vorhersage</value></data>
+  <data name="Discharge_Forecast_Issued" xml:space="preserve"><value>Vorhersage BAFU, ausgegeben {0}</value></data>
+  <data name="Discharge_Forecast_Unchecked" xml:space="preserve"><value>automatisch gerechnet, nicht geprüft</value></data>
+  <data name="Day_Discharge" xml:space="preserve"><value>Abfluss {0}</value></data>
 </root>

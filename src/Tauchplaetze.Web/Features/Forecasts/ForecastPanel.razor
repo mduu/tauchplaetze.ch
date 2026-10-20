@@ -108,6 +108,10 @@
                         <div class="day-index">–</div>
                     }
                     <div class="day-word">@DayWord(day)</div>
+                    @if (Discharge?.Forecast?.Days.FirstOrDefault(d => d.Date == day.Date) is { Level: { } dischargeLevel })
+                    {
+                        <div class="day-discharge" data-discharge="@dischargeLevel">@L["Day_Discharge", L[$"Discharge_{dischargeLevel}"]]</div>
+                    }
                 </li>
             }
         </ol>

@@ -203,6 +203,17 @@
     color: var(--color-text-muted);
 }
 
+.day-discharge {
+    margin-top: 4px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+}
+
+.day-discharge[data-discharge="VeryLow"],
+.day-discharge[data-discharge="Low"] { color: var(--color-index-high); }
+.day-discharge[data-discharge="Medium"] { color: var(--color-index-mid); }
+.day-discharge[data-discharge="Strong"] { color: var(--color-index-low-text); }
+
 .sources {
     margin: 16px 0 0;
     font-size: 13px;
