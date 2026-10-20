@@ -17,7 +17,7 @@ Diese Spec beschreibt die Entitäten in Azure SQL. Entitäten und Felder heissen
 
 ### WaterBody
 
-Stammdaten der Gewässer, schweizweit: Seen und Flüsse (Entscheid Marc, 17.10.2026). Tabelle `WaterBodies`. Der Seed steht vorerst in `Features/WaterBodies/Seed/water-bodies.json` (Gewässer mit Plätzen; die Schlüssel für Alplakes seit 19.10.2026 für alle Seen mit Plätzen, die Alplakes abdeckt). Der Command `SeedWaterBodies` legt fehlende Gewässer an. Bei bestehenden füllt er nur leere Angaben: Lage einer Station, `AlplakesLakeKey`, `AlplakesModel3d`, `AlplakesSimstratKey`, `SatellitePoint`. Ein gesetzter Wert bleibt. Später kommt der Seed aus dem Gewässernetz von swisstopo (swissTLM3D, `data-sources.md`).
+Stammdaten der Gewässer, schweizweit: Seen und Flüsse (Entscheid Marc, 17.10.2026). Tabelle `WaterBodies`. Der Seed steht vorerst in `Features/WaterBodies/Seed/water-bodies.json` (Gewässer mit Plätzen; die Schlüssel für Alplakes seit 19.10.2026 für alle Seen mit Plätzen, die Alplakes abdeckt). Der Command `SeedWaterBodies` legt fehlende Gewässer an. Bei bestehenden füllt er nur leere Angaben: Lage einer Station, `AlplakesLakeKey`, `AlplakesModel3d`, `AlplakesSimstratKey`, `SatellitePoint`, `Elevation`. Ein gesetzter Wert bleibt. Später kommt der Seed aus dem Gewässernetz von swisstopo (swissTLM3D, `data-sources.md`).
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
@@ -33,6 +33,7 @@ Stammdaten der Gewässer, schweizweit: Seen und Flüsse (Entscheid Marc, 17.10.2
 | `AlplakesModel3d` | string(50), optional | Modellname für 3D-Simulationen (z.B. `delft3d-flow`, `mitgcm`) |
 | `AlplakesSimstratKey` | string(50), optional | Schlüssel im 1D-Modell Simstrat (z.B. `lowerzurich`). Weicht oft vom 3D-Schlüssel ab. |
 | `SatellitePoint` | geography (Point), optional | Standardpunkt seewärts für Satellitenwerte |
+| `Elevation` | int, optional | Höhe des Seespiegels in m ü. M., gerundet. Einmalig aus swissALTI3D über den Höhendienst von swisstopo am Satellitenpunkt bzw. in der Mitte bestimmt (20.10.2026, Seed). Flüsse ohne Wert. Grundlage für die Notiz «Bergsee» ab 700 m (`forecast.md`, «Rangliste»). |
 | `IsActive` | bool | |
 
 ### WaterBodyHydroStation

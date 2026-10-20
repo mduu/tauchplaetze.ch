@@ -41,7 +41,8 @@ public record DiveSiteDetails(
     Guid? HeroMediaId = null,
     IReadOnlyList<string>? OtherNames = null,
     SiteTexts? Texts = null,
-    bool HasDivingBan = false)
+    bool HasDivingBan = false,
+    int? MountainLakeElevation = null)
 {
     /// <summary>Weitere Namen («auch bekannt als»).</summary>
     public IReadOnlyList<string> OtherNameList => OtherNames ?? [];

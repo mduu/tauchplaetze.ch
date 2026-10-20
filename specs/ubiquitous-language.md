@@ -10,6 +10,7 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Gewässer | `WaterBody` | water | eaux | acque | Oberbegriff für See und Fluss. Jeder Tauchplatz gehört zu einem Gewässer. |
 | See | `WaterBodyType.Lake` | lake | lac | lago | Gewässer der Art See. |
 | Fluss | `WaterBodyType.River` | river | rivière | fiume | Gewässer der Art Fluss. |
+| Bergsee | `MountainLakes` | mountain lake | lac de montagne | lago di montagna | See ab 700 m ü. M. Ab dieser Höhe gelten eigene Tauchtabellen (Höhentauchen). |
 | Tauchgang | `Dive` | dive | plongée | immersione | Ein einzelner Tauchgang. |
 | Prognose | `Forecast` | forecast | prévision | previsione | Berechnete Bedingungen pro Platz und Tag. |
 | Tauch-Index | `DiveIndex` | dive index | indice de plongée | indice d'immersione | Zahl von 0 bis 10. Fasst die Bedingungen zusammen. |

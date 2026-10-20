@@ -144,6 +144,93 @@ public class GetBestSitesTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(2, best.WithoutForecastCount);
     }
 
+    [SqlFact]
+    public async Task Die_Rangliste_zeigt_hoechstens_zwei_Plaetze_pro_Gewaesser_und_die_weiteren_beim_zweiten()
+    {
+        // Arrange
+        await Sql.Arrange(db =>
+        {
+            var genfersee = Lake("genfersee");
+            var zuerichsee = Lake("zuerichsee");
+            Add(db, genfersee, "genf-1", 46.21, 6.15, 9.0m);
+            Add(db, genfersee, "genf-2", 46.22, 6.16, 8.8m);
+            Add(db, genfersee, "genf-3", 46.23, 6.17, 8.6m);
+            Add(db, genfersee, "genf-4", 46.24, 6.18, 8.4m);
+            Add(db, zuerichsee, "zuerich-1", 47.28, 8.61, 8.0m);
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var best = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de"));
+
+        // Assert
+        Assert.Equal(["genf-1", "genf-2", "zuerich-1"], best.Ranking.Select(r => r.Slug));
+        Assert.Equal(["genf-3", "genf-4"], best.Ranking[1].MoreList.Select(r => r.Slug));
+        Assert.Empty(best.Ranking[0].MoreList);
+        Assert.Empty(best.Ranking[2].MoreList);
+    }
+
+    [SqlFact]
+    public async Task Mit_Ort_zieht_die_Distanz_von_der_Reihung_ab_der_angezeigte_Index_bleibt()
+    {
+        // Arrange
+        await Sql.Arrange(DistanceSeed);
+        var zurich = new Area(47.37, 8.54, 40);
+
+        // Act
+        var best = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de", Area: zurich));
+
+        // Assert
+        Assert.Equal(["nah", "weit"], best.Ranking.Select(r => r.Slug));
+        Assert.Equal(8.0m, best.Ranking[1].DiveIndex);
+    }
+
+    [SqlFact]
+    public async Task Ohne_Ort_zaehlt_nur_der_Index()
+    {
+        // Arrange
+        await Sql.Arrange(DistanceSeed);
+
+        // Act
+        var best = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de"));
+
+        // Assert
+        Assert.Equal(["weit", "nah"], best.Ranking.Select(r => r.Slug));
+    }
+
+    [SqlTheory]
+    [InlineData(1796, 1796)]
+    [InlineData(700, 700)]
+    [InlineData(699, null)]
+    [InlineData(null, null)]
+    public async Task Ein_See_ab_700_m_ueber_Meer_gilt_als_Bergsee(int? elevation, int? expected)
+    {
+        // Arrange
+        await Sql.Arrange(db =>
+        {
+            var lake = Lake("silsersee");
+            lake.Elevation = elevation;
+            Add(db, lake, "sils", 46.42, 9.74, 8.9m);
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var best = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de"));
+
+        // Assert
+        Assert.Equal(expected, Assert.Single(best.Ranking).MountainLakeElevation);
+    }
+
+    private static Task DistanceSeed(TauchplaetzeDbContext db)
+    {
+        Add(db, Lake("zuerichsee"), "nah", 47.355, 8.555, 7.8m);
+        Add(db, Lake("zugersee"), "weit", 47.10, 8.48, 8.0m);
+        return Task.CompletedTask;
+    }
+
+    private static WaterBody Lake(string slug) =>
+        new() { Slug = slug, NameDe = slug, WaterBodyType = WaterBodyType.Lake, Centroid = GeoPoints.Create(47, 8), IsActive = true };
+
     private static Task Seed(TauchplaetzeDbContext db)
     {
         var lake = new WaterBody { Slug = "see", NameDe = "See", WaterBodyType = WaterBodyType.Lake, Centroid = GeoPoints.Create(47, 8), IsActive = true };

@@ -36,7 +36,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 d.OtherNames,
                 d.HasDivingBan,
                 Ratings = new SiteRatings(d.DifficultyRating, d.WallRating, d.MarineLifeRating, d.WrecksRating, d.CurrentRating, d.SurroundingsRating),
-                WaterBody = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType },
+                WaterBody = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType, d.WaterBody.Elevation },
             })
             .SingleOrDefaultAsync(ct);
 
@@ -63,7 +63,8 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 site.HeroMediaId,
                 OtherNameJson.Read(site.OtherNames, logger),
                 await Texts(site.Id, query.Culture, ct),
-                site.HasDivingBan)),
+                site.HasDivingBan,
+                MountainLakes.Elevation(site.WaterBody.WaterBodyType, site.WaterBody.Elevation))),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),

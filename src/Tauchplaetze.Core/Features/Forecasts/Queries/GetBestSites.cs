@@ -14,7 +14,9 @@ namespace Tauchplaetze.Core.Features.Forecasts.Queries;
 public record Area(double Latitude, double Longitude, int RadiusKm);
 
 /// <summary>
-/// Die Rangliste eines Tages, bester Index zuerst. Nur Plätze mit Index (`forecast.md`, «Datenstufe»), ohne Plätze, die an dem Tag gesperrt sind.
+/// Die Rangliste eines Tages nach <see cref="RankingRules"/>: bester Index zuerst, mit Ort abzüglich der Distanz, höchstens
+/// <see cref="RankingRules.SitesPerWaterBody"/> Plätze pro Gewässer (die weiteren in <see cref="RankedSite.MoreList"/>).
+/// Nur Plätze mit Index (`forecast.md`, «Datenstufe»), ohne Plätze, die an dem Tag gesperrt sind.
 /// Ohne <paramref name="Area"/> gilt die ganze Schweiz (`features.md`). Ohne <paramref name="Date"/> gilt heute.
 /// </summary>
 public record GetBestSitesQuery(string Culture, DateOnly? Date = null, Area? Area = null);
@@ -52,10 +54,15 @@ public record RankedSite(
     int? WindBeaufort,
     IReadOnlyList<ReasonCode> Reasons,
     double? DistanceKm,
-    WaterBodyType WaterBodyType = WaterBodyType.Lake)
+    WaterBodyType WaterBodyType = WaterBodyType.Lake,
+    int? MountainLakeElevation = null,
+    IReadOnlyList<RankedSite>? More = null)
 {
     /// <summary>Den Querschnitt mit Temperaturen gibt es nur im See.</summary>
     public bool HasDepthProfile => WaterBodyType != WaterBodyType.River;
+
+    /// <summary>Beim zweiten Platz eines Gewässers: die weiteren Plätze dieses Gewässers in derselben Reihung.</summary>
+    public IReadOnlyList<RankedSite> MoreList => More ?? [];
 }
 
 internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider time) : IQueryHandler<GetBestSitesQuery, BestSites>
@@ -84,14 +91,14 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
         }
 
         var rows = await forecasts
-            .OrderByDescending(x => x.f.DiveIndex)
             .Select(x => new
             {
+                x.d.WaterBodyId,
                 x.d.Slug,
                 x.d.Name,
                 x.d.Municipality,
                 x.d.Location,
-                Water = new { x.d.WaterBody!.NameDe, x.d.WaterBody.NameEn, x.d.WaterBody.NameFr, x.d.WaterBody.NameIt, x.d.WaterBody.WaterBodyType },
+                Water = new { x.d.WaterBody!.NameDe, x.d.WaterBody.NameEn, x.d.WaterBody.NameFr, x.d.WaterBody.NameIt, x.d.WaterBody.WaterBodyType, x.d.WaterBody.Elevation },
                 x.f.DiveIndex,
                 x.f.DataLevel,
                 x.f.SurfaceTemperature,
@@ -103,7 +110,7 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
             })
             .ToListAsync(ct);
 
-        var ranking = rows.Select(r => new RankedSite(
+        var sites = rows.Select(r => (r.WaterBodyId, Site: new RankedSite(
                 r.Slug,
                 r.Name,
                 r.Municipality,
@@ -117,12 +124,41 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 r.WindBeaufort,
                 ReasonCodes.Parse(r.ReasonCodes),
                 origin is null ? null : Math.Round(Distance.Km(origin, r.Location), 0),
-                r.Water.WaterBodyType))
+                r.Water.WaterBodyType,
+                MountainLakes.Elevation(r.Water.WaterBodyType, r.Water.Elevation))))
+            .OrderByDescending(s => RankingRules.Score(s.Site.DiveIndex, s.Site.DistanceKm))
+            .ThenByDescending(s => s.Site.DiveIndex)
+            .ThenBy(s => s.Site.Name, StringComparer.Ordinal)
             .ToList();
+        var ranking = Spread(sites);
 
         var coverage = await Coverage(query.Culture, date, ct);
         var (withoutForecast, withoutForecastCount) = origin is null ? ([], 0) : await Unranked(query, date, origin, ct);
         return new BestSites(date, days, ranking, coverage, withoutForecast, withoutForecastCount);
+    }
+
+    private static List<RankedSite> Spread(IReadOnlyList<(int WaterBodyId, RankedSite Site)> sites)
+    {
+        var more = sites
+            .GroupBy(s => s.WaterBodyId)
+            .ToDictionary(g => g.Key, g => g.Skip(RankingRules.SitesPerWaterBody).Select(s => s.Site).ToList());
+        var shown = new Dictionary<int, int>();
+        var ranking = new List<RankedSite>();
+        foreach (var (waterBodyId, site) in sites)
+        {
+            var count = shown.GetValueOrDefault(waterBodyId) + 1;
+            shown[waterBodyId] = count;
+            if (count < RankingRules.SitesPerWaterBody)
+            {
+                ranking.Add(site);
+            }
+            else if (count == RankingRules.SitesPerWaterBody)
+            {
+                ranking.Add(more[waterBodyId] is [_, ..] rest ? site with { More = rest } : site);
+            }
+        }
+
+        return ranking;
     }
 
     private async Task<ForecastCoverage?> Coverage(string culture, DateOnly date, CancellationToken ct)

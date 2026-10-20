@@ -34,6 +34,15 @@ Jeder Platz hat eine **Datenstufe** (`DataLevel`). Sie sagt, wie genau die Daten
 - Die Rangliste «Wo tauchen?» zeigt nur Plätze mit Index. Plätze ohne Index erscheinen im Verzeichnis und auf der Gewässerseite.
 - Ein Platz mit gültiger Sperrung (`dive-site.md`, «Hinweise») fehlt an diesem Tag in «Beste Wahl» und Rangliste. Der Index wird trotzdem berechnet.
 
+### Rangliste
+
+Entscheid Marc, 20.10.2026 (`RankingRules`, `GetBestSites`). Die Reihung ändert nie den angezeigten Index.
+
+- **Ohne Ort:** Reihung nach Index.
+- **Mit Ort:** Reihung nach Index − 0.1 × (Distanz in km / 10), also 0.01 Punkte pro km. Bei 40 km Umkreis höchstens 0.4 Punkte. Ein naher Platz mit 7.8 steht so vor einem Platz mit 8.0 in 30 km.
+- **Streuung:** höchstens 2 Plätze pro Gewässer in der Rangliste, die weiteren beim zweiten Platz dieses Gewässers. «Beste Wahl» ist der erste Platz der Reihung.
+- **Bergsee:** ab 700 m ü. M. (`MountainLakes`, Höhe des Seespiegels in `WaterBody.Elevation`) nur als Notiz, keine Abwertung.
+
 ## Eingaben pro Platz und Tag
 
 Das Tauchfenster ist 08:00 bis 16:00 Uhr Lokalzeit.
