@@ -12,12 +12,12 @@ Pro See zählt der höchste Quotient «Abfluss / Median der letzten 30 Tage» al
 | Brienzersee | Brienzwiler | 2019 | Aare | Hauptzufluss am Ostende |
 | Brienzersee | Gsteig | 2109 | Lütschine | Gletscherbach, trübt nach Regen bei Bönigen |
 | Thunersee | Ringgenberg, Goldswil | 2457 | Aare | Abfluss des Brienzersees, Zufluss bei Interlaken |
-| Thunersee | Hondrich | 2469 | Kander | Kander mit Simme, trübt stark nach Regen |
+| Thunersee | Emdthal, Heustrich | 2646 | Kander | trübt stark nach Regen (2469 Hondrich liefert bei existenz.ch keinen Abfluss) |
 | Genfersee | Porte du Scex | 2009 | Rhône | Hauptzufluss, trägt Gletschertrübe |
 | Hallwilersee | Hitzkirch, Richensee | 2416 | Aabach | Zufluss aus dem Baldeggersee |
 | Greyerzersee | Broc, Château d'en bas | 2160 | Sarine | Hauptzufluss am Südende |
 | Schiffenensee | Fribourg | 2119 | Sarine | Hauptzufluss |
-| Lago Maggiore | Riazzino | 2068 | Ticino | Hauptzufluss bei Magadino |
+| Lago Maggiore | Bellinzona | 2020 | Ticino | Hauptzufluss (2068 Riazzino misst nur Pegel und Temperatur) |
 | Lago Maggiore | Locarno, Solduno | 2368 | Maggia | Zufluss bei Locarno, trübt nach Gewittern |
 | Luganersee | Agno | 2629 | Vedeggio | Zufluss im Westbecken |
 | Luganersee | Pregassona | 2321 | Cassarate | Zufluss bei Lugano |
