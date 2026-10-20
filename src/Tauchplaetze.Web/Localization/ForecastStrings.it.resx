@@ -176,4 +176,5 @@
   <data name="Discharge_Forecast_Issued" xml:space="preserve"><value>Previsione UFAM, emessa {0}</value></data>
   <data name="Discharge_Forecast_Unchecked" xml:space="preserve"><value>calcolata automaticamente, non verificata</value></data>
   <data name="Day_Discharge" xml:space="preserve"><value>Portata {0}</value></data>
+  <data name="Day_Today_Short" xml:space="preserve"><value>Oggi</value></data>
 </root>

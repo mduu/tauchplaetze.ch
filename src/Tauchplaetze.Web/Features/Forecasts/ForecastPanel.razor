@@ -97,7 +97,7 @@
             @foreach (var day in Forecast.Days)
             {
                 <li data-outlook="@(day.IsOutlook ? "true" : "false")">
-                    <div class="day-name">@(day.Date == Today.Date ? L["Day_Today"] : ForecastFormat.Weekday(day.Date))</div>
+                    <div class="day-name">@(day.Date == Today.Date ? L["Day_Today_Short"] : ForecastFormat.Weekday(day.Date))</div>
                     @if (day.DiveIndex is { } dayIndex)
                     {
                         <div class="day-index" data-index-band="@ForecastFormat.IndexBand(dayIndex)">@ForecastFormat.Number(dayIndex)</div>

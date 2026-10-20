@@ -91,7 +91,7 @@
                     <li>
                         <span class="day-bar-wrap"><span class="day-bar" style="height: @(DayHeight(day.Discharge))"></span></span>
                         <span class="day-value">@DischargeFormat.Amount(day.Discharge)</span>
-                        <span class="day-name">@(day.Date == DischargeFormat.Today(Time) ? L["Day_Today"] : ForecastFormat.Weekday(day.Date))</span>
+                        <span class="day-name">@(day.Date == DischargeFormat.Today(Time) ? L["Day_Today_Short"] : ForecastFormat.Weekday(day.Date))</span>
                     </li>
                 }
             </ol>

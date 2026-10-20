@@ -176,4 +176,5 @@
   <data name="Discharge_Forecast_Issued" xml:space="preserve"><value>BAFU forecast, issued {0}</value></data>
   <data name="Discharge_Forecast_Unchecked" xml:space="preserve"><value>computed automatically, not checked</value></data>
   <data name="Day_Discharge" xml:space="preserve"><value>Discharge {0}</value></data>
+  <data name="Day_Today_Short" xml:space="preserve"><value>Today</value></data>
 </root>
