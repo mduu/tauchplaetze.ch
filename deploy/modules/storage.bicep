@@ -35,9 +35,20 @@ resource account 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   }
 }
 
+// Soft Delete 14 Tage für Blobs und Container: Ein Fehlgriff löscht die Revisionen (History) sonst endgültig.
 resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2023-05-01' = {
   parent: account
   name: 'default'
+  properties: {
+    deleteRetentionPolicy: {
+      enabled: true
+      days: 14
+    }
+    containerDeleteRetentionPolicy: {
+      enabled: true
+      days: 14
+    }
+  }
 }
 
 resource media 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-05-01' = {

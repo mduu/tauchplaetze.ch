@@ -22,7 +22,8 @@ concurrency:
 
 env:
   APP_NAME: app-tauchplaetze-prod
-  APP_URL: https://app-tauchplaetze-prod.azurewebsites.net
+  # Nach restrictToCloudflare erreicht nur Cloudflare die App: dann die Variable PUBLIC_BASE_URL setzen (doc/go-live.md).
+  APP_URL: ${{ vars.PUBLIC_BASE_URL || 'https://app-tauchplaetze-prod.azurewebsites.net' }}
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 

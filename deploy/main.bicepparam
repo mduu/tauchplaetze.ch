@@ -15,3 +15,4 @@ param mailFrom = 'tauchplaetze.ch <noreply@tauchplaetze.ch>'
 param publicSiteBaseUri = 'https://tauchplaetze.ch'
 param mediaPublicBaseUri = ''
 param adminDisplayName = 'Marc'
+param restrictToCloudflare = false

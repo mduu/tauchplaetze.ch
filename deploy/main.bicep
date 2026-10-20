@@ -45,6 +45,9 @@ param mediaPublicBaseUri string = ''
 @description('Anzeigename des ersten Admins. Die E-Mail steht im Key Vault (Accounts--Admins--0--Email).')
 param adminDisplayName string = 'Marc'
 
+@description('Nur Cloudflare darf die App erreichen (Access Restrictions). Erst auf true, wenn DNS und Proxy bei Cloudflare laufen (doc/go-live.md). Setzt auch Contact__TrustCloudflareHeader.')
+param restrictToCloudflare bool = false
+
 var names = {
   plan: 'asp-tauchplaetze-prod'
   webApp: 'app-tauchplaetze-prod'
@@ -110,6 +113,7 @@ module webApp 'modules/webApp.bicep' = {
     publicSiteBaseUri: publicSiteBaseUri
     mediaPublicBaseUri: mediaPublicBaseUri
     adminDisplayName: adminDisplayName
+    restrictToCloudflare: restrictToCloudflare
   }
 }
 

@@ -56,7 +56,7 @@ In GitHub (Settings → Secrets and variables → Actions):
 |---|---|---|
 | Variable | `AZURE_CLIENT_ID` | `$APP_ID` |
 | Variable | `AZURE_TENANT_ID` | `az account show --query tenantId -o tsv` |
-| Variable | `AZURE_SUBSCRIPTION_ID` | `d7088f29-7c73-47ea-9b93-961edf4a5431` |
+| Variable | `AZURE_SUBSCRIPTION_ID` | `<Subscription-ID>` |
 | Variable | `SQL_ADMIN_LOGIN` | Anzeigename des SQL-Admins (Benutzer oder Gruppe) |
 | Variable | `SQL_ADMIN_OBJECT_ID` | `az ad signed-in-user show --query id -o tsv` (oder die Gruppe) |
 | Variable | `SQL_ADMIN_PRINCIPAL_TYPE` | `User` oder `Group` |
@@ -127,7 +127,7 @@ CREATE USER [app-tauchplaetze-prod] FROM EXTERNAL PROVIDER;
 ALTER ROLE db_owner ADD MEMBER [app-tauchplaetze-prod];
 ```
 
-`db_owner`, weil die App beim Start migriert (`Database__PrepareOnStartup`).
+`db_owner`, weil die App beim Start migriert (`Database__PrepareOnStartup`). Das ist bewusst so (Security-Review 20.10.2026): Ein eigener Migrations-Benutzer bräuchte Zugang aus GitHub durch die SQL-Firewall.
 
 ## 7. Mail über Hostpoint
 
@@ -159,6 +159,9 @@ Prüfen:
 4. Cloudflare-Proxy einschalten (orange), SSL/TLS «Full (strict)».
 5. Redirect Rules in Cloudflare: `www.tauchplaetze.ch/*` und `sichtweiten.ch/*`, `www.sichtweiten.ch/*` → `https://tauchplaetze.ch/$1` (301).
 6. Später: `media.tauchplaetze.ch` vor dem Container `media` (infrastructure.md), dann `mediaPublicBaseUri` in `main.bicepparam` setzen.
+7. **Nur noch Cloudflare zulassen**, wenn die Website über Cloudflare läuft: in `main.bicepparam` `restrictToCloudflare = true`, dann `infra.yml` (what-if, deploy). Das setzt die Access Restrictions auf die IP-Bereiche von Cloudflare (Default Deny) und `Contact__TrustCloudflareHeader=true`. Ohne diese Einschränkung wären WAF und Rate Limits über `app-tauchplaetze-prod.azurewebsites.net` umgehbar, und `CF-Connecting-IP` liesse sich fälschen. Die SCM-Site bleibt offen, der Deploy über OIDC geht weiter.
+8. GitHub-Variable `PUBLIC_BASE_URL` = `https://tauchplaetze.ch` setzen. Der Health Check in `deploy.yml` ruft sonst die gesperrte Adresse `azurewebsites.net` auf.
+9. Das App Service Managed Certificate erneuert sich nicht immer hinter dem Proxy von Cloudflare. Schlägt die Erneuerung fehl: Cloudflare Origin Certificate (15 Jahre) erzeugen und in App Service hochladen.
 
 ## 10. Zurück auf eine frühere Version
 
