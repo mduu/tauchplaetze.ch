@@ -1,6 +1,7 @@
 using Tauchplaetze.Core.CrossCutting.Geo;
 using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
+using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Forecasts;
@@ -377,6 +378,37 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
         var point = Assert.Single((await Query<GetWaterBodyIndexHistoryQuery, WaterBodyIndexHistory>(new GetWaterBodyIndexHistoryQuery(lake))).Years.Single().Points);
         Assert.Equal((new DateOnly(2026, 10, 17), today.DiveIndex, 1), (point.Date, (decimal?)point.MedianIndex, point.Sites));
+    }
+
+    [SqlFact]
+    public async Task Sagt_das_BAFU_uebermorgen_Hochwasser_am_Zufluss_voraus_sinkt_der_Index_uebermorgen_und_heute_bleibt_er()
+    {
+        // Arrange: Linth – Weesen (2104), Zufluss des Zürichsees. Für den 19.10.2026 ein Tag mit dem Vielfachen des üblichen Abflusses.
+        var siteId = await PrepareRiffWilliams();
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+        var before = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days;
+        await Sql.Arrange(db =>
+        {
+            db.HydroHours.AddRange(Enumerable.Range(0, 24).Select(hour => new HydroHour
+            {
+                StationId = "2104",
+                Kind = HydroSeriesKind.Forecast,
+                Hour = new DateTimeOffset(2026, 10, 18, 22, 0, 0, TimeSpan.Zero).AddHours(hour),
+                Discharge = 2000,
+                ImportedAt = FixedTime.SpikeDay,
+            }));
+            return db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        });
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        var after = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days;
+        Assert.Equal(before[0].DiveIndex, after[0].DiveIndex);
+        Assert.Equal(before[1].DiveIndex, after[1].DiveIndex);
+        Assert.True(after[2].DiveIndex < before[2].DiveIndex, $"{after[2].DiveIndex} < {before[2].DiveIndex}");
+        Assert.Contains(ReasonCode.TurbidAfterRain, after[2].Reasons);
     }
 
     private async Task<Guid> PrepareRiffWilliams()

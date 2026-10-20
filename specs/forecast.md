@@ -51,7 +51,7 @@ Das Tauchfenster ist 08:00 bis 16:00 Uhr Lokalzeit.
 | Abfluss der Zuflüsse bzw. des Flusses | BAFU | Zuflüsse, Kachel «Abfluss» an Flussplätzen | MVP |
 | Trübung des Flusses | BAFU, wo gemessen | Klarheit im Fluss | MVP |
 | Gemessenes Temperaturprofil | Eawag Datalakes | ersetzt das Modell für heute, wo eine Messstation nah ist | Phase 1 |
-| Abflussprognose | BAFU-Vorhersagen | Kachel «Abfluss» und Tagesleiste an Flussplätzen (seit 20.10.2026); Zuflüsse an künftigen Tagen offen | Phase 1 |
+| Abflussprognose | BAFU-Vorhersagen | Kachel «Abfluss» und Tagesleiste an Flussplätzen, Zuflüsse an künftigen Tagen (`rules-1.4`, seit 20.10.2026) | Phase 1 |
 
 Die Endpunkte stehen in `data-sources.md`.
 
@@ -118,7 +118,7 @@ An Flussplätzen zeigt die Platzseite die Kachel «Abfluss» (`ux.md`, Tauchplat
 - **Trend:** neuester Wert gegen den Wert 3 h davor (höchstens 30 min daneben). Innerhalb von 5 % «gleich», sonst «steigt» oder «fällt». Die Kachel zeigt die Änderung in m³/s.
 - **Verlauf:** die Stundenmittel der letzten 48 Stunden als Kurve, mit dem Median gestrichelt. Darunter die Tagesmittel der letzten 7 Tage (Schweizer Kalendertage, heute bis jetzt).
 - **Vorhersage (BAFU, 20.10.2026):** `HydroHour.Kind = Forecast`, Stundenmittel bis 5 Tage voraus (`data-sources.md`, «Phase 1: Vorhersagen des BAFU»). Die Kachel setzt die Kurve der letzten 48 Stunden gestrichelt fort, bis zum Ende der Vorhersage, beschriftet «Vorhersage BAFU». Die Tagesleiste der Prognose zeigt an Flussplätzen pro Tag die Einordnung des vorhergesagten Tagesmittels (gleiche Regel wie der Messwert). Ohne Vorhersage fehlt beides. Ausgabezeit und Ordner (`official` oder `unofficial`) stehen in `HydroReading`.
-- **Nicht im Index:** Die Vorhersage fliesst noch nicht in den Teilwert «Zuflüsse». Der Index rechnet weiter mit dem aktuellen Verhältnis zum Median. Vorschlag für `rules-1.4`: An künftigen Tagen das vorhergesagte Tagesmittel durch den Median teilen. Dafür müsste der Job auch die Zuflussstationen der Seen holen. Entscheid offen.
+- **Im Index (`rules-1.4`, 20.10.2026):** An künftigen Tagen rechnen der Teilwert «Zuflüsse» und die Korrektur der Klarheit mit dem vorhergesagten Tagesmittel geteilt durch den Median der letzten 30 Tage (siehe `rules-1.4`). Der Abfluss-Job holt dafür auch die Zuflussstationen der Seen.
 - **Speicher:** `HydroHour` (Stundenmittel pro Station, 30 Tage) und `HydroReading` (neuester Wert mit Wert vor 3 h und Median). Die Seite liest nur diese Tabellen.
 - Weil der Abfluss als Kachel nicht in den Index fliesst, ändert eine neue Schwelle die `ModelVersion` nicht. Das Verhältnis zum Median im Index (Zuflüsse) bleibt Teil von `RunForecast`.
 
@@ -142,6 +142,8 @@ Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 | Wind | 25 % | 0–2 Bft im Tauchfenster | ≥ 5 Bft |
 | Zuflüsse | 20 % | < 5 mm Regen in 72 h und Abfluss unter 1.2 × Median | Starkregen oder Abfluss über 3 × Median |
 | Schichtung | 20 % | klare Schicht unter einer Sprungschicht ≤ 20 m, oder durchmischter See mit wenig Algen | Sprungschicht tiefer als 30 m bei trüber Oberfläche |
+
+**`rules-1.4`** (20.10.2026, Entscheid Marc): wie `rules-1.3`, dazu rechnen **künftige Tage mit der Abflussvorhersage des BAFU**. Heute zählt weiter der gemessene Abfluss (neuester Wert geteilt durch den Median der letzten 30 Tage). Ab morgen zählt das vorhergesagte Tagesmittel (Schweizer Kalendertag, mindestens 12 Stunden) geteilt durch denselben Median, für den Teilwert «Zuflüsse» und für die Korrektur der Klarheit. Bei mehreren Zuflüssen zählt der höchste Quotient. Ohne Vorhersage für den Tag bleibt der gemessene Wert wie in `rules-1.3`. Automatisch gerechnete Vorhersagen (`unofficial`) zählen wie kontrollierte; den Unterschied zeigt nur die Kachel. Grund: Bisher sah ein Tag mit vorhergesagtem Hochwasser gleich gut aus wie heute. Vergangene Tage ändern sich nicht, denn ihr gespeicherter Quotient bleibt. Zuflussstationen der Seen: `data-sources.md`, Liste in `doc/inflow-stations-vorschlag.md`.
 
 **`rules-1.3`** (19.10.2026, Entscheid Marc): wie `rules-1.2`, dazu **begrenzt die Sicht den Index**. Mässige Sicht in Ufernähe (3 bis unter 6 m) erlaubt höchstens 7.0, schlechte Sicht (unter 3 m) höchstens 5.0. Gute und sehr gute Sicht begrenzen nicht. Ohne Sichtwert bleibt die Obergrenze 6.5. Grund: Am Zürichsee ergaben 5–6 m in Ufernähe bei Windstille und klarer Sprungschicht 7.5 bis 8.5. Das ist für Taucher kein Top-Tag. Greift die Grenze, steht die Begründung `VisibilityLimitsIndex` («Sicht begrenzt den Index») vorne. Die Tageswerte werden beim nächsten Lauf neu gerechnet.
 

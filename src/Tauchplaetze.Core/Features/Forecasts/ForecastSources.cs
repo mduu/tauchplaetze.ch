@@ -11,8 +11,8 @@ using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.Forecasts;
 
-/// <summary>Die Daten eines Gewässers für einen Lauf.</summary>
-internal record WaterBodyData(DepthTimeSeries? LakeWide, double? DischargeRatio, double? RiverTemperature);
+/// <summary>Die Daten eines Gewässers für einen Lauf. <see cref="Medians"/>: Median des Abflusses der letzten 30 Tage pro Station.</summary>
+internal record WaterBodyData(DepthTimeSeries? LakeWide, double? DischargeRatio, double? RiverTemperature, IReadOnlyDictionary<string, double>? Medians = null);
 
 /// <summary>Die Daten eines Platzes für einen Lauf.</summary>
 internal record SiteData(
@@ -56,6 +56,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             : null;
 
         var ratios = new List<double>();
+        var medians = new Dictionary<string, double>();
         double? riverTemperature = null;
         foreach (var station in waterBody.HydroStations)
         {
@@ -64,6 +65,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             if (RatioToMedian(flow) is { } ratio)
             {
                 ratios.Add(ratio);
+                medians[station.StationId] = Median(flow!);
             }
 
             if (station.Role == HydroStationRole.River)
@@ -74,7 +76,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             }
         }
 
-        return new WaterBodyData(lakeWide, ratios.Count > 0 ? ratios.Max() : null, riverTemperature);
+        return new WaterBodyData(lakeWide, ratios.Count > 0 ? ratios.Max() : null, riverTemperature, medians);
     }
 
     public async Task<SiteData> ForSite(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
@@ -239,9 +241,14 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             return null;
         }
 
-        var sorted = values.Select(v => v.Value).Order().ToList();
-        var median = sorted[sorted.Count / 2];
+        var median = Median(values);
         return median > 0 ? Math.Round(latest.Value / median, 2) : null;
+    }
+
+    private static double Median(IReadOnlyList<HydroValue> values)
+    {
+        var sorted = values.Select(v => v.Value).Order().ToList();
+        return sorted[sorted.Count / 2];
     }
 }
 

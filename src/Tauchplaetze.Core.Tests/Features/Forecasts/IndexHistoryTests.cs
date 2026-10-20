@@ -5,6 +5,7 @@ using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Forecasts;
+using Tauchplaetze.Core.Features.Forecasts.Calculation;
 using Tauchplaetze.Core.Features.Forecasts.Commands;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
 using Tauchplaetze.Core.Features.WaterBodies;
@@ -57,9 +58,9 @@ public class IndexHistoryTests(SqlServer sql) : SqlTest(sql)
             var site = AddSite(db, lake, lakeSiteId);
             var second = AddSite(db, lake, secondSiteId);
             db.DailyForecasts.Add(ModerateVisibilityDay(site, Today.AddDays(-1)));
-            AddForecast(db, second, Today.AddDays(-1), 6.0m, "rules-1.3");
-            AddForecast(db, second, Today, 5.0m, "rules-1.3");
-            AddForecast(db, second, Today.AddDays(2), 9.0m, "rules-1.3");
+            AddForecast(db, second, Today.AddDays(-1), 6.0m, DiveIndexRules.Default.ModelVersion);
+            AddForecast(db, second, Today, 5.0m, DiveIndexRules.Default.ModelVersion);
+            AddForecast(db, second, Today.AddDays(2), 9.0m, DiveIndexRules.Default.ModelVersion);
             return Task.CompletedTask;
         });
 
@@ -69,7 +70,7 @@ public class IndexHistoryTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         var yesterday = (await Query<GetSiteIndexHistoryQuery, SiteIndexHistory>(new GetSiteIndexHistoryQuery(lakeSiteId))).Days.Single();
-        Assert.Equal((7.0m, "rules-1.3"), (yesterday.DiveIndex, yesterday.ModelVersion));
+        Assert.Equal((7.0m, DiveIndexRules.Default.ModelVersion), (yesterday.DiveIndex, yesterday.ModelVersion));
         Assert.Equal((1, 1, 2), (first.Recomputed, first.Changed, first.Days));
         Assert.Equal((0, 0), (second.Recomputed, second.Changed));
 
@@ -103,7 +104,7 @@ public class IndexHistoryTests(SqlServer sql) : SqlTest(sql)
         // Assert
         var old = (await Query<GetSiteIndexHistoryQuery, SiteIndexHistory>(new GetSiteIndexHistoryQuery(oldSiteId))).Days.Single();
         var current = (await Query<GetSiteIndexHistoryQuery, SiteIndexHistory>(new GetSiteIndexHistoryQuery(newSiteId))).Days.Single();
-        Assert.Equal((5.6m, ClaritySource.Sentinel3Lake, "rules-1.3"), (old.SecchiDepthShore, old.ClaritySource, old.ModelVersion));
+        Assert.Equal((5.6m, ClaritySource.Sentinel3Lake, DiveIndexRules.Default.ModelVersion), (old.SecchiDepthShore, old.ClaritySource, old.ModelVersion));
         Assert.NotNull(old.DiveIndex);
         Assert.Equal(current.DiveIndex, old.DiveIndex);
     }

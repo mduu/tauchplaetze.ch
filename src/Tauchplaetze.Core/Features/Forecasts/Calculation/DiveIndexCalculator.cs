@@ -24,7 +24,7 @@ internal record DayResult(
     double? VisibilityGoodBelow,
     IReadOnlyList<ReasonCode> Reasons);
 
-/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.3`, ADR-004).</summary>
+/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.4`, ADR-004).</summary>
 internal static class DiveIndexCalculator
 {
     public static DayResult Calculate(DayInputs inputs, DiveIndexRules rules)

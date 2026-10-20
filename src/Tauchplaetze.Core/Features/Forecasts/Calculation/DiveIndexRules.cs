@@ -13,13 +13,14 @@ internal record SupportPoint(double Input, double Score);
 /// `rules-1.2` (19.10.2026): Sentinel-2 in Ufernähe ist die Hauptquelle der Klarheit, ohne Uferfaktor. Sentinel-3 bleibt Rückfall.
 /// Volle Punkte für die Schichtung erst ab guter Sicht in Ufernähe (6 m).
 /// `rules-1.3` (19.10.2026, Entscheid Marc): Mässige Sicht in Ufernähe begrenzt den Index auf 7, schlechte auf 5.
+/// `rules-1.4` (20.10.2026, Entscheid Marc): An künftigen Tagen zählt für Zuflüsse und Korrektur der Klarheit der vorhergesagte Abfluss des BAFU.
 /// Sie werden mit Meldungen und eigenen Tauchgängen geprüft.
 /// </remarks>
 internal record DiveIndexRules
 {
     public static readonly DiveIndexRules Default = new();
 
-    public string ModelVersion { get; init; } = "rules-1.3";
+    public string ModelVersion { get; init; } = "rules-1.4";
 
     public double ClarityWeight { get; init; } = 0.35;
 
