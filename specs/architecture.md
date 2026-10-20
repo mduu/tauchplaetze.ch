@@ -205,6 +205,10 @@ Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, ko
 - Bilder: lange Cache-Dauer (`immutable`), Dateiname enthält die Version. Cloudflare cacht vor dem App Service.
 - Nebeneffekt: Die Datenbank bekommt wenig Anfragen. Das schont das Free Offer (vCore-Sekunden) und erlaubt Auto-Pause.
 
+## Security-Header
+
+Jede Antwort trägt `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` (Standort nur für die eigene Seite) und eine schmale CSP `frame-ancestors 'none'; object-src 'none'; base-uri 'self'` (`SecurityHeaders`, Security-Review 20.10.2026). HSTS ein Jahr ausserhalb von Development. Blazor setzt keine eigene CSP, Antiforgery kein eigenes `X-Frame-Options`. Eine volle CSP mit `script-src` braucht wegen der Inline-Skripte von Blazor und MudBlazor Nonces und kommt später.
+
 ## Background Worker
 
 - `ForecastWorker` (BackgroundService) im Web-Host. Er enthält nur Zeitplan und Aufruf des Commands `RunForecast`.

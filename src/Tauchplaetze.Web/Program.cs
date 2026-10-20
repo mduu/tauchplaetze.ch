@@ -6,6 +6,7 @@ using Tauchplaetze.Web.CrossCutting.Database;
 using Tauchplaetze.Web.CrossCutting.Health;
 using Tauchplaetze.Web.CrossCutting.Localization;
 using Tauchplaetze.Web.CrossCutting.RateLimiting;
+using Tauchplaetze.Web.CrossCutting.Security;
 using Tauchplaetze.Web.Features.About;
 using Tauchplaetze.Web.Features.Accounts;
 using Tauchplaetze.Web.Features.Forecasts;
@@ -30,6 +31,7 @@ builder.Services.AddHostedService<MailQueueWorker>();
 builder.Services.AddHostedService<DeadLetterMonitorWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));
 builder.Services.AddRateLimits(builder.Configuration);
+builder.Services.AddSecurityHeaders();
 ReadinessCheck.Register(builder.Services);
 
 var app = builder.Build();
@@ -47,6 +49,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSecurityHeaders();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseRequestLocalization();
@@ -61,7 +64,7 @@ app.MapAccountEndpoints();
 app.MapMediaEndpoints();
 app.MapContentEndpoints();
 app.MapMovedPages();
-app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode(options => options.ContentSecurityFrameAncestorsPolicy = null);
 app.MapDefaultEndpoints();
 ReadinessCheck.Map(app);
 
