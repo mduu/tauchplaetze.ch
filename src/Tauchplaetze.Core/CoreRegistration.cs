@@ -45,7 +45,7 @@ public static class CoreRegistration
         builder.Services.Configure<ContactOptions>(builder.Configuration.GetSection(ContactOptions.Section));
         builder.Services.Configure<NotificationOptions>(builder.Configuration.GetSection(NotificationOptions.Section));
         builder.Services.Configure<ContentOptions>(builder.Configuration.GetSection(ContentOptions.Section));
-        builder.Services.Configure<BafuForecastOptions>(builder.Configuration.GetSection(BafuForecastOptions.Section));
+        BafuForecastOptions.Register(builder.Services, builder.Configuration.GetSection(BafuForecastOptions.Section));
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddHandlers(typeof(CoreRegistration).Assembly);
         builder.Services.AddCoreModules(typeof(CoreRegistration).Assembly);
