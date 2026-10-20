@@ -27,6 +27,7 @@ using Tauchplaetze.Core.Features.Media.Queries;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
+using Tauchplaetze.Core.Features.Operations.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -44,6 +45,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
     public FakeQuery<GetWaterBodyIndexHistoryQuery, WaterBodyIndexHistory> WaterBodyHistory { get; } = new(_ => new WaterBodyIndexHistory([], []));
 
     public FakeBestSites BestSites { get; } = new();
+
+    public FakeQuery<GetReadinessQuery, Readiness> Readiness { get; } = new(_ => new Readiness(true, null, null));
 
     public FakeQuery<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> SiteList { get; } = new(_ => []);
 
@@ -122,6 +125,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
         {
             services.RemoveAll<IHostedService>();
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetReadinessQuery, Readiness>>(Readiness));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteDischargeQuery, SiteDischarge?>>(Discharge));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteIndexHistoryQuery, SiteIndexHistory>>(SiteHistory));
@@ -244,9 +248,12 @@ public sealed class FakeQuery<TQuery, TResult>(Func<TQuery, TResult> answer) : I
 
     public TQuery? LastQuery { get; private set; }
 
+    public int Calls { get; private set; }
+
     public Task<TResult> Handle(TQuery query, CancellationToken ct = default)
     {
         LastQuery = query;
+        Calls++;
         return Task.FromResult(Answer(query));
     }
 }

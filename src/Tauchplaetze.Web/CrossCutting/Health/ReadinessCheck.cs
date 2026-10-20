@@ -5,22 +5,42 @@ using Tauchplaetze.Core.Features.Operations.Queries;
 
 namespace Tauchplaetze.Web.CrossCutting.Health;
 
-/// <summary>`/health/ready`: Datenbank erreichbar und ein Prognose-Lauf jünger als 30 h. Weckt die Datenbank, darum nicht für den Health Check von App Service.</summary>
-internal class ReadinessCheck(IQueryHandler<GetReadinessQuery, Readiness> readiness) : IHealthCheck
+/// <summary>
+/// `/health/ready`: Datenbank erreichbar und ein Prognose-Lauf jünger als 30 h. Der Endpoint ist öffentlich.
+/// Das Ergebnis gilt <see cref="CacheFor"/>, so treffen viele Aufrufe die Datenbank höchstens zweimal pro Minute.
+/// </summary>
+internal class ReadinessCheck(IQueryHandler<GetReadinessQuery, Readiness> readiness, ReadinessCheck.Cache cache, TimeProvider time) : IHealthCheck
 {
     public const string Path = "/health/ready";
 
     private const string Tag = "ready";
 
+    private static readonly TimeSpan CacheFor = TimeSpan.FromSeconds(30);
+
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
-        var result = await readiness.Handle(new GetReadinessQuery(), cancellationToken);
-        return result.IsReady ? HealthCheckResult.Healthy() : HealthCheckResult.Unhealthy(result.Problem);
+        var now = time.GetUtcNow();
+        if (cache.Last is not { } last || now - last.CheckedAt > CacheFor)
+        {
+            last = (now, await readiness.Handle(new GetReadinessQuery(), cancellationToken));
+            cache.Last = last;
+        }
+
+        return last.Result.IsReady ? HealthCheckResult.Healthy() : HealthCheckResult.Unhealthy(last.Result.Problem);
     }
 
-    public static void Register(IServiceCollection services) =>
+    public static void Register(IServiceCollection services)
+    {
+        services.AddSingleton<Cache>();
         services.AddHealthChecks().AddCheck<ReadinessCheck>(Tag, tags: [Tag]);
+    }
 
     public static void Map(WebApplication app) =>
         app.MapHealthChecks(Path, new HealthCheckOptions { Predicate = r => r.Tags.Contains(Tag) });
+
+    /// <summary>Das letzte Ergebnis, für alle Aufrufe gemeinsam.</summary>
+    internal sealed class Cache
+    {
+        public (DateTimeOffset CheckedAt, Readiness Result)? Last { get; set; }
+    }
 }
