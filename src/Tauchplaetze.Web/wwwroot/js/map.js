@@ -13,10 +13,11 @@ window.tauchplaetzeMap = (function () {
   const siteLabelZoom = 13;
   let maps = [];
 
+  // Auch für Attribute: innerHTML maskiert keine Anführungszeichen.
   function escapeHtml(text) {
     const span = document.createElement('span');
     span.textContent = text;
-    return span.innerHTML;
+    return span.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   // Farben aus den Design Tokens (design-system.md), damit tokens.css die einzige Quelle bleibt.
@@ -33,7 +34,7 @@ window.tauchplaetzeMap = (function () {
   // Mit minZoom ist sie erst ab diesem Zoom dauerhaft, darunter erscheint sie beim Antippen oder Darüberfahren.
   // Ein Klick auf den Punkt öffnet die Seite, wenn die Beschriftung sichtbar ist, sonst zuerst die Beschriftung.
   function labelled(marker, item, html, side, priority, minZoom) {
-    const content = item.url ? '<a href="' + item.url + '">' + html + '</a>' : html;
+    const content = item.url ? '<a href="' + escapeHtml(item.url) + '">' + html + '</a>' : html;
     marker.options.labelPriority = priority || 0;
     marker.options.labelMinZoom = minZoom || 0;
 

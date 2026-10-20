@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.Accounts.Queries;
@@ -13,8 +14,13 @@ internal static class AccountEndpoints
 
     public static IEndpointRouteBuilder MapAccountEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/{lang}/account/sign-out", async (string lang, HttpContext context) =>
+        endpoints.MapPost("/{lang}/account/sign-out", async (string lang, HttpContext context, IAntiforgery antiforgery) =>
         {
+            if (!await antiforgery.IsRequestValidAsync(context))
+            {
+                return Results.BadRequest();
+            }
+
             await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Results.Redirect($"/{(Languages.IsSupported(lang) ? lang : Languages.Default)}");
         });

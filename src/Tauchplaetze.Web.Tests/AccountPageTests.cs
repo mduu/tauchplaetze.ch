@@ -79,6 +79,40 @@ public class AccountPageTests : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Abmelden_ohne_Antiforgery_Token_wird_abgewiesen()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser, "/de/account/sign-in", "richtiges-passwort");
+
+        // Act
+        using var response = await browser.PostAsync("/de/account/sign-out", new FormUrlEncodedContent([]), TestContext.Current.CancellationToken);
+        using var profile = await browser.GetAsync("/de/account/profile", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, profile.StatusCode);
+    }
+
+    [Fact]
+    public async Task Abmelden_mit_dem_Token_aus_dem_Menue_meldet_ab()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser, "/de/account/sign-in", "richtiges-passwort");
+        var page = await browser.GetStringAsync("/de/account/profile", TestContext.Current.CancellationToken);
+        var token = System.Text.RegularExpressions.Regex.Match(page, "name=\"__RequestVerificationToken\" value=\"([^\"]+)\"").Groups[1].Value;
+
+        // Act
+        using var response = await browser.PostAsync("/de/account/sign-out", new FormUrlEncodedContent(new Dictionary<string, string> { ["__RequestVerificationToken"] = token }), TestContext.Current.CancellationToken);
+        using var profile = await browser.GetAsync("/de/account/profile", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Redirect, profile.StatusCode);
+    }
+
+    [Fact]
     public async Task Ein_gesperrtes_Konto_bekommt_dieselbe_Antwort_wie_ein_falsches_Passwort()
     {
         // Arrange
