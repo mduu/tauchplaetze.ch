@@ -40,4 +40,8 @@
   <data name="Contact_NoName" xml:space="preserve"><value>(senza nome)</value></data>
   <data name="Contact_General" xml:space="preserve"><value>Generale</value></data>
   <data name="Layout_Footer_Operator" xml:space="preserve"><value>Questo messaggio è arrivato dal modulo di contatto di tauchplaetze.ch. Il sito non lo salva.</value></data>
+  <data name="Exists_Subject" xml:space="preserve"><value>Hai già un account su tauchplaetze.ch</value></data>
+  <data name="Exists_Text" xml:space="preserve"><value>Qualcuno ha voluto creare un nuovo account con il tuo indirizzo e-mail. Ne hai già uno. Accedi. Se non ricordi la password, scegli «Password dimenticata» nella pagina di accesso.</value></data>
+  <data name="Exists_Button" xml:space="preserve"><value>Accedi</value></data>
+  <data name="Exists_Ignore" xml:space="preserve"><value>Non volevi creare un account? Allora ignora questa e-mail.</value></data>
 </root>

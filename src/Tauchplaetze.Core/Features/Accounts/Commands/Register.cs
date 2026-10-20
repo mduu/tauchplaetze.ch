@@ -9,17 +9,28 @@ namespace Tauchplaetze.Core.Features.Accounts.Commands;
 
 /// <summary>
 /// Selbstregistrierung als Mitwirkende (`cms.md`, «Rollen»). Schickt eine Mail mit Link zur Bestätigung.
-/// <paramref name="ConfirmPathTemplate"/> ist ein Pfad der Website mit `{user}` und `{token}`.
+/// Ist die Adresse schon registriert, ist das Ergebnis dasselbe wie bei einem neuen Konto, und die Mail sagt «Du hast schon ein Konto» (keine Konto-Enumeration).
+/// <paramref name="ConfirmPathTemplate"/> ist ein Pfad der Website mit `{user}` und `{token}`, <paramref name="SignInPath"/> der Pfad der Anmeldung.
 /// </summary>
-public record RegisterCommand(string Email, string Password, string DisplayName, string Culture, string ConfirmPathTemplate);
+public record RegisterCommand(string Email, string Password, string DisplayName, string Culture, string ConfirmPathTemplate, string SignInPath = "/de/account/sign-in");
 
-internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOptions<AccountsOptions> options, IOptions<PublicSiteOptions> site, TimeProvider time) : ICommandHandler<RegisterCommand, AccountResult>
+internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOptions<AccountsOptions> options, IOptions<PublicSiteOptions> site, TimeProvider time, AccountMailCooldown cooldown) : ICommandHandler<RegisterCommand, AccountResult>
 {
     public async Task<AccountResult> Handle(RegisterCommand command, CancellationToken ct = default)
     {
         if (!options.Value.RegistrationOpen)
         {
             return AccountResult.Fail(AccountError.RegistrationClosed);
+        }
+
+        if (await users.FindByEmailAsync(command.Email.Trim()) is { Email: { } known } existing)
+        {
+            if (cooldown.TryStart(existing.Id, AccountMailCooldown.Registration))
+            {
+                await mail.SendNow(known, existing.PreferredCulture, new AccountExistsMail(existing.DisplayName, site.Value.Link(command.SignInPath)), ct);
+            }
+
+            return AccountResult.Ok;
         }
 
         var displayName = command.DisplayName.Trim();
@@ -41,6 +52,7 @@ internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOp
         }
 
         await users.AddToRoleAsync(user, Roles.Contributor);
+        cooldown.TryStart(user.Id, AccountMailCooldown.Registration);
         var token = await users.GenerateEmailConfirmationTokenAsync(user);
         await mail.SendNow(user.Email, user.PreferredCulture, new ConfirmEmailMail(displayName, site.Value.Link(AccountLinks.Build(command.ConfirmPathTemplate, user.Id, token))), ct);
         return AccountResult.Ok;

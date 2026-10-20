@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using System.Net;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
@@ -50,6 +52,45 @@ public class AccountPageTests : IClassFixture<WebApp>
         Assert.Contains("E-mail ou mot de passe incorrect.", VisibleText.Of(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)));
         Assert.Equal(HttpStatusCode.Redirect, profile.StatusCode);
         Assert.StartsWith("/fr/account/sign-in?returnUrl=", profile.Headers.Location?.OriginalString);
+    }
+
+    [Fact]
+    public async Task Der_vierte_Anmeldeversuch_in_einer_Stunde_landet_beim_Limit()
+    {
+        // Arrange
+        using var limited = app.WithWebHostBuilder(builder => builder.ConfigureAppConfiguration((_, config) =>
+            config.AddInMemoryCollection(new Dictionary<string, string?> { ["Accounts:RateLimit:SignInPerHour"] = "3" })));
+        using var browser = limited.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, BaseAddress = new Uri("https://localhost") });
+        var responses = new List<HttpResponseMessage>();
+
+        // Act
+        for (var attempt = 1; attempt <= 4; attempt++)
+        {
+            responses.Add(await SignIn(browser, "/it/account/sign-in", "falsch"));
+        }
+
+        using var limitPage = await browser.GetAsync(responses[3].Headers.Location, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.All(responses.Take(3), r => Assert.Equal(HttpStatusCode.OK, r.StatusCode));
+        Assert.Equal(HttpStatusCode.SeeOther, responses[3].StatusCode);
+        Assert.Equal("/it/account/sign-in?limit=1", responses[3].Headers.Location?.OriginalString);
+        Assert.Contains("Troppi tentativi dalla tua connessione.", VisibleText.Of(await limitPage.Content.ReadAsStringAsync(TestContext.Current.CancellationToken)));
+    }
+
+    [Fact]
+    public async Task Ein_gesperrtes_Konto_bekommt_dieselbe_Antwort_wie_ein_falsches_Passwort()
+    {
+        // Arrange
+        app.SignIn.Answer = _ => new SignInOutcome(SignInStatus.LockedOut);
+        using var browser = app.Browser();
+
+        // Act
+        using var response = await SignIn(browser, "/de/account/sign-in", "egal");
+
+        // Assert
+        var text = VisibleText.Of(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        Assert.Contains("E-Mail oder Passwort stimmt nicht.", text);
     }
 
     [Theory]

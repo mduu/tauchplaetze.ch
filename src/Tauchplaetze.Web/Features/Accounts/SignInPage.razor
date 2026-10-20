@@ -1,4 +1,5 @@
 @page "/{Lang}/account/sign-in"
+@attribute [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting(AccountFormsRateLimit.Policy)]
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Core.Features.Accounts.Commands
@@ -24,6 +25,9 @@
     [Parameter]
     public string? Lang { get; set; }
 
+    [SupplyParameterFromQuery(Name = "limit")]
+    public string? Limit { get; set; }
+
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
 
@@ -38,6 +42,10 @@
     protected override void OnInitialized()
     {
         Input ??= new SignInInput();
+        if (Limit is not null)
+        {
+            messages = [L["Account_Limit"]];
+        }
         if (!Languages.IsSupported(Lang))
         {
             Navigation.NotFound();
@@ -54,7 +62,7 @@
             return;
         }
 
-        messages = [L[$"SignIn_{outcome.Status}"]];
+        messages = [L[$"SignIn_{(outcome.Status == SignInStatus.LockedOut ? SignInStatus.Failed : outcome.Status)}"]];
     }
 
     private sealed class SignInInput

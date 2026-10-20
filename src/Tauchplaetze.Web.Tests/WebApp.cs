@@ -120,6 +120,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
         {
             ["Operator:Email"] = OperatorEmail,
             ["Contact:MessagesPerHour"] = "1000",
+            ["Accounts:RateLimit:SignInPerHour"] = "1000",
+            ["Accounts:RateLimit:FormsPerHour"] = "1000",
         }));
         builder.ConfigureTestServices(services =>
         {

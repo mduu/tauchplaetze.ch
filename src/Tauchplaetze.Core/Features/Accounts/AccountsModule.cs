@@ -9,7 +9,7 @@ namespace Tauchplaetze.Core.Features.Accounts;
 internal class AccountsModule : ICoreModule
 {
     /// <remarks>
-    /// Passwort ab 10 Zeichen ohne Vorgaben zur Zusammensetzung (NIST SP 800-63B). Nach 5 Fehlversuchen 15 Minuten Lockout.
+    /// Passwort ab 10 Zeichen ohne Vorgaben zur Zusammensetzung (NIST SP 800-63B). Nach 5 Fehlversuchen 15 Minuten Lockout. Mails zum Konto höchstens eine pro 15 Minuten (<see cref="AccountMailCooldown"/>).
     /// Die Tokens für Bestätigung und neues Passwort gelten einen Tag (<see cref="ProtectedTokenProvider"/>).
     /// </remarks>
     public void Register(IServiceCollection services)
@@ -33,5 +33,6 @@ internal class AccountsModule : ICoreModule
             .AddTokenProvider<ProtectedTokenProvider>(TokenOptions.DefaultProvider);
         services.AddScoped<AccountRoles>();
         services.AddScoped<AccountDeletion>();
+        services.AddSingleton<AccountMailCooldown>();
     }
 }

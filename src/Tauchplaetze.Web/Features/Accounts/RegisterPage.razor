@@ -1,4 +1,5 @@
 @page "/{Lang}/account/register"
+@attribute [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting(AccountFormsRateLimit.Policy)]
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Core.Features.Accounts.Commands
@@ -32,6 +33,9 @@ else
     [Parameter]
     public string? Lang { get; set; }
 
+    [SupplyParameterFromQuery(Name = "limit")]
+    public string? Limit { get; set; }
+
     [SupplyParameterFromForm]
     private RegisterInput? Input { get; set; }
 
@@ -40,6 +44,10 @@ else
     protected override void OnInitialized()
     {
         Input ??= new RegisterInput();
+        if (Limit is not null)
+        {
+            messages = [L["Account_Limit"]];
+        }
         if (!Languages.IsSupported(Lang))
         {
             Navigation.NotFound();
@@ -48,7 +56,7 @@ else
 
     private async Task Submit()
     {
-        var result = await Register.Handle(new RegisterCommand(Input!.Email, Input!.Password, Input!.DisplayName, Language, AccountPaths.ConfirmTemplate(Language)));
+        var result = await Register.Handle(new RegisterCommand(Input!.Email, Input!.Password, Input!.DisplayName, Language, AccountPaths.ConfirmTemplate(Language), AccountPaths.SignIn(Language)));
         done = result.Succeeded;
         messages = AccountText.Errors(L, result);
     }

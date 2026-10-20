@@ -8,9 +8,8 @@
   <data name="Email" xml:space="preserve"><value>E-mail</value></data>
   <data name="Password" xml:space="preserve"><value>Password</value></data>
   <data name="SignIn_Submit" xml:space="preserve"><value>Accedi</value></data>
-  <data name="SignIn_Failed" xml:space="preserve"><value>E-mail o password errata.</value></data>
+  <data name="SignIn_Failed" xml:space="preserve"><value>E-mail o password errata. Dopo 5 tentativi errati l'accesso è bloccato per 15 minuti.</value></data>
   <data name="SignIn_NotConfirmed" xml:space="preserve"><value>Conferma prima il tuo indirizzo e-mail. Trovi il link nell'e-mail.</value></data>
-  <data name="SignIn_LockedOut" xml:space="preserve"><value>Troppi tentativi. Riprova tra 15 minuti.</value></data>
   <data name="SignIn_Blocked" xml:space="preserve"><value>Questo account è bloccato.</value></data>
   <data name="SignIn_Forgot" xml:space="preserve"><value>Password dimenticata?</value></data>
   <data name="SignIn_Register" xml:space="preserve"><value>Non hai ancora un account? Registrati</value></data>
@@ -80,4 +79,5 @@
   <data name="Delete_Photos" xml:space="preserve"><value>Le foto ancora private vengono eliminate. Le foto pubbliche restano con il nome del fotografo, senza collegamento al tuo account.</value></data>
   <data name="MyData_CreatedAt" xml:space="preserve"><value>Registrato il</value></data>
   <data name="MyData_LastSignInAt" xml:space="preserve"><value>Ultimo accesso</value></data>
+  <data name="Account_Limit" xml:space="preserve"><value>Troppi tentativi dalla tua connessione. Riprova tra un'ora.</value></data>
 </root>

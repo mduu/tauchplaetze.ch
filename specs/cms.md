@@ -276,6 +276,10 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 
 - Anmeldung mit ASP.NET Core Identity: E-Mail plus Passkey oder Passwort.
 - **Selbstregistrierung** für Mitwirkende (Entscheid Marc, 17.10.2026): E-Mail bestätigen, Anzeigename wählen (Pseudonym erlaubt). Öffentlich erscheint der Anzeigename nur mit Einwilligung (siehe «Datenschutz in der History»). Ab Phase 1 offen, im MVP ausgeschaltet (`Accounts:RegistrationOpen`).
+- **Schutz der Konten** (Security-Review, 20.10.2026):
+  - **Keine Konto-Enumeration:** Eine Registrierung mit bekannter Adresse meldet denselben Erfolg wie eine neue. Die Mail an die bestehende Adresse sagt «Du hast schon ein Konto». Ein gesperrtes Konto (Lockout) bekommt bei der Anmeldung dieselbe Antwort wie ein falsches Passwort. «Passwort vergessen» antwortet immer gleich.
+  - **Lockout:** nach 5 Fehlversuchen 15 Minuten, nicht eskalierend. Eine Eskalation würde das Sperren fremder Konten (DoS) verschärfen. Dagegen hilft das Rate Limit pro Client.
+  - **Abkühlzeit:** höchstens eine Mail derselben Art pro Konto in 15 Minuten (Bestätigung oder «Konto besteht schon», neues Passwort), nur im Arbeitsspeicher.
 - Admins ernennen Moderatoren.
 - **Der letzte aktive Admin bleibt** (Entscheid Marc, 18.10.2026). Sperren, die Rolle Admin wegnehmen und das Konto löschen lehnt der Core mit `LastAdmin` ab, wenn danach kein Admin ohne Sperre übrig wäre.
 - Löscht jemand sein Konto, bleiben die Versionen. Autor bzw. Approver wird «gelöschtes Konto». Das erfüllt das Recht auf Löschung und hält die History vollständig.

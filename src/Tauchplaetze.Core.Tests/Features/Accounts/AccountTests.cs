@@ -64,7 +64,8 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
             scope.ServiceProvider.GetRequiredService<MailDispatcher>(),
             Options.Create(new AccountsOptions { RegistrationOpen = false }),
             Options.Create(new PublicSiteOptions()),
-            Sql.Time);
+            Sql.Time,
+            new AccountMailCooldown(Sql.Time));
 
         // Act
         var result = await handler.Handle(new RegisterCommand(Email, Password, "Anna", "de", ConfirmTemplate), TestContext.Current.CancellationToken);
@@ -72,6 +73,44 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
         // Assert
         Assert.Equal([AccountError.RegistrationClosed], result.Errors);
         Assert.Empty(Sql.Mail.Sent);
+    }
+
+    [SqlFact]
+    public async Task Eine_Registrierung_mit_bekannter_Adresse_meldet_Erfolg_und_schickt_nur_den_Hinweis_auf_das_bestehende_Konto()
+    {
+        // Arrange
+        await RegisterAndConfirm();
+        Sql.Time.Now += AccountMailCooldown.Cooldown;
+        var before = Sql.Mail.Sent.Count;
+
+        // Act
+        var result = await Command<RegisterCommand, AccountResult>(new RegisterCommand(Email, "Anderes-Passwort-1", "Anna Zwei", "de", ConfirmTemplate));
+
+        // Assert
+        Assert.True(result.Succeeded);
+        var mail = Assert.Single(Sql.Mail.Sent.Skip(before));
+        Assert.Equal(Email, mail.To);
+        Assert.Contains("schon", mail.Subject, StringComparison.Ordinal);
+        Assert.Equal(SignInStatus.Succeeded, (await SignIn(Password)).Status);
+    }
+
+    [SqlFact]
+    public async Task Ein_zweiter_Link_fuer_ein_neues_Passwort_geht_erst_nach_15_Minuten_hinaus()
+    {
+        // Arrange
+        await RegisterAndConfirm();
+        var before = Sql.Mail.Sent.Count;
+
+        // Act
+        await Command<RequestPasswordResetCommand, Unit>(new RequestPasswordResetCommand(Email, ResetTemplate));
+        await Command<RequestPasswordResetCommand, Unit>(new RequestPasswordResetCommand(Email, ResetTemplate));
+        var afterTwo = Sql.Mail.Sent.Count - before;
+        Sql.Time.Now += AccountMailCooldown.Cooldown;
+        await Command<RequestPasswordResetCommand, Unit>(new RequestPasswordResetCommand(Email, ResetTemplate));
+
+        // Assert
+        Assert.Equal(1, afterTwo);
+        Assert.Equal(2, Sql.Mail.Sent.Count - before);
     }
 
     [SqlFact]

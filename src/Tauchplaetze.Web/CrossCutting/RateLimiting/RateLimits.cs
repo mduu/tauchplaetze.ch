@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using Tauchplaetze.Web.Features.About;
+using Tauchplaetze.Web.Features.Accounts;
 using Tauchplaetze.Web.Features.Platform;
 
 namespace Tauchplaetze.Web.CrossCutting.RateLimiting;
@@ -10,10 +11,13 @@ namespace Tauchplaetze.Web.CrossCutting.RateLimiting;
 internal static class RateLimits
 {
     public static IServiceCollection AddRateLimits(this IServiceCollection services, IConfiguration configuration) =>
-        services.Configure<ContactRateLimitOptions>(configuration.GetSection(ContactRateLimitOptions.Section)).AddRateLimiter(options =>
+        services.Configure<ContactRateLimitOptions>(configuration.GetSection(ContactRateLimitOptions.Section))
+            .Configure<AccountFormsRateLimitOptions>(configuration.GetSection(AccountFormsRateLimitOptions.Section))
+            .AddRateLimiter(options =>
         {
             ContactRateLimit.AddPolicy(options);
             ContentEndpoints.AddRateLimitPolicy(options);
+            AccountFormsRateLimit.AddPolicy(options);
             options.OnRejected = Reject;
         });
 
@@ -35,12 +39,18 @@ internal static class RateLimits
         };
     }
 
-    /// <summary>Endpoints unter `/api` bekommen 429, Formulare eine Umleitung mit Hinweis.</summary>
+    /// <summary>Endpoints unter `/api` bekommen 429, Formulare eine Umleitung mit Hinweis auf derselben Seite.</summary>
     private static ValueTask Reject(OnRejectedContext context, CancellationToken ct)
     {
         if (context.HttpContext.Request.Path.StartsWithSegments("/api"))
         {
             context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            return ValueTask.CompletedTask;
+        }
+
+        if (AccountFormsRateLimit.Handles(context.HttpContext.Request))
+        {
+            AccountFormsRateLimit.Reject(context.HttpContext);
             return ValueTask.CompletedTask;
         }
 

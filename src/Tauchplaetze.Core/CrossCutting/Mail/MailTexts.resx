@@ -40,4 +40,8 @@
   <data name="Contact_NoName" xml:space="preserve"><value>(ohne Namen)</value></data>
   <data name="Contact_General" xml:space="preserve"><value>Allgemein</value></data>
   <data name="Layout_Footer_Operator" xml:space="preserve"><value>Diese Nachricht kam über das Kontaktformular von tauchplaetze.ch. Die Website speichert sie nicht.</value></data>
+  <data name="Exists_Subject" xml:space="preserve"><value>Du hast schon ein Konto bei tauchplaetze.ch</value></data>
+  <data name="Exists_Text" xml:space="preserve"><value>Mit deiner E-Mail-Adresse wollte jemand ein neues Konto anlegen. Du hast schon eines. Melde dich an. Weisst du das Passwort nicht mehr, wähle bei der Anmeldung «Passwort vergessen».</value></data>
+  <data name="Exists_Button" xml:space="preserve"><value>Anmelden</value></data>
+  <data name="Exists_Ignore" xml:space="preserve"><value>Wolltest du kein Konto anlegen? Dann ignoriere diese Mail.</value></data>
 </root>
