@@ -6,11 +6,14 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 
 | # | Frage | Nächster Schritt |
 |---|---|---|
-| 26 | **Welcher Mail-Dienst versendet in Prod die Mails** (Bestätigung, Passwort, Freigabe)? Der Datenschutz muss ihn nennen, wenn er Daten ausserhalb der Schweiz bearbeitet. | Vor dem Go-Live entscheiden und in `infrastructure.md` und im Datenschutz nachtragen. |
 | 27 | **Koordinaten in der Telemetrie:** «In meiner Nähe» und der Umkreis der Startseite tragen `lat`/`lng` in der Adresse. Application Insights speichert die Adressen 30 Tage. | Vorschlag: Query-Parameter `lat`, `lng` vor dem Senden entfernen oder runden (Telemetry Processor). Dann den Satz im Datenschutz anpassen. |
 | 28 | **Datenschutz vor dem Go-Live prüfen lassen** (nDSG, Bekanntgabe ins Ausland: Cloudflare, Microsoft, Mail-Dienst). Der Text auf «Über» ist ein sorgfältiger Entwurf, keine Rechtsberatung. | Marc entscheidet, ob eine Fachperson drüberschaut. |
-| 29 | **Data-Protection-Schlüssel in Prod:** `AddDataProtection()` ohne `PersistKeysTo…`. Nach jedem Neustart oder Deploy sind Anmelde-Cookies ungültig und offene Kontaktformulare «abgelaufen». | Vor dem Go-Live: Schlüssel in Blob Storage ablegen (`PersistKeysToAzureBlobStorage`), optional mit Key Vault schützen. |
 | 30 | **Health-Check für die Mail-Queue:** `/health/ready` prüft heute nur die App. Soll er die Queue (und die Dead-Letter-Queue) einschliessen? | Mit dem Deployment klären. Die Aspire-Integration für Queues bringt einen Health-Check mit, er ist nur noch nicht an `/health/ready` gebunden. |
+
+## Erledigt am 20.10.2026
+
+- #26 (Mail-Dienst in Prod): Hostpoint SMTP, ADR-012. Im Datenschutz nachtragen (#28).
+- #29 (Data-Protection-Schlüssel in Prod): in Blob Storage, geschützt mit einem Key aus Key Vault, `infrastructure.md` (IaC).
 
 ## Erledigt am 17.10.2026
 

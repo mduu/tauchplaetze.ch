@@ -1,6 +1,8 @@
 # Infrastruktur und Deployment
 
-Ziel: Betrieb unter **CHF 20 pro Monat**. Region: **Switzerland North**.
+Ziel: Betrieb unter **CHF 20 pro Monat**. Region: **Switzerland North** (Entscheid Marc, 20.10.2026; Rückfall West Europe). Serverless und das Free Offer sind dort verfügbar (geprüft 20.10.2026 mit `az sql db list-editions`).
+
+Bicep: `deploy/main.bicep` (Subscription-Scope, legt die Resource Group an), Module in `deploy/modules/`, Werte in `deploy/main.bicepparam`. Schritte zum Go-live: `doc/go-live.md`.
 
 ## Azure-Ressourcen
 
@@ -12,7 +14,9 @@ Ziel: Betrieb unter **CHF 20 pro Monat**. Region: **Switzerland North**.
 | SQL Server (logisch) | `sql-tauchplaetze-prod` | – | nur Entra-Authentifizierung |
 | SQL Database | `sqldb-tauchplaetze` | General Purpose Serverless, **Free Offer** | siehe unten |
 | Storage Account | `sttauchplaetzeprod` | Standard LRS | Container `media`, `forecast-raw`, `models`, `locks` |
-| Log Analytics + Application Insights | `appi-tauchplaetze-prod` | Pay-as-you-go | tägliches Limit setzen, Sampling aktiv, Aufbewahrung 30 Tage, IP-Adressen nicht speichern (Standard von Application Insights, nicht ändern) |
+| Log Analytics + Application Insights | `log-tauchplaetze-prod`, `appi-tauchplaetze-prod` | Pay-as-you-go | Tageslimit 0.15 GB (unter dem Gratisvolumen von 5 GB im Monat), Sampling 50 % der Traces, Aufbewahrung 30 Tage, IP-Adressen nicht speichern (Standard von Application Insights, nicht ändern) |
+| Key Vault | `kv-tauchplaetze-prod` | Standard, RBAC | Secrets der App, Key `dataprotection` |
+| Action Group, Alerts, Budget | `ag-tauchplaetze-prod`, `alert-*`, `budget-tauchplaetze-prod` | – | nur mit `ALERT_EMAIL`, siehe «Betrieb» |
 
 Ausserhalb von Azure:
 
@@ -66,16 +70,22 @@ Quelle: Microsoft Learn, «Azure SQL Database free offer».
 
 Lifecycle-Regel: `forecast-raw` nach 90 Tagen in die Cool-Stufe. `revisions` bleibt in der Hot-Stufe (kleine Dateien, selten gelesen, aber die History soll schnell laden).
 
-## Kosten (Schätzung, vor dem Start im Azure Pricing Calculator prüfen)
+## Kosten (Listenpreise Switzerland North in CHF, Azure Retail Prices API, 20.10.2026)
 
-| Posten | ca. pro Monat |
-|---|---|
-| App Service B1 Linux | CHF 10–15 |
-| Azure SQL Free Offer | CHF 0 |
-| Blob Storage (einige GB) und Storage Queues | unter CHF 1 |
-| Application Insights (mit Limit) | CHF 0–3 |
-| Cloudflare, GitHub | CHF 0 |
-| **Total** | **ca. CHF 11–19** |
+| Posten | Preis | ca. pro Monat |
+|---|---|---|
+| App Service B1 Linux | 0.0165 pro Stunde | CHF 12.05 |
+| Azure SQL Free Offer | 0 bis zum Kontingent | CHF 0 |
+| oder Azure SQL Basic (5 DTU) | 0.1474 pro Tag | CHF 4.50 |
+| Serverless über dem Kontingent (nur mit «Continue») | 0.5253 pro vCore-Stunde | bei dauernd 0.5 vCore rund CHF 190 |
+| Blob Storage (einige GB), Storage Queues, Key Vault | | unter CHF 1 |
+| Log Analytics mit Tageslimit 0.15 GB | im Gratisvolumen | CHF 0 |
+| Alerts (2–3 Metrik-Alerts, 3 Log-Alerts stündlich) | | CHF 0.50–2 |
+| Cloudflare, GitHub | | CHF 0 |
+| **Total mit Free Offer** | | **ca. CHF 13–15** |
+| **Total mit Basic** | | **ca. CHF 18–20** |
+
+**Risiko Free Offer (20.10.2026):** 100 000 vCore-Sekunden sind bei 0.5 vCore rund 55 Stunden online im Monat. Jeder Zugriff hält die Datenbank mindestens 15 Minuten wach (`autoPauseDelay`). Der Abfluss-Job schreibt alle 30 Minuten, dazu kommen Besucher und Prognose-Läufe. Die Datenbank wäre so fast immer online, das Kontingent nach wenigen Tagen aufgebraucht. Mit «Auto-pause» ist die Datenbank dann bis Monatsende nicht erreichbar. Empfehlung: `sqlPlan = 'Basic'` in `main.bicepparam` (eine Zeile, Entscheid Marc offen).
 
 Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos DB (unnötig), Premium-SKUs.
 
@@ -90,28 +100,33 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 - **Betreiber für Impressum und Kontakt:** `Operator:Name` und `Operator:Address` (Zeilen mit `\n`) stehen im Impressum. `Operator:Email` ist nur der Empfänger des Kontaktformulars und erscheint nie auf der Website. Name und Adresse stehen in `appsettings.json` (Stand 18.10.2026: Marc Dürst, Privatperson). Die E-Mail steht nie in einer Datei im Repository: lokal als User Secret der Web-App, in Prod als App Setting bzw. Secret der App (`Operator__Email`). Fehlt eine Angabe, zeigt das Impressum «Angaben folgen» bzw. das Formular einen Fehler, und der Start schreibt eine Warnung ins Log. Vor dem Go-Live vollständig.
 - **Rate Limit Kontaktformular:** `Contact:MessagesPerHour` (Standard 5) pro Stunde und Client, nur im Arbeitsspeicher der App (bei mehreren Instanzen pro Instanz), IPv6 auf das /64-Netz gekürzt. `CF-Connecting-IP` zählt nur mit `Contact:TrustCloudflareHeader = true`. In Prod: Ingress der App auf die IP-Bereiche von Cloudflare beschränken (Access Restrictions) und erst dann den Schalter setzen. Ohne Beschränkung könnte jede Anfrage den Header fälschen. Die Data-Protection-Schlüssel für die Zeitfalle müssen in Prod über Neustarts bestehen (Blob Storage), sonst sind offene Formulare nach einem Neustart «abgelaufen».
 - **Links in Mails:** `PublicSite:BaseUri` (Standard `https://tauchplaetze.ch`). Lokal setzt Aspire die Adresse der Web-App. Die Links kommen nie aus dem Host-Header der Anfrage (Entscheid Marc, 18.10.2026).
-- **Inhalt von Prod nach lokal (ADR-011):** In Prod `Content__ExportKey` als Secret der App (lang, zufällig, z.B. `openssl rand -base64 32`). Ohne Wert ist `/api/platform/content-export` aus (404). Lokal setzt Aspire `Content__ImportEnabled=true`. Für den Abruf als User Secrets der Web-App: `dotnet user-secrets set "Content:SourceBaseUri" "https://tauchplaetze.ch/"` und `dotnet user-secrets set "Content:ExportKey" "…"` (derselbe Wert wie in Prod). Ablauf: in Prod erfassen, lokal auf `/platform/inhalt` «Aus Prod übernehmen». In Prod `Content:ImportEnabled` nie setzen. Der Abruf geht nur über HTTPS. Das Rate Limit des Endpoints (10 pro Stunde) zählt den Client wie das Kontaktformular.
-- **BAFU-Abflussvorhersage:** In Prod `Hydro__Forecast__Username` und `Hydro__Forecast__Password` als Secret der App (Key Vault-Referenz), lokal als User Secrets der Web-App (`Hydro:Forecast:Username`, `Hydro:Forecast:Password`), in einem eigenen Terminal gesetzt, nie im Chat. Ohne Werte holt der Abfluss-Job keine Vorhersage. `Hydro__Forecast__BaseUrl` nur über HTTPS.
+- **Inhalt von Prod nach lokal (ADR-011):** In Prod das Secret `Content--ExportKey` im Key Vault (lang, zufällig, z.B. `openssl rand -base64 32`). Ohne Wert ist `/api/platform/content-export` aus (404). Lokal setzt Aspire `Content__ImportEnabled=true`. Für den Abruf als User Secrets der Web-App: `dotnet user-secrets set "Content:SourceBaseUri" "https://tauchplaetze.ch/"` und `dotnet user-secrets set "Content:ExportKey" "…"` (derselbe Wert wie in Prod). Ablauf: in Prod erfassen, lokal auf `/platform/inhalt` «Aus Prod übernehmen». In Prod `Content:ImportEnabled` nie setzen. Der Abruf geht nur über HTTPS. Das Rate Limit des Endpoints (10 pro Stunde) zählt den Client wie das Kontaktformular.
+- **BAFU-Abflussvorhersage:** In Prod die Secrets `Hydro--Forecast--Username` und `Hydro--Forecast--Password` im Key Vault, lokal als User Secrets der Web-App (`Hydro:Forecast:Username`, `Hydro:Forecast:Password`), in einem eigenen Terminal gesetzt, nie im Chat. Ohne Werte holt der Abfluss-Job keine Vorhersage. `Hydro__Forecast__BaseUrl` nur über HTTPS.
 - **PROD:** einzige Cloud-Umgebung (wie feldnah). Keine Test-Umgebung in Azure. Ein Health Check nach dem Deploy ist das Sicherheitsnetz.
 
 ## IaC
 
-- Azure Bicep in `/deploy` (wie feldnah).
-- Infra-Deploy manuell über `workflow_dispatch`.
+- Azure Bicep in `/deploy` (wie feldnah). Infra-Deploy manuell über `infra.yml` (`workflow_dispatch`: what-if, dann Deploy mit Freigabe im Environment `prod`).
+- Persönliche Werte (Object ID des SQL-Admins, Adresse für Alerts) kommen aus Umgebungsvariablen (`readEnvironmentVariable` in `main.bicepparam`), in GitHub aus Variablen und Secrets.
+- **Keine Secrets im Template.** Bicep legt keine Key-Vault-Secrets an, ein Deploy würde sonst gesetzte Werte überschreiben. Marc setzt sie einmal (`doc/go-live.md`).
+- **Zugriff nur über Entra:** SQL nur mit Entra-Anmeldung, Storage ohne Schlüssel (`allowSharedKeyAccess: false`), Deploy ohne Basic-Auth für FTP und SCM. Die Managed Identity der App hat «Storage Blob Data Contributor», «Storage Queue Data Contributor», «Key Vault Secrets User» und «Key Vault Crypto User». Den SQL-Benutzer legt Marc per SQL an (`db_owner`, weil die App migriert).
+- **App Settings (prod):** Connection Strings `tauchplaetze` (`Authentication=Active Directory Default`, Timeout 90 s wegen Serverless), `blobs` und `queues` als Endpoint-Adresse (Aspire nimmt dann die Managed Identity). `KeyVault__Uri`: Die App liest die Secrets beim Start selbst (`--` wird `:`), fehlende Secrets fehlen nur als Wert. `DataProtection__KeysBlobUri` (`dataprotection/keys.xml`) und `DataProtection__KeyVaultKeyUri`: Schlüssel der Data Protection in Blob, geschützt mit dem Key (offener Punkt #29 erledigt). `APPLICATIONINSIGHTS_CONNECTION_STRING`. `Database__PrepareOnStartup=true`. Mail über Hostpoint (ADR-012).
+- **Secrets im Key Vault:** `Accounts--Admins--0--Email`, `Operator--Email`, `Mail--UserName`, `Mail--Password`, `Hydro--Forecast--Username`, `Hydro--Forecast--Password`, `Content--ExportKey`.
+- **Entra-Anmeldung an SQL:** Ab SqlClient 7 braucht sie das Paket `Microsoft.Data.SqlClient.Extensions.Azure` (im Core referenziert).
 
 ## CI/CD (GitHub Actions)
 
 | Workflow | Auslöser | Schritte |
 |---|---|---|
-| `ci.yml` | Pull Request | Restore, Build (`TreatWarningsAsErrors`), Tests (inkl. Testcontainers), Prüfung der `.resx`-Vollständigkeit |
-| `deploy.yml` | Push auf `main` | Build, Tests, Publish, Deploy auf App Service (OIDC, kein Secret), EF-Migrationen als Bundle, Health Check |
-| `infra.yml` | manuell | Bicep Deploy |
+| `ci.yml` | Push auf `main`, Pull Request | Restore, Build (`TreatWarningsAsErrors`), Tests (inkl. Testcontainers), Prüfung der `.resx`-Vollständigkeit |
+| `deploy.yml` | grüne CI auf `main` (`workflow_run`), manuell | Publish, Deploy auf App Service (OIDC, kein Secret), Prüfung von `/alive` und `/de`. Läuft erst, wenn `AZURE_CLIENT_ID` gesetzt ist. |
+| `infra.yml` | manuell | what-if (Zusammenfassung im Job), Deploy nach Freigabe |
 
-- Anmeldung bei Azure über OpenID Connect (Federated Credential). Keine Secrets im Repository.
-- EF-Migrationen: `dotnet ef migrations bundle`, Ausführung im Deploy vor dem Slot-Wechsel bzw. vor dem Neustart.
+- Anmeldung bei Azure über OpenID Connect (Federated Credential für `main` und das Environment `prod`). Keine Secrets im Repository.
+- **EF-Migrationen beim Start der App** (Entscheid 20.10.2026, statt Bundle im Workflow): Der Start legt ohnehin Gewässer, Admins und Plätze aus dem Seed an (`Database:PrepareOnStartup`). Es gibt eine Instanz. Der Runner von GitHub braucht so keinen Zugang durch die Firewall von SQL. Scheitert eine Migration, startet die App nicht, und der Health Check im Workflow wird rot. Migrationen fügen nur hinzu (Review-Regel), eine ältere App läuft auf dem neueren Schema.
 
 ## Betrieb
 
-- Health Checks: `/health` (App), `/health/ready` (DB erreichbar, letzter Prognose-Lauf jünger als 30 h).
-- Alerts: Health Check fehlgeschlagen, Prognose-Lauf `Failed`, Free-Offer-Kontingent unter 10 %, Mail in der Dead-Letter-Queue (ADR-010).
+- Health Checks: `/alive` und `/health` prüfen nur die App, **ohne Datenbank**. App Service fragt `/alive` jede Minute ab. Mit der Datenbank könnte Serverless nie pausieren. `/health/ready` prüft zusätzlich die Datenbank und einen brauchbaren Prognose-Lauf jünger als 30 h (`GetReadiness`). Er weckt die Datenbank, darum fragt ihn kein Dienst regelmässig ab.
+- Alerts (`deploy/modules/alerts.bicep`, an `ALERT_EMAIL`): Health Check von App Service unter 100 %; Prognose-Lauf gescheitert; seit 30 h kein brauchbarer Lauf; Mail in der Dead-Letter-Queue (ADR-010); Free-Offer-Kontingent unter 10 000 vCore-Sekunden (nur mit `sqlPlan = 'Free'`). Die Log-Alerts suchen die Texte der Logs aus `ForecastWorker` und `ProcessMailQueue` in `AppTraces` und prüfen stündlich. Budget der Resource Group (Standard 25 im Monat): Mail bei 80 % und bei 100 % der Prognose.
 - Backups: Point-in-time Restore der Datenbank (7 Tage). Medien zusätzlich lokal bei Marc (Originale).
