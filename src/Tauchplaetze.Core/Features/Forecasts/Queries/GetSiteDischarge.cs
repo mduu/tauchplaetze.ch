@@ -88,7 +88,7 @@ internal class GetSiteDischargeHandler(TauchplaetzeDbContext dbContext, TimeProv
 
         return new DischargeForecast(
             issuedAt,
-            reading.ForecastOfficial ?? true,
+            reading.ForecastOfficial ?? false,
             [.. hours
                 .GroupBy(h => SwissTime.DayOf(h.Hour))
                 .Select(g => Day(g.Key, Math.Round(g.Average(h => h.Discharge), 1), thresholds))]);
