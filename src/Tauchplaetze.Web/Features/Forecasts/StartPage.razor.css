@@ -418,3 +418,12 @@
     font-size: 13px;
     color: var(--color-notice-warning);
 }
+
+.ranking li.has-more {
+    align-items: start;
+}
+
+.ranking li.has-more > .rank,
+.ranking li.has-more > .index-small {
+    margin-top: 14px;
+}

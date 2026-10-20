@@ -204,7 +204,7 @@
     private IEnumerable<(RankedSite Site, int Rank)> RankedSites => best!.Ranking.Select((s, i) => (s, i + 1));
 
     private RenderFragment RankingEntry(RankedSite site, int rank) =>
-        @<li>
+        @<li class="@(site.MoreList.Count > 0 ? "has-more" : null)">
             <span class="rank">@rank</span>
             <div class="ranking-site">
                 <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
