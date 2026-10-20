@@ -82,6 +82,8 @@ var cloudflareRules = [for (range, i) in cloudflareIpRanges: {
 var settings = union(secretSettings, {
   APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
   ASPNETCORE_ENVIRONMENT: 'Production'
+  // Der erste Start migriert die leere Datenbank und legt die Stammdaten an. Das dauerte am 20.10.2026 über die Standardgrenze von 230 s.
+  WEBSITES_CONTAINER_START_TIME_LIMIT: '600'
   Database__PrepareOnStartup: 'true'
   Accounts__Admins__0__DisplayName: adminDisplayName
   Mail__Host: 'asmtp.mail.hostpoint.ch'
