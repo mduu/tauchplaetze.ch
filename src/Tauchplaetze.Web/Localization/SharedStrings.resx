@@ -45,4 +45,5 @@
   <data name="Form_InvalidCoordinate" xml:space="preserve"><value>Bitte eine Zahl mit Punkt, z.B. 47.284900.</value></data>
   <data name="Form_MoveUp" xml:space="preserve"><value>«{0}» nach oben</value></data>
   <data name="Form_MoveDown" xml:space="preserve"><value>«{0}» nach unten</value></data>
+  <data name="MountainLake" xml:space="preserve"><value>Bergsee · {0} m ü. M.</value></data>
 </root>

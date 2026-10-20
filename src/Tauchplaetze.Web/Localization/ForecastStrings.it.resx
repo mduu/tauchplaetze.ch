@@ -178,4 +178,7 @@
   <data name="Discharge_Forecast_Unchecked" xml:space="preserve"><value>calcolata automaticamente, non verificata</value></data>
   <data name="Day_Discharge" xml:space="preserve"><value>Portata {0}</value></data>
   <data name="Day_Today_Short" xml:space="preserve"><value>Oggi</value></data>
+  <data name="Start_Ranking_MoreAtWater" xml:space="preserve"><value>+ {0} altri siti – {1}</value></data>
+  <data name="Start_Area_Locate" xml:space="preserve"><value>Usa la mia posizione</value></data>
+  <data name="Start_Area_Locate_Error" xml:space="preserve"><value>La posizione non è disponibile. Scegli un luogo dalla lista.</value></data>
 </root>

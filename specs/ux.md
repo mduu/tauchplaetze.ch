@@ -53,6 +53,10 @@ Mockup: `design/start.dc.html`.
    - Aktionen: «Zum Tauchplatz», «Buddy für {See} finden».
 6. **Rangliste im Umkreis** (unter der Beste Wahl, über die ganze Breite, breit in zwei Spalten): Rang, Name (Link), Ort · See, Balken, Index, Begründung. Die ersten 10 Plätze offen, der Rest hinter «Alle {n} Plätze anzeigen».
    - Solange weniger als 80 % der Plätze einen Index haben, steht über der Liste «Prognose bisher für Rhein, Zugersee und Zürichsee. Weitere Gewässer folgen.» Die Gewässer liefert der Core (`GetBestSites`), der Hinweis wächst und verschwindet mit dem Ausbau.
+   - **Streuung** (Entscheid Marc, 20.10.2026): höchstens 2 Plätze pro Gewässer. Die weiteren stehen beim zweiten Platz aufklappbar als «+ {n} weitere am {Gewässer}» (`<details>`, ohne Rang). So zeigt die Rangliste mehr verschiedene Gewässer.
+   - **Mit gewähltem Ort** zählt in der Reihung auch die Distanz (`forecast.md`, «Rangliste»). Der angezeigte Index bleibt, dazu steht die Distanz («25 km»).
+   - **Bergsee:** Seen ab 700 m ü. M. tragen die Notiz «Bergsee · 1796 m ü. M.» in Rangliste, Beste Wahl und im Hero der Platzseite. Die Schweizer Tauchtabellen (Bühlmann) haben ab 700 m eine eigene Höhenstufe. Keine Abwertung im Index.
+   - **Ort merken:** Ein gewählter Ort und der Umkreis bleiben in einem funktionalen Cookie `tp_area` (ein Jahr, `SameSite=Lax`, nur Schlüssel des Orts und km, z.B. `zuerich:25`). Die Startseite ohne `ort` nutzt das Cookie. Ein Link mit `ort` hat Vorrang und ersetzt die Wahl. «Ganze Schweiz» (`?ort=schweiz`) löscht sie. «Meinen Standort verwenden» erscheint nur mit JavaScript und fragt den Standort erst auf Klick ab. Der Browser rundet auf den nächsten Ort der Liste, gesendet wird nur dessen Schlüssel, nie eine Koordinate.
    - Mit gewähltem Ort folgen unter der Rangliste die Plätze im Umkreis ohne Index, gedämpft und ohne Rang («noch keine Prognose»), nächster zuerst, höchstens 10, dazu «und {n} weitere Plätze ohne Prognose».
 7. Hinweis: «Der Index ist ein Indikator …».
 8. Seen im Überblick: Kachel pro See mit Temperatur, Mini-Verlauf der Klarheit und Trendtext.

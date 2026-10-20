@@ -177,3 +177,46 @@ window.tauchplaetzeEdit = (function () {
 
   return { saved: function () { saved = true; } };
 })();
+
+// «Meinen Standort verwenden» auf der Startseite: nur auf Klick. Die Koordinate bleibt im Browser,
+// gesendet wird nur der Schlüssel des nächsten Orts (data-places: «key,lat,lng;…»).
+(function () {
+  const item = document.querySelector('[data-locate]');
+  if (!item || !navigator.geolocation) {
+    return;
+  }
+
+  item.hidden = false;
+  const places = item.getAttribute('data-places').split(';').map(function (entry) {
+    const parts = entry.split(',');
+    return { key: parts[0], lat: parseFloat(parts[1]), lng: parseFloat(parts[2]) };
+  });
+
+  function nearest(lat, lng) {
+    let best = null;
+    let bestDistance = Infinity;
+    places.forEach(function (place) {
+      const dLat = place.lat - lat;
+      const dLng = (place.lng - lng) * Math.cos(lat * Math.PI / 180);
+      const distance = dLat * dLat + dLng * dLng;
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = place;
+      }
+    });
+    return best;
+  }
+
+  item.querySelector('button').addEventListener('click', function () {
+    const error = item.querySelector('[data-locate-error]');
+    error.hidden = true;
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const place = nearest(position.coords.latitude, position.coords.longitude);
+      if (place) {
+        window.location.href = item.getAttribute('data-href').replace('{ort}', encodeURIComponent(place.key));
+      }
+    }, function () {
+      error.hidden = false;
+    }, { maximumAge: 600000, timeout: 10000 });
+  });
+})();

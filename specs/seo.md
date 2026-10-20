@@ -23,6 +23,7 @@ Siehe `i18n.md`. Grundsätze:
 - Kleinbuchstaben, Bindestriche, keine Umlaute im Slug.
 - Ein geänderter Slug erzeugt automatisch einen 301 vom alten Slug.
 - Reserviert: `neu`, `new`, `nouveau`, `nuovo` (Seite «Neuer Platz», `ReservedSlugs`). Ein neuer oder importierter Platz bekommt dann `-2`, ein Slug von Hand ergibt `InvalidSlug`. Der Sprachwechsel übersetzt diese Seite wie ein Segment.
+- Die Startseite kennt `?tag=…`, `?ort=…` und `?km=…`. `?ort=schweiz` löscht den gemerkten Ort (Cookie `tp_area`, `ux.md`). Alle sind kanonisch auf `/{lang}`.
 - Query-Parameter (`?date=…`, Suche und Filter im Verzeichnis `?q=…&f=…&page=…`) sind kanonisch auf die Seite ohne Parameter. Das Verzeichnis setzt `<link rel="canonical">` auf `/{lang}/tauchplaetze`. Suchergebnisse sind keine eigenen Landingpages.
 - Absolute Adressen in `canonical` und `hreflang` kommen aus `PublicSite:BaseUri`, nie aus der Anfrage (hinter Ingress und Cloudflare stimmen Schema und Host der Anfrage nicht), immer ohne Query-String.
 

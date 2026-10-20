@@ -40,6 +40,10 @@
             {
                 <p class="other-names">@L["Site_OtherNames", string.Join(", ", site.OtherNameList)]</p>
             }
+            @if (site.MountainLakeElevation is { } elevation)
+            {
+                <p class="mountain-lake" data-mountain-lake>@Shared["MountainLake", elevation]</p>
+            }
         </UnderwaterHero>
 
         @if (Saved is "vorschlag" or "online")

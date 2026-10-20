@@ -6,6 +6,7 @@
 @inject IStringLocalizer<ForecastStrings> F
 @inject IQueryHandler<GetBestSitesQuery, BestSites> BestSitesQuery
 @inject NavigationManager Navigation
+@inject TimeProvider Time
 
 <PageTitle>@L["Start_Title"] · @L["Brand"]</PageTitle>
 <HeadContent>
@@ -29,7 +30,11 @@
         <details class="area">
             <summary class="pill pill-dashed">@F["Start_Area_Label"]: @AreaLabel · @F["Start_Area_Choose"]</summary>
             <ul>
-                <li><a href="@Link(best.Date, null, radius)">@F["Start_Area_All"]</a></li>
+                <li><a href="@Link(best.Date, null, radius, forgetArea: true)">@F["Start_Area_All"]</a></li>
+                <li hidden data-locate data-places="@PlaceCoordinates" data-href="@LocateTemplate">
+                    <button type="button" class="link-button">@F["Start_Area_Locate"]</button>
+                    <span class="locate-error" role="status" hidden data-locate-error>@F["Start_Area_Locate_Error"]</span>
+                </li>
                 @foreach (var option in Places.All)
                 {
                     <li><a href="@Link(best.Date, option, radius)">@F[$"Place_{option.Key}"]</a></li>
@@ -58,6 +63,10 @@
                         <p class="eyebrow signal">@BestPickLabel</p>
                         <h2 id="best-pick-name">@top.Name</h2>
                         <p class="where">@Where(top)</p>
+                        @if (top.MountainLakeElevation is { } topElevation)
+                        {
+                            <p class="mountain-lake" data-mountain-lake>@L["MountainLake", topElevation]</p>
+                        }
                     </div>
                     <div class="index" data-index-band="@ForecastFormat.IndexBand(top.DiveIndex)">@ForecastFormat.Number(top.DiveIndex)</div>
                 </div>
@@ -150,6 +159,9 @@
     [SupplyParameterFromQuery(Name = "km")]
     public int? RadiusKm { get; set; }
 
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
     private string Title => best is null || best.Date == best.Days[0]
@@ -196,11 +208,28 @@
             <span class="rank">@rank</span>
             <div class="ranking-site">
                 <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
-                <span class="where">@Where(site)</span>
+                <span class="where">@Where(site)@if (site.MountainLakeElevation is { } elevation)
+                {<span class="mountain-lake" data-mountain-lake> · @L["MountainLake", elevation]</span>}</span>
                 <span class="bar" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)" style="width: @(FormattableString.Invariant($"{Math.Clamp(site.DiveIndex * 10, 10, 100):0}%"))"></span>
                 @if (site.Reasons.Count > 0)
                 {
                     <span class="reason">@F[$"Reason_{site.Reasons[0]}"]</span>
+                }
+                @if (site.MoreList is [_, ..] more)
+                {
+                    <details class="water-more" data-water-more>
+                        <summary>@F["Start_Ranking_MoreAtWater", more.Count, site.WaterBodyName]</summary>
+                        <ul>
+                            @foreach (var other in more)
+                            {
+                                <li>
+                                    <a href="@PublicRoutes.DiveSite(Language, other.Slug)">@other.Name</a>
+                                    <span class="where">@Where(other)</span>
+                                    <span class="index-small" data-index-band="@ForecastFormat.IndexBand(other.DiveIndex)">@ForecastFormat.Number(other.DiveIndex)</span>
+                                </li>
+                            }
+                        </ul>
+                    </details>
                 }
             </div>
             <span class="index-small" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)">@ForecastFormat.Number(site.DiveIndex)</span>
@@ -214,14 +243,13 @@
             return;
         }
 
-        place = Places.Find(PlaceKey);
-        radius = Places.Radius(RadiusKm);
+        (place, radius) = RememberedArea.Resolve(HttpContext, PlaceKey, RadiusKm, Time);
         var date = DateOnly.TryParseExact(Day, "yyyy-MM-dd", out var parsed) ? parsed : (DateOnly?)null;
         var area = place is null ? null : new Area(place.Latitude, place.Longitude, radius);
         best = await BestSitesQuery.Handle(new GetBestSitesQuery(Language, date, area));
     }
 
-    private string Link(DateOnly day, Place? area, int km)
+    private string Link(DateOnly day, Place? area, int km, bool forgetArea = false)
     {
         var query = new List<string>();
         if (best is not null && day != best.Days[0])
@@ -229,7 +257,11 @@
             query.Add($"tag={day:yyyy-MM-dd}");
         }
 
-        if (area is not null)
+        if (area is null && forgetArea)
+        {
+            query.Add($"ort={RememberedArea.AllOfSwitzerland}");
+        }
+        else if (area is not null)
         {
             query.Add($"ort={area.Key}");
             if (km != Places.DefaultRadiusKm)
@@ -240,6 +272,11 @@
 
         return query.Count == 0 ? $"/{Language}" : $"/{Language}?{string.Join('&', query)}";
     }
+
+    private static string PlaceCoordinates =>
+        string.Join(";", Places.All.Select(p => FormattableString.Invariant($"{p.Key},{p.Latitude:0.####},{p.Longitude:0.####}")));
+
+    private string LocateTemplate => $"/{Language}?ort={{ort}}" + (radius == Places.DefaultRadiusKm ? "" : $"&km={radius}");
 
     private string DayLabel(DateOnly day) => best is not null && day == best.Days[0]
         ? $"{F["Day_Today"]} · {ForecastFormat.Weekday(day)} {day.Day}."

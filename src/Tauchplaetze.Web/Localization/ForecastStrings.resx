@@ -178,4 +178,7 @@
   <data name="Discharge_Forecast_Unchecked" xml:space="preserve"><value>automatisch gerechnet, nicht geprüft</value></data>
   <data name="Day_Discharge" xml:space="preserve"><value>Abfluss {0}</value></data>
   <data name="Day_Today_Short" xml:space="preserve"><value>Heute</value></data>
+  <data name="Start_Ranking_MoreAtWater" xml:space="preserve"><value>+ {0} weitere am {1}</value></data>
+  <data name="Start_Area_Locate" xml:space="preserve"><value>Meinen Standort verwenden</value></data>
+  <data name="Start_Area_Locate_Error" xml:space="preserve"><value>Der Standort ist nicht verfügbar. Wähle einen Ort aus der Liste.</value></data>
 </root>

@@ -178,4 +178,7 @@
   <data name="Discharge_Forecast_Unchecked" xml:space="preserve"><value>computed automatically, not checked</value></data>
   <data name="Day_Discharge" xml:space="preserve"><value>Discharge {0}</value></data>
   <data name="Day_Today_Short" xml:space="preserve"><value>Today</value></data>
+  <data name="Start_Ranking_MoreAtWater" xml:space="preserve"><value>+ {0} more at {1}</value></data>
+  <data name="Start_Area_Locate" xml:space="preserve"><value>Use my location</value></data>
+  <data name="Start_Area_Locate_Error" xml:space="preserve"><value>Your location is not available. Choose a place from the list.</value></data>
 </root>

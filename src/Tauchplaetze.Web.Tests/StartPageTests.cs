@@ -52,6 +52,74 @@ public class StartPageTests : IClassFixture<WebApp>
         Assert.Contains("Meilleur choix pour mardi", VisibleText.Of(html));
     }
 
+    [Fact]
+    public async Task Die_Startseite_merkt_sich_Ort_und_Umkreis_und_Ganze_Schweiz_loescht_die_Wahl()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await browser.GetStringAsync("/de?ort=bern&km=40", TestContext.Current.CancellationToken);
+
+        // Act
+        await browser.GetStringAsync("/de", TestContext.Current.CancellationToken);
+        var remembered = app.BestSites.LastQuery!.Area;
+        await browser.GetStringAsync("/de?ort=schweiz", TestContext.Current.CancellationToken);
+        await browser.GetStringAsync("/de", TestContext.Current.CancellationToken);
+        var forgotten = app.BestSites.LastQuery!.Area;
+
+        // Assert
+        Assert.Equal((46.9480, 40), (remembered!.Latitude, remembered.RadiusKm));
+        Assert.Null(forgotten);
+    }
+
+    [Fact]
+    public async Task Ein_Link_mit_Ort_hat_Vorrang_vor_dem_gemerkten_Ort()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await browser.GetStringAsync("/de?ort=bern", TestContext.Current.CancellationToken);
+
+        // Act
+        await browser.GetStringAsync("/de?ort=lugano&km=15", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal((46.0037, 15), (app.BestSites.LastQuery!.Area!.Latitude, app.BestSites.LastQuery.Area.RadiusKm));
+    }
+
+    [Fact]
+    public async Task Das_Cookie_fuer_den_Ort_enthaelt_nur_den_Ort_und_den_Umkreis()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var response = await browser.GetAsync("/de?ort=zuerich&km=15", TestContext.Current.CancellationToken);
+
+        // Assert
+        var cookie = Assert.Single(response.Headers.GetValues("Set-Cookie"), c => c.StartsWith("tp_area=", StringComparison.Ordinal));
+        Assert.StartsWith("tp_area=zuerich%3A15;", cookie);
+        Assert.Contains("samesite=lax", cookie, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Weitere_Plaetze_desselben_Gewaessers_stehen_aufklappbar_beim_zweiten_und_Bergseen_tragen_die_Hoehe()
+    {
+        // Arrange
+        var ranking = app.BestSites.Ranking;
+        var more = new RankedSite("dritter-platz", "Dritter Platz", "Zug", "Zugersee", 5.9m, 2, null, null, null, null, 3, [], null);
+        app.BestSites.Ranking = [ranking[0] with { MountainLakeElevation = 1796 }, ranking[1] with { More = [more] }];
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de", TestContext.Current.CancellationToken);
+
+        // Assert
+        app.BestSites.Ranking = ranking;
+        var text = VisibleText.Of(html);
+        Assert.Contains("+ 1 weitere am Zugersee", text);
+        Assert.Contains("href=\"/de/tauchplaetze/dritter-platz\"", html);
+        Assert.Contains("Bergsee · 1796 m ü. M.", text);
+    }
+
     [Theory]
     [InlineData("/de?ort=zuerich", 25)]
     [InlineData("/de?ort=zuerich&km=15", 15)]
