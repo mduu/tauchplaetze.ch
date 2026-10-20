@@ -25,6 +25,19 @@ public class DischargeRulesTests
     }
 
     [Fact]
+    public void Ein_Median_unter_1_m3_pro_s_zaehlt_als_1_m3_pro_s()
+    {
+        // Arrange: ein Bach mit fast keinem Wasser.
+        var thresholds = DischargeRules.ThresholdsFor(null, median: 0.01m)!;
+
+        // Act
+        var level = DischargeRules.LevelOf(0.3m, thresholds);
+
+        // Assert
+        Assert.Equal(DischargeLevel.VeryLow, level);
+    }
+
+    [Fact]
     public void Die_Schwellen_des_Platzes_gelten_vor_dem_Median()
     {
         // Arrange

@@ -381,12 +381,14 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Sagt_das_BAFU_uebermorgen_Hochwasser_am_Zufluss_voraus_sinkt_der_Index_uebermorgen_und_heute_bleibt_er()
+    public async Task Sagt_das_BAFU_uebermorgen_Hochwasser_am_Zufluss_voraus_sinkt_der_Index_uebermorgen_nur_nahe_der_Muendung()
     {
-        // Arrange: Linth – Weesen (2104), Zufluss des Zürichsees. Für den 19.10.2026 ein Tag mit dem Vielfachen des üblichen Abflusses.
+        // Arrange: Linth – Weesen (2104) mündet bei Schmerikon. Bollingen liegt 4 km davon, Riff Williams 26 km.
         var siteId = await PrepareRiffWilliams();
+        var nearId = await AddSiteAtZuerichsee("Bollingen", 47.2185, 8.8950, "Rapperswil-Jona", "SG");
         await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
         var before = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days;
+        var nearBefore = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(nearId))).Days;
         await Sql.Arrange(db =>
         {
             db.HydroHours.AddRange(Enumerable.Range(0, 24).Select(hour => new HydroHour
@@ -405,10 +407,22 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         var after = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days;
-        Assert.Equal(before[0].DiveIndex, after[0].DiveIndex);
-        Assert.Equal(before[1].DiveIndex, after[1].DiveIndex);
-        Assert.True(after[2].DiveIndex < before[2].DiveIndex, $"{after[2].DiveIndex} < {before[2].DiveIndex}");
-        Assert.Contains(ReasonCode.TurbidAfterRain, after[2].Reasons);
+        var nearAfter = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(nearId))).Days;
+        Assert.Equal(nearBefore[0].DiveIndex, nearAfter[0].DiveIndex);
+        Assert.Equal(nearBefore[1].DiveIndex, nearAfter[1].DiveIndex);
+        Assert.True(nearAfter[2].DiveIndex < nearBefore[2].DiveIndex, $"{nearAfter[2].DiveIndex} < {nearBefore[2].DiveIndex}");
+        Assert.Contains(ReasonCode.TurbidAfterRain, nearAfter[2].Reasons);
+        Assert.Equal(before[2].DiveIndex, after[2].DiveIndex);
+    }
+
+    private async Task<Guid> AddSiteAtZuerichsee(string name, double latitude, double longitude, string municipality, string canton)
+    {
+        var waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"));
+        var lake = waterBodies.Single(w => w.Slug == "zuerichsee").Id;
+        var admins = await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]));
+        var result = await Command<ProposeDiveSiteCommand, EditorialResult>(
+            new ProposeDiveSiteCommand(admins.UserIds[0], name, lake, latitude, longitude, municipality, canton, null));
+        return result.DiveSiteId ?? throw new InvalidOperationException(string.Join(", ", result.Errors));
     }
 
     private async Task<Guid> PrepareRiffWilliams()

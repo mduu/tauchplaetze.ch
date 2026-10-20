@@ -2,11 +2,16 @@ using Tauchplaetze.Core.Features.Forecasts.Sources.Hydro;
 
 namespace Tauchplaetze.Core.Features.Forecasts.Calculation;
 
-/// <summary>Einordnung und Trend des Abflusses an Flussplätzen (`forecast.md`, «Abfluss»). Fliesst nicht in den Index.</summary>
+/// <summary>Einordnung und Trend des Abflusses an Flussplätzen (`forecast.md`, «Abfluss»). Die Einordnung fliesst nicht in den Index.</summary>
 internal static class DischargeRules
 {
     /// <summary>Faktoren auf den Median der letzten 30 Tage, ab denen der Abfluss gering, mittel und stark ist.</summary>
     public static readonly (decimal Low, decimal Medium, decimal Strong) MedianFactors = (0.5m, 1m, 2m);
+
+    /// <summary>
+    /// Untergrenze des Medians in m³/s. Ein kleiner Bach mit fast keinem Wasser ergäbe sonst unsinnige Quotienten (`rules-1.5`).
+    /// </summary>
+    public const decimal MinMedian = 1m;
 
     /// <summary>Innerhalb dieses Anteils des Werts von vor 3 Stunden bleibt der Abfluss gleich.</summary>
     public const decimal SteadyWithin = 0.05m;
@@ -14,8 +19,11 @@ internal static class DischargeRules
     /// <summary>Die Schwellen des Platzes, sonst die Schwellen aus dem Median. <c>null</c> ohne beides.</summary>
     public static DischargeThresholds? ThresholdsFor(DischargeThresholds? site, decimal? median) =>
         site ?? (median is { } m and > 0
-            ? new DischargeThresholds(m * MedianFactors.Low, m * MedianFactors.Medium, m * MedianFactors.Strong)
+            ? Thresholds(Math.Max(m, MinMedian))
             : null);
+
+    private static DischargeThresholds Thresholds(decimal median) =>
+        new(median * MedianFactors.Low, median * MedianFactors.Medium, median * MedianFactors.Strong);
 
     public static DischargeLevel LevelOf(decimal discharge, DischargeThresholds thresholds) =>
         discharge < thresholds.LowFrom ? DischargeLevel.VeryLow

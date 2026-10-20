@@ -24,7 +24,7 @@ internal record DayResult(
     double? VisibilityGoodBelow,
     IReadOnlyList<ReasonCode> Reasons);
 
-/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.4`, ADR-004).</summary>
+/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.5`, ADR-004).</summary>
 internal static class DiveIndexCalculator
 {
     public static DayResult Calculate(DayInputs inputs, DiveIndexRules rules)
@@ -41,12 +41,21 @@ internal static class DiveIndexCalculator
 
         var hasWaterData = inputs.Clarity.ShoreDepth is not null || inputs.Profile is not null;
         double? uncapped = scores.Wind is not null && hasWaterData ? Capped(WeightedMean(scores, rules), inputs, rules) : null;
-        var index = uncapped is { } value ? Math.Min(value, VisibilityCap(inputs.Clarity.Indicator, rules)) : (double?)null;
+        var capped = uncapped is { } value ? Math.Min(value, VisibilityCap(inputs.Clarity.Indicator, rules)) : (double?)null;
+        var penalty = CurrentPenalty(inputs, rules);
+        var index = capped is { } beforePenalty && penalty > 0
+            ? Math.Round(Math.Max(beforePenalty - penalty, rules.MinIndexAfterCurrentPenalty), 1)
+            : capped;
 
         var reasons = Reasons(inputs, thermocline, rules);
-        if (index < uncapped)
+        if (capped < uncapped)
         {
             reasons = [ReasonCode.VisibilityLimitsIndex, .. reasons];
+        }
+
+        if (penalty > 0)
+        {
+            reasons = [ReasonCode.StrongCurrent, .. reasons];
         }
 
         return new DayResult(index, scores, thermocline, thermocline?.Bottom, reasons);
@@ -145,6 +154,10 @@ internal static class DiveIndexCalculator
         VisibilityIndicator.Moderate => rules.MaxIndexWithModerateVisibility,
         _ => 10,
     };
+
+    /// <summary>Am Fluss heisst viel Wasser auch starke Strömung. Der Abfluss zählt so doppelt: als Zufluss und als Abzug.</summary>
+    private static double CurrentPenalty(DayInputs inputs, DiveIndexRules rules) =>
+        inputs is { IsRiver: true, DischargeRatio: { } ratio } ? DiveIndexRules.Interpolate(rules.RiverCurrentPenalty, ratio) : 0;
 
     private static double WeightedMean(SubScores scores, DiveIndexRules rules)
     {

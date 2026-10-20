@@ -41,6 +41,7 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
         }
 
         AddMissingStationLocations(seeds, existing);
+        RemoveRetiredStations(seeds, existing);
         AddMissingAlplakesKeys(seeds, existing);
 
         await dbContext.SaveChangesAsync(ct);
@@ -52,12 +53,28 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
     {
         var located = seeds
             .Where(s => existing.ContainsKey(s.Slug))
-            .SelectMany(s => (s.HydroStations ?? []).Where(h => h.Latitude is not null).Select(h => (WaterBody: existing[s.Slug], Seed: h)));
+            .SelectMany(s => (s.HydroStations ?? []).Where(h => h.Latitude is not null || h.MouthLatitude is not null).Select(h => (WaterBody: existing[s.Slug], Seed: h)));
         foreach (var (waterBody, seed) in located)
         {
-            if (waterBody.HydroStations.FirstOrDefault(h => h.StationId == seed.Id) is { Location: null } station)
+            if (waterBody.HydroStations.FirstOrDefault(h => h.StationId == seed.Id) is { } station)
             {
-                station.Location = seed.ToEntity().Location;
+                var entity = seed.ToEntity();
+                station.Location ??= entity.Location;
+                station.Mouth ??= entity.Mouth;
+            }
+        }
+    }
+
+    /// <summary>Der Seed löscht sonst nichts. Eine Station, die nicht taugt, steht darum ausdrücklich unter <c>removedHydroStations</c>.</summary>
+    private void RemoveRetiredStations(IReadOnlyList<WaterBodySeed> seeds, Dictionary<string, WaterBody> existing)
+    {
+        foreach (var seed in seeds.Where(s => existing.ContainsKey(s.Slug) && s.RemovedHydroStations is { Count: > 0 }))
+        {
+            var waterBody = existing[seed.Slug];
+            foreach (var station in waterBody.HydroStations.Where(h => seed.RemovedHydroStations!.Contains(h.StationId)).ToList())
+            {
+                waterBody.HydroStations.Remove(station);
+                dbContext.Remove(station);
             }
         }
     }
@@ -110,9 +127,11 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
         string? AlplakesLakeKey,
         string? AlplakesModel3d,
         string? AlplakesSimstratKey,
-        IReadOnlyList<HydroStationSeed>? HydroStations);
+        IReadOnlyList<HydroStationSeed>? HydroStations,
+        IReadOnlyList<string>? RemovedHydroStations = null);
 
-    private sealed record HydroStationSeed(string Id, string Name, string Role, double? Latitude, double? Longitude)
+    private sealed record HydroStationSeed(
+        string Id, string Name, string Role, double? Latitude, double? Longitude, double? MouthLatitude = null, double? MouthLongitude = null)
     {
         public WaterBodyHydroStation ToEntity() => new()
         {
@@ -120,6 +139,7 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
             Name = Name,
             Role = Enum.Parse<HydroStationRole>(Role),
             Location = Latitude is { } lat && Longitude is { } lng ? GeoPoints.Create(lat, lng) : null,
+            Mouth = MouthLatitude is { } mouthLat && MouthLongitude is { } mouthLng ? GeoPoints.Create(mouthLat, mouthLng) : null,
         };
     }
 

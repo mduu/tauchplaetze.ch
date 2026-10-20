@@ -155,6 +155,7 @@
   <data name="Start_BestPick_Note_Area" xml:space="preserve"><value>Le site avec l’indice le plus élevé dans le rayon.</value></data>
   <data name="Start_Ranking_More" xml:space="preserve"><value>Afficher les {0} sites</value></data>
   <data name="Reason_VisibilityLimitsIndex" xml:space="preserve"><value>la visibilité limite l'indice</value></data>
+  <data name="Reason_StrongCurrent" xml:space="preserve"><value>fort courant</value></data>
   <data name="Start_Coverage" xml:space="preserve"><value>Prévisions pour l'instant pour {0}. D'autres plans d'eau suivront.</value></data>
   <data name="Start_Coverage_And" xml:space="preserve"><value> et </value></data>
   <data name="Start_WithoutForecast_Title" xml:space="preserve"><value>Dans le rayon, encore sans prévisions</value></data>

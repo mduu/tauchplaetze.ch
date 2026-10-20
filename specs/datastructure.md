@@ -46,6 +46,7 @@ Zuordnung der BAFU-Stationen zu einem Gewässer. PK: (`WaterBodyId`, `StationId`
 | `Role` | enum | `Inflow` (Zufluss eines Sees), `River` (Station am Fluss selbst, für Flussplätze) |
 | `Weight` | decimal, optional | Anteil am Teilwert «Zuflüsse», nur bei `Inflow` |
 | `Location` | geography (Point), optional | Lage der Station. Ein Flussplatz nimmt die nächste Station mit Rolle `River` (`forecast.md`, «Abfluss»). Der Seed ergänzt eine fehlende Lage. |
+| `Mouth` | geography (Point), optional | Mündung eines Zuflusses (Rolle `Inflow`) in den See. Daraus folgt sein Gewicht am Platz (`forecast.md`, `rules-1.5`). Der Seed ergänzt eine fehlende Mündung. Stationen unter `removedHydroStations` entfernt der Seed. |
 
 ### WaterBodyWeatherStation
 

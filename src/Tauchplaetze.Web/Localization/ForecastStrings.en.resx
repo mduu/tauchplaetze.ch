@@ -155,6 +155,7 @@
   <data name="Start_BestPick_Note_Area" xml:space="preserve"><value>The site with the highest index within the radius.</value></data>
   <data name="Start_Ranking_More" xml:space="preserve"><value>Show all {0} sites</value></data>
   <data name="Reason_VisibilityLimitsIndex" xml:space="preserve"><value>visibility limits the index</value></data>
+  <data name="Reason_StrongCurrent" xml:space="preserve"><value>strong current</value></data>
   <data name="Start_Coverage" xml:space="preserve"><value>Forecast so far for {0}. More waters will follow.</value></data>
   <data name="Start_Coverage_And" xml:space="preserve"><value> and </value></data>
   <data name="Start_WithoutForecast_Title" xml:space="preserve"><value>Within the radius, no forecast yet</value></data>

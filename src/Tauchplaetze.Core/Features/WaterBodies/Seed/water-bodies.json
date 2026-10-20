@@ -21,7 +21,9 @@
       {
         "id": "2104",
         "name": "Linth – Weesen, Biäsche",
-        "role": "Inflow"
+        "role": "Inflow",
+        "mouthLatitude": 47.224,
+        "mouthLongitude": 8.944
       }
     ]
   },
@@ -47,7 +49,9 @@
       {
         "id": "2477",
         "name": "Lorze – Zug, Letzi",
-        "role": "Inflow"
+        "role": "Inflow",
+        "mouthLatitude": 47.1835,
+        "mouthLongitude": 8.484
       }
     ]
   },
@@ -219,7 +223,9 @@
         "name": "Aare – Hagneck",
         "role": "Inflow",
         "latitude": 47.0556,
-        "longitude": 7.1844
+        "longitude": 7.1844,
+        "mouthLatitude": 47.055,
+        "mouthLongitude": 7.177
       }
     ]
   },
@@ -258,14 +264,18 @@
         "name": "Aare – Brienzwiler",
         "role": "Inflow",
         "latitude": 46.7457,
-        "longitude": 8.092
+        "longitude": 8.092,
+        "mouthLatitude": 46.743,
+        "mouthLongitude": 8.062
       },
       {
         "id": "2109",
         "name": "Lütschine – Gsteig",
         "role": "Inflow",
         "latitude": 46.6642,
-        "longitude": 7.8715
+        "longitude": 7.8715,
+        "mouthLatitude": 46.6905,
+        "mouthLongitude": 7.893
       }
     ]
   },
@@ -383,7 +393,9 @@
         "name": "Rhône – Porte du Scex",
         "role": "Inflow",
         "latitude": 46.3496,
-        "longitude": 6.8886
+        "longitude": 6.8886,
+        "mouthLatitude": 46.393,
+        "mouthLongitude": 6.853
       }
     ]
   },
@@ -425,7 +437,9 @@
         "name": "Sarine – Broc, Château d'en bas",
         "role": "Inflow",
         "latitude": 46.6028,
-        "longitude": 7.093
+        "longitude": 7.093,
+        "mouthLatitude": 46.612,
+        "mouthLongitude": 7.088
       }
     ]
   },
@@ -459,14 +473,8 @@
     "alplakesLakeKey": "hallwil",
     "alplakesModel3d": "delft3d-flow",
     "alplakesSimstratKey": "hallwil",
-    "hydroStations": [
-      {
-        "id": "2416",
-        "name": "Aabach – Hitzkirch, Richensee",
-        "role": "Inflow",
-        "latitude": 47.2201,
-        "longitude": 8.2491
-      }
+    "removedHydroStations": [
+      "2416"
     ]
   },
   {
@@ -697,14 +705,18 @@
         "name": "Ticino – Bellinzona",
         "role": "Inflow",
         "latitude": 46.1938,
-        "longitude": 9.0093
+        "longitude": 9.0093,
+        "mouthLatitude": 46.16,
+        "mouthLongitude": 8.856
       },
       {
         "id": "2368",
         "name": "Maggia – Locarno, Solduno",
         "role": "Inflow",
         "latitude": 46.1683,
-        "longitude": 8.7736
+        "longitude": 8.7736,
+        "mouthLatitude": 46.16,
+        "mouthLongitude": 8.784
       }
     ]
   },
@@ -789,14 +801,18 @@
         "name": "Vedeggio – Agno",
         "role": "Inflow",
         "latitude": 46.003,
-        "longitude": 8.9117
+        "longitude": 8.9117,
+        "mouthLatitude": 45.996,
+        "mouthLongitude": 8.905
       },
       {
         "id": "2321",
         "name": "Cassarate – Pregassona",
         "role": "Inflow",
         "latitude": 46.0177,
-        "longitude": 8.9625
+        "longitude": 8.9625,
+        "mouthLatitude": 46.004,
+        "mouthLongitude": 8.96
       }
     ]
   },
@@ -904,14 +920,18 @@
         "name": "Areuse – Boudry",
         "role": "Inflow",
         "latitude": 46.949,
-        "longitude": 6.839
+        "longitude": 6.839,
+        "mouthLatitude": 46.953,
+        "mouthLongitude": 6.853
       },
       {
         "id": "2378",
         "name": "Orbe – Orbe, Le Chalet",
         "role": "Inflow",
         "latitude": 46.7276,
-        "longitude": 6.5239
+        "longitude": 6.5239,
+        "mouthLatitude": 46.784,
+        "mouthLongitude": 6.64
       }
     ]
   },
@@ -1054,7 +1074,9 @@
         "name": "Sarine – Fribourg",
         "role": "Inflow",
         "latitude": 46.8039,
-        "longitude": 7.169
+        "longitude": 7.169,
+        "mouthLatitude": 46.818,
+        "mouthLongitude": 7.17
       }
     ]
   },
@@ -1245,14 +1267,18 @@
         "name": "Aare – Ringgenberg, Goldswil",
         "role": "Inflow",
         "latitude": 46.694,
-        "longitude": 7.8796
+        "longitude": 7.8796,
+        "mouthLatitude": 46.688,
+        "mouthLongitude": 7.827
       },
       {
         "id": "2646",
         "name": "Kander – Emdthal, Heustrich",
         "role": "Inflow",
         "latitude": 46.6525,
-        "longitude": 7.6828
+        "longitude": 7.6828,
+        "mouthLatitude": 46.693,
+        "mouthLongitude": 7.665
       }
     ]
   },
@@ -1348,14 +1374,18 @@
         "name": "Reuss – Seedorf",
         "role": "Inflow",
         "latitude": 46.8839,
-        "longitude": 8.6206
+        "longitude": 8.6206,
+        "mouthLatitude": 46.905,
+        "mouthLongitude": 8.611
       },
       {
         "id": "2481",
         "name": "Engelberger Aa – Buochs, Flugplatz",
         "role": "Inflow",
         "latitude": 46.9728,
-        "longitude": 8.4053
+        "longitude": 8.4053,
+        "mouthLatitude": 46.979,
+        "mouthLongitude": 8.414
       }
     ]
   },
@@ -1394,14 +1424,18 @@
         "name": "Linth – Mollis, Linthbrücke",
         "role": "Inflow",
         "latitude": 47.1011,
-        "longitude": 9.072
+        "longitude": 9.072,
+        "mouthLatitude": 47.125,
+        "mouthLongitude": 9.095
       },
       {
         "id": "2426",
         "name": "Seez – Mels",
         "role": "Inflow",
         "latitude": 47.0465,
-        "longitude": 9.4182
+        "longitude": 9.4182,
+        "mouthLatitude": 47.121,
+        "mouthLongitude": 9.315
       }
     ]
   }

@@ -1,4 +1,6 @@
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Commands;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
@@ -22,6 +24,31 @@ public class SeedWaterBodiesTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(first.Added, waterBodies.Count);
         Assert.Subset(waterBodies.Select(w => w.Name).ToHashSet(), new HashSet<string> { "Rhein", "Zugersee", "Zürichsee" });
         Assert.Equal(WaterBodyType.River, waterBodies.Single(w => w.Slug == "rhein").Type);
+    }
+
+    [SqlFact]
+    public async Task Der_Seed_entfernt_eine_ausgemusterte_Station_und_ergaenzt_die_Muendung_bestehender_Zufluesse()
+    {
+        // Arrange: ein Stand von vor rules-1.5, mit dem Aabach am Hallwilersee und ohne Mündung der Linth.
+        await Seed();
+        await Sql.Arrange(async db =>
+        {
+            var hallwilersee = await db.WaterBodies.Include(w => w.HydroStations).SingleAsync(w => w.Slug == "hallwilersee");
+            hallwilersee.HydroStations.Add(new WaterBodyHydroStation { StationId = "2416", Name = "Aabach – Hitzkirch, Richensee", Role = HydroStationRole.Inflow });
+            var linth = await db.Set<WaterBodyHydroStation>().SingleAsync(s => s.StationId == "2104");
+            linth.Mouth = null;
+            await db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        });
+
+        // Act
+        await Seed();
+
+        // Assert
+        await Sql.Arrange(async db =>
+        {
+            Assert.False(await db.Set<WaterBodyHydroStation>().AnyAsync(s => s.StationId == "2416"));
+            Assert.NotNull((await db.Set<WaterBodyHydroStation>().SingleAsync(s => s.StationId == "2104")).Mouth);
+        });
     }
 
     [Fact]

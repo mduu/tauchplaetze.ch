@@ -87,7 +87,7 @@ internal class RunForecastHandler(
             .ToDictionaryAsync(f => (f.DiveSiteId, f.Date), ct);
         var outlooks = await dbContext.SiteWeatherOutlooks.ToDictionaryAsync(o => o.DiveSiteId, ct);
         var waterBodies = new Dictionary<int, WaterBodyData>();
-        var inflowForecasts = new Dictionary<int, IReadOnlyDictionary<DateOnly, double>>();
+        var inflowForecasts = new Dictionary<int, IReadOnlyDictionary<(string StationId, DateOnly Day), double>>();
         var forecastHours = await ForecastHours(ct);
         var forecastSites = sites.Where(s => !s.ForecastDisabled).ToList();
         await sources.PrepareWeather(forecastSites, recorder, ct);
@@ -99,15 +99,17 @@ internal class RunForecastHandler(
             {
                 waterBodyData = await sources.ForWaterBody(waterBody, today, recorder, ct);
                 waterBodies[waterBody.Id] = waterBodyData;
-                inflowForecasts[waterBody.Id] = InflowForecast.Ratios(waterBodyData.Medians ?? new Dictionary<string, double>(), forecastHours);
+                inflowForecasts[waterBody.Id] = InflowForecast.Ratios(waterBodyData.Medians, forecastHours);
             }
 
             var siteData = await sources.ForSite(site, waterBody, today, recorder, ct);
+            var inflows = SiteInflows.For(site, waterBody);
             SaveOutlook(outlooks.GetValueOrDefault(site.Id) ?? AddOutlook(site.Id), today, siteData, run);
             foreach (var day in days)
             {
                 var forecast = existing.GetValueOrDefault((site.Id, day)) ?? Add(site.Id, day);
-                var dayForecast = DayFor(day, today, waterBody, waterBodyData, inflowForecasts[waterBody.Id], siteData);
+                var dischargeRatio = SiteInflows.Ratio(inflows, day, today, waterBodyData.Ratios, inflowForecasts[waterBody.Id]);
+                var dayForecast = DayFor(day, today, waterBody, waterBodyData, dischargeRatio, siteData);
                 Fill(forecast, dayForecast, run);
                 if (day == today)
                 {
@@ -142,10 +144,9 @@ internal class RunForecastHandler(
     }
 
     private static DayForecast DayFor(
-        DateOnly day, DateOnly today, WaterBody waterBody, WaterBodyData waterBodyData, IReadOnlyDictionary<DateOnly, double> inflowForecast, SiteData siteData)
+        DateOnly day, DateOnly today, WaterBody waterBody, WaterBodyData waterBodyData, double? dischargeRatio, SiteData siteData)
     {
         var rules = DiveIndexRules.Default;
-        var dischargeRatio = DischargeRatioOn(day, today, waterBodyData, inflowForecast);
         var isRiver = waterBody.WaterBodyType == WaterBodyType.River;
         var weather = DayWeather.For(day, siteData.Weather, DiveWindow.Default);
         var profile = isRiver ? RiverProfile(day, today, waterBodyData) : DataLevelRule.ChooseProfile(day, siteData.Model3d, waterBodyData.LakeWide);
@@ -163,10 +164,6 @@ internal class RunForecastHandler(
         var current = isRiver ? null : CurrentEstimate.For(day, siteData.Model3d, DiveWindow.Default, CurrentRules.Default);
         return new DayForecast(inputs, DiveIndexCalculator.Calculate(inputs, rules), DataLevelRule.For(false, profile?.Source), current);
     }
-
-    /// <summary>Heute der gemessene Abfluss, an künftigen Tagen die Vorhersage des BAFU, ohne Vorhersage weiter der gemessene (`rules-1.4`).</summary>
-    private static double? DischargeRatioOn(DateOnly day, DateOnly today, WaterBodyData data, IReadOnlyDictionary<DateOnly, double> inflowForecast) =>
-        day > today && inflowForecast.TryGetValue(day, out var forecast) ? forecast : data.DischargeRatio;
 
     private async Task<List<ForecastHour>> ForecastHours(CancellationToken ct) =>
         (await dbContext.HydroHours

@@ -1142,6 +1142,9 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.Property<Point>("Location")
                         .HasColumnType("geography");
 
+                    b.Property<Point>("Mouth")
+                        .HasColumnType("geography");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)

@@ -66,6 +66,7 @@ internal class WaterBodyHydroStationConfiguration : IEntityTypeConfiguration<Wat
         builder.Property(s => s.Name).HasMaxLength(100);
         builder.Property(s => s.Weight).HasPrecision(4, 2);
         builder.Property(s => s.Location).HasColumnType("geography");
+        builder.Property(s => s.Mouth).HasColumnType("geography");
     }
 }
 

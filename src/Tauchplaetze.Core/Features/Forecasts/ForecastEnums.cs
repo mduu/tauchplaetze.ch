@@ -109,6 +109,9 @@ public enum ReasonCode
 
     /// <summary>Die Sicht in Ufernähe ist mässig oder schlecht und begrenzt den Index (`rules-1.3`).</summary>
     VisibilityLimitsIndex,
+
+    /// <summary>Am Fluss viel Wasser und darum starke Strömung. Gibt einen Abzug vom Index (`rules-1.5`).</summary>
+    StrongCurrent,
 }
 
 /// <summary>Status eines Laufs des Prognose-Jobs.</summary>

@@ -14,13 +14,15 @@ internal record SupportPoint(double Input, double Score);
 /// Volle Punkte für die Schichtung erst ab guter Sicht in Ufernähe (6 m).
 /// `rules-1.3` (19.10.2026, Entscheid Marc): Mässige Sicht in Ufernähe begrenzt den Index auf 7, schlechte auf 5.
 /// `rules-1.4` (20.10.2026, Entscheid Marc): An künftigen Tagen zählt für Zuflüsse und Korrektur der Klarheit der vorhergesagte Abfluss des BAFU.
+/// `rules-1.5` (20.10.2026, Entscheid Marc): Ein Zufluss zählt nach der Distanz zu seiner Mündung, der Median mindestens 1 m³/s,
+/// am Fluss die Station des Platzes, und viel Wasser im Fluss gibt einen Abzug für die Strömung.
 /// Sie werden mit Meldungen und eigenen Tauchgängen geprüft.
 /// </remarks>
 internal record DiveIndexRules
 {
     public static readonly DiveIndexRules Default = new();
 
-    public string ModelVersion { get; init; } = "rules-1.4";
+    public string ModelVersion { get; init; } = "rules-1.5";
 
     public double ClarityWeight { get; init; } = 0.35;
 
@@ -77,6 +79,12 @@ internal record DiveIndexRules
 
     /// <summary>Abfluss geteilt durch den Median → Punkte.</summary>
     public IReadOnlyList<SupportPoint> Discharge { get; init; } = [new(1.2, 10), new(3, 1)];
+
+    /// <summary>Am Fluss: Abfluss geteilt durch den Median → Abzug vom Index für die Strömung (`rules-1.5`).</summary>
+    public IReadOnlyList<SupportPoint> RiverCurrentPenalty { get; init; } = [new(1.5, 0), new(3, 3)];
+
+    /// <summary>Tiefster Index nach dem Abzug für die Strömung.</summary>
+    public double MinIndexAfterCurrentPenalty { get; init; } = 1;
 
     /// <summary>Untergrenze der Sprungschicht in m → Punkte.</summary>
     public IReadOnlyList<SupportPoint> ThermoclineBottom { get; init; } = [new(20, 10), new(30, 1)];

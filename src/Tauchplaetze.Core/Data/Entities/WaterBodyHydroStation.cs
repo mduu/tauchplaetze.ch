@@ -17,4 +17,7 @@ internal class WaterBodyHydroStation
 
     /// <summary>Lage der Station. Damit wählt ein Flussplatz die nächste Station am selben Fluss.</summary>
     public Point? Location { get; set; }
+
+    /// <summary>Mündung eines Zuflusses in den See. Daraus folgt, wie stark der Zufluss an einem Platz zählt (`forecast.md`, `rules-1.5`).</summary>
+    public Point? Mouth { get; set; }
 }

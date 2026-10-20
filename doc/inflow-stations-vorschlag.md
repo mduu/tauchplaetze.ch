@@ -2,7 +2,7 @@
 
 Stand 20.10.2026, für `rules-1.4` (Teilwert «Zuflüsse» und Korrektur der Klarheit mit der Abflussvorhersage). Quelle: Stationsliste des BAFU über existenz.ch (`apiv1/hydro/locations`, Abruf 20.10.2026). Im Seed als Rolle `Inflow` eingetragen. Marc prüft die Liste.
 
-Pro See zählt der höchste Quotient «Abfluss / Median der letzten 30 Tage» aller Zuflüsse.
+Seit `rules-1.5` zählt ein Zufluss nach der Distanz zwischen Platz und Mündung: bis 5 km voll, ab 15 km nicht mehr. Die Mündungen stehen im Seed (`mouthLatitude`, `mouthLongitude`). Der Median zählt mindestens mit 1 m³/s.
 
 | See | Station | Nummer | Gewässer | Begründung |
 |---|---|---|---|---|
@@ -14,7 +14,6 @@ Pro See zählt der höchste Quotient «Abfluss / Median der letzten 30 Tage» al
 | Thunersee | Ringgenberg, Goldswil | 2457 | Aare | Abfluss des Brienzersees, Zufluss bei Interlaken |
 | Thunersee | Emdthal, Heustrich | 2646 | Kander | trübt stark nach Regen (2469 Hondrich liefert bei existenz.ch keinen Abfluss) |
 | Genfersee | Porte du Scex | 2009 | Rhône | Hauptzufluss, trägt Gletschertrübe |
-| Hallwilersee | Hitzkirch, Richensee | 2416 | Aabach | Zufluss aus dem Baldeggersee |
 | Greyerzersee | Broc, Château d'en bas | 2160 | Sarine | Hauptzufluss am Südende |
 | Schiffenensee | Fribourg | 2119 | Sarine | Hauptzufluss |
 | Lago Maggiore | Bellinzona | 2020 | Ticino | Hauptzufluss (2068 Riazzino misst nur Pegel und Temperatur) |
@@ -29,6 +28,8 @@ Pro See zählt der höchste Quotient «Abfluss / Median der letzten 30 Tage» al
 | Walensee | Mels | 2426 | Seez | Zufluss am Ostende |
 
 ## Bewusst ohne Station
+
+- **Hallwilersee:** 2416 Aabach – Hitzkirch hatte einen Median von 0.01 m³/s und ergab unsinnige Quotienten. Am 20.10.2026 entfernt (Entscheid Marc).
 
 - **Sarnersee:** 2102 Sarner Aa – Sarnen misst den Abfluss des Sees, nicht den Zufluss.
 - **Vierwaldstättersee, Muota (2084 Ingenbohl):** möglicher dritter Zufluss bei Brunnen. Weggelassen, damit ein Zufluss am Rand nicht den ganzen See abwertet.

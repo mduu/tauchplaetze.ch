@@ -11,8 +11,15 @@ using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.Forecasts;
 
-/// <summary>Die Daten eines Gewässers für einen Lauf. <see cref="Medians"/>: Median des Abflusses der letzten 30 Tage pro Station.</summary>
-internal record WaterBodyData(DepthTimeSeries? LakeWide, double? DischargeRatio, double? RiverTemperature, IReadOnlyDictionary<string, double>? Medians = null);
+/// <summary>
+/// Die Daten eines Gewässers für einen Lauf. <see cref="Ratios"/>: neuester Abfluss geteilt durch den Median pro Station.
+/// <see cref="Medians"/>: Median des Abflusses der letzten 30 Tage pro Station, mindestens <see cref="DischargeRules.MinMedian"/>.
+/// </summary>
+internal record WaterBodyData(
+    DepthTimeSeries? LakeWide,
+    IReadOnlyDictionary<string, double> Ratios,
+    double? RiverTemperature,
+    IReadOnlyDictionary<string, double> Medians);
 
 /// <summary>Die Daten eines Platzes für einen Lauf.</summary>
 internal record SiteData(
@@ -55,17 +62,18 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             ? await recorder.Record(AlplakesClient.Source, $"1d-{key}", alplakes.GetLakeWideDepthTime(key, start, end, ct), ct)
             : null;
 
-        var ratios = new List<double>();
+        var ratios = new Dictionary<string, double>();
         var medians = new Dictionary<string, double>();
         double? riverTemperature = null;
         foreach (var station in waterBody.HydroStations)
         {
             var flow = await recorder.Record(HydroClient.Source, $"{station.StationId}-flow",
                 hydro.GetRange(station.StationId, "flow", today.AddDays(-LookbackDays), today.AddDays(1), ct), ct);
-            if (RatioToMedian(flow) is { } ratio)
+            if (flow is [.., var newest])
             {
-                ratios.Add(ratio);
-                medians[station.StationId] = Median(flow!);
+                var median = Median(flow);
+                ratios[station.StationId] = Math.Round(newest.Value / median, 2);
+                medians[station.StationId] = median;
             }
 
             if (station.Role == HydroStationRole.River)
@@ -76,7 +84,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             }
         }
 
-        return new WaterBodyData(lakeWide, ratios.Count > 0 ? ratios.Max() : null, riverTemperature, medians);
+        return new WaterBodyData(lakeWide, ratios, riverTemperature, medians);
     }
 
     public async Task<SiteData> ForSite(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
@@ -234,21 +242,10 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
     private static (DateTimeOffset Start, DateTimeOffset End) ModelPeriod(DateOnly today) =>
         (SwissTime.ToUtc(today, 0), SwissTime.ToUtc(today.AddDays(ForecastDays), 0));
 
-    private static double? RatioToMedian(IReadOnlyList<HydroValue>? values)
-    {
-        if (values is not [.., var latest])
-        {
-            return null;
-        }
-
-        var median = Median(values);
-        return median > 0 ? Math.Round(latest.Value / median, 2) : null;
-    }
-
     private static double Median(IReadOnlyList<HydroValue> values)
     {
         var sorted = values.Select(v => v.Value).Order().ToList();
-        return sorted[sorted.Count / 2];
+        return Math.Max(sorted[sorted.Count / 2], (double)DischargeRules.MinMedian);
     }
 }
 

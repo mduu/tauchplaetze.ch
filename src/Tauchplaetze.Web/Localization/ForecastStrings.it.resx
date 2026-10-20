@@ -155,6 +155,7 @@
   <data name="Start_BestPick_Note_Area" xml:space="preserve"><value>Il sito con l’indice più alto nel raggio.</value></data>
   <data name="Start_Ranking_More" xml:space="preserve"><value>Mostra tutti i {0} siti</value></data>
   <data name="Reason_VisibilityLimitsIndex" xml:space="preserve"><value>la visibilità limita l'indice</value></data>
+  <data name="Reason_StrongCurrent" xml:space="preserve"><value>corrente forte</value></data>
   <data name="Start_Coverage" xml:space="preserve"><value>Previsioni finora per {0}. Seguiranno altri specchi d’acqua.</value></data>
   <data name="Start_Coverage_And" xml:space="preserve"><value> e </value></data>
   <data name="Start_WithoutForecast_Title" xml:space="preserve"><value>Nel raggio, ancora senza previsioni</value></data>

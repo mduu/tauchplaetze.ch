@@ -449,6 +449,40 @@ public class DiveIndexTests
         Assert.DoesNotContain(ReasonCode.VisibilityLimitsIndex, result.Reasons);
     }
 
+    [Theory]
+    [InlineData(1.4, 0)]
+    [InlineData(2.25, 1.5)]
+    [InlineData(3.0, 3)]
+    [InlineData(5.0, 3)]
+    public void Am_Fluss_zieht_viel_Wasser_ab_1_5_mal_dem_Median_bis_3_Punkte_fuer_die_Stroemung_ab(double ratio, double expectedPenalty)
+    {
+        // Arrange
+        var river = new DayProfile(Profiles.Of((0, 12)), ProfileSource.RiverStation);
+        var calm = new DayInputs(Calm, river, ClarityEstimate.Unknown, AlgaeLevel.Unknown, 1.0, IsRiver: true);
+        var high = calm with { DischargeRatio = ratio };
+        var withoutPenalty = DiveIndexCalculator.Calculate(high, DiveIndexRules.Default with { RiverCurrentPenalty = [new(100, 0), new(101, 0)] });
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(high, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Equal(Math.Max(withoutPenalty.DiveIndex!.Value - expectedPenalty, 1), result.DiveIndex!.Value, 1);
+        Assert.Equal(expectedPenalty > 0, result.Reasons.Contains(ReasonCode.StrongCurrent));
+    }
+
+    [Fact]
+    public void Am_See_gibt_viel_Zufluss_keinen_Abzug_fuer_die_Stroemung()
+    {
+        // Arrange
+        var inputs = new DayInputs(Calm, Summer, Clear(8), AlgaeLevel.Low, 3.0, IsRiver: false);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
+
+        // Assert
+        Assert.DoesNotContain(ReasonCode.StrongCurrent, result.Reasons);
+    }
+
     private static ClarityEstimate Shore(double secchi) =>
         ClarityEstimate.Choose(new DateOnly(2026, 10, 18), new SatelliteObservation(new DateOnly(2026, 10, 17), secchi, 9), null, _ => 0, 1, DiveIndexRules.Default);
 
