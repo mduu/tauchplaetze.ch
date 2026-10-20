@@ -99,7 +99,7 @@ public class ContentTests(SqlServer sql) : SqlTest(sql)
         var (_, bytes) = await ExportBytes(admin);
         var edit = await ForEditing(site);
         await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(admin, site, edit.BaseNumber, edit.Content with { MaxDepth = 12 }, null));
-        var versionsBefore = (await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site))).Count;
+        var versionsBefore = (await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site, admin))).Count;
 
         // Act
         var result = await Import(admin, bytes);
@@ -107,7 +107,7 @@ public class ContentTests(SqlServer sql) : SqlTest(sql)
         // Assert
         Assert.Equal((1, 0), (result.SitesUpdated, result.SitesAdded));
         Assert.Equal(edit.Content.MaxDepth, (await ForEditing(site)).Content.MaxDepth);
-        var versions = await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site));
+        var versions = await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site, admin));
         Assert.Equal(versionsBefore + 1, versions.Count);
         Assert.StartsWith("Import aus Prod vom ", versions.MaxBy(v => v.Number)!.Comment);
     }

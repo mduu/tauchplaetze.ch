@@ -1,6 +1,6 @@
 @page "/admin/plaetze/{Id:guid}/versionen"
 @layout AdminLayout
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Moderator,Admin")]
 @inherits AdminPage
 @using Microsoft.AspNetCore.Authorization
 @using Tauchplaetze.Core.Features.Media.Queries
@@ -68,7 +68,7 @@
 
     protected override async Task Load()
     {
-        revisions = await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(Id));
+        revisions = await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(Id, UserId));
         name = (await Query<GetDiveSiteForEditingQuery, DiveSiteForEditing?>(new GetDiveSiteForEditingQuery(Id)))?.Content.Name ?? "";
     }
 
@@ -76,7 +76,7 @@
     {
         comparing = number;
         var revision = revisions.Single(r => r.Number == number);
-        changes = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(Id, revision.BaseNumber, number));
+        changes = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(Id, revision.BaseNumber, number, UserId));
         photos = await Query<CompareRevisionMediaQuery, IReadOnlyList<RevisionPhoto>>(new CompareRevisionMediaQuery(UserId, Id, revision.BaseNumber, number, MediaEndpoints.PendingPathTemplate));
     }
 

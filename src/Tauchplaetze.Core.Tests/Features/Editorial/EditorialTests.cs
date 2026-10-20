@@ -82,6 +82,26 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Mitwirkende_sehen_im_CMS_weder_die_Versionen_noch_den_Vergleich_fremder_Vorschlaege()
+    {
+        // Arrange
+        var (moderator, anna, site) = await Prepare();
+        var edit = await ForEditing(site);
+        var bert = await Confirmed("bert@example.org", "Bert");
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(bert, site, edit.BaseNumber, edit.Content with { MaxDepth = 33 }, "geheim"));
+
+        // Act
+        var versions = await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site, anna));
+        var compare = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(site, 1, 2, anna));
+        var forModeration = await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site, moderator));
+
+        // Assert
+        Assert.Empty(versions);
+        Assert.Null(compare);
+        Assert.Equal(2, forModeration.Count);
+    }
+
+    [SqlFact]
     public async Task Ohne_Aenderung_entsteht_keine_neue_Version()
     {
         // Arrange
@@ -93,7 +113,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         Assert.True(result.NoChange);
-        Assert.Single(await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site)));
+        Assert.Single(await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site, await Moderator())));
     }
 
     [SqlFact]
@@ -341,7 +361,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(admin, anna, Roles.Admin, true));
         var proposal = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 21 }, null));
         await Command<BlockAccountCommand, AccountResult>(new BlockAccountCommand(admin, anna, true));
-        var revision = (await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site))).Single(r => r.Number == proposal.Number);
+        var revision = (await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site, await Moderator()))).Single(r => r.Number == proposal.Number);
 
         // Act
         var profile = await Command<UpdateProfileCommand, AccountResult>(new UpdateProfileCommand(anna, "Anna B.", true, "fr"));
@@ -594,6 +614,9 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     private static SketchFeature Sketch(SketchKind kind, int? depth, (string Culture, string Label)[] labels, params (double Lat, double Lng)[] points) =>
         new(Guid.NewGuid(), kind, [.. points.Select(p => new SketchPoint(p.Lat, p.Lng))], depth, [.. labels.Select(l => new SketchText(l.Culture, l.Label))]);
 
+    private async Task<string> Moderator() =>
+        (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
+
     private async Task<(string Moderator, string Anna, Guid Site)> Prepare()
     {
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
@@ -626,7 +649,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     private async Task<int?> PublicMaxDepth(Guid site) => (await ForEditing(site)).Content.MaxDepth;
 
     private async Task<IReadOnlyList<FieldChange>> Changes(Guid site, int from, int to) =>
-        (await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(site, from, to)))!;
+        (await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(site, from, to, await Moderator())))!;
 
     private async Task<IReadOnlyList<SiteNotice>> PublicNotices(Guid site)
     {

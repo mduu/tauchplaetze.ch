@@ -53,7 +53,10 @@
                         <p class="proposal-reason">@L["MyProposals_Reason"]: @(proposal.ReviewComment ?? "–")</p>
                     }
                     <p class="proposal-actions">
-                        <a href="@($"/admin/plaetze/{proposal.DiveSiteId}/versionen")" data-enhance-nav="false">@L["MyProposals_Compare"]</a>
+                        @if (proposal.SiteSlug is { } versionsSlug)
+                        {
+                            <a href="@PublicRoutes.DiveSiteVersions(Language, versionsSlug)">@L["MyProposals_Compare"]</a>
+                        }
                         @if (proposal.Status == RevisionStatus.Pending)
                         {
                             <button type="submit" class="link-button" name="RevisionId" value="@proposal.RevisionId">@L["MyProposals_Withdraw"]</button>

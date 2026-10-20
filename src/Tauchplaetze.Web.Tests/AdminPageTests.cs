@@ -126,6 +126,7 @@ public class AdminPageTests : IClassFixture<WebApp>
     [InlineData("/admin/plaetze")]
     [InlineData("/admin/vorschlaege")]
     [InlineData("/admin/konten")]
+    [InlineData("/admin/plaetze/0190d6f2-0000-7000-8000-000000000001/versionen")]
     public async Task Mitwirkende_kommen_nicht_in_die_Moderation(string path)
     {
         // Arrange

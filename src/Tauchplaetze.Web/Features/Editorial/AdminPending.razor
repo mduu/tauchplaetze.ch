@@ -61,7 +61,7 @@
         foreach (var item in pending)
         {
             reasons.TryAdd(item.Revision.Id, "");
-            changes[item.Revision.Id] = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(item.DiveSiteId, item.Revision.BaseNumber, item.Revision.Number));
+            changes[item.Revision.Id] = await Query<CompareRevisionsQuery, IReadOnlyList<FieldChange>?>(new CompareRevisionsQuery(item.DiveSiteId, item.Revision.BaseNumber, item.Revision.Number, UserId));
             photos[item.Revision.Id] = await Query<CompareRevisionMediaQuery, IReadOnlyList<RevisionPhoto>>(
                 new CompareRevisionMediaQuery(UserId, item.DiveSiteId, item.Revision.BaseNumber, item.Revision.Number, MediaEndpoints.PendingPathTemplate));
         }

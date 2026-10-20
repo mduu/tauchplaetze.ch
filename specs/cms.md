@@ -8,7 +8,7 @@ Es gibt drei Bereiche (Entscheid Marc, 19.10.2026: «reine Admin-Features auf /p
 | **Moderation** `/admin` | Moderatoren und Admins | MudBlazor, Seitenleiste |
 | **Plattform** `/platform` | nur Admins | MudBlazor, Navigation oben, Kopf mit orangem Strich |
 
-Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätze nur auf der Website vor. Offen bleiben ihnen nur die Versionen eines Platzes (`/admin/plaetze/{id}/versionen`), weil «Meine Vorschläge» für den Vergleich darauf verlinkt. Die Navigation der Moderation zeigt ihnen dort nur «Meine Vorschläge». Der Editor im CMS bleibt der Moderation, zum Beispiel für die Felder «nur Moderation» und die Hinweise.
+Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätze nur auf der Website vor. Auch die Versionen eines Platzes im CMS (`/admin/plaetze/{id}/versionen`) sind nur für die Moderation. «Meine Vorschläge» verlinkt auf die öffentliche History des Platzes. Der Editor im CMS bleibt der Moderation, zum Beispiel für die Felder «nur Moderation» und die Hinweise.
 
 | Pfad | Inhalt | Wer |
 |---|---|---|
@@ -19,7 +19,7 @@ Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätz
 | `/admin/plaetze` | Liste mit Suche, Status, Ausbaustufe, Datenstufe, offenen Vorschlägen | Moderatoren, Admins |
 | `/admin/plaetze/neu` | neuer Platz: Name, Gewässer, Koordinate (Klick in die Karte) | Moderatoren, Admins |
 | `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten (mit «Auch bekannt als», Namen mit Komma getrennt), Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station, Schwellen des Abflusses) | Moderatoren, Admins |
-| `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | alle Angemeldeten, Wiederherstellen für Moderatoren |
+| `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | Moderatoren und Admins (Security-Review 20.10.2026: zeigte Mitwirkenden Namen ohne Einwilligung, Begründungen und fremde Vorschläge). Der Core liefert ohne Recht nichts. |
 | `/admin/vorschlaege` | offene Vorschläge mit Vergleich zur Basis, Freigeben, Ablehnen mit Begründung | Moderatoren, Admins |
 | `/admin/konten` | Konten sperren (ohne E-Mail-Adressen und Rollen) | Moderatoren; Admins nutzen `/platform/konten` |
 | `/platform` | Übersicht: Konten (davon gesperrt), offene Vorschläge, letzter Prognose-Lauf, Mail-Queue | Admins |
