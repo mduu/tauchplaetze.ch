@@ -143,9 +143,11 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
         // Act
         await Command<RequestPasswordResetCommand, Unit>(new RequestPasswordResetCommand(Email, ResetTemplate));
         await Command<RequestPasswordResetCommand, Unit>(new RequestPasswordResetCommand(Email, ResetTemplate));
+        await Sql.DeliverMail();
         var afterTwo = Sql.Mail.Sent.Count - before;
         Sql.Time.Now += AccountMailCooldown.Cooldown;
         await Command<RequestPasswordResetCommand, Unit>(new RequestPasswordResetCommand(Email, ResetTemplate));
+        await Sql.DeliverMail();
 
         // Assert
         Assert.Equal(1, afterTwo);
@@ -187,6 +189,7 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
         // Arrange
         await RegisterAndConfirm();
         await Command<RequestPasswordResetCommand, Unit>(new RequestPasswordResetCommand(Email, ResetTemplate));
+        await Sql.DeliverMail();
         var (userId, token) = Parts(Sql.Mail.LinkTo(Email));
 
         // Act

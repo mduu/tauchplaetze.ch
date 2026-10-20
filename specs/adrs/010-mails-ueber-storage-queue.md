@@ -65,3 +65,7 @@ Wir entscheiden uns für **Azure Storage Queues** im bestehenden Storage Account
 
 - Feldnah ADR-010 (Storage Queue), ADR-013 (Monitoring über Log-Signal)
 - `cms.md`, «Benachrichtigungen» und «Plattform»; `infrastructure.md`, «Storage Queues»
+
+## Nachtrag 20.10.2026 (Security-Review)
+
+«Passwort vergessen» sendet über die Queue statt sofort. Nur eine bekannte Adresse löst eine Mail aus. Ein sofortiger Versand würde die Antwort um die Zeit des SMTP-Versands verlängern, und das verriete, dass es das Konto gibt. Die Queue liefert in 5–30 s. Der Link «neues Passwort» aus der Plattform (Admin) und die Registrierung senden weiter sofort.

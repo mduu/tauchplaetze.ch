@@ -8,7 +8,8 @@ namespace Tauchplaetze.Core.Features.Accounts.Commands;
 
 /// <summary>
 /// Schickt einen Link für ein neues Passwort, wenn es ein bestätigtes Konto gibt. Das Ergebnis verrät nicht, ob es das Konto gibt.
-/// Höchstens eine Mail pro Konto innert 15 Minuten (<see cref="AccountMailCooldown"/>).
+/// Höchstens eine Mail pro Konto innert 15 Minuten (<see cref="AccountMailCooldown"/>). Die Mail geht über die Queue (5–30 s), nicht sofort:
+/// So antwortet die Seite für bekannte und unbekannte Adressen gleich schnell und verrät kein Konto.
 /// <paramref name="ResetPathTemplate"/> ist ein Pfad der Website mit `{user}` und `{token}`.
 /// </summary>
 public record RequestPasswordResetCommand(string Email, string ResetPathTemplate);
@@ -21,7 +22,7 @@ internal class RequestPasswordResetHandler(UserManager<User> users, MailDispatch
         if (user is { EmailConfirmed: true, BlockedAt: null, Email: { } email } && cooldown.TryStart(user.Id, AccountMailCooldown.PasswordReset))
         {
             var token = await users.GeneratePasswordResetTokenAsync(user);
-            await mail.SendNow(email, user.PreferredCulture, new ResetPasswordMail(user.DisplayName, site.Value.Link(AccountLinks.Build(command.ResetPathTemplate, user.Id, token))), ct);
+            await mail.Enqueue(email, user.PreferredCulture, new ResetPasswordMail(user.DisplayName, site.Value.Link(AccountLinks.Build(command.ResetPathTemplate, user.Id, token))), ct);
         }
 
         return Unit.Value;
