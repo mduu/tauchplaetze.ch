@@ -88,6 +88,7 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
             waterBody.AlplakesModel3d ??= seed.AlplakesModel3d;
             waterBody.AlplakesSimstratKey ??= seed.AlplakesSimstratKey;
             waterBody.SatellitePoint ??= seed.SatellitePoint?.ToPoint();
+            waterBody.Elevation ??= seed.Elevation;
         }
     }
 
@@ -111,6 +112,7 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
         AlplakesLakeKey = seed.AlplakesLakeKey,
         AlplakesModel3d = seed.AlplakesModel3d,
         AlplakesSimstratKey = seed.AlplakesSimstratKey,
+        Elevation = seed.Elevation,
         IsActive = true,
         HydroStations = [.. (seed.HydroStations ?? []).Select(s => s.ToEntity())],
     };
@@ -128,7 +130,8 @@ internal class SeedWaterBodiesHandler(TauchplaetzeDbContext dbContext) : IComman
         string? AlplakesModel3d,
         string? AlplakesSimstratKey,
         IReadOnlyList<HydroStationSeed>? HydroStations,
-        IReadOnlyList<string>? RemovedHydroStations = null);
+        IReadOnlyList<string>? RemovedHydroStations = null,
+        int? Elevation = null);
 
     private sealed record HydroStationSeed(
         string Id, string Name, string Role, double? Latitude, double? Longitude, double? MouthLatitude = null, double? MouthLongitude = null)

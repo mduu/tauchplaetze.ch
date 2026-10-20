@@ -1057,6 +1057,9 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .IsRequired()
                         .HasColumnType("geography");
 
+                    b.Property<int?>("Elevation")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 

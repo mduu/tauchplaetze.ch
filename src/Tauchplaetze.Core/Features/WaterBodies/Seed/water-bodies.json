@@ -17,6 +17,7 @@
     "alplakesLakeKey": "zurich",
     "alplakesModel3d": "delft3d-flow",
     "alplakesSimstratKey": "lowerzurich",
+    "elevation": 406,
     "hydroStations": [
       {
         "id": "2104",
@@ -45,6 +46,7 @@
     "alplakesLakeKey": "zug",
     "alplakesModel3d": "mitgcm",
     "alplakesSimstratKey": "zug",
+    "elevation": 414,
     "hydroStations": [
       {
         "id": "2477",
@@ -142,7 +144,8 @@
     },
     "alplakesLakeKey": "ageri",
     "alplakesModel3d": "delft3d-flow",
-    "alplakesSimstratKey": "aegeri"
+    "alplakesSimstratKey": "aegeri",
+    "elevation": 724
   },
   {
     "slug": "alter-rhein",
@@ -154,7 +157,8 @@
     "centroid": {
       "latitude": 47.3897,
       "longitude": 9.6728
-    }
+    },
+    "elevation": 411
   },
   {
     "slug": "arnensee",
@@ -167,7 +171,8 @@
       "latitude": 46.389,
       "longitude": 7.2168
     },
-    "alplakesLakeKey": "arnen"
+    "alplakesLakeKey": "arnen",
+    "elevation": 1541
   },
   {
     "slug": "arnisee",
@@ -179,7 +184,8 @@
     "centroid": {
       "latitude": 46.7718,
       "longitude": 8.6434
-    }
+    },
+    "elevation": 1368
   },
   {
     "slug": "baldeggersee",
@@ -197,7 +203,8 @@
       "longitude": 8.26
     },
     "alplakesLakeKey": "baldegg",
-    "alplakesSimstratKey": "baldegg"
+    "alplakesSimstratKey": "baldegg",
+    "elevation": 463
   },
   {
     "slug": "bielersee",
@@ -217,6 +224,7 @@
     "alplakesLakeKey": "biel",
     "alplakesModel3d": "delft3d-flow",
     "alplakesSimstratKey": "biel",
+    "elevation": 429,
     "hydroStations": [
       {
         "id": "2085",
@@ -239,7 +247,8 @@
     "centroid": {
       "latitude": 46.5325,
       "longitude": 7.6648
-    }
+    },
+    "elevation": 887
   },
   {
     "slug": "brienzersee",
@@ -258,6 +267,7 @@
     },
     "alplakesLakeKey": "brienz",
     "alplakesSimstratKey": "brienz",
+    "elevation": 564,
     "hydroStations": [
       {
         "id": "2019",
@@ -291,7 +301,8 @@
       "longitude": 7.6688
     },
     "alplakesLakeKey": "burgaschisee",
-    "alplakesSimstratKey": "burgaschisee"
+    "alplakesSimstratKey": "burgaschisee",
+    "elevation": 465
   },
   {
     "slug": "caumasee",
@@ -303,7 +314,8 @@
     "centroid": {
       "latitude": 46.8202,
       "longitude": 9.2951
-    }
+    },
+    "elevation": 997
   },
   {
     "slug": "champferersee",
@@ -317,7 +329,8 @@
       "longitude": 9.8056
     },
     "alplakesLakeKey": "champfer",
-    "alplakesSimstratKey": "champfer"
+    "alplakesSimstratKey": "champfer",
+    "elevation": 1815
   },
   {
     "slug": "davosersee",
@@ -330,7 +343,8 @@
       "latitude": 46.8198,
       "longitude": 9.8527
     },
-    "alplakesLakeKey": "davoser"
+    "alplakesLakeKey": "davoser",
+    "elevation": 1558
   },
   {
     "slug": "engstlensee",
@@ -343,7 +357,8 @@
       "latitude": 46.773,
       "longitude": 8.3557
     },
-    "alplakesLakeKey": "engstlen"
+    "alplakesLakeKey": "engstlen",
+    "elevation": 1850
   },
   {
     "slug": "espi",
@@ -355,7 +370,8 @@
     "centroid": {
       "latitude": 47.6585,
       "longitude": 8.8564
-    }
+    },
+    "elevation": 395
   },
   {
     "slug": "etang-du-duzillet",
@@ -367,7 +383,8 @@
     "centroid": {
       "latitude": 46.2915,
       "longitude": 6.9592
-    }
+    },
+    "elevation": 385
   },
   {
     "slug": "genfersee",
@@ -387,6 +404,7 @@
     "alplakesLakeKey": "geneva",
     "alplakesModel3d": "delft3d-flow",
     "alplakesSimstratKey": "geneva",
+    "elevation": 372,
     "hydroStations": [
       {
         "id": "2009",
@@ -416,7 +434,8 @@
     },
     "alplakesLakeKey": "greifensee",
     "alplakesModel3d": "delft3d-flow",
-    "alplakesSimstratKey": "greifensee"
+    "alplakesSimstratKey": "greifensee",
+    "elevation": 435
   },
   {
     "slug": "greyerzersee",
@@ -431,6 +450,7 @@
     },
     "alplakesLakeKey": "gruyere",
     "alplakesSimstratKey": "gruyere",
+    "elevation": 674,
     "hydroStations": [
       {
         "id": "2160",
@@ -475,7 +495,8 @@
     "alplakesSimstratKey": "hallwil",
     "removedHydroStations": [
       "2416"
-    ]
+    ],
+    "elevation": 449
   },
   {
     "slug": "heidsee",
@@ -487,7 +508,8 @@
     "centroid": {
       "latitude": 46.7388,
       "longitude": 9.5511
-    }
+    },
+    "elevation": 1484
   },
   {
     "slug": "kloentalersee",
@@ -501,7 +523,8 @@
       "longitude": 8.9764
     },
     "alplakesLakeKey": "klontalersee",
-    "alplakesSimstratKey": "klontalersee"
+    "alplakesSimstratKey": "klontalersee",
+    "elevation": 841
   },
   {
     "slug": "l-areuse",
@@ -536,7 +559,8 @@
       "longitude": 6.3241
     },
     "alplakesLakeKey": "brenet",
-    "alplakesSimstratKey": "brenet"
+    "alplakesSimstratKey": "brenet",
+    "elevation": 1002
   },
   {
     "slug": "lac-de-geronde",
@@ -548,7 +572,8 @@
     "centroid": {
       "latitude": 46.2888,
       "longitude": 7.5426
-    }
+    },
+    "elevation": 521
   },
   {
     "slug": "lac-de-l-hongrin",
@@ -561,7 +586,8 @@
       "latitude": 46.4222,
       "longitude": 7.0504
     },
-    "alplakesLakeKey": "hongrin"
+    "alplakesLakeKey": "hongrin",
+    "elevation": 1260
   },
   {
     "slug": "lac-de-moiry",
@@ -574,7 +600,8 @@
       "latitude": 46.1264,
       "longitude": 7.5709
     },
-    "alplakesLakeKey": "moiry"
+    "alplakesLakeKey": "moiry",
+    "elevation": 2248
   },
   {
     "slug": "lac-de-montsalvens",
@@ -587,7 +614,8 @@
       "latitude": 46.6154,
       "longitude": 7.1468
     },
-    "alplakesLakeKey": "montsalvens"
+    "alplakesLakeKey": "montsalvens",
+    "elevation": 806
   },
   {
     "slug": "lac-de-taney",
@@ -600,7 +628,8 @@
       "latitude": 46.3455,
       "longitude": 6.84
     },
-    "alplakesLakeKey": "taney"
+    "alplakesLakeKey": "taney",
+    "elevation": 1405
   },
   {
     "slug": "lac-lioson",
@@ -614,7 +643,8 @@
       "longitude": 7.1287
     },
     "alplakesLakeKey": "lioson",
-    "alplakesSimstratKey": "lioson"
+    "alplakesSimstratKey": "lioson",
+    "elevation": 1847
   },
   {
     "slug": "laghetto-moesola",
@@ -626,7 +656,8 @@
     "centroid": {
       "latitude": 46.4932,
       "longitude": 9.1706
-    }
+    },
+    "elevation": 2063
   },
   {
     "slug": "lago-del-sambuco",
@@ -639,7 +670,8 @@
       "latitude": 46.4656,
       "longitude": 8.6471
     },
-    "alplakesLakeKey": "sambuco"
+    "alplakesLakeKey": "sambuco",
+    "elevation": 1458
   },
   {
     "slug": "lago-di-cadagno",
@@ -653,7 +685,8 @@
       "longitude": 8.7116
     },
     "alplakesLakeKey": "cadagno",
-    "alplakesSimstratKey": "cadagno"
+    "alplakesSimstratKey": "cadagno",
+    "elevation": 1921
   },
   {
     "slug": "lago-di-tome",
@@ -667,7 +700,8 @@
       "longitude": 8.6899
     },
     "alplakesLakeKey": "tome",
-    "alplakesSimstratKey": "tome"
+    "alplakesSimstratKey": "tome",
+    "elevation": 1693
   },
   {
     "slug": "lago-di-vogorno",
@@ -680,7 +714,8 @@
       "latitude": 46.2173,
       "longitude": 8.8527
     },
-    "alplakesLakeKey": "vogorno"
+    "alplakesLakeKey": "vogorno",
+    "elevation": 758
   },
   {
     "slug": "lago-maggiore",
@@ -699,6 +734,7 @@
     },
     "alplakesLakeKey": "maggiore",
     "alplakesSimstratKey": "maggiore",
+    "elevation": 193,
     "hydroStations": [
       {
         "id": "2020",
@@ -730,7 +766,8 @@
     "centroid": {
       "latitude": 46.4783,
       "longitude": 8.5783
-    }
+    },
+    "elevation": 2260
   },
   {
     "slug": "le-creugenat",
@@ -754,7 +791,8 @@
     "centroid": {
       "latitude": 46.4702,
       "longitude": 9.728
-    }
+    },
+    "elevation": 2270
   },
   {
     "slug": "limmat",
@@ -795,6 +833,7 @@
     "alplakesLakeKey": "lugano",
     "alplakesModel3d": "delft3d-flow",
     "alplakesSimstratKey": "upperlugano",
+    "elevation": 270,
     "hydroStations": [
       {
         "id": "2629",
@@ -828,7 +867,8 @@
       "longitude": 8.1629
     },
     "alplakesLakeKey": "lungern",
-    "alplakesSimstratKey": "lungern"
+    "alplakesSimstratKey": "lungern",
+    "elevation": 701
   },
   {
     "slug": "maggia",
@@ -869,7 +909,8 @@
       "latitude": 46.4985,
       "longitude": 9.6362
     },
-    "alplakesLakeKey": "marmorera"
+    "alplakesLakeKey": "marmorera",
+    "elevation": 1676
   },
   {
     "slug": "melchsee",
@@ -882,7 +923,8 @@
       "latitude": 46.7704,
       "longitude": 8.2726
     },
-    "alplakesLakeKey": "melch"
+    "alplakesLakeKey": "melch",
+    "elevation": 1892
   },
   {
     "slug": "muslen-stausee",
@@ -894,7 +936,8 @@
     "centroid": {
       "latitude": 47.1404,
       "longitude": 9.1351
-    }
+    },
+    "elevation": 603
   },
   {
     "slug": "neuenburgersee",
@@ -914,6 +957,7 @@
     "alplakesLakeKey": "neuchatel",
     "alplakesModel3d": "mitgcm",
     "alplakesSimstratKey": "neuchatel",
+    "elevation": 429,
     "hydroStations": [
       {
         "id": "2480",
@@ -947,7 +991,8 @@
       "longitude": 7.7254
     },
     "alplakesLakeKey": "oeschinensee",
-    "alplakesSimstratKey": "oeschinensee"
+    "alplakesSimstratKey": "oeschinensee",
+    "elevation": 1575
   },
   {
     "slug": "orbe-inferieure",
@@ -986,7 +1031,8 @@
       "longitude": 8.78
     },
     "alplakesLakeKey": "pfaffikon",
-    "alplakesSimstratKey": "pfaffikon"
+    "alplakesSimstratKey": "pfaffikon",
+    "elevation": 537
   },
   {
     "slug": "pumpspeicherkraftwerk-mapragg",
@@ -998,7 +1044,8 @@
     "centroid": {
       "latitude": 46.9407,
       "longitude": 9.477
-    }
+    },
+    "elevation": 864
   },
   {
     "slug": "riale-del-salto",
@@ -1023,7 +1070,8 @@
       "latitude": 46.5399,
       "longitude": 8.6912
     },
-    "alplakesLakeKey": "ritom"
+    "alplakesLakeKey": "ritom",
+    "elevation": 1848
   },
   {
     "slug": "sanetschsee",
@@ -1036,7 +1084,8 @@
       "latitude": 46.3556,
       "longitude": 7.2946
     },
-    "alplakesLakeKey": "sanetsch"
+    "alplakesLakeKey": "sanetsch",
+    "elevation": 2033
   },
   {
     "slug": "sarnersee",
@@ -1054,7 +1103,8 @@
       "longitude": 8.205
     },
     "alplakesLakeKey": "sarnen",
-    "alplakesSimstratKey": "sarnen"
+    "alplakesSimstratKey": "sarnen",
+    "elevation": 469
   },
   {
     "slug": "schiffenensee",
@@ -1068,6 +1118,7 @@
       "longitude": 7.1676
     },
     "alplakesLakeKey": "schiffenen",
+    "elevation": 578,
     "hydroStations": [
       {
         "id": "2119",
@@ -1091,7 +1142,8 @@
       "latitude": 46.6651,
       "longitude": 7.2818
     },
-    "alplakesLakeKey": "schwarz"
+    "alplakesLakeKey": "schwarz",
+    "elevation": 1045
   },
   {
     "slug": "seealpsee",
@@ -1104,7 +1156,8 @@
       "latitude": 47.2683,
       "longitude": 9.4012
     },
-    "alplakesLakeKey": "seealp"
+    "alplakesLakeKey": "seealp",
+    "elevation": 1142
   },
   {
     "slug": "sihlsee",
@@ -1122,7 +1175,8 @@
       "longitude": 8.78
     },
     "alplakesLakeKey": "sihlsee",
-    "alplakesSimstratKey": "sihlsee"
+    "alplakesSimstratKey": "sihlsee",
+    "elevation": 889
   },
   {
     "slug": "silsersee",
@@ -1136,7 +1190,8 @@
       "longitude": 9.7294
     },
     "alplakesLakeKey": "sils",
-    "alplakesSimstratKey": "sils"
+    "alplakesSimstratKey": "sils",
+    "elevation": 1796
   },
   {
     "slug": "silvaplanersee",
@@ -1154,7 +1209,8 @@
       "longitude": 9.79
     },
     "alplakesLakeKey": "silvaplana",
-    "alplakesSimstratKey": "silvaplana"
+    "alplakesSimstratKey": "silvaplana",
+    "elevation": 1791
   },
   {
     "slug": "stausee-garichti",
@@ -1167,7 +1223,8 @@
       "latitude": 46.9555,
       "longitude": 9.0999
     },
-    "alplakesLakeKey": "garichti"
+    "alplakesLakeKey": "garichti",
+    "elevation": 1620
   },
   {
     "slug": "stausee-gigerwald",
@@ -1180,7 +1237,8 @@
       "latitude": 46.9155,
       "longitude": 9.3742
     },
-    "alplakesLakeKey": "gigerwald"
+    "alplakesLakeKey": "gigerwald",
+    "elevation": 1333
   },
   {
     "slug": "steinenbach",
@@ -1204,7 +1262,8 @@
     "centroid": {
       "latitude": 47.3154,
       "longitude": 8.3691
-    }
+    },
+    "elevation": 378
   },
   {
     "slug": "sufnersee",
@@ -1217,7 +1276,8 @@
       "latitude": 46.5671,
       "longitude": 9.3666
     },
-    "alplakesLakeKey": "sufner"
+    "alplakesLakeKey": "sufner",
+    "elevation": 1398
   },
   {
     "slug": "talalpsee",
@@ -1229,7 +1289,8 @@
     "centroid": {
       "latitude": 47.0955,
       "longitude": 9.1335
-    }
+    },
+    "elevation": 1084
   },
   {
     "slug": "tannensee",
@@ -1242,7 +1303,8 @@
       "latitude": 46.7732,
       "longitude": 8.3069
     },
-    "alplakesLakeKey": "tannen"
+    "alplakesLakeKey": "tannen",
+    "elevation": 1977
   },
   {
     "slug": "thunersee",
@@ -1261,6 +1323,7 @@
     },
     "alplakesLakeKey": "thun",
     "alplakesSimstratKey": "thun",
+    "elevation": 558,
     "hydroStations": [
       {
         "id": "2457",
@@ -1313,7 +1376,8 @@
     "centroid": {
       "latitude": 46.7937,
       "longitude": 8.3902
-    }
+    },
+    "elevation": 1764
   },
   {
     "slug": "tuerlersee",
@@ -1327,7 +1391,8 @@
       "longitude": 8.5035
     },
     "alplakesLakeKey": "turlersee",
-    "alplakesSimstratKey": "turlersee"
+    "alplakesSimstratKey": "turlersee",
+    "elevation": 644
   },
   {
     "slug": "verzasca",
@@ -1368,6 +1433,7 @@
     "alplakesLakeKey": "lucerne",
     "alplakesModel3d": "mitgcm",
     "alplakesSimstratKey": "lucernekreuztrichterandvitznauerbecken",
+    "elevation": 434,
     "hydroStations": [
       {
         "id": "2056",
@@ -1399,7 +1465,8 @@
     "centroid": {
       "latitude": 47.0869,
       "longitude": 8.9152
-    }
+    },
+    "elevation": 914
   },
   {
     "slug": "walensee",
@@ -1418,6 +1485,7 @@
     },
     "alplakesLakeKey": "walensee",
     "alplakesSimstratKey": "walensee",
+    "elevation": 420,
     "hydroStations": [
       {
         "id": "2372",

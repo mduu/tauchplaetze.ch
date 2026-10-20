@@ -33,6 +33,9 @@ internal class WaterBody
 
     public Point? SatellitePoint { get; set; }
 
+    /// <summary>Höhe des Seespiegels in m ü. M., gerundet. <c>null</c> bei Flüssen und wenn unbekannt.</summary>
+    public int? Elevation { get; set; }
+
     public bool IsActive { get; set; }
 
     public List<WaterBodyHydroStation> HydroStations { get; set; } = [];
