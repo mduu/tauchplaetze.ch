@@ -165,6 +165,24 @@ public class DischargeTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Heute_ordnet_die_Tagesleiste_den_Abfluss_wie_die_Kachel_nach_dem_Messwert_ein()
+    {
+        // Arrange: Rheinfelden mit Vorhersage. Der Rest des heutigen Tages ist im Mittel tiefer als der Messwert.
+        var (_, site) = await PrepareRheinfelden();
+        Sql.Sources.Overrides["locations=2091&"] = TestData.Read("hydro", "daterange-2091-flow-height.json");
+        Sql.Sources.Overrides["pqprevi-official/Pqprevi_ICH2_Ctrl_2091.txt"] = TestData.Read("hydro", "pqprevi-official-ICH2_Ctrl-2091-20261019.txt");
+        await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
+
+        // Act
+        var discharge = (await Discharge(site))!;
+
+        // Assert
+        var today = discharge.Forecast!.Days[0];
+        Assert.Equal(discharge.Discharge, today.Discharge);
+        Assert.Equal(discharge.Level, today.Level);
+    }
+
+    [SqlFact]
     public async Task Ohne_kontrollierte_Vorhersage_gilt_die_automatisch_gerechnete_und_ist_so_gekennzeichnet()
     {
         // Arrange

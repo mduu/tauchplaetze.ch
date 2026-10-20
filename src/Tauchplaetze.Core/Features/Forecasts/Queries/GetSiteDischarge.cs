@@ -76,10 +76,11 @@ internal class GetSiteDischargeHandler(TauchplaetzeDbContext dbContext, TimeProv
             reading is { Temperature: { } temperature, TemperatureMeasuredAt: { } measuredAt }
                 ? new WaterTemperature(temperature, measuredAt, now - measuredAt > StaleAfter)
                 : null,
-            Forecast(reading, forecastHours, thresholds));
+            Forecast(reading, forecastHours, thresholds, today));
     }
 
-    private static DischargeForecast? Forecast(HydroReading reading, List<HydroHour> hours, DischargeThresholds? thresholds)
+    /// <remarks>Heute zählt der Messwert wie in der Kachel, nicht das Mittel der restlichen Stunden. So sagen Kachel und Tagesleiste dasselbe.</remarks>
+    private static DischargeForecast? Forecast(HydroReading reading, List<HydroHour> hours, DischargeThresholds? thresholds, DateOnly today)
     {
         if (reading.ForecastIssuedAt is not { } issuedAt || hours.Count == 0)
         {
@@ -91,7 +92,7 @@ internal class GetSiteDischargeHandler(TauchplaetzeDbContext dbContext, TimeProv
             reading.ForecastOfficial ?? false,
             [.. hours
                 .GroupBy(h => SwissTime.DayOf(h.Hour))
-                .Select(g => Day(g.Key, Math.Round(g.Average(h => h.Discharge), 1), thresholds))]);
+                .Select(g => Day(g.Key, g.Key == today ? reading.Discharge : Math.Round(g.Average(h => h.Discharge), 1), thresholds))]);
     }
 
     private static DischargeForecastDay Day(DateOnly date, decimal mean, DischargeThresholds? thresholds) =>
