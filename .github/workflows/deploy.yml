@@ -22,6 +22,7 @@ concurrency:
 
 env:
   APP_NAME: app-tauchplaetze-prod
+  RESOURCE_GROUP: rg-tauchplaetze-prod
   # Nach restrictToCloudflare erreicht nur Cloudflare die App: dann die Variable PUBLIC_BASE_URL setzen (doc/go-live.md).
   APP_URL: ${{ vars.PUBLIC_BASE_URL || 'https://app-tauchplaetze-prod.azurewebsites.net' }}
   DOTNET_NOLOGO: true
@@ -56,7 +57,19 @@ jobs:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
+      # Vor dem ersten Infra-Deploy gibt es die Web App noch nicht. Dann überspringt der Job Deploy und Health, statt rot zu werden.
+      - name: Web App vorhanden?
+        id: app
+        run: |
+          if az webapp show --name "$APP_NAME" --resource-group "$RESOURCE_GROUP" --query id -o tsv > /dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Web App $APP_NAME gibt es noch nicht (infra.yml zuerst). Deploy übersprungen."
+          fi
+
       - name: Deploy
+        if: steps.app.outputs.exists == 'true'
         uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383 # v3.0.8
         with:
           app-name: ${{ env.APP_NAME }}
@@ -65,6 +78,7 @@ jobs:
       # /alive prüft die App, /de zusätzlich die Datenbank. /health/ready (Datenbank und Prognose-Lauf jünger als 30 h) nur als Warnung:
       # Nach dem ersten Deploy gibt es noch keinen Lauf, und ein voller Lauf dauert rund 25 Minuten.
       - name: Health
+        if: steps.app.outputs.exists == 'true'
         run: |
           check() {
             for i in $(seq 1 10); do

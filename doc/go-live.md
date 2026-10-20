@@ -21,13 +21,15 @@ Eine App-Registrierung für GitHub Actions, ohne Passwort. Zwei Federated Creden
 - `prod-app`: Deploy der App und what-if der Infrastruktur, **ohne Freigabe**.
 - `prod`: Deploy der Infrastruktur, **mit Freigabe**.
 
+GitHub schickt das Subject mit den festen IDs von Konto und Repository (`repo:mduu@8256317/tauchplaetze.ch@1423266386:…`), nicht mehr nur mit den Namen. Ein Subject ohne IDs schlägt mit `AADSTS700213` fehl (20.10.2026). Die IDs zeigt das Log eines gescheiterten Laufs unter «subject claim».
+
 Eine Credential für den Branch `main` braucht es nicht: Jeder Job mit Azure läuft in einem der beiden Environments.
 
 ```bash
 APP_ID=$(az ad app create --display-name "github-tauchplaetze-prod" --query appId -o tsv)
 az ad sp create --id "$APP_ID"
-for subject in "repo:mduu/tauchplaetze.ch:environment:prod-app" "repo:mduu/tauchplaetze.ch:environment:prod"; do
-  az ad app federated-credential create --id "$APP_ID" --parameters "{\"name\":\"$(echo "$subject" | tr ':/' '--')\",\"issuer\":\"https://token.actions.githubusercontent.com\",\"subject\":\"$subject\",\"audiences\":[\"api://AzureADTokenExchange\"]}"
+for env in prod-app prod; do
+  az ad app federated-credential create --id "$APP_ID" --parameters "{\"name\":\"github-env-$env\",\"issuer\":\"https://token.actions.githubusercontent.com\",\"subject\":\"repo:mduu@8256317/tauchplaetze.ch@1423266386:environment:$env\",\"audiences\":[\"api://AzureADTokenExchange\"]}"
 done
 ```
 
@@ -57,10 +59,12 @@ In GitHub (Settings → Secrets and variables → Actions):
 | Variable | `AZURE_CLIENT_ID` | `$APP_ID` |
 | Variable | `AZURE_TENANT_ID` | `az account show --query tenantId -o tsv` |
 | Variable | `AZURE_SUBSCRIPTION_ID` | `<Subscription-ID>` |
-| Variable | `SQL_ADMIN_LOGIN` | Anzeigename des SQL-Admins (Benutzer oder Gruppe) |
-| Variable | `SQL_ADMIN_OBJECT_ID` | `az ad signed-in-user show --query id -o tsv` (oder die Gruppe) |
+| Secret | `SQL_ADMIN_LOGIN` | Anmeldename des SQL-Admins (Benutzer oder Gruppe) |
+| Secret | `SQL_ADMIN_OBJECT_ID` | `az ad signed-in-user show --query id -o tsv` (oder die Gruppe) |
 | Variable | `SQL_ADMIN_PRINCIPAL_TYPE` | `User` oder `Group` |
 | Secret | `ALERT_EMAIL` | Adresse für Alerts und Budget |
+
+Die Logs eines öffentlichen Repositorys sind öffentlich. GitHub maskiert nur Secrets, keine Variablen. Darum sind Anmeldename und Object-ID des SQL-Admins Secrets.
 
 Solange `AZURE_CLIENT_ID` fehlt, überspringt `deploy.yml` den Deploy.
 

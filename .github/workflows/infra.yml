@@ -23,8 +23,9 @@ concurrency:
 
 env:
   RESOURCE_GROUP: rg-tauchplaetze-prod
-  SQL_ADMIN_LOGIN: ${{ vars.SQL_ADMIN_LOGIN }}
-  SQL_ADMIN_OBJECT_ID: ${{ vars.SQL_ADMIN_OBJECT_ID }}
+  # Secrets statt Variablen: Die Logs eines öffentlichen Repositorys sind öffentlich, Variablen maskiert GitHub nicht.
+  SQL_ADMIN_LOGIN: ${{ secrets.SQL_ADMIN_LOGIN }}
+  SQL_ADMIN_OBJECT_ID: ${{ secrets.SQL_ADMIN_OBJECT_ID }}
   SQL_ADMIN_PRINCIPAL_TYPE: ${{ vars.SQL_ADMIN_PRINCIPAL_TYPE }}
   ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
 
