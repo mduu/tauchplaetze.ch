@@ -15,7 +15,7 @@ using Tauchplaetze.Core.Features.WaterBodies;
 namespace Tauchplaetze.Core.Features.Forecasts.Commands;
 
 /// <summary>
-/// Holt Abfluss und Wassertemperatur der Stationen aller Flussplätze in einem Call und speichert Stundenmittel und die neuesten Messwerte
+/// Holt Abfluss und Wassertemperatur der Stationen aller Flussplätze und der Zuflüsse aller Seen mit Plätzen in einem Call und speichert Stundenmittel und die neuesten Messwerte
 /// (`forecast.md`, «Abfluss»). Stundenwerte älter als 30 Tage fallen weg. Ein zweiter Lauf schreibt dieselben Werte.
 /// Ab 08:15 und danach höchstens alle 3 Stunden holt er auch die Vorhersage des BAFU pro Station und ersetzt die alte.
 /// Eine Datei, die vor heute 00:00 ausgegeben wurde, zählt nicht; der nächste Lauf versucht es wieder. Fällt das BAFU aus (5xx, Timeout), hört der Abruf für diesen Lauf auf.
@@ -68,7 +68,7 @@ internal class ImportDischargeHandler(
             return new ImportDischargeResult(0, 0, Skipped: true);
         }
 
-        var stations = await StationsOfRiverSites(ct);
+        var stations = await StationsToImport(ct);
         if (stations.Count == 0)
         {
             return new ImportDischargeResult(0, 0);
@@ -207,16 +207,23 @@ internal class ImportDischargeHandler(
             .Select(g => new HydroHour { StationId = station, Kind = HydroSeriesKind.Forecast, Hour = g.Key, Discharge = g.Last().Discharge, ImportedAt = now }));
     }
 
-    private async Task<List<string>> StationsOfRiverSites(CancellationToken ct)
+    /// <summary>Die Station jedes Flussplatzes und die Zuflüsse jedes Sees mit Plätzen. Die Zuflüsse braucht der Index (`rules-1.4`).</summary>
+    private async Task<List<string>> StationsToImport(CancellationToken ct)
     {
         var sites = await dbContext.DiveSites
             .AsNoTracking()
             .Include(s => s.WaterBody).ThenInclude(w => w!.HydroStations)
-            .Where(s => s.Status != DiveSiteStatus.Archived && s.WaterBody!.WaterBodyType == WaterBodyType.River)
+            .Where(s => s.Status != DiveSiteStatus.Archived)
             .ToListAsync(ct);
-        return sites
+        var riverStations = sites
+            .Where(s => s.WaterBody!.WaterBodyType == WaterBodyType.River)
             .Select(s => DischargeStations.For(s.Location, s.InflowStationOverride, s.WaterBody!))
-            .OfType<string>()
+            .OfType<string>();
+        var inflows = sites
+            .Where(s => s.WaterBody!.WaterBodyType != WaterBodyType.River && !s.ForecastDisabled)
+            .SelectMany(s => s.WaterBody!.HydroStations.Where(h => h.Role == HydroStationRole.Inflow).Select(h => h.StationId));
+        return riverStations
+            .Concat(inflows)
             .Distinct()
             .Order(StringComparer.Ordinal)
             .ToList();

@@ -126,7 +126,7 @@ public class DischargeTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Ein_Platz_am_See_hat_keinen_Abfluss_und_der_Import_fragt_keine_Station_an()
+    public async Task Ein_Platz_am_See_hat_keine_Kachel_Abfluss_aber_der_Import_holt_den_Zufluss_des_Sees()
     {
         // Arrange
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
@@ -137,9 +137,9 @@ public class DischargeTests(SqlServer sql) : SqlTest(sql)
         var result = await Command<ImportDischargeCommand, ImportDischargeResult>(new ImportDischargeCommand());
 
         // Assert
-        Assert.Equal(0, result.Stations);
+        Assert.Equal(1, result.Stations);
         Assert.Null(await Discharge(site));
-        Assert.Empty(Sql.Sources.Requests);
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("locations=2104&", StringComparison.Ordinal));
     }
 
     [SqlFact]
