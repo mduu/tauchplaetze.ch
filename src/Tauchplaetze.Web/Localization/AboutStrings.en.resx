@@ -36,7 +36,7 @@
   <data name="About_Source_Weather_Name" xml:space="preserve"><value>MeteoSwiss via Open-Meteo</value></data>
   <data name="About_Source_Weather_Text" xml:space="preserve"><value>Weather models ICON-CH1 and ICON-CH2 by MeteoSwiss (open government data) and ICON by DWD, retrieved via Open-Meteo (CC BY 4.0).</value></data>
   <data name="About_Source_Hydro_Name" xml:space="preserve"><value>FOEN hydrological data</value></data>
-  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Discharge and water temperature from the gauging stations of the Federal Office for the Environment, retrieved via existenz.ch. Open government data with attribution.</value></data>
+  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Discharge and water temperature of the measuring stations of the Federal Office for the Environment, fetched via existenz.ch, plus the discharge forecast directly from the FOEN. Open Government Data with attribution.</value></data>
   <data name="About_Source_Swisstopo_Name" xml:space="preserve"><value>swisstopo</value></data>
   <data name="About_Source_Swisstopo_Text" xml:space="preserve"><value>National map, aerial imagery (SWISSIMAGE) and lake depth data (swissBATHY3D) for the depth contours. Open government data, © swisstopo.</value></data>
   <data name="About_Source_Osm_Name" xml:space="preserve"><value>OpenStreetMap</value></data>
@@ -80,4 +80,37 @@
   <data name="Contact_Error_Limit" xml:space="preserve"><value>Too many messages in a short time. Please try again in an hour.</value></data>
   <data name="About_Privacy_Contact_Title" xml:space="preserve"><value>Contact form</value></data>
   <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Name, e-mail address and message go to the operator by e-mail and are not stored in the database. The form uses a technically necessary cookie that protects against misuse. Against spam, we count messages per IP address, only in memory and for at most one hour.</value></data>
+  <data name="About_Factors_Title" xml:space="preserve"><value>What goes into the index</value></data>
+  <data name="About_Factors_Lead" xml:space="preserve"><value>The dive index combines four parts. Each part gives 1 to 10 points. The weight tells how much it counts.</value></data>
+  <data name="About_Factors_Col_Part" xml:space="preserve"><value>Part</value></data>
+  <data name="About_Factors_Col_Weight" xml:space="preserve"><value>Weight</value></data>
+  <data name="About_Factors_Col_Sources" xml:space="preserve"><value>Where the data comes from</value></data>
+  <data name="About_Factor_Clarity_Name" xml:space="preserve"><value>Clarity</value></data>
+  <data name="About_Factor_Clarity_Sources" xml:space="preserve"><value>Sentinel-2 and Sentinel-3 satellites (Eawag Alplakes)</value></data>
+  <data name="About_Factor_Wind_Name" xml:space="preserve"><value>Wind</value></data>
+  <data name="About_Factor_Wind_Sources" xml:space="preserve"><value>MeteoSwiss ICON-CH1 and ICON-CH2, DWD ICON (via Open-Meteo)</value></data>
+  <data name="About_Factor_Inflow_Name" xml:space="preserve"><value>Inflows</value></data>
+  <data name="About_Factor_Inflow_Sources" xml:space="preserve"><value>Rain (Open-Meteo), discharge and discharge forecast (FOEN)</value></data>
+  <data name="About_Factor_Stratification_Name" xml:space="preserve"><value>Stratification</value></data>
+  <data name="About_Factor_Stratification_Sources" xml:space="preserve"><value>3D lake models and Simstrat (Eawag Alplakes)</value></data>
+  <data name="About_Clarity_Title" xml:space="preserve"><value>Clarity: how clear the water is near the shore</value></data>
+  <data name="About_Clarity_Text" xml:space="preserve"><value>We estimate the visibility depth (Secchi depth) where people dive. First we use Sentinel-2 with 10 m pixels, {0} m from the shore, otherwise {1} m. Without this value we use Sentinel-3 from the middle of the lake. Near the shore the water is usually less clear, so only {2} % of it counts. An image counts fully for {3} days. After that it loses weight, and after {4} days it no longer counts. Many algae cost points. Rain and much water in the inflows since the image reduce the visibility by up to {5} %.</value></data>
+  <data name="About_Cap_Title" xml:space="preserve"><value>Visibility limits the index</value></data>
+  <data name="About_Cap_Text" xml:space="preserve"><value>Nice weather does not turn murky water into a top day. If the visibility near the shore is moderate ({0} to {1} m), the index is at most {2}. If it is poor (below {0} m), the index is at most {3}. Without a visibility value it is at most {4}.</value></data>
+  <data name="About_Wind_Title" xml:space="preserve"><value>Wind in the dive window</value></data>
+  <data name="About_Wind_Text" xml:space="preserve"><value>We take the strongest hour between {0}:00 and {1}:00. Up to {2} Beaufort gives full points, from {3} Beaufort there are none. On a lake, wind stirs up the shore and makes entry and exit harder.</value></data>
+  <data name="About_Inflow_Title" xml:space="preserve"><value>Inflows and rain</value></data>
+  <data name="About_Inflow_Text" xml:space="preserve"><value>Rain and floods carry mud into the lake. We count the rain of the last {0} hours. We add the discharge of the inflows compared with the usual discharge, the median of the last 30 days (at least {1} m³/s). For the next days we use the discharge forecast of the FOEN. An inflow counts fully up to {2} km from its mouth, then less, and from {3} km not at all. So a flood of the Ticino clouds Magadino, but not Brissago.</value></data>
+  <data name="About_Stratification_Title" xml:space="preserve"><value>Stratification and thermocline</value></data>
+  <data name="About_Stratification_Text" xml:space="preserve"><value>Lake models of the Eawag calculate the temperature at each depth: at the site with the 3D model, otherwise for the whole lake with Simstrat. From this we find the thermocline. Below it the water is often colder and clearer. Full points only come when the surface is good too (from {0} m visibility near the shore).</value></data>
+  <data name="About_River_Title" xml:space="preserve"><value>On a river</value></data>
+  <data name="About_River_Text" xml:space="preserve"><value>A river is mixed, so stratification does not count. We use the FOEN station of the site, with discharge, forecast and water temperature. Much water means a strong current. From {0} times the usual discharge we take off points, at {1} times {2} points.</value></data>
+  <data name="About_Current_Title" xml:space="preserve"><value>Current in the lake</value></data>
+  <data name="About_Current_Text" xml:space="preserve"><value>The 3D lake model also calculates the current. We show the mean between {0} and {1} m depth as information. The current in a lake does not go into the index.</value></data>
+  <data name="About_Updates_Title" xml:space="preserve"><value>When we calculate</value></data>
+  <data name="About_Updates_Text" xml:space="preserve"><value>The forecast runs daily at {0} for {1} days. We fetch the discharge every 30 minutes, the FOEN forecast from 08:15 every 3 hours. Satellite images come when the sky is clear: Sentinel-3 almost daily, Sentinel-2 about every 5 days.</value></data>
+  <data name="About_Missing_Title" xml:space="preserve"><value>When data is missing</value></data>
+  <data name="About_Missing_Text" xml:space="preserve"><value>If a part is missing, we calculate with the others. Only clarity always counts: without a satellite value it counts carefully, and the index is at most {0}. Without wind or without water data there is no index, only an outlook with wind and rain.</value></data>
+  <data name="About_Rules_Version" xml:space="preserve"><value>Rules {0}. The numbers on this page come straight from the calculation.</value></data>
+  <data name="About_And" xml:space="preserve"><value> and </value></data>
 </root>

@@ -36,7 +36,7 @@
   <data name="About_Source_Weather_Name" xml:space="preserve"><value>MétéoSuisse via Open-Meteo</value></data>
   <data name="About_Source_Weather_Text" xml:space="preserve"><value>Modèles météo ICON-CH1 et ICON-CH2 de MétéoSuisse (données publiques ouvertes) et ICON du DWD, obtenus via Open-Meteo (CC BY 4.0).</value></data>
   <data name="About_Source_Hydro_Name" xml:space="preserve"><value>Données hydrologiques OFEV</value></data>
-  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Débit et température de l’eau des stations de mesure de l’Office fédéral de l’environnement, obtenus via existenz.ch. Données publiques ouvertes avec indication de la source.</value></data>
+  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Débit et température de l'eau des stations de mesure de l'Office fédéral de l'environnement, relevés via existenz.ch, ainsi que la prévision de débit directement auprès de l'OFEV. Open Government Data avec mention de la source.</value></data>
   <data name="About_Source_Swisstopo_Name" xml:space="preserve"><value>swisstopo</value></data>
   <data name="About_Source_Swisstopo_Text" xml:space="preserve"><value>Carte nationale, image aérienne (SWISSIMAGE) et données de profondeur des lacs (swissBATHY3D) pour les isobathes. Données publiques ouvertes, © swisstopo.</value></data>
   <data name="About_Source_Osm_Name" xml:space="preserve"><value>OpenStreetMap</value></data>
@@ -80,4 +80,37 @@
   <data name="Contact_Error_Limit" xml:space="preserve"><value>Trop de messages en peu de temps. Réessaie dans une heure.</value></data>
   <data name="About_Privacy_Contact_Title" xml:space="preserve"><value>Formulaire de contact</value></data>
   <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Le nom, l’adresse e-mail et le message sont envoyés par e-mail à l’exploitant et ne sont pas enregistrés dans la base de données. Le formulaire utilise un cookie techniquement nécessaire de protection contre les abus. Contre le spam, nous comptons les messages par adresse IP, uniquement en mémoire et pendant une heure au plus.</value></data>
+  <data name="About_Factors_Title" xml:space="preserve"><value>Ce qui entre dans l'indice</value></data>
+  <data name="About_Factors_Lead" xml:space="preserve"><value>L'indice de plongée réunit quatre composantes. Chacune donne 1 à 10 points. Le poids indique combien elle compte.</value></data>
+  <data name="About_Factors_Col_Part" xml:space="preserve"><value>Composante</value></data>
+  <data name="About_Factors_Col_Weight" xml:space="preserve"><value>Poids</value></data>
+  <data name="About_Factors_Col_Sources" xml:space="preserve"><value>D'où viennent les données</value></data>
+  <data name="About_Factor_Clarity_Name" xml:space="preserve"><value>Clarté</value></data>
+  <data name="About_Factor_Clarity_Sources" xml:space="preserve"><value>Satellites Sentinel-2 et Sentinel-3 (Eawag Alplakes)</value></data>
+  <data name="About_Factor_Wind_Name" xml:space="preserve"><value>Vent</value></data>
+  <data name="About_Factor_Wind_Sources" xml:space="preserve"><value>MétéoSuisse ICON-CH1 et ICON-CH2, DWD ICON (via Open-Meteo)</value></data>
+  <data name="About_Factor_Inflow_Name" xml:space="preserve"><value>Affluents</value></data>
+  <data name="About_Factor_Inflow_Sources" xml:space="preserve"><value>Pluie (Open-Meteo), débit et prévision de débit (OFEV)</value></data>
+  <data name="About_Factor_Stratification_Name" xml:space="preserve"><value>Stratification</value></data>
+  <data name="About_Factor_Stratification_Sources" xml:space="preserve"><value>Modèles de lac 3D et Simstrat (Eawag Alplakes)</value></data>
+  <data name="About_Clarity_Title" xml:space="preserve"><value>Clarté : la limpidité de l'eau près de la rive</value></data>
+  <data name="About_Clarity_Text" xml:space="preserve"><value>Nous estimons la profondeur de visibilité (profondeur de Secchi) là où l'on plonge. D'abord avec Sentinel-2 et ses pixels de 10 m, à {0} m de la rive, sinon à {1} m. Sans cette valeur, nous prenons Sentinel-3 au milieu du lac. Près de la rive, l'eau est souvent plus trouble : seuls {2} % de cette valeur comptent. Une image compte pleinement pendant {3} jours. Ensuite, elle perd du poids, et après {4} jours, elle ne compte plus. Beaucoup d'algues coûtent des points. La pluie et un fort débit des affluents depuis l'image réduisent la visibilité jusqu'à {5} %.</value></data>
+  <data name="About_Cap_Title" xml:space="preserve"><value>La visibilité limite l'indice</value></data>
+  <data name="About_Cap_Text" xml:space="preserve"><value>Le beau temps ne fait pas d'une eau trouble une journée de rêve. Si la visibilité près de la rive est moyenne ({0} à {1} m), l'indice vaut au plus {2}. Si elle est mauvaise (moins de {0} m), il vaut au plus {3}. Sans valeur de visibilité, il vaut au plus {4}.</value></data>
+  <data name="About_Wind_Title" xml:space="preserve"><value>Le vent pendant la plongée</value></data>
+  <data name="About_Wind_Text" xml:space="preserve"><value>Nous prenons l'heure la plus venteuse entre {0} h et {1} h. Jusqu'à {2} Beaufort, la note est pleine ; dès {3} Beaufort, elle tombe à zéro. Sur un lac, le vent remue le bord et complique l'entrée et la sortie.</value></data>
+  <data name="About_Inflow_Title" xml:space="preserve"><value>Affluents et pluie</value></data>
+  <data name="About_Inflow_Text" xml:space="preserve"><value>La pluie et les crues amènent de la boue dans le lac. Nous comptons la pluie des {0} dernières heures. S'y ajoute le débit des affluents comparé au débit habituel, la médiane des 30 derniers jours (au moins {1} m³/s). Pour les jours suivants, nous prenons la prévision de débit de l'OFEV. Un affluent compte pleinement jusqu'à {2} km de son embouchure, puis moins, et plus du tout dès {3} km. Ainsi, une crue du Tessin trouble Magadino, mais pas Brissago.</value></data>
+  <data name="About_Stratification_Title" xml:space="preserve"><value>Stratification et thermocline</value></data>
+  <data name="About_Stratification_Text" xml:space="preserve"><value>Les modèles de lac de l'Eawag calculent la température à chaque profondeur : au site avec le modèle 3D, sinon pour tout le lac avec Simstrat. Nous en tirons la thermocline. En dessous, l'eau est souvent plus froide et plus claire. La note est pleine seulement si la surface est bonne aussi (dès {0} m de visibilité près de la rive).</value></data>
+  <data name="About_River_Title" xml:space="preserve"><value>En rivière</value></data>
+  <data name="About_River_Text" xml:space="preserve"><value>Une rivière est brassée : la stratification ne compte pas. Nous prenons la station de l'OFEV du site, avec débit, prévision et température de l'eau. Beaucoup d'eau signifie un fort courant. Dès {0} fois le débit habituel, nous retirons des points, à {1} fois {2} points.</value></data>
+  <data name="About_Current_Title" xml:space="preserve"><value>Courant dans le lac</value></data>
+  <data name="About_Current_Text" xml:space="preserve"><value>Le modèle de lac 3D calcule aussi le courant. Nous montrons la moyenne entre {0} et {1} m de profondeur, à titre d'information. Le courant dans le lac n'entre pas dans l'indice.</value></data>
+  <data name="About_Updates_Title" xml:space="preserve"><value>Quand nous calculons</value></data>
+  <data name="About_Updates_Text" xml:space="preserve"><value>La prévision tourne chaque jour à {0} pour {1} jours. Nous relevons le débit toutes les 30 minutes, la prévision de l'OFEV dès 08:15 toutes les 3 heures. Les images satellite arrivent quand le ciel est dégagé : Sentinel-3 presque chaque jour, Sentinel-2 environ tous les 5 jours.</value></data>
+  <data name="About_Missing_Title" xml:space="preserve"><value>Quand des données manquent</value></data>
+  <data name="About_Missing_Text" xml:space="preserve"><value>S'il manque une composante, nous calculons avec les autres. Seule la clarté compte toujours : sans valeur satellite, elle compte prudemment, et l'indice vaut au plus {0}. Sans vent ou sans données sur l'eau, il n'y a pas d'indice, seulement un aperçu avec le vent et la pluie.</value></data>
+  <data name="About_Rules_Version" xml:space="preserve"><value>Règles {0}. Les chiffres de cette page viennent directement du calcul.</value></data>
+  <data name="About_And" xml:space="preserve"><value> et </value></data>
 </root>

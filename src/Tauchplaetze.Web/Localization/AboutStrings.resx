@@ -36,7 +36,7 @@
   <data name="About_Source_Weather_Name" xml:space="preserve"><value>MeteoSchweiz über Open-Meteo</value></data>
   <data name="About_Source_Weather_Text" xml:space="preserve"><value>Wettermodelle ICON-CH1 und ICON-CH2 von MeteoSchweiz (Open Government Data) und ICON des DWD, abgerufen über Open-Meteo (CC BY 4.0).</value></data>
   <data name="About_Source_Hydro_Name" xml:space="preserve"><value>BAFU Hydrodaten</value></data>
-  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Abfluss und Wassertemperatur der Messstationen des Bundesamts für Umwelt, abgerufen über existenz.ch. Open Government Data mit Quellenangabe.</value></data>
+  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Abfluss und Wassertemperatur der Messstationen des Bundesamts für Umwelt, abgerufen über existenz.ch, dazu die Abflussvorhersage direkt vom BAFU. Open Government Data mit Quellenangabe.</value></data>
   <data name="About_Source_Swisstopo_Name" xml:space="preserve"><value>swisstopo</value></data>
   <data name="About_Source_Swisstopo_Text" xml:space="preserve"><value>Landeskarte, Luftbild (SWISSIMAGE) und Tiefendaten der Seen (swissBATHY3D) für die Tiefenlinien. Open Government Data, © swisstopo.</value></data>
   <data name="About_Source_Osm_Name" xml:space="preserve"><value>OpenStreetMap</value></data>
@@ -80,4 +80,37 @@
   <data name="Contact_Error_Limit" xml:space="preserve"><value>Zu viele Nachrichten in kurzer Zeit. Versuche es in einer Stunde nochmals.</value></data>
   <data name="About_Privacy_Contact_Title" xml:space="preserve"><value>Kontaktformular</value></data>
   <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Name, E-Mail-Adresse und Nachricht gehen per E-Mail an den Betreiber und werden nicht in der Datenbank gespeichert. Das Formular nutzt ein technisch nötiges Cookie zum Schutz vor Missbrauch. Gegen Spam zählen wir die Nachrichten pro IP-Adresse, nur im Arbeitsspeicher und höchstens eine Stunde lang.</value></data>
+  <data name="About_Factors_Title" xml:space="preserve"><value>Was in den Index einfliesst</value></data>
+  <data name="About_Factors_Lead" xml:space="preserve"><value>Der Tauch-Index verbindet vier Teilwerte. Jeder Teilwert gibt 1 bis 10 Punkte. Das Gewicht sagt, wie stark er zählt.</value></data>
+  <data name="About_Factors_Col_Part" xml:space="preserve"><value>Teilwert</value></data>
+  <data name="About_Factors_Col_Weight" xml:space="preserve"><value>Gewicht</value></data>
+  <data name="About_Factors_Col_Sources" xml:space="preserve"><value>Woher die Daten kommen</value></data>
+  <data name="About_Factor_Clarity_Name" xml:space="preserve"><value>Klarheit</value></data>
+  <data name="About_Factor_Clarity_Sources" xml:space="preserve"><value>Satelliten Sentinel-2 und Sentinel-3 (Eawag Alplakes)</value></data>
+  <data name="About_Factor_Wind_Name" xml:space="preserve"><value>Wind</value></data>
+  <data name="About_Factor_Wind_Sources" xml:space="preserve"><value>MeteoSchweiz ICON-CH1 und ICON-CH2, DWD ICON (über Open-Meteo)</value></data>
+  <data name="About_Factor_Inflow_Name" xml:space="preserve"><value>Zuflüsse</value></data>
+  <data name="About_Factor_Inflow_Sources" xml:space="preserve"><value>Regen (Open-Meteo), Abfluss und Abflussvorhersage (BAFU)</value></data>
+  <data name="About_Factor_Stratification_Name" xml:space="preserve"><value>Schichtung</value></data>
+  <data name="About_Factor_Stratification_Sources" xml:space="preserve"><value>Seemodelle 3D und Simstrat (Eawag Alplakes)</value></data>
+  <data name="About_Clarity_Title" xml:space="preserve"><value>Klarheit: so klar ist das Wasser am Ufer</value></data>
+  <data name="About_Clarity_Text" xml:space="preserve"><value>Wir schätzen die Sichttiefe (Secchi-Tiefe) dort, wo getaucht wird. Zuerst nehmen wir Sentinel-2 mit Pixeln von 10 m, {0} m vor dem Ufer, sonst {1} m. Fehlt dieser Wert, nehmen wir Sentinel-3 aus der Seemitte. Am Ufer ist das Wasser meist trüber, darum zählen davon nur {2} %. Ein Bild zählt {3} Tage voll. Danach verliert es an Gewicht, nach {4} Tagen zählt es nicht mehr. Viele Algen ziehen Punkte ab. Regen und viel Wasser in den Zuflüssen seit dem Bild verringern die Sicht um bis zu {5} %.</value></data>
+  <data name="About_Cap_Title" xml:space="preserve"><value>Die Sicht begrenzt den Index</value></data>
+  <data name="About_Cap_Text" xml:space="preserve"><value>Schönes Wetter macht trübes Wasser nicht zu einem Top-Tag. Ist die Sicht am Ufer mässig ({0} bis {1} m), liegt der Index höchstens bei {2}. Ist sie schlecht (unter {0} m), liegt er höchstens bei {3}. Ohne Sichtwert liegt er höchstens bei {4}.</value></data>
+  <data name="About_Wind_Title" xml:space="preserve"><value>Wind im Tauchfenster</value></data>
+  <data name="About_Wind_Text" xml:space="preserve"><value>Wir nehmen die stärkste Stunde zwischen {0} und {1} Uhr. Bis {2} Beaufort gibt es volle Punkte, ab {3} Beaufort keine mehr. Am See wühlt Wind das Ufer auf und erschwert den Ein- und Ausstieg.</value></data>
+  <data name="About_Inflow_Title" xml:space="preserve"><value>Zuflüsse und Regen</value></data>
+  <data name="About_Inflow_Text" xml:space="preserve"><value>Regen und Hochwasser bringen Schlamm in den See. Wir zählen den Regen der letzten {0} Stunden. Dazu kommt der Abfluss der Zuflüsse im Vergleich zum üblichen Abfluss, dem Median der letzten 30 Tage (mindestens {1} m³/s). Für die nächsten Tage nehmen wir die Abflussvorhersage des BAFU. Ein Zufluss zählt voll bis {2} km von seiner Mündung, danach weniger und ab {3} km nicht mehr. So trübt ein Hochwasser des Ticino Magadino, aber nicht Brissago.</value></data>
+  <data name="About_Stratification_Title" xml:space="preserve"><value>Schichtung und Sprungschicht</value></data>
+  <data name="About_Stratification_Text" xml:space="preserve"><value>Seemodelle der Eawag rechnen die Temperatur in jeder Tiefe: am Platz mit dem 3D-Modell, sonst für den ganzen See mit Simstrat. Daraus bestimmen wir die Sprungschicht. Darunter ist das Wasser oft kälter und klarer. Volle Punkte gibt es nur, wenn auch die Oberfläche gut ist (ab {0} m Sicht am Ufer).</value></data>
+  <data name="About_River_Title" xml:space="preserve"><value>Am Fluss</value></data>
+  <data name="About_River_Text" xml:space="preserve"><value>Ein Fluss ist durchmischt, darum zählt die Schichtung nicht. Wir nehmen die BAFU-Station, die zum Platz gehört, mit Abfluss, Vorhersage und Wassertemperatur. Viel Wasser heisst starke Strömung. Ab dem {0}-fachen des üblichen Abflusses ziehen wir Punkte ab, beim {1}-fachen {2} Punkte.</value></data>
+  <data name="About_Current_Title" xml:space="preserve"><value>Strömung im See</value></data>
+  <data name="About_Current_Text" xml:space="preserve"><value>Das 3D-Seemodell rechnet auch die Strömung. Wir zeigen das Mittel zwischen {0} und {1} m Tiefe als Information. In den Index fliesst die Strömung im See nicht ein.</value></data>
+  <data name="About_Updates_Title" xml:space="preserve"><value>Wann wir rechnen</value></data>
+  <data name="About_Updates_Text" xml:space="preserve"><value>Die Prognose rechnet täglich um {0} Uhr für {1} Tage. Den Abfluss holen wir alle 30 Minuten, die Vorhersage des BAFU ab 08:15 Uhr alle 3 Stunden. Satellitenbilder kommen, wenn der Himmel klar ist: Sentinel-3 fast täglich, Sentinel-2 etwa alle 5 Tage.</value></data>
+  <data name="About_Missing_Title" xml:space="preserve"><value>Wenn Daten fehlen</value></data>
+  <data name="About_Missing_Text" xml:space="preserve"><value>Fehlt ein Teilwert, rechnen wir mit den übrigen. Nur die Sicht zählt immer: Ohne Satellitenwert zählt sie vorsichtig, und der Index liegt höchstens bei {0}. Ohne Wind oder ohne Wasserdaten gibt es keinen Index, nur einen Ausblick mit Wind und Regen.</value></data>
+  <data name="About_Rules_Version" xml:space="preserve"><value>Regel {0}. Die Zahlen auf dieser Seite kommen direkt aus der Rechnung.</value></data>
+  <data name="About_And" xml:space="preserve"><value> und </value></data>
 </root>

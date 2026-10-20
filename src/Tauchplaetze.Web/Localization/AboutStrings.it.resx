@@ -36,7 +36,7 @@
   <data name="About_Source_Weather_Name" xml:space="preserve"><value>MeteoSvizzera tramite Open-Meteo</value></data>
   <data name="About_Source_Weather_Text" xml:space="preserve"><value>Modelli meteo ICON-CH1 e ICON-CH2 di MeteoSvizzera (dati pubblici aperti) e ICON del DWD, ottenuti tramite Open-Meteo (CC BY 4.0).</value></data>
   <data name="About_Source_Hydro_Name" xml:space="preserve"><value>Dati idrologici UFAM</value></data>
-  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Portata e temperatura dell’acqua delle stazioni di misura dell’Ufficio federale dell’ambiente, ottenute tramite existenz.ch. Dati pubblici aperti con indicazione della fonte.</value></data>
+  <data name="About_Source_Hydro_Text" xml:space="preserve"><value>Portata e temperatura dell'acqua delle stazioni di misura dell'Ufficio federale dell'ambiente, lette tramite existenz.ch, e la previsione della portata direttamente dall'UFAM. Open Government Data con indicazione della fonte.</value></data>
   <data name="About_Source_Swisstopo_Name" xml:space="preserve"><value>swisstopo</value></data>
   <data name="About_Source_Swisstopo_Text" xml:space="preserve"><value>Carta nazionale, immagine aerea (SWISSIMAGE) e dati di profondità dei laghi (swissBATHY3D) per le isobate. Dati pubblici aperti, © swisstopo.</value></data>
   <data name="About_Source_Osm_Name" xml:space="preserve"><value>OpenStreetMap</value></data>
@@ -80,4 +80,37 @@
   <data name="Contact_Error_Limit" xml:space="preserve"><value>Troppi messaggi in poco tempo. Riprova tra un’ora.</value></data>
   <data name="About_Privacy_Contact_Title" xml:space="preserve"><value>Modulo di contatto</value></data>
   <data name="About_Privacy_Contact_Text" xml:space="preserve"><value>Nome, indirizzo e-mail e messaggio arrivano al gestore per e-mail e non vengono salvati nella banca dati. Il modulo usa un cookie tecnicamente necessario di protezione dagli abusi. Contro lo spam contiamo i messaggi per indirizzo IP, solo in memoria e al massimo per un’ora.</value></data>
+  <data name="About_Factors_Title" xml:space="preserve"><value>Che cosa entra nell'indice</value></data>
+  <data name="About_Factors_Lead" xml:space="preserve"><value>L'indice d'immersione unisce quattro componenti. Ognuna dà da 1 a 10 punti. Il peso indica quanto conta.</value></data>
+  <data name="About_Factors_Col_Part" xml:space="preserve"><value>Componente</value></data>
+  <data name="About_Factors_Col_Weight" xml:space="preserve"><value>Peso</value></data>
+  <data name="About_Factors_Col_Sources" xml:space="preserve"><value>Da dove vengono i dati</value></data>
+  <data name="About_Factor_Clarity_Name" xml:space="preserve"><value>Limpidezza</value></data>
+  <data name="About_Factor_Clarity_Sources" xml:space="preserve"><value>Satelliti Sentinel-2 e Sentinel-3 (Eawag Alplakes)</value></data>
+  <data name="About_Factor_Wind_Name" xml:space="preserve"><value>Vento</value></data>
+  <data name="About_Factor_Wind_Sources" xml:space="preserve"><value>MeteoSvizzera ICON-CH1 e ICON-CH2, DWD ICON (tramite Open-Meteo)</value></data>
+  <data name="About_Factor_Inflow_Name" xml:space="preserve"><value>Immissari</value></data>
+  <data name="About_Factor_Inflow_Sources" xml:space="preserve"><value>Pioggia (Open-Meteo), portata e previsione della portata (UFAM)</value></data>
+  <data name="About_Factor_Stratification_Name" xml:space="preserve"><value>Stratificazione</value></data>
+  <data name="About_Factor_Stratification_Sources" xml:space="preserve"><value>Modelli del lago 3D e Simstrat (Eawag Alplakes)</value></data>
+  <data name="About_Clarity_Title" xml:space="preserve"><value>Limpidezza: quanto è limpida l'acqua vicino alla riva</value></data>
+  <data name="About_Clarity_Text" xml:space="preserve"><value>Stimiamo la profondità di visibilità (profondità di Secchi) dove ci si immerge. Prima usiamo Sentinel-2 con pixel di 10 m, a {0} m dalla riva, altrimenti a {1} m. Senza questo valore prendiamo Sentinel-3 dal centro del lago. Vicino alla riva l'acqua è di solito più torbida: conta solo il {2} %. Un'immagine conta pienamente per {3} giorni. Poi perde peso e dopo {4} giorni non conta più. Molte alghe tolgono punti. La pioggia e molta acqua negli immissari dopo l'immagine riducono la visibilità fino al {5} %.</value></data>
+  <data name="About_Cap_Title" xml:space="preserve"><value>La visibilità limita l'indice</value></data>
+  <data name="About_Cap_Text" xml:space="preserve"><value>Il bel tempo non trasforma l'acqua torbida in una giornata top. Se la visibilità vicino alla riva è media (da {0} a {1} m), l'indice vale al massimo {2}. Se è scarsa (sotto {0} m), vale al massimo {3}. Senza un valore di visibilità vale al massimo {4}.</value></data>
+  <data name="About_Wind_Title" xml:space="preserve"><value>Il vento durante l'immersione</value></data>
+  <data name="About_Wind_Text" xml:space="preserve"><value>Prendiamo l'ora più ventosa tra le {0} e le {1}. Fino a {2} Beaufort i punti sono pieni, da {3} Beaufort non ce ne sono più. Sul lago il vento smuove la riva e rende più difficili entrata e uscita.</value></data>
+  <data name="About_Inflow_Title" xml:space="preserve"><value>Immissari e pioggia</value></data>
+  <data name="About_Inflow_Text" xml:space="preserve"><value>Pioggia e piene portano fango nel lago. Contiamo la pioggia delle ultime {0} ore. A questo si aggiunge la portata degli immissari rispetto a quella abituale, la mediana degli ultimi 30 giorni (almeno {1} m³/s). Per i giorni seguenti usiamo la previsione della portata dell'UFAM. Un immissario conta pienamente fino a {2} km dalla sua foce, poi meno, e da {3} km non conta più. Così una piena del Ticino intorbidisce Magadino, ma non Brissago.</value></data>
+  <data name="About_Stratification_Title" xml:space="preserve"><value>Stratificazione e termoclino</value></data>
+  <data name="About_Stratification_Text" xml:space="preserve"><value>I modelli del lago dell'Eawag calcolano la temperatura a ogni profondità: al sito con il modello 3D, altrimenti per tutto il lago con Simstrat. Da qui ricaviamo il termoclino. Sotto, l'acqua è spesso più fredda e più limpida. I punti sono pieni solo se anche la superficie è buona (da {0} m di visibilità vicino alla riva).</value></data>
+  <data name="About_River_Title" xml:space="preserve"><value>Nel fiume</value></data>
+  <data name="About_River_Text" xml:space="preserve"><value>Un fiume è rimescolato, quindi la stratificazione non conta. Usiamo la stazione UFAM del sito, con portata, previsione e temperatura dell'acqua. Molta acqua significa corrente forte. Da {0} volte la portata abituale togliamo punti, a {1} volte {2} punti.</value></data>
+  <data name="About_Current_Title" xml:space="preserve"><value>Corrente nel lago</value></data>
+  <data name="About_Current_Text" xml:space="preserve"><value>Il modello del lago 3D calcola anche la corrente. Mostriamo la media tra {0} e {1} m di profondità come informazione. La corrente nel lago non entra nell'indice.</value></data>
+  <data name="About_Updates_Title" xml:space="preserve"><value>Quando calcoliamo</value></data>
+  <data name="About_Updates_Text" xml:space="preserve"><value>La previsione viene calcolata ogni giorno alle {0} per {1} giorni. La portata la leggiamo ogni 30 minuti, la previsione dell'UFAM dalle 08:15 ogni 3 ore. Le immagini satellitari arrivano quando il cielo è sereno: Sentinel-3 quasi ogni giorno, Sentinel-2 circa ogni 5 giorni.</value></data>
+  <data name="About_Missing_Title" xml:space="preserve"><value>Quando mancano dati</value></data>
+  <data name="About_Missing_Text" xml:space="preserve"><value>Se manca una componente, calcoliamo con le altre. Solo la limpidezza conta sempre: senza valore satellitare conta con prudenza e l'indice vale al massimo {0}. Senza vento o senza dati sull'acqua non c'è indice, solo una tendenza con vento e pioggia.</value></data>
+  <data name="About_Rules_Version" xml:space="preserve"><value>Regole {0}. I numeri di questa pagina vengono direttamente dal calcolo.</value></data>
+  <data name="About_And" xml:space="preserve"><value> e </value></data>
 </root>

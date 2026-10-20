@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.Contact.Commands;
+using Tauchplaetze.Core.Features.Forecasts.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -30,6 +32,32 @@ public class AboutPageTests(WebApp app) : IClassFixture<WebApp>
         Assert.Contains(privacy, text);
         Assert.Contains("href=\"https://www.openstreetmap.org/copyright\"", html);
         Assert.Contains("href=\"https://www.alplakes.eawag.ch\"", html);
+    }
+
+    [Theory]
+    [InlineData("/de/ueber", "bis 5 km von seiner Mündung", "zwischen 8 und 16 Uhr")]
+    [InlineData("/en/about", "up to 5 km from its mouth", "between 8:00 and 16:00")]
+    [InlineData("/fr/a-propos", "jusqu'à 5 km de son embouchure", "entre 8 h et 16 h")]
+    [InlineData("/it/chi-siamo", "fino a 5 km dalla sua foce", "tra le 8 e le 16")]
+    public async Task Die_Seite_Ueber_beschreibt_jeden_Teilwert_mit_Gewicht_und_den_Zahlen_der_aktuellen_Regel(string path, string inflow, string window)
+    {
+        // Arrange
+        using var browser = app.Browser();
+        using var scope = app.Services.CreateScope();
+        var rules = await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetForecastRulesQuery, ForecastRulesSummary>>()
+            .Handle(new GetForecastRulesQuery(), TestContext.Current.CancellationToken);
+
+        // Act
+        var html = await browser.GetStringAsync(path, TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Equal(["Clarity", "Wind", "Inflow", "Stratification"], Regex.Matches(html, "data-factor=\"(\\w+)\"").Select(m => m.Groups[1].Value));
+        Assert.Equal(100, rules.ClarityWeight + rules.WindWeight + rules.InflowWeight + rules.StratificationWeight);
+        Assert.Contains($"{rules.ClarityWeight} %", text);
+        Assert.Contains(rules.ModelVersion, text);
+        Assert.Contains(inflow, text);
+        Assert.Contains(window, text);
     }
 
     [Fact]

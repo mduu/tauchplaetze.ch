@@ -5,11 +5,14 @@
 @using Microsoft.AspNetCore.RateLimiting
 @using Microsoft.Extensions.Options
 @using Tauchplaetze.Core.CrossCutting.Mail
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Forecasts.Queries
 @attribute [EnableRateLimiting(ContactForm.RateLimitPolicy)]
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<AboutStrings> L
 @inject IOptions<OperatorOptions> Operator
 @inject IOptions<PublicSiteOptions> Site
+@inject IQueryHandler<GetForecastRulesQuery, ForecastRulesSummary> ForecastRules
 
 <PageTitle>@L["About_Title"] · @Shared["Brand"]</PageTitle>
 <HeadContent>
@@ -43,6 +46,74 @@
             </div>
         }
     </div>
+
+    @if (rules is { } r)
+    {
+        <h3 class="about-subtitle">@L["About_Factors_Title"]</h3>
+        <p>@L["About_Factors_Lead"]</p>
+        <div class="factors" role="region" aria-labelledby="factors-caption">
+            <table class="factors-table">
+                <caption id="factors-caption" class="visually-hidden">@L["About_Factors_Title"]</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">@L["About_Factors_Col_Part"]</th>
+                        <th scope="col" class="factors-weight">@L["About_Factors_Col_Weight"]</th>
+                        <th scope="col">@L["About_Factors_Col_Sources"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var (key, weight) in Factors(r))
+                    {
+                        <tr data-factor="@key">
+                            <th scope="row">@L[$"About_Factor_{key}_Name"]</th>
+                            <td class="factors-weight">@weight %</td>
+                            <td>@L[$"About_Factor_{key}_Sources"]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="factor-details">
+            <div class="factor-detail">
+                <h4>@L["About_Clarity_Title"]</h4>
+                <p>@L["About_Clarity_Text", r.ShoreNearMeters, r.ShoreFarMeters, r.ShoreFactor, r.SatelliteFullAgeDays, r.SatelliteMaxAgeDays, r.ClarityMaxLoss]</p>
+            </div>
+            <div class="factor-detail">
+                <h4>@L["About_Cap_Title"]</h4>
+                <p>@L["About_Cap_Text", N(r.SurfaceModerateFrom), N(r.SurfaceGoodFrom), N(r.MaxIndexWithModerateVisibility), N(r.MaxIndexWithPoorVisibility), N(r.MaxIndexWithoutClarity)]</p>
+            </div>
+            <div class="factor-detail">
+                <h4>@L["About_Wind_Title"]</h4>
+                <p>@L["About_Wind_Text", r.DiveWindowStart, r.DiveWindowEnd, N(r.WindFullUpToBeaufort), N(r.WindNoneFromBeaufort)]</p>
+            </div>
+            <div class="factor-detail">
+                <h4>@L["About_Inflow_Title"]</h4>
+                <p>@L["About_Inflow_Text", r.RainHours, N((double)r.MinMedian), N(r.InflowFullUpToKm), N(r.InflowNoneFromKm)]</p>
+            </div>
+            <div class="factor-detail">
+                <h4>@L["About_Stratification_Title"]</h4>
+                <p>@L["About_Stratification_Text", N(r.SurfaceGoodFrom)]</p>
+            </div>
+            <div class="factor-detail">
+                <h4>@L["About_River_Title"]</h4>
+                <p>@L["About_River_Text", N(r.CurrentPenaltyFrom), N(r.CurrentPenaltyFullAt), N(r.CurrentPenaltyMax)]</p>
+            </div>
+            <div class="factor-detail">
+                <h4>@L["About_Current_Title"]</h4>
+                <p>@L["About_Current_Text", N(r.CurrentMinDepth), N(r.CurrentMaxDepth)]</p>
+            </div>
+            <div class="factor-detail">
+                <h4>@L["About_Updates_Title"]</h4>
+                <p>@L["About_Updates_Text", string.Join(L["About_And"], r.RunTimes.Select(t => t.ToString("HH:mm", CultureInfo.InvariantCulture))), r.ForecastDays]</p>
+            </div>
+            <div class="factor-detail">
+                <h4>@L["About_Missing_Title"]</h4>
+                <p>@L["About_Missing_Text", N(r.MaxIndexWithoutClarity)]</p>
+            </div>
+        </div>
+        <p class="about-rules-version">@L["About_Rules_Version", r.ModelVersion]</p>
+    }
 
     <h3 class="about-subtitle">@L["About_Levels_Title"]</h3>
     <p>@L["About_Levels_Lead"]</p>
@@ -116,6 +187,20 @@
 
 @code {
     private static readonly string[] Steps = ["Model", "Satellite", "Weather", "Community"];
+
+    private ForecastRulesSummary? rules;
+
+    protected override async Task OnInitializedAsync() => rules = await ForecastRules.Handle(new GetForecastRulesQuery());
+
+    private static (string Key, int Weight)[] Factors(ForecastRulesSummary r) =>
+    [
+        ("Clarity", r.ClarityWeight),
+        ("Wind", r.WindWeight),
+        ("Inflow", r.InflowWeight),
+        ("Stratification", r.StratificationWeight),
+    ];
+
+    private static string N(double value) => value.ToString("0.#", CultureInfo.CurrentCulture);
 
     private static readonly string[] PrivacyTopics = ["Visit", "Hosting", "Account", "Contributions", "Contact", "Location", "Routes"];
 
