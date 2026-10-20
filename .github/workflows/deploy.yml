@@ -1,0 +1,75 @@
+# Deploy der App auf prod, nach einer grünen CI auf main (infrastructure.md, CI/CD).
+# Die App migriert die Datenbank beim Start und legt fehlende Stammdaten an (Database__PrepareOnStartup).
+# Läuft erst, wenn die Repository-Variable AZURE_CLIENT_ID gesetzt ist (doc/go-live.md, OIDC).
+
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+env:
+  APP_NAME: app-tauchplaetze-prod
+  APP_URL: https://app-tauchplaetze-prod.azurewebsites.net
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  deploy:
+    if: vars.AZURE_CLIENT_ID != '' && (github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Publish
+        run: dotnet publish src/Tauchplaetze.Web/Tauchplaetze.Web.csproj --configuration Release --output ./publish
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.APP_NAME }}
+          package: ./publish
+
+      # /alive prüft die App, /de zusätzlich die Datenbank. Nach einer Pause braucht Serverless bis zu einer Minute.
+      - name: Health
+        run: |
+          check() {
+            for i in $(seq 1 10); do
+              code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 "$APP_URL$1" || echo 000)
+              echo "$1 attempt $i: HTTP $code"
+              [ "$code" = "200" ] && return 0
+              sleep 15
+            done
+            echo "::error::$1 is not healthy (last HTTP $code)"
+            return 1
+          }
+          check /alive
+          check /de
+
+      - name: Logout
+        if: always()
+        run: az logout
