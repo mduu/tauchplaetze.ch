@@ -3,6 +3,7 @@ using Tauchplaetze.Core;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Web.Components;
 using Tauchplaetze.Web.CrossCutting.Database;
+using Tauchplaetze.Web.CrossCutting.Health;
 using Tauchplaetze.Web.CrossCutting.Localization;
 using Tauchplaetze.Web.CrossCutting.RateLimiting;
 using Tauchplaetze.Web.Features.About;
@@ -29,6 +30,7 @@ builder.Services.AddHostedService<MailQueueWorker>();
 builder.Services.AddHostedService<DeadLetterMonitorWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));
 builder.Services.AddRateLimits(builder.Configuration);
+ReadinessCheck.Register(builder.Services);
 
 var app = builder.Build();
 
@@ -61,6 +63,7 @@ app.MapContentEndpoints();
 app.MapMovedPages();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 app.MapDefaultEndpoints();
+ReadinessCheck.Map(app);
 
 app.Run();
 

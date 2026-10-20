@@ -1,3 +1,4 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,6 +79,11 @@ public static class Extensions
             builder.Services.AddOpenTelemetry().UseOtlpExporter();
         }
 
+        if (!string.IsNullOrWhiteSpace(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
+        {
+            builder.Services.AddOpenTelemetry().UseAzureMonitor(options => options.SamplingRatio = 0.5f);
+        }
+
         return builder;
     }
 
@@ -94,18 +100,13 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Maps the health endpoints in development.
+    /// Maps `/health` and `/alive`. Both run only the liveness check: no database call, so the serverless database can pause.
     /// </summary>
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapHealthChecks(HealthEndpointPath);
-            app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
-            {
-                Predicate = r => r.Tags.Contains("live")
-            });
-        }
+        var live = new HealthCheckOptions { Predicate = r => r.Tags.Contains("live") };
+        app.MapHealthChecks(HealthEndpointPath, live);
+        app.MapHealthChecks(AlivenessEndpointPath, live);
 
         return app;
     }

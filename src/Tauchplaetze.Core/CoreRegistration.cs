@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Tauchplaetze.Core.CrossCutting.Hosting;
 using Tauchplaetze.Core.CrossCutting.Mail;
 using Tauchplaetze.Core.CrossCutting.Modules;
 using Tauchplaetze.Core.CrossCutting.UseCases;
@@ -30,6 +31,8 @@ public static class CoreRegistration
     /// <summary>Meldet Datenbank, Handler und die Module aller Slices an.</summary>
     public static IHostApplicationBuilder AddTauchplaetzeCore(this IHostApplicationBuilder builder)
     {
+        AzureHosting.AddKeyVaultSecrets(builder);
+
         var connectionString = builder.Configuration.GetConnectionString(DatabaseConnectionName)
             ?? throw new InvalidOperationException($"Connection String «{DatabaseConnectionName}» fehlt.");
 
@@ -38,7 +41,10 @@ public static class CoreRegistration
         builder.AddAzureBlobServiceClient(BlobsConnectionName);
         builder.AddAzureQueueServiceClient(QueuesConnectionName);
 
-        builder.Services.Configure<MailOptions>(builder.Configuration.GetSection(MailOptions.Section));
+        builder.Services.AddOptions<MailOptions>()
+            .Bind(builder.Configuration.GetSection(MailOptions.Section))
+            .Validate(o => !o.SendsPasswordWithoutTls, "Mail:UseTls must be true when Mail:UserName is set.")
+            .ValidateOnStart();
         builder.Services.Configure<AccountsOptions>(builder.Configuration.GetSection(AccountsOptions.Section));
         builder.Services.Configure<PublicSiteOptions>(builder.Configuration.GetSection(PublicSiteOptions.Section));
         builder.Services.Configure<MediaOptions>(builder.Configuration.GetSection(MediaOptions.Section));
@@ -49,6 +55,7 @@ public static class CoreRegistration
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddHandlers(typeof(CoreRegistration).Assembly);
         builder.Services.AddCoreModules(typeof(CoreRegistration).Assembly);
+        AzureHosting.PersistDataProtectionKeys(builder);
 
         return builder;
     }
