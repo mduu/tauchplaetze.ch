@@ -23,16 +23,6 @@ internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOp
             return AccountResult.Fail(AccountError.RegistrationClosed);
         }
 
-        if (await users.FindByEmailAsync(command.Email.Trim()) is { Email: { } known } existing)
-        {
-            if (cooldown.TryStart(existing.Id, AccountMailCooldown.Registration))
-            {
-                await mail.SendNow(known, existing.PreferredCulture, new AccountExistsMail(existing.DisplayName, site.Value.Link(command.SignInPath)), ct);
-            }
-
-            return AccountResult.Ok;
-        }
-
         var displayName = command.DisplayName.Trim();
         if (AccountErrors.DisplayName(displayName) is { } invalid)
         {
@@ -45,6 +35,17 @@ internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOp
         }
 
         var user = new User { UserName = command.Email.Trim(), Email = command.Email.Trim(), DisplayName = displayName, PreferredCulture = command.Culture, CreatedAt = time.GetUtcNow() };
+        if (await PasswordErrors(user, command.Password) is { Succeeded: false } weak)
+        {
+            return weak;
+        }
+
+        if (await users.FindByEmailAsync(user.Email) is { Email: { } known } existing)
+        {
+            await AnswerKnownAddress(existing, known, command, ct);
+            return AccountResult.Ok;
+        }
+
         var created = AccountErrors.From(await users.CreateAsync(user, command.Password));
         if (!created.Succeeded)
         {
@@ -56,5 +57,34 @@ internal class RegisterHandler(UserManager<User> users, MailDispatcher mail, IOp
         var token = await users.GenerateEmailConfirmationTokenAsync(user);
         await mail.SendNow(user.Email, user.PreferredCulture, new ConfirmEmailMail(displayName, site.Value.Link(AccountLinks.Build(command.ConfirmPathTemplate, user.Id, token))), ct);
         return AccountResult.Ok;
+    }
+
+    private async Task<AccountResult> PasswordErrors(User user, string password)
+    {
+        var results = await Task.WhenAll(users.PasswordValidators.Select(v => v.ValidateAsync(users, user, password)));
+        var errors = results.SelectMany(r => r.Errors).ToArray();
+        return AccountErrors.From(errors.Length == 0 ? IdentityResult.Success : IdentityResult.Failed(errors));
+    }
+
+    /// <summary>
+    /// Unbestätigt: die Bestätigung noch einmal, sonst «Du hast schon ein Konto». Der Hash gleicht die Arbeit des neuen Kontos an,
+    /// damit die Antwortzeit eine bekannte Adresse nicht verrät. Gesendet wird sofort wie beim neuen Konto (ADR-010).
+    /// </summary>
+    private async Task AnswerKnownAddress(User existing, string email, RegisterCommand command, CancellationToken ct)
+    {
+        users.PasswordHasher.HashPassword(existing, command.Password);
+        if (!cooldown.TryStart(existing.Id, AccountMailCooldown.Registration))
+        {
+            return;
+        }
+
+        if (existing.EmailConfirmed)
+        {
+            await mail.SendNow(email, existing.PreferredCulture, new AccountExistsMail(existing.DisplayName, site.Value.Link(command.SignInPath)), ct);
+            return;
+        }
+
+        var token = await users.GenerateEmailConfirmationTokenAsync(existing);
+        await mail.SendNow(email, existing.PreferredCulture, new ConfirmEmailMail(existing.DisplayName, site.Value.Link(AccountLinks.Build(command.ConfirmPathTemplate, existing.Id, token))), ct);
     }
 }

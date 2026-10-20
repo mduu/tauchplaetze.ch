@@ -95,6 +95,45 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Eine_bekannte_Adresse_mit_ungueltigem_Passwort_oder_vergebenem_Namen_ergibt_denselben_Fehler_wie_eine_neue()
+    {
+        // Arrange
+        await RegisterAndConfirm();
+        Sql.Time.Now += AccountMailCooldown.Cooldown;
+        var before = Sql.Mail.Sent.Count;
+
+        // Act
+        var knownShort = await Command<RegisterCommand, AccountResult>(new RegisterCommand(Email, "kurz", "Bert", "de", ConfirmTemplate));
+        var newShort = await Command<RegisterCommand, AccountResult>(new RegisterCommand("neu@example.org", "kurz", "Bert", "de", ConfirmTemplate));
+        var knownName = await Command<RegisterCommand, AccountResult>(new RegisterCommand(Email, Password, "Anna", "de", ConfirmTemplate));
+        var newName = await Command<RegisterCommand, AccountResult>(new RegisterCommand("neu@example.org", Password, "Anna", "de", ConfirmTemplate));
+
+        // Assert
+        Assert.Equal(newShort.Errors, knownShort.Errors);
+        Assert.Contains(AccountError.PasswordTooShort, knownShort.Errors);
+        Assert.Equal(newName.Errors, knownName.Errors);
+        Assert.Equal([AccountError.DisplayNameTaken], knownName.Errors);
+        Assert.Equal(before, Sql.Mail.Sent.Count);
+    }
+
+    [SqlFact]
+    public async Task Eine_bekannte_aber_unbestaetigte_Adresse_bekommt_die_Bestaetigung_noch_einmal()
+    {
+        // Arrange
+        await Register("Anna");
+        Sql.Time.Now += AccountMailCooldown.Cooldown;
+
+        // Act
+        var result = await Command<RegisterCommand, AccountResult>(new RegisterCommand(Email, "Anderes-Passwort-1", "Anna Zwei", "de", ConfirmTemplate));
+        var confirmed = await Command<ConfirmEmailCommand, AccountResult>(Confirmation(Sql.Mail.LinkTo(Email)));
+
+        // Assert
+        Assert.True(result.Succeeded);
+        Assert.True(confirmed.Succeeded);
+        Assert.Equal(SignInStatus.Succeeded, (await SignIn(Password)).Status);
+    }
+
+    [SqlFact]
     public async Task Ein_zweiter_Link_fuer_ein_neues_Passwort_geht_erst_nach_15_Minuten_hinaus()
     {
         // Arrange
