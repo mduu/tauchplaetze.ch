@@ -84,6 +84,8 @@ var settings = union(secretSettings, {
   ASPNETCORE_ENVIRONMENT: 'Production'
   // Der erste Start migriert die leere Datenbank und legt die Stammdaten an. Das dauerte am 20.10.2026 über die Standardgrenze von 230 s.
   WEBSITES_CONTAINER_START_TIME_LIMIT: '600'
+  // Startet die App direkt aus dem ZIP des Deploys: Der Wechsel ist atomar, die App lädt nie halb kopierte DLLs (500er beim Deploy am 21.10.2026).
+  WEBSITE_RUN_FROM_PACKAGE: '1'
   Database__PrepareOnStartup: 'true'
   Accounts__Admins__0__DisplayName: adminDisplayName
   Mail__Host: 'asmtp.mail.hostpoint.ch'
