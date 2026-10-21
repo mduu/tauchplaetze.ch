@@ -899,6 +899,77 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.ToTable("MediaItemTranslations", (string)null);
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.Report", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(280)
+                        .HasColumnType("nvarchar(280)");
+
+                    b.Property<string>("CommentStatus")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("DiveSiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("ForecastIndex")
+                        .HasPrecision(3, 1)
+                        .HasColumnType("decimal(3,1)");
+
+                    b.Property<string>("ForecastModelVersion")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset?>("HiddenAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("HiddenBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("Temperature")
+                        .HasPrecision(3, 1)
+                        .HasColumnType("decimal(3,1)");
+
+                    b.Property<int?>("TemperatureDepth")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal>("Visibility")
+                        .HasPrecision(3, 1)
+                        .HasColumnType("decimal(3,1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentStatus");
+
+                    b.HasIndex("AuthorId", "CreatedAt");
+
+                    b.HasIndex("DiveSiteId", "Date");
+
+                    b.HasIndex("DiveSiteId", "AuthorId", "Date")
+                        .IsUnique()
+                        .HasFilter("[AuthorId] IS NOT NULL");
+
+                    b.ToTable("Reports", (string)null);
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SiteWeatherOutlook", b =>
                 {
                     b.Property<Guid>("DiveSiteId")
@@ -1310,6 +1381,15 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.HasOne("Tauchplaetze.Core.Data.Entities.MediaItem", null)
                         .WithMany("Translations")
                         .HasForeignKey("MediaItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.Report", b =>
+                {
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSite", null)
+                        .WithMany()
+                        .HasForeignKey("DiveSiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

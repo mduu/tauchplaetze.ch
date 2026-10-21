@@ -170,3 +170,51 @@ Reihenfolge der Abschnitte siehe `ux.md`. Kurz:
 6. Gefahren: Text und Bilder. Gut sichtbar, nicht eingeklappt.
 7. Einstiege: Karte mit allen Pins, pro Einstieg Text und Bilder.
 8. Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten.
+
+## Meldungen
+
+Eine Meldung (`Report`) ist die Beobachtung einer Person nach einem Tauchgang: Sicht, Temperatur, Datum, optional ein Satz. Sie zeigt anderen, wie es wirklich war, und neben der Prognose, ob die Prognose stimmte. Später sind Meldungen Trainingsdaten für das eigene Sichtmodell (`roadmap.md`, Phase 2). Entscheid Marc, 21.10.2026: aus Phase 1 vorgezogen. Meldungen fliessen nicht in den Index (`vision.md`: Prognose aus Daten, nicht aus Meldungen).
+
+### Inhalt
+
+| Feld | Pflicht | Regel |
+|---|---|---|
+| Platz | ja | ein veröffentlichter Platz |
+| Datum des Tauchgangs | ja | Schweizer Kalendertag, heute oder bis 7 Tage zurück, nie in der Zukunft. Standard: heute |
+| Sicht | ja | 0.5 bis 30 m, in Schritten von 0.5 m |
+| Temperatur | nein | −2 bis 30 °C, eine Dezimale |
+| Tiefe der Temperatur | nein | 0 bis 100 m, ganze Meter, nur mit Temperatur |
+| Kommentar | nein | reiner Text, höchstens 280 Zeichen, eine Zeile. Wird nie zu einem Link |
+
+Für das Sichtmodell speichert der Core dazu Autor, Zeitpunkt sowie Index und `ModelVersion` der Prognose für diesen Platz und Tag, falls es eine gibt.
+
+### Wer darf melden
+
+- Nur mit Konto: angemeldet, E-Mail bestätigt, nicht gesperrt. Ohne Anmeldung führt «Tauchgang melden» zur Anmeldung und danach zurück zum Formular.
+- **Eine Meldung pro Konto, Platz und Tag.** Eine zweite ersetzt die eigene. Ein doppelter Klick erzeugt keine zweite Meldung.
+- **Höchstens 10 Meldungen pro Konto und Kalendertag** (Zeitpunkt der Meldung). Dazu ein Rate Limit pro Client wie bei den Konto-Formularen.
+
+### Sichtbarkeit
+
+- **Sofort öffentlich:** Datum, Sicht, Temperatur, Tiefe. Zahlen lassen sich nicht für Spam oder Links missbrauchen.
+- **Kommentar erst nach Freigabe** durch die Moderation. Bis dahin sehen ihn nur die Person, die gemeldet hat, und die Moderation. Ein geänderter Kommentar braucht wieder eine Freigabe.
+- **Name:** Anzeigename nur mit Einwilligung (`ShowNamePublicly`, `cms.md`), sonst «Taucher:in». Ein gelöschtes Konto hat keinen Namen.
+- **Ausgeblendet** (Moderation): öffentlich weg. Die Moderation kann das Ausblenden rückgängig machen.
+
+### Auf der Platzseite
+
+- Kachel «Meldungen» bei den Bedingungen: die Meldungen der letzten 14 Tage, neueste zuerst, höchstens 5. Pro Meldung Datum, Sicht, Temperatur mit Tiefe, Name und der freigegebene Kommentar, dazu die Prognose dieses Tages («Prognose: Index 7.4 · Sicht gut»).
+- Ohne Meldung: «Noch keine Meldung in den letzten 14 Tagen.»
+- Knopf «Tauchgang melden»: eigene Seite (Static SSR, Antiforgery), mobil zuerst, wenige Felder, `noindex`.
+
+### Moderation (`/admin/meldungen`)
+
+- Kommentare, die auf Freigabe warten, älteste zuerst: Platz, Datum, Sicht, Kommentar, Name. «Freigeben» oder «Ablehnen» (Kommentar weg, die Zahlen bleiben).
+- Jede Meldung lässt sich ausblenden und wieder einblenden.
+- Nur `Moderator` und `Admin`. Der Core prüft die Rechte selbst.
+
+### Datenschutz
+
+- «Meine Daten» zeigt die Zahl der eigenen Meldungen, der Export enthält sie.
+- Wird ein Konto gelöscht, bleiben die Zahlen als anonyme Meldung ohne Autor, der Kommentar wird gelöscht. Sie bleiben als Daten für das Sichtmodell.
+- Der Datenschutztext nennt Meldungen.

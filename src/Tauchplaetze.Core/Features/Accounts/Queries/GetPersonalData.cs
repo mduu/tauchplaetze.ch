@@ -25,11 +25,18 @@ public record PersonalData(
     IReadOnlyList<RevisionReference> Reviews,
     IReadOnlyList<PhotoReference>? Photos = null,
     DateTimeOffset? CreatedAt = null,
-    DateTimeOffset? LastSignInAt = null)
+    DateTimeOffset? LastSignInAt = null,
+    IReadOnlyList<ReportReference>? Reports = null)
 {
     [JsonIgnore]
     public IReadOnlyList<PhotoReference> PhotoList => Photos ?? [];
+
+    [JsonIgnore]
+    public IReadOnlyList<ReportReference> ReportList => Reports ?? [];
 }
+
+/// <summary>Eine eigene Meldung mit Platz, Datum, Werten und Kommentar.</summary>
+public record ReportReference(string SiteSlug, string SiteName, DateOnly Date, decimal Visibility, decimal? Temperature, int? TemperatureDepth, string? Comment, bool IsHidden);
 
 /// <summary>Ein hochgeladenes Foto mit Platz, Fotograf, Datum, Legenden und ob es öffentlich ist.</summary>
 public record PhotoReference(Guid Id, string SiteSlug, string SiteName, string Photographer, string? PhotographerUrl, int? Depth, DateTimeOffset UploadedAt, bool IsPublic, IReadOnlyList<MediaText> Texts);
@@ -62,7 +69,8 @@ internal class GetPersonalDataHandler(TauchplaetzeDbContext dbContext, UserManag
             reviews,
             await PhotosOf(user.Id, ct),
             user.CreatedAt,
-            user.LastSignInAt);
+            user.LastSignInAt,
+            await ReportsOf(user.Id, ct));
     }
 
     private async Task<IReadOnlyList<PhotoReference>> PhotosOf(string userId, CancellationToken ct)
@@ -79,6 +87,15 @@ internal class GetPersonalDataHandler(TauchplaetzeDbContext dbContext, UserManag
             p.Media.Id, p.Slug, p.Name, p.Media.Photographer, p.Media.PhotographerUrl, p.Media.Depth, p.Media.UploadedAt, p.Media.IsPublic,
             [.. p.Media.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new MediaText(t.Culture.Trim(), t.Caption, t.AltText))]))];
     }
+
+    private async Task<IReadOnlyList<ReportReference>> ReportsOf(string userId, CancellationToken ct) =>
+        await dbContext.Reports
+            .AsNoTracking()
+            .Where(r => r.AuthorId == userId)
+            .Join(dbContext.DiveSites, r => r.DiveSiteId, d => d.Id, (r, d) => new { d.Slug, d.Name, Report = r })
+            .OrderByDescending(r => r.Report.Date)
+            .Select(r => new ReportReference(r.Slug, r.Name, r.Report.Date, r.Report.Visibility, r.Report.Temperature, r.Report.TemperatureDepth, r.Report.Comment, r.Report.HiddenAt != null))
+            .ToListAsync(ct);
 
     private async Task<IReadOnlyList<RevisionReference>> References(System.Linq.Expressions.Expression<Func<DiveSiteRevision, bool>> filter, CancellationToken ct) =>
         await dbContext.DiveSiteRevisions
