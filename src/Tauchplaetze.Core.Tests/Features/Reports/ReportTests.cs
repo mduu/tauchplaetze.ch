@@ -77,6 +77,21 @@ public class ReportTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Ein_Doppelklick_mit_zwei_gleichzeitigen_Meldungen_ergibt_eine_Meldung()
+    {
+        // Arrange
+        var (_, anna, site) = await Prepare();
+
+        // Act
+        var results = await Task.WhenAll(Enumerable.Range(0, 4).Select(_ => Submit(anna, site, Today, 6.5m)));
+        var reports = await Query<GetSiteReportsQuery, IReadOnlyList<SiteReport>>(new GetSiteReportsQuery(site));
+
+        // Assert
+        Assert.All(results, r => Assert.True(r.Succeeded));
+        Assert.Single(reports);
+    }
+
+    [SqlFact]
     public async Task Ein_Konto_meldet_hoechstens_10_neue_Tauchgaenge_pro_Tag()
     {
         // Arrange
@@ -109,8 +124,8 @@ public class ReportTests(SqlServer sql) : SqlTest(sql)
 
         // Act
         var before = await Comments(site, null, anna, admin);
-        var byBert = await Command<ModerateReportCommand, ReportResult>(new ModerateReportCommand(bert, report, ReportModeration.ApproveComment));
-        await Command<ModerateReportCommand, ReportResult>(new ModerateReportCommand(admin, report, ReportModeration.ApproveComment));
+        var byBert = await Command<ModerateReportCommand, ReportResult>(new ModerateReportCommand(bert, report, ReportModeration.ApproveComment, await UpdatedAt(admin, report)));
+        await Command<ModerateReportCommand, ReportResult>(new ModerateReportCommand(admin, report, ReportModeration.ApproveComment, await UpdatedAt(admin, report)));
         var approved = await Comments(site, null, anna, admin);
         await Submit(anna, site, Today, 6m, comment: "Unter 15 m sehr klar, oben trüb");
         var changed = await Comments(site, null, anna, admin);
@@ -143,6 +158,31 @@ public class ReportTests(SqlServer sql) : SqlTest(sql)
         Assert.Empty(queue!.PendingComments);
         Assert.Contains(queue.Recent, r => r.Id == spam && r.IsHidden);
         Assert.Null(queueForAnna);
+    }
+
+    [SqlFact]
+    public async Task Loeschen_darf_ein_Admin_jede_Meldung_die_Moderation_nur_ausblenden_jede_Person_ihre_eigene()
+    {
+        // Arrange
+        var (admin, anna, site) = await Prepare();
+        var moderator = await RegisterConfirmed("mia@example.org", "Mia");
+        await Command<SetRoleCommand, AccountResult>(new SetRoleCommand(admin, moderator, Roles.Moderator, true));
+        var bert = await RegisterConfirmed("bert@example.org", "Bert");
+        var annas = (await Submit(anna, site, Today, 6m)).ReportId!.Value;
+        var berts = (await Submit(bert, site, Today, 5m)).ReportId!.Value;
+
+        // Act
+        var byModerator = await Command<DeleteReportCommand, ReportResult>(new DeleteReportCommand(moderator, annas));
+        var byBert = await Command<DeleteReportCommand, ReportResult>(new DeleteReportCommand(bert, annas));
+        var own = await Command<DeleteReportCommand, ReportResult>(new DeleteReportCommand(bert, berts));
+        var byAdmin = await Command<DeleteReportCommand, ReportResult>(new DeleteReportCommand(admin, annas));
+
+        // Assert
+        Assert.Equal([ReportError.NotAllowed], byModerator.Errors);
+        Assert.Equal([ReportError.NotAllowed], byBert.Errors);
+        Assert.True(own.Succeeded);
+        Assert.True(byAdmin.Succeeded);
+        Assert.Empty(await Query<GetSiteReportsQuery, IReadOnlyList<SiteReport>>(new GetSiteReportsQuery(site)));
     }
 
     [SqlFact]
@@ -197,6 +237,28 @@ public class ReportTests(SqlServer sql) : SqlTest(sql)
         Assert.Single(lastDay);
         Assert.Empty(dayAfter);
     }
+
+    [SqlFact]
+    public async Task Eine_Freigabe_gilt_nur_fuer_den_Kommentar_den_die_Moderation_gesehen_hat()
+    {
+        // Arrange
+        var (admin, anna, site) = await Prepare();
+        var report = (await Submit(anna, site, Today, 6m, comment: "Sehr klar")).ReportId!.Value;
+        var seen = await UpdatedAt(admin, report);
+        Sql.Time.Now = Sql.Time.Now.AddMinutes(1);
+        await Submit(anna, site, Today, 6m, comment: "Billige Uhren auf example.org");
+
+        // Act
+        var stale = await Command<ModerateReportCommand, ReportResult>(new ModerateReportCommand(admin, report, ReportModeration.ApproveComment, seen));
+        var current = await Command<ModerateReportCommand, ReportResult>(new ModerateReportCommand(admin, report, ReportModeration.ApproveComment, await UpdatedAt(admin, report)));
+
+        // Assert
+        Assert.Equal([ReportError.CommentChanged], stale.Errors);
+        Assert.True(current.Succeeded);
+    }
+
+    private async Task<DateTimeOffset> UpdatedAt(string moderator, Guid report) =>
+        (await Query<GetReportQueueQuery, ReportQueue?>(new GetReportQueueQuery(moderator)))!.Recent.Single(r => r.Id == report).UpdatedAt;
 
     private async Task<string?[]> Comments(Guid site, params string?[] viewers)
     {

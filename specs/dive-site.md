@@ -203,14 +203,15 @@ Für das Sichtmodell speichert der Core dazu Autor, Zeitpunkt sowie Index und `M
 
 ### Auf der Platzseite
 
-- Kachel «Meldungen» bei den Bedingungen: die Meldungen der letzten 14 Tage, neueste zuerst, höchstens 5. Pro Meldung Datum, Sicht, Temperatur mit Tiefe, Name und der freigegebene Kommentar, dazu die Prognose dieses Tages («Prognose: Index 7.4 · Sicht gut»).
+- Kachel «Meldungen» bei den Bedingungen: die Meldungen der letzten 14 Tage, neueste zuerst, höchstens 5. Pro Meldung Datum, Sicht, Temperatur mit Tiefe, Name und der freigegebene Kommentar, dazu der Index der Prognose dieses Tages, z.B. «Sicht 6.5 m · 12.4 °C auf 15 m · 21.10.2026 · Taucher:in · Prognose: Index 6.1».
 - Ohne Meldung: «Noch keine Meldung in den letzten 14 Tagen.»
 - Knopf «Tauchgang melden»: eigene Seite (Static SSR, Antiforgery), mobil zuerst, wenige Felder, `noindex`.
 
 ### Moderation (`/admin/meldungen`)
 
 - Kommentare, die auf Freigabe warten, älteste zuerst: Platz, Datum, Sicht, Kommentar, Name. «Freigeben» oder «Ablehnen» (Kommentar weg, die Zahlen bleiben).
-- Jede Meldung lässt sich ausblenden und wieder einblenden.
+- Jede Meldung lässt sich ausblenden und wieder einblenden. Endgültig löschen darf nur ein Admin, mit Rückfrage. Die Person, die gemeldet hat, darf ihre eigene löschen.
+- Freigeben gilt nur für den Kommentar, den die Moderation gesehen hat. Wurde er inzwischen geändert, meldet die Seite das, und die Moderation prüft neu.
 - Nur `Moderator` und `Admin`. Der Core prüft die Rechte selbst.
 
 ### Datenschutz

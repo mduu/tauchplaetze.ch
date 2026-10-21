@@ -281,4 +281,5 @@
   <data name="ReportError_CommentTooLong" xml:space="preserve"><value>Der Kommentar hat höchstens 280 Zeichen.</value></data>
   <data name="ReportError_DailyLimit" xml:space="preserve"><value>Du hast heute schon 10 Tauchgänge gemeldet.</value></data>
   <data name="ReportError_NotFound" xml:space="preserve"><value>Diese Meldung gibt es nicht.</value></data>
+  <data name="ReportError_CommentChanged" xml:space="preserve"><value>Der Kommentar wurde inzwischen geändert.</value></data>
 </root>

@@ -281,4 +281,5 @@
   <data name="ReportError_CommentTooLong" xml:space="preserve"><value>Il commento ha al massimo 280 caratteri.</value></data>
   <data name="ReportError_DailyLimit" xml:space="preserve"><value>Oggi hai già segnalato 10 immersioni.</value></data>
   <data name="ReportError_NotFound" xml:space="preserve"><value>Questa segnalazione non esiste.</value></data>
+  <data name="ReportError_CommentChanged" xml:space="preserve"><value>Il commento è stato modificato nel frattempo.</value></data>
 </root>

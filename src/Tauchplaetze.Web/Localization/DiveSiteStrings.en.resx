@@ -281,4 +281,5 @@
   <data name="ReportError_CommentTooLong" xml:space="preserve"><value>The comment has at most 280 characters.</value></data>
   <data name="ReportError_DailyLimit" xml:space="preserve"><value>You have already reported 10 dives today.</value></data>
   <data name="ReportError_NotFound" xml:space="preserve"><value>This report does not exist.</value></data>
+  <data name="ReportError_CommentChanged" xml:space="preserve"><value>The comment has changed in the meantime.</value></data>
 </root>

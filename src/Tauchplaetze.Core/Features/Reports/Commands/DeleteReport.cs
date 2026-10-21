@@ -5,7 +5,7 @@ using Tauchplaetze.Core.Features.Accounts;
 
 namespace Tauchplaetze.Core.Features.Reports.Commands;
 
-/// <summary>Löscht eine Meldung endgültig. Die Person, die gemeldet hat, ihre eigene; die Moderation jede.</summary>
+/// <summary>Löscht eine Meldung endgültig (`dive-site.md`, «Meldungen»). Die Person, die gemeldet hat, ihre eigene; ein Admin jede. Die Moderation blendet aus.</summary>
 public record DeleteReportCommand(string UserId, Guid ReportId);
 
 internal class DeleteReportHandler(TauchplaetzeDbContext dbContext, AccountRoles roles) : ICommandHandler<DeleteReportCommand, ReportResult>
@@ -19,7 +19,7 @@ internal class DeleteReportHandler(TauchplaetzeDbContext dbContext, AccountRoles
             return new ReportResult([ReportError.NotFound]);
         }
 
-        if (!rights.CanWrite || (!rights.CanModerate && report.AuthorId != command.UserId))
+        if (!rights.CanWrite || (!rights.CanAdminister && report.AuthorId != command.UserId))
         {
             return new ReportResult([ReportError.NotAllowed]);
         }

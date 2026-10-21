@@ -410,4 +410,8 @@
   <data name="Versions_RedactText" xml:space="preserve"><value>Version #{0} disappears from the public history and comparison. It stays visible in the CMS with a note. For spam or personal data.</value></data>
   <data name="Error_PublishedRevision" xml:space="preserve"><value>The published version cannot be redacted. Approve a corrected version first.</value></data>
   <data name="Error_RedactedRevision" xml:space="preserve"><value>The version is redacted. It cannot be approved or restored.</value></data>
+  <data name="Reports_Changed" xml:space="preserve"><value>The comment has changed in the meantime. Check it again.</value></data>
+  <data name="Reports_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Reports_DeleteTitle" xml:space="preserve"><value>Delete report?</value></data>
+  <data name="Reports_DeleteText" xml:space="preserve"><value>The report for {0} of {1} will be deleted for good. To hide it, «Hide» is enough.</value></data>
 </root>

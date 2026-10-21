@@ -242,7 +242,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 ### Meldungen (`/admin/meldungen`)
 
 - Kommentare, die auf Freigabe warten (älteste zuerst): «Freigeben» oder «Ablehnen» (Kommentar weg, Sicht und Temperatur bleiben).
-- Die 50 neuesten Meldungen mit «Ausblenden» und «Wieder zeigen». Regeln in `dive-site.md`, «Meldungen».
+- Die 50 neuesten Meldungen mit «Ausblenden» und «Wieder zeigen», für Admins zusätzlich «Löschen» mit Rückfrage. Regeln in `dive-site.md`, «Meldungen».
 
 ### Plattform (Admin)
 

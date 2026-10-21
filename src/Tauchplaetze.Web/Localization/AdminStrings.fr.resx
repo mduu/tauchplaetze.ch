@@ -410,4 +410,8 @@
   <data name="Versions_RedactText" xml:space="preserve"><value>La version n° {0} disparaît de l'historique public et de la comparaison. Elle reste visible dans le CMS avec une mention. Pour le spam ou les données personnelles.</value></data>
   <data name="Error_PublishedRevision" xml:space="preserve"><value>La version publiée ne peut pas être caviardée. Valide d'abord une version corrigée.</value></data>
   <data name="Error_RedactedRevision" xml:space="preserve"><value>La version est caviardée. Elle ne peut être ni validée ni restaurée.</value></data>
+  <data name="Reports_Changed" xml:space="preserve"><value>Le commentaire a été modifié entre-temps. Vérifie-le à nouveau.</value></data>
+  <data name="Reports_Delete" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="Reports_DeleteTitle" xml:space="preserve"><value>Supprimer le signalement ?</value></data>
+  <data name="Reports_DeleteText" xml:space="preserve"><value>Le signalement pour {0} du {1} sera supprimé définitivement. Pour le cacher, « Masquer » suffit.</value></data>
 </root>

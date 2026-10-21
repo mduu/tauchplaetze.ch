@@ -7,11 +7,12 @@
 @using Tauchplaetze.Core.Features.Reports.Commands
 @using Tauchplaetze.Core.Features.Reports.Queries
 @using Tauchplaetze.Web.Features.Editorial
+@inject IDialogService Dialogs
 
 <MudText Typo="Typo.h4" Class="mb-4">@L["Reports_Title"]</MudText>
-@if (failed)
+@if (error is not null)
 {
-    <MudAlert Severity="Severity.Error" Class="mb-4">@L["Reports_Failed"]</MudAlert>
+    <MudAlert Severity="Severity.Error" Class="mb-4">@L[error == ReportError.CommentChanged ? "Reports_Changed" : "Reports_Failed"]</MudAlert>
 }
 
 <MudText Typo="Typo.h6" Class="mb-2">@L["Reports_PendingTitle"]</MudText>
@@ -54,6 +55,10 @@ else
                 <td>@Line(report)</td>
                 <td>@report.Comment</td>
                 <td>
+                    @if (IsAdmin)
+                    {
+                        <MudButton Size="Size.Small" Variant="Variant.Text" Color="Color.Error" Disabled="busy" OnClick="@(() => Delete(report))">@L["Reports_Delete"]</MudButton>
+                    }
                     @if (report.IsHidden)
                     {
                         <MudButton Size="Size.Small" Variant="Variant.Outlined" Disabled="busy" OnClick="@(() => Moderate(report, ReportModeration.Show))">@L["Reports_Show"]</MudButton>
@@ -73,7 +78,7 @@ else
 
     private bool busy;
 
-    private bool failed;
+    private ReportError? error;
 
     protected override async Task Load() =>
         queue = await Query<GetReportQueueQuery, ReportQueue?>(new GetReportQueueQuery(UserId));
@@ -91,7 +96,22 @@ else
         }
 
         busy = true;
-        failed = !(await Command<ModerateReportCommand, ReportResult>(new ModerateReportCommand(UserId, report.Id, action))).Succeeded;
+        var result = await Command<ModerateReportCommand, ReportResult>(new ModerateReportCommand(UserId, report.Id, action, report.UpdatedAt));
+        error = result.Succeeded ? null : result.Errors[0];
+        await Load();
+        busy = false;
+    }
+
+    private async Task Delete(QueuedReport report)
+    {
+        if (busy || await Dialogs.ShowMessageBoxAsync(L["Reports_DeleteTitle"], L["Reports_DeleteText", report.SiteName, ReportFormat.Date(report.Date)], yesText: L["Reports_Delete"], cancelText: L["Account_Cancel"]) != true)
+        {
+            return;
+        }
+
+        busy = true;
+        var result = await Command<DeleteReportCommand, ReportResult>(new DeleteReportCommand(UserId, report.Id));
+        error = result.Succeeded ? null : result.Errors[0];
         await Load();
         busy = false;
     }

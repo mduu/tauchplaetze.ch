@@ -410,4 +410,8 @@
   <data name="Versions_RedactText" xml:space="preserve"><value>Version #{0} verschwindet aus der öffentlichen History und dem Vergleich. Im CMS bleibt sie mit Hinweis sichtbar. Für Spam oder Personendaten.</value></data>
   <data name="Error_PublishedRevision" xml:space="preserve"><value>Die veröffentlichte Version lässt sich nicht schwärzen. Gib zuerst eine korrigierte Version frei.</value></data>
   <data name="Error_RedactedRevision" xml:space="preserve"><value>Die Version ist geschwärzt. Sie lässt sich weder freigeben noch wiederherstellen.</value></data>
+  <data name="Reports_Changed" xml:space="preserve"><value>Der Kommentar wurde inzwischen geändert. Prüfe ihn neu.</value></data>
+  <data name="Reports_Delete" xml:space="preserve"><value>Löschen</value></data>
+  <data name="Reports_DeleteTitle" xml:space="preserve"><value>Meldung löschen?</value></data>
+  <data name="Reports_DeleteText" xml:space="preserve"><value>Die Meldung zu {0} vom {1} wird endgültig gelöscht. Zum Verbergen genügt «Ausblenden».</value></data>
 </root>
