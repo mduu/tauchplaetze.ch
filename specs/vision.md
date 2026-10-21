@@ -6,14 +6,9 @@ Taucherinnen und Taucher in der Schweiz stellen vor jedem Wochenende dieselbe Fr
 
 ## Das Problem heute
 
-- Es gibt keinen modernen, vollständigen Tauchplatzführer für die Schweizer Seen.
-  - Die App «Swiss Dive» (, ca. 600 Plätze) ist technisch veraltet.
-  - PADI listet nur rund 85 Plätze.
-  - swiss-divers.ch hat Tauchplatzseiten, aber das Forum ist praktisch tot.
-- Sichtweiten-Plattformen leben von Community-Meldungen. Zu wenige Leute melden. Ganze Seen bleiben leer.
-  - eine bestehende Plattform: wenige Meldungen, vor allem Bern und Westschweiz. Zürichsee, Zugersee, Walensee, Vierwaldstättersee und Bodensee fehlen weitgehend.
-  - ein Tauchclub: dieselben wenigen Melder seit Jahren.
-- Die Schweizer Szene ist stabil, aber klein und saisonal. Ein Produkt, das von Beteiligung lebt, scheitert.
+- Es gibt keinen modernen, vollständigen Tauchplatzführer für die Schweizer Seen und Flüsse. Bestehende Verzeichnisse sind lückenhaft oder werden kaum mehr gepflegt.
+- Plattformen für Sichtweiten leben von Meldungen aus der Community. Meist melden wenige Leute. Ganze Seen bleiben ohne aktuelle Angaben.
+- Die Schweizer Szene ist stabil, aber klein und saisonal. Ein Produkt, das nur von Beteiligung lebt, bleibt leer.
 
 ## Die Idee
 
@@ -21,7 +16,6 @@ Taucherinnen und Taucher in der Schweiz stellen vor jedem Wochenende dieselbe Fr
 2. **Jeder Platz so gut, wie die Daten es erlauben.** Ein Platz kann genaue Daten und eine Prognose haben, einfachere Daten oder gar keine. Dafür hat er vielleicht eine gute Dokumentation. Die **Datenstufe** und die **Ausbaustufe** zeigen das getrennt. Im Idealfall hat ein Platz beides: gute Daten mit Prognose und eine gute Dokumentation.
 3. **Prognose aus Daten, nicht aus Meldungen.** Seemodelle der Eawag liefern die Temperatur in jeder Tiefe und damit die Sprungschicht. Satellitendaten zeigen Klarheit und Algen. MeteoSchweiz liefert Wind und Regen. Das BAFU liefert den Abfluss der Zuflüsse. Daraus entsteht ein **Tauch-Index** pro Platz und Tag.
 4. **Community als Bonus.** Wer meldet, verbessert das spätere Modell. Niemand muss melden. Wer einen Platz kennt, kann Texte, Fotos und neue Plätze beisteuern. Moderatoren geben die Beiträge frei.
-4. **Wow durch Bilder.** Marc besitzt ein grosses Archiv an Unterwasserfotos und -videos aus Schweizer Seen (tauchfotos.ch, tauchvideos.ch).
 
 ## Zielgruppe
 
@@ -30,7 +24,7 @@ Taucherinnen und Taucher in der Schweiz stellen vor jedem Wochenende dieselbe Fr
 | Aktive Seetaucher (Kern) | Schnell sehen, wo es sich heute oder am Wochenende lohnt |
 | Gelegenheitstaucher | Einen passenden Platz in der Nähe finden, Einstieg und Parkierung kennen |
 | Taucher aus dem Ausland | Schweizer Plätze entdecken (EN, FR, IT) |
-| Tauchshops und Clubs | Sichtbarkeit als «nächste Füllstation» (kostenlos) |
+| Tauchshops und Clubs | Geplant (Phase 1): Sichtbarkeit als «nächste Füllstation», kostenlos und ohne Hervorhebung |
 
 ## Abgrenzung (bewusst nicht)
 
@@ -45,7 +39,7 @@ Taucherinnen und Taucher in der Schweiz stellen vor jedem Wochenende dieselbe Fr
 Phase MVP (Zürichsee, Zugersee und Rhein, je 8 bis 12 Plätze):
 
 - Leute aus der Szene reagieren mit «endlich!» und fragen nach weiteren Seen.
-- Shops und Clubs wollen als Füllstation eingetragen werden.
+- Shops und Clubs fragen, ob sie als Füllstation erscheinen können (die Funktion ist für Phase 1 geplant).
 - Es kommen Fotos, Korrekturen oder Meldungen ohne Aufforderung.
 
 Phase 1 (alle grossen Seen):
@@ -58,7 +52,7 @@ Phase 1 (alle grossen Seen):
 Entscheid Marc, 17.10.2026: Das Projekt ist nicht kommerziell.
 
 - Marc trägt die Betriebskosten.
-- Tauchshops und Füllstationen erscheinen kostenlos und ohne Hervorhebung.
+- Tauchshops und Füllstationen sollen kostenlos und ohne Hervorhebung erscheinen (geplant, Phase 1).
 - Sponsoren für das Projekt sind später möglich. Vor einem Sponsoring prüfen wir die Bedingungen aller Datenquellen neu (ADR-007). Manche Quellen erlauben nur nicht-kommerzielle Nutzung.
 
 ## Werte
