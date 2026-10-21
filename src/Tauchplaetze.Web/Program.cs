@@ -4,6 +4,7 @@ using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Web.Components;
 using Tauchplaetze.Web.CrossCutting.Database;
 using Tauchplaetze.Web.CrossCutting.Health;
+using Tauchplaetze.Web.CrossCutting.Hosting;
 using Tauchplaetze.Web.CrossCutting.Localization;
 using Tauchplaetze.Web.CrossCutting.RateLimiting;
 using Tauchplaetze.Web.CrossCutting.Security;
@@ -32,6 +33,7 @@ builder.Services.AddHostedService<DeadLetterMonitorWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));
 builder.Services.AddRateLimits(builder.Configuration);
 builder.Services.AddSecurityHeaders();
+builder.Services.AddHostRedirects(builder.Configuration);
 ReadinessCheck.Register(builder.Services);
 
 var app = builder.Build();
@@ -49,6 +51,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseHostRedirects();
 app.UseSecurityHeaders();
 app.UseHttpsRedirection();
 app.UseAuthentication();
