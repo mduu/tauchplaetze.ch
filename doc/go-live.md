@@ -152,7 +152,35 @@ Prüfen:
 - `https://app-tauchplaetze-prod.azurewebsites.net/health/ready` → nach dem ersten Lauf `Healthy`
 - Anmelden mit «Passwort vergessen» für die Admin-Adresse (die Mail kommt über Hostpoint).
 
-## 9. Domain und Cloudflare
+## 9. Domain (DNS bei Hostpoint, ohne Cloudflare)
+
+Entscheid Marc, 21.10.2026: Das DNS bleibt bei Hostpoint, wie bei bau-ticker. Hostpoint pflegt DKIM selbst (drei Schlüssel mit zufälligem Selector), ein Umzug zu Cloudflare müsste sie von Hand kopieren. Die Weiterleitungen (`www`, `sichtweiten.ch`) macht die App (`HostRedirects`, `seo.md`). `restrictToCloudflare` bleibt `false`.
+
+1. Werte holen:
+   ```bash
+   az webapp show -g rg-tauchplaetze-prod -n app-tauchplaetze-prod --query customDomainVerificationId -o tsv   # Wert für asuid
+   dig +short app-tauchplaetze-prod.azurewebsites.net | tail -1                                                # IP für den A-Record
+   ```
+2. Hostpoint Zone-Editor, je für `tauchplaetze.ch` und `sichtweiten.ch`:
+   - TXT `asuid` und `asuid.www` mit dem Wert aus 1.
+   - A `@` auf die IP aus 1 (ersetzt den Webspace von Hostpoint). MX, SPF, DKIM und DMARC bleiben unverändert.
+   - CNAME `www` auf `app-tauchplaetze-prod.azurewebsites.net`.
+3. Custom Domains und Zertifikate (kostenlos, erneuern sich selbst), für alle vier Namen:
+   ```bash
+   for host in tauchplaetze.ch www.tauchplaetze.ch sichtweiten.ch www.sichtweiten.ch; do
+     az webapp config hostname add -g rg-tauchplaetze-prod --webapp-name app-tauchplaetze-prod --hostname $host
+     thumb=$(az webapp config ssl create -g rg-tauchplaetze-prod -n app-tauchplaetze-prod --hostname $host --query thumbprint -o tsv)
+     az webapp config ssl bind -g rg-tauchplaetze-prod -n app-tauchplaetze-prod --certificate-thumbprint $thumb --ssl-type SNI
+   done
+   ```
+4. GitHub-Variable `PUBLIC_BASE_URL` = `https://tauchplaetze.ch` setzen (Health Check nach dem Deploy über die echte Domain).
+5. Prüfen: `https://tauchplaetze.ch/de` (200), `https://www.tauchplaetze.ch/de` und `https://sichtweiten.ch/zuerichsee` (301 auf `tauchplaetze.ch`).
+
+Die IP des A-Records ändert sich nur, wenn die Web App in einen anderen Plan oder eine andere Region zieht. Dann den A-Record nachführen.
+
+## 9b. Später: Cloudflare davor
+
+Bei viel Traffic (Fotos) oder Missbrauch. Die DKIM-Einträge von Hostpoint vorher aus dem Zone-Editor kopieren.
 
 1. App Service → Custom domains → `tauchplaetze.ch` und `www.tauchplaetze.ch` hinzufügen. Azure zeigt einen TXT-Eintrag `asuid…` zur Prüfung.
 2. Cloudflare DNS:
@@ -166,7 +194,7 @@ Prüfen:
    3. GitHub-Variable `PUBLIC_BASE_URL` = `https://tauchplaetze.ch` setzen. Der Health Check in `deploy.yml` ruft sonst die gesperrte Adresse `azurewebsites.net` auf.
 
    Warum direkt nacheinander: Mit Proxy, aber ohne Schalter zählen alle Rate Limits die IP der Edge von Cloudflare. Wenige Besucher über dieselbe Edge sperren dann alle anderen (Kontakt, Anmeldung). Ohne Einschränkung wären WAF und Rate Limits zudem über `azurewebsites.net` umgehbar, und `CF-Connecting-IP` liesse sich fälschen.
-5. Redirect Rules in Cloudflare: `www.tauchplaetze.ch/*` und `sichtweiten.ch/*`, `www.sichtweiten.ch/*` → `https://tauchplaetze.ch/$1` (301).
+5. Die Weiterleitungen macht weiter die App (`HostRedirects`). Redirect Rules in Cloudflare sind optional, sie entlasten die App nur wenig.
 6. Bot-Regeln: Der Health Check aus GitHub Actions kommt von Rechenzentren. «Bot Fight Mode» oder eine Challenge kann ihn blockieren (HTTP 403 oder 503 im Schritt «Health»). Dann eine Custom Rule «Skip» für die Pfade `/alive` und `/health/ready` anlegen, nicht für die ganze Website.
 7. Später: `media.tauchplaetze.ch` vor dem Container `media` (infrastructure.md), dann `mediaPublicBaseUri` in `main.bicepparam` setzen.
 8. Das App Service Managed Certificate erneuert sich nicht immer hinter dem Proxy von Cloudflare. Schlägt die Erneuerung fehl: Cloudflare Origin Certificate (15 Jahre) erzeugen und in App Service hochladen.

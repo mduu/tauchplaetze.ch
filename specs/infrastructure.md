@@ -22,7 +22,8 @@ Ausserhalb von Azure:
 
 | Dienst | Zweck | Kosten |
 |---|---|---|
-| Cloudflare (Free) | DNS, Proxy, CDN, Redirect Rules für `sichtweiten.ch` und `www` | 0 |
+| DNS bei Hostpoint | A-Record auf App Service, CNAME `www`, Mail (MX, SPF, DKIM, DMARC). Entscheid Marc, 21.10.2026: kein Cloudflare vorerst, Weiterleitungen in der App (`seo.md`), App Service Managed Certificates | bestehend |
+| Cloudflare (Free), später | Proxy, CDN für Fotos, `restrictToCloudflare` (`doc/go-live.md`, 9b) | 0 |
 | GitHub | Repository, Actions | 0 (privat, freies Kontingent) |
 | Domains | bereits im Besitz von Marc | bestehend |
 
