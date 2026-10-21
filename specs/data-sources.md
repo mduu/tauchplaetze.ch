@@ -77,17 +77,18 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
 ### Rechtliches
 
 - Die API beschreibt sich als «as is»: keine Garantie für Genauigkeit, Vollständigkeit, Aktualität und Verfügbarkeit.
-- **Nutzung erlaubt** (Eawag, Antwort vom 19.10.2026 auf `doc/mails/2026-10-17-eawag-alplakes.md`):
+- **Anfrage vom 17.10.2026** an Eawag (Alplakes): Nutzung der Endpunkte für Profile (3D, Simstrat) und Satellit, ein Lauf pro Tag, höchstens etwa 1000 Calls pro Tag und 2 pro Sekunde, Quellenangabe auf jeder Seite. Fragen: Bedingungen, bevorzugte Frequenz, Datalakes, Sentinel-2 in Ufernähe, leere Felder `u` und `v`.
+- **Nutzung erlaubt** (Eawag, Antwort vom 19.10.2026):
   1. Die Nutzung ist erlaubt, einzige Bedingung ist die Quellenangabe.
   2. Es gibt ein Rate Limit, die vorgeschlagene Frequenz (ein täglicher Lauf, höchstens etwa 1000 Calls pro Tag, höchstens 2 pro Sekunde) ist in Ordnung.
   3. Die Daten von Datalakes dürfen wir ebenfalls nutzen.
   4. Das Secchi-Produkt `Z490` von Sentinel-2 wird laufend verarbeitet.
-  5. Zu den leeren Geschwindigkeitsfeldern `u` und `v` wünscht er einen Beispiel-Request (Antwort: `doc/mails/2026-10-19-eawag-alplakes-antwort.md`).
+  5. Zu den leeren Geschwindigkeitsfeldern `u` und `v` wünscht Eawag einen Beispiel-Request. Wir schickten am 19.10.2026 einen Request für Riff Williams und fragten zu `Z490` (Einheit, Abstand vom Ufer).
 - **Zweite Antwort vom 19.10.2026:**
   - Der Beispiel-Request deckte einen Fehler auf (Zellen mit bestimmten Randbedingungen gaben `null`). Eawag hat ihn behoben, `u` und `v` liefern jetzt Werte.
   - `Z490` ist die Secchi-Tiefe in Metern und mit `Zsd_lee` von Sentinel-3 vergleichbar.
   - Pixel nahe am Ufer entfernt Eawag absichtlich, weil Ufer und flaches Wasser sie verfälschen. Ältere Bilder sind teils weniger streng maskiert. Jedes gelieferte Pixel gilt als gültig und darf genutzt werden.
-- Rückmeldungen von Tauchenden zu den Modellwerten teilen wir mit Eawag, darum hat er gebeten.
+- Rückmeldungen von Tauchenden zu den Modellwerten teilen wir mit Eawag, darum hat Eawag gebeten.
 - **Dritte Antwort vom 19.10.2026:** Sentinel-2 überfliegt einen See etwa alle 5 Tage, Sentinel-3 täglich. Ob ein Pixel einen Wert hat, hängt von der Bewölkung ab. Das passt zur Regel «Sentinel-2 bis 5 Tage voll» (`forecast.md`, «Klarheit»): Ein Wert gilt bis zum nächsten Überflug als aktuell. Nach einem bewölkten Überflug altert er, dann zählt oft ein frischerer Wert von Sentinel-3.
 - **Sentinel-2 in Ufernähe (`rules-1.2`):** `GET /remotesensing/timeseries/{lake}/sentinel2/Z490/{lat}/{lng}/{start}/{end}?window=2` zuerst 50 m seewärts des Platzes, bei fehlendem Wert oder weniger als 3 Pixeln (`count`) ein zweiter Call bei 100 m (`forecast.md`, «Klarheit»), Zeitraum 30 Tage. Laut Eawag gilt jedes gelieferte Pixel als gültig. Höchstens zwei Calls pro Platz an einem See mit `Z490`, Plätze am selben Punkt teilen ihn; dazu ein Call `remotesensing/metadata` pro Lauf. Heute haben 69 Plätze ein Gewässer mit Alplakes-Zuordnung (Zürichsee, Zugersee); das sind höchstens rund 138 Calls mehr pro Lauf (meist weniger: der zweite Call fällt weg, wenn 50 m genug Pixel hat), innerhalb der von Eawag bestätigten Frequenz. Ein Call dauert 2–5 s.
 - Quellenangabe auf jeder Seite mit Werten: «Daten: Eawag Alplakes» mit Link.
@@ -157,7 +158,8 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
 - Das BAFU rechnet Prognosen für Abfluss und Seepegel (etwa 3 Tage, etwa 50–60 Stationen).
 - Es gibt keine dokumentierte API. Nur ein JSON der Grafiken auf `hydrodaten.admin.ch` (`/plots/p_forecast/{id}_p_forecast_de.json`).
-- **Nutzung erlaubt** (BAFU, Abteilung Hydrologie, Antwort vom 19.10.2026 auf `doc/mails/2026-10-17-bafu-hydrologie.md`):
+- **Anfrage vom 17.10.2026** an das BAFU (Abteilung Hydrologie): Nutzung von Messwerten (Abfluss, Pegel, Temperatur, Trübung) und Vorhersagen, Fragen zu Schnittstelle, Stationen, Aktualisierung, Grenze der Abfragen und Quellenangabe.
+- **Nutzung erlaubt** (BAFU, Abteilung Hydrologie, Antwort vom 19.10.2026):
   - Eine offizielle Schnittstelle für Vorhersagen gibt es noch nicht. Das BAFU bietet einen Zugang per SFTP oder HTTPS an, mit Beispieldaten im Anhang der Mail.
   - Vorhersagen gibt es für die Stationen, die auf Hydroweb aufgeschaltet sind («Hydrologische Daten und Vorhersagen», https://www.hydrodaten.admin.ch/de/aktuelle-lage). Sie werden 1- bis 2-mal täglich gerechnet.
   - Keine Grenze für die Anzahl Abfragen.
@@ -174,7 +176,8 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
   Format: Text in UTF-8. Ein Kopf von rund 15 Zeilen nennt Ausgabezeit, Zeit des Wetterlaufs und den letzten Messwert (MEWZ). Danach eine Zeile pro Stunde: `dd mm yyyy hh Wasserstand Abfluss`, Wasserstand in m ü. M., Abfluss in m³/s. Die Reihe beginnt einen Tag vor der Ausgabe mit gemessenen Werten.
 - **Verwendung (geplant):** `ICH2_Ctrl` deckt die 5 Tage der Prognose ab. Die Stunden kommen als `HydroHour` mit `Kind = Forecast` in dieselbe Tabelle wie die Messwerte. Die Kachel «Abfluss» zeigt sie dann nach der gemessenen Kurve. Der Teilwert «Zuflüsse» rechnet dann mit dem vorhergesagten statt dem aktuellen Abfluss, vor allem für Flussplätze. Das Ensemble (`ICH2`) taugt später für einen Hinweis «Abfluss unsicher».
-- **Zugang per HTTPS** (BAFU, Abteilung Hydrologie, Antwort vom 20.10.2026 auf `doc/mails/2026-10-19-bafu-hydrologie-antwort.md`):
+- **Bitte um Zugang per HTTPS** am 19.10.2026 für `ICH2_Ctrl` der Stationen 2104 und 2091, mit Fragen zur Verfügbarkeit und zu 2477 Lorze – Zug.
+- **Zugang per HTTPS** (BAFU, Abteilung Hydrologie, Antwort vom 20.10.2026):
   - `https://www.hydrodata.ch/data/pqprevi-official/`: die Vorhersagen, die das BAFU auf hydrodaten.admin.ch publiziert. Täglich von den Prognostikern kontrolliert.
   - `https://www.hydrodata.ch/data/pqprevi-unofficial/`: nur automatisch gerechnet, nicht kontrolliert und nicht publiziert. Dort liegen weitere Stationen, z.B. 2477 Lorze – Zug.
   - Basic Auth (Prüfung vom 20.10.2026: `401` mit `WWW-Authenticate: Basic`). Benutzername und Passwort kamen in zwei Mails. Sie liegen nur in der Konfiguration: lokal als User Secrets des Web-Projekts (`Hydro:Forecast:Username`, `Hydro:Forecast:Password`), in Prod als Secret. Nie im Repository, nie im Log: Die Clients der Quellen redigieren alle Header im Log des HttpClient, Rohdaten und Status enthalten nur URL und Body.
