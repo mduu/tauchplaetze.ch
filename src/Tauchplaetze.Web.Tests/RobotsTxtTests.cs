@@ -25,6 +25,9 @@ public class RobotsTxtTests
         Assert.Contains("Disallow: /fr/sites-de-plongee/*/versions", body);
         Assert.Contains("Disallow: /de/tauchplaetze/*/bearbeiten", body);
         Assert.DoesNotContain("Disallow: /de/tauchplaetze\n", body);
+        var lines = body.Split('\n').Where(l => l.Length > 0).ToList();
+        Assert.Single(lines, line => line == "Disallow: /it/siti-di-immersione/*/segnala");
+        Assert.Equal(lines.Count, lines.Distinct().Count());
         Assert.Contains("Sitemap: https://tauchplaetze.ch/sitemap.xml", body);
     }
 }
