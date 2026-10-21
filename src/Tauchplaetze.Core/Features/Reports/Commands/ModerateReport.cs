@@ -21,8 +21,11 @@ public enum ReportModeration
     Show,
 }
 
-/// <summary>Moderation einer Meldung (`dive-site.md`, «Meldungen»). Nur Moderation und Admin.</summary>
-public record ModerateReportCommand(string ModeratorId, Guid ReportId, ReportModeration Action);
+/// <summary>
+/// Moderation einer Meldung (`dive-site.md`, «Meldungen»). Nur Moderation und Admin. <paramref name="SeenAt"/> ist <see cref="QueuedReport.UpdatedAt"/>
+/// beim Laden: Eine Freigabe gilt nur für den Kommentar, den die Moderation gesehen hat.
+/// </summary>
+public record ModerateReportCommand(string ModeratorId, Guid ReportId, ReportModeration Action, DateTimeOffset? SeenAt = null);
 
 internal class ModerateReportHandler(TauchplaetzeDbContext dbContext, AccountRoles roles, TimeProvider time) : ICommandHandler<ModerateReportCommand, ReportResult>
 {
@@ -37,6 +40,11 @@ internal class ModerateReportHandler(TauchplaetzeDbContext dbContext, AccountRol
         if (report is null)
         {
             return new ReportResult([ReportError.NotFound]);
+        }
+
+        if (command.Action == ReportModeration.ApproveComment && command.SeenAt != report.UpdatedAt)
+        {
+            return new ReportResult([ReportError.CommentChanged]);
         }
 
         switch (command.Action)

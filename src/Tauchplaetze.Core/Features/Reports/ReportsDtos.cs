@@ -42,6 +42,9 @@ public enum ReportError
 
     /// <summary>Meldung unbekannt.</summary>
     NotFound,
+
+    /// <summary>Der Kommentar hat sich seit dem Laden geändert. Die Moderation prüft ihn neu.</summary>
+    CommentChanged,
 }
 
 /// <summary>Ergebnis eines Commands zu Meldungen.</summary>
