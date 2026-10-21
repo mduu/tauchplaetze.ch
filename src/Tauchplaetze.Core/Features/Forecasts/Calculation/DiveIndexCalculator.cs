@@ -24,14 +24,16 @@ internal record DayResult(
     double? VisibilityGoodBelow,
     IReadOnlyList<ReasonCode> Reasons);
 
-/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.5`, ADR-004).</summary>
+/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.6`, ADR-004).</summary>
 internal static class DiveIndexCalculator
 {
     public static DayResult Calculate(DayInputs inputs, DiveIndexRules rules)
     {
         var thermocline = inputs.Thermocline is { } known
-            ? known.Value
-            : inputs.Profile is { } profile ? ThermoclineDetector.Detect(profile.Profile, rules.ThermoclineGradient) : null;
+            ? known.Value?.Plausible(rules.ThermoclineMinDepth, rules.ThermoclineMinThickness)
+            : inputs.Profile is { } profile
+                ? ThermoclineDetector.Detect(profile.Profile, rules.ThermoclineGradient, rules.ThermoclineMinDepth, rules.ThermoclineMinThickness)
+                : null;
         var clarity = ClarityScore(inputs, rules);
         var scores = new SubScores(
             clarity,

@@ -16,13 +16,15 @@ internal record SupportPoint(double Input, double Score);
 /// `rules-1.4` (20.10.2026, Entscheid Marc): An künftigen Tagen zählt für Zuflüsse und Korrektur der Klarheit der vorhergesagte Abfluss des BAFU.
 /// `rules-1.5` (20.10.2026, Entscheid Marc): Ein Zufluss zählt nach der Distanz zu seiner Mündung, der Median mindestens 1 m³/s,
 /// am Fluss die Station des Platzes, und viel Wasser im Fluss gibt einen Abzug für die Strömung.
+/// `rules-1.6` (21.10.2026, Fehlerbehebung): Die Sprungschicht zählt erst ab 1 m Tiefe und ab 1 m Dicke.
+/// Sonst hielt die warme Haut der obersten Dezimeter im 3D-Modell als Sprungschicht «0–0 m» her.
 /// Sie werden mit Meldungen und eigenen Tauchgängen geprüft.
 /// </remarks>
 internal record DiveIndexRules
 {
     public static readonly DiveIndexRules Default = new();
 
-    public string ModelVersion { get; init; } = "rules-1.5";
+    public string ModelVersion { get; init; } = "rules-1.6";
 
     public double ClarityWeight { get; init; } = 0.35;
 
@@ -33,6 +35,12 @@ internal record DiveIndexRules
     public double StratificationWeight { get; init; } = 0.20;
 
     public double ThermoclineGradient { get; init; } = 0.5;
+
+    /// <summary>Punkte darüber zählen nicht für die Sprungschicht, in Metern.</summary>
+    public double ThermoclineMinDepth { get; init; } = 1;
+
+    /// <summary>Eine dünnere Sprungschicht gilt als keine, in Metern.</summary>
+    public double ThermoclineMinThickness { get; init; } = 1;
 
     public int SatelliteMaxAgeDays { get; init; } = 14;
 

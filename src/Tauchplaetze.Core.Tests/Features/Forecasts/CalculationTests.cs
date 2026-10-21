@@ -23,6 +23,35 @@ public class ThermoclineTests
     }
 
     [Fact]
+    public void Die_warme_Haut_an_der_Oberflaeche_ist_keine_Sprungschicht_bei_Sisikon_liegt_sie_tiefer()
+    {
+        // Arrange: mitgcm am Urnersee, 21.10.2026 09 UTC. Zwischen 0.1 und 0.3 m fällt die Temperatur um 1 °C pro Meter.
+        var series = DepthTimeSeries.Parse(TestData.Read("alplakes", "depthtime-mitgcm-lucerne-sisikon-20261021.json"), "temperature");
+        var profile = series.ProfileAt(new DateTimeOffset(2026, 10, 21, 9, 0, 0, TimeSpan.Zero), TimeSpan.FromHours(1))!;
+
+        // Act
+        var thermocline = ThermoclineDetector.Detect(profile, 0.5);
+
+        // Assert
+        Assert.InRange(thermocline!.Top, 14, 17);
+        Assert.InRange(thermocline.Bottom, 20, 24);
+    }
+
+    [Theory]
+    [InlineData(0.1, 0.3)]
+    [InlineData(0, 0)]
+    [InlineData(12, 12.5)]
+    [InlineData(15, 12)]
+    public void Eine_Sprungschicht_an_der_Oberflaeche_oder_duenner_als_1_m_gilt_als_keine(double top, double bottom)
+    {
+        // Act
+        var plausible = new Thermocline(top, bottom).Plausible(1, 1);
+
+        // Assert
+        Assert.Null(plausible);
+    }
+
+    [Fact]
     public void Ein_durchmischter_See_hat_keine_Sprungschicht()
     {
         // Arrange
@@ -209,6 +238,23 @@ public class DiveIndexTests
         Assert.Equal(10, result.DiveIndex);
         Assert.Equal([ReasonCode.ClearBelowThermocline, ReasonCode.ClearWater, ReasonCode.CalmLake], result.Reasons);
         Assert.Equal(16, result.VisibilityGoodBelow);
+    }
+
+    [Fact]
+    public void Eine_gespeicherte_Sprungschicht_an_der_Oberflaeche_zaehlt_bei_der_Neuberechnung_wie_keine()
+    {
+        // Arrange: so stand sie vor rules-1.6 in der Datenbank («0–0 m»).
+        var skin = new DayInputs(Calm, Summer, Clear(8), AlgaeLevel.Low, 1.0, IsRiver: false, new KnownThermocline(new Thermocline(0.1, 0.3)));
+        var none = skin with { Thermocline = new KnownThermocline(null) };
+
+        // Act
+        var withSkin = DiveIndexCalculator.Calculate(skin, DiveIndexRules.Default);
+        var withoutThermocline = DiveIndexCalculator.Calculate(none, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Null(withSkin.Thermocline);
+        Assert.Null(withSkin.VisibilityGoodBelow);
+        Assert.Equal(withoutThermocline.DiveIndex, withSkin.DiveIndex);
     }
 
     [Fact]

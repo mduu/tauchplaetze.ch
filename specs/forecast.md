@@ -71,6 +71,8 @@ Die Endpunkte stehen in `data-sources.md`.
 - Aus dem Temperaturprofil die Schicht mit dem stärksten Temperaturabfall bestimmen.
 - `ThermoclineTop` und `ThermoclineBottom`: Grenzen, an denen der Gradient den Schwellwert überschreitet (Standard 0.5 °C pro m, konfigurierbar).
 - Kein Gradient über dem Schwellwert (typisch im Winter): keine Sprungschicht. Der See ist durchmischt.
+- **Oberflächenhaut (`rules-1.6`):** Punkte über 1 m Tiefe zählen nicht (`ThermoclineMinDepth`). Die Sonne erwärmt tagsüber die obersten Dezimeter. Das 3D-Modell `mitgcm` hat dort Schichten von 0.2 m und zeigt bis 1 °C pro m Abfall zwischen 0.1 und 0.3 m. Daraus wurde am 21.10.2026 bei Sisikon die Sprungschicht «0–0 m» statt 15–22 m.
+- Eine Sprungschicht dünner als 1 m (`ThermoclineMinThickness`) oder über 1 m Tiefe gilt als keine. Das gilt auch für gespeicherte Werte bei der Neuberechnung.
 - Das 1D-Modell liefert die Sprungschicht als eigene Variable (`Thermocline`). Der Job bestimmt sie trotzdem selbst aus dem Profil. So gilt für beide Modelle dieselbe Regel.
 
 ### Regen der letzten 72 h
@@ -153,6 +155,8 @@ Vier Teilwerte, je 0 bis 10. Der Index ist der gewichtete Mittelwert.
 | Schichtung | 20 % | klare Schicht unter einer Sprungschicht ≤ 20 m, oder durchmischter See mit wenig Algen | Sprungschicht tiefer als 30 m bei trüber Oberfläche |
 
 **`rules-1.4`** (20.10.2026, Entscheid Marc): wie `rules-1.3`, dazu rechnen **künftige Tage mit der Abflussvorhersage des BAFU**. Heute zählt weiter der gemessene Abfluss (neuester Wert geteilt durch den Median der letzten 30 Tage). Ab morgen zählt das vorhergesagte Tagesmittel (Schweizer Kalendertag, mindestens 12 Stunden) geteilt durch denselben Median, für den Teilwert «Zuflüsse» und für die Korrektur der Klarheit. Bei mehreren Zuflüssen zählt der höchste Quotient. Ohne Vorhersage für den Tag bleibt der gemessene Wert wie in `rules-1.3`. Automatisch gerechnete Vorhersagen (`unofficial`) zählen wie kontrollierte; den Unterschied zeigt nur die Kachel. Grund: Bisher sah ein Tag mit vorhergesagtem Hochwasser gleich gut aus wie heute. Vergangene Tage ändern sich nicht, denn ihr gespeicherter Quotient bleibt. Zuflussstationen der Seen: `data-sources.md`, Liste in `doc/inflow-stations-vorschlag.md`.
+
+**`rules-1.6`** (21.10.2026, Fehlerbehebung): wie `rules-1.5`. Die Sprungschicht zählt erst ab 1 m Tiefe und ab 1 m Dicke (siehe «Sprungschicht»). Vorher gab die warme Oberflächenhaut im 3D-Modell eine Sprungschicht «0–0 m», volle Punkte für die Schichtung und «besser ab 0 m».
 
 **`rules-1.5`** (20.10.2026, Entscheid Marc): wie `rules-1.4` mit vier Änderungen.
 1. **Zufluss nach Distanz zur Mündung:** Ein Zufluss zählt nicht mehr für den ganzen See, sondern nach der Distanz zwischen Platz und Mündung (`WaterBodyHydroStation.Mouth`). Bis 5 km zählt er voll, dann linear weniger, ab 15 km gar nicht (10 km: halb). Der Quotient am Platz ist `1 + Gewicht × (Quotient − 1)`. Bei mehreren Zuflüssen zählt der höchste. Erreicht kein Zufluss den Platz, zählt nur der Regen. Grund: Ein Hochwasser des Ticino trübt Magadino und Tenero, nicht Brissago; eines der Reuss den Urnersee, nicht Luzern. Becken sind nicht modelliert, nur die Distanz. Gilt für den Teilwert «Zuflüsse» und die Korrektur der Klarheit, heute und an künftigen Tagen.
