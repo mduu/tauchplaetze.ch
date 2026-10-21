@@ -109,7 +109,8 @@ Namen in einer öffentlichen History sind Personendaten (nDSG). Darum gilt **Dat
 - **Name nur mit Einwilligung.** Im Profil gibt es die Einstellung «Meinen Anzeigenamen öffentlich bei meinen Beiträgen zeigen». Sie ist aus, bis die Person sie einschaltet. Sie gilt für Autor und Approver gleich. Sie wirkt auch rückwirkend: Ausschalten macht alle bisherigen Einträge wieder anonym.
 - **Pseudonym erlaubt.** Der Anzeigename muss kein echter Name sein. Die Registrierung sagt das.
 - **Nie öffentlich:** E-Mail-Adresse, Konto-ID, IP-Adresse.
-- **Nicht in Suchmaschinen:** Die Seiten der History haben `noindex` und stehen nicht in der Sitemap.
+- **Nicht in Suchmaschinen:** Die Seiten der History haben `noindex, nofollow` als Meta-Tag und als Header `X-Robots-Tag`, `robots.txt` sperrt sie, und sie stehen nicht in der Sitemap.
+- **Schutz gegen Spam (Entscheid Marc, 21.10.2026):** Öffentlich erscheinen nur freigegebene Versionen ohne Schwärzung (`Approved`, `RedactedAt` leer), in der Liste wie im Vergleich. Abgelehnte, wartende und zurückgezogene Versionen erscheinen nie. Kommentare und Änderungen stehen als Text, URLs darin sind nicht verlinkt. So bringt ein abgelehnter Vorschlag mit Links nichts.
 - **Konto löschen:** Die Versionen bleiben. Autor bzw. Approver wird «gelöschtes Konto», auch im CMS.
 - **Personendaten im Inhalt:** Texte und Fotos können selbst Personendaten enthalten (z.B. Telefonnummern, erkennbare Personen). Moderatoren prüfen das vor der Freigabe. Eine Version mit solchen Daten lässt sich im Inhalt nachträglich schwärzen. Das ist die einzige Ausnahme von «Versionen sind unveränderlich». Die Schwärzung selbst steht in der History.
 - Die Datenschutzerklärung beschreibt Konto, Anzeigename, History und Aufbewahrung.

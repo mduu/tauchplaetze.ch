@@ -17,7 +17,7 @@
 {
     <PageTitle>@L["History_Title", history.SiteName] · @Shared["Brand"]</PageTitle>
     <HeadContent>
-        <meta name="robots" content="noindex" />
+        <meta name="robots" content="noindex, nofollow" />
     </HeadContent>
 
     <section class="page-section history">
@@ -84,10 +84,14 @@
     [SupplyParameterFromQuery]
     public int? V { get; set; }
 
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
     protected override async Task OnInitializedAsync()
     {
+        HttpContext?.Response.Headers["X-Robots-Tag"] = "noindex, nofollow";
         history = await Revisions.Handle(new GetPublicRevisionsQuery(Slug));
         if (history is null)
         {

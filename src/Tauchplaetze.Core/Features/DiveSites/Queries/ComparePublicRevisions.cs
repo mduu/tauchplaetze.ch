@@ -20,7 +20,7 @@ internal class ComparePublicRevisionsHandler(TauchplaetzeDbContext dbContext, Re
 
         var wanted = new[] { query.From, query.To }.OfType<int>().ToList();
         var found = await dbContext.DiveSiteRevisions.AsNoTracking()
-            .Where(r => r.DiveSiteId == siteId && r.Status == RevisionStatus.Approved && wanted.Contains(r.Number))
+            .Where(r => r.DiveSiteId == siteId && r.Status == RevisionStatus.Approved && r.RedactedAt == null && wanted.Contains(r.Number))
             .ToDictionaryAsync(r => r.Number, ct);
         if (!found.TryGetValue(query.To, out var to) || (query.From is { } from && !found.ContainsKey(from)))
         {

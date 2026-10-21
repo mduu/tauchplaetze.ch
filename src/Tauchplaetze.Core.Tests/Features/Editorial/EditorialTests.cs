@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -316,6 +317,36 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.All(anonymous.Revisions, r => Assert.Null(r.AuthorName));
         Assert.Equal("Anna", withConsent!.Revisions[0].AuthorName);
         Assert.Null(withConsent.Revisions[0].ReviewerName);
+    }
+
+    [SqlFact]
+    public async Task Die_oeffentliche_History_und_ihr_Vergleich_zeigen_keine_abgelehnten_und_keine_geschwaerzten_Versionen()
+    {
+        // Arrange
+        var (moderator, anna, site) = await Prepare();
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 31 }, "https://spam.example"));
+        var rejected = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator)));
+        await Command<RejectRevisionCommand, EditorialResult>(new RejectRevisionCommand(moderator, rejected.Revision.Id, "Spam"));
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { MaxDepth = 32 }, null));
+        var approved = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(moderator)));
+        await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(moderator, approved.Revision.Id));
+        await Sql.Arrange(async db =>
+        {
+            var revision = await db.DiveSiteRevisions.SingleAsync(r => r.Id == approved.Revision.Id);
+            revision.RedactedAt = DateTimeOffset.UtcNow;
+            await db.SaveChangesAsync();
+        });
+
+        // Act
+        var history = await Query<GetPublicRevisionsQuery, PublicRevisions?>(new GetPublicRevisionsQuery("riff-williams-herrliberg"));
+        var compareRejected = await Query<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?>(new ComparePublicRevisionsQuery("riff-williams-herrliberg", 1, rejected.Revision.Number));
+        var compareRedacted = await Query<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?>(new ComparePublicRevisionsQuery("riff-williams-herrliberg", 1, approved.Revision.Number));
+
+        // Assert
+        Assert.Equal([1], history!.Revisions.Select(r => r.Number));
+        Assert.Null(compareRejected);
+        Assert.Null(compareRedacted);
     }
 
     [SqlFact]

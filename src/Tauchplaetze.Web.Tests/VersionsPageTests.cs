@@ -16,10 +16,10 @@ public class VersionsPageTests : IClassFixture<WebApp>
         this.app = app;
         app.PublicRevisions.Answer = query => query.Slug != "riff-williams" ? null : new PublicRevisions("Riff Williams", "riff-williams",
         [
-            new RevisionSummary(Guid.NewGuid(), 2, 1, RevisionStatus.Approved, At, At, "Tiefe ergänzt", null, null, "Lucie", null, false),
+            new RevisionSummary(Guid.NewGuid(), 2, 1, RevisionStatus.Approved, At, At, "Mehr auf https://spam.example", null, null, "Lucie", null, false),
             new RevisionSummary(Guid.NewGuid(), 1, null, RevisionStatus.Approved, At, At, "Erstimport", null, null, null, null, false),
         ]);
-        app.PublicChanges.Answer = query => query is { From: 1, To: 2 } ? [new FieldChange("MaxDepth", null, "38")] : null;
+        app.PublicChanges.Answer = query => query is { From: 1, To: 2 } ? [new FieldChange("MaxDepth", null, "38"), new FieldChange("UnderwaterDescription", null, "Billig: https://spam.example/shop")] : null;
     }
 
     [Fact]
@@ -37,7 +37,8 @@ public class VersionsPageTests : IClassFixture<WebApp>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Contains("von Lucie, freigegeben von Moderation", text);
         Assert.Contains("von Mitwirkende, freigegeben von Moderation", text);
-        Assert.Contains("<meta name=\"robots\" content=\"noindex\"", html);
+        Assert.Contains("<meta name=\"robots\" content=\"noindex, nofollow\"", html);
+        Assert.Equal("noindex, nofollow", response.Headers.GetValues("X-Robots-Tag").Single());
     }
 
     [Fact]
@@ -80,5 +81,20 @@ public class VersionsPageTests : IClassFixture<WebApp>
 
         // Assert
         Assert.Equal(expected, switched);
+    }
+
+    [Fact]
+    public async Task Links_in_Kommentaren_und_Aenderungen_der_History_sind_nicht_klickbar()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/riff-williams/versionen?v=2", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("https://spam.example/shop", VisibleText.Of(html));
+        Assert.Contains("https://spam.example", VisibleText.Of(html));
+        Assert.DoesNotContain("href=\"https://spam.example", html);
     }
 }

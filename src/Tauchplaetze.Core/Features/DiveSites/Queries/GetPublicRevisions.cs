@@ -22,7 +22,7 @@ internal class GetPublicRevisionsHandler(TauchplaetzeDbContext dbContext, Revisi
         }
 
         var approved = await dbContext.DiveSiteRevisions.AsNoTracking()
-            .Where(r => r.DiveSiteId == site.Id && r.Status == RevisionStatus.Approved)
+            .Where(r => r.DiveSiteId == site.Id && r.Status == RevisionStatus.Approved && r.RedactedAt == null)
             .OrderByDescending(r => r.Number)
             .ToListAsync(ct);
         return new PublicRevisions(site.Name, site.Slug, await names.Summaries(approved, publicView: true, ct));
