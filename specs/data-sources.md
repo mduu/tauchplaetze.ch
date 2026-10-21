@@ -22,7 +22,7 @@ Das Projekt ist **nicht kommerziell** (`vision.md`, «Finanzierung»). Mehrere Q
 
 ## Eawag Alplakes
 
-Alplakes ist eine Plattform der Eawag (Abteilung Oberflächengewässer). Sie verbindet Seemodelle mit Satellitendaten für über 200 Seen im Alpenraum. Alplakes erhielt 2025 den Nationalen Preis für offene Forschungsdaten. Entwickler: Eawag (Alplakes) (Eawag).
+Alplakes ist eine Plattform der Eawag (Abteilung Oberflächengewässer). Sie verbindet Seemodelle mit Satellitendaten für über 200 Seen im Alpenraum. Alplakes erhielt 2025 den Nationalen Preis für offene Forschungsdaten.
 
 Der Code der API ist öffentlich: `github.com/eawag-surface-waters-research/alplakes-fastapi`. Die API heisst «Alplakes API» (Version 2.0.0). Basis-URL: `https://alplakes-api.eawag.ch`.
 
@@ -77,7 +77,7 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
 ### Rechtliches
 
 - Die API beschreibt sich als «as is»: keine Garantie für Genauigkeit, Vollständigkeit, Aktualität und Verfügbarkeit.
-- **Nutzung erlaubt** (Eawag (Alplakes), Eawag, Antwort vom 19.10.2026 auf `doc/mails/2026-10-17-eawag-alplakes.md`):
+- **Nutzung erlaubt** (Eawag, Antwort vom 19.10.2026 auf `doc/mails/2026-10-17-eawag-alplakes.md`):
   1. Die Nutzung ist erlaubt, einzige Bedingung ist die Quellenangabe.
   2. Es gibt ein Rate Limit, die vorgeschlagene Frequenz (ein täglicher Lauf, höchstens etwa 1000 Calls pro Tag, höchstens 2 pro Sekunde) ist in Ordnung.
   3. Die Daten von Datalakes dürfen wir ebenfalls nutzen.
@@ -155,7 +155,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
 - Das BAFU rechnet Prognosen für Abfluss und Seepegel (etwa 3 Tage, etwa 50–60 Stationen).
 - Es gibt keine dokumentierte API. Nur ein JSON der Grafiken auf `hydrodaten.admin.ch` (`/plots/p_forecast/{id}_p_forecast_de.json`).
-- **Nutzung erlaubt** (BAFU (Hydrologie), Projektleiter Abt. Hydrologie, BAFU, Antwort vom 19.10.2026 auf `doc/mails/2026-10-17-bafu-hydrologie.md`):
+- **Nutzung erlaubt** (BAFU, Abteilung Hydrologie, Antwort vom 19.10.2026 auf `doc/mails/2026-10-17-bafu-hydrologie.md`):
   - Eine offizielle Schnittstelle für Vorhersagen gibt es noch nicht. Das BAFU bietet einen Zugang per SFTP oder HTTPS an, mit Beispieldaten im Anhang der Mail.
   - Vorhersagen gibt es für die Stationen, die auf Hydroweb aufgeschaltet sind («Hydrologische Daten und Vorhersagen», https://www.hydrodaten.admin.ch/de/aktuelle-lage). Sie werden 1- bis 2-mal täglich gerechnet.
   - Keine Grenze für die Anzahl Abfragen.
@@ -172,7 +172,7 @@ Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den R
 
   Format: Text in UTF-8. Ein Kopf von rund 15 Zeilen nennt Ausgabezeit, Zeit des Wetterlaufs und den letzten Messwert (MEWZ). Danach eine Zeile pro Stunde: `dd mm yyyy hh Wasserstand Abfluss`, Wasserstand in m ü. M., Abfluss in m³/s. Die Reihe beginnt einen Tag vor der Ausgabe mit gemessenen Werten.
 - **Verwendung (geplant):** `ICH2_Ctrl` deckt die 5 Tage der Prognose ab. Die Stunden kommen als `HydroHour` mit `Kind = Forecast` in dieselbe Tabelle wie die Messwerte. Die Kachel «Abfluss» zeigt sie dann nach der gemessenen Kurve. Der Teilwert «Zuflüsse» rechnet dann mit dem vorhergesagten statt dem aktuellen Abfluss, vor allem für Flussplätze. Das Ensemble (`ICH2`) taugt später für einen Hinweis «Abfluss unsicher».
-- **Zugang per HTTPS** (BAFU (Hydrologie), BAFU, Antwort vom 20.10.2026 auf `doc/mails/2026-10-19-bafu-hydrologie-antwort.md`):
+- **Zugang per HTTPS** (BAFU, Abteilung Hydrologie, Antwort vom 20.10.2026 auf `doc/mails/2026-10-19-bafu-hydrologie-antwort.md`):
   - `https://www.hydrodata.ch/data/pqprevi-official/`: die Vorhersagen, die das BAFU auf hydrodaten.admin.ch publiziert. Täglich von den Prognostikern kontrolliert.
   - `https://www.hydrodata.ch/data/pqprevi-unofficial/`: nur automatisch gerechnet, nicht kontrolliert und nicht publiziert. Dort liegen weitere Stationen, z.B. 2477 Lorze – Zug.
   - Basic Auth (Prüfung vom 20.10.2026: `401` mit `WWW-Authenticate: Basic`). Benutzername und Passwort kamen in zwei Mails. Sie liegen nur in der Konfiguration: lokal als User Secrets des Web-Projekts (`Hydro:Forecast:Username`, `Hydro:Forecast:Password`), in Prod als Secret. Nie im Repository, nie im Log: Die Clients der Quellen redigieren alle Header im Log des HttpClient, Rohdaten und Status enthalten nur URL und Body.
@@ -243,7 +243,7 @@ Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schw
 - **Gewässer:** benanntes `natural=water` oder `waterway=river|canal` im Umkreis von 300 m oder als Fläche um den Punkt. Steht der Name des Gewässers im Namen des Platzes, gilt dieses. Sonst geht ein See einem Fluss vor (Platz an einer Mündung). Häfen und Becken zählen nicht. Neue Gewässer kommen mit Namen in vier Sprachen (`name:de|fr|it|en`) in den Seed, ohne Alplakes-Zuordnung (Datenstufe «nur Wetter», bis jemand sie ergänzt).
 - **Einstiege:** Punkte mit «Einstieg», «Ausstieg», «Entrée», «Sortie», «Ingresso» oder «Uscita» im Namen werden Einstiege des Platzes mit demselben Namensanfang in höchstens 400 m. Fehlt er, entsteht ein Platz mit diesem Namen.
 - **Kein Parkplatz aus dem Namen:** Ein Punkt mit `sport=scuba_diving` ist ein Tauchplatz, auch wenn er «Parkplatz» heisst (am Zürichsee «Kleiner» und «Grosser Parkplatz»). Echte Parkplätze (`amenity=parking`) holt das Skript nicht.
-- **Nicht übernommen:** Punkte ohne Namen, ohne Gewässer, Dubletten nach Slug, Punkte mit `source` von swiss-divers.ch.
+- **Nicht übernommen:** Punkte ohne Namen, ohne Gewässer, Dubletten nach Slug, Punkte, deren `source` auf ein anderes Tauchplatzverzeichnis zeigt.
 - **Durchsicht:** Das Skript schreibt `tools/osm-import/out/review.md`. Marc prüft die Liste. Das Skript ergänzt nur, was fehlt: Ein zweiter Lauf fügt neue OSM-Punkte hinzu und lässt bestehende Seeds stehen.
 - **Quellenangabe:** im Seitenfuss «© OpenStreetMap-Mitwirkende, ODbL» mit Link auf openstreetmap.org/copyright.
 - **Abruf über curl:** .NET baut zu overpass-api.de keine TLS-Verbindung auf (macOS, 18.10.2026). Das Skript ruft darum curl auf.
@@ -256,7 +256,7 @@ Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schw
 | Quelle | Grund |
 |---|---|
 | Google Maps (Places) | Die Bedingungen verbieten Scraping und das dauerhafte Speichern der Inhalte. Nur Links für die Route. |
-| swiss-divers.ch | Tauchplatzführer mit eigenem Verzeichnis. Systematisches Übernehmen wäre unlauter (UWG Art. 5 lit. c), eine Anfrage wenig aussichtsreich (gleiches Angebot). Punkte in OSM mit dieser Quelle werden ausgelassen. |
+| Andere Tauchplatzverzeichnisse | Eigene Verzeichnisse Dritter. Systematisches Übernehmen wäre unlauter (UWG Art. 5 lit. c). Punkte in OSM, deren `source` auf ein solches Verzeichnis zeigt, werden ausgelassen. |
 | MeteoSchweiz ICON direkt (GRIB2) | Open-Meteo liefert dieselben Modelle als JSON (ADR-007). Direkt heisst: grosse Dateien für die ganze Schweiz laden, um wenige Punkte zu lesen. Mehrwert erst mit dem **Ensemble** (11 bzw. 21 Läufe): Es zeigt, wie sicher die Windprognose ist. Kandidat für Phase 2 («Prognose unsicher»). |
 | MeteoSchweiz `ogd-local-forecasting` (CSV-Punktprognose) | Später möglich als Ersatz für Open-Meteo, falls dessen Bedingungen nicht mehr passen. |
 | MeteoSchweiz CombiPrecip (Radar) | Regen im ganzen Einzugsgebiet wäre genauer. HDF5, Aufwand M. Später. |
@@ -277,5 +277,5 @@ Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schw
 
 ## Was wir nicht nutzen
 
-- **Keine Daten von eine bestehende Plattform, ein Tauchclub oder swiss-divers.ch.** Kein Scraping. Marc hat damit früher schlechte Erfahrungen gemacht (Konflikt mit dem ein Tauchclub).
-- Kooperation mit eine bestehende Plattform ist möglich, aber nur mit Zustimmung des Betreibers.
+- **Keine Daten aus anderen Tauchplatzverzeichnissen oder Plattformen für Sichtweiten.** Kein Scraping.
+- Eine Zusammenarbeit ist möglich, aber nur mit Zustimmung der jeweiligen Betreiber.

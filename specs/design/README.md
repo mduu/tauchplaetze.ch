@@ -15,7 +15,7 @@ Entwurf vom 17.10.2026. Zwei Seiten im dunklen Schema «Kaltwasser-Nacht». Alle
 - Alle Texte in den Mockups sind deutsch und fest eingetragen. In der App kommen sie aus `.resx` (vier Sprachen).
 - Die statischen Dateien laden Schriften von Google Fonts. Die App hostet die Schriften selbst.
 - Die `.dc.html`-Quellen enthalten Platzhalter (`{{…}}`), Schleifen (`<sc-for>`) und Bedingungen (`<sc-if>`). Die Logik mit den Beispieldaten steht im Skript am Ende der Datei.
-- Die Platzbeschreibung von «Riff Williams» stammt sinngemäss aus der öffentlichen Tauchplatzliste des ein Tauchclub. Für die echte Plattform schreibt Marc eigene Texte.
+- Die Platzbeschreibung von «Riff Williams» stammt sinngemäss aus einer öffentlichen Tauchplatzliste. Für die echte Plattform schreibt Marc eigene Texte.
 
 ## Was der Entwurf zeigt
 

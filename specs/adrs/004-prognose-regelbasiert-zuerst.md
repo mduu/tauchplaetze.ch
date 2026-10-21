@@ -7,7 +7,7 @@
 ## Kontext
 
 - Ein ML-Modell braucht Labels (beobachtete Sichtweiten). Zum Start gibt es keine.
-- Community-Meldungen bleiben in der Schweiz erfahrungsgemäss spärlich (ein Tauchclub, eine bestehende Plattform, früher swiss-divers.ch).
+- Community-Meldungen bleiben in der Schweiz erfahrungsgemäss spärlich, auch auf bestehenden Plattformen.
 - Die Prognose muss vom ersten Tag an für alle Plätze funktionieren.
 - Erfahrene Taucher sollen die Bewertung nachvollziehen können.
 

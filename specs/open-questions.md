@@ -19,8 +19,8 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 
 - #6 (Umkreis ohne gewählten Ort): ganze Schweiz, `features.md`.
 - #4 (Marke): «tauchplaetze.ch».
-- #9 (eine bestehende Plattform): vorerst keine Zusammenarbeit. Dort gibt es nur vereinzelte Daten.
-- #10 (Swiss Dive): vorerst nicht anschreiben.
+- #9 (Zusammenarbeit mit bestehenden Plattformen für Sichtweiten): vorerst keine.
+- #10 (Betreiber bestehender Tauchplatz-Apps anschreiben): vorerst nicht.
 - #12 (Bilder): öffentlicher Blob-Container mit Cloudflare davor, `infrastructure.md`.
 - #13 (maschinelle Übersetzung): Claude API mit Glossar, Phase 1, `cms.md`.
 - #16 (Azure SQL Free Offer): für das Projekt nicht entscheidend. Bei der Einrichtung prüfen.
