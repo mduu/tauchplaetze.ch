@@ -31,6 +31,10 @@ internal static class RobotsTxt
         Disallow: /en/dive-sites/*/report
         Disallow: /fr/sites-de-plongee/*/signaler
         Disallow: /it/siti-di-immersione/*/segnala
+        Disallow: /de/tauchplaetze/*/melden
+        Disallow: /en/dive-sites/*/report
+        Disallow: /fr/sites-de-plongee/*/signaler
+        Disallow: /it/siti-di-immersione/*/segnala
         Disallow: /*?
         """;
 

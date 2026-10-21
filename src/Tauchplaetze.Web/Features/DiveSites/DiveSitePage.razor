@@ -8,10 +8,14 @@
 @using Tauchplaetze.Core.Features.Forecasts
 @using Tauchplaetze.Core.Features.Forecasts.Queries
 @using Tauchplaetze.Web.Features.Forecasts
+@using Tauchplaetze.Core.Features.Reports
+@using Tauchplaetze.Core.Features.Reports.Queries
+@using Tauchplaetze.Web.Features.Reports
 @inject IQueryHandler<GetDiveSiteQuery, DiveSiteLookup> DiveSites
 @inject IQueryHandler<GetSiteForecastQuery, SiteForecast> Forecasts
 @inject IQueryHandler<GetSiteDischargeQuery, SiteDischarge?> Discharges
 @inject IQueryHandler<GetSiteIndexHistoryQuery, SiteIndexHistory> IndexHistory
+@inject IQueryHandler<GetSiteReportsQuery, IReadOnlyList<SiteReport>> SiteReportsQuery
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
 @inject NavigationManager Navigation
@@ -76,6 +80,8 @@
                 }
             }
         </section>
+
+        <SiteReports Reports="reports" Slug="@site.Slug" />
 
         <SiteLocationMap Site="site" />
 
@@ -177,6 +183,8 @@
 
     private SiteIndexHistory? history;
 
+    private IReadOnlyList<SiteReport> reports = [];
+
     [Parameter]
     public string Slug { get; set; } = "";
 
@@ -195,6 +203,7 @@
                 forecast = await Forecasts.Handle(new GetSiteForecastQuery(found.Site.Id));
                 discharge = await Discharges.Handle(new GetSiteDischargeQuery(found.Site.Id));
                 history = await IndexHistory.Handle(new GetSiteIndexHistoryQuery(found.Site.Id));
+                reports = await SiteReportsQuery.Handle(new GetSiteReportsQuery(found.Site.Id, HttpContext is null ? null : AccountCookie.UserId(HttpContext.User)));
                 break;
             case DiveSiteLookup.Moved moved:
                 RedirectPermanently(PublicRoutes.DiveSite(Language, moved.Slug));

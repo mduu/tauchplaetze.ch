@@ -9,5 +9,7 @@ internal static class SwissClock
 
     public static string DateTime(DateTimeOffset time) => TimeZoneInfo.ConvertTime(time, Zone).ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture);
 
+    public static DateOnly Today(TimeProvider time) => DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(time.GetUtcNow(), Zone).DateTime);
+
     public static string Date(DateTimeOffset time) => TimeZoneInfo.ConvertTime(time, Zone).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
 }

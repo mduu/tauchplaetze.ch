@@ -389,6 +389,20 @@
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Annulla</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} giorni ricalcolati, di cui {1} con un altro indice. Mediana per specchio d'acqua costruita per {2} giorni.</value></data>
   <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Il ricalcolo non è riuscito. I dettagli sono nel log.</value></data>
+  <data name="Nav_Reports" xml:space="preserve"><value>Segnalazioni</value></data>
+  <data name="Reports_Title" xml:space="preserve"><value>Segnalazioni</value></data>
+  <data name="Reports_PendingTitle" xml:space="preserve"><value>Commenti da approvare</value></data>
+  <data name="Reports_PendingNone" xml:space="preserve"><value>Nessun commento in attesa di approvazione.</value></data>
+  <data name="Reports_RecentTitle" xml:space="preserve"><value>Ultime segnalazioni</value></data>
+  <data name="Reports_Approve" xml:space="preserve"><value>Approva</value></data>
+  <data name="Reports_Reject" xml:space="preserve"><value>Rifiuta</value></data>
+  <data name="Reports_Hide" xml:space="preserve"><value>Nascondi</value></data>
+  <data name="Reports_Show" xml:space="preserve"><value>Mostra di nuovo</value></data>
+  <data name="Reports_Failed" xml:space="preserve"><value>L'azione non è riuscita. Ricarica la pagina.</value></data>
+  <data name="Reports_Column_Site" xml:space="preserve"><value>Sito</value></data>
+  <data name="Reports_Column_Report" xml:space="preserve"><value>Segnalazione</value></data>
+  <data name="Reports_Column_Comment" xml:space="preserve"><value>Commento</value></data>
+  <data name="Reports_Line" xml:space="preserve"><value>{0} · visibilità {1} m{2} · {3} · segnalato {4}</value></data>
   <data name="Versions_Redacted" xml:space="preserve"><value>oscurata</value></data>
   <data name="Versions_Redact" xml:space="preserve"><value>Oscura</value></data>
   <data name="Versions_Unredact" xml:space="preserve"><value>Annulla oscuramento</value></data>

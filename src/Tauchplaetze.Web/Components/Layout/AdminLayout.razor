@@ -26,6 +26,7 @@
                 <MudNavLink Href="/admin" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">@L["Nav_Dashboard"]</MudNavLink>
                 <MudNavLink Href="/admin/plaetze" Icon="@Icons.Material.Outlined.Place">@L["Nav_Sites"]</MudNavLink>
                 <MudNavLink Href="/admin/vorschlaege" Icon="@Icons.Material.Outlined.FactCheck">@L["Nav_Pending"]</MudNavLink>
+                <MudNavLink Href="/admin/meldungen" Icon="@Icons.Material.Outlined.Visibility">@L["Nav_Reports"]</MudNavLink>
                 @if (!context.User.IsInRole(Roles.Admin))
                 {
                     <MudNavLink Href="/admin/konten" Icon="@Icons.Material.Outlined.People">@L["Nav_Accounts"]</MudNavLink>

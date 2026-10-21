@@ -26,6 +26,7 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Zufluss | `Inflow` | inflow | affluent | immissario | Fluss, der in den See mündet. |
 | Abfluss (Menge) | `Discharge` | discharge | débit | portata | Wassermenge eines Flusses (BAFU). |
 | Meldung | `Report` | report | signalement | segnalazione | Beobachtung einer Person nach einem Tauchgang. |
+| Taucher:in | – | diver | plongeur·euse | sub | Name einer meldenden Person ohne Einwilligung zur Anzeige des Namens. |
 | Ausbaustufe | `ContentLevel` | completeness | niveau de détail | livello di dettaglio | Wie vollständig ein Tauchplatz dokumentiert ist (0 bis 2). |
 | Datenstufe | `DataLevel` | data quality | qualité des données | qualità dei dati | Wie genau die Daten der Prognose für einen Platz sind (0 bis 3). |
 | Ausblick | `Outlook` | outlook | tendance | tendenza | Prognosetag ohne Wasserdaten: nur Wind und Regen, kein Index. |

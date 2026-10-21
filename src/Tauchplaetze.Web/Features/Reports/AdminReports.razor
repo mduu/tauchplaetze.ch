@@ -1,0 +1,98 @@
+@page "/admin/meldungen"
+@layout AdminLayout
+@attribute [Authorize(Roles = "Moderator,Admin")]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Reports
+@using Tauchplaetze.Core.Features.Reports.Commands
+@using Tauchplaetze.Core.Features.Reports.Queries
+@using Tauchplaetze.Web.Features.Editorial
+
+<MudText Typo="Typo.h4" Class="mb-4">@L["Reports_Title"]</MudText>
+@if (failed)
+{
+    <MudAlert Severity="Severity.Error" Class="mb-4">@L["Reports_Failed"]</MudAlert>
+}
+
+<MudText Typo="Typo.h6" Class="mb-2">@L["Reports_PendingTitle"]</MudText>
+@if (queue is null || queue.PendingComments.Count == 0)
+{
+    <MudText Class="mb-6">@L["Reports_PendingNone"]</MudText>
+}
+else
+{
+    <MudStack Spacing="3" Class="mb-6">
+        @foreach (var report in queue.PendingComments)
+        {
+            <MudPaper Outlined="true" Class="pa-4" data-pending-report="@report.Id">
+                <MudText Typo="Typo.subtitle1">@Line(report)</MudText>
+                <MudText Typo="Typo.body1" Class="my-2">«@report.Comment»</MudText>
+                <MudStack Row="true">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="busy" OnClick="@(() => Moderate(report, ReportModeration.ApproveComment))">@L["Reports_Approve"]</MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="busy" OnClick="@(() => Moderate(report, ReportModeration.RejectComment))">@L["Reports_Reject"]</MudButton>
+                </MudStack>
+            </MudPaper>
+        }
+    </MudStack>
+}
+
+<MudText Typo="Typo.h6" Class="mb-2">@L["Reports_RecentTitle"]</MudText>
+<MudSimpleTable Dense="true" Hover="true">
+    <thead>
+        <tr>
+            <th>@L["Reports_Column_Site"]</th>
+            <th>@L["Reports_Column_Report"]</th>
+            <th>@L["Reports_Column_Comment"]</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in queue?.Recent ?? [])
+        {
+            <tr data-recent-report="@report.Id">
+                <td><MudLink Href="@PublicRoutes.DiveSite(Language, report.SiteSlug)" Target="_blank">@report.SiteName</MudLink></td>
+                <td>@Line(report)</td>
+                <td>@report.Comment</td>
+                <td>
+                    @if (report.IsHidden)
+                    {
+                        <MudButton Size="Size.Small" Variant="Variant.Outlined" Disabled="busy" OnClick="@(() => Moderate(report, ReportModeration.Show))">@L["Reports_Show"]</MudButton>
+                    }
+                    else
+                    {
+                        <MudButton Size="Size.Small" Variant="Variant.Outlined" Color="Color.Error" Disabled="busy" OnClick="@(() => Moderate(report, ReportModeration.Hide))">@L["Reports_Hide"]</MudButton>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</MudSimpleTable>
+
+@code {
+    private ReportQueue? queue;
+
+    private bool busy;
+
+    private bool failed;
+
+    protected override async Task Load() =>
+        queue = await Query<GetReportQueueQuery, ReportQueue?>(new GetReportQueueQuery(UserId));
+
+    private string Line(QueuedReport report) =>
+        L["Reports_Line", ReportFormat.Date(report.Date), ReportFormat.Metres(report.Visibility),
+            report.Temperature is { } temperature ? $" · {ReportFormat.Celsius(temperature)} °C" : "",
+            report.AuthorName ?? L["Versions_DeletedAccount"], SwissClock.DateTime(report.UpdatedAt)];
+
+    private async Task Moderate(QueuedReport report, ReportModeration action)
+    {
+        if (busy)
+        {
+            return;
+        }
+
+        busy = true;
+        failed = !(await Command<ModerateReportCommand, ReportResult>(new ModerateReportCommand(UserId, report.Id, action))).Succeeded;
+        await Load();
+        busy = false;
+    }
+}

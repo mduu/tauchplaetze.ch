@@ -1,0 +1,127 @@
+@page "/de/tauchplaetze/{Slug}/melden"
+@page "/en/dive-sites/{Slug}/report"
+@page "/fr/sites-de-plongee/{Slug}/signaler"
+@page "/it/siti-di-immersione/{Slug}/segnala"
+@attribute [Authorize]
+@attribute [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting(ReportRateLimit.Policy)]
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.DiveSites.Queries
+@using Tauchplaetze.Core.Features.Reports
+@using Tauchplaetze.Core.Features.Reports.Commands
+@using Tauchplaetze.Web.Features.Editorial
+@inject IQueryHandler<GetDiveSiteQuery, DiveSiteLookup> DiveSites
+@inject ICommandHandler<SubmitReportCommand, ReportResult> SubmitReport
+@inject IStringLocalizer<DiveSiteStrings> L
+@inject NavigationManager Navigation
+@inject TimeProvider Time
+
+@if (site is null)
+{
+    <PageTitle>@L["Gone_Title"]</PageTitle>
+    <h1 class="status-title">@L["Gone_Title"]</h1>
+}
+else
+{
+    <AccountLayout Title="@L["ReportForm_Title", site.Name]" Lead="@L["ReportForm_Lead"]" Messages="messages" IsError="@(!saved)">
+        @if (saved)
+        {
+            <p><a class="button" href="@($"{PublicRoutes.DiveSite(Language, site.Slug)}#reports")">@L["ReportForm_Back", site.Name]</a></p>
+        }
+        else
+        {
+            <EditForm Model="Input" FormName="report" OnSubmit="Submit" class="form" data-report-form>
+                <label>@L["ReportForm_Date"]
+                    <InputDate @bind-Value="Input!.Date" required min="@ReportFormat.IsoDate(Today.AddDays(-ReportRules.MaxDaysBack))" max="@ReportFormat.IsoDate(Today)" />
+                </label>
+                <label>@L["ReportForm_Visibility"]
+                    <InputNumber @bind-Value="Input!.Visibility" required min="0.5" max="30" step="0.5" inputmode="decimal" />
+                </label>
+                <div class="report-temperature">
+                    <label>@L["ReportForm_Temperature"]
+                        <InputNumber @bind-Value="Input!.Temperature" min="-2" max="30" step="0.1" inputmode="decimal" />
+                    </label>
+                    <label>@L["ReportForm_Depth"]
+                        <InputNumber @bind-Value="Input!.Depth" min="0" max="100" step="1" inputmode="numeric" />
+                    </label>
+                </div>
+                <label>@L["ReportForm_Comment"]
+                    <InputTextArea @bind-Value="Input!.Comment" maxlength="@ReportRules.CommentMaxLength" rows="3" />
+                </label>
+                <p class="help">@L["ReportForm_CommentHelp"]</p>
+                <button type="submit" class="button">@L["ReportForm_Submit"]</button>
+            </EditForm>
+            <p><a href="@PublicRoutes.DiveSite(Language, site.Slug)">← @site.Name</a></p>
+        }
+    </AccountLayout>
+}
+
+@code {
+    private DiveSiteDetails? site;
+
+    private IReadOnlyList<string> messages = [];
+
+    private bool saved;
+
+    [Parameter]
+    public string Slug { get; set; } = "";
+
+    [SupplyParameterFromQuery(Name = "limit")]
+    public string? Limit { get; set; }
+
+    [SupplyParameterFromForm]
+    private ReportInput? Input { get; set; }
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private DateOnly Today => SwissClock.Today(Time);
+
+    protected override async Task OnInitializedAsync()
+    {
+        switch (await DiveSites.Handle(new GetDiveSiteQuery(Slug, Language)))
+        {
+            case DiveSiteLookup.Found found:
+                site = found.Site;
+                break;
+            case DiveSiteLookup.Moved moved:
+                Navigation.NavigateTo(PublicRoutes.DiveSiteReport(Language, moved.Slug));
+                return;
+            default:
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                return;
+        }
+
+        Input ??= new ReportInput { Date = Today };
+        if (Limit == "1")
+        {
+            messages = [L["ReportForm_Limit"]];
+        }
+    }
+
+    private async Task Submit()
+    {
+        var result = await SubmitReport.Handle(new SubmitReportCommand(
+            AccountCookie.UserId(HttpContext.User)!, site!.Id, Input!.Date, Input.Visibility, Input.Temperature, Input.Depth, Input.Comment));
+        saved = result.Succeeded;
+        messages = saved
+            ? [Input.Comment is { Length: > 0 } ? L["ReportForm_SavedWithComment"] : L["ReportForm_Saved"]]
+            : [.. result.Errors.Select(e => L[$"ReportError_{e}"].Value)];
+    }
+
+    private sealed class ReportInput
+    {
+        public DateOnly Date { get; set; }
+
+        public decimal Visibility { get; set; }
+
+        public decimal? Temperature { get; set; }
+
+        public int? Depth { get; set; }
+
+        public string? Comment { get; set; }
+    }
+}

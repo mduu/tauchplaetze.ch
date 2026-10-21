@@ -389,6 +389,20 @@
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Abbrechen</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} Tage neu gerechnet, davon {1} mit anderem Index. Median pro Gewässer für {2} Tage aufgebaut.</value></data>
   <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Die Neuberechnung ist fehlgeschlagen. Details stehen im Log.</value></data>
+  <data name="Nav_Reports" xml:space="preserve"><value>Meldungen</value></data>
+  <data name="Reports_Title" xml:space="preserve"><value>Meldungen</value></data>
+  <data name="Reports_PendingTitle" xml:space="preserve"><value>Kommentare zur Freigabe</value></data>
+  <data name="Reports_PendingNone" xml:space="preserve"><value>Kein Kommentar wartet auf Freigabe.</value></data>
+  <data name="Reports_RecentTitle" xml:space="preserve"><value>Neueste Meldungen</value></data>
+  <data name="Reports_Approve" xml:space="preserve"><value>Freigeben</value></data>
+  <data name="Reports_Reject" xml:space="preserve"><value>Ablehnen</value></data>
+  <data name="Reports_Hide" xml:space="preserve"><value>Ausblenden</value></data>
+  <data name="Reports_Show" xml:space="preserve"><value>Wieder zeigen</value></data>
+  <data name="Reports_Failed" xml:space="preserve"><value>Die Aktion ist fehlgeschlagen. Lade die Seite neu.</value></data>
+  <data name="Reports_Column_Site" xml:space="preserve"><value>Platz</value></data>
+  <data name="Reports_Column_Report" xml:space="preserve"><value>Meldung</value></data>
+  <data name="Reports_Column_Comment" xml:space="preserve"><value>Kommentar</value></data>
+  <data name="Reports_Line" xml:space="preserve"><value>{0} · Sicht {1} m{2} · {3} · gemeldet {4}</value></data>
   <data name="Versions_Redacted" xml:space="preserve"><value>geschwärzt</value></data>
   <data name="Versions_Redact" xml:space="preserve"><value>Schwärzen</value></data>
   <data name="Versions_Unredact" xml:space="preserve"><value>Schwärzung aufheben</value></data>

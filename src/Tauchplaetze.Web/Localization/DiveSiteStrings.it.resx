@@ -250,4 +250,35 @@
   <data name="Text_Facilities" xml:space="preserve"><value>Ristoranti e servizi igienici</value></data>
   <data name="Text_OnlyGerman" xml:space="preserve"><value>Questo testo è disponibile solo in tedesco.</value></data>
   <data name="Text_MachineTranslated" xml:space="preserve"><value>Tradotto automaticamente.</value></data>
+  <data name="Reports_Title" xml:space="preserve"><value>Segnalazioni</value></data>
+  <data name="Reports_Report" xml:space="preserve"><value>Segnala un'immersione</value></data>
+  <data name="Reports_None" xml:space="preserve"><value>Nessuna segnalazione negli ultimi {0} giorni.</value></data>
+  <data name="Reports_Visibility" xml:space="preserve"><value>Visibilità {0} m</value></data>
+  <data name="Reports_Temperature" xml:space="preserve"><value>{0} °C</value></data>
+  <data name="Reports_TemperatureAt" xml:space="preserve"><value>{0} °C a {1} m</value></data>
+  <data name="Reports_Diver" xml:space="preserve"><value>Sub</value></data>
+  <data name="Reports_Forecast" xml:space="preserve"><value>Previsione: indice {0}</value></data>
+  <data name="Reports_Pending" xml:space="preserve"><value>in attesa di approvazione</value></data>
+  <data name="ReportForm_Title" xml:space="preserve"><value>Segnala un'immersione: {0}</value></data>
+  <data name="ReportForm_Lead" xml:space="preserve"><value>Com'era sott'acqua? La tua segnalazione aiuta gli altri e mostra se la previsione era giusta.</value></data>
+  <data name="ReportForm_Date" xml:space="preserve"><value>Data dell'immersione</value></data>
+  <data name="ReportForm_Visibility" xml:space="preserve"><value>Visibilità (m)</value></data>
+  <data name="ReportForm_Temperature" xml:space="preserve"><value>Temperatura dell'acqua (°C, facoltativa)</value></data>
+  <data name="ReportForm_Depth" xml:space="preserve"><value>alla profondità (m, facoltativa)</value></data>
+  <data name="ReportForm_Comment" xml:space="preserve"><value>Commento (facoltativo)</value></data>
+  <data name="ReportForm_CommentHelp" xml:space="preserve"><value>Al massimo 280 caratteri, senza link. Il commento appare dopo l'approvazione della moderazione, visibilità e temperatura subito.</value></data>
+  <data name="ReportForm_Submit" xml:space="preserve"><value>Invia segnalazione</value></data>
+  <data name="ReportForm_Saved" xml:space="preserve"><value>Grazie! La tua segnalazione è salvata.</value></data>
+  <data name="ReportForm_SavedWithComment" xml:space="preserve"><value>Grazie! La tua segnalazione è salvata. Il commento appare dopo l'approvazione.</value></data>
+  <data name="ReportForm_Back" xml:space="preserve"><value>Torna a {0}</value></data>
+  <data name="ReportForm_Limit" xml:space="preserve"><value>Troppe segnalazioni in poco tempo. Riprova più tardi.</value></data>
+  <data name="ReportError_NotAllowed" xml:space="preserve"><value>Per segnalare serve un account confermato e non bloccato.</value></data>
+  <data name="ReportError_SiteNotFound" xml:space="preserve"><value>Questo sito non esiste.</value></data>
+  <data name="ReportError_InvalidDate" xml:space="preserve"><value>Scegli oggi o un giorno degli ultimi 7 giorni.</value></data>
+  <data name="ReportError_InvalidVisibility" xml:space="preserve"><value>La visibilità è tra 0.5 e 30 m, a passi di 0.5 m.</value></data>
+  <data name="ReportError_InvalidTemperature" xml:space="preserve"><value>La temperatura è tra −2 e 30 °C, con un decimale.</value></data>
+  <data name="ReportError_InvalidDepth" xml:space="preserve"><value>La profondità è tra 0 e 100 m e richiede una temperatura.</value></data>
+  <data name="ReportError_CommentTooLong" xml:space="preserve"><value>Il commento ha al massimo 280 caratteri.</value></data>
+  <data name="ReportError_DailyLimit" xml:space="preserve"><value>Oggi hai già segnalato 10 immersioni.</value></data>
+  <data name="ReportError_NotFound" xml:space="preserve"><value>Questa segnalazione non esiste.</value></data>
 </root>

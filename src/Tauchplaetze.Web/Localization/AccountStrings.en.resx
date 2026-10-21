@@ -80,4 +80,7 @@
   <data name="MyData_CreatedAt" xml:space="preserve"><value>Registered</value></data>
   <data name="MyData_LastSignInAt" xml:space="preserve"><value>Last sign-in</value></data>
   <data name="Account_Limit" xml:space="preserve"><value>Too many attempts from your connection. Try again in an hour.</value></data>
+  <data name="MyData_Reports" xml:space="preserve"><value>Reports</value></data>
+  <data name="MyData_ReportVisibility" xml:space="preserve"><value>visibility {0} m</value></data>
+  <data name="MyData_ReportHidden" xml:space="preserve"><value>hidden</value></data>
 </root>

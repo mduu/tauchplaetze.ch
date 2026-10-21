@@ -298,20 +298,27 @@ Die neuesten Messwerte einer Station (Abfluss, Wassertemperatur). Eine Zeile pro
 
 Eine Zeile pro Gewässer und Tag für die Gewässerseite und die Seen-Übersicht. PK: (`WaterBodyId`, `Date`). Felder: `SurfaceTemperature`, `ClarityTrend` (enum `Rising`, `Stable`, `Falling`, `Unknown`), `LatestSecchiDepth` und `LatestSecchiDate` (aus dem Satellit am `WaterBody.SatellitePoint`), `WaterLevel` (Pegel in m ü. M., optional).
 
-### Report (Phase 1)
+### Report
+
+Meldung nach einem Tauchgang (`dive-site.md`, «Meldungen»). Tabelle `Reports`, Migration `DiveReports` (21.10.2026). Ersetzt den früheren Entwurf mit Sichtbändern pro Tiefe und anonymer Meldung mit `ClientHash`: Meldungen brauchen ein Konto (Entscheid Marc, 21.10.2026).
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
-| `Id` | Guid | |
-| `DiveSiteId` | Guid | |
-| `DiveDate` | DateOnly | |
-| `VisibilityBand0to10`, `VisibilityBand10to20`, `VisibilityBand20to30`, `VisibilityBandBelow30` | enum, optional | `VeryPoor` bis `VeryGood` |
-| `WaterTemperatureAtDepth` | decimal(4,1), optional | |
-| `Comment` | string(500), optional | |
-| `Culture` | string(2) | Sprache der Person |
-| `ClientHash` | string(64) | Hash aus IP und Tag, gegen Missbrauch, keine Klartext-IP |
-| `Status` | enum | `Visible`, `Hidden` |
-| `CreatedAt` | DateTimeOffset | |
+| `Id` | Guid (v7) | |
+| `DiveSiteId` | Guid | FK, Cascade |
+| `Date` | DateOnly | Schweizer Kalendertag des Tauchgangs, höchstens 7 Tage zurück |
+| `Visibility` | decimal(3,1) | Sicht in m, 0.5–30 in Schritten von 0.5 |
+| `Temperature` | decimal(3,1), optional | °C, −2 bis 30 |
+| `TemperatureDepth` | int, optional | m, nur mit `Temperature` |
+| `Comment` | string(280), optional | reiner Text, eine Zeile |
+| `CommentStatus` | enum | `None`, `Pending`, `Approved`. Öffentlich nur `Approved` |
+| `AuthorId` | string, optional | `null` nach Löschung des Kontos (dann auch kein Kommentar) |
+| `CreatedAt`, `UpdatedAt` | DateTimeOffset | |
+| `HiddenAt`, `HiddenBy` | optional | ausgeblendet durch die Moderation |
+| `ForecastIndex` | decimal(3,1), optional | Index der Prognose für Platz und Tag beim Melden, für das Sichtmodell |
+| `ForecastModelVersion` | string(20), optional | `ModelVersion` dieser Prognose |
+
+Eindeutig: (`DiveSiteId`, `AuthorId`, `Date`) für Zeilen mit Autor. Eine zweite Meldung ersetzt die erste.
 
 ### DiveShop (Phase 1)
 

@@ -4,6 +4,7 @@
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.Accounts.Queries
 @using Tauchplaetze.Web.Features.Editorial
+@using Tauchplaetze.Web.Features.Reports
 @inject IQueryHandler<GetPersonalDataQuery, PersonalData?> PersonalDataQuery
 @inject IStringLocalizer<AccountStrings> L
 
@@ -43,6 +44,32 @@
                         <a href="@PublicRoutes.DiveSite(Language, photo.SiteSlug)">@photo.SiteName</a>
                         · @photo.Photographer · @photo.UploadedAt.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
                         · @(photo.IsPublic ? L["MyData_PhotoPublic"] : L["MyData_PhotoPrivate"])
+                    </li>
+                }
+            </ul>
+        }
+
+        <h2 class="subtitle">@L["MyData_Reports"]</h2>
+        @if (data.ReportList.Count == 0)
+        {
+            <p>@L["MyData_None"]</p>
+        }
+        else
+        {
+            <ul class="references" data-my-reports>
+                @foreach (var report in data.ReportList)
+                {
+                    <li>
+                        <a href="@PublicRoutes.DiveSite(Language, report.SiteSlug)">@report.SiteName</a>
+                        · @ReportFormat.Date(report.Date) · @L["MyData_ReportVisibility", ReportFormat.Metres(report.Visibility)]
+                        @if (report.Comment is { } comment)
+                        {
+                            <span> · «@comment»</span>
+                        }
+                        @if (report.IsHidden)
+                        {
+                            <span> · @L["MyData_ReportHidden"]</span>
+                        }
                     </li>
                 }
             </ul>

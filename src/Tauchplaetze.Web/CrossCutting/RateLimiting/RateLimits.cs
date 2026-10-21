@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Tauchplaetze.Web.Features.About;
 using Tauchplaetze.Web.Features.Accounts;
 using Tauchplaetze.Web.Features.Platform;
+using Tauchplaetze.Web.Features.Reports;
 
 namespace Tauchplaetze.Web.CrossCutting.RateLimiting;
 
@@ -13,11 +14,13 @@ internal static class RateLimits
     public static IServiceCollection AddRateLimits(this IServiceCollection services, IConfiguration configuration) =>
         services.Configure<ContactRateLimitOptions>(configuration.GetSection(ContactRateLimitOptions.Section))
             .Configure<AccountFormsRateLimitOptions>(configuration.GetSection(AccountFormsRateLimitOptions.Section))
+            .Configure<ReportRateLimitOptions>(configuration.GetSection(ReportRateLimitOptions.Section))
             .AddRateLimiter(options =>
         {
             ContactRateLimit.AddPolicy(options);
             ContentEndpoints.AddRateLimitPolicy(options);
             AccountFormsRateLimit.AddPolicy(options);
+            ReportRateLimit.AddPolicy(options);
             options.OnRejected = Reject;
         });
 
@@ -51,6 +54,12 @@ internal static class RateLimits
         if (AccountFormsRateLimit.Handles(context.HttpContext.Request))
         {
             AccountFormsRateLimit.Reject(context.HttpContext);
+            return ValueTask.CompletedTask;
+        }
+
+        if (ReportRateLimit.Handles(context.HttpContext.Request))
+        {
+            ReportRateLimit.Reject(context.HttpContext);
             return ValueTask.CompletedTask;
         }
 

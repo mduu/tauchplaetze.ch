@@ -389,6 +389,20 @@
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} days recomputed, {1} of them with a different index. Median per water body built for {2} days.</value></data>
   <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Recomputing failed. The log has the details.</value></data>
+  <data name="Nav_Reports" xml:space="preserve"><value>Reports</value></data>
+  <data name="Reports_Title" xml:space="preserve"><value>Reports</value></data>
+  <data name="Reports_PendingTitle" xml:space="preserve"><value>Comments to approve</value></data>
+  <data name="Reports_PendingNone" xml:space="preserve"><value>No comment is waiting for approval.</value></data>
+  <data name="Reports_RecentTitle" xml:space="preserve"><value>Latest reports</value></data>
+  <data name="Reports_Approve" xml:space="preserve"><value>Approve</value></data>
+  <data name="Reports_Reject" xml:space="preserve"><value>Reject</value></data>
+  <data name="Reports_Hide" xml:space="preserve"><value>Hide</value></data>
+  <data name="Reports_Show" xml:space="preserve"><value>Show again</value></data>
+  <data name="Reports_Failed" xml:space="preserve"><value>The action failed. Reload the page.</value></data>
+  <data name="Reports_Column_Site" xml:space="preserve"><value>Site</value></data>
+  <data name="Reports_Column_Report" xml:space="preserve"><value>Report</value></data>
+  <data name="Reports_Column_Comment" xml:space="preserve"><value>Comment</value></data>
+  <data name="Reports_Line" xml:space="preserve"><value>{0} · visibility {1} m{2} · {3} · reported {4}</value></data>
   <data name="Versions_Redacted" xml:space="preserve"><value>redacted</value></data>
   <data name="Versions_Redact" xml:space="preserve"><value>Redact</value></data>
   <data name="Versions_Unredact" xml:space="preserve"><value>Remove redaction</value></data>

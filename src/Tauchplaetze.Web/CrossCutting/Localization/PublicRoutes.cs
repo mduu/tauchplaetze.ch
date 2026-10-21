@@ -59,7 +59,15 @@ internal static class PublicRoutes
         ["it"] = "nuovo",
     };
 
-    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions, About, Edit, New];
+    public static readonly IReadOnlyDictionary<string, string> Report = new Dictionary<string, string>
+    {
+        ["de"] = "melden",
+        ["en"] = "report",
+        ["fr"] = "signaler",
+        ["it"] = "segnala",
+    };
+
+    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions, About, Edit, New, Report];
 
     /// <summary>Die Seite «Über», optional mit Anker (`prognose`, `quellen`, `impressum`, `datenschutz`).</summary>
     public static string AboutPage(string language, string? anchor = null) => $"/{language}/{About[language]}{(anchor is null ? "" : "#" + anchor)}";
@@ -69,6 +77,9 @@ internal static class PublicRoutes
         $"/{language}/{About[language]}{(reference is null ? "" : "?bezug=" + Uri.EscapeDataString(reference))}#kontakt";
 
     public static string DiveSite(string language, string slug) => $"/{language}/{DiveSites[language]}/{slug}";
+
+    /// <summary>Formular «Tauchgang melden» eines Platzes (`dive-site.md`, «Meldungen»).</summary>
+    public static string DiveSiteReport(string language, string slug) => $"{DiveSite(language, slug)}/{Report[language]}";
 
     public static string DiveSiteVersions(string language, string slug) => $"{DiveSite(language, slug)}/{Versions[language]}";
 

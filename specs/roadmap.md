@@ -47,7 +47,7 @@ Ziel: Reaktion der Szene testen. Stand 21.10.2026: ✅ umgesetzt, 🟡 teilweise
 
 - 🟡 Alle grossen Seen mit Prognose (51 Seen, 19.10.2026) und Flussplätze mit BAFU-Stationen umgesetzt. Die Dokumentation der Plätze (Stufe 1 bis 2) ist offen.
 - ✅ BAFU-Abflussvorhersage (Zugang per HTTPS, 20.10.2026), auch im Index (`rules-1.4`). ⏳ In-situ-Messungen aus Eawag Datalakes.
-- Meldungen (ein Klick nach dem Tauchgang).
+- ~~Meldungen (ein Klick nach dem Tauchgang).~~ Vorgezogen, gebaut am 21.10.2026 (`dive-site.md`, «Meldungen»).
 - ⏳ Tauchshops und Füllstationen (kostenlos, ohne Hervorhebung).
 - ⏳ Buddy-Gruppen (WhatsApp) pro Region.
 - ✅ Registrierung für alle öffnen: Mitwirkende schlagen vor, Moderatoren geben frei (`cms.md`).

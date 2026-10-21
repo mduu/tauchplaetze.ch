@@ -28,6 +28,9 @@ using Tauchplaetze.Core.Features.Forecasts.Queries;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
 using Tauchplaetze.Core.Features.Operations.Queries;
+using Tauchplaetze.Core.Features.Reports;
+using Tauchplaetze.Core.Features.Reports.Commands;
+using Tauchplaetze.Core.Features.Reports.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -47,6 +50,10 @@ public sealed class WebApp : WebApplicationFactory<Program>
     public FakeBestSites BestSites { get; } = new();
 
     public FakeQuery<GetReadinessQuery, Readiness> Readiness { get; } = new(_ => new Readiness(true, null, null));
+
+    public FakeQuery<GetSiteReportsQuery, IReadOnlyList<SiteReport>> SiteReports { get; } = new(_ => []);
+
+    public FakeQuery<SubmitReportCommand, ReportResult> SubmitReport { get; } = new(_ => new ReportResult([], Guid.NewGuid()));
 
     public FakeQuery<GetSitemapEntriesQuery, SitemapEntries> SitemapEntries { get; } = new(_ => new SitemapEntries([], []));
 
@@ -130,6 +137,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.RemoveAll<IHostedService>();
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetReadinessQuery, Readiness>>(Readiness));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteReportsQuery, IReadOnlyList<SiteReport>>>(SiteReports));
+            services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SubmitReportCommand, ReportResult>>(SubmitReport));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSitemapEntriesQuery, SitemapEntries>>(SitemapEntries));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteDischargeQuery, SiteDischarge?>>(Discharge));
