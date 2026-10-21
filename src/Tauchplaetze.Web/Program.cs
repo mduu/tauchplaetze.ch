@@ -63,6 +63,7 @@ app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapLanguageRedirect();
+app.MapRobotsTxt();
 app.MapAccountEndpoints();
 app.MapMediaEndpoints();
 app.MapContentEndpoints();

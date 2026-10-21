@@ -56,7 +56,7 @@ Siehe `i18n.md`. Grundsätze:
 
 - `/sitemap.xml` als Index, darunter eine Sitemap pro Sprache. Nur veröffentlichte Plätze.
 - `lastmod` aus `DiveSite.UpdatedAt` (nicht aus der täglichen Prognose, sonst ändert sich jede Seite täglich).
-- `/robots.txt`: `/admin` und Query-Varianten ausschliessen.
+- `/robots.txt` (Endpoint der App, `RobotsTxt`): sperrt `/admin`, `/platform`, `/api`, die Konto-Seiten (`/{Lang}/account/`), «Neuer Platz», Bearbeiten und Versionen in allen vier Sprachen sowie Query-Varianten (`/*?`). Eine Sitemap gibt es noch nicht (Stand 21.10.2026), darum fehlt die Zeile `Sitemap:`.
 - Die Seiten der Versionen (`…/versionen`) haben `noindex` und stehen nicht in der Sitemap (Datenschutz, `cms.md`). Ebenso der Bearbeiten-Modus (`…/bearbeiten`) und «Neuen Platz vorschlagen» (`…/neu`), beide nur angemeldet.
 
 ## Performance
