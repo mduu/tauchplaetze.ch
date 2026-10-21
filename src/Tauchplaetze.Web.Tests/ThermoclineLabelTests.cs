@@ -19,4 +19,21 @@ public class ThermoclineLabelTests
         // Assert
         Assert.All(labels, label => Assert.True(label.Y >= 52));
     }
+
+    [Theory]
+    [InlineData(1, 3)]
+    [InlineData(14, 17)]
+    [InlineData(12, 30)]
+    public void Der_Text_unter_der_Sprungschicht_steht_immer_unter_ihren_Beschriftungen(double top, double bottom)
+    {
+        // Arrange
+        static double Y(decimal depth) => 34 + (double)depth * 6.6;
+        var labels = ThermoclineLabels.For((decimal)top, (decimal)bottom, Y, 26, minY: 52);
+
+        // Act
+        var below = ThermoclineLabels.BelowBand(Y((decimal)bottom), labels, 26);
+
+        // Assert
+        Assert.All(labels, label => Assert.True(below - label.Y >= 26));
+    }
 }

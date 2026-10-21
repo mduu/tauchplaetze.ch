@@ -18,7 +18,7 @@
             <SvgText x="14" y="@Svg(label.Y + 4)" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" data-thermocline-depth Content="@label.Text" />
         }
         <SvgText x="@(Labels.Count == 1 ? "100" : "70")" y="@Svg(Math.Max((bandTop + bandBottom) / 2, MinLabelY) + 4)" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Thermocline"]" />
-        <SvgText x="14" y="@Svg(bandBottom + 26)" fill="var(--color-bubble)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Clearer"]" />
+        <SvgText x="14" y="@Svg(ThermoclineLabels.BelowBand(bandBottom, Labels, LabelGap) + 4)" fill="var(--color-bubble)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Clearer"]" />
     }
     else if (Surface is not null && ThermoclineTop is null)
     {

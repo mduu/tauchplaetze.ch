@@ -17,6 +17,10 @@ internal static class ThermoclineLabels
         return [.. labels.Select(label => label with { Y = Math.Max(label.Y, minY) })];
     }
 
+    /// <summary>Die y-Koordinate für den Text unter dem Band: mindestens <paramref name="minGap"/> unter der tiefsten Beschriftung.</summary>
+    public static double BelowBand(double bandBottom, IReadOnlyList<Label> labels, double minGap) =>
+        Math.Max(bandBottom + minGap, labels.Count == 0 ? double.MinValue : labels.Max(label => label.Y) + minGap);
+
     /// <summary>Ob ein Achsenwert so nahe an einer Beschriftung der Sprungschicht liegt, dass er sie überdecken würde.</summary>
     public static bool Overlaps(IReadOnlyList<Label> labels, double y, double minGap) =>
         labels.Any(label => Math.Abs(label.Y - y) < minGap);
