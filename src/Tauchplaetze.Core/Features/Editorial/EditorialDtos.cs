@@ -156,6 +156,9 @@ public enum EditorialError
 
     /// <summary>Die Version ist die veröffentlichte und lässt sich nicht schwärzen. Zuerst eine korrigierte Version freigeben.</summary>
     PublishedRevision,
+
+    /// <summary>Die Version ist geschwärzt und lässt sich weder freigeben noch wiederherstellen.</summary>
+    RedactedRevision,
 }
 
 /// <summary>Ergebnis eines Commands der Redaktion. <see cref="NoChange"/>: Der Inhalt war gleich wie die Basis, es entstand keine Version.</summary>

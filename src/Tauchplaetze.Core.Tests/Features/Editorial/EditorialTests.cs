@@ -691,6 +691,28 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal([2, 1], history!.Revisions.Select(r => r.Number));
     }
 
+    [SqlFact]
+    public async Task Eine_geschwaerzte_Version_laesst_sich_weder_wiederherstellen_noch_freigeben()
+    {
+        // Arrange
+        var (admin, anna, site) = await Prepare();
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(admin, site, edit.BaseNumber, edit.Content with { MaxDepth = 31 }, null));
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, 2, edit.Content with { MaxDepth = 99 }, "Spam"));
+        var pending = Assert.Single(await Query<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>(new GetPendingRevisionsQuery(admin)));
+        await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(admin, site, 1));
+        await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(admin, site, pending.Revision.Number));
+
+        // Act
+        var restored = await Command<RestoreRevisionCommand, EditorialResult>(new RestoreRevisionCommand(admin, site, 1));
+        var approved = await Command<ApproveRevisionCommand, EditorialResult>(new ApproveRevisionCommand(admin, pending.Revision.Id));
+
+        // Assert
+        Assert.Equal([EditorialError.RedactedRevision], restored.Errors);
+        Assert.Equal([EditorialError.RedactedRevision], approved.Errors);
+        Assert.Equal(31, await PublicMaxDepth(site));
+    }
+
     private async Task<string> Moderator() =>
         (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
 

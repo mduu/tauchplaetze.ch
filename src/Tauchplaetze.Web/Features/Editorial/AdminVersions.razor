@@ -41,7 +41,7 @@
                 </div>
                 <MudStack Row="true">
                     <MudButton Variant="Variant.Text" OnClick="@(() => Compare(revision.Number))">@L["Versions_CompareBase"]</MudButton>
-                    @if (IsModerator && revision.Number != revisions[0].Number)
+                    @if (IsModerator && revision.Number != revisions[0].Number && !revision.IsRedacted)
                     {
                         <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="busy" OnClick="@(() => Restore(revision.Number))">@L["Versions_Restore"]</MudButton>
                     }

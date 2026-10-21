@@ -409,4 +409,5 @@
   <data name="Versions_RedactTitle" xml:space="preserve"><value>Redact version</value></data>
   <data name="Versions_RedactText" xml:space="preserve"><value>Version #{0} disappears from the public history and comparison. It stays visible in the CMS with a note. For spam or personal data.</value></data>
   <data name="Error_PublishedRevision" xml:space="preserve"><value>The published version cannot be redacted. Approve a corrected version first.</value></data>
+  <data name="Error_RedactedRevision" xml:space="preserve"><value>The version is redacted. It cannot be approved or restored.</value></data>
 </root>

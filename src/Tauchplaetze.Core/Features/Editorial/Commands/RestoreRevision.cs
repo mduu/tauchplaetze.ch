@@ -26,6 +26,11 @@ internal class RestoreRevisionHandler(TauchplaetzeDbContext dbContext, RevisionW
             return EditorialResult.Fail(EditorialError.NotFound);
         }
 
+        if (source.RedactedAt is not null)
+        {
+            return EditorialResult.Fail(EditorialError.RedactedRevision);
+        }
+
         var latestApproved = await dbContext.DiveSiteRevisions.Where(r => r.DiveSiteId == site.Id && r.Status == RevisionStatus.Approved).MaxAsync(r => (int?)r.Number, ct);
         var content = await revisions.Load(source, ct);
         var revision = await revisions.Append(site, content, latestApproved, command.EditorId, $"#{source.Number}", approve: true, ct);

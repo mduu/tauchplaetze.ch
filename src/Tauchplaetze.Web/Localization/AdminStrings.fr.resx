@@ -403,10 +403,11 @@
   <data name="Reports_Column_Report" xml:space="preserve"><value>Signalement</value></data>
   <data name="Reports_Column_Comment" xml:space="preserve"><value>Commentaire</value></data>
   <data name="Reports_Line" xml:space="preserve"><value>{0} · visibilité {1} m{2} · {3} · signalé {4}</value></data>
-  <data name="Versions_Redacted" xml:space="preserve"><value>masquée</value></data>
-  <data name="Versions_Redact" xml:space="preserve"><value>Masquer</value></data>
-  <data name="Versions_Unredact" xml:space="preserve"><value>Rétablir</value></data>
-  <data name="Versions_RedactTitle" xml:space="preserve"><value>Masquer la version</value></data>
+  <data name="Versions_Redacted" xml:space="preserve"><value>caviardée</value></data>
+  <data name="Versions_Redact" xml:space="preserve"><value>Caviarder</value></data>
+  <data name="Versions_Unredact" xml:space="preserve"><value>Annuler le caviardage</value></data>
+  <data name="Versions_RedactTitle" xml:space="preserve"><value>Caviarder la version</value></data>
   <data name="Versions_RedactText" xml:space="preserve"><value>La version n° {0} disparaît de l'historique public et de la comparaison. Elle reste visible dans le CMS avec une mention. Pour le spam ou les données personnelles.</value></data>
-  <data name="Error_PublishedRevision" xml:space="preserve"><value>La version publiée ne peut pas être masquée. Valide d'abord une version corrigée.</value></data>
+  <data name="Error_PublishedRevision" xml:space="preserve"><value>La version publiée ne peut pas être caviardée. Valide d'abord une version corrigée.</value></data>
+  <data name="Error_RedactedRevision" xml:space="preserve"><value>La version est caviardée. Elle ne peut être ni validée ni restaurée.</value></data>
 </root>

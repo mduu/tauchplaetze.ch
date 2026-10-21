@@ -30,6 +30,11 @@ internal class ApproveRevisionHandler(TauchplaetzeDbContext dbContext, RevisionW
             return EditorialResult.Fail(EditorialError.NotPending);
         }
 
+        if (revision.RedactedAt is not null)
+        {
+            return EditorialResult.Fail(EditorialError.RedactedRevision);
+        }
+
         var site = await dbContext.DiveSites.Include(d => d.Translations).Include(d => d.EntryPoints).ThenInclude(e => e.Translations).Include(d => d.Notices).ThenInclude(n => n.Translations)
             .SingleAsync(d => d.Id == revision.DiveSiteId, ct);
         var content = await revisions.Load(revision, ct);

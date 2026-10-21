@@ -409,4 +409,5 @@
   <data name="Versions_RedactTitle" xml:space="preserve"><value>Oscura versione</value></data>
   <data name="Versions_RedactText" xml:space="preserve"><value>La versione n. {0} scompare dalla cronologia pubblica e dal confronto. Resta visibile nel CMS con un'indicazione. Per spam o dati personali.</value></data>
   <data name="Error_PublishedRevision" xml:space="preserve"><value>La versione pubblicata non si può oscurare. Approva prima una versione corretta.</value></data>
+  <data name="Error_RedactedRevision" xml:space="preserve"><value>La versione è oscurata. Non si può né approvare né ripristinare.</value></data>
 </root>
