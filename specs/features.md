@@ -55,13 +55,20 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 - Bei Ausfall einer Quelle: letzte Werte behalten, Datenalter anzeigen.
 - Details in `forecast.md` und `data-sources.md`.
 
+### Meldungen – Slice `Reports` (vorgezogen aus Phase 1, 21.10.2026)
+
+- Nach dem Tauchgang melden: Datum, Sicht in m, optional Temperatur mit Tiefe und ein kurzer Kommentar.
+- Nur mit Konto (bestätigt, nicht gesperrt). Eine Meldung pro Konto, Platz und Tag, höchstens 10 pro Tag, dazu ein Rate Limit pro Client.
+- Zahlen sofort öffentlich, Kommentar erst nach Freigabe durch die Moderation (`/admin/meldungen`). Name nur mit Einwilligung.
+- Kachel «Meldungen» auf der Platzseite mit dem Index der Prognose des Tages. Kein Einfluss auf den Index.
+- Details in `dive-site.md`, «Meldungen».
+
 ### Mehrsprachigkeit – querschnittlich
 
 - DE (Standard), EN, FR, IT ab dem ersten Release. Details in `i18n.md`.
 
 ## Phase 1
 
-- **Meldungen (Slice `Reports`):** Sicht nach dem Tauchgang mit einem Klick melden (Sicht pro Tiefenband, optional Kommentar). Ohne Konto, mit Schutz gegen Missbrauch (Rate Limit, Captcha-freie Honeypot-Lösung).
 - **Füllstationen (Slice `DiveShops`):** Tauchshops und Füllstationen. Die Platzseite zeigt die nächste Füllstation nach Distanz. Kostenlos, ohne Hervorhebung. Verwaltung im CMS.
 - **Buddy-Gruppen (Slice `BuddyGroups`):** WhatsApp-Gruppen pro Region verwalten und auf Platz- und Gewässerseiten verlinken.
 - **Registrierung für alle:** Selbstregistrierung für Mitwirkende. Admins ernennen Moderatoren. Mails bei Freigabe oder Ablehnung.
