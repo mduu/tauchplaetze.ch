@@ -88,3 +88,13 @@ The details are in `specs/architecture.md`, section "Testing".
 
 - Write English text (`AGENTS.md`) in ASD-STE100 Simplified Technical English. Use the skill in `.claude/skills/asd-ste100/`.
 - Write German text with the same principles: short sentences, one statement in each sentence, active voice, no filler words. The details are in `specs/architecture.md`, section "Schreiben".
+
+## Personal Data
+
+The repository is public. Each file and each commit message is visible to all persons.
+
+- Do not write names of persons into the repository. Use the role or the organisation, for example "Eawag (Alplakes)" or "BAFU (Hydrology)". You can write "Marc" only for decisions ("Entscheid Marc").
+- Do not write e-mail addresses, telephone numbers or postal addresses into the repository. The operator data for the imprint is the only exception (`appsettings.json`, section `Operator`).
+- Do not keep e-mails or chat messages in the repository. Write only the result (the question, the answer, the decision, the date) into the applicable spec.
+- Do not write user names, passwords, keys or tokens into the repository. Use user secrets (local) or Key Vault (prod).
+- Do not write a negative statement about a specific website, app, club or company. Describe the problem in general terms.
