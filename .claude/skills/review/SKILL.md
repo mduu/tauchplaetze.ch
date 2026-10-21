@@ -113,6 +113,21 @@ Gespeicherte Daten überleben den Code, der sie geschrieben hat.
 - **Rohdaten:** Antworten der Quellen liegen unverändert in Blob Storage. Alte Läufe müssen sich neu berechnen lassen.
 - Fehlt etwas davon = **Blocker**.
 
+### Personendaten im öffentlichen Repo
+
+Das Repo ist öffentlich (`AGENTS.md`, «Personal Data»). Den Diff **und die Commit-Nachrichten** prüfen:
+
+```bash
+git diff @{upstream}...HEAD | grep -nE '^\+' | grep -niE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}|\+41 ?[0-9]|0[0-9]{2} ?[0-9]{3} ?[0-9]{2} ?[0-9]{2}'
+git log @{upstream}..HEAD --format=%B | grep -niE '@[a-z0-9.-]+\.[a-z]{2,}|co-authored|claude-session'
+```
+
+- **Kein Name einer Person** (ausser «Entscheid Marc»), keine E-Mail-Adresse, Telefonnummer oder Postadresse. Ausnahme: Betreiberdaten fürs Impressum in `appsettings.json` (`Operator`). Funktionsadressen wie `noreply@tauchplaetze.ch` sind erlaubt.
+- **Keine abgelegten Mails oder Chats**, nur das Ergebnis in der passenden Spec.
+- **Keine Zugangsdaten:** Benutzernamen, Passwörter, Keys, Tokens, auch nicht in Testdaten, Logs oder Kommentaren.
+- **Keine Wertung** konkreter Websites, Apps, Clubs oder Firmen.
+- Verstoss = **Blocker**. Liegt der Fund schon in einem gepushten Commit, Marc darauf hinweisen: Entfernen aus der History braucht ein Umschreiben.
+
 ### Mehrsprachigkeit
 
 - Jeder sichtbare Text kommt aus `.resx`. Ein neuer oder geänderter Key steht in `*.resx`, `*.en.resx`, `*.fr.resx` und `*.it.resx` mit **echter** Übersetzung (kein deutscher Platzhalter, kein leerer Wert). Fehlt eine = **Blocker**.
