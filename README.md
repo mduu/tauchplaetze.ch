@@ -28,7 +28,7 @@
 - **Offene Daten:** Seemodelle und Satellit, Wetter und Abfluss. Die Prognose braucht keine Meldungen, Meldungen verbessern sie nur.
 - **Gemeinsam gepflegt:** Alle können Inhalte vorschlagen, Moderatoren geben sie frei. Jede Version bleibt nachvollziehbar.
 
-Das Projekt ist nicht kommerziell. Der Betrieb kostet unter CHF 20 pro Monat.
+Das Projekt ist nicht kommerziell.
 
 ## Schnellstart
 
@@ -72,7 +72,7 @@ Die Specs beschreiben, was gilt. Zuerst [`vision.md`](specs/vision.md) und [`arc
 | Sprachen | [i18n.md](specs/i18n.md) |
 | Seiten, Design | [ux.md](specs/ux.md), [design-system.md](specs/design-system.md) |
 | URLs, Domains, SEO | [seo.md](specs/seo.md) |
-| Hosting, Kosten, Betrieb | [infrastructure.md](specs/infrastructure.md), [doc/go-live.md](doc/go-live.md) |
+| Hosting, Betrieb | [infrastructure.md](specs/infrastructure.md), [doc/go-live.md](doc/go-live.md) |
 | Entscheide | [adrs/](specs/adrs/README.md) |
 | Offene Punkte | [open-questions.md](specs/open-questions.md) |
 
