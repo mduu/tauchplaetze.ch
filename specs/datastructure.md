@@ -337,7 +337,7 @@ Zusätzliche Felder am Benutzer:
 | Feld | Typ | Bemerkung |
 |---|---|---|
 | `DisplayName` | string(60) | Pseudonym erlaubt, eindeutig |
-| `ShowNamePublicly` | bool | Einwilligung, den Anzeigenamen öffentlich in der History zu zeigen. Standard `false` |
+| `ShowNamePublicly` | bool | Einwilligung, den Anzeigenamen öffentlich in der History und bei Meldungen zu zeigen. Standard `false` |
 | `PreferredCulture` | string(2) | Sprache des CMS und der Mails |
 | `BlockedAt`, `BlockedBy` | optional | Konto gesperrt |
 | `CreatedAt` | DateTimeOffset, optional | Registrierung oder Anlage. Leer bei Konten vor dem 19.10.2026 |
@@ -380,7 +380,7 @@ Ohne Platz mit Index gibt es für den Tag keine Zeile (nie 0).
 - `MediaItems (DiveSiteId, Section, SortOrder)`.
 - `DailyForecasts (Date, DiveIndex DESC)` für die Rangliste.
 - `HydroHours (Hour)` für das Löschen nach 30 Tagen.
-- `Reports (DiveSiteId, DiveDate)`.
+- `Reports (DiveSiteId, Date)` für die Platzseite, `Reports (DiveSiteId, AuthorId, Date)` eindeutig für Zeilen mit Autor, `Reports (AuthorId, CreatedAt)` für die Grenze pro Tag, `Reports (CommentStatus)` für die Moderation.
 
 ## Aufbewahrung
 
