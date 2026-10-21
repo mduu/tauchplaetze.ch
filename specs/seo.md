@@ -11,6 +11,14 @@ Organischer Traffic ist der wichtigste Kanal. Es gibt keine Werbung und keine Ak
 | `sichtweiten.ch`, `www.sichtweiten.ch` | 301 auf `https://tauchplaetze.ch/de` (Prognose) |
 | `sichtweiten.ch/{see}` | 301 auf die Gewässerseite (z.B. `/de/gewaesser/zuerichsee`), Liste der Kurzpfade in der Konfiguration |
 
+Weitere Domains von Marc, nicht Teil der Plattform:
+
+| Domain | Rolle |
+|---|---|
+| `tauchfotos.ch` | Bestehendes Fotoarchiv, Quelle für Bilder |
+| `tauchvideos.ch` | Bestehendes Videoarchiv, Quelle für Videos |
+| `tauchbolde.ch` | Website der eigenen Tauchgruppe |
+
 `sichtweiten.ch` ist ein Einstieg für Suchen wie «Sichtweite Zürichsee». Es gibt keinen doppelten Inhalt. Darum nur Redirects, keine zweite Website.
 
 Die Weiterleitungen macht die App (`HostRedirects`, Konfiguration `HostRedirects` in `appsettings.json`): Aliase mit Pfad und Query auf den Host aus `PublicSite:BaseUri`, Kurzpfade von `sichtweiten.ch` auf die Gewässerseite, sonst auf die Prognose (`/de`). GET und HEAD bekommen 301, andere Methoden 308. Andere Hosts (z.B. `*.azurewebsites.net` für Health Checks) laufen unverändert. Entscheid Marc, 21.10.2026: DNS bei Hostpoint, Cloudflare später (`infrastructure.md`).

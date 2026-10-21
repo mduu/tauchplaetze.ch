@@ -1,93 +1,83 @@
-# tauchplaetze.ch – Projektdossier
+<p align="center">
+  <a href="https://tauchplaetze.ch"><img src="src/Tauchplaetze.Web/wwwroot/img/logo-128.png" alt="tauchplaetze.ch" width="96" height="96"></a>
+</p>
 
-Dieses Dossier ist der Startpunkt für die Umsetzung von **tauchplaetze.ch**. Es enthält Vision, Fachlichkeit, Architektur, UX und Entscheide. Claude Code liest es in jeder Session als Grundlage.
+<h1 align="center">tauchplaetze.ch</h1>
 
-Stand: 17.10.2026 · Autor: Marc · Status: Entwurf vor dem ersten Code
+<p align="center">
+  <strong>Wo tauchen wir heute?</strong><br>
+  Tauchplatz-Führer für Schweizer Seen und Flüsse mit täglicher Tauchprognose.
+</p>
 
-## Worum es geht
+<p align="center">
+  <a href="https://tauchplaetze.ch">tauchplaetze.ch</a> ·
+  <a href="specs/vision.md">Vision</a> ·
+  <a href="specs/roadmap.md">Roadmap</a>
+</p>
 
-tauchplaetze.ch ist ein digitaler Tauchplatzführer für die Schweizer Seen. Er beantwortet eine Frage: **«Wo soll ich tauchen gehen?»**
+<p align="center">
+  <a href="https://github.com/mduu/tauchplaetze.ch/actions/workflows/ci.yml"><img src="https://github.com/mduu/tauchplaetze.ch/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+</p>
 
-Dazu verbindet die Plattform zwei Dinge:
+---
 
-1. **Ein Verzeichnis aller Tauchplätze.** Ein Platz ist schon mit Name, Koordinate und See erfasst. Details kommen nach und nach dazu.
-2. **Eine tägliche Tauchprognose für jeden Platz**, so genau, wie die Daten es erlauben (Datenstufe). Sie stammt aus offenen Daten: Seemodelle und Satellit (Eawag Alplakes), Wetter (MeteoSchweiz über Open-Meteo) und Abfluss (BAFU). Sie braucht keine Meldungen aus der Community. Meldungen verbessern sie nur.
+## Was es ist
 
-Die Plattform ist ein Leidenschaftsprojekt und nicht kommerziell. Der Betrieb soll unter CHF 20 pro Monat kosten.
+- **Verzeichnis:** Alle bekannten Tauchplätze der Schweiz mit Karte, Einstiegen, Bewertungen und Fotos. Ein Platz ist schon mit Name, Koordinate und Gewässer vollständig.
+- **Tauchprognose:** Pro Platz und Tag ein Tauch-Index von 0 bis 10, mit Sicht, Wind, Zuflüssen, Sprungschicht, Strömung und Wassertemperatur.
+- **Offene Daten:** Seemodelle und Satellit, Wetter und Abfluss. Die Prognose braucht keine Meldungen, Meldungen verbessern sie nur.
+- **Gemeinsam gepflegt:** Alle können Inhalte vorschlagen, Moderatoren geben sie frei. Jede Version bleibt nachvollziehbar.
 
-## Domains
+Das Projekt ist nicht kommerziell. Der Betrieb kostet unter CHF 20 pro Monat.
 
-| Domain | Rolle |
+## Schnellstart
+
+Voraussetzungen: [.NET 10 SDK](https://dotnet.microsoft.com/download) und Docker.
+
+```bash
+cd src/Tauchplaetze.AppHost && dotnet run     # App mit SQL Server, Azurite und Mailpit (Aspire)
+cd src && dotnet build && dotnet test --no-build  # Build und Tests (Docker für die SQL-Tests)
+```
+
+Lokale Einstellungen wie Admin-Konto und Zugangsdaten stehen in [`specs/infrastructure.md`](specs/infrastructure.md), Abschnitt «Umgebungen».
+
+## Projektstruktur
+
+```
+src/
+├── Tauchplaetze.Core/            Fachlogik: Commands, Queries, Datenbank, Storage, Datenquellen
+├── Tauchplaetze.Web/             Fassade: öffentliche Seiten, CMS, Plattform, Worker
+├── Tauchplaetze.AppHost/         Aspire für die lokale Entwicklung
+├── Tauchplaetze.ServiceDefaults/ Telemetrie, Health Checks, Resilience
+└── *.Tests/                      xUnit, Testcontainers
+deploy/                           Bicep für Azure
+specs/                            Specs und ADRs, die Quelle der Wahrheit
+doc/                              Go-live, Mails, Spikes
+```
+
+## Dokumentation
+
+Die Specs beschreiben, was gilt. Zuerst [`vision.md`](specs/vision.md) und [`architecture.md`](specs/architecture.md), dann die Spec des Bereichs.
+
+| Bereich | Spec |
 |---|---|
-| `tauchplaetze.ch` | Hauptdomain der Plattform |
-| `sichtweiten.ch` | Einstieg direkt in die Prognose (Redirect auf `/prognose`) |
-| `tauchfotos.ch` | Bestehendes Fotoarchiv (Quelle für Bildmaterial) |
-| `tauchvideos.ch` | Bestehendes Videoarchiv (Quelle für Videos) |
-| `tauchbolde.ch` | Website der eigenen Tauchgruppe (nicht Teil dieser Plattform) |
+| Produkt, Ziele, Abgrenzung | [vision.md](specs/vision.md), [features.md](specs/features.md), [roadmap.md](specs/roadmap.md) |
+| Fachbegriffe (DE/EN/FR/IT) | [ubiquitous-language.md](specs/ubiquitous-language.md) |
+| Architektur, Coding Guidelines, Tests | [architecture.md](specs/architecture.md) |
+| Datenmodell | [datastructure.md](specs/datastructure.md) |
+| Tauchplatz, Bewertungen | [dive-site.md](specs/dive-site.md) |
+| Redaktion, Versionen | [cms.md](specs/cms.md) |
+| Prognose, Tauch-Index | [forecast.md](specs/forecast.md) |
+| Datenquellen | [data-sources.md](specs/data-sources.md) |
+| Sprachen | [i18n.md](specs/i18n.md) |
+| Seiten, Design | [ux.md](specs/ux.md), [design-system.md](specs/design-system.md) |
+| URLs, Domains, SEO | [seo.md](specs/seo.md) |
+| Hosting, Kosten, Betrieb | [infrastructure.md](specs/infrastructure.md), [doc/go-live.md](doc/go-live.md) |
+| Entscheide | [adrs/](specs/adrs/README.md) |
+| Offene Punkte | [open-questions.md](specs/open-questions.md) |
 
-## Inhalt des Dossiers
+Für Coding Agents gilt [`AGENTS.md`](AGENTS.md).
 
-```
-README.md                 dieses Dokument
-AGENTS.md                 Regeln für Coding Agents (CLAUDE.md verweist darauf)
-specs/
-├── vision.md             Produkt, Zielgruppe, Abgrenzung, Erfolgskriterien
-├── ubiquitous-language.md  Fachbegriffe mit Übersetzungen DE/EN/FR/IT
-├── features.md           Features nach Phase (MVP, später)
-├── datastructure.md      Entitäten, Felder, Beziehungen, EF-Hinweise
-├── cms.md                Redaktion: Erfassen, Ausbaustufen, Revisionen, Medien
-├── forecast.md           Tauch-Index: Eingaben, Formel, Job, späteres ML-Modell
-├── data-sources.md       Alplakes, MeteoSchweiz, BAFU: Endpunkte, Recht, Ausfälle
-├── architecture.md       Stack, Projektstruktur, Vertical Slices, CQS, Coding Guidelines, Tests
-├── i18n.md               Mehrsprachigkeit (DE Standard, EN, FR, IT)
-├── ux.md                 Seiten, Navigation, Zustände, Barrierefreiheit
-├── design-system.md      Dunkles Farbschema, Typografie, Komponenten
-├── design/               Mockups aus dem Entwurf (Startseite, Tauchplatz)
-├── seo.md                URLs, Sitemap, strukturierte Daten, Domains
-├── infrastructure.md     Azure-Ressourcen, Kosten, CI/CD, lokale Entwicklung
-├── roadmap.md            Phasen und Meilensteine
-├── open-questions.md     Offene Punkte und nächste Abklärungen
-└── adrs/                 Architecture Decision Records
-```
+## Datenquellen
 
-## Lesereihenfolge
-
-1. `specs/vision.md`: was wir bauen und warum.
-2. `specs/architecture.md`: wie der Code aufgebaut ist.
-3. Die Spec des Bereichs, an dem gerade gearbeitet wird.
-4. `specs/open-questions.md`: was noch nicht entschieden ist.
-
-## Kernentscheide auf einen Blick
-
-| Thema | Entscheid | ADR |
-|---|---|---|
-| Frontend | Blazor Web App, öffentliche Seiten Static SSR, Admin Interactive Server | [001](specs/adrs/001-blazor-ssr-und-interactive-server.md) |
-| Code-Struktur | Vertical Slices, Commands und Queries getrennt, Core plus Fassade | [002](specs/adrs/002-vertical-slices-und-cqs.md) |
-| Datenbank | Azure SQL Database (Free Offer), Medien in Blob Storage | [003](specs/adrs/003-azure-sql-free.md) |
-| Prognose | Zuerst regelbasierter Tauch-Index, ML-Modell erst mit Labels | [004](specs/adrs/004-prognose-regelbasiert-zuerst.md) |
-| Sprachen | Deutsch Standard, dazu EN, FR, IT ab dem ersten Release | [005](specs/adrs/005-mehrsprachigkeit.md) |
-| Hosting | Azure App Service (Linux B1), Background Worker im selben Host | [006](specs/adrs/006-app-service-mit-worker.md) |
-| Wetter und Abfluss | Open-Meteo (Prognose), MeteoSchweiz SwissMetNet (Messung), BAFU über existenz.ch | [007](specs/adrs/007-wetter-und-abflussquellen.md) |
-| Inhalte | Alle können beitragen, Moderatoren geben frei. Versionen wie im Wiki, Inhalt in Blob Storage | [008](specs/adrs/008-beitraege-mit-freigabe-und-versionen.md) |
-| Fotos | SkiaSharp und MetadataExtractor, Bildgrössen nur als WebP ohne Metadaten, Original privat | [009](specs/adrs/009-fotos-mit-skiasharp-und-webp.md) |
-| Mails | Storage Queue mit Backoff und Dead-Letter, einheitliches Layout mit Textfassung, sichtbar unter `/platform` | [010](specs/adrs/010-mails-ueber-storage-queue.md) |
-| Inhalt von Prod nach lokal | ZIP-Paket nur mit öffentlichen Inhalten, Import lokal ohne Löschen | [011](specs/adrs/011-inhalt-von-prod-nach-lokal.md) |
-| Design | Dunkles Farbschema («Kaltwasser-Nacht») | [design-system.md](specs/design-system.md) |
-
-## Bezug zu bestehenden Projekten
-
-Die Konventionen folgen **feldnah** und **bau-ticker** (beide private Repositories von Marc):
-
-- Vertical Slices unter `Features/{Slice}/Commands` und `Features/{Slice}/Queries`.
-- Ein Use Case pro Datei: Record plus Handler mit der Methode `Handle`.
-- Eigene Contracts `ICommandHandler<TCommand, TResult>` und `IQueryHandler<TQuery, TResult>`, kein MediatR.
-- Core-Projekt als einziger Zugang zu Datenbank, Storage und externen Diensten. Web und Worker sind Fassaden.
-- xUnit ohne Mocking Library, Testcontainers. Verhalten als Black-Box testen, nicht Mapping.
-
-Details stehen in `specs/architecture.md`.
-
-## So startet die erste Session
-
-1. Neues Repository anlegen. `CLAUDE.md` und `specs/` aus diesem Dossier hineinkopieren.
-2. Claude Code mit diesem Auftrag starten: «Lies README.md und specs/architecture.md. Setze das Solution-Gerüst nach Phase 0 in specs/roadmap.md auf.»
-3. Vor dem Bau der Prognose: Eawag wegen der Datennutzung anschreiben (siehe `specs/open-questions.md`).
+Seemodelle und Satellit: [Eawag Alplakes](https://www.alplakes.eawag.ch) · Wetter: MeteoSchweiz und DWD über [Open-Meteo](https://open-meteo.com) · Abfluss und Abflussvorhersage: [Bundesamt für Umwelt BAFU](https://www.hydrodaten.admin.ch), Messwerte über [existenz.ch](https://api.existenz.ch) · Karten und Tiefenlinien: [swisstopo](https://www.swisstopo.admin.ch). Bedingungen und Nutzung: [`data-sources.md`](specs/data-sources.md).
