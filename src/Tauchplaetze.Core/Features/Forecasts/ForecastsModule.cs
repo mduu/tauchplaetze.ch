@@ -1,6 +1,8 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
 using Tauchplaetze.Core.CrossCutting.Modules;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Alplakes;
@@ -16,7 +18,9 @@ internal class ForecastsModule : ICoreModule
     public void Register(IServiceCollection services)
     {
         AddSourceClient<AlplakesClient>(services, "https://alplakes-api.eawag.ch/");
-        AddSourceClient<OpenMeteoClient>(services, "https://api.open-meteo.com/");
+        AddSourceClient<OpenMeteoClient>(services, (_, client) => client.BaseAddress = new Uri("https://api.open-meteo.com/"), retryTooManyRequests: false);
+        services.AddOptions<OpenMeteoOptions>().BindConfiguration(OpenMeteoOptions.Section);
+        services.AddSingleton<OpenMeteoBudget>();
         AddSourceClient<HydroClient>(services, "https://api.existenz.ch/");
         AddSourceClient<BafuForecastClient>(services, (provider, client) =>
         {
@@ -43,7 +47,8 @@ internal class ForecastsModule : ICoreModule
         where TClient : class =>
         AddSourceClient<TClient>(services, (_, client) => client.BaseAddress = new Uri(baseAddress));
 
-    private static void AddSourceClient<TClient>(IServiceCollection services, Action<IServiceProvider, HttpClient> configure)
+    /// <param name="retryTooManyRequests">Ohne Retry bei 429 entscheidet der Client selbst (Open-Meteo: Minutenlimit, `OpenMeteoClient`).</param>
+    private static void AddSourceClient<TClient>(IServiceCollection services, Action<IServiceProvider, HttpClient> configure, bool retryTooManyRequests = true)
         where TClient : class =>
         services.AddHttpClient<TClient>((provider, client) =>
             {
@@ -59,6 +64,13 @@ internal class ForecastsModule : ICoreModule
                 options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(120);
                 options.Retry.MaxRetryAttempts = 4;
                 options.Retry.Delay = TimeSpan.FromSeconds(2);
+                if (!retryTooManyRequests)
+                {
+                    options.Retry.ShouldHandle = args => ValueTask.FromResult(
+                        args.Outcome.Result?.StatusCode != HttpStatusCode.TooManyRequests && HttpClientResiliencePredicates.IsTransient(args.Outcome));
+                    options.CircuitBreaker.ShouldHandle = args => ValueTask.FromResult(
+                        args.Outcome.Result?.StatusCode != HttpStatusCode.TooManyRequests && HttpClientResiliencePredicates.IsTransient(args.Outcome));
+                }
             });
 #pragma warning restore EXTEXP0001
 }

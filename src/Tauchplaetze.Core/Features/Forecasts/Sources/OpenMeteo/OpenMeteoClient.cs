@@ -1,29 +1,84 @@
 using System.Globalization;
+using System.Net;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Tauchplaetze.Core.Features.Forecasts.Sources.OpenMeteo;
 
 /// <summary>Client für die Wettermodelle über Open-Meteo (ADR-007).</summary>
-internal class OpenMeteoClient(HttpClient httpClient)
+internal class OpenMeteoClient(HttpClient httpClient, OpenMeteoBudget budget, TimeProvider time, ILogger<OpenMeteoClient> logger)
 {
     public const string Source = "open-meteo";
+
+    /// <summary>Open-Meteo sagt beim Minutenlimit «try again in one minute».</summary>
+    public static readonly TimeSpan MinutelyPause = TimeSpan.FromSeconds(61);
 
     /// <summary>
     /// Stündliches Wetter eines Modells an mehreren Punkten in einem Call, <paramref name="pastDays"/> Tage zurück und <paramref name="forecastDays"/> voraus.
     /// Die Liste hat die Reihenfolge der Punkte. Zeiten in Lokalzeit.
+    /// Der Call wartet auf das Kontingent der Minute; ein 429 wegen des Minutenlimits wiederholt er einmal nach <see cref="MinutelyPause"/>.
     /// </summary>
-    public Task<SourceResult<IReadOnlyList<HourlyWeather>>> GetHourly(
-        string model, IReadOnlyList<(double Latitude, double Longitude)> points, int pastDays, int forecastDays, CancellationToken ct) =>
-        SourceHttp.Get(
-            httpClient,
-            "v1/forecast"
+    public async Task<SourceResult<IReadOnlyList<HourlyWeather>>> GetHourly(
+        string model, IReadOnlyList<(double Latitude, double Longitude)> points, int pastDays, int forecastDays, CancellationToken ct)
+    {
+        var url = "v1/forecast"
             + $"?latitude={string.Join(',', points.Select(p => SourceHttp.Format(p.Latitude)))}"
             + $"&longitude={string.Join(',', points.Select(p => SourceHttp.Format(p.Longitude)))}"
             + "&hourly=wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation,temperature_2m,weather_code,sunshine_duration,is_day"
             + $"&past_days={pastDays}&forecast_days={forecastDays}"
-            + $"&models={model}&wind_speed_unit=kmh&timezone=Europe%2FZurich",
-            json => HourlyWeather.ParseMany(json, points.Count),
-            ct);
+            + $"&models={model}&wind_speed_unit=kmh&timezone=Europe%2FZurich";
+
+        if (budget.IsBlocked)
+        {
+            return Skipped(url);
+        }
+
+        var result = await Fetch(url, points.Count, ct);
+        if (LimitOf(result) is QuotaLimit.Minute)
+        {
+            logger.LogWarning("Open-Meteo minute limit reached for {Model}, retrying in {Pause}", model, MinutelyPause);
+            await Task.Delay(MinutelyPause, time, ct);
+            result = await Fetch(url, points.Count, ct);
+        }
+
+        if (LimitOf(result) is QuotaLimit.Hour or QuotaLimit.Day)
+        {
+            var until = LimitOf(result) is QuotaLimit.Hour ? NextHour(time.GetUtcNow()) : NextDay(time.GetUtcNow());
+            budget.BlockUntil(until);
+            logger.LogWarning("Open-Meteo quota exhausted, no further calls until {Until}", until);
+        }
+
+        return result;
+    }
+
+    private async Task<SourceResult<IReadOnlyList<HourlyWeather>>> Fetch(string url, int points, CancellationToken ct)
+    {
+        await budget.Take(points, ct);
+        return await SourceHttp.Get(httpClient, url, json => HourlyWeather.ParseMany(json, points), ct);
+    }
+
+    private SourceResult<IReadOnlyList<HourlyWeather>> Skipped(string url) =>
+        new(new SourceResponse(new Uri(httpClient.BaseAddress!, url).ToString(), null, null, "Kontingent von Open-Meteo erschöpft, Call übersprungen", TimeSpan.Zero), null);
+
+    private static QuotaLimit? LimitOf(SourceResult<IReadOnlyList<HourlyWeather>> result) =>
+        result.Response.StatusCode != (int)HttpStatusCode.TooManyRequests ? null
+        : result.Response.Error?.Contains("Daily", StringComparison.OrdinalIgnoreCase) == true ? QuotaLimit.Day
+        : result.Response.Error?.Contains("Hourly", StringComparison.OrdinalIgnoreCase) == true ? QuotaLimit.Hour
+        : QuotaLimit.Minute;
+
+    private static DateTimeOffset NextHour(DateTimeOffset now) => Truncated(now, TimeSpan.FromHours(1)).AddHours(1);
+
+    private static DateTimeOffset NextDay(DateTimeOffset now) => Truncated(now, TimeSpan.FromDays(1)).AddDays(1);
+
+    private static DateTimeOffset Truncated(DateTimeOffset now, TimeSpan unit) =>
+        new(now.UtcTicks - now.UtcTicks % unit.Ticks, TimeSpan.Zero);
+
+    private enum QuotaLimit
+    {
+        Minute,
+        Hour,
+        Day
+    }
 }
 
 /// <summary>Eine Stunde Wetter am Punkt, Lokalzeit (Europe/Zurich). <see cref="WeatherCode"/> nach WMO, Sonne in Sekunden der Stunde.</summary>
