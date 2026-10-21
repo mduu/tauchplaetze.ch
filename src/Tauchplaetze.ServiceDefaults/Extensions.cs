@@ -1,6 +1,8 @@
+using System.Reflection;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
@@ -106,8 +108,35 @@ public static class Extensions
     {
         var live = new HealthCheckOptions { Predicate = r => r.Tags.Contains("live") };
         app.MapHealthChecks(HealthEndpointPath, live);
-        app.MapHealthChecks(AlivenessEndpointPath, live);
+        var commit = BuildCommit(Assembly.Load(app.Environment.ApplicationName));
+        app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
+        {
+            Predicate = live.Predicate,
+            ResponseWriter = (context, report) => WriteAliveness(context, report, commit),
+        });
 
         return app;
+    }
+
+    /// <summary>
+    /// The commit of a build: the part after `+` in the informational version (`SourceRevisionId` at publish). Null without a commit.
+    /// `/alive` sends it in the header `X-Build`. The deploy workflow waits until the new commit answers.
+    /// </summary>
+    public static string? BuildCommit(Assembly assembly)
+    {
+        var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+        var plus = version?.IndexOf('+') ?? -1;
+        return plus >= 0 && plus < version!.Length - 1 ? version[(plus + 1)..] : null;
+    }
+
+    private static Task WriteAliveness(HttpContext context, HealthReport report, string? commit)
+    {
+        if (commit is not null)
+        {
+            context.Response.Headers["X-Build"] = commit;
+        }
+
+        context.Response.ContentType = "text/plain";
+        return context.Response.WriteAsync(report.Status.ToString());
     }
 }

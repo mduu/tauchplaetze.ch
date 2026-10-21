@@ -6,6 +6,36 @@ namespace Tauchplaetze.Web.Tests;
 public class HealthTests
 {
     [Fact]
+    public async Task Alive_nennt_den_Commit_des_laufenden_Builds_im_Header_X_Build()
+    {
+        // Arrange
+        await using var app = new WebApp();
+        using var client = app.Browser();
+        var expected = Microsoft.Extensions.Hosting.Extensions.BuildCommit(typeof(Program).Assembly);
+
+        // Act
+        using var response = await client.GetAsync("/alive", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(expected, response.Headers.TryGetValues("X-Build", out var values) ? values.Single() : null);
+    }
+
+    [Fact]
+    public async Task Nur_alive_nennt_den_Commit()
+    {
+        // Arrange
+        await using var app = new WebApp();
+        using var client = app.Browser();
+
+        // Act
+        using var response = await client.GetAsync("/de", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.False(response.Headers.Contains("X-Build"));
+    }
+
+    [Fact]
     public async Task Viele_Aufrufe_von_health_ready_fragen_die_Datenbank_nur_einmal_in_30_Sekunden()
     {
         // Arrange

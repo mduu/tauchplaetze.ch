@@ -142,7 +142,7 @@ Host, Port und TLS stehen in den App Settings, Benutzer und Passwort im Key Vaul
 
 ## 8. Erster Deploy der App
 
-Nach Schritt 2–7: GitHub → Actions → **Deploy** → «Run workflow» (oder ein Push auf `main` mit grüner CI, ohne Freigabe). Der Workflow prüft danach `/alive` und `/de`. Er deployt nur Pushes auf `main` dieses Repositorys, nie einen Pull Request aus einem Fork.
+Nach Schritt 2–7: GitHub → Actions → **Deploy** → «Run workflow» (oder ein Push auf `main` mit grüner CI, ohne Freigabe). Der Workflow wartet, bis `/alive` im Header `X-Build` den neuen Commit nennt, und prüft danach `/alive` und `/de`. Er deployt nur Pushes auf `main` dieses Repositorys, nie einen Pull Request aus einem Fork.
 
 Beim ersten Start migriert die App die Datenbank, legt Gewässer, den Admin und die Plätze aus dem Seed an. Die erste Prognose rechnet der Worker zum nächsten Termin.
 

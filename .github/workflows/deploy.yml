@@ -48,8 +48,11 @@ jobs:
         with:
           global-json-file: global.json
 
+      # Der Commit landet in der Version der App. /alive nennt ihn im Header X-Build, der Health-Schritt wartet darauf.
       - name: Publish
-        run: dotnet publish src/Tauchplaetze.Web/Tauchplaetze.Web.csproj --configuration Release --output ./publish
+        env:
+          BUILD_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: dotnet publish src/Tauchplaetze.Web/Tauchplaetze.Web.csproj --configuration Release --output ./publish "-p:SourceRevisionId=$BUILD_SHA"
 
       - uses: azure/login@7184910d9eb2b1c5e48f7073824a90609bb9b6d6 # v2.3.1
         with:
@@ -75,11 +78,25 @@ jobs:
           app-name: ${{ env.APP_NAME }}
           package: ./publish
 
+      # Mit Run from Package meldet der Deploy Erfolg, bevor die neue Version läuft. Darum zuerst warten, bis /alive den neuen Commit nennt.
       # /alive prüft die App, /de zusätzlich die Datenbank. /health/ready (Datenbank und Prognose-Lauf jünger als 30 h) nur als Warnung:
       # Nach dem ersten Deploy gibt es noch keinen Lauf, und ein voller Lauf dauert rund 25 Minuten.
       - name: Health
         if: steps.app.outputs.exists == 'true'
+        env:
+          BUILD_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
+          running=""
+          for i in $(seq 1 60); do
+            running=$(curl -s -o /dev/null -D - --max-time 20 "$APP_URL/alive" | tr -d '\r' | awk 'tolower($1)=="x-build:" {print $2}' || true)
+            echo "/alive attempt $i: X-Build ${running:-none}, expected $BUILD_SHA"
+            [ "$running" = "$BUILD_SHA" ] && break
+            sleep 10
+          done
+          if [ "$running" != "$BUILD_SHA" ]; then
+            echo "::error::Neue Version läuft nicht: /alive nennt ${running:-keinen Commit} statt $BUILD_SHA (10 Minuten gewartet)"
+            exit 1
+          fi
           check() {
             for i in $(seq 1 10); do
               code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 "$APP_URL$1" || echo 000)
