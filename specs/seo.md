@@ -56,9 +56,9 @@ Stand 21.10.2026: noch nicht umgesetzt.
 
 ## Sitemap und Robots
 
-- `/sitemap.xml` (geplant, Stand 21.10.2026 noch nicht umgesetzt, liefert 404) als Index, darunter eine Sitemap pro Sprache. Nur veröffentlichte Plätze.
-- `lastmod` aus `DiveSite.UpdatedAt` (nicht aus der täglichen Prognose, sonst ändert sich jede Seite täglich).
-- `/robots.txt` (Endpoint der App, `RobotsTxt`): sperrt `/admin`, `/platform`, `/api`, die Konto-Seiten (`/{Lang}/account/`), «Neuer Platz», Bearbeiten und Versionen in allen vier Sprachen sowie Query-Varianten (`/*?`). Eine Sitemap gibt es noch nicht (Stand 21.10.2026), darum fehlt die Zeile `Sitemap:`.
+- `/sitemap.xml` als Index, darunter `/sitemap-{sprache}.xml` pro Sprache (Endpoint der App, `Sitemap`, Query `GetSitemapEntries`). Enthalten: Startseite, Verzeichnis, Gewässerliste, «Über», jeder veröffentlichte Platz und jedes Gewässer mit mindestens einem veröffentlichten Platz. Jede Adresse nennt ihre Fassungen in allen vier Sprachen und `x-default` (= `de`) als `xhtml:link rel="alternate"`. Die Antwort bleibt eine Stunde im Speicher der App. Nicht enthalten: Entwürfe, archivierte Plätze, alte Slugs, Konto-, Redaktions-, Versions- und Bearbeiten-Seiten.
+- `lastmod` aus `DiveSite.UpdatedAt`, beim Gewässer die jüngste Änderung seiner Plätze (nicht aus der täglichen Prognose, sonst ändert sich jede Seite täglich). Die festen Seiten haben kein `lastmod`.
+- `/robots.txt` (Endpoint der App, `RobotsTxt`): sperrt `/admin`, `/platform`, `/api`, die Konto-Seiten (`/{Lang}/account/`), «Neuer Platz», Bearbeiten, Versionen und «Tauchgang melden» in allen vier Sprachen sowie Query-Varianten (`/*?`). Am Schluss steht `Sitemap: {PublicSite:BaseUri}/sitemap.xml`.
 - Die Seiten der Versionen (`…/versionen`) haben `noindex` und stehen nicht in der Sitemap (Datenschutz, `cms.md`). Ebenso der Bearbeiten-Modus (`…/bearbeiten`) und «Neuen Platz vorschlagen» (`…/neu`), beide nur angemeldet.
 
 ## Performance

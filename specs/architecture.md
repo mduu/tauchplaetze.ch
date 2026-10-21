@@ -97,7 +97,7 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 | `Reports` (Phase 1) | Commands `SubmitReport`, `HideReport`; Queries `GetReports` | Meldeformular, Admin-Liste |
 | `DiveShops` (Phase 1) | Commands, Queries für Tauchshops und Füllstationen | Admin-Seiten, Anzeige auf Platzseite |
 | `BuddyGroups` (Phase 1) | Commands, Queries | Admin-Seiten, Links |
-| `Seo` (geplant) | Queries `GetSitemapEntries` | `sitemap.xml`. Heute gibt es keine Sitemap. `robots.txt` (`RobotsTxt`) und die Weiterleitungen nach Host (`HostRedirects`) liegen in `CrossCutting/Hosting` |
+| `Seo` | Query `GetSitemapEntries` (im Slice `DiveSites`) | `sitemap.xml` (`Sitemap`), `robots.txt` (`RobotsTxt`) und die Weiterleitungen nach Host (`HostRedirects`) liegen in `CrossCutting/Hosting` |
 | `Mail` | Commands `ProcessMailQueue`, `ReplayDeadLetters`, `DeleteDeadLetters`, `CheckDeadLetters`; Query `GetMailQueueStatus`. Queue, Dispatcher, Vorlagen und Layout in `CrossCutting/Mail` (ADR-010) | `MailQueueWorker`, `DeadLetterMonitorWorker`, Seite `/platform/queues` |
 | `Content` | Query `ExportContent`, `GetContentSyncStatus`; Commands `ImportContent`, `PullContentFromSource` (ADR-011) | Seite `/platform/inhalt`, Endpoints `/platform/inhalt/export` und `/api/platform/content-export` |
 | `Operations` | Command `MigrateDatabase` | Start der Web-App (`Database:PrepareOnStartup`, lokal mit Aspire) |

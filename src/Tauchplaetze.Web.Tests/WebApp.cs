@@ -48,6 +48,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetReadinessQuery, Readiness> Readiness { get; } = new(_ => new Readiness(true, null, null));
 
+    public FakeQuery<GetSitemapEntriesQuery, SitemapEntries> SitemapEntries { get; } = new(_ => new SitemapEntries([], []));
+
     public FakeQuery<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> SiteList { get; } = new(_ => []);
 
     public FakeQuery<FindDiveSitesQuery, FoundDiveSites> Finder { get; } = new(_ => new FoundDiveSites([], 0, 1, 1, SiteSort.Index, [], 0, 0, null));
@@ -128,6 +130,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.RemoveAll<IHostedService>();
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetReadinessQuery, Readiness>>(Readiness));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSitemapEntriesQuery, SitemapEntries>>(SitemapEntries));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteDischargeQuery, SiteDischarge?>>(Discharge));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteIndexHistoryQuery, SiteIndexHistory>>(SiteHistory));

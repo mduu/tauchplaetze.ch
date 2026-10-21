@@ -5,7 +5,7 @@ namespace Tauchplaetze.Web.Tests;
 public class RobotsTxtTests
 {
     [Fact]
-    public async Task Robots_txt_ist_Text_und_sperrt_Redaktion_Konten_und_Versionen_in_allen_Sprachen()
+    public async Task Robots_txt_ist_Text_sperrt_Redaktion_Konten_und_Versionen_in_allen_Sprachen_und_nennt_die_Sitemap()
     {
         // Arrange
         await using var app = new WebApp();
@@ -25,5 +25,6 @@ public class RobotsTxtTests
         Assert.Contains("Disallow: /fr/sites-de-plongee/*/versions", body);
         Assert.Contains("Disallow: /de/tauchplaetze/*/bearbeiten", body);
         Assert.DoesNotContain("Disallow: /de/tauchplaetze\n", body);
+        Assert.Contains("Sitemap: https://tauchplaetze.ch/sitemap.xml", body);
     }
 }
