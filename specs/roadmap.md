@@ -50,6 +50,7 @@ Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise
 
 - 🟡 Alle grossen Seen mit Prognose (51 Seen, 19.10.2026) und Flussplätze mit BAFU-Stationen umgesetzt. Die Dokumentation der Plätze (Stufe 1 bis 2) ist offen.
 - ✅ BAFU-Abflussvorhersage (Zugang per HTTPS, 20.10.2026), auch im Index (`rules-1.4`). ⏳ In-situ-Messungen aus Eawag Datalakes.
+- ⏳ Rückfall für die gemessenen Abflüsse direkt beim BAFU (hydrodaten.admin.ch bzw. derselbe Zugang wie die Vorhersage), falls existenz.ch ausfällt. Anlass: Ausfall am 21.10.2026 ab 18:30 UTC, alle Abrufe mit Timeout. Vorher beim BAFU klären, welche Messdateien der Zugang enthält.
 - ✅ Meldungen nach dem Tauchgang (Sicht, Temperatur, Kommentar nach Freigabe), vorgezogen und gebaut am 21.10.2026 (`dive-site.md`, «Meldungen»).
 - ⏳ Tauchshops und Füllstationen (kostenlos, ohne Hervorhebung).
 - ⏳ Buddy-Gruppen (WhatsApp) pro Region.
