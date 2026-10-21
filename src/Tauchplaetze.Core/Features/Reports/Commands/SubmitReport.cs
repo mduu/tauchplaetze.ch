@@ -18,6 +18,23 @@ internal class SubmitReportHandler(TauchplaetzeDbContext dbContext, UserManager<
 {
     public async Task<ReportResult> Handle(SubmitReportCommand command, CancellationToken ct = default)
     {
+        try
+        {
+            return await Save(command, ct);
+        }
+        catch (DbUpdateException) when (dbContext.ChangeTracker.Entries<Report>().Any(e => e.State == EntityState.Added))
+        {
+            dbContext.ChangeTracker.Clear();
+            return await Save(command, ct);
+        }
+    }
+
+    /// <remarks>
+    /// Zwei gleichzeitige erste Meldungen (Doppelklick) verletzen den eindeutigen Index (Platz, Autor, Tag). Der zweite Versuch
+    /// findet dann die Meldung der ersten Anfrage und ersetzt sie.
+    /// </remarks>
+    private async Task<ReportResult> Save(SubmitReportCommand command, CancellationToken ct)
+    {
         if (await users.FindByIdAsync(command.UserId) is not { EmailConfirmed: true, BlockedAt: null })
         {
             return new ReportResult([ReportError.NotAllowed]);
