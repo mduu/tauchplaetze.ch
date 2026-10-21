@@ -7,12 +7,14 @@ internal static class ThermoclineLabels
 
     /// <param name="y">Die Tiefe in m als y-Koordinate im Diagramm.</param>
     /// <param name="minGap">Der kleinste Abstand zweier Beschriftungen in Pixeln.</param>
-    public static IReadOnlyList<Label> For(decimal top, decimal bottom, Func<decimal, double> y, double minGap)
+    /// <param name="minY">Keine Beschriftung höher als diese y-Koordinate, damit sie die Oberfläche nicht überdeckt.</param>
+    public static IReadOnlyList<Label> For(decimal top, decimal bottom, Func<decimal, double> y, double minGap, double minY = double.MinValue)
     {
         var (upper, lower) = (y(top), y(bottom));
-        return lower - upper < minGap
+        IReadOnlyList<Label> labels = lower - upper < minGap
             ? [new Label((upper + lower) / 2, $"{ForecastFormat.Meters(top)}–{ForecastFormat.Meters(bottom)} m")]
             : [new Label(upper, $"{ForecastFormat.Meters(top)} m"), new Label(lower, $"{ForecastFormat.Meters(bottom)} m")];
+        return [.. labels.Select(label => label with { Y = Math.Max(label.Y, minY) })];
     }
 
     /// <summary>Ob ein Achsenwert so nahe an einer Beschriftung der Sprungschicht liegt, dass er sie überdecken würde.</summary>

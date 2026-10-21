@@ -17,7 +17,7 @@
         {
             <SvgText x="14" y="@Svg(label.Y + 4)" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" data-thermocline-depth Content="@label.Text" />
         }
-        <SvgText x="@(Labels.Count == 1 ? "100" : "70")" y="@Svg((bandTop + bandBottom) / 2 + 4)" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Thermocline"]" />
+        <SvgText x="@(Labels.Count == 1 ? "100" : "70")" y="@Svg(Math.Max((bandTop + bandBottom) / 2, MinLabelY) + 4)" fill="var(--color-signal)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Thermocline"]" />
         <SvgText x="14" y="@Svg(bandBottom + 26)" fill="var(--color-bubble)" font-family="IBM Plex Mono, monospace" font-size="13" Content="@L["Start_CrossSection_Clearer"]" />
     }
     else if (Surface is not null && ThermoclineTop is null)
@@ -69,10 +69,13 @@
 
     private const double LabelGap = 26;
 
+    /// <summary>Die Beschriftungen stehen mindestens so weit unter der Wasserlinie (y 34), damit die Welle frei bleibt.</summary>
+    private const double MinLabelY = 52;
+
     private (double Top, double Bottom)? Band => ThermoclineTop is { } top && ThermoclineBottom is { } bottom ? (Y(top), Y(bottom)) : null;
 
     private IReadOnlyList<ThermoclineLabels.Label> Labels => ThermoclineTop is { } top && ThermoclineBottom is { } bottom
-        ? ThermoclineLabels.For(top, bottom, Y, LabelGap)
+        ? ThermoclineLabels.For(top, bottom, Y, LabelGap, MinLabelY)
         : [];
 
     private static double Y(decimal depth) => 34 + Math.Clamp((double)depth, 0, 40) * 6.6;
