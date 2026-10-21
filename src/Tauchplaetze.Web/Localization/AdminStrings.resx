@@ -389,4 +389,10 @@
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Abbrechen</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} Tage neu gerechnet, davon {1} mit anderem Index. Median pro Gewässer für {2} Tage aufgebaut.</value></data>
   <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Die Neuberechnung ist fehlgeschlagen. Details stehen im Log.</value></data>
+  <data name="Versions_Redacted" xml:space="preserve"><value>geschwärzt</value></data>
+  <data name="Versions_Redact" xml:space="preserve"><value>Schwärzen</value></data>
+  <data name="Versions_Unredact" xml:space="preserve"><value>Schwärzung aufheben</value></data>
+  <data name="Versions_RedactTitle" xml:space="preserve"><value>Version schwärzen</value></data>
+  <data name="Versions_RedactText" xml:space="preserve"><value>Version #{0} verschwindet aus der öffentlichen History und dem Vergleich. Im CMS bleibt sie mit Hinweis sichtbar. Für Spam oder Personendaten.</value></data>
+  <data name="Error_PublishedRevision" xml:space="preserve"><value>Die veröffentlichte Version lässt sich nicht schwärzen. Gib zuerst eine korrigierte Version frei.</value></data>
 </root>

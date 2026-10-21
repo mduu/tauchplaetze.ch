@@ -8,6 +8,7 @@
 @using Tauchplaetze.Core.Features.Editorial
 @using Tauchplaetze.Core.Features.Editorial.Commands
 @using Tauchplaetze.Core.Features.Editorial.Queries
+@inject IDialogService Dialogs
 
 <MudText Typo="Typo.h4" Class="mb-4">@L["Versions_Title", name]</MudText>
 <ErrorList Errors="errors" />
@@ -18,7 +19,13 @@
         <MudPaper Outlined="true" Class="pa-4">
             <div class="d-flex justify-space-between flex-wrap gap-2">
                 <div>
-                    <MudText Typo="Typo.h6">#@revision.Number · @L[$"Revision_{revision.Status}"]</MudText>
+                    <MudText Typo="Typo.h6">
+                        #@revision.Number · @L[$"Revision_{revision.Status}"]
+                        @if (revision.IsRedacted)
+                        {
+                            <MudChip T="string" Size="Size.Small" Color="Color.Dark" Class="ml-2" data-redacted>@L["Versions_Redacted"]</MudChip>
+                        }
+                    </MudText>
                     <MudText Typo="Typo.body2">
                         @L["Versions_Author"]: @(revision.AuthorName ?? L["Versions_DeletedAccount"]) · @SwissClock.DateTime(revision.CreatedAt)
                         @if (revision.ReviewedAt is { } reviewed)
@@ -37,6 +44,14 @@
                     @if (IsModerator && revision.Number != revisions[0].Number)
                     {
                         <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="busy" OnClick="@(() => Restore(revision.Number))">@L["Versions_Restore"]</MudButton>
+                    }
+                    @if (IsModerator && !revision.IsRedacted && revision.Number != Published)
+                    {
+                        <MudButton Variant="Variant.Text" Color="Color.Error" Disabled="busy" OnClick="@(() => Redact(revision.Number, true))">@L["Versions_Redact"]</MudButton>
+                    }
+                    @if (IsAdmin && revision.IsRedacted)
+                    {
+                        <MudButton Variant="Variant.Text" Disabled="busy" OnClick="@(() => Redact(revision.Number, false))">@L["Versions_Unredact"]</MudButton>
                     }
                 </MudStack>
             </div>
@@ -66,6 +81,8 @@
     [Parameter]
     public Guid Id { get; set; }
 
+    private int? Published => revisions.Where(r => r.Status == RevisionStatus.Approved).Max(r => (int?)r.Number);
+
     protected override async Task Load()
     {
         revisions = await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(Id, UserId));
@@ -89,6 +106,20 @@
 
         busy = true;
         var result = await Command<RestoreRevisionCommand, EditorialResult>(new RestoreRevisionCommand(UserId, Id, number));
+        errors = result.Errors;
+        await Load();
+        busy = false;
+    }
+
+    private async Task Redact(int number, bool redact)
+    {
+        if (busy || (redact && await Dialogs.ShowMessageBoxAsync(L["Versions_RedactTitle"], L["Versions_RedactText", number], yesText: L["Versions_Redact"], cancelText: L["Account_Cancel"]) != true))
+        {
+            return;
+        }
+
+        busy = true;
+        var result = await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(UserId, Id, number, redact));
         errors = result.Errors;
         await Load();
         busy = false;

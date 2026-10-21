@@ -153,6 +153,9 @@ public enum EditorialError
 
     /// <summary>Die Station für Abfluss und Trübung ist keine BAFU-Stationsnummer (4 Ziffern).</summary>
     InvalidStation,
+
+    /// <summary>Die Version ist die veröffentlichte und lässt sich nicht schwärzen. Zuerst eine korrigierte Version freigeben.</summary>
+    PublishedRevision,
 }
 
 /// <summary>Ergebnis eines Commands der Redaktion. <see cref="NoChange"/>: Der Inhalt war gleich wie die Basis, es entstand keine Version.</summary>

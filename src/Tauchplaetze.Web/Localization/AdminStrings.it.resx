@@ -389,4 +389,10 @@
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Annulla</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} giorni ricalcolati, di cui {1} con un altro indice. Mediana per specchio d'acqua costruita per {2} giorni.</value></data>
   <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Il ricalcolo non è riuscito. I dettagli sono nel log.</value></data>
+  <data name="Versions_Redacted" xml:space="preserve"><value>oscurata</value></data>
+  <data name="Versions_Redact" xml:space="preserve"><value>Oscura</value></data>
+  <data name="Versions_Unredact" xml:space="preserve"><value>Annulla oscuramento</value></data>
+  <data name="Versions_RedactTitle" xml:space="preserve"><value>Oscura versione</value></data>
+  <data name="Versions_RedactText" xml:space="preserve"><value>La versione n. {0} scompare dalla cronologia pubblica e dal confronto. Resta visibile nel CMS con un'indicazione. Per spam o dati personali.</value></data>
+  <data name="Error_PublishedRevision" xml:space="preserve"><value>La versione pubblicata non si può oscurare. Approva prima una versione corretta.</value></data>
 </root>

@@ -389,4 +389,10 @@
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} days recomputed, {1} of them with a different index. Median per water body built for {2} days.</value></data>
   <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Recomputing failed. The log has the details.</value></data>
+  <data name="Versions_Redacted" xml:space="preserve"><value>redacted</value></data>
+  <data name="Versions_Redact" xml:space="preserve"><value>Redact</value></data>
+  <data name="Versions_Unredact" xml:space="preserve"><value>Remove redaction</value></data>
+  <data name="Versions_RedactTitle" xml:space="preserve"><value>Redact version</value></data>
+  <data name="Versions_RedactText" xml:space="preserve"><value>Version #{0} disappears from the public history and comparison. It stays visible in the CMS with a note. For spam or personal data.</value></data>
+  <data name="Error_PublishedRevision" xml:space="preserve"><value>The published version cannot be redacted. Approve a corrected version first.</value></data>
 </root>

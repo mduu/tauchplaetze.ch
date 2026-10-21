@@ -645,6 +645,52 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     private static SketchFeature Sketch(SketchKind kind, int? depth, (string Culture, string Label)[] labels, params (double Lat, double Lng)[] points) =>
         new(Guid.NewGuid(), kind, [.. points.Select(p => new SketchPoint(p.Lat, p.Lng))], depth, [.. labels.Select(l => new SketchText(l.Culture, l.Label))]);
 
+    [SqlFact]
+    public async Task Die_Moderation_schwaerzt_eine_fruehere_Version_sie_verschwindet_oeffentlich_und_bleibt_im_CMS_markiert()
+    {
+        // Arrange
+        var (admin, anna, site) = await Prepare();
+        var bert = await Moderator(admin);
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(admin, site, edit.BaseNumber, edit.Content with { MaxDepth = 31 }, "Spam-Link entfernt"));
+
+        // Act
+        var byContributor = await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(anna, site, 1));
+        var first = await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(bert, site, 1));
+        var again = await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(bert, site, 1));
+        var unredactByModerator = await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(bert, site, 1, Redact: false));
+
+        // Assert
+        Assert.Equal([EditorialError.NotAllowed], byContributor.Errors);
+        Assert.Empty(first.Errors);
+        Assert.Empty(again.Errors);
+        Assert.Equal([EditorialError.NotAllowed], unredactByModerator.Errors);
+        var history = await Query<GetPublicRevisionsQuery, PublicRevisions?>(new GetPublicRevisionsQuery("riff-williams-herrliberg"));
+        Assert.Equal([2], history!.Revisions.Select(r => r.Number));
+        var cms = await Query<GetRevisionsQuery, IReadOnlyList<RevisionSummary>>(new GetRevisionsQuery(site, bert));
+        Assert.True(cms.Single(r => r.Number == 1).IsRedacted);
+    }
+
+    [SqlFact]
+    public async Task Die_veroeffentlichte_Version_laesst_sich_nicht_schwaerzen_und_der_Admin_hebt_eine_Schwaerzung_auf()
+    {
+        // Arrange
+        var (admin, _, site) = await Prepare();
+        var edit = await ForEditing(site);
+        await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(admin, site, edit.BaseNumber, edit.Content with { MaxDepth = 31 }, null));
+        await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(admin, site, 1));
+
+        // Act
+        var published = await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(admin, site, 2));
+        var unredacted = await Command<RedactRevisionCommand, EditorialResult>(new RedactRevisionCommand(admin, site, 1, Redact: false));
+
+        // Assert
+        Assert.Equal([EditorialError.PublishedRevision], published.Errors);
+        Assert.Empty(unredacted.Errors);
+        var history = await Query<GetPublicRevisionsQuery, PublicRevisions?>(new GetPublicRevisionsQuery("riff-williams-herrliberg"));
+        Assert.Equal([2, 1], history!.Revisions.Select(r => r.Number));
+    }
+
     private async Task<string> Moderator() =>
         (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
 

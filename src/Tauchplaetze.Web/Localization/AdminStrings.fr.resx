@@ -389,4 +389,10 @@
   <data name="Forecast_RecomputeCancel" xml:space="preserve"><value>Annuler</value></data>
   <data name="Forecast_RecomputeDone" xml:space="preserve"><value>{0} jours recalculés, dont {1} avec un autre indice. Médiane par plan d'eau établie pour {2} jours.</value></data>
   <data name="Forecast_RecomputeFailed" xml:space="preserve"><value>Le recalcul a échoué. Les détails figurent dans le journal.</value></data>
+  <data name="Versions_Redacted" xml:space="preserve"><value>masquée</value></data>
+  <data name="Versions_Redact" xml:space="preserve"><value>Masquer</value></data>
+  <data name="Versions_Unredact" xml:space="preserve"><value>Rétablir</value></data>
+  <data name="Versions_RedactTitle" xml:space="preserve"><value>Masquer la version</value></data>
+  <data name="Versions_RedactText" xml:space="preserve"><value>La version n° {0} disparaît de l'historique public et de la comparaison. Elle reste visible dans le CMS avec une mention. Pour le spam ou les données personnelles.</value></data>
+  <data name="Error_PublishedRevision" xml:space="preserve"><value>La version publiée ne peut pas être masquée. Valide d'abord une version corrigée.</value></data>
 </root>

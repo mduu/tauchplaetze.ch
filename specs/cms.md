@@ -112,7 +112,7 @@ Namen in einer öffentlichen History sind Personendaten (nDSG). Darum gilt **Dat
 - **Nicht in Suchmaschinen:** Die Seiten der History haben `noindex, nofollow` als Meta-Tag und als Header `X-Robots-Tag`, `robots.txt` sperrt sie, und sie stehen nicht in der Sitemap.
 - **Schutz gegen Spam (Entscheid Marc, 21.10.2026):** Öffentlich erscheinen nur freigegebene Versionen ohne Schwärzung (`Approved`, `RedactedAt` leer), in der Liste wie im Vergleich. Abgelehnte, wartende und zurückgezogene Versionen erscheinen nie. Kommentare und Änderungen stehen als Text, URLs darin sind nicht verlinkt. So bringt ein abgelehnter Vorschlag mit Links nichts.
 - **Konto löschen:** Die Versionen bleiben. Autor bzw. Approver wird «gelöschtes Konto», auch im CMS.
-- **Personendaten im Inhalt:** Texte und Fotos können selbst Personendaten enthalten (z.B. Telefonnummern, erkennbare Personen). Moderatoren prüfen das vor der Freigabe. Eine Version mit solchen Daten lässt sich im Inhalt nachträglich schwärzen. Das ist die einzige Ausnahme von «Versionen sind unveränderlich». Die Schwärzung selbst steht in der History.
+- **Personendaten im Inhalt:** Texte und Fotos können selbst Personendaten enthalten (z.B. Telefonnummern, erkennbare Personen). Moderatoren prüfen das vor der Freigabe. Eine Version mit solchen Daten oder mit Spam lässt sich nachträglich schwärzen (Command `RedactRevision`, Knopf «Schwärzen» mit Rückfrage in der Versionsansicht `/admin/plaetze/{id}/versionen`). Schwärzen dürfen Moderation und Admin, aufheben nur Admin. Die veröffentlichte (jüngste freigegebene) Version lässt sich nicht schwärzen: zuerst eine korrigierte Version freigeben. Eine geschwärzte Version fehlt in der öffentlichen History und im Vergleich. Im CMS bleibt sie mit dem Hinweis «geschwärzt» sichtbar, ihr Inhalt im Blob bleibt für die Moderation lesbar. Zweimal schwärzen ändert nichts. Einen Grund speichert das System nicht. Das ist die einzige Ausnahme von «Versionen sind unveränderlich».
 - Die Datenschutzerklärung beschreibt Konto, Anzeigename, History und Aufbewahrung.
 
 ### Konten auf der Plattform
@@ -239,9 +239,10 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 - Einfache Listen mit Bearbeiten-Dialog.
 - Seen enthalten zusätzlich die Alplakes-Zuordnung (`AlplakesLakeKey`, Modellnamen). Nur Admins ändern diese Felder.
 
-### Meldungen (Phase 1)
+### Meldungen (`/admin/meldungen`)
 
-- Liste der neuen Meldungen. Aktion «Ausblenden» bei Missbrauch.
+- Kommentare, die auf Freigabe warten (älteste zuerst): «Freigeben» oder «Ablehnen» (Kommentar weg, Sicht und Temperatur bleiben).
+- Die 50 neuesten Meldungen mit «Ausblenden» und «Wieder zeigen». Regeln in `dive-site.md`, «Meldungen».
 
 ### Plattform (Admin)
 
