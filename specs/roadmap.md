@@ -2,7 +2,9 @@
 
 Grundsatz: früh etwas Echtes zeigen. Zuerst **zwei Seen und ein Fluss richtig schön**, dann skalieren.
 
-## Phase 0 – Fundament
+## Phase 0 – Fundament ✅
+
+Erledigt bis 18.10.2026.
 
 Ziel: lauffähiges Gerüst, alle Konventionen verankert.
 
@@ -30,24 +32,25 @@ Ziel: Gewissheit, dass die Prognose mit echten Daten trägt.
 
 ## Phase MVP – zwei Seen und ein Fluss, richtig schön
 
-Ziel: Reaktion der Szene testen. Stand 21.10.2026: ✅ umgesetzt, 🟡 teilweise, ⏳ offen.
+Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise, ⏳ offen.
 
 - ✅ Gewässer-Stammdaten schweizweit (Seed). Zuordnung zu Alplakes und BAFU-Stationen für die grossen Seen. SwissMetNet ist nicht angebunden (⏳), der Regen der letzten Tage kommt aus Open-Meteo.
 - ✅ Redaktion: Platz erfassen (Schnellerfassung mit Karte), bearbeiten, Revisionen, Medien-Upload mit Bildgrössen.
 - ✅ Öffentliche Seiten: Start «Wo tauchen?», Tauchplatzseite, Verzeichnis mit Karte, Gewässerseite, Über/Impressum/Datenschutz.
 - ✅ Prognose-Job mit Datenstufen (heute `rules-1.6`), Rohdaten in Blob Storage, Status auf `/platform/prognose`. Quellen: Alplakes, Open-Meteo, BAFU (ADR-007).
-- 🟡 SEO-Grundlagen: Titel, Meta, `hreflang` und `robots.txt` umgesetzt. Sitemap und JSON-LD offen (⏳).
-- 🟡 Deploy auf Azure (Bicep, GitHub Actions) und Domain `tauchplaetze.ch` mit `www` umgesetzt (21.10.2026). DNS bleibt bei Hostpoint, Cloudflare ist ein späterer Ausbau. `sichtweiten.ch` leitet die App weiter, sobald die Domain auf die App zeigt (⏳).
+- 🟡 SEO-Grundlagen: Titel, Meta, `hreflang`, `robots.txt` und Sitemap pro Sprache (`/sitemap.xml`) umgesetzt. JSON-LD offen (⏳).
+- ✅ Deploy auf Azure (Bicep, GitHub Actions mit what-if und Freigabe, Deploy aus dem Paket, Health Check wartet auf die neue Version). Domains `tauchplaetze.ch`, `www.tauchplaetze.ch`, `sichtweiten.ch` und `www.sichtweiten.ch` mit Zertifikat (21.10.2026). Mail über Hostpoint mit SPF, DKIM und DMARC. DNS bleibt bei Hostpoint, Cloudflare ist ein späterer Ausbau.
 - ⏳ **Inhalt:** Zürichsee und Zugersee vollständig (je 8 bis 12 Plätze auf Stufe 2 mit Fotos aus tauchfotos.ch). Dazu der Rhein als erster Fluss. Alle weiteren bekannten Plätze als Stufe 0. Entscheid Marc, 17.10.2026: Marc taucht dort am meisten und kann die Prognose am besten beurteilen. Beide Seen haben ein 3D-Modell (Datenstufe 3).
 - ⏳ **Inhalt pro Platz:** 3–6 starke Fotos aus den Originalen von tauchfotos.ch. Fotos der Ein- und Ausstiege nach und nach bei eigenen Tauchgängen.
-- 🟡 **Rechtliches vor dem Go-Live:** Impressum, Datenschutz (nDSG) und Haftungshinweis sind online. Die Prüfung des Datenschutzes ist offen (`open-questions.md` #28).
+- 🟡 **Rechtliches:** Impressum, Datenschutz (nDSG) und Haftungshinweis sind online. Die Prüfung des Datenschutzes ist offen (`open-questions.md` #28).
+- ✅ **Sicherheit:** Security-Review von Infrastruktur und Software (20.10.2026), Befunde behoben: Rate Limits der Konto-Formulare, keine Konto-Enumeration, Security-Header, Rechte der Versionsansicht, Schwärzen von Versionen.
 - ⏳ **Validierung:** Link an alte Kontakte, Clubs, Shops, Facebook- und WhatsApp-Gruppen. Erfolgskriterien in `vision.md`.
 
 ## Phase 1 – alle grossen Seen
 
 - 🟡 Alle grossen Seen mit Prognose (51 Seen, 19.10.2026) und Flussplätze mit BAFU-Stationen umgesetzt. Die Dokumentation der Plätze (Stufe 1 bis 2) ist offen.
 - ✅ BAFU-Abflussvorhersage (Zugang per HTTPS, 20.10.2026), auch im Index (`rules-1.4`). ⏳ In-situ-Messungen aus Eawag Datalakes.
-- ~~Meldungen (ein Klick nach dem Tauchgang).~~ Vorgezogen, gebaut am 21.10.2026 (`dive-site.md`, «Meldungen»).
+- ✅ Meldungen nach dem Tauchgang (Sicht, Temperatur, Kommentar nach Freigabe), vorgezogen und gebaut am 21.10.2026 (`dive-site.md`, «Meldungen»).
 - ⏳ Tauchshops und Füllstationen (kostenlos, ohne Hervorhebung).
 - ⏳ Buddy-Gruppen (WhatsApp) pro Region.
 - ✅ Registrierung für alle öffnen: Mitwirkende schlagen vor, Moderatoren geben frei (`cms.md`).
@@ -55,10 +58,20 @@ Ziel: Reaktion der Szene testen. Stand 21.10.2026: ✅ umgesetzt, 🟡 teilweise
 - ⏳ Videos aus tauchvideos.ch.
 - Neue Fotos der Ein- und Ausstiege, nach und nach.
 
+## Zusätzlich umgesetzt (nicht im ursprünglichen Plan)
+
+- ✅ Kachel «Strömung» an Seen aus dem 3D-Modell (19.10.2026).
+- ✅ Kachel «Abfluss» an Flussplätzen mit Einordnung, Trend, 48 Stunden, 7 Tagesmitteln und BAFU-Vorhersage; Kachel «Wassertemperatur» am Fluss (19.–20.10.2026).
+- ✅ Regeln `rules-1.3` bis `rules-1.6`: Sicht begrenzt den Index, Zuflüsse nach Nähe zur Mündung, Strömungsabzug am Fluss, Sprungschicht erst ab 1 m Tiefe (20.–21.10.2026).
+- ✅ Index-Verlauf: Mini-Diagramme in den Kacheln, Verlauf im Kopf der Platzseite, «Jahr über Jahr» auf der Gewässerseite, Neuberechnung der Vergangenheit auf `/platform` (20.10.2026).
+- ✅ Startseite: höchstens 2 Plätze pro Gewässer, Distanz zum gewählten Ort, Bergsee-Notiz, gemerkter Ort, Standort auf Klick (20.10.2026).
+- ✅ Plattform: Konto-Detailseite (Bestätigen, Sperren, Löschen, letzte Anmeldung), Übersicht der Prognose-Läufe, Mail-Queue, Inhalt von Prod nach lokal (ADR-011).
+- ✅ Seite «Über» beschreibt alle Teilwerte des Index mit den Zahlen der aktuellen Regel.
+
 ## Phase 2 – Modell und Komfort
 
-- Eigenes Sichtmodell (ML.NET, LightGBM) mit Meldungen, Secchi-Messungen und historischen Labels aus Marcs Logs und Fotos. Schattenbetrieb, dann Wechsel bei klarer Verbesserung.
-- Benachrichtigungen («gute Bedingungen am Walensee»).
-- PWA mit Favoriten offline.
-- Native Apps nur, wenn die Web-App trägt.
-- Rückrechnung des Index für die Jahre vor dem Start, einmalig pro Gewässer: Sentinel-3 und Sentinel-2 von Alplakes (seit 2016), Simstrat-Hindcast, Wetter aus dem Archiv von Open-Meteo. Vorher die Nutzung und die Zahl der Calls mit Eawag und Open-Meteo klären (Entscheid Marc, 19.10.2026). Grundlage für Phase 2 (Trainingsdaten) und für die Ansicht «Jahr über Jahr».
+- ⏳ Eigenes Sichtmodell (ML.NET, LightGBM) mit Meldungen, Secchi-Messungen und historischen Labels aus Marcs Logs und Fotos. Schattenbetrieb, dann Wechsel bei klarer Verbesserung.
+- ⏳ Benachrichtigungen («gute Bedingungen am Walensee»).
+- ⏳ PWA mit Favoriten offline.
+- ⏳ Native Apps nur, wenn die Web-App trägt.
+- ⏳ Rückrechnung des Index für die Jahre vor dem Start, einmalig pro Gewässer: Sentinel-3 und Sentinel-2 von Alplakes (seit 2016), Simstrat-Hindcast, Wetter aus dem Archiv von Open-Meteo. Vorher die Nutzung und die Zahl der Calls mit Eawag und Open-Meteo klären (Entscheid Marc, 19.10.2026). Grundlage für Phase 2 (Trainingsdaten) und füllt die Ansicht «Jahr über Jahr» (die Ansicht selbst ist gebaut).
