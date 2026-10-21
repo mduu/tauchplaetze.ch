@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
+using Tauchplaetze.Core.Features.Forecasts.Calculation;
 
 namespace Tauchplaetze.Core.Features.Forecasts.Queries;
 
@@ -20,32 +21,33 @@ internal class GetSiteForecastHandler(TauchplaetzeDbContext dbContext, TimeProvi
             .OrderBy(f => f.Date)
             .ToListAsync(ct);
 
-        var days = rows.Select(f => new ForecastDay(
-                f.Date,
-                f.DataLevel,
-                f.DiveIndex,
-                f.ProfileSource,
-                f.SurfaceTemperature,
-                f.TemperatureAt10m,
-                f.TemperatureAt20m,
-                f.TemperatureAt30m,
-                f.ThermoclineTop,
-                f.ThermoclineBottom,
-                f.SecchiDepth,
-                f.SecchiObservedAt,
-                f.VisibilityIndicator,
-                f.VisibilityGoodBelow,
-                f.WindBeaufort,
-                f.WindSpeedKmh,
-                f.WindGustsKmh,
-                f.PrecipitationLast72h,
-                f.AlgaeLevel,
-                ReasonCodes.Parse(f.ReasonCodes),
-                f.SecchiDepthShore,
-                f.ClaritySource,
-                f.CurrentSpeed,
-                f.CurrentDirection,
-                f.CurrentLevel))
+        var days = rows.Select(f => (f, Thermocline: StoredThermocline.Read(f.ThermoclineTop, f.ThermoclineBottom)))
+            .Select(t => new ForecastDay(
+                t.f.Date,
+                t.f.DataLevel,
+                t.f.DiveIndex,
+                t.f.ProfileSource,
+                t.f.SurfaceTemperature,
+                t.f.TemperatureAt10m,
+                t.f.TemperatureAt20m,
+                t.f.TemperatureAt30m,
+                t.Thermocline is null ? null : t.f.ThermoclineTop,
+                t.Thermocline is null ? null : t.f.ThermoclineBottom,
+                t.f.SecchiDepth,
+                t.f.SecchiObservedAt,
+                t.f.VisibilityIndicator,
+                t.Thermocline is null ? null : t.f.VisibilityGoodBelow,
+                t.f.WindBeaufort,
+                t.f.WindSpeedKmh,
+                t.f.WindGustsKmh,
+                t.f.PrecipitationLast72h,
+                t.f.AlgaeLevel,
+                StoredThermocline.Reasons(ReasonCodes.Parse(t.f.ReasonCodes), t.Thermocline),
+                t.f.SecchiDepthShore,
+                t.f.ClaritySource,
+                t.f.CurrentSpeed,
+                t.f.CurrentDirection,
+                t.f.CurrentLevel))
             .ToList();
 
         var waterBodyType = await dbContext.DiveSites

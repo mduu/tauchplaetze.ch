@@ -221,6 +221,40 @@ public class GetBestSitesTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(expected, Assert.Single(best.Ranking).MountainLakeElevation);
     }
 
+    [SqlTheory]
+    [InlineData(0.1, 0.3, false)]
+    [InlineData(0.0, 0.0, false)]
+    [InlineData(14.0, 17.0, true)]
+    public async Task Eine_gespeicherte_Sprungschicht_an_der_Oberflaeche_erscheint_beim_Lesen_nicht(double top, double bottom, bool shown)
+    {
+        // Arrange
+        Guid siteId = default;
+        await Sql.Arrange(db =>
+        {
+            var lake = new WaterBody { Slug = "see", NameDe = "See", WaterBodyType = WaterBodyType.Lake, Centroid = GeoPoints.Create(47, 8), IsActive = true };
+            var site = Add(db, lake, "sisikon", 46.95, 8.62, null);
+            siteId = site.Id;
+            db.DailyForecasts.Local.Single().DiveIndex = 9.1m;
+            db.DailyForecasts.Local.Single().ThermoclineTop = (decimal)top;
+            db.DailyForecasts.Local.Single().ThermoclineBottom = (decimal)bottom;
+            db.DailyForecasts.Local.Single().VisibilityGoodBelow = (decimal)bottom;
+            db.DailyForecasts.Local.Single().ReasonCodes = $"{nameof(ReasonCode.ClearBelowThermocline)},{nameof(ReasonCode.CalmLake)}";
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var day = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        var ranked = Assert.Single((await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de"))).Ranking);
+
+        // Assert
+        Assert.Equal(shown, day.ThermoclineTop is not null);
+        Assert.Equal(shown, day.VisibilityGoodBelow is not null);
+        Assert.Equal(shown, day.Reasons.Contains(ReasonCode.ClearBelowThermocline));
+        Assert.Equal(shown, ranked.ThermoclineBottom is not null);
+        Assert.Equal(shown, ranked.Reasons.Contains(ReasonCode.ClearBelowThermocline));
+        Assert.Contains(ReasonCode.CalmLake, day.Reasons);
+    }
+
     private static Task DistanceSeed(TauchplaetzeDbContext db)
     {
         Add(db, Lake("zuerichsee"), "nah", 47.355, 8.555, 7.8m);

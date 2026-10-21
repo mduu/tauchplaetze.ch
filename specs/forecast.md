@@ -71,7 +71,7 @@ Die Endpunkte stehen in `data-sources.md`.
 - Aus dem Temperaturprofil die Schicht mit dem stärksten Temperaturabfall bestimmen.
 - `ThermoclineTop` und `ThermoclineBottom`: Grenzen, an denen der Gradient den Schwellwert überschreitet (Standard 0.5 °C pro m, konfigurierbar).
 - Kein Gradient über dem Schwellwert (typisch im Winter): keine Sprungschicht. Der See ist durchmischt.
-- **Oberflächenhaut (`rules-1.6`):** Punkte über 1 m Tiefe zählen nicht (`ThermoclineMinDepth`). Die Sonne erwärmt tagsüber die obersten Dezimeter. Das 3D-Modell `mitgcm` hat dort Schichten von 0.2 m und zeigt bis 1 °C pro m Abfall zwischen 0.1 und 0.3 m. Daraus wurde am 21.10.2026 bei Sisikon die Sprungschicht «0–0 m» statt 15–22 m.
+- **Oberflächenhaut (`rules-1.6`):** Punkte über 1 m Tiefe zählen nicht (`ThermoclineMinDepth`). Die Sonne erwärmt tagsüber die obersten Dezimeter. Das 3D-Modell `mitgcm` hat dort Schichten von 0.2 m und zeigt bis 1 °C pro m Abfall zwischen 0.1 und 0.3 m. Daraus wurde am 21.10.2026 bei Sisikon die Sprungschicht «0–0 m» statt 15–22 m. Dieselbe Prüfung gilt beim Lesen (`StoredThermocline`): Eine gespeicherte Sprungschicht an der Oberfläche oder dünner als 1 m zeigen die Seiten nicht, ebenso kein «besser ab» und kein «unten klarer». Der gespeicherte Index bleibt bis zum nächsten Lauf.
 - Eine Sprungschicht dünner als 1 m (`ThermoclineMinThickness`) oder über 1 m Tiefe gilt als keine. Das gilt auch für gespeicherte Werte bei der Neuberechnung.
 - Das 1D-Modell liefert die Sprungschicht als eigene Variable (`Thermocline`). Der Job bestimmt sie trotzdem selbst aus dem Profil. So gilt für beide Modelle dieselbe Regel.
 

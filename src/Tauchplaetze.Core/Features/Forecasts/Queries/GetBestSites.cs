@@ -6,6 +6,7 @@ using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Forecasts.Calculation;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.Forecasts.Queries;
@@ -110,22 +111,23 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
             })
             .ToListAsync(ct);
 
-        var sites = rows.Select(r => (r.WaterBodyId, Site: new RankedSite(
-                r.Slug,
-                r.Name,
-                r.Municipality,
-                WaterBodyNames.In(query.Culture, r.Water.NameDe, r.Water.NameEn, r.Water.NameFr, r.Water.NameIt),
-                r.DiveIndex!.Value,
-                r.DataLevel,
-                r.SurfaceTemperature,
-                r.TemperatureAt20m,
-                r.ThermoclineTop,
-                r.ThermoclineBottom,
-                r.WindBeaufort,
-                ReasonCodes.Parse(r.ReasonCodes),
-                origin is null ? null : Math.Round(Distance.Km(origin, r.Location), 0),
-                r.Water.WaterBodyType,
-                MountainLakes.Elevation(r.Water.WaterBodyType, r.Water.Elevation))))
+        var sites = rows.Select(r => (r, Thermocline: StoredThermocline.Read(r.ThermoclineTop, r.ThermoclineBottom)))
+            .Select(t => (t.r.WaterBodyId, Site: new RankedSite(
+                t.r.Slug,
+                t.r.Name,
+                t.r.Municipality,
+                WaterBodyNames.In(query.Culture, t.r.Water.NameDe, t.r.Water.NameEn, t.r.Water.NameFr, t.r.Water.NameIt),
+                t.r.DiveIndex!.Value,
+                t.r.DataLevel,
+                t.r.SurfaceTemperature,
+                t.r.TemperatureAt20m,
+                t.Thermocline is null ? null : t.r.ThermoclineTop,
+                t.Thermocline is null ? null : t.r.ThermoclineBottom,
+                t.r.WindBeaufort,
+                StoredThermocline.Reasons(ReasonCodes.Parse(t.r.ReasonCodes), t.Thermocline),
+                origin is null ? null : Math.Round(Distance.Km(origin, t.r.Location), 0),
+                t.r.Water.WaterBodyType,
+                MountainLakes.Elevation(t.r.Water.WaterBodyType, t.r.Water.Elevation))))
             .OrderByDescending(s => RankingRules.Score(s.Site.DiveIndex, s.Site.DistanceKm))
             .ThenByDescending(s => s.Site.DiveIndex)
             .ThenBy(s => s.Site.Name, StringComparer.Ordinal)
