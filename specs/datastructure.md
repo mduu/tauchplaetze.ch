@@ -49,9 +49,9 @@ Zuordnung der BAFU-Stationen zu einem Gewässer. PK: (`WaterBodyId`, `StationId`
 | `Location` | geography (Point), optional | Lage der Station. Ein Flussplatz nimmt die nächste Station mit Rolle `River` (`forecast.md`, «Abfluss»). Der Seed ergänzt eine fehlende Lage. |
 | `Mouth` | geography (Point), optional | Mündung eines Zuflusses (Rolle `Inflow`) in den See. Daraus folgt sein Gewicht am Platz (`forecast.md`, `rules-1.5`). Der Seed ergänzt eine fehlende Mündung. Stationen unter `removedHydroStations` entfernt der Seed. |
 
-### WaterBodyWeatherStation
+### WaterBodyWeatherStation (geplant)
 
-Zuordnung der SwissMetNet-Stationen zu einem Gewässer. PK: (`WaterBodyId`, `StationId`). Felder: `StationId` (string(10), z.B. `WAE`), `Name`, `SortOrder` (erste Station mit Daten gilt).
+Noch nicht im Code (Stand 21.10.2026). Zuordnung der SwissMetNet-Stationen zu einem Gewässer. PK: (`WaterBodyId`, `StationId`). Felder: `StationId` (string(10), z.B. `WAE`), `Name`, `SortOrder` (erste Station mit Daten gilt).
 
 ### DiveSite
 

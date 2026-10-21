@@ -87,7 +87,7 @@ Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit
 1. Mitwirkende bearbeiten einen Platz oder schlagen einen neuen Platz vor. Das Speichern ergibt eine Version `Pending` mit Änderungsnotiz.
 2. Die Version merkt sich ihre **Basis**: die freigegebene Version, auf der die Änderung aufbaut.
 3. Moderatoren sehen eine Liste der offenen Vorschläge mit dem Vergleich zur Basis.
-4. **Freigeben:** Die Version wird `Approved` und ihr Inhalt wird online. Der Output Cache des Platzes wird ungültig. Ein neuer Platz wird dabei `Published`.
+4. **Freigeben:** Die Version wird `Approved` und ihr Inhalt wird online. Ein neuer Platz wird dabei `Published`.
 5. **Ablehnen:** Die Version wird `Rejected`, mit einer kurzen Begründung. Die Autorin oder der Autor sieht sie.
 6. **Veraltete Basis:** Wurde seit der Basis eine andere Version freigegeben, zeigt das CMS beide Vergleiche. Der Moderator übernimmt die Änderung von Hand (bearbeitet und gibt frei) oder lehnt ab. Keine automatische Zusammenführung.
 7. **Moderatoren und Admins** geben ihre eigenen Änderungen beim Speichern selbst frei. In der History steht dann Autor = Approver (Entscheid Marc, 17.10.2026).
@@ -132,12 +132,12 @@ Die Kontenliste verlinkt jedes Konto auf `/platform/konten/{id}` (nur Admins, Qu
 Jede Person hat ein Recht auf Auskunft (nDSG Art. 25) und auf Herausgabe ihrer Daten (Art. 28). Das Konto bietet beides selbst an, ohne Anfrage an uns. Grundlage sind die Seiten von ASP.NET Core Identity unter «Konto verwalten» (`Manage/PersonalData`), erweitert um die Beiträge.
 
 - **Seite «Meine Daten»:** zeigt alle gespeicherten Daten zum Konto:
-  - Konto: E-Mail, Anzeigename, Einwilligung zur öffentlichen Anzeige, Sprache, Rollen, registriert am, letzte Anmeldung, Passkeys (Name, angelegt am), Sperre.
+  - Konto: E-Mail, Anzeigename, Einwilligung zur öffentlichen Anzeige, Sprache, Rollen, registriert am, letzte Anmeldung, Sperre. Passkeys kommen dazu, sobald sie gebaut sind.
   - **Beiträge:** alle Versionen, die die Person geschrieben hat, mit Platz, Datum, Status und Notiz. Jede Zeile hat einen Link auf die Version bzw. den Vergleich.
   - **Freigaben:** alle Versionen, die die Person freigegeben oder abgelehnt hat (nur Moderatoren und Admins), mit Link.
   - **Fotos:** alle hochgeladenen Fotos mit Platz, Status und Link.
 - **Download:** «Meine Daten herunterladen» liefert alles als JSON. Die Datei enthält die Links auf die Beiträge und die Texte der eigenen Notizen und Begründungen. Den Inhalt der Versionen liefert sie als Link, nicht als Kopie. Felder am Benutzer tragen dafür `[PersonalData]`.
-- **Konto löschen:** wie oben unter «Konto löschen». Die Seite sagt vorher, was bleibt (Versionen ohne Namen) und was gelöscht wird (Konto, E-Mail, Passkeys, Anzeigename, Fotos im Status `Pending`).
+- **Konto löschen:** wie oben unter «Konto löschen». Die Seite sagt vorher, was bleibt (Versionen ohne Namen) und was gelöscht wird (Konto, E-Mail, Anzeigename, Fotos im Status `Pending`).
 - **Anfrage per E-Mail:** Kommt eine Anfrage ohne Konto oder per Post, erzeugt ein Admin denselben Bericht im CMS (Konto suchen, «Auskunft erstellen»). Antwort innerhalb von 30 Tagen. Jede erstellte Auskunft steht im Log des Kontos.
 - **Logs:** Application Insights speichert IP-Adressen nicht. Die Aufbewahrung der Logs steht in `infrastructure.md`.
 
@@ -235,6 +235,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 
 ### Seen, Shops, Buddy-Gruppen
 
+- Shops und Buddy-Gruppen sind geplant (Phase 1), es gibt sie noch nicht.
 - Einfache Listen mit Bearbeiten-Dialog.
 - Seen enthalten zusätzlich die Alplakes-Zuordnung (`AlplakesLakeKey`, Modellnamen). Nur Admins ändern diese Felder.
 
@@ -275,7 +276,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 | `Moderator` | alles von `Contributor`, dazu Vorschläge freigeben oder ablehnen, eigene Änderungen direkt freigeben, archivieren, Konten sperren (ausser Admin-Konten), Meldungen ausblenden |
 | `Admin` | alles, dazu Rollen vergeben, Admin-Konten sperren, Gewässer und Stationen zuordnen, Prognose-Lauf starten |
 
-- Anmeldung mit ASP.NET Core Identity: E-Mail plus Passkey oder Passwort.
+- Anmeldung mit ASP.NET Core Identity: E-Mail plus Passwort. Passkeys sind geplant.
 - **Selbstregistrierung** für Mitwirkende (Entscheid Marc, 17.10.2026): E-Mail bestätigen, Anzeigename wählen (Pseudonym erlaubt). Öffentlich erscheint der Anzeigename nur mit Einwilligung (siehe «Datenschutz in der History»). Ab Phase 1 offen, im MVP ausgeschaltet (`Accounts:RegistrationOpen`).
 - **Schutz der Konten** (Security-Review, 20.10.2026):
   - **Keine Konto-Enumeration:** Die Registrierung prüft Anzeigename und Passwort zuerst, bei bekannter und neuer Adresse gleich. Danach meldet eine bekannte Adresse denselben Erfolg wie eine neue. Die Mail sagt «Du hast schon ein Konto», bei einem unbestätigten Konto kommt die Bestätigung noch einmal. Der bekannte Zweig rechnet einen Passwort-Hash wie ein neues Konto, damit die Antwortzeit nichts verrät. Die Registrierung sendet sofort (ADR-010), weil beide Zweige eine Mail senden. «Passwort vergessen» sendet über die Queue (5–30 s), weil nur der bekannte Zweig eine Mail hat und ein sofortiger Versand die Antwortzeit verlängern und so ein Konto verraten würde. Ein gesperrtes Konto (Lockout) bekommt bei der Anmeldung dieselbe Antwort wie ein falsches Passwort. «Passwort vergessen» antwortet immer gleich.

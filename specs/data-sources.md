@@ -12,7 +12,7 @@ Das Projekt ist **nicht kommerziell** (`vision.md`, «Finanzierung»). Mehrere Q
 |---|---|---|---|---|
 | Eawag Alplakes API | Seemodelle 3D und 1D (Temperatur nach Tiefe und Zeit), Satellit (Secchi, Chlorophyll) | Prognose Temperatur und Sprungschicht, Klarheit | MVP | ✅ Spike |
 | Open-Meteo (Modelle von MeteoSchweiz, DWD, ECMWF) | Wetterprognose am Punkt, stündlich | Prognose Wind und Regen | MVP | ✅ Spike |
-| MeteoSchweiz SwissMetNet | gemessener Wind, Böen, Niederschlag, alle 10 min | aktueller Stand, Regen der letzten Tage | MVP | ✅ |
+| MeteoSchweiz SwissMetNet | gemessener Wind, Böen, Niederschlag, alle 10 min | aktueller Stand, Regen der letzten Tage | geplant | Nutzung geklärt, nicht angebunden. Heute kommt der Regen der letzten 72 h aus Open-Meteo (`past_days`) |
 | BAFU Hydrodaten (über existenz.ch, Ziel: BAFU-Datenplattform) | Abfluss, Pegel, Wassertemperatur, an einigen Stationen Trübung | Zuflüsse, Flussplätze | MVP | ✅ Spike |
 | swisstopo | Kartenkacheln, Gewässernetz (swissTLM3D), Bathymetrie (swissBATHY3D) | Karte, Stammdaten aller Gewässer, Tiefenkarten | MVP | ✅ |
 | Eawag Datalakes | In-situ-Messungen: Temperaturketten, Bojen, Profile, Secchi (LéXPLORE) | aktueller Stand, Kontrolle der Modelle | Phase 1 | ✅ |
@@ -115,7 +115,9 @@ Entscheid in ADR-007. Open-Meteo liefert die Modelle von MeteoSchweiz und andere
 - Open-Meteo antwortet bei Last mit HTTP 503. Retry mit Backoff.
 - **Bedingungen:** Die freie API ist nur für nicht-kommerzielle Nutzung, mit Quellenangabe (CC BY 4.0). Die Daten der Modelle sind Open Data der Wetterdienste.
 
-## Wetter gemessen: MeteoSchweiz SwissMetNet
+## Wetter gemessen: MeteoSchweiz SwissMetNet (geplant)
+
+Stand 21.10.2026: nicht angebunden. Der Lauf ruft SwissMetNet nicht ab, und das Datenmodell hat noch keine Zuordnung der Stationen.
 
 Gemessene Werte ergänzen die Prognose. Sie zeigen den aktuellen Stand und den Regen der letzten Tage.
 

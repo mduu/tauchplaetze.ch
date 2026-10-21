@@ -29,6 +29,8 @@ Ausserhalb von Azure:
 
 ## Azure SQL Free Offer
 
+Stand 21.10.2026: Prod nutzt **Basic** (5 DTU, 2 GB, ADR-003, Nachtrag). Der Abschnitt beschreibt die Option Free Offer (`sqlPlan = 'Free'`).
+
 Quelle: Microsoft Learn, «Azure SQL Database free offer».
 
 - Pro Datenbank und Monat: **100'000 vCore-Sekunden** Serverless-Compute, **32 GB** Daten, 32 GB Backup.
@@ -40,7 +42,7 @@ Quelle: Microsoft Learn, «Azure SQL Database free offer».
   - «Auto-pause the database until next month»: Datenbank pausiert bis Monatsende. Point-in-time Restore 7 Tage, nur LRS-Backup.
   - «Continue using database for additional charges»: läuft weiter, Mehrverbrauch zu normalen Serverless-Preisen. **Nicht umkehrbar.**
 - **Start:** Auto-Pause-Variante. Alert auf die Metrik «Free amount remaining» bei unter 10'000 vCore-Sekunden. Zeigt der Verbrauch, dass das Limit eng wird: auf «Continue» umstellen.
-- Output Cache und tägliche Vorberechnung halten den Verbrauch tief. Nach einer Pause dauert die erste Anfrage spürbar länger. Der Cache überbrückt das.
+- Ein Output Cache (geplant) und die tägliche Vorberechnung würden den Verbrauch tief halten. Nach einer Pause dauert die erste Anfrage spürbar länger. Der Cache überbrückt das.
 - Offene Datenbankverbindungen (z.B. ein offenes Query-Tool) verhindern Auto-Pause. Nach der Arbeit trennen.
 - Ob das Angebot GA oder Preview ist, steht nicht auf der Seite. In der FAQ prüfen.
 
@@ -48,7 +50,7 @@ Quelle: Microsoft Learn, «Azure SQL Database free offer».
 
 | Container | Inhalt | Zugriff |
 |---|---|---|
-| `media` | Bildgrössen als WebP ohne Metadaten (ADR-009), `Cache-Control: immutable` | öffentlich lesbar, Cloudflare davor (Entscheid 17.10.2026: einfacher und günstiger als ein Endpunkt der App) |
+| `media` | Bildgrössen als WebP ohne Metadaten (ADR-009), `Cache-Control: immutable` | öffentlich lesbar. Cloudflare davor ist ein späterer Ausbau (Entscheid 17.10.2026: einfacher und günstiger als ein Endpunkt der App; DNS vorerst bei Hostpoint, 21.10.2026) |
 | `media-pending` | Hochgeladene Fotos bis zur Freigabe, dazu immer das Original (mit EXIF) | privat |
 | `revisions` | Inhalt aller Versionen der Plätze als JSON (`{diveSiteId}/{number}.json`) | privat |
 | `forecast-raw` | Rohdaten der Läufe als JSON | privat |
@@ -95,7 +97,7 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 - **Lokal:** Aspire (`Tauchplaetze.AppHost`) startet SQL Server und Azurite im Container. Beide behalten ihre Daten in einem Volume. Die Web-App migriert die Datenbank beim Start und legt fehlende Stammdaten an (`Database__PrepareOnStartup`).
 - **Admins lokal:** `Accounts:Admins` als User Secret der Web-App, z.B. `dotnet user-secrets set "Accounts:Admins:0:Email" "…"` und `…:0:DisplayName`. Ohne Admin legt der Start keine Plätze an.
 - **Speicher für Docker:** SQL Server braucht rund 2 GB im Container. Laufen SQL Server anderer Projekte, stirbt der Container mit Fehler 17138 (17.10.2026). Dann andere SQL-Container stoppen oder Docker mehr Speicher geben.
-- **Bild-URLs:** `Media:PublicBaseUri`, die Adresse vor dem Container `media` (in Prod Cloudflare). Ohne Wert gilt die Adresse des Containers, lokal Azurite.
+- **Bild-URLs:** `Media:PublicBaseUri`, die Adresse vor dem Container `media` (später Cloudflare, heute leer). Ohne Wert gilt die Adresse des Containers, lokal Azurite.
 - **Container für Fotos:** Lokal legt der Core `media-pending` und `media` einmal pro Prozess an, `media` mit öffentlichem Lesezugriff auf Blobs. In Prod legt das Deployment `media` an: Storage Account mit `AllowBlobPublicAccess = true`, Container mit Zugriff «Blob». Ohne diese Einstellung scheitert die Freigabe von Fotos.
 - **Fotos, Kosten und Missbrauch:** Ein Foto belegt das Original (bis 25 MB, privat) und vier WebP-Grössen (zusammen etwa 1 MB). 1000 Fotos sind rund 5–25 GB, auf Standard LRS etwa CHF 0.10–0.50 im Monat. Grenzen gegen Missbrauch: 30 Uploads pro Stunde und 100 pro Tag und Konto, 25 MB und 50 Megapixel pro Datei, ein Bild gleichzeitig in Bearbeitung. Öffentlich wird ein Foto erst mit der Freigabe einer Version durch die Moderation. Private, nie verwendete Fotos bleiben vorerst liegen (`open-questions.md`).
 - **Betreiber für Impressum und Kontakt:** `Operator:Name` und `Operator:Address` (Zeilen mit `\n`) stehen im Impressum. `Operator:Email` ist nur der Empfänger des Kontaktformulars und erscheint nie auf der Website. Name und Adresse stehen in `appsettings.json` (Stand 18.10.2026: Marc Dürst, Privatperson). Die E-Mail steht nie in einer Datei im Repository: lokal als User Secret der Web-App, in Prod als App Setting bzw. Secret der App (`Operator__Email`). Fehlt eine Angabe, zeigt das Impressum «Angaben folgen» bzw. das Formular einen Fehler, und der Start schreibt eine Warnung ins Log. Vor dem Go-Live vollständig.

@@ -45,7 +45,9 @@ Siehe `i18n.md`. Grundsätze:
 - Open Graph und Twitter Card mit dem Hero-Foto.
 - Eine `<h1>` pro Seite.
 
-## Strukturierte Daten (JSON-LD)
+## Strukturierte Daten (JSON-LD, geplant)
+
+Stand 21.10.2026: noch nicht umgesetzt.
 
 - Tauchplatz: `TouristAttraction` (bzw. `Place`) mit `geo` (`GeoCoordinates`), `containedInPlace` (der See), `image`.
 - Gewässer: `LakeBodyOfWater` (See) bzw. `RiverBodyOfWater` (Fluss).
@@ -54,14 +56,14 @@ Siehe `i18n.md`. Grundsätze:
 
 ## Sitemap und Robots
 
-- `/sitemap.xml` als Index, darunter eine Sitemap pro Sprache. Nur veröffentlichte Plätze.
+- `/sitemap.xml` (geplant, Stand 21.10.2026 noch nicht umgesetzt, liefert 404) als Index, darunter eine Sitemap pro Sprache. Nur veröffentlichte Plätze.
 - `lastmod` aus `DiveSite.UpdatedAt` (nicht aus der täglichen Prognose, sonst ändert sich jede Seite täglich).
 - `/robots.txt` (Endpoint der App, `RobotsTxt`): sperrt `/admin`, `/platform`, `/api`, die Konto-Seiten (`/{Lang}/account/`), «Neuer Platz», Bearbeiten und Versionen in allen vier Sprachen sowie Query-Varianten (`/*?`). Eine Sitemap gibt es noch nicht (Stand 21.10.2026), darum fehlt die Zeile `Sitemap:`.
 - Die Seiten der Versionen (`…/versionen`) haben `noindex` und stehen nicht in der Sitemap (Datenschutz, `cms.md`). Ebenso der Bearbeiten-Modus (`…/bearbeiten`) und «Neuen Platz vorschlagen» (`…/neu`), beide nur angemeldet.
 
 ## Performance
 
-- Static SSR und Output Cache: Antwortzeit unter 200 ms aus dem Cache.
+- Static SSR. Ein Output Cache ist geplant (`architecture.md`, «Caching»), Ziel: Antwortzeit unter 200 ms aus dem Cache.
 - Bilder responsiv (`srcset`, WebP), `loading="lazy"` ausser beim Hero.
 - Schriften selbst gehostet, `font-display: swap`.
 - Ziel: Core Web Vitals im grünen Bereich auf dem Handy.

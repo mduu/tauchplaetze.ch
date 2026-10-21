@@ -56,9 +56,9 @@ Das Tauchfenster ist 08:00 bis 16:00 Uhr Lokalzeit.
 | Algen (Chlorophyll) | Alplakes Satellit Sentinel-3 `chla` am Satellitenpunkt | Abzug bei Klarheit | MVP |
 | Wind (Mittel, Böen, Richtung) | Open-Meteo (ICON-CH1, ICON-CH2) | Wind | MVP |
 | Strömung im Tauchbereich (`u`, `v`) | Alplakes 3D-Modell am Platz | Information, kein Teilwert | MVP |
-| Regen der letzten 72 h | SwissMetNet gemessen (vergangene Stunden), Open-Meteo (künftige Stunden) | Zuflüsse | MVP |
+| Regen der letzten 72 h | Open-Meteo (vergangene Stunden über `past_days`, künftige aus der Prognose). SwissMetNet gemessen ist geplant | Zuflüsse | MVP |
 | Abfluss der Zuflüsse bzw. des Flusses | BAFU | Zuflüsse, Kachel «Abfluss» an Flussplätzen | MVP |
-| Trübung des Flusses | BAFU, wo gemessen | Klarheit im Fluss | MVP |
+| Trübung des Flusses | BAFU, wo gemessen | Klarheit im Fluss | geplant (die Spalte `Turbidity` gibt es, der Lauf füllt sie nicht) |
 | Gemessenes Temperaturprofil | Eawag Datalakes | ersetzt das Modell für heute, wo eine Messstation nah ist | Phase 1 |
 | Abflussprognose | BAFU-Vorhersagen | Kachel «Abfluss» und Tagesleiste an Flussplätzen, Zuflüsse an künftigen Tagen (`rules-1.4`, seit 20.10.2026) | Phase 1 |
 
@@ -78,7 +78,7 @@ Die Endpunkte stehen in `data-sources.md`.
 ### Regen der letzten 72 h
 
 - Summe der 72 Stunden **vor** dem Prognosetag, ohne den Tag selbst.
-- Vergangene Stunden aus der Messung (SwissMetNet), künftige aus der Prognose.
+- Vergangene und künftige Stunden aus Open-Meteo. Die Messung von SwissMetNet für die vergangenen Stunden ist geplant, aber nicht angebunden.
 
 ### Klarheit
 
@@ -217,7 +217,7 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   7. Rohdaten als JSON in Blob Storage ablegen (`forecast-raw/{date}/{runId}/{source}/{key}.json`).
   8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert). Das Wetter pro Stunde in `SiteWeatherOutlook` ersetzen.
   9. Den Median des Index pro Gewässer für heute schreiben (`WaterBodyDailyIndex`, Upsert, siehe «Verlauf»).
-  10. Output Cache der öffentlichen Seiten invalidieren (Tag `forecast`).
+  10. Output Cache der öffentlichen Seiten invalidieren (Tag `forecast`), sobald es ihn gibt (geplant, `architecture.md`, «Caching»).
   11. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
   Stoppt der Host während eines Laufs (Neustart, Deployment), bricht der Lauf sofort ab und gilt als `Failed`. Die übrigen Plätze behalten die Werte des letzten Laufs. Ein abgebrochener Call ist kein Teilerfolg (Fehler vom 19.10.2026: Nach einem Neustart scheiterten 357 Calls in 1 ms, und der Lauf überschrieb gute Werte mit leeren).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.

@@ -30,29 +30,29 @@ Ziel: Gewissheit, dass die Prognose mit echten Daten trägt.
 
 ## Phase MVP – zwei Seen und ein Fluss, richtig schön
 
-Ziel: Reaktion der Szene testen.
+Ziel: Reaktion der Szene testen. Stand 21.10.2026: ✅ umgesetzt, 🟡 teilweise, ⏳ offen.
 
-- Gewässer-Stammdaten schweizweit, Seen und Flüsse aus swissTLM3D (Seed). Zuordnung zu Alplakes, BAFU-Stationen und SwissMetNet für die grossen Seen.
-- Redaktion: Platz erfassen (Schnellerfassung mit Karte), bearbeiten, Revisionen, Medien-Upload mit Bildgrössen.
-- Öffentliche Seiten: Start «Wo tauchen?», Tauchplatzseite, Verzeichnis mit Karte, Gewässerseite, Über/Impressum/Datenschutz.
-- Prognose-Job mit `rules-1.0` und Datenstufen, Rohdaten in Blob Storage, Status im Admin. Quellen: Alplakes, Open-Meteo, SwissMetNet, BAFU (ADR-007).
-- SEO-Grundlagen: Titel, Meta, `hreflang`, Sitemap, JSON-LD.
-- Deploy auf Azure (Bicep, GitHub Actions, Cloudflare, Redirect `sichtweiten.ch`).
-- **Inhalt:** Zürichsee und Zugersee vollständig (je 8 bis 12 Plätze auf Stufe 2 mit Fotos aus tauchfotos.ch). Dazu der Rhein als erster Fluss. Alle weiteren bekannten Plätze als Stufe 0. Entscheid Marc, 17.10.2026: Marc taucht dort am meisten und kann die Prognose am besten beurteilen. Beide Seen haben ein 3D-Modell (Datenstufe 3).
-- **Inhalt pro Platz:** 3–6 starke Fotos aus den Originalen von tauchfotos.ch. Fotos der Ein- und Ausstiege nach und nach bei eigenen Tauchgängen.
-- **Rechtliches vor dem Go-Live:** Impressum, Datenschutz (nDSG), Haftungshinweis zur Prognose.
-- **Validierung:** Link an alte Kontakte, Clubs, Shops, Facebook- und WhatsApp-Gruppen. Erfolgskriterien in `vision.md`.
+- ✅ Gewässer-Stammdaten schweizweit (Seed). Zuordnung zu Alplakes und BAFU-Stationen für die grossen Seen. SwissMetNet ist nicht angebunden (⏳), der Regen der letzten Tage kommt aus Open-Meteo.
+- ✅ Redaktion: Platz erfassen (Schnellerfassung mit Karte), bearbeiten, Revisionen, Medien-Upload mit Bildgrössen.
+- ✅ Öffentliche Seiten: Start «Wo tauchen?», Tauchplatzseite, Verzeichnis mit Karte, Gewässerseite, Über/Impressum/Datenschutz.
+- ✅ Prognose-Job mit Datenstufen (heute `rules-1.6`), Rohdaten in Blob Storage, Status auf `/platform/prognose`. Quellen: Alplakes, Open-Meteo, BAFU (ADR-007).
+- 🟡 SEO-Grundlagen: Titel, Meta, `hreflang` und `robots.txt` umgesetzt. Sitemap und JSON-LD offen (⏳).
+- 🟡 Deploy auf Azure (Bicep, GitHub Actions) und Domain `tauchplaetze.ch` mit `www` umgesetzt (21.10.2026). DNS bleibt bei Hostpoint, Cloudflare ist ein späterer Ausbau. `sichtweiten.ch` leitet die App weiter, sobald die Domain auf die App zeigt (⏳).
+- ⏳ **Inhalt:** Zürichsee und Zugersee vollständig (je 8 bis 12 Plätze auf Stufe 2 mit Fotos aus tauchfotos.ch). Dazu der Rhein als erster Fluss. Alle weiteren bekannten Plätze als Stufe 0. Entscheid Marc, 17.10.2026: Marc taucht dort am meisten und kann die Prognose am besten beurteilen. Beide Seen haben ein 3D-Modell (Datenstufe 3).
+- ⏳ **Inhalt pro Platz:** 3–6 starke Fotos aus den Originalen von tauchfotos.ch. Fotos der Ein- und Ausstiege nach und nach bei eigenen Tauchgängen.
+- 🟡 **Rechtliches vor dem Go-Live:** Impressum, Datenschutz (nDSG) und Haftungshinweis sind online. Die Prüfung des Datenschutzes ist offen (`open-questions.md` #28).
+- ⏳ **Validierung:** Link an alte Kontakte, Clubs, Shops, Facebook- und WhatsApp-Gruppen. Erfolgskriterien in `vision.md`.
 
 ## Phase 1 – alle grossen Seen
 
-- Alle grossen Seen mit Plätzen auf Stufe 1 bis 2. Flussplätze mit BAFU-Stationen.
-- In-situ-Messungen aus Eawag Datalakes. BAFU-Abflussprognosen, falls die Nutzung geklärt ist.
+- 🟡 Alle grossen Seen mit Prognose (51 Seen, 19.10.2026) und Flussplätze mit BAFU-Stationen umgesetzt. Die Dokumentation der Plätze (Stufe 1 bis 2) ist offen.
+- ✅ BAFU-Abflussvorhersage (Zugang per HTTPS, 20.10.2026), auch im Index (`rules-1.4`). ⏳ In-situ-Messungen aus Eawag Datalakes.
 - Meldungen (ein Klick nach dem Tauchgang).
-- Tauchshops und Füllstationen (kostenlos, ohne Hervorhebung).
-- Buddy-Gruppen (WhatsApp) pro Region.
-- Registrierung für alle öffnen: Mitwirkende schlagen vor, Moderatoren geben frei (`cms.md`).
-- Optional: maschineller Übersetzungsvorschlag für redaktionelle Inhalte.
-- Videos aus tauchvideos.ch.
+- ⏳ Tauchshops und Füllstationen (kostenlos, ohne Hervorhebung).
+- ⏳ Buddy-Gruppen (WhatsApp) pro Region.
+- ✅ Registrierung für alle öffnen: Mitwirkende schlagen vor, Moderatoren geben frei (`cms.md`).
+- ⏳ Optional: maschineller Übersetzungsvorschlag für redaktionelle Inhalte.
+- ⏳ Videos aus tauchvideos.ch.
 - Neue Fotos der Ein- und Ausstiege, nach und nach.
 
 ## Phase 2 – Modell und Komfort

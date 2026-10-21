@@ -37,9 +37,9 @@ flowchart LR
 | Daten | EF Core 10, SQL Server Provider, NetTopologySuite |
 | Datenbank | Azure SQL Database, Free Offer – ADR-003 |
 | Storage | Azure Blob Storage (Medien, Rohdaten, ML-Modelle) |
-| Bilder | ImageSharp (Grössen, WebP) |
+| Bilder | SkiaSharp (Grössen, WebP) |
 | HTTP-Clients | `IHttpClientFactory` mit `Microsoft.Extensions.Http.Resilience` |
-| Auth | ASP.NET Core Identity, Cookie, Passkeys |
+| Auth | ASP.NET Core Identity, Cookie, Passwort (Passkeys geplant) |
 | Lokale Entwicklung | .NET Aspire (`Tauchplaetze.AppHost`) mit SQL Server und Azurite im Container |
 | Observability | OpenTelemetry über `ServiceDefaults`, Application Insights in Produktion |
 | ML (Phase 2) | ML.NET mit LightGBM |
@@ -97,7 +97,7 @@ Später möglich: `Tauchplaetze.Cli` als zweite Fassade (Import, Training des Mo
 | `Reports` (Phase 1) | Commands `SubmitReport`, `HideReport`; Queries `GetReports` | Meldeformular, Admin-Liste |
 | `DiveShops` (Phase 1) | Commands, Queries für Tauchshops und Füllstationen | Admin-Seiten, Anzeige auf Platzseite |
 | `BuddyGroups` (Phase 1) | Commands, Queries | Admin-Seiten, Links |
-| `Seo` | Queries `GetSitemapEntries` | `sitemap.xml`, `robots.txt`, Redirects |
+| `Seo` (geplant) | Queries `GetSitemapEntries` | `sitemap.xml`. Heute gibt es keine Sitemap. `robots.txt` (`RobotsTxt`) und die Weiterleitungen nach Host (`HostRedirects`) liegen in `CrossCutting/Hosting` |
 | `Mail` | Commands `ProcessMailQueue`, `ReplayDeadLetters`, `DeleteDeadLetters`, `CheckDeadLetters`; Query `GetMailQueueStatus`. Queue, Dispatcher, Vorlagen und Layout in `CrossCutting/Mail` (ADR-010) | `MailQueueWorker`, `DeadLetterMonitorWorker`, Seite `/platform/queues` |
 | `Content` | Query `ExportContent`, `GetContentSyncStatus`; Commands `ImportContent`, `PullContentFromSource` (ADR-011) | Seite `/platform/inhalt`, Endpoints `/platform/inhalt/export` und `/api/platform/content-export` |
 | `Operations` | Command `MigrateDatabase` | Start der Web-App (`Database:PrepareOnStartup`, lokal mit Aspire) |
@@ -188,7 +188,7 @@ Logik, die mehrere Handler eines Slice brauchen, liegt als `internal` Klasse im 
 
 | Bereich | Modus | Begründung |
 |---|---|---|
-| Öffentliche Seiten | Static SSR, Enhanced Navigation, Streaming Rendering | SEO, schnell, cachebar, keine Verbindung pro Besucher |
+| Öffentliche Seiten | Static SSR, Enhanced Navigation | SEO, schnell, cachebar, keine Verbindung pro Besucher |
 | Tagesauswahl, Filter | Links mit Query-Parametern (`?date=2026-10-18`) | bleibt SSR, jede Variante ist cachebar und teilbar |
 | Karten, Galerie | kleines JavaScript-Modul, progressiv | kein WASM nötig |
 | Moderation `/admin`, Plattform `/platform` | Interactive Server mit MudBlazor | reiche Editoren ohne JS-Framework, wenige gleichzeitige Verbindungen |
@@ -199,11 +199,13 @@ Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, ko
 
 ## Caching
 
+Stand 21.10.2026: Es gibt noch keinen Output Cache. Die Seiten lesen bei jeder Anfrage die Datenbank (SQL Basic). Die Regeln unten gelten, sobald er kommt.
+
 - **Output Cache** für öffentliche Seiten: Standard 15 Minuten. Tags `forecast`, `site:{id}`, `water:{id}`. Ausgenommen sind Seiten mit Formular (Antiforgery-Token, Timestamp pro Aufruf): «Über» mit dem Kontaktformular und die Konto-Seiten. Die Startseite liest Ort und Umkreis aus dem Cookie `tp_area`: Ihr Output Cache variiert nach diesem Cookie (`VaryByCookie`), sonst wird sie nicht gecacht. Sonst sähe ein Besucher die Rangliste eines anderen Orts.
 - Der Prognose-Lauf invalidiert `forecast`. Eine Speicherung im CMS invalidiert `site:{id}` und `water:{id}`.
 - Variation nach Kultur und Query-Parametern (Tag, Umkreis).
-- Bilder: lange Cache-Dauer (`immutable`), Dateiname enthält die Version. Cloudflare cacht vor dem App Service.
-- Nebeneffekt: Die Datenbank bekommt wenig Anfragen. Das schont das Free Offer (vCore-Sekunden) und erlaubt Auto-Pause.
+- Bilder: lange Cache-Dauer (`immutable`), Dateiname enthält die Version. Cloudflare davor ist ein späterer Ausbau.
+- Nebeneffekt: Die Datenbank bekommt wenig Anfragen.
 
 ## Security-Header
 
