@@ -31,6 +31,7 @@ Jeder Platz hat eine **Datenstufe** (`DataLevel`). Sie sagt, wie genau die Daten
 - Die Redaktion bestimmt die Datenstufe nicht. Sie kann nur die Prognose ausschalten (`DiveSite.ForecastDisabled`) und den Satellitenpunkt setzen.
 - Wetter gibt es für jeden Punkt der Schweiz. Ein veröffentlichter Platz hat darum mindestens Stufe 1, ausser die Prognose ist ausgeschaltet.
 - Die Datenstufe kann pro Tag sinken, wenn eine Quelle ausfällt.
+- **Profil am Platz (22.10.2026):** Am Ufer liegt der nächste Gitterpunkt des 3D-Modells oft im Flachwasser. Reicht sein Profil nicht bis 30 m (`ModelPoint.MinDepth`), fragt der Lauf zusätzlich Punkte 100 m und 250 m Richtung Seemitte ab (Richtung wie bei Sentinel-2, siehe «Klarheit»). Es gilt das tiefste Profil. Die Distanz zum Gitterpunkt zählt für die Datenstufe ab dem Platz (Distanz draussen plus 100 bzw. 250 m). Bei Tellskapelle Sisikon endete das Profil am Platz bei 1.5 m: keine Werte auf 10, 20 und 30 m, keine Sprungschicht. 100 m draussen reicht es bis 79 m: 15.1 °C bis 15 m, 12.9 °C auf 20 m, 8.2 °C auf 30 m.
 - Die Rangliste «Wo tauchen?» zeigt nur Plätze mit Index. Plätze ohne Index erscheinen im Verzeichnis und auf der Gewässerseite.
 - Ein Platz mit gültiger Sperrung (`dive-site.md`, «Hinweise») fehlt an diesem Tag in «Beste Wahl» und Rangliste. Der Index wird trotzdem berechnet.
 
@@ -71,7 +72,7 @@ Die Endpunkte stehen in `data-sources.md`.
 - Aus dem Temperaturprofil die Schicht mit dem stärksten Temperaturabfall bestimmen.
 - `ThermoclineTop` und `ThermoclineBottom`: Grenzen, an denen der Gradient den Schwellwert überschreitet (Standard 0.5 °C pro m, konfigurierbar).
 - Kein Gradient über dem Schwellwert (typisch im Winter): keine Sprungschicht. Der See ist durchmischt.
-- **Oberflächenhaut (`rules-1.6`):** Punkte über 1 m Tiefe zählen nicht (`ThermoclineMinDepth`). Die Sonne erwärmt tagsüber die obersten Dezimeter. Das 3D-Modell `mitgcm` hat dort Schichten von 0.2 m und zeigt bis 1 °C pro m Abfall zwischen 0.1 und 0.3 m. Daraus wurde am 21.10.2026 bei Sisikon die Sprungschicht «0–0 m» statt 15–22 m. Dieselbe Prüfung gilt beim Lesen (`StoredThermocline`): Eine gespeicherte Sprungschicht an der Oberfläche oder dünner als 1 m zeigen die Seiten nicht, ebenso kein «besser ab» und kein «unten klarer». Der gespeicherte Index bleibt bis zum nächsten Lauf.
+- **Oberflächenhaut (`rules-1.6`):** Punkte über 1 m Tiefe zählen nicht (`ThermoclineMinDepth`). Die Sonne erwärmt tagsüber die obersten Dezimeter. Das 3D-Modell `mitgcm` hat dort Schichten von 0.2 m und zeigt bis 1 °C pro m Abfall zwischen 0.1 und 0.3 m. Daraus wurde am 21.10.2026 bei Sisikon die Sprungschicht «0–0 m» statt 15–22 m. Der eigentliche Grund war der flache Gitterpunkt am Ufer (siehe «Profil am Platz»). Dieselbe Prüfung gilt beim Lesen (`StoredThermocline`): Eine gespeicherte Sprungschicht an der Oberfläche oder dünner als 1 m zeigen die Seiten nicht, ebenso kein «besser ab» und kein «unten klarer». Der gespeicherte Index bleibt bis zum nächsten Lauf.
 - Eine Sprungschicht dünner als 1 m (`ThermoclineMinThickness`) oder über 1 m Tiefe gilt als keine. Das gilt auch für gespeicherte Werte bei der Neuberechnung.
 - Das 1D-Modell liefert die Sprungschicht als eigene Variable (`Thermocline`). Der Job bestimmt sie trotzdem selbst aus dem Profil. So gilt für beide Modelle dieselbe Regel.
 

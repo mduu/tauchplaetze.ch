@@ -57,7 +57,7 @@ Der Job liest die Abdeckung aus `GET /simulations/metadata` und `GET /simulation
 | Endpunkt | Zweck |
 |---|---|
 | `GET /simulations/metadata` | 3D-Modelle und Seen |
-| `GET /simulations/depthtime/{model}/{lake}/{start}/{end}/{lat}/{lng}` | Temperatur über Tiefe und Zeit am Gitterpunkt nächst der Koordinate. **Hauptquelle** (ein Call pro Platz). Zeiten als `yyyyMMddHHmm` (UTC). |
+| `GET /simulations/depthtime/{model}/{lake}/{start}/{end}/{lat}/{lng}` | Temperatur über Tiefe und Zeit am Gitterpunkt nächst der Koordinate. **Hauptquelle** (ein Call pro Platz, bis drei bei einem flachen Gitterpunkt am Ufer, `forecast.md`, «Profil am Platz»). Zeiten als `yyyyMMddHHmm` (UTC). |
 | `GET /simulations/1d/metadata` | 1D-Modelle, Seen, Zeitraum, Variablen |
 | `GET /simulations/1d/depthtime/simstrat/{lake}/{start}/{end}` | Profil über Tiefe und Zeit für den ganzen See. Enthält die Variable `Thermocline`. |
 | `GET /remotesensing/metadata` | Satellitenprodukte pro See. Leitet auf eine Datei in S3 weiter. Einmal pro Lauf. |

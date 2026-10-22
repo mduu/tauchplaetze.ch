@@ -86,7 +86,7 @@ Die E-Mail-Adresse des Betreibers erscheint nirgends auf der Website, auch nicht
 
 Mockup: `design/tauchplatz.dc.html`.
 
-1. Hero: Titelbild (`HeroMediaId`, mit «Titelbild: {Fotograf}» oben rechts und Verlauf nach unten für die Lesbarkeit) oder die Unterwasser-Illustration, Brotkrumen «See › Gemeinde», Name gross, darunter «auch bekannt als …» (falls vorhanden), Tags (Wand, Wrack, Tiefe, Zugang, Schwierigkeit, ganzjährig).
+1. Hero: Titelbild (`HeroMediaId`, mit «Titelbild: {Fotograf}» oben rechts und Verlauf nach unten für die Lesbarkeit) oder die Unterwasser-Illustration. Mit Prognose zeigt die Illustration die Sprungschicht von heute als Band mit Ober- und Unterkante in Metern (0 bis 40 m auf den oberen 60 % der Höhe). Ohne Sprungschicht zeigt sie keine Linie, ohne Prognose die Linie aus dem Entwurf. Brotkrumen «See › Gemeinde», Name gross, darunter «auch bekannt als …» (falls vorhanden), Tags (Wand, Wrack, Tiefe, Zugang, Schwierigkeit, ganzjährig).
 2. **Hinweise** (falls gültig): Banner direkt unter dem Hero, schwerster zuerst. Farbe nach Art, Art und Enddatum als Label («Gesperrt · bis 01.04.2027»), darunter der Text. Siehe `dive-site.md`, «Hinweise».
 3. **Tauchbedingungen:** Satz («Heute ein guter Tag.») und Index gross.
    - Temperaturprofil als Diagramm (Temperatur über Tiefe) mit markierter Sprungschicht.

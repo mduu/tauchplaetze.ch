@@ -19,6 +19,10 @@ public class DiveSitePageTests : IClassFixture<WebApp>
 
     private const string WithTexts = "terlinden-kuesnacht-zh";
 
+    private const string WithoutPhoto = "platz-ohne-foto";
+
+    private static readonly Guid WithoutPhotoId = Guid.NewGuid();
+
     private static readonly Guid RiverSiteId = Guid.NewGuid();
 
     private readonly WebApp app;
@@ -46,6 +50,9 @@ public class DiveSitePageTests : IClassFixture<WebApp>
             [Day(18, 8.4m, [ReasonCode.ClearBelowThermocline, ReasonCode.CalmLake]) with { CurrentSpeed = 0.023m, CurrentDirection = 45, CurrentLevel = CurrentLevel.Calm }, Day(19, 6.2m, [ReasonCode.Windy]), Day(20, null, [])],
             DateTimeOffset.UtcNow,
             Hours(new DateTime(2030, 1, 7))));
+        app.DiveSites.Add(WithoutPhoto, new DiveSiteLookup.Found(new DiveSiteDetails(
+            WithoutPhotoId, WithoutPhoto, "Platz ohne Foto", "zuerichsee", "Zürichsee", WaterBodyType.Lake, "Herrliberg", "ZH", 47.28, 8.6, 0, DateTimeOffset.UtcNow, [], [])));
+        app.Forecasts.Add(WithoutPhotoId, new SiteForecast([Day(18, 8.4m, [ReasonCode.CalmLake]) with { ThermoclineTop = 15m, ThermoclineBottom = 30m }], DateTimeOffset.UtcNow, Hours(new DateTime(2030, 1, 7))));
         app.DiveSites.Add(River, new DiveSiteLookup.Found(new DiveSiteDetails(
             RiverSiteId, River, "Strandbad", "rhein", "Rhein", WaterBodyType.River, "Rheinfelden", "AG", 47.55164, 7.7767, 0, DateTimeOffset.UtcNow, [], [])));
         app.Discharge.Answer = query => query.DiveSiteId == RiverSiteId ? RiverDischarge() : null;
@@ -420,6 +427,38 @@ public class DiveSitePageTests : IClassFixture<WebApp>
 
         // Assert
         Assert.Equal(["12 m", "18 m"], Regex.Matches(html, "<text [^>]*data-thermocline-depth[^>]*>([^<]*)</text>").Select(m => m.Groups[1].Value));
+    }
+
+    [Fact]
+    public async Task Ohne_Titelbild_zeigt_der_Hero_die_Sprungschicht_von_heute_als_Band_mit_Tiefenangaben()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithoutPhoto, TestContext.Current.CancellationToken);
+
+        // Assert
+        var hero = html[..html.IndexOf("</section>", StringComparison.Ordinal)];
+        Assert.Contains("data-thermocline-band", hero);
+        Assert.Equal(["15 m", "30 m"], Regex.Matches(hero, "<span [^>]*data-thermocline-depth[^>]*>([^<]*)</span>").Select(m => m.Groups[1].Value));
+        Assert.DoesNotContain("stroke-dasharray", hero);
+    }
+
+    [Fact]
+    public async Task Ohne_Sprungschicht_zeigt_der_Hero_weder_Band_noch_Linie()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + River, TestContext.Current.CancellationToken);
+
+        // Assert
+        var hero = html[..html.IndexOf("</section>", StringComparison.Ordinal)];
+        Assert.Contains("data-mixed", hero);
+        Assert.DoesNotContain("data-thermocline", hero);
+        Assert.DoesNotContain("<line ", hero);
     }
 
     [Fact]

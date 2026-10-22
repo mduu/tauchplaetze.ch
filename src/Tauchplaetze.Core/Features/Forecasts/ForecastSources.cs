@@ -119,15 +119,46 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
 
     public async Task<SiteData> ForSite(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
     {
-        var (start, end) = ModelPeriod(today);
-        var model3d = waterBody is { AlplakesModel3d: { } model, AlplakesLakeKey: { } lake }
-            ? await recorder.Record(AlplakesClient.Source, $"3d-{model}-{site.Slug}",
-                alplakes.GetDepthTime(model, lake, start, end, site.Location.Y, site.Location.X, ct), ct)
-            : null;
-
+        var model3d = await Model3d(site, waterBody, today, recorder, ct);
         var (secchi, chlorophyll) = await LakeSatellite(site, waterBody, today, recorder, ct);
 
         return new SiteData(model3d, await Weather(site.Location.Y, site.Location.X, recorder, ct), secchi, chlorophyll, await ShoreSecchi(site, waterBody, today, recorder, ct));
+    }
+
+    /// <remarks>
+    /// Reicht das Profil am Platz nicht bis <see cref="ModelPoint.MinDepth"/>, folgen Punkte 100 m und 250 m Richtung Seemitte.
+    /// Die Richtung bestimmt derselbe Punkt wie bei Sentinel-2. Es gilt das tiefste Profil. Höchstens drei Calls pro Platz.
+    /// </remarks>
+    private async Task<DepthTimeSeries?> Model3d(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
+    {
+        if (waterBody is not { AlplakesModel3d: { } model, AlplakesLakeKey: { } lake })
+        {
+            return null;
+        }
+
+        var (start, end) = ModelPeriod(today);
+        var best = await recorder.Record(AlplakesClient.Source, $"3d-{model}-{site.Slug}",
+            alplakes.GetDepthTime(model, lake, start, end, site.Location.Y, site.Location.X, ct), ct);
+        var toward = site.SatellitePoint ?? waterBody.SatellitePoint ?? waterBody.Centroid;
+        foreach (var meters in ModelPoint.SeawardMeters)
+        {
+            if (!ModelPoint.TooShallow(best))
+            {
+                break;
+            }
+
+            var point = SeawardPoint.Of(site.Location.Y, site.Location.X, toward.Y, toward.X, meters);
+            var seaward = await recorder.Record(AlplakesClient.Source, $"3d-{model}-{site.Slug}-{meters:0}m",
+                alplakes.GetDepthTime(model, lake, start, end, point.Latitude, point.Longitude, ct), ct);
+            best = ModelPoint.Deeper(best, seaward is null ? null : ModelPoint.FromSite(seaward, meters));
+        }
+
+        if (ModelPoint.TooShallow(best))
+        {
+            logger.LogInformation("3D model profile for dive site {Slug} ends at {Depth} m", site.Slug, best?.DeepestValue);
+        }
+
+        return best;
     }
 
     /// <remarks>
