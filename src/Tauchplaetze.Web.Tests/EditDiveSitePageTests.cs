@@ -207,6 +207,22 @@ public class EditDiveSitePageTests : IClassFixture<WebApp>
         Assert.DoesNotContain("Gesperrt wegen Bauarbeiten.", html);
     }
 
+    [Fact]
+    public async Task Mitwirkende_korrigieren_die_Koordinate_des_Platzes_in_der_Karte_oder_mit_Breite_und_Laenge()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        var html = await browser.GetStringAsync($"/fr/sites-de-plongee/{Slug}/modifier", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("id=\"edit-site-location\"", html);
+        Assert.Contains("value=\"47.130000\"", html);
+        Assert.Contains("value=\"8.620000\"", html);
+    }
+
     private static async Task SignIn(HttpClient browser)
     {
         using var response = await WebApp.Submit(browser, "/fr/account/sign-in", "sign-in",

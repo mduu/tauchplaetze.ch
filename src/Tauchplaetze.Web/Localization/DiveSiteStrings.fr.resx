@@ -218,6 +218,7 @@
   <data name="EditMode_Comment_Help" xml:space="preserve"><value>Qu’as-tu modifié et comment le sais-tu ? Cela aide la modération.</value></data>
   <data name="EditMode_NoChange" xml:space="preserve"><value>Tu n’as rien modifié, il n’y a rien à enregistrer.</value></data>
   <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>La modération change le lac ou la rivière.</value></data>
+  <data name="EditMode_Location_Help" xml:space="preserve"><value>Le point principal du site. Clique sur la carte ou saisis la latitude et la longitude. Tu places les points d’entrée sous «Situation et points d’entrée».</value></data>
   <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Merci ! Ta proposition est chez la modération. Tu recevras un e-mail dès qu’elle sera publiée ou refusée.</value></data>
   <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Enregistré et en ligne.</value></data>
   <data name="EditMode_Map_Label" xml:space="preserve"><value>Carte pour modifier points d’entrée, lieux et croquis</value></data>

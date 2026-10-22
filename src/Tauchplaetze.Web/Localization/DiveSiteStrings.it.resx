@@ -218,6 +218,7 @@
   <data name="EditMode_Comment_Help" xml:space="preserve"><value>Che cosa hai cambiato e come lo sai? Aiuta la moderazione.</value></data>
   <data name="EditMode_NoChange" xml:space="preserve"><value>Non hai cambiato nulla, non c’è niente da salvare.</value></data>
   <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>Il lago o il fiume lo cambia la moderazione.</value></data>
+  <data name="EditMode_Location_Help" xml:space="preserve"><value>Il punto principale del sito. Clicca sulla mappa o digita latitudine e longitudine. I punti d’entrata li metti sotto «Posizione e punti d’entrata».</value></data>
   <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Grazie! La tua proposta è alla moderazione. Riceverai un’e-mail non appena sarà pubblicata o respinta.</value></data>
   <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Salvato e online.</value></data>
   <data name="EditMode_Map_Label" xml:space="preserve"><value>Mappa per modificare punti d’entrata, luoghi e schizzo</value></data>

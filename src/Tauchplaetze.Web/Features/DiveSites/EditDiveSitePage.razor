@@ -86,6 +86,8 @@ else
                 <FormText Label="@L["Field_Canton"]" @bind-Value="form.Canton" MaxLength="2" />
             </div>
             <p class="field-help">@L["Field_WaterBodyId"]: @details.WaterBodyName · @Site["EditMode_WaterBody_Help"]</p>
+            <LocationField Id="edit-site-location" Label="@L["Field_Location"]" Help="@Site["EditMode_Location_Help"]"
+                           Latitude="form.Latitude" Longitude="form.Longitude" Changed="Locate" />
         </section>
 
         <section class="page-section edit-section" aria-labelledby="edit-notices" data-edit-notices>
@@ -247,6 +249,8 @@ else
 
     private IReadOnlyList<(string Short, string Text)> Legend(string scale) =>
         [.. Enumerable.Range(1, 5).Select(step => (Site[$"Rating_{scale}_{step}"].Value, Site[$"Rating_{scale}_{step}_Text"].Value))];
+
+    private void Locate((double Latitude, double Longitude) point) => (form!.Latitude, form.Longitude) = point;
 
     private void Toggle(DiveSiteFeatures feature, bool on)
     {
