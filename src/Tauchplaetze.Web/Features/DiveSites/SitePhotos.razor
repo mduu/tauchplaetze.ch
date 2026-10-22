@@ -5,41 +5,38 @@
 {
     <section class="page-section" aria-labelledby="photos">
         <h2 id="photos" class="photos-title">@L["Photos_Title"]</h2>
-        @foreach (var group in Photos.GroupBy(p => p.Section).OrderBy(g => g.Key))
-        {
-            <h3 class="photos-section">@L[$"PhotoSection_{group.Key}"]</h3>
-            <div class="photos">
-                @foreach (var photo in group)
-                {
-                    <figure class="photo">
-                        <a href="@photo.Renditions[^1].Url" target="_blank" rel="noopener" data-lightbox>
-                            <img src="@Rendition(photo, 960)" srcset="@PhotoMarkup.SrcSet(photo.Renditions)" sizes="(min-width: 960px) 30vw, 90vw"
-                                 width="@photo.Width" height="@photo.Height" loading="lazy" decoding="async" alt="@(photo.AltText ?? photo.Caption ?? "")" />
-                        </a>
-                        <figcaption>
-                            @if (photo.Caption is not null)
+        <div class="photos">
+            @foreach (var photo in Photos.OrderBy(p => p.Section))
+            {
+                <figure class="photo">
+                    <a href="@photo.Renditions[^1].Url" target="_blank" rel="noopener" data-lightbox>
+                        <img src="@Rendition(photo, 960)" srcset="@PhotoMarkup.SrcSet(photo.Renditions)" sizes="(min-width: 960px) 20vw, (min-width: 520px) 45vw, 90vw"
+                             width="@photo.Width" height="@photo.Height" loading="lazy" decoding="async" alt="@(photo.AltText ?? photo.Caption ?? "")" />
+                    </a>
+                    <figcaption>
+                        <span class="photo-section">@L[$"PhotoSection_{photo.Section}"]</span>
+                        @if (photo.Caption is not null)
+                        {
+                            <span class="photo-caption">@photo.Caption</span>
+                        }
+                        <span class="photo-credit">
+                            @if (photo.PhotographerUrl is not null)
                             {
-                                <span class="photo-caption">@photo.Caption</span>
+                                <a href="@photo.PhotographerUrl" rel="noopener nofollow" target="_blank">@L["Photo_Credit", photo.Photographer]</a>
                             }
-                            <span class="photo-credit">
-                                @if (photo.PhotographerUrl is not null)
-                                {
-                                    <a href="@photo.PhotographerUrl" rel="noopener nofollow" target="_blank">@L["Photo_Credit", photo.Photographer]</a>
-                                }
-                                else
-                                {
-                                    @L["Photo_Credit", photo.Photographer]
-                                }
-                                @if (photo.Depth is { } depth)
-                                {
-                                    <text> · @L["Photo_Depth", depth]</text>
-                                }
-                            </span>
-                        </figcaption>
-                    </figure>
-                }
-            </div>
-        }
+                            else
+                            {
+                                @L["Photo_Credit", photo.Photographer]
+                            }
+                            @if (photo.Depth is { } depth)
+                            {
+                                <text> · @L["Photo_Depth", depth]</text>
+                            }
+                        </span>
+                    </figcaption>
+                </figure>
+            }
+        </div>
         <dialog class="lightbox" data-lightbox-dialog tabindex="-1" aria-label="@L["Photos_Title"]">
             <figure class="lightbox-figure">
                 <img class="lightbox-image" alt="" />
