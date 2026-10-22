@@ -1,24 +1,34 @@
-@* Bewertung 1 bis 5 oder keine als Radiogruppe, mit der Legende der Skala hinter dem «i» (`dive-site.md`, «Bewertungen»). *@
+@* Bewertung 1 bis 5 oder keine als Radiogruppe, darunter die gewählte Stufe mit Bedeutung, die Legende der Skala hinter dem «i» (`dive-site.md`, «Bewertungen»). *@
 <div class="level-picker" data-kind="@(IsLevel ? "level" : "quality")">
     <div class="level-head">
         <span class="field-label" id="@labelId">@Label</span>
         <button type="button" class="rating-info" popovertarget="@legendId" data-hover-popover aria-label="@InfoLabel"><span aria-hidden="true">i</span></button>
     </div>
     <fieldset class="level-options" aria-labelledby="@labelId">
-        <label class="level-option level-none" data-checked="@(Value is null ? "true" : "false")">
-            <input type="radio" name="@name" checked="@(Value is null)" @onchange="() => Pick(null)" />
-            <span>@NoneLabel</span>
-        </label>
         @for (byte step = 1; step <= 5; step++)
         {
             var current = step;
-            <label class="level-option" data-on="@(Value >= current ? "true" : "false")" data-checked="@(Value == current ? "true" : "false")" title="@Legend[current - 1].Short">
+            <label class="level-option" data-on="@(Value >= current ? "true" : "false")" title="@($"{current} · {Legend[current - 1].Short}")">
                 <input type="radio" name="@name" checked="@(Value == current)" aria-label="@($"{current} · {Legend[current - 1].Short}")" @onchange="() => Pick(current)" />
-                <span aria-hidden="true">@current</span>
+                <span class="level-dot" aria-hidden="true"></span>
             </label>
         }
+        <label class="level-none" data-checked="@(Value is null ? "true" : "false")" title="@NoneLabel">
+            <input type="radio" name="@name" checked="@(Value is null)" aria-label="@NoneLabel" @onchange="() => Pick(null)" />
+            <span aria-hidden="true">×</span>
+        </label>
     </fieldset>
-    <p class="level-current" aria-live="polite">@(Value is { } value ? Legend[value - 1].Short : NoneLabel)</p>
+    <p class="level-current" aria-live="polite">
+        @if (Value is { } value)
+        {
+            <strong>@value · @Legend[value - 1].Short</strong>
+            <span class="level-current-text">@Legend[value - 1].Text</span>
+        }
+        else
+        {
+            @NoneLabel
+        }
+    </p>
     <div id="@legendId" popover class="rating-legend">
         <p class="rating-legend-title">@Label</p>
         <ol>

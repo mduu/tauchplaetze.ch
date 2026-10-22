@@ -207,7 +207,7 @@ Bausteine in `Components/Forms`, nur Tokens, kein MudBlazor:
 |---|---|
 | `FormText`, `FormTextArea`, `FormNumber`, `FormSelect` | Label in Mono, Grossbuchstaben, `--color-text-muted`; Feld mit `--color-surface`, Rand `--color-border`, Radius `--radius-tile-sm`, mindestens 44 px hoch; Fokus mit Rand in `--color-primary` |
 | `FormChip` | Eigenschaft als Pille; an: Fläche `--color-primary`, Text `--color-bg` |
-| `LevelPicker` | Bewertung als Kachel: Name, «i» mit Legende (wie auf der Platzseite), Knöpfe «keine» und 1 bis 5. Qualität füllt die Knöpfe bis zum Wert in `--color-primary`, Stufe (Schwierigkeit, Strömung) in `--color-signal`. Darunter der Kurztext. |
+| `LevelPicker` | Bewertung als Kachel: Name, «i» mit Legende (wie auf der Platzseite), fünf Kreise (22 px, Touch-Ziel 34 × 44 px) wie eine Sternwahl in einer Zeile, danach «×» für «nicht bewertet». Qualität füllt die Kreise bis zum Wert in `--color-primary`, Stufe (Schwierigkeit, Strömung) in `--color-signal`. Darunter klein die Zahl mit Kurztext und die Bedeutung der Stufe (Entscheid Marc, 22.10.2026). |
 | `LanguageTabs` | Tabs DE, EN, FR, IT wie bei den Texten, Pfeiltasten wechseln die Sprache |
 | `ToolPicker` | Werkzeuge der Karte als Pillen in Gruppen (`FormChip`-Stil), `aria-pressed`; ein zweiter Klick hebt die Wahl auf |
 | `CoordinateFields`, `LocationField` | Breite und Länge als Textfelder mit Punkt; `LocationField` zeigt darüber die Karte zum Klicken |
