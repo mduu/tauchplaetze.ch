@@ -41,11 +41,10 @@ public class ReportPageTests : IClassFixture<WebApp>
         var french = VisibleText.Of(await browser.GetStringAsync($"/fr/sites-de-plongee/{Slug}", TestContext.Current.CancellationToken));
 
         // Assert
-        Assert.Contains("Sicht 6.5 m", german);
-        Assert.Contains("12.4 °C auf 15 m", german);
-        Assert.Contains("20.10.2026 · Anna · Prognose: Index 7.4", german);
+        Assert.Contains("20.10.2026 Sicht 6.5 m 12.4 °C auf 15 m Anna · Prognose: Index 7.4", german);
         Assert.Contains("«Unter 15 m sehr klar»", german);
-        Assert.Contains("19.10.2026 · Taucher:in", german);
+        Assert.Contains("19.10.2026 Sicht 4 m Taucher:in", german);
+        Assert.Contains("2 Meldungen", german);
         Assert.Contains("Signaler une plongée", french);
     }
 
