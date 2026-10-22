@@ -7,6 +7,7 @@
 @using Tauchplaetze.Web.Features.Media
 @inject IStringLocalizer<DiveSiteStrings> Site
 @inject IStringLocalizer<SharedStrings> Shared
+@inject ILogger<SitePhotoEditor> Logger
 
 <div class="photo-editor">
     <p class="field-help">@L["Media_Help"]</p>
@@ -231,6 +232,11 @@
                 await Reload();
                 await Changed.InvokeAsync();
             }
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError(exception, "Uploading photos for dive site {DiveSiteId} failed", SiteId);
+            errors = [L["Media_UploadFailed"].Value];
         }
         finally
         {

@@ -16,6 +16,7 @@
 @inject IStringLocalizer<SharedStrings> Shared
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject ILogger<EditDiveSitePage> Logger
 
 <PageTitle>@Site["EditMode_Title", details?.Name ?? ""] · @Shared["Brand"]</PageTitle>
 <HeadContent>
@@ -62,12 +63,16 @@ else
             </p>
         }
 
-        @if (errors.Count > 0 || message is not null)
+        @if (HasErrors || message is not null)
         {
-            <div class="message @(errors.Count > 0 ? "error" : "ok")" role="@(errors.Count > 0 ? "alert" : "status")" tabindex="-1" @ref="messageBox">
+            <div class="message @(HasErrors ? "error" : "ok")" role="@(HasErrors ? "alert" : "status")" tabindex="-1" @ref="messageBox">
                 @foreach (var error in errors)
                 {
                     <p>@L[$"Error_{error}"]</p>
+                }
+                @if (saveFailed)
+                {
+                    <p>@L["Edit_SaveFailed"]</p>
                 }
                 @if (message is not null)
                 {
@@ -146,6 +151,10 @@ else
 
         <section class="page-section edit-section" aria-labelledby="edit-photos">
             <h2 id="edit-photos" class="edit-section-title">@Site["Photos_Title"]</h2>
+            @if (errors.Contains(EditorialError.InvalidMedia))
+            {
+                <p class="field-error" role="alert">@L["Error_InvalidMedia"]</p>
+            }
             <SitePhotoEditor SiteId="details.Id" Form="form" Changed="StateHasChanged" />
         </section>
 
@@ -185,6 +194,8 @@ else
     private string textLanguage = Language;
 
     private bool saving;
+
+    private bool saveFailed;
 
     private bool gone;
 
@@ -242,6 +253,8 @@ else
         }
     }
 
+    private bool HasErrors => errors.Count > 0 || saveFailed;
+
     /// <remarks>Steuert die Warnung beim Verlassen (`site.js`). Vergleicht den Inhalt des Formulars mit dem geladenen.</remarks>
     private bool IsDirty => form is not null && savedContent is not null && Serialized(form) != savedContent;
 
@@ -274,8 +287,25 @@ else
 
         saving = true;
         message = null;
-        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(UserId, details!.Id, editing!.BaseNumber, form!.ToContent(), form.Comment));
-        saving = false;
+        saveFailed = false;
+        EditorialResult result;
+        try
+        {
+            result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(UserId, details!.Id, editing!.BaseNumber, form!.ToContent(), form.Comment));
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError(exception, "Saving dive site {DiveSiteId} failed", details!.Id);
+            errors = [];
+            saveFailed = true;
+            focusMessage = true;
+            return;
+        }
+        finally
+        {
+            saving = false;
+        }
+
         errors = result.Errors;
         focusMessage = errors.Count > 0;
         if (result is { Succeeded: true, NoChange: true })

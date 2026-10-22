@@ -81,7 +81,7 @@ internal static partial class ContentValidation
         content.MediaList.DistinctBy(m => m.MediaId).Count() != content.MediaList.Count
         || content.HeroMediaId is { } hero && content.MediaList.All(m => m.MediaId != hero)
         || content.MediaList.Any(m => !Enum.IsDefined(m.Section)
-            || (m.Section == MediaSection.EntryPoint) != (m.EntryPointId is not null)
+            || m.Section != MediaSection.EntryPoint && m.EntryPointId is not null
             || m.EntryPointId is { } entry && content.EntryPointList.All(e => e.Id != entry));
 
     private static bool IsInvalid(SketchFeature feature, DiveSiteContent content) =>

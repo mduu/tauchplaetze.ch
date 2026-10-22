@@ -87,6 +87,7 @@
   <data name="Edit_Remove" xml:space="preserve"><value>Entfernen</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Als Vorschlag speichern</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Speichern und freigeben</value></data>
+  <data name="Edit_SaveFailed" xml:space="preserve"><value>Speichern hat nicht geklappt. Bitte nochmals versuchen. Deine Änderungen sind noch da.</value></data>
   <data name="Edit_Saved_Pending" xml:space="preserve"><value>Danke! Dein Vorschlag ist bei der Moderation. Du bekommst eine Mail, sobald er freigegeben oder abgelehnt ist.</value></data>
   <data name="Edit_Saved_Approved" xml:space="preserve"><value>Gespeichert und online.</value></data>
   <data name="Edit_NoChange" xml:space="preserve"><value>Nichts geändert.</value></data>
@@ -230,7 +231,7 @@
   <data name="Field_MediaPhoto" xml:space="preserve"><value>Datei</value></data>
   <data name="Field_MediaSection" xml:space="preserve"><value>Abschnitt</value></data>
   <data name="Field_HeroMediaId" xml:space="preserve"><value>Titelbild</value></data>
-  <data name="Error_InvalidMedia" xml:space="preserve"><value>Ein Foto passt nicht: Es gehört zu einem anderen Platz, kommt doppelt vor, das Titelbild fehlt in der Liste, der Einstieg fehlt oder ein Text ist zu lang.</value></data>
+  <data name="Error_InvalidMedia" xml:space="preserve"><value>Ein Foto passt nicht: Es gehört zu einem anderen Platz, kommt doppelt vor, das Titelbild fehlt in der Liste, der gewählte Einstieg existiert nicht mehr oder ein Text ist zu lang.</value></data>
   <data name="Error_RightsNotConfirmed" xml:space="preserve"><value>Bitte bestätige, dass du die Rechte an den Fotos hast.</value></data>
   <data name="Error_InvalidPhotographer" xml:space="preserve"><value>Der Fotograf fehlt oder ist zu lang (höchstens 120 Zeichen).</value></data>
   <data name="Error_InvalidImage" xml:space="preserve"><value>Nur JPEG, PNG oder WebP bis 25 MB und höchstens 12 000 px pro Seite. Fotos vom iPhone (HEIC) bitte als JPEG exportieren.</value></data>
@@ -300,6 +301,7 @@
   <data name="Media_TooManyFiles" xml:space="preserve"><value>Bitte höchstens {0} Fotos auf einmal wählen.</value></data>
   <data name="Media_Remaining" xml:space="preserve"><value>Du kannst im Moment noch {0} Fotos hochladen (höchstens 30 pro Stunde und 100 pro Tag). Wähle weniger oder versuche es später.</value></data>
   <data name="Media_UploadAborted" xml:space="preserve"><value>Der Upload wurde abgebrochen. Bitte nochmals versuchen.</value></data>
+  <data name="Media_UploadFailed" xml:space="preserve"><value>Das Hochladen hat nicht geklappt. Bitte nochmals versuchen.</value></data>
   <data name="Media_Choose_NeedPhotographer" xml:space="preserve"><value>Trage zuerst den Fotografen ein.</value></data>
   <data name="Media_Choose_NeedRights" xml:space="preserve"><value>Bestätige zuerst die Rechte an den Fotos.</value></data>
   <data name="Platform_Content_Title" xml:space="preserve"><value>Inhalt</value></data>
