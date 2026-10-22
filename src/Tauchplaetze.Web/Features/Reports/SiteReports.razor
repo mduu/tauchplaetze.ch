@@ -1,35 +1,29 @@
 @using Tauchplaetze.Core.Features.Reports
 @inject IStringLocalizer<DiveSiteStrings> L
 
-<section class="page-section site-reports" aria-labelledby="reports">
-    <div class="reports-head">
-        <h2 id="reports" class="section-title">@L["Reports_Title"]</h2>
-        <a class="button" href="@PublicRoutes.DiveSiteReport(Language, Slug)" rel="nofollow" data-report-link>@L["Reports_Report"]</a>
-    </div>
-    @if (Reports.Count == 0)
-    {
-        <p class="reports-none">@L["Reports_None", ReportRules.ShownDays]</p>
-    }
-    else
-    {
+@if (Reports.Count > 0)
+{
+    <section class="site-reports" aria-labelledby="reports">
+        <h3 id="reports" class="label reports-title">@L["Reports_Recent", ReportRules.ShownDays]</h3>
         <ul class="reports" data-reports>
             @foreach (var report in Reports)
             {
                 <li class="report" data-report="@report.Id">
-                    <div class="report-values">
-                        <span class="report-visibility">@L["Reports_Visibility", ReportFormat.Metres(report.Visibility)]</span>
+                    <span class="report-date">@ReportFormat.Date(report.Date)</span>
+                    <span class="report-visibility">@L["Reports_Visibility", ReportFormat.Metres(report.Visibility)]</span>
+                    <span class="report-temperature">
                         @if (report.Temperature is { } temperature)
                         {
-                            <span>@(report.TemperatureDepth is { } depth ? L["Reports_TemperatureAt", ReportFormat.Celsius(temperature), depth] : L["Reports_Temperature", ReportFormat.Celsius(temperature)])</span>
+                            @(report.TemperatureDepth is { } depth ? L["Reports_TemperatureAt", ReportFormat.Celsius(temperature), depth] : L["Reports_Temperature", ReportFormat.Celsius(temperature)])
                         }
-                    </div>
-                    <div class="report-meta">
-                        @ReportFormat.Date(report.Date) · @(report.AuthorName ?? L["Reports_Diver"])
+                    </span>
+                    <span class="report-meta">
+                        @(report.AuthorName ?? L["Reports_Diver"])
                         @if (report.ForecastIndex is { } index)
                         {
                             <span> · @L["Reports_Forecast", ReportFormat.Index(index)]</span>
                         }
-                    </div>
+                    </span>
                     @if (report.Comment is { } comment)
                     {
                         <p class="report-comment">«@comment»@if (report.CommentStatus == ReportCommentStatus.Pending) {<span class="report-pending"> · @L["Reports_Pending"]</span>}</p>
@@ -37,15 +31,10 @@
                 </li>
             }
         </ul>
-    }
-</section>
+    </section>
+}
 
 @code {
     [Parameter, EditorRequired]
     public IReadOnlyList<SiteReport> Reports { get; set; } = [];
-
-    [Parameter, EditorRequired]
-    public string Slug { get; set; } = "";
-
-    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 }

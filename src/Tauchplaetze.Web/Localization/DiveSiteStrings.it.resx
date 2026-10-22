@@ -254,9 +254,10 @@
   <data name="Text_Facilities" xml:space="preserve"><value>Ristoranti e servizi igienici</value></data>
   <data name="Text_OnlyGerman" xml:space="preserve"><value>Questo testo è disponibile solo in tedesco.</value></data>
   <data name="Text_MachineTranslated" xml:space="preserve"><value>Tradotto automaticamente.</value></data>
-  <data name="Reports_Title" xml:space="preserve"><value>Segnalazioni</value></data>
   <data name="Reports_Report" xml:space="preserve"><value>Segnala un'immersione</value></data>
-  <data name="Reports_None" xml:space="preserve"><value>Nessuna segnalazione negli ultimi {0} giorni.</value></data>
+  <data name="Reports_Recent" xml:space="preserve"><value>Segnalazioni degli ultimi {0} giorni</value></data>
+  <data name="Reports_Count" xml:space="preserve"><value>{0} segnalazioni</value></data>
+  <data name="Reports_CountOne" xml:space="preserve"><value>1 segnalazione</value></data>
   <data name="Reports_Visibility" xml:space="preserve"><value>Visibilità {0} m</value></data>
   <data name="Reports_Temperature" xml:space="preserve"><value>{0} °C</value></data>
   <data name="Reports_TemperatureAt" xml:space="preserve"><value>{0} °C a {1} m</value></data>

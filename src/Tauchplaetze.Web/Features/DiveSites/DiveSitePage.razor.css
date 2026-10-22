@@ -40,6 +40,14 @@
     color: var(--color-primary);
 }
 
+.conditions-soon-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+}
+
 .pending {
     margin-top: 28px;
     border-style: dashed;
