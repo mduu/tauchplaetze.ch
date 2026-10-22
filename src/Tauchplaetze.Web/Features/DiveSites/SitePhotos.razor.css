@@ -3,20 +3,20 @@
     letter-spacing: -0.02em;
 }
 
-.photos-section {
-    margin: 24px 0 12px;
+.photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.photo-section {
     color: var(--color-text-muted);
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-}
-
-.photos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-    gap: 14px;
 }
 
 .photo {
@@ -49,6 +49,17 @@
 .photo-credit,
 .photo-credit a {
     color: var(--color-text-subtle);
+}
+
+@media (max-width: 520px) {
+    .photos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .photo figcaption {
+        font-size: 13px;
+    }
 }
 
 .lightbox {
