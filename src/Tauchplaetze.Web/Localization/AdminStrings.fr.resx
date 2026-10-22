@@ -87,6 +87,7 @@
   <data name="Edit_Remove" xml:space="preserve"><value>Retirer</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Enregistrer comme proposition</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Enregistrer et valider</value></data>
+  <data name="Edit_SaveFailed" xml:space="preserve"><value>L'enregistrement n'a pas fonctionné. Réessaie. Tes modifications sont toujours là.</value></data>
   <data name="Edit_Saved_Pending" xml:space="preserve"><value>Merci ! Ta proposition est chez la modération. Tu recevras un e-mail dès qu'elle sera validée ou refusée.</value></data>
   <data name="Edit_Saved_Approved" xml:space="preserve"><value>Enregistré et en ligne.</value></data>
   <data name="Edit_NoChange" xml:space="preserve"><value>Rien n'a changé.</value></data>
@@ -230,7 +231,7 @@
   <data name="Field_MediaPhoto" xml:space="preserve"><value>Fichier</value></data>
   <data name="Field_MediaSection" xml:space="preserve"><value>Section</value></data>
   <data name="Field_HeroMediaId" xml:space="preserve"><value>Photo de couverture</value></data>
-  <data name="Error_InvalidMedia" xml:space="preserve"><value>Une photo ne convient pas : elle appartient à un autre site, apparaît deux fois, la photo de couverture manque dans la liste, le point d'entrée manque ou un texte est trop long.</value></data>
+  <data name="Error_InvalidMedia" xml:space="preserve"><value>Une photo ne convient pas : elle appartient à un autre site, apparaît deux fois, la photo de couverture manque dans la liste, le point d'entrée choisi n'existe plus ou un texte est trop long.</value></data>
   <data name="Error_RightsNotConfirmed" xml:space="preserve"><value>Confirme que tu détiens les droits sur les photos.</value></data>
   <data name="Error_InvalidPhotographer" xml:space="preserve"><value>Le photographe manque ou est trop long (120 caractères au plus).</value></data>
   <data name="Error_InvalidImage" xml:space="preserve"><value>Uniquement JPEG, PNG ou WebP jusqu'à 25 Mo et 12 000 px par côté au plus. Exporte les photos d'iPhone (HEIC) en JPEG.</value></data>
@@ -300,6 +301,7 @@
   <data name="Media_TooManyFiles" xml:space="preserve"><value>Choisis au plus {0} photos à la fois.</value></data>
   <data name="Media_Remaining" xml:space="preserve"><value>Tu peux encore téléverser {0} photos pour le moment (au plus 30 par heure et 100 par jour). Choisis-en moins ou réessaie plus tard.</value></data>
   <data name="Media_UploadAborted" xml:space="preserve"><value>Le téléversement a été interrompu. Réessaie.</value></data>
+  <data name="Media_UploadFailed" xml:space="preserve"><value>Le téléversement n'a pas fonctionné. Réessaie.</value></data>
   <data name="Media_Choose_NeedPhotographer" xml:space="preserve"><value>Indique d'abord le photographe.</value></data>
   <data name="Media_Choose_NeedRights" xml:space="preserve"><value>Confirme d'abord les droits sur les photos.</value></data>
   <data name="Platform_Content_Title" xml:space="preserve"><value>Contenu</value></data>

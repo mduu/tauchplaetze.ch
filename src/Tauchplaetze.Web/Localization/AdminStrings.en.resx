@@ -87,6 +87,7 @@
   <data name="Edit_Remove" xml:space="preserve"><value>Remove</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Save as suggestion</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Save and approve</value></data>
+  <data name="Edit_SaveFailed" xml:space="preserve"><value>Saving did not work. Please try again. Your changes are still here.</value></data>
   <data name="Edit_Saved_Pending" xml:space="preserve"><value>Thank you! Your proposal is with the moderators. You will get a mail as soon as it is approved or rejected.</value></data>
   <data name="Edit_Saved_Approved" xml:space="preserve"><value>Saved and online.</value></data>
   <data name="Edit_NoChange" xml:space="preserve"><value>Nothing changed.</value></data>
@@ -230,7 +231,7 @@
   <data name="Field_MediaPhoto" xml:space="preserve"><value>File</value></data>
   <data name="Field_MediaSection" xml:space="preserve"><value>Section</value></data>
   <data name="Field_HeroMediaId" xml:space="preserve"><value>Cover photo</value></data>
-  <data name="Error_InvalidMedia" xml:space="preserve"><value>A photo does not fit: it belongs to another site, appears twice, the cover photo is missing from the list, the entry point is missing or a text is too long.</value></data>
+  <data name="Error_InvalidMedia" xml:space="preserve"><value>A photo does not fit: it belongs to another site, appears twice, the cover photo is missing from the list, the selected entry point no longer exists or a text is too long.</value></data>
   <data name="Error_RightsNotConfirmed" xml:space="preserve"><value>Please confirm that you own the rights to the photos.</value></data>
   <data name="Error_InvalidPhotographer" xml:space="preserve"><value>The photographer is missing or too long (120 characters at most).</value></data>
   <data name="Error_InvalidImage" xml:space="preserve"><value>Only JPEG, PNG or WebP up to 25 MB and at most 12,000 px per side. Please export iPhone photos (HEIC) as JPEG.</value></data>
@@ -300,6 +301,7 @@
   <data name="Media_TooManyFiles" xml:space="preserve"><value>Please choose at most {0} photos at once.</value></data>
   <data name="Media_Remaining" xml:space="preserve"><value>You can upload {0} more photos right now (at most 30 per hour and 100 per day). Choose fewer or try again later.</value></data>
   <data name="Media_UploadAborted" xml:space="preserve"><value>The upload was interrupted. Please try again.</value></data>
+  <data name="Media_UploadFailed" xml:space="preserve"><value>The upload did not work. Please try again.</value></data>
   <data name="Media_Choose_NeedPhotographer" xml:space="preserve"><value>Enter the photographer first.</value></data>
   <data name="Media_Choose_NeedRights" xml:space="preserve"><value>First confirm the rights to the photos.</value></data>
   <data name="Platform_Content_Title" xml:space="preserve"><value>Content</value></data>

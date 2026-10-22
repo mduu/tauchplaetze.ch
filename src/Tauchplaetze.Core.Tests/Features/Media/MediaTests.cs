@@ -185,6 +185,22 @@ public class MediaTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Ein_Foto_im_Abschnitt_Einstieg_braucht_keinen_bestimmten_Einstieg()
+    {
+        // Arrange
+        var (_, anna, site) = await Prepare();
+        var photo = (await Upload(anna, site)).MediaId!.Value;
+        var edit = await ForEditing(site);
+
+        // Act
+        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber,
+            edit.Content with { Media = [new MediaUse(photo, MediaSection.EntryPoint)] }, null));
+
+        // Assert
+        Assert.True(result.Succeeded);
+    }
+
+    [SqlFact]
     public async Task Ein_gesperrtes_Konto_laedt_kein_Foto_hoch()
     {
         // Arrange

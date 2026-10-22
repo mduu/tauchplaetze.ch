@@ -156,7 +156,7 @@ Die Tauchskizze (`SiteSketch`) zeigt den Platz unter Wasser. Alle Skizzen sehen 
 
 ## Bilder pro Abschnitt
 
-Jedes Bild eines Platzes gehört zu genau einem Abschnitt (`MediaItem.Section`): `Underwater`, `Surroundings`, `Approach`, `EntryPoint`, `Hazards`. Bilder eines Einstiegs verweisen zusätzlich auf den Einstieg (`EntryPointId`). Das Hero-Foto ist meist ein Bild aus `Underwater`.
+Jedes Bild eines Platzes gehört zu genau einem Abschnitt (`MediaItem.Section`): `Underwater`, `Surroundings`, `Approach`, `EntryPoint`, `Hazards`. Bilder eines Einstiegs können zusätzlich auf den Einstieg verweisen (`EntryPointId`, optional). Das Hero-Foto ist meist ein Bild aus `Underwater`.
 
 ## Darstellung auf der Tauchplatzseite
 
