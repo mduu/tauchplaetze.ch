@@ -158,6 +158,9 @@
   <data name="PhotoSection_Hazards" xml:space="preserve"><value>Hazards</value></data>
   <data name="Photo_Credit" xml:space="preserve"><value>Photo: {0}</value></data>
   <data name="Photo_Depth" xml:space="preserve"><value>at {0} m</value></data>
+  <data name="Lightbox_Close" xml:space="preserve"><value>Close</value></data>
+  <data name="Lightbox_Previous" xml:space="preserve"><value>Previous photo</value></data>
+  <data name="Lightbox_Next" xml:space="preserve"><value>Next photo</value></data>
   <data name="Hero_Credit" xml:space="preserve"><value>Cover photo: {0}</value></data>
   <data name="WaterBodies_Jump" xml:space="preserve"><value>Jump to</value></data>
   <data name="WaterBodies_Group_LargeLakes" xml:space="preserve"><value>The large lakes</value></data>

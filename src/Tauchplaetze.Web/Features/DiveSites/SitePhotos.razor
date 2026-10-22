@@ -12,7 +12,7 @@
                 @foreach (var photo in group)
                 {
                     <figure class="photo">
-                        <a href="@photo.Renditions[^1].Url" target="_blank" rel="noopener">
+                        <a href="@photo.Renditions[^1].Url" target="_blank" rel="noopener" data-lightbox>
                             <img src="@Rendition(photo, 960)" srcset="@PhotoMarkup.SrcSet(photo.Renditions)" sizes="(min-width: 960px) 30vw, 90vw"
                                  width="@photo.Width" height="@photo.Height" loading="lazy" decoding="async" alt="@(photo.AltText ?? photo.Caption ?? "")" />
                         </a>
@@ -40,6 +40,16 @@
                 }
             </div>
         }
+        <dialog class="lightbox" data-lightbox-dialog aria-label="@L["Photos_Title"]">
+            <figure class="lightbox-figure">
+                <img class="lightbox-image" alt="" />
+                <figcaption class="lightbox-caption"></figcaption>
+            </figure>
+            <span class="lightbox-count" aria-live="polite"></span>
+            <button type="button" class="lightbox-button lightbox-close" data-lightbox-close aria-label="@L["Lightbox_Close"]">✕</button>
+            <button type="button" class="lightbox-button lightbox-previous" data-lightbox-previous aria-label="@L["Lightbox_Previous"]">‹</button>
+            <button type="button" class="lightbox-button lightbox-next" data-lightbox-next aria-label="@L["Lightbox_Next"]">›</button>
+        </dialog>
     </section>
 }
 
