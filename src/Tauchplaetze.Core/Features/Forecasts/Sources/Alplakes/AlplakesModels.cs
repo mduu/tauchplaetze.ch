@@ -87,6 +87,12 @@ internal record DepthTimeSeries(
         return new TemperatureProfile(Times[index], points);
     }
 
+    /// <summary>Die tiefste Modellschicht mit einem Wert. <c>null</c> ohne Werte.</summary>
+    public double? DeepestValue => Enumerable.Range(0, Depths.Count)
+        .Where(depth => Enumerable.Range(0, Times.Count).Any(time => Temperatures[depth, time] is not null))
+        .Select(depth => (double?)Depths[depth])
+        .Max();
+
     private static double? ReadDistance(JsonElement root)
     {
         if (!root.TryGetProperty("distance", out var distance))

@@ -75,6 +75,25 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Endet_das_Seemodell_am_Platz_im_Flachwasser_gilt_das_Profil_100_m_weiter_draussen()
+    {
+        // Arrange: Am Ufer liegt der nächste Gitterpunkt oft im Flachwasser. Bei Sisikon endete das Profil am 22.10.2026 bei 1.5 m.
+        var siteId = await PrepareRiffWilliams();
+        Sql.Sources.Overrides["/47.2849/8.6085"] = Shallow(TestData.Read("alplakes", "depthtime-delft3d-flow-zurich.json"), maxDepth: 1.5);
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Assert.Equal((ProfileSource.Model3d, (byte)3), (today.ProfileSource, today.DataLevel));
+        Assert.NotNull(today.TemperatureAt30m);
+        Assert.InRange(today.ThermoclineTop!.Value, 12m, 15m);
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("simulations/depthtime/delft3d-flow/", StringComparison.Ordinal) && url.EndsWith("/47.2843/8.6075", StringComparison.Ordinal));
+        Assert.Equal(2, Sql.Sources.Requests.Count(url => url.Contains("simulations/depthtime/delft3d-flow/", StringComparison.Ordinal)));
+    }
+
+    [SqlFact]
     public async Task Die_Klarheit_kommt_von_Sentinel_2_50_m_vor_dem_Ufer_ohne_Uferfaktor_und_ohne_zweiten_Call()
     {
         // Arrange
@@ -474,6 +493,22 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
             [.. rows.Select(row => (JsonNode)new JsonArray([.. row!.AsArray().Select(_ => (JsonNode?)value)]))];
         variables["u"] = new JsonObject { ["data"] = Filled(east), ["unit"] = "m/s" };
         variables["v"] = new JsonObject { ["data"] = Filled(north), ["unit"] = "m/s" };
+        return root.ToJsonString();
+    }
+
+    private static string Shallow(string json, double maxDepth)
+    {
+        var root = JsonNode.Parse(json)!;
+        var depths = root["depth"]!["data"]!.AsArray();
+        var rows = root["variables"]!["temperature"]!["data"]!.AsArray();
+        for (var i = 0; i < depths.Count; i++)
+        {
+            if (depths[i]!.GetValue<double>() > maxDepth)
+            {
+                rows[i] = new JsonArray([.. rows[i]!.AsArray().Select(_ => (JsonNode?)null)]);
+            }
+        }
+
         return root.ToJsonString();
     }
 
