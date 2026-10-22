@@ -46,4 +46,16 @@
   <data name="Form_MoveUp" xml:space="preserve"><value>«{0}» nach oben</value></data>
   <data name="Form_MoveDown" xml:space="preserve"><value>«{0}» nach unten</value></data>
   <data name="MountainLake" xml:space="preserve"><value>Bergsee · {0} m ü. M.</value></data>
+  <data name="Reconnect_Label" xml:space="preserve"><value>Verbindung</value></data>
+  <data name="Reconnect_Title" xml:space="preserve"><value>Verbindung unterbrochen</value></data>
+  <data name="Reconnect_Connecting" xml:space="preserve"><value>Einen Moment, wir verbinden dich wieder.</value></data>
+  <data name="Reconnect_Retrying" xml:space="preserve"><value>Nächster Versuch in {0} s.</value></data>
+  <data name="Reconnect_FailedTitle" xml:space="preserve"><value>Keine Verbindung</value></data>
+  <data name="Reconnect_Failed" xml:space="preserve"><value>Der Server ist gerade nicht erreichbar. Deine Eingaben sind noch auf der Seite.</value></data>
+  <data name="Reconnect_Retry" xml:space="preserve"><value>Erneut verbinden</value></data>
+  <data name="Reconnect_PausedTitle" xml:space="preserve"><value>Sitzung pausiert</value></data>
+  <data name="Reconnect_Paused" xml:space="preserve"><value>Der Server hat die Sitzung pausiert.</value></data>
+  <data name="Reconnect_Resume" xml:space="preserve"><value>Fortsetzen</value></data>
+  <data name="Reconnect_ResumeFailed" xml:space="preserve"><value>Die Sitzung lässt sich nicht fortsetzen. Lade die Seite neu. Ungespeicherte Änderungen gehen dabei verloren.</value></data>
+  <data name="Reconnect_Reload" xml:space="preserve"><value>Seite neu laden</value></data>
 </root>

@@ -1,0 +1,121 @@
+.reconnect {
+    width: min(440px, calc(100% - 2 * var(--space-gutter)));
+    margin: auto;
+    padding: 30px 28px 28px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface-raised);
+    color: var(--color-text-body);
+    font-family: var(--font-body);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+    overflow: hidden;
+    outline: none;
+}
+
+.reconnect::backdrop {
+    background: rgb(7 20 23 / 0.72);
+    backdrop-filter: blur(3px);
+}
+
+.reconnect-label {
+    margin: 0 0 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+}
+
+.reconnect-title {
+    margin: 0 0 10px;
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+}
+
+.reconnect-text {
+    margin: 0 0 18px;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.reconnect-text:last-child {
+    margin-bottom: 0;
+}
+
+.reconnect-state,
+.reconnect-retrying-visible,
+.reconnect-bubbles {
+    display: none;
+}
+
+.reconnect.components-reconnect-show .reconnect-connecting,
+.reconnect.components-reconnect-retrying .reconnect-connecting,
+.reconnect.components-reconnect-failed .reconnect-failed,
+.reconnect.components-reconnect-paused .reconnect-paused,
+.reconnect.components-reconnect-resume-failed .reconnect-resume-failed,
+.reconnect.components-reconnect-retrying .reconnect-retrying-visible {
+    display: block;
+}
+
+.reconnect.components-reconnect-show .reconnect-bubbles,
+.reconnect.components-reconnect-retrying .reconnect-bubbles {
+    display: flex;
+}
+
+.reconnect.components-reconnect-failed .reconnect-label,
+.reconnect.components-reconnect-resume-failed .reconnect-label {
+    color: var(--color-signal);
+}
+
+#components-seconds-to-next-attempt {
+    font-family: var(--font-mono);
+    color: var(--color-text);
+}
+
+.reconnect-bubbles {
+    gap: 10px;
+    align-items: flex-end;
+    height: 34px;
+    margin-bottom: 14px;
+}
+
+.reconnect-bubbles span {
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--color-bubble);
+    border-radius: 50%;
+    animation: reconnect-rise 1.6s ease-in-out infinite;
+}
+
+.reconnect-bubbles span:nth-child(2) {
+    width: 14px;
+    height: 14px;
+    animation-delay: 0.25s;
+}
+
+.reconnect-bubbles span:nth-child(3) {
+    width: 8px;
+    height: 8px;
+    animation-delay: 0.5s;
+}
+
+@keyframes reconnect-rise {
+    0% {
+        transform: translateY(0);
+        opacity: 0.25;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+}

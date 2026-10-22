@@ -46,4 +46,16 @@
   <data name="Form_MoveUp" xml:space="preserve"><value>Monter « {0} »</value></data>
   <data name="Form_MoveDown" xml:space="preserve"><value>Descendre « {0} »</value></data>
   <data name="MountainLake" xml:space="preserve"><value>Lac de montagne · {0} m d'altitude</value></data>
+  <data name="Reconnect_Label" xml:space="preserve"><value>Connexion</value></data>
+  <data name="Reconnect_Title" xml:space="preserve"><value>Connexion interrompue</value></data>
+  <data name="Reconnect_Connecting" xml:space="preserve"><value>Un instant, nous te reconnectons.</value></data>
+  <data name="Reconnect_Retrying" xml:space="preserve"><value>Prochain essai dans {0} s.</value></data>
+  <data name="Reconnect_FailedTitle" xml:space="preserve"><value>Pas de connexion</value></data>
+  <data name="Reconnect_Failed" xml:space="preserve"><value>Le serveur est injoignable pour le moment. Tes saisies sont toujours sur la page.</value></data>
+  <data name="Reconnect_Retry" xml:space="preserve"><value>Se reconnecter</value></data>
+  <data name="Reconnect_PausedTitle" xml:space="preserve"><value>Session en pause</value></data>
+  <data name="Reconnect_Paused" xml:space="preserve"><value>Le serveur a mis la session en pause.</value></data>
+  <data name="Reconnect_Resume" xml:space="preserve"><value>Reprendre</value></data>
+  <data name="Reconnect_ResumeFailed" xml:space="preserve"><value>La session ne peut pas reprendre. Recharge la page. Les modifications non enregistrées seront perdues.</value></data>
+  <data name="Reconnect_Reload" xml:space="preserve"><value>Recharger la page</value></data>
 </root>

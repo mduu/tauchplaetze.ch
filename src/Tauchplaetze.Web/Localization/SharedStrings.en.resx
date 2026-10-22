@@ -46,4 +46,16 @@
   <data name="Form_MoveUp" xml:space="preserve"><value>Move “{0}” up</value></data>
   <data name="Form_MoveDown" xml:space="preserve"><value>Move “{0}” down</value></data>
   <data name="MountainLake" xml:space="preserve"><value>Mountain lake · {0} m a.s.l.</value></data>
+  <data name="Reconnect_Label" xml:space="preserve"><value>Connection</value></data>
+  <data name="Reconnect_Title" xml:space="preserve"><value>Connection lost</value></data>
+  <data name="Reconnect_Connecting" xml:space="preserve"><value>One moment, we are reconnecting you.</value></data>
+  <data name="Reconnect_Retrying" xml:space="preserve"><value>Next attempt in {0} s.</value></data>
+  <data name="Reconnect_FailedTitle" xml:space="preserve"><value>No connection</value></data>
+  <data name="Reconnect_Failed" xml:space="preserve"><value>The server cannot be reached right now. Your input is still on the page.</value></data>
+  <data name="Reconnect_Retry" xml:space="preserve"><value>Reconnect</value></data>
+  <data name="Reconnect_PausedTitle" xml:space="preserve"><value>Session paused</value></data>
+  <data name="Reconnect_Paused" xml:space="preserve"><value>The server paused the session.</value></data>
+  <data name="Reconnect_Resume" xml:space="preserve"><value>Continue</value></data>
+  <data name="Reconnect_ResumeFailed" xml:space="preserve"><value>The session cannot be resumed. Reload the page. Unsaved changes will be lost.</value></data>
+  <data name="Reconnect_Reload" xml:space="preserve"><value>Reload page</value></data>
 </root>
