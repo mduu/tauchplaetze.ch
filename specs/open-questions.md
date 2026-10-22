@@ -7,7 +7,7 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 | # | Frage | Nächster Schritt |
 |---|---|---|
 | 27 | **Koordinaten in der Telemetrie:** «In meiner Nähe» und der Umkreis der Startseite tragen `lat`/`lng` in der Adresse. Application Insights speichert die Adressen 30 Tage. | Vorschlag: Query-Parameter `lat`, `lng` vor dem Senden entfernen oder runden (Telemetry Processor). Dann den Satz im Datenschutz anpassen. |
-| 28 | **Datenschutz vor dem Go-Live prüfen lassen** (nDSG, Bekanntgabe ins Ausland: Cloudflare, Microsoft; Mail über einen Schweizer Anbieter, ADR-012). Der Text auf «Über» ist ein sorgfältiger Entwurf, keine Rechtsberatung. | Marc entscheidet, ob eine Fachperson drüberschaut. |
+| 28 | **Datenschutz vor dem Go-Live prüfen lassen** (nDSG, Bekanntgabe ins Ausland: Microsoft; Mail über einen Schweizer Anbieter, ADR-012). Der Text auf «Über» ist ein sorgfältiger Entwurf, keine Rechtsberatung. | Marc entscheidet, ob eine Fachperson drüberschaut. |
 | 30 | **Health-Check für die Mail-Queue:** `/health/ready` prüft heute nur die App. Soll er die Queue (und die Dead-Letter-Queue) einschliessen? | Mit dem Deployment klären. Die Aspire-Integration für Queues bringt einen Health-Check mit, er ist nur noch nicht an `/health/ready` gebunden. |
 
 ## Erledigt am 20.10.2026
