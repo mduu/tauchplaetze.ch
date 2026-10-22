@@ -1377,6 +1377,26 @@ button.chip-toggle:focus-visible {
   gap: 12px;
 }
 
+.notice-editor {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.notice-editor .editor-list {
+  justify-self: stretch;
+}
+
+.notice-item {
+  display: grid;
+  gap: 12px;
+  border-left-width: 4px;
+}
+
+.notice-item[data-notice-kind="Info"] { border-left-color: var(--color-notice-info); }
+.notice-item[data-notice-kind="Warning"] { border-left-color: var(--color-notice-warning); }
+.notice-item[data-notice-kind="Closure"] { border-left-color: var(--color-notice-closure); }
+
 .link-button.danger {
   color: var(--color-signal);
 }

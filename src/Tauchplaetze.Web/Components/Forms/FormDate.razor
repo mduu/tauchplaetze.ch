@@ -1,0 +1,19 @@
+@* Datum mit dem Kalender des Browsers, leer erlaubt. *@
+<label class="field field-short">
+    <span class="field-label">@Label</span>
+    <input type="date" value="@Value?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)" @onchange="Changed" />
+</label>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    [Parameter]
+    public DateTime? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<DateTime?> ValueChanged { get; set; }
+
+    private Task Changed(ChangeEventArgs e) =>
+        ValueChanged.InvokeAsync(DateTime.TryParseExact(e.Value as string, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date) ? date : null);
+}

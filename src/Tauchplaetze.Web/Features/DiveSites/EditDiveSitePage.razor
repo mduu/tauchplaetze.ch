@@ -88,6 +88,11 @@ else
             <p class="field-help">@L["Field_WaterBodyId"]: @details.WaterBodyName · @Site["EditMode_WaterBody_Help"]</p>
         </section>
 
+        <section class="page-section edit-section" aria-labelledby="edit-notices" data-edit-notices>
+            <h2 id="edit-notices" class="edit-section-title">@Site["Notices_Label"]</h2>
+            <SiteNoticeEditor Form="form" Changed="StateHasChanged" />
+        </section>
+
         <section class="page-section edit-section" aria-labelledby="edit-site">
             <h2 id="edit-site" class="edit-section-title">@Site["Ratings_Title"]</h2>
             <div class="edit-grid">
