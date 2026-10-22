@@ -34,6 +34,10 @@
     <PackageVersion Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.5.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Maschinelle Übersetzung (Claude API)">
+    <PackageVersion Include="Anthropic" Version="12.55.0" />
+  </ItemGroup>
+
   <ItemGroup Label="Aspire">
     <PackageVersion Include="Aspire.Hosting.SqlServer" Version="13.6.1" />
     <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.6.1" />

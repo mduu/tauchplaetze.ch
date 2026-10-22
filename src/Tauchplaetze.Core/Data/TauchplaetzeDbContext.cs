@@ -44,6 +44,8 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
 
     public DbSet<Report> Reports => Set<Report>();
 
+    public DbSet<MachineTranslation> MachineTranslations => Set<MachineTranslation>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

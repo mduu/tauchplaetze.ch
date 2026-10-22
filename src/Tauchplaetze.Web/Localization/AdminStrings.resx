@@ -416,4 +416,19 @@
   <data name="Reports_Delete" xml:space="preserve"><value>Löschen</value></data>
   <data name="Reports_DeleteTitle" xml:space="preserve"><value>Meldung löschen?</value></data>
   <data name="Reports_DeleteText" xml:space="preserve"><value>Die Meldung zu {0} vom {1} wird endgültig gelöscht. Zum Verbergen genügt «Ausblenden».</value></data>
+  <data name="Translate_Button" xml:space="preserve"><value>Automatisch übersetzen</value></data>
+  <data name="Translate_Running" xml:space="preserve"><value>Übersetzt …</value></data>
+  <data name="Translate_Source" xml:space="preserve"><value>Quelle</value></data>
+  <data name="Translate_SourceText" xml:space="preserve"><value>Quelle: {0}</value></data>
+  <data name="Translate_Replace" xml:space="preserve"><value>Die Texte in dieser Sprache werden ersetzt.</value></data>
+  <data name="Translate_Confirm" xml:space="preserve"><value>Ersetzen</value></data>
+  <data name="Translate_Cancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="Translate_Done" xml:space="preserve"><value>Automatisch übersetzt. Prüfe die Texte und speichere dann.</value></data>
+  <data name="Translate_Remaining" xml:space="preserve"><value>Heute noch {0} Übersetzungen.</value></data>
+  <data name="Translate_Error_NotAllowed" xml:space="preserve"><value>Du darfst nicht übersetzen.</value></data>
+  <data name="Translate_Error_Unavailable" xml:space="preserve"><value>Die automatische Übersetzung ist nicht verfügbar.</value></data>
+  <data name="Translate_Error_InvalidInput" xml:space="preserve"><value>Der Text ist leer oder zu lang für die Übersetzung.</value></data>
+  <data name="Translate_Error_DailyLimit" xml:space="preserve"><value>Dein Limit für heute ist erreicht. Morgen geht es wieder.</value></data>
+  <data name="Translate_Error_BudgetExhausted" xml:space="preserve"><value>Das Budget für Übersetzungen ist diesen Monat aufgebraucht.</value></data>
+  <data name="Translate_Error_Failed" xml:space="preserve"><value>Die Übersetzung hat nicht geklappt. Versuche es später noch einmal.</value></data>
 </root>

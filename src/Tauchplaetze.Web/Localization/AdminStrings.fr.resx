@@ -87,7 +87,7 @@
   <data name="Edit_Remove" xml:space="preserve"><value>Retirer</value></data>
   <data name="Edit_Save_Contributor" xml:space="preserve"><value>Enregistrer comme proposition</value></data>
   <data name="Edit_Save_Moderator" xml:space="preserve"><value>Enregistrer et valider</value></data>
-  <data name="Edit_Saved_Pending" xml:space="preserve"><value>Merci ! Ta proposition est chez la modération. Tu recevras un e-mail dès qu’elle sera validée ou refusée.</value></data>
+  <data name="Edit_Saved_Pending" xml:space="preserve"><value>Merci ! Ta proposition est chez la modération. Tu recevras un e-mail dès qu'elle sera validée ou refusée.</value></data>
   <data name="Edit_Saved_Approved" xml:space="preserve"><value>Enregistré et en ligne.</value></data>
   <data name="Edit_NoChange" xml:space="preserve"><value>Rien n'a changé.</value></data>
   <data name="Edit_BaseInfo" xml:space="preserve"><value>Tu modifies la version {0}.</value></data>
@@ -188,14 +188,14 @@
   <data name="SketchKind_Wall" xml:space="preserve"><value>Tombant</value></data>
   <data name="SketchKind_Edge" xml:space="preserve"><value>Arête</value></data>
   <data name="SketchKind_Route" xml:space="preserve"><value>Parcours</value></data>
-  <data name="SketchKind_Line" xml:space="preserve"><value>Fil d’Ariane</value></data>
+  <data name="SketchKind_Line" xml:space="preserve"><value>Fil d'Ariane</value></data>
   <data name="SketchKind_PlantField" xml:space="preserve"><value>Herbier</value></data>
   <data name="Field_Sketch" xml:space="preserve"><value>Croquis {0}</value></data>
   <data name="Field_SketchKind" xml:space="preserve"><value>Type</value></data>
   <data name="Field_SketchPoints" xml:space="preserve"><value>Emplacement</value></data>
   <data name="Field_SketchDepth" xml:space="preserve"><value>Profondeur</value></data>
   <data name="Field_SketchLabel" xml:space="preserve"><value>Libellé</value></data>
-  <data name="Error_InvalidSketch" xml:space="preserve"><value>Le croquis est invalide : 200 éléments au plus, tous les points à 2 km au plus du site, profondeur jusqu’à 200 m, libellés de 80 caractères au plus.</value></data>
+  <data name="Error_InvalidSketch" xml:space="preserve"><value>Le croquis est invalide : 200 éléments au plus, tous les points à 2 km au plus du site, profondeur jusqu'à 200 m, libellés de 80 caractères au plus.</value></data>
   <data name="Edit_Tab_Media" xml:space="preserve"><value>Photos</value></data>
   <data name="Media_Help" xml:space="preserve"><value>Téléverse des photos au-dessus et sous l'eau. Une photo n'est publique que lorsqu'une version validée l'utilise. La position et les données de l'appareil sont retirées des images publiées.</value></data>
   <data name="Media_Upload" xml:space="preserve"><value>Téléverser des photos</value></data>
@@ -221,7 +221,7 @@
   <data name="Media_Details" xml:space="preserve"><value>Détails</value></data>
   <data name="Media_SaveDetails" xml:space="preserve"><value>Enregistrer les détails</value></data>
   <data name="Media_EntryPoint" xml:space="preserve"><value>Point d'entrée</value></data>
-  <data name="MediaSection_Underwater" xml:space="preserve"><value>Sous l’eau</value></data>
+  <data name="MediaSection_Underwater" xml:space="preserve"><value>Sous l'eau</value></data>
   <data name="MediaSection_Surroundings" xml:space="preserve"><value>Environs (hors de l'eau)</value></data>
   <data name="MediaSection_Approach" xml:space="preserve"><value>Accès et parking</value></data>
   <data name="MediaSection_EntryPoint" xml:space="preserve"><value>Point d'entrée</value></data>
@@ -252,8 +252,8 @@
   <data name="Field_Markdown_Preview" xml:space="preserve"><value>Aperçu</value></data>
   <data name="Error_InvalidOtherNames" xml:space="preserve"><value>Les autres noms sont invalides : 5 au plus, 80 caractères au plus chacun, sans doublon ni identique au nom.</value></data>
   <data name="Nav_Platform" xml:space="preserve"><value>Plateforme</value></data>
-  <data name="Platform_Queues_Title" xml:space="preserve"><value>File d’attente des e-mails</value></data>
-  <data name="Platform_Queues_Lead" xml:space="preserve"><value>Tous les e-mails passent par la file d’attente. Si un e-mail échoue cinq fois ou définitivement, il atterrit dans la file des messages morts et t’attend ici.</value></data>
+  <data name="Platform_Queues_Title" xml:space="preserve"><value>File d'attente des e-mails</value></data>
+  <data name="Platform_Queues_Lead" xml:space="preserve"><value>Tous les e-mails passent par la file d'attente. Si un e-mail échoue cinq fois ou définitivement, il atterrit dans la file des messages morts et t'attend ici.</value></data>
   <data name="Platform_Refresh" xml:space="preserve"><value>Actualiser</value></data>
   <data name="Platform_Waiting" xml:space="preserve"><value>Dans la file</value></data>
   <data name="Platform_DeadLetters" xml:space="preserve"><value>Messages morts</value></data>
@@ -267,22 +267,22 @@
   <data name="Platform_Reason" xml:space="preserve"><value>Erreur</value></data>
   <data name="Platform_FailedAt" xml:space="preserve"><value>Échec le</value></data>
   <data name="Platform_CreatedAt" xml:space="preserve"><value>Créé le</value></data>
-  <data name="Platform_MessageId" xml:space="preserve"><value>Id de l’e-mail</value></data>
+  <data name="Platform_MessageId" xml:space="preserve"><value>Id de l'e-mail</value></data>
   <data name="Platform_Replay" xml:space="preserve"><value>Renvoyer</value></data>
   <data name="Platform_Delete" xml:space="preserve"><value>Supprimer</value></data>
   <data name="Platform_Cancel" xml:space="preserve"><value>Annuler</value></data>
   <data name="Platform_Unreadable" xml:space="preserve"><value>Message illisible</value></data>
   <data name="Platform_Replayed" xml:space="preserve"><value>{0} e-mail(s) de nouveau dans la file.</value></data>
   <data name="Platform_Deleted" xml:space="preserve"><value>{0} e-mail(s) supprimé(s).</value></data>
-  <data name="Platform_Delete_Title" xml:space="preserve"><value>Supprimer l’e-mail ?</value></data>
+  <data name="Platform_Delete_Title" xml:space="preserve"><value>Supprimer l'e-mail ?</value></data>
   <data name="Platform_DeleteAll_Title" xml:space="preserve"><value>Supprimer tous les messages morts ?</value></data>
   <data name="Platform_Delete_Text" xml:space="preserve"><value>Les e-mails supprimés ne peuvent pas être restaurés.</value></data>
   <data name="Edit_OpenProposal" xml:space="preserve"><value>Tu as ici une proposition en attente du {0}.</value></data>
   <data name="Edit_OpenProposal_Link" xml:space="preserve"><value>Mes propositions</value></data>
   <data name="Nav_MyProposals" xml:space="preserve"><value>Mes propositions</value></data>
   <data name="MyProposals_Title" xml:space="preserve"><value>Mes propositions</value></data>
-  <data name="MyProposals_Lead" xml:space="preserve"><value>Tes propositions et leur état. Tu reçois aussi un e-mail lorsqu’une proposition est validée ou refusée.</value></data>
-  <data name="MyProposals_Empty" xml:space="preserve"><value>Tu n’as encore rien proposé.</value></data>
+  <data name="MyProposals_Lead" xml:space="preserve"><value>Tes propositions et leur état. Tu reçois aussi un e-mail lorsqu'une proposition est validée ou refusée.</value></data>
+  <data name="MyProposals_Empty" xml:space="preserve"><value>Tu n'as encore rien proposé.</value></data>
   <data name="MyProposals_Submitted" xml:space="preserve"><value>Envoyée le {0}</value></data>
   <data name="MyProposals_Reviewed" xml:space="preserve"><value>examinée le {0}</value></data>
   <data name="MyProposals_Comment" xml:space="preserve"><value>Ton commentaire</value></data>
@@ -292,7 +292,7 @@
   <data name="MyProposals_Withdrawn" xml:space="preserve"><value>Ta proposition a été retirée.</value></data>
   <data name="Platform_ReplayHint" xml:space="preserve"><value>Les e-mails avec des liens de connexion ou de mot de passe expirent : renvoyés, leurs liens peuvent déjà être invalides.</value></data>
   <data name="Nav_Moderation" xml:space="preserve"><value>Modération</value></data>
-  <data name="Platform_Lead" xml:space="preserve"><value>Exploitation de la plateforme : comptes, calculs de prévision et file d’envoi des e-mails. Réservé aux admins.</value></data>
+  <data name="Platform_Lead" xml:space="preserve"><value>Exploitation de la plateforme : comptes, calculs de prévision et file d'envoi des e-mails. Réservé aux admins.</value></data>
   <data name="Platform_BlockedCount" xml:space="preserve"><value>dont {0} bloqué(s)</value></data>
   <data name="Field_WaterBodyId_ModeratorOnly" xml:space="preserve"><value>La modération change le lac ou la rivière.</value></data>
   <data name="MyProposals_NewSiteSubmitted" xml:space="preserve"><value>Merci ! Ta proposition de nouveau site est envoyée. Une modératrice ou un modérateur la vérifie.</value></data>
@@ -340,7 +340,7 @@
   <data name="Forecast_Column_Calls" xml:space="preserve"><value>Appels</value></data>
   <data name="Forecast_Column_Errors" xml:space="preserve"><value>Erreurs</value></data>
   <data name="Forecast_OnlyErrors" xml:space="preserve"><value>Seulement les passages avec erreurs</value></data>
-  <data name="Forecast_Progress" xml:space="preserve"><value>{0} sur {1} sites, {2} appels jusqu’ici</value></data>
+  <data name="Forecast_Progress" xml:space="preserve"><value>{0} sur {1} sites, {2} appels jusqu'ici</value></data>
   <data name="Forecast_Failure_Http" xml:space="preserve"><value>HTTP {0}</value></data>
   <data name="Forecast_Failure_Timeout" xml:space="preserve"><value>Délai dépassé</value></data>
   <data name="Forecast_Failure_CircuitOpen" xml:space="preserve"><value>Disjoncteur ouvert</value></data>
@@ -363,7 +363,7 @@
   <data name="Account_Password" xml:space="preserve"><value>Mot de passe</value></data>
   <data name="Account_NoPassword" xml:space="preserve"><value>aucun mot de passe</value></data>
   <data name="Account_FailedAttempts" xml:space="preserve"><value>Tentatives échouées</value></data>
-  <data name="Account_LockedOutUntil" xml:space="preserve"><value>bloqué après des échecs jusqu’au {0}</value></data>
+  <data name="Account_LockedOutUntil" xml:space="preserve"><value>bloqué après des échecs jusqu'au {0}</value></data>
   <data name="Account_BlockedBy" xml:space="preserve"><value>le {0} par {1}</value></data>
   <data name="Account_Contributions" xml:space="preserve"><value>Contributions</value></data>
   <data name="Account_ContributionsValue" xml:space="preserve"><value>{0} versions, dont {1} en attente · {2} photos</value></data>
@@ -375,11 +375,11 @@
   <data name="Account_SendResetDone" xml:space="preserve"><value>L'e-mail avec le lien est envoyée.</value></data>
   <data name="Account_Delete" xml:space="preserve"><value>Supprimer le compte</value></data>
   <data name="Account_DeleteTitle" xml:space="preserve"><value>Supprimer le compte ?</value></data>
-  <data name="Account_DeleteText" xml:space="preserve"><value>Le compte « {0} » sera supprimé. Ses versions restent comme « compte supprimé », les photos privées sont supprimées, les publiques restent avec le nom du photographe. Impossible d’annuler.</value></data>
+  <data name="Account_DeleteText" xml:space="preserve"><value>Le compte « {0} » sera supprimé. Ses versions restent comme « compte supprimé », les photos privées sont supprimées, les publiques restent avec le nom du photographe. Impossible d'annuler.</value></data>
   <data name="Account_BlockTitle" xml:space="preserve"><value>Bloquer le compte ?</value></data>
   <data name="Account_BlockText" xml:space="preserve"><value>« {0} » ne peut plus se connecter. Les propositions en attente sont refusées.</value></data>
   <data name="Account_Cancel" xml:space="preserve"><value>Annuler</value></data>
-  <data name="Account_SelfHint" xml:space="preserve"><value>C’est toi. Tu ne peux pas bloquer ou supprimer ton propre compte ici ; supprime-le dans ton profil.</value></data>
+  <data name="Account_SelfHint" xml:space="preserve"><value>C'est toi. Tu ne peux pas bloquer ou supprimer ton propre compte ici ; supprime-le dans ton profil.</value></data>
   <data name="Forecast_Column_Sites" xml:space="preserve"><value>Sites</value></data>
   <data name="Map_Layer_Grey" xml:space="preserve"><value>Carte grise</value></data>
   <data name="Error_InvalidStation" xml:space="preserve"><value>La station n'est pas un numéro de station de l'OFEV : 4 chiffres, p. ex. 2091.</value></data>
@@ -416,4 +416,19 @@
   <data name="Reports_Delete" xml:space="preserve"><value>Supprimer</value></data>
   <data name="Reports_DeleteTitle" xml:space="preserve"><value>Supprimer le signalement ?</value></data>
   <data name="Reports_DeleteText" xml:space="preserve"><value>Le signalement pour {0} du {1} sera supprimé définitivement. Pour le cacher, « Masquer » suffit.</value></data>
+  <data name="Translate_Button" xml:space="preserve"><value>Traduire automatiquement</value></data>
+  <data name="Translate_Running" xml:space="preserve"><value>Traduction en cours …</value></data>
+  <data name="Translate_Source" xml:space="preserve"><value>Source</value></data>
+  <data name="Translate_SourceText" xml:space="preserve"><value>Source : {0}</value></data>
+  <data name="Translate_Replace" xml:space="preserve"><value>Les textes dans cette langue seront remplacés.</value></data>
+  <data name="Translate_Confirm" xml:space="preserve"><value>Remplacer</value></data>
+  <data name="Translate_Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Translate_Done" xml:space="preserve"><value>Traduit automatiquement. Vérifie les textes, puis enregistre.</value></data>
+  <data name="Translate_Remaining" xml:space="preserve"><value>Encore {0} traductions aujourd'hui.</value></data>
+  <data name="Translate_Error_NotAllowed" xml:space="preserve"><value>Tu n'as pas le droit de traduire.</value></data>
+  <data name="Translate_Error_Unavailable" xml:space="preserve"><value>La traduction automatique n'est pas disponible.</value></data>
+  <data name="Translate_Error_InvalidInput" xml:space="preserve"><value>Le texte est vide ou trop long pour la traduction.</value></data>
+  <data name="Translate_Error_DailyLimit" xml:space="preserve"><value>Ta limite du jour est atteinte. Réessaie demain.</value></data>
+  <data name="Translate_Error_BudgetExhausted" xml:space="preserve"><value>Le budget de traduction de ce mois est épuisé.</value></data>
+  <data name="Translate_Error_Failed" xml:space="preserve"><value>La traduction n'a pas fonctionné. Réessaie plus tard.</value></data>
 </root>

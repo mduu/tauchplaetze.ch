@@ -4,6 +4,7 @@ using Tauchplaetze.Core.CrossCutting.Locks;
 using Tauchplaetze.Core.CrossCutting.Mail;
 using Tauchplaetze.Core.CrossCutting.Mail.Queue;
 using Tauchplaetze.Core.CrossCutting.Storage;
+using Tauchplaetze.Core.Features.Translations;
 using Tauchplaetze.Core.Tests.Features.Forecasts;
 
 namespace Tauchplaetze.Core.Tests.Sql;
@@ -257,5 +258,30 @@ internal sealed class FlakyMailSender : IMailSender
 
         Sent.Enqueue(message);
         return Task.CompletedTask;
+    }
+}
+
+/// <summary>Übersetzt ohne Claude API: hängt die Zielsprache an jede Zeile, das Markdown bleibt. <see cref="Translate"/> ersetzt das, etwa für kaputtes Markdown.</summary>
+internal sealed class FakeTranslator : ITextTranslator
+{
+    public const int TokensPerCall = 1000;
+
+    public int Calls { get; private set; }
+
+    public Func<string, string, string>? Translate { get; set; }
+
+    public string Version => "fake/1";
+
+    Task<TranslatorReply> ITextTranslator.Translate(string sourceCulture, string targetCulture, IReadOnlyDictionary<string, string> fields, CancellationToken ct)
+    {
+        Calls++;
+        var translate = Translate ?? ((text, target) => string.Join('\n', text.Split('\n').Select(line => line.Length == 0 ? line : $"{line} ({target})")));
+        return Task.FromResult(new TranslatorReply(fields.ToDictionary(f => f.Key, f => translate(f.Value, targetCulture)), TokensPerCall, TokensPerCall));
+    }
+
+    public void Reset()
+    {
+        Calls = 0;
+        Translate = null;
     }
 }

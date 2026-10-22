@@ -28,6 +28,8 @@ using Tauchplaetze.Core.Features.Forecasts.Queries;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
 using Tauchplaetze.Core.Features.Operations.Queries;
+using Tauchplaetze.Core.Features.Translations;
+using Tauchplaetze.Core.Features.Translations.Queries;
 using Tauchplaetze.Core.Features.Reports;
 using Tauchplaetze.Core.Features.Reports.Commands;
 using Tauchplaetze.Core.Features.Reports.Queries;
@@ -86,6 +88,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
     public FakeQuery<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>> PendingRevisions { get; } = new(_ => []);
 
     public FakeQuery<GetDiveSiteForEditingQuery, DiveSiteForEditing?> ForEditing { get; } = new(_ => null);
+
+    public FakeQuery<GetTranslationAllowanceQuery, TranslationAllowance> TranslationAllowance { get; } = new(_ => new TranslationAllowance(TranslationError.Unavailable, 0));
 
     /// <summary>Wie der Core mit dem Schlüssel «richtig» in der Konfiguration.</summary>
     public FakeQuery<ExportContentQuery, ExportContentResult> ContentExport { get; } = new(query =>
@@ -160,6 +164,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<WithdrawRevisionCommand, EditorialResult>>(Withdraw));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>>(PendingRevisions));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteForEditingQuery, DiveSiteForEditing?>>(ForEditing));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetTranslationAllowanceQuery, TranslationAllowance>>(TranslationAllowance));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>>(SiteMedia));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSignedInAccountQuery, SignedInAccount?>>(SignedIn));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetMailQueueStatusQuery, MailQueueStatus?>>(MailQueue));

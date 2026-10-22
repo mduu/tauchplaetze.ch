@@ -416,4 +416,19 @@
   <data name="Reports_Delete" xml:space="preserve"><value>Delete</value></data>
   <data name="Reports_DeleteTitle" xml:space="preserve"><value>Delete report?</value></data>
   <data name="Reports_DeleteText" xml:space="preserve"><value>The report for {0} of {1} will be deleted for good. To hide it, «Hide» is enough.</value></data>
+  <data name="Translate_Button" xml:space="preserve"><value>Translate automatically</value></data>
+  <data name="Translate_Running" xml:space="preserve"><value>Translating …</value></data>
+  <data name="Translate_Source" xml:space="preserve"><value>Source</value></data>
+  <data name="Translate_SourceText" xml:space="preserve"><value>Source: {0}</value></data>
+  <data name="Translate_Replace" xml:space="preserve"><value>The texts in this language will be replaced.</value></data>
+  <data name="Translate_Confirm" xml:space="preserve"><value>Replace</value></data>
+  <data name="Translate_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Translate_Done" xml:space="preserve"><value>Translated automatically. Check the texts, then save.</value></data>
+  <data name="Translate_Remaining" xml:space="preserve"><value>{0} translations left today.</value></data>
+  <data name="Translate_Error_NotAllowed" xml:space="preserve"><value>You are not allowed to translate.</value></data>
+  <data name="Translate_Error_Unavailable" xml:space="preserve"><value>Automatic translation is not available.</value></data>
+  <data name="Translate_Error_InvalidInput" xml:space="preserve"><value>The text is empty or too long to translate.</value></data>
+  <data name="Translate_Error_DailyLimit" xml:space="preserve"><value>You have reached your limit for today. Try again tomorrow.</value></data>
+  <data name="Translate_Error_BudgetExhausted" xml:space="preserve"><value>The translation budget for this month is used up.</value></data>
+  <data name="Translate_Error_Failed" xml:space="preserve"><value>The translation did not work. Try again later.</value></data>
 </root>
