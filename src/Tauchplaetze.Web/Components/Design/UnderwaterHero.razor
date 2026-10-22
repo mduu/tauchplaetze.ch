@@ -1,5 +1,7 @@
-@* Hero mit Titelbild oder, ohne Foto, der Unterwasser-Silhouette aus dem Entwurf (design/tauchplatz.html). Die Grafik ist Dekoration. *@
+@* Hero mit Titelbild oder, ohne Foto, der Unterwasser-Silhouette aus dem Entwurf (design/tauchplatz.html). Mit Prognose zeigt die Silhouette die Sprungschicht von heute als Band mit Tiefenangaben. *@
 @using Tauchplaetze.Web.Features.DiveSites
+@using Tauchplaetze.Web.Features.Forecasts
+@inject IStringLocalizer<SharedStrings> L
 <section class="underwater-hero @(Photo is null ? "" : "has-photo")">
     @if (Photo is { } photo)
     {
@@ -9,12 +11,33 @@
     }
     else
     {
+    <svg class="layers" viewBox="0 0 100 420" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        @if (Band is var (bandTop, bandBottom))
+        {
+            <rect x="0" y="0" width="100" height="@Svg(bandTop)" fill="#14413F" />
+            <rect x="0" y="@Svg(bandTop)" width="100" height="@Svg(bandBottom - bandTop)" fill="#0F3335" />
+            <rect x="0" y="@Svg(bandTop)" width="100" height="@Svg(bandBottom - bandTop)" fill="var(--color-signal)" opacity="0.14" data-thermocline-band />
+            <rect x="0" y="@Svg(bandBottom)" width="100" height="@Svg(420 - bandBottom)" fill="#092427" />
+            <line x1="0" y1="@Svg(bandTop)" x2="100" y2="@Svg(bandTop)" stroke="var(--color-signal)" stroke-width="1.5" vector-effect="non-scaling-stroke" opacity="0.8" />
+            <line x1="0" y1="@Svg(bandBottom)" x2="100" y2="@Svg(bandBottom)" stroke="var(--color-signal)" stroke-width="1.5" vector-effect="non-scaling-stroke" opacity="0.8" />
+        }
+        else if (Mixed)
+        {
+            <linearGradient id="hero-mixed" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#14413F" />
+                <stop offset="1" stop-color="#0F3335" />
+            </linearGradient>
+            <rect x="0" y="0" width="100" height="420" fill="url(#hero-mixed)" data-mixed />
+        }
+        else
+        {
+            <rect x="0" y="0" width="100" height="150" fill="#14413F" />
+            <rect x="0" y="150" width="100" height="110" fill="#0F3335" />
+            <rect x="0" y="260" width="100" height="160" fill="#092427" />
+            <line x1="0" y1="150" x2="100" y2="150" stroke="var(--color-signal)" stroke-width="1.5" stroke-dasharray="8 8" vector-effect="non-scaling-stroke" opacity="0.6" />
+        }
+    </svg>
     <svg class="scene" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-        <rect x="0" y="0" width="1440" height="420" fill="#0B2427" />
-        <rect x="0" y="0" width="1440" height="150" fill="#14413F" />
-        <rect x="0" y="150" width="1440" height="110" fill="#0F3335" />
-        <rect x="0" y="260" width="1440" height="160" fill="#092427" />
-        <line x1="0" y1="150" x2="1440" y2="150" stroke="var(--color-signal)" stroke-width="1.5" stroke-dasharray="8 8" opacity="0.6" />
         <polygon points="1440,0 1440,420 980,420 1010,360 990,318 1030,270 1012,226 1046,180 1030,130 1064,84 1050,40 1080,0" fill="var(--color-rock)" />
         <polygon points="1010,360 1040,372 1080,358 1060,346" fill="#0E2D30" />
         <circle cx="640" cy="240" r="4" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
@@ -23,6 +46,19 @@
         <circle cx="644" cy="120" r="2" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
         <circle cx="640" cy="70" r="1.6" fill="none" stroke="var(--color-bubble)" stroke-width="1.5" />
     </svg>
+    @if (Band is var (top, bottom))
+    {
+        <div class="thermocline-labels" aria-hidden="true">
+            @foreach (var (label, index) in Labels.Select((label, index) => (label, index)))
+            {
+                <span class="@LabelClass(index)" style="top: @Percent(label.Y)" data-thermocline-depth>@(Labels.Count == 1 ? $"{L["Start_CrossSection_Thermocline"]} {label.Text}" : label.Text)</span>
+            }
+            @if (Labels.Count == 2 && bottom - top >= 2 * LabelGap)
+            {
+                <span class="term" style="top: @Percent((top + bottom) / 2)">@L["Start_CrossSection_Thermocline"]</span>
+            }
+        </div>
+    }
     }
     <div class="content">
         @ChildContent
@@ -40,4 +76,36 @@
     /// <summary>Namensnennung des Titelbilds.</summary>
     [Parameter]
     public string? Credit { get; set; }
+
+    /// <summary>Mit Ober- und Unterkante zeichnet die Illustration die Sprungschicht als Band in Tiefe (0 bis 40 m).</summary>
+    [Parameter]
+    public decimal? ThermoclineTop { get; set; }
+
+    [Parameter]
+    public decimal? ThermoclineBottom { get; set; }
+
+    /// <summary>Profil ohne Sprungschicht: Die Illustration zeigt keine Linie.</summary>
+    [Parameter]
+    public bool Mixed { get; set; }
+
+    private const double LabelGap = 20;
+
+    /// <summary>40 m reichen bis 60 % der Höhe. Darunter bleibt Platz für den Titel.</summary>
+    private const double UnitsPerMeter = 6.3;
+
+    private const double MinLabelY = 24;
+
+    private (double Top, double Bottom)? Band => ThermoclineTop is { } top && ThermoclineBottom is { } bottom ? (Y(top), Y(bottom)) : null;
+
+    private IReadOnlyList<ThermoclineLabels.Label> Labels => ThermoclineTop is { } top && ThermoclineBottom is { } bottom
+        ? ThermoclineLabels.For(top, bottom, Y, LabelGap, MinLabelY)
+        : [];
+
+    private static double Y(decimal depth) => Math.Clamp((double)depth, 0, 40) * UnitsPerMeter;
+
+    private static string Svg(double value) => value.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+
+    private string LabelClass(int index) => Labels.Count == 1 ? "" : index == 0 ? "above" : "below";
+
+    private static string Percent(double y) => Svg(y / 420 * 100) + "%";
 }

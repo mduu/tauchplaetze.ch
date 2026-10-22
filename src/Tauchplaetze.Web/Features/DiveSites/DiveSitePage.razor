@@ -29,7 +29,8 @@
             <HreflangLinks />
         </HeadContent>
 
-        <UnderwaterHero Photo="site.Hero" Credit="@(site.Hero is { } hero ? L["Hero_Credit", hero.Photographer].Value : null)">
+        <UnderwaterHero Photo="site.Hero" Credit="@(site.Hero is { } hero ? L["Hero_Credit", hero.Photographer].Value : null)"
+                        ThermoclineTop="Today?.ThermoclineTop" ThermoclineBottom="Today?.ThermoclineBottom" Mixed="@(Today is { ProfileSource: not null, ThermoclineTop: null })">
             <nav aria-label="@L["Breadcrumb"]">
                 <ol class="breadcrumb">
                     <li>@site.WaterBodyName</li>
@@ -178,6 +179,8 @@
     private DiveSiteLookup? lookup;
 
     private SiteForecast? forecast;
+
+    private ForecastDay? Today => forecast is { Days: [var today, ..] } ? today : null;
 
     private SiteDischarge? discharge;
 
