@@ -119,13 +119,14 @@ else
 
         <section class="page-section edit-section" aria-labelledby="edit-texts">
             <h2 id="edit-texts" class="edit-section-title">@Site["EditMode_Section_Texts"]</h2>
+            <p class="field-help">@L["Field_Markdown_Help"]</p>
             <LanguageTabs Label="@Site["EditMode_Section_Texts"]" @bind-Selected="textLanguage">
                 <div class="edit-texts">
-                    <FormTextArea Label="@L["Field_UnderwaterDescription"]" @bind-Value="form.Texts[context].UnderwaterDescription" Rows="6" />
-                    <FormTextArea Label="@L["Field_HazardsInfo"]" @bind-Value="form.Texts[context].HazardsInfo" MaxLength="2000" />
-                    <FormTextArea Label="@L["Field_ApproachInfo"]" @bind-Value="form.Texts[context].ApproachInfo" MaxLength="2000" />
-                    <FormTextArea Label="@L["Field_SurroundingsInfo"]" @bind-Value="form.Texts[context].SurroundingsInfo" MaxLength="2000" />
-                    <FormTextArea Label="@L["Field_FacilitiesInfo"]" @bind-Value="form.Texts[context].FacilitiesInfo" Rows="2" MaxLength="1000" />
+                    <FormTextArea Label="@L["Field_UnderwaterDescription"]" @bind-Value="form.Texts[context].UnderwaterDescription" Preview="SiteTextMarkup.ToHtml" PreviewLabel="@L["Field_Markdown_Preview"]" Rows="6" />
+                    <FormTextArea Label="@L["Field_HazardsInfo"]" @bind-Value="form.Texts[context].HazardsInfo" Preview="SiteTextMarkup.ToHtml" PreviewLabel="@L["Field_Markdown_Preview"]" MaxLength="2000" />
+                    <FormTextArea Label="@L["Field_ApproachInfo"]" @bind-Value="form.Texts[context].ApproachInfo" Preview="SiteTextMarkup.ToHtml" PreviewLabel="@L["Field_Markdown_Preview"]" MaxLength="2000" />
+                    <FormTextArea Label="@L["Field_SurroundingsInfo"]" @bind-Value="form.Texts[context].SurroundingsInfo" Preview="SiteTextMarkup.ToHtml" PreviewLabel="@L["Field_Markdown_Preview"]" MaxLength="2000" />
+                    <FormTextArea Label="@L["Field_FacilitiesInfo"]" @bind-Value="form.Texts[context].FacilitiesInfo" Preview="SiteTextMarkup.ToHtml" PreviewLabel="@L["Field_Markdown_Preview"]" Rows="2" MaxLength="1000" />
                 </div>
             </LanguageTabs>
         </section>

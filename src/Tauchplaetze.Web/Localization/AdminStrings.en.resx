@@ -248,6 +248,8 @@
   <data name="Photo_NoPreview" xml:space="preserve"><value>No preview</value></data>
   <data name="Field_OtherNames" xml:space="preserve"><value>Also known as</value></data>
   <data name="Field_OtherNames_Help" xml:space="preserve"><value>Other names, separated by commas, e.g. «Grosser Parkplatz, Seeterasse». At most 5.</value></data>
+  <data name="Field_Markdown_Help" xml:space="preserve"><value>Formatting: «## Subheading», «**bold**», «*italic*», «- » for bullet lists, «1. » for numbered lists. Blank line for a new paragraph.</value></data>
+  <data name="Field_Markdown_Preview" xml:space="preserve"><value>Preview</value></data>
   <data name="Error_InvalidOtherNames" xml:space="preserve"><value>The other names are invalid: at most 5, each at most 80 characters, none repeated or equal to the name.</value></data>
   <data name="Nav_Platform" xml:space="preserve"><value>Platform</value></data>
   <data name="Platform_Queues_Title" xml:space="preserve"><value>Mail queue</value></data>

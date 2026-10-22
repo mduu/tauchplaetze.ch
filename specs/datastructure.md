@@ -98,7 +98,7 @@ Alle `…Rating`-Felder haben einen Check Constraint `BETWEEN 1 AND 5`. Im Code 
 |---|---|---|
 | `DiveSiteId` | Guid | PK-Teil |
 | `Culture` | string(2) | PK-Teil |
-| `UnderwaterDescription` | nvarchar(max), optional | Unter Wasser. Markdown, eingeschränkt (Absätze, Listen, Fett) |
+| `UnderwaterDescription` | nvarchar(max), optional | Unter Wasser. Einfaches Markdown wie alle Texte der Übersetzung (siehe `design-system.md`, `SiteTextBlock`) |
 | `SurroundingsInfo` | string(2000), optional | Umgebung ausserhalb des Wassers |
 | `ApproachInfo` | string(2000), optional | Anfahrt und Parkplatz, Gebühren |
 | `HazardsInfo` | string(2000), optional | Gefahren, Schiffsverkehr, Verbote |

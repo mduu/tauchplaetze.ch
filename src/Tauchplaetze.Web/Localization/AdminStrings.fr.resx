@@ -248,6 +248,8 @@
   <data name="Photo_NoPreview" xml:space="preserve"><value>Pas d'aperçu</value></data>
   <data name="Field_OtherNames" xml:space="preserve"><value>Aussi appelé</value></data>
   <data name="Field_OtherNames_Help" xml:space="preserve"><value>Autres noms, séparés par des virgules, p. ex. «Grosser Parkplatz, Seeterasse». 5 au plus.</value></data>
+  <data name="Field_Markdown_Help" xml:space="preserve"><value>Mise en forme : «## Intertitre», «**gras**», «*italique*», «- » pour les listes à puces, «1. » pour les listes numérotées. Ligne vide pour un nouveau paragraphe.</value></data>
+  <data name="Field_Markdown_Preview" xml:space="preserve"><value>Aperçu</value></data>
   <data name="Error_InvalidOtherNames" xml:space="preserve"><value>Les autres noms sont invalides : 5 au plus, 80 caractères au plus chacun, sans doublon ni identique au nom.</value></data>
   <data name="Nav_Platform" xml:space="preserve"><value>Plateforme</value></data>
   <data name="Platform_Queues_Title" xml:space="preserve"><value>File d’attente des e-mails</value></data>
