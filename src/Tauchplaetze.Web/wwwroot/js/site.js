@@ -220,3 +220,77 @@ window.tauchplaetzeEdit = (function () {
     }, { maximumAge: 600000, timeout: 10000 });
   });
 })();
+
+// Fotos auf der Detailseite (a[data-lightbox]) als Lightbox im Dialog. Ohne JavaScript öffnet der Link das Bild in einem neuen Tab.
+(function () {
+  let links = [];
+  let index = 0;
+
+  function dialog() {
+    return document.querySelector('[data-lightbox-dialog]');
+  }
+
+  function show(box, i) {
+    index = (i + links.length) % links.length;
+    const link = links[index];
+    const thumb = link.querySelector('img');
+    const image = box.querySelector('.lightbox-image');
+    image.removeAttribute('srcset');
+    image.src = link.href;
+    if (thumb.srcset) {
+      image.srcset = thumb.srcset;
+      image.sizes = '100vw';
+    }
+    image.alt = thumb.alt;
+
+    const caption = box.querySelector('.lightbox-caption');
+    const source = link.closest('figure').querySelector('figcaption');
+    caption.replaceChildren.apply(caption, source ? Array.from(source.childNodes, function (node) { return node.cloneNode(true); }) : []);
+
+    const single = links.length < 2;
+    box.querySelector('[data-lightbox-previous]').hidden = single;
+    box.querySelector('[data-lightbox-next]').hidden = single;
+    box.querySelector('.lightbox-count').textContent = single ? '' : (index + 1) + ' / ' + links.length;
+  }
+
+  document.addEventListener('click', function (event) {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) {
+      return;
+    }
+
+    const link = event.target.closest && event.target.closest('a[data-lightbox]');
+    const box = dialog();
+    if (link && box) {
+      event.preventDefault();
+      links = Array.from(document.querySelectorAll('a[data-lightbox]'));
+      show(box, links.indexOf(link));
+      box.showModal();
+      return;
+    }
+
+    if (!box || !box.open) {
+      return;
+    }
+
+    if (event.target.closest('[data-lightbox-close]') || event.target === box) {
+      box.close();
+    } else if (event.target.closest('[data-lightbox-previous]')) {
+      show(box, index - 1);
+    } else if (event.target.closest('[data-lightbox-next]')) {
+      show(box, index + 1);
+    }
+  });
+
+  document.addEventListener('keydown', function (event) {
+    const box = dialog();
+    if (!box || !box.open || links.length < 2) {
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
+      show(box, index - 1);
+    } else if (event.key === 'ArrowRight') {
+      show(box, index + 1);
+    }
+  });
+})();

@@ -1648,3 +1648,7 @@ button.chip-toggle:focus-visible {
     grid-column: 1 / -1;
   }
 }
+
+html:has(dialog[data-lightbox-dialog][open]) {
+  overflow: hidden;
+}
