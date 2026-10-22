@@ -162,7 +162,8 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
     }
 
     /// <remarks>
-    /// Zuerst 50 m vom Platz Richtung Seemitte, bei fehlendem, zu altem Wert oder zu wenigen Pixeln 100 m. Höchstens zwei Calls pro Platz.
+    /// Zuerst 50 m vom Platz Richtung Seemitte, bei fehlendem, zu altem Wert oder zu wenigen Pixeln 100 m. Liefern beide nichts, folgen Punkte bei 100 m in gedrehter Richtung (<see cref="ShorePoint.FallbackTurns"/>), bis einer einen brauchbaren Wert hat.
+    /// Höchstens sechs Calls pro Platz.
     /// Die Richtung gibt der eigene Satellitenpunkt des Platzes (für Sentinel-3 seewärts gesetzt), sonst der des Sees, sonst seine Mitte.
     /// Ist kein Wert da, gilt Sentinel-3.
     /// </remarks>
@@ -187,9 +188,25 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
         var farPoint = SeawardPoint.Of(site.Location.Y, site.Location.X, toward.Y, toward.X, ShorePoint.FarMeters);
         var far = await ShoreSatelliteAt(lake, farPoint.Latitude, farPoint.Longitude, today, recorder, ct);
         var picked = ShorePoint.Pick(near, far, ShorePoint.MinPixels);
+        if (picked is not null)
+        {
+            return picked;
+        }
+
+        foreach (var degrees in ShorePoint.FallbackTurns)
+        {
+            var turnedPoint = SeawardPoint.Turned(site.Location.Y, site.Location.X, toward.Y, toward.X, ShorePoint.FarMeters, degrees);
+            var turned = await ShoreSatelliteAt(lake, turnedPoint.Latitude, turnedPoint.Longitude, today, recorder, ct);
+            picked = ShorePoint.Pick(picked, turned, ShorePoint.MinPixels);
+            if (!ShorePoint.NeedsFallback(picked, today, ShorePoint.MinPixels, freshDays))
+            {
+                return picked;
+            }
+        }
+
         if (picked is null)
         {
-            logger.LogInformation("Sentinel-2 has no value at 50 m or 100 m from dive site {Slug}", site.Slug);
+            logger.LogInformation("Sentinel-2 has no value around dive site {Slug}", site.Slug);
         }
 
         return picked;

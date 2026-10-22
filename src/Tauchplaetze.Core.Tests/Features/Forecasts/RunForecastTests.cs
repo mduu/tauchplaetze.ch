@@ -132,7 +132,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Liefert_Sentinel_2_bei_50_und_100_m_keine_Werte_ist_das_kein_Fehler_und_Sentinel_3_gilt()
+    public async Task Liefert_Sentinel_2_rund_um_den_Platz_keine_Werte_ist_das_kein_Fehler_und_Sentinel_3_gilt()
     {
         // Arrange
         var siteId = await PrepareRiffWilliams();
@@ -145,7 +145,25 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(ForecastRunStatus.Succeeded, run.Status);
         var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
         Assert.Equal(ClaritySource.Sentinel3Lake, today.ClaritySource);
-        Assert.Equal(2, Sql.Sources.Requests.Count(url => url.Contains("/sentinel2/Z490/", StringComparison.Ordinal)));
+        Assert.Equal(6, Sql.Sources.Requests.Count(url => url.Contains("/sentinel2/Z490/", StringComparison.Ordinal)));
+    }
+
+    [SqlFact]
+    public async Task Liefern_50_und_100_m_Richtung_Seemitte_keine_Werte_gilt_der_Wert_in_gedrehter_Richtung()
+    {
+        // Arrange: Führt die Richtung zur Seemitte dem Ufer entlang, liegen 50 und 100 m auf maskierten Pixeln (Terlinden, 22.10.2026).
+        var siteId = await PrepareRiffWilliams();
+        Sql.Sources.Overrides["/Z490/47.2846/8.6080/"] = "[]";
+        Sql.Sources.Overrides["/Z490/47.2843/8.6075/"] = "[]";
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];
+        Assert.Equal((ClaritySource.Sentinel2Shore, 5.5m), (today.ClaritySource, today.SecchiDepthShore));
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("/sentinel2/Z490/47.2850/8.6072/", StringComparison.Ordinal));
+        Assert.Equal(3, Sql.Sources.Requests.Count(url => url.Contains("/sentinel2/Z490/", StringComparison.Ordinal)));
     }
 
     [SqlFact]
