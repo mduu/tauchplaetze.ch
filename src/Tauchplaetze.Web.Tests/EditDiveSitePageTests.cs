@@ -180,6 +180,33 @@ public class EditDiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("value=\"Lucie\"", html);
     }
 
+    [Fact]
+    public async Task Mitwirkende_bearbeiten_die_Hinweise_mit_Art_Zeitraum_und_Text_in_der_Sprache_der_Seite()
+    {
+        // Arrange
+        var editing = app.ForEditing.Answer(new GetDiveSiteForEditingQuery(SiteId))!;
+        var content = editing.Content with
+        {
+            Notices = [new NoticeContent(Guid.NewGuid(), NoticeKind.Closure, null, new DateOnly(2027, 4, 1),
+                [new NoticeText("de", "Gesperrt wegen Bauarbeiten."), new NoticeText("fr", "Fermé pour travaux.")])],
+        };
+        app.ForEditing.Answer = query => query.DiveSiteId == SiteId ? editing with { Content = content } : null;
+        using var browser = app.Browser();
+        await SignIn(browser);
+
+        // Act
+        var html = await browser.GetStringAsync($"/fr/sites-de-plongee/{Slug}/modifier", TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains("Avis importants", text);
+        Assert.Contains("Ajouter un avis", text);
+        Assert.Contains("data-notice-kind=\"Closure\"", html);
+        Assert.Contains("value=\"2027-04-01\"", html);
+        Assert.Contains(">Ferm&#xE9; pour travaux.</textarea>", html);
+        Assert.DoesNotContain("Gesperrt wegen Bauarbeiten.", html);
+    }
+
     private static async Task SignIn(HttpClient browser)
     {
         using var response = await WebApp.Submit(browser, "/fr/account/sign-in", "sign-in",

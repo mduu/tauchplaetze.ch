@@ -1,0 +1,69 @@
+@inherits AdminPage
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Web.Features.Editorial
+@inject IStringLocalizer<SharedStrings> Shared
+
+<div class="notice-editor">
+    <p class="field-help">@L["Notices_Help"]</p>
+
+    @if (Form.Notices.Count > 0)
+    {
+        <ol class="editor-list">
+            @foreach (var (notice, index) in Form.Notices.Select((n, i) => (n, i)).ToList())
+            {
+                var current = notice;
+                var name = L["Field_Notice", index + 1].Value;
+                <li class="editor-item notice-item" data-notice-kind="@current.Kind">
+                    <div class="editor-item-head">
+                        <h3 class="edit-subtitle">@name</h3>
+                        <span class="editor-item-actions">
+                            <button type="button" class="link-button" disabled="@(index == 0)" aria-label="@Shared["Form_MoveUp", name]" @onclick="() => Move(index, -1)">↑</button>
+                            <button type="button" class="link-button" disabled="@(index == Form.Notices.Count - 1)" aria-label="@Shared["Form_MoveDown", name]" @onclick="() => Move(index, 1)">↓</button>
+                            <button type="button" class="link-button danger" @onclick="() => Remove(current)">@L["Edit_Remove"]</button>
+                        </span>
+                    </div>
+                    <div class="edit-grid">
+                        <FormSelect TValue="NoticeKind" Label="@L["Field_NoticeKind"]" Value="current.Kind" ValueChanged="@(kind => Set(() => current.Kind = kind))" Options="Kinds" />
+                        <FormDate Label="@L["Field_NoticeValidFrom"]" Value="current.ValidFrom" ValueChanged="@(date => Set(() => current.ValidFrom = date))" />
+                        <FormDate Label="@L["Field_NoticeValidUntil"]" Value="current.ValidUntil" ValueChanged="@(date => Set(() => current.ValidUntil = date))" />
+                    </div>
+                    <LanguageTabs Label="@L["Field_NoticeText"]" @bind-Selected="textLanguage">
+                        <FormTextArea Label="@L["Field_NoticeText"]" Value="@current.Texts[context]" ValueChanged="@(text => Set(() => current.Texts[context] = text))" Rows="2" MaxLength="NoticeRules.TextLength" />
+                    </LanguageTabs>
+                </li>
+            }
+        </ol>
+    }
+
+    <button type="button" class="button secondary" @onclick="Add">@L["Edit_AddNotice"]</button>
+</div>
+
+@code {
+    private string textLanguage = Language;
+
+    [Parameter, EditorRequired]
+    public SiteForm Form { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback Changed { get; set; }
+
+    private IReadOnlyList<(NoticeKind Value, string Text)> Kinds =>
+        [.. Enum.GetValues<NoticeKind>().Select(kind => (kind, L[$"NoticeKind_{kind}"].Value))];
+
+    private Task Set(Action change)
+    {
+        change();
+        return Changed.InvokeAsync();
+    }
+
+    private Task Add() => Set(() => Form.Notices.Add(new NoticeForm()));
+
+    private Task Remove(NoticeForm notice) => Set(() => Form.Notices.Remove(notice));
+
+    private Task Move(int index, int step) => Set(() =>
+    {
+        var notice = Form.Notices[index];
+        Form.Notices.RemoveAt(index);
+        Form.Notices.Insert(index + step, notice);
+    });
+}

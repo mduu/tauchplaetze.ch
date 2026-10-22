@@ -8,7 +8,7 @@ Es gibt drei Bereiche (Entscheid Marc, 19.10.2026: «reine Admin-Features auf /p
 | **Moderation** `/admin` | Moderatoren und Admins | MudBlazor, Seitenleiste |
 | **Plattform** `/platform` | nur Admins | MudBlazor, Navigation oben, Kopf mit orangem Strich |
 
-Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätze nur auf der Website vor. Auch die Versionen eines Platzes im CMS (`/admin/plaetze/{id}/versionen`) sind nur für die Moderation. «Meine Vorschläge» verlinkt auf die öffentliche History des Platzes. Der Editor im CMS bleibt der Moderation, zum Beispiel für die Felder «nur Moderation» und die Hinweise.
+Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätze nur auf der Website vor. Auch die Versionen eines Platzes im CMS (`/admin/plaetze/{id}/versionen`) sind nur für die Moderation. «Meine Vorschläge» verlinkt auf die öffentliche History des Platzes. Der Editor im CMS bleibt der Moderation, zum Beispiel für die Felder «nur Moderation». Hinweise bearbeiten alle im Bearbeiten-Modus der Website (`ux.md`).
 
 | Pfad | Inhalt | Wer |
 |---|---|---|
