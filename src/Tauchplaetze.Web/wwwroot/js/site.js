@@ -222,6 +222,7 @@ window.tauchplaetzeEdit = (function () {
 })();
 
 // Fotos auf der Detailseite (a[data-lightbox]) als Lightbox im Dialog. Ohne JavaScript öffnet der Link das Bild in einem neuen Tab.
+// Mit der Maus erhält der Dialog den Fokus (kein Fokusrahmen), mit der Tastatur der Knopf «Schliessen».
 (function () {
   let links = [];
   let index = 0;
@@ -265,6 +266,9 @@ window.tauchplaetzeEdit = (function () {
       links = Array.from(document.querySelectorAll('a[data-lightbox]'));
       show(box, links.indexOf(link));
       box.showModal();
+      if (event.detail > 0) {
+        box.focus();
+      }
       return;
     }
 

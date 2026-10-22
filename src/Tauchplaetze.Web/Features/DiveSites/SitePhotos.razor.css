@@ -64,6 +64,10 @@
     overflow: hidden;
 }
 
+.lightbox:focus {
+    outline: none;
+}
+
 .lightbox[open] {
     display: flex;
     align-items: center;
