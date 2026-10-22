@@ -4,6 +4,7 @@ using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Media;
+using Tauchplaetze.Core.Features.Translations;
 
 namespace Tauchplaetze.Core.Features.Editorial.Commands;
 
@@ -38,7 +39,7 @@ internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWri
 
         var current = DiveSiteContentMapping.FromEntity(site);
         var content = Proposals.ClearMachineTranslationOfEditedTexts(
-            rights.IsModerator ? command.Content : Proposals.ProtectModeratorFields(command.Content, current), current);
+            rights.IsModerator ? command.Content : Proposals.ProtectModeratorFields(command.Content, current), current, await MachineTranslatedCultures(command.Content, ct));
         var errors = ContentValidation.Errors(content, await dbContext.WaterBodies.AnyAsync(w => w.Id == content.WaterBodyId, ct)).ToList();
         if (content.Slug != site.Slug && await dbContext.DiveSites.AnyAsync(d => d.Slug == content.Slug && d.Id != site.Id, ct))
         {
@@ -67,6 +68,14 @@ internal class ProposeChangeHandler(TauchplaetzeDbContext dbContext, RevisionWri
             ? notifications.ModeratorChanged(revision, site.Id, content.Name, ct)
             : notifications.ProposalSubmitted(revision, content.Name, isNewSite: false, ct));
         return new EditorialResult([], site.Id, revision.Number, revision.Status);
+    }
+
+    /// <summary>Sprachen, deren Text genau so aus einer maschinellen Übersetzung stammt (`MachineTranslations`).</summary>
+    private async Task<IReadOnlySet<string>> MachineTranslatedCultures(DiveSiteContent content, CancellationToken ct)
+    {
+        var hashes = content.Translations.Where(t => t.IsMachineTranslated).ToDictionary(SiteTextFields.HashOf, t => t.Culture);
+        var known = await dbContext.MachineTranslations.Where(t => hashes.Keys.Contains(t.ResultHash)).Select(t => t.ResultHash).Distinct().ToListAsync(ct);
+        return known.Select(h => hashes[h]).ToHashSet();
     }
 
     /// <summary>Nur Fotos dieses Platzes. Mitwirkende verwenden nur öffentliche oder eigene Fotos (`cms.md`, «Medien»).</summary>

@@ -34,6 +34,7 @@ internal class AccountDeletion(TauchplaetzeDbContext dbContext, UserManager<User
         await dbContext.Reports.Where(r => r.HiddenBy == user.Id).ExecuteUpdateAsync(r => r.SetProperty(x => x.HiddenBy, (string?)null), ct);
         await DeletePrivatePhotos(user.Id, ct);
         await dbContext.MediaItems.Where(m => m.UploadedBy == user.Id).ExecuteUpdateAsync(m => m.SetProperty(x => x.UploadedBy, (string?)null), ct);
+        await dbContext.MachineTranslations.Where(t => t.RequestedBy == user.Id).ExecuteUpdateAsync(t => t.SetProperty(x => x.RequestedBy, (string?)null), ct);
 
         return AccountErrors.From(await users.DeleteAsync(user));
     }

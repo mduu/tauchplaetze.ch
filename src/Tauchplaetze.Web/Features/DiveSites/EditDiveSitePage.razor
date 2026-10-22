@@ -129,6 +129,7 @@ else
             <p class="field-help">@L["Field_Markdown_Help"]</p>
             <LanguageTabs Label="@Site["EditMode_Section_Texts"]" @bind-Selected="textLanguage">
                 <div class="edit-texts">
+                    <SiteTextTranslator Form="form" Target="@context" Changed="StateHasChanged" />
                     <FormTextArea Label="@L["Field_UnderwaterDescription"]" @bind-Value="form.Texts[context].UnderwaterDescription" Preview="SiteTextMarkup.ToHtml" PreviewLabel="@L["Field_Markdown_Preview"]" Rows="6" />
                     <FormTextArea Label="@L["Field_HazardsInfo"]" @bind-Value="form.Texts[context].HazardsInfo" Preview="SiteTextMarkup.ToHtml" PreviewLabel="@L["Field_Markdown_Preview"]" MaxLength="2000" />
                     <FormTextArea Label="@L["Field_ApproachInfo"]" @bind-Value="form.Texts[context].ApproachInfo" Preview="SiteTextMarkup.ToHtml" PreviewLabel="@L["Field_Markdown_Preview"]" MaxLength="2000" />

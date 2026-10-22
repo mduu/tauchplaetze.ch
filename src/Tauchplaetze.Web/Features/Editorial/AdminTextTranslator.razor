@@ -1,0 +1,39 @@
+@* «Automatisch übersetzen» im Sprach-Tab des CMS. Logik in TextTranslatorBase. *@
+@inherits TextTranslatorBase
+@inject IStringLocalizer<SharedStrings> Shared
+
+@if (Visible)
+{
+    <MudStack Row="true" AlignItems="AlignItems.Center" Wrap="Wrap.Wrap" Class="pt-2">
+        @if (Confirming)
+        {
+            <MudText Typo="Typo.body2">@L["Translate_Replace"]</MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Start">@L["Translate_Confirm"]</MudButton>
+            <MudButton Variant="Variant.Text" OnClick="Cancel">@L["Translate_Cancel"]</MudButton>
+        }
+        else
+        {
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Translate" Disabled="@(Running || !Allowance!.Available)" OnClick="Start">
+                @(Running ? L["Translate_Running"] : L["Translate_Button"])
+            </MudButton>
+            <MudSelect T="string" Value="SelectedSource" ValueChanged="@(v => Source = v)" Label="@L["Translate_Source"]" Dense="true" Style="max-width: 12rem">
+                @foreach (var source in Sources)
+                {
+                    <MudSelectItem T="string" Value="source">@Shared[$"Language_{source}"]</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </MudStack>
+    @if (Message is not null)
+    {
+        <MudText Typo="Typo.body2" Color="@(Failed ? Color.Error : Color.Default)" role="status">@Message</MudText>
+    }
+    else if (Blocked is not null)
+    {
+        <MudText Typo="Typo.body2" role="status">@Blocked</MudText>
+    }
+    else if (Allowance?.RemainingToday is { } remaining)
+    {
+        <MudText Typo="Typo.caption">@L["Translate_Remaining", remaining]</MudText>
+    }
+}

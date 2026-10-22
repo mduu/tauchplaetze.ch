@@ -5,6 +5,7 @@ using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Queries;
 using Tauchplaetze.Core.Features.Media;
+using Tauchplaetze.Core.Features.Translations;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Web.Tests;
@@ -32,6 +33,7 @@ public class EditDiveSitePageTests : IClassFixture<WebApp>
         app.DiveSites.Add("archiviert-bearbeiten", new DiveSiteLookup.Gone());
         app.ForEditing.Answer = query => query.DiveSiteId == SiteId ? new DiveSiteForEditing(SiteId, DiveSiteStatus.Published, 3, content, []) : null;
         app.SiteMedia.Answer = _ => [];
+        app.TranslationAllowance.Answer = _ => new TranslationAllowance(TranslationError.Unavailable, 0);
     }
 
     [Fact]
@@ -99,6 +101,30 @@ public class EditDiveSitePageTests : IClassFixture<WebApp>
         // Assert
         Assert.Contains("<textarea rows=\"6\">Tombant jusqu&#x27;&#xE0; 30 m.</textarea>", html);
         Assert.DoesNotContain("Steilwand bis 30 m.", html);
+    }
+
+    [Fact]
+    public async Task Automatisch_uebersetzen_erscheint_nur_mit_Schluessel_und_bei_Limit_inaktiv_mit_Hinweis()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        await SignIn(browser);
+        var path = $"/fr/sites-de-plongee/{Slug}/modifier";
+
+        // Act
+        var unavailable = VisibleText.Of(await browser.GetStringAsync(path, TestContext.Current.CancellationToken));
+        app.TranslationAllowance.Answer = _ => new TranslationAllowance(null, 12);
+        var available = VisibleText.Of(await browser.GetStringAsync(path, TestContext.Current.CancellationToken));
+        app.TranslationAllowance.Answer = _ => new TranslationAllowance(TranslationError.DailyLimit, 0);
+        var limited = await browser.GetStringAsync(path, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.DoesNotContain("Traduire automatiquement", unavailable);
+        Assert.Contains("Traduire automatiquement", available);
+        Assert.Contains("Source : Deutsch", available);
+        Assert.Contains("Encore 12 traductions aujourd'hui.", available);
+        Assert.Matches(@"<button type=""button"" class=""button secondary"" disabled[^>]*>\s*Traduire automatiquement", limited);
+        Assert.Contains("Ta limite du jour est atteinte.", VisibleText.Of(limited));
     }
 
     [Fact]

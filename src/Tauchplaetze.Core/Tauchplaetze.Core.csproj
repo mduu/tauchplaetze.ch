@@ -16,11 +16,13 @@
     <PackageReference Include="SkiaSharp" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" />
     <PackageReference Include="MetadataExtractor" />
+    <PackageReference Include="Anthropic" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Features/**/Seed/*.json" />
     <EmbeddedResource Update="Features/**/*.resx" />
+    <EmbeddedResource Include="../../specs/ubiquitous-language.md" LogicalName="Tauchplaetze.Glossary.md" Link="Features/Translations/Glossary.md" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1213,6 +1213,17 @@ a:hover {
   gap: 16px;
 }
 
+.text-translator-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+}
+
+.text-translator-actions > .field-help {
+  align-self: center;
+}
+
 .saved-banner {
   margin: 20px auto 0;
   max-width: var(--content-max);

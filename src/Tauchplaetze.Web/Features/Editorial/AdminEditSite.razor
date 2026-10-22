@@ -112,6 +112,7 @@ else
                     var text = form.Texts[language];
                     <MudTabPanel Text="@language.ToUpperInvariant()">
                         <MudStack Spacing="3">
+                            <AdminTextTranslator Form="form" Target="@language" Changed="StateHasChanged" />
                             <MudTextField @bind-Value="text.UnderwaterDescription" Label="@L["Field_UnderwaterDescription"]" Lines="6" />
                             <MudTextField @bind-Value="text.HazardsInfo" Label="@L["Field_HazardsInfo"]" Lines="3" MaxLength="2000" />
                             <MudTextField @bind-Value="text.ApproachInfo" Label="@L["Field_ApproachInfo"]" Lines="3" MaxLength="2000" />

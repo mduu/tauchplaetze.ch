@@ -68,6 +68,7 @@ var secretNames = [
   'Hydro--Forecast--Username'
   'Hydro--Forecast--Password'
   'Content--ExportKey'
+  'Translation--ApiKey'
 ]
 
 var secretSettings = toObject(secretNames, name => replace(name, '--', '__'), name => '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=${name})')

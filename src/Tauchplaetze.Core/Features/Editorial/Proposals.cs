@@ -20,10 +20,15 @@ internal static class Proposals
         Discharge = current.Discharge,
     };
 
-    /// <summary>Ein Text, den jemand ändert, ist nicht mehr automatisch übersetzt (`i18n.md`, «Maschinelle Übersetzung»).</summary>
-    public static DiveSiteContent ClearMachineTranslationOfEditedTexts(DiveSiteContent proposed, DiveSiteContent current) => proposed with
+    /// <summary>
+    /// Ein Text, den jemand ändert, ist nicht mehr automatisch übersetzt (`i18n.md`, «Maschinelle Übersetzung»).
+    /// Ausnahme: Der Text ist genau eine Übersetzung der Claude API (<paramref name="machineTranslatedCultures"/>).
+    /// </summary>
+    public static DiveSiteContent ClearMachineTranslationOfEditedTexts(DiveSiteContent proposed, DiveSiteContent current, IReadOnlySet<string> machineTranslatedCultures) => proposed with
     {
-        Translations = [.. proposed.Translations.Select(text => text.IsMachineTranslated && IsEdited(text, current.TextIn(text.Culture)) ? text with { IsMachineTranslated = false } : text)],
+        Translations = [.. proposed.Translations.Select(text => text.IsMachineTranslated && IsEdited(text, current.TextIn(text.Culture)) && !machineTranslatedCultures.Contains(text.Culture)
+            ? text with { IsMachineTranslated = false }
+            : text)],
     };
 
     private static bool IsEdited(DiveSiteContentTranslation text, DiveSiteContentTranslation? before) =>

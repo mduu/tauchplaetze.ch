@@ -192,9 +192,36 @@ Konto-Mails (Bestätigung, Passwort) und das Kontaktformular nutzen dasselbe Lay
 - Bewertungen: pro Skala eine Auswahl 1–5 mit Kurztext der Stufe und «nicht bewertet». Skalen in `dive-site.md`.
 - Texte pro Sprache: Unter Wasser, Gefahren, Anfahrt und Parkplatz, Umgebung, Restaurants und Toiletten.
 - Texte: Deutsch ist Pflicht. EN/FR/IT sind optional.
-- Button «Fehlende Sprachen übersetzen» (Phase 1, optional): erzeugt einen Vorschlag per LLM und setzt `IsMachineTranslated = true`. Eine Person prüft und speichert. Dienst: Claude API mit dem Glossar aus `ubiquitous-language.md` als Kontext (Entscheid 17.10.2026).
+- Button «Automatisch übersetzen» in jedem Sprach-Tab, im CMS und im Bearbeiten-Modus der Website. Details im nächsten Abschnitt.
 - Speichern ergibt eine neue Version (siehe «Mitwirken und Freigabe»). Bei Moderatoren und Admins ist sie sofort freigegeben.
 - Optimistische Sperre über `RowVersion`. Hat jemand anders zwischenzeitlich eine Version freigegeben, erscheint ein Hinweis mit Vergleich.
+
+### Automatisch übersetzen
+
+Dienst: Claude API mit dem Glossar aus `ubiquitous-language.md` als Kontext (Entscheid 17.10.2026). Limite und Budget: Entscheid Marc, 22.10.2026.
+
+- Jeder Sprach-Tab hat den Button «Automatisch übersetzen». Er übersetzt alle Texte des Platzes aus einer Quellsprache mit Text in die Sprache des Tabs. Quelle: Deutsch, sonst die erste Sprache mit Text. Bei mehreren Sprachen mit Text wählt man die Quelle.
+- Hat der Tab schon Text, fragt der Editor zuerst («Die Texte in dieser Sprache werden ersetzt.»).
+- Das Ergebnis steht nur im Formular. Gespeichert wird wie sonst, als Vorschlag oder direkt freigegeben. Die Texte haben `IsMachineTranslated = true`.
+- Der Core übernimmt `IsMachineTranslated` beim Speichern nur, wenn der Text unverändert ist oder genau einer gespeicherten Übersetzung entspricht (`MachineTranslations.ResultHash`). Sonst setzt er das Flag zurück.
+- Die Claude API läuft nur auf Knopfdruck, nie beim Laden einer Seite. Während der Übersetzung ist der Button inaktiv. Zwei gleichzeitige gleiche Anfragen kosten trotzdem zweimal, das nehmen wir in Kauf.
+- Command `TranslateSiteText`, Query `GetTranslationAllowance` (Slice `Translations`). Der Button fehlt ohne Recht oder ohne Schlüssel. Bei Limit oder Budget steht er inaktiv da, mit Hinweis.
+
+**Schutz gegen Missbrauch und Kosten:**
+
+- Der Schlüssel der Claude API liegt nur auf dem Server (`Translation:ApiKey`, Key Vault). Ohne Schlüssel ist die Funktion aus.
+- Kein freier Text: nur die sechs Textfelder eines Platzes mit ihren Längen (Unter Wasser 8000 Zeichen, Gefahren, Anfahrt und Umgebung je 2000, Restaurants und Toiletten 1000, Tauchverbot 500). Nur DE, EN, FR und IT.
+- Nur bestätigte, nicht gesperrte Konten.
+- Tageslimit pro Konto und Schweizer Tag: Mitwirkende 50, Moderation 500, Admins ohne Limit (`Translation:DailyLimitContributor`, `Translation:DailyLimitModerator`).
+- Budget pro Monat für alle zusammen: 5 USD (`Translation:MonthlyBudgetUsd`). Die Kosten rechnet der Core aus den Tokens der Antworten und den Preisen in `Translation:InputPricePerMillion` und `Translation:OutputPricePerMillion`. Zusätzlich gilt ein Spend-Limit im Workspace der Claude Console.
+- Cache: Gleicher Quelltext, gleiche Sprachen, gleiches Modell und gleicher Prompt ergeben dieselbe Übersetzung ohne neuen Aufruf. Ein Treffer zählt nicht für das Limit.
+- Eine bezahlte Übersetzung zählt für Limit und Budget, auch wenn sie unbrauchbar ist.
+
+**Modell und Markdown:**
+
+- Modell: `claude-haiku-5-5` (`Translation:Model`), Effort `low`. Kosten am 22.10.2026: 0.10 USD pro Million Input-Tokens, 0.50 USD pro Million Output-Tokens. Ein Platz in drei Sprachen kostet etwa 0.01 USD.
+- Die Antwort ist JSON mit denselben Feldern wie die Anfrage (Structured Outputs). Der Prompt behandelt die Texte nur als Daten.
+- Der Core prüft das Markdown jedes Felds gegen die Quelle: Zwischentitel mit Ebene, Listenpunkte, Absätze und Fett (`MarkdownStructure`). Weicht etwas ab oder fehlt ein Feld, verwirft er die Übersetzung («Die Übersetzung hat nicht geklappt»).
 
 ### Erstimport
 

@@ -1,0 +1,47 @@
+@* «Automatisch übersetzen» im Sprach-Tab des Bearbeiten-Modus. Logik in TextTranslatorBase. *@
+@inherits TextTranslatorBase
+@using Tauchplaetze.Web.Features.Editorial
+@inject IStringLocalizer<SharedStrings> Shared
+
+@if (Visible)
+{
+    <div class="text-translator" data-text-translator>
+        <div class="text-translator-actions">
+            @if (Confirming)
+            {
+                <span class="field-help">@L["Translate_Replace"]</span>
+                <button type="button" class="button" @onclick="Start">@L["Translate_Confirm"]</button>
+                <button type="button" class="button secondary" @onclick="Cancel">@L["Translate_Cancel"]</button>
+            }
+            else
+            {
+                <button type="button" class="button secondary" disabled="@(Running || !Allowance!.Available)" @onclick="Start">
+                    @(Running ? L["Translate_Running"] : L["Translate_Button"])
+                </button>
+                @if (Sources.Count > 1)
+                {
+                    <FormSelect TValue="string" Label="@L["Translate_Source"]" Value="SelectedSource" ValueChanged="@(v => Source = v)"
+                                Options="@([.. Sources.Select(s => (s, Shared[$"Language_{s}"].Value))])" />
+                }
+                else
+                {
+                    <span class="field-help">@L["Translate_SourceText", Shared[$"Language_{SelectedSource}"]]</span>
+                }
+            }
+        </div>
+        <div role="status" aria-live="polite">
+            @if (Message is not null)
+            {
+                <p class="@(Failed ? "field-error" : "field-help")">@Message</p>
+            }
+            else if (Blocked is not null)
+            {
+                <p class="field-help">@Blocked</p>
+            }
+            else if (Allowance?.RemainingToday is { } remaining)
+            {
+                <p class="field-help">@L["Translate_Remaining", remaining]</p>
+            }
+        </div>
+    </div>
+}

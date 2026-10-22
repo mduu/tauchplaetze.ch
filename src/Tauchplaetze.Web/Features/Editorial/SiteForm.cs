@@ -100,16 +100,7 @@ public class SiteForm
 
         foreach (var text in content.Translations.Where(t => form.Texts.ContainsKey(t.Culture)))
         {
-            form.Texts[text.Culture] = new TextForm
-            {
-                UnderwaterDescription = text.UnderwaterDescription,
-                SurroundingsInfo = text.SurroundingsInfo,
-                ApproachInfo = text.ApproachInfo,
-                HazardsInfo = text.HazardsInfo,
-                FacilitiesInfo = text.FacilitiesInfo,
-                DivingBanNote = text.DivingBanNote,
-                IsMachineTranslated = text.IsMachineTranslated,
-            };
+            form.Texts[text.Culture] = TextForm.From(text);
         }
 
         form.EntryPoints.AddRange(content.EntryPointList.Select(e => EntryForm.From(e)));
@@ -143,8 +134,7 @@ public class SiteForm
         SatelliteLatitude,
         SatelliteLongitude,
         ForecastDisabled,
-        [.. Texts.Select(t => new DiveSiteContentTranslation(t.Key, t.Value.UnderwaterDescription, t.Value.SurroundingsInfo, t.Value.ApproachInfo,
-            t.Value.HazardsInfo, t.Value.FacilitiesInfo, t.Value.DivingBanNote, t.Value.IsMachineTranslated)).Where(HasText)],
+        [.. Texts.Where(t => t.Value.HasText).Select(t => t.Value.ToContent(t.Key))],
         [.. EntryPoints.Select(e => e.ToContent())],
         [.. Notices.Select(n => n.ToContent())],
         [.. Sketch.Select(f => f.ToContent())],
@@ -157,9 +147,6 @@ public class SiteForm
     private DischargeThresholds? Discharge => DischargeLowFrom is null && DischargeMediumFrom is null && DischargeStrongFrom is null
         ? null
         : new DischargeThresholds(DischargeLowFrom ?? 0, DischargeMediumFrom ?? 0, DischargeStrongFrom ?? 0);
-
-    private static bool HasText(DiveSiteContentTranslation t) =>
-        new[] { t.UnderwaterDescription, t.SurroundingsInfo, t.ApproachInfo, t.HazardsInfo, t.FacilitiesInfo, t.DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));
 }
 
 public class TextForm
@@ -177,6 +164,22 @@ public class TextForm
     public string? DivingBanNote { get; set; }
 
     public bool IsMachineTranslated { get; set; }
+
+    public bool HasText => new[] { UnderwaterDescription, SurroundingsInfo, ApproachInfo, HazardsInfo, FacilitiesInfo, DivingBanNote }.Any(s => !string.IsNullOrWhiteSpace(s));
+
+    public static TextForm From(DiveSiteContentTranslation text) => new()
+    {
+        UnderwaterDescription = text.UnderwaterDescription,
+        SurroundingsInfo = text.SurroundingsInfo,
+        ApproachInfo = text.ApproachInfo,
+        HazardsInfo = text.HazardsInfo,
+        FacilitiesInfo = text.FacilitiesInfo,
+        DivingBanNote = text.DivingBanNote,
+        IsMachineTranslated = text.IsMachineTranslated,
+    };
+
+    public DiveSiteContentTranslation ToContent(string culture) =>
+        new(culture, UnderwaterDescription, SurroundingsInfo, ApproachInfo, HazardsInfo, FacilitiesInfo, DivingBanNote, IsMachineTranslated);
 }
 
 public class EntryForm

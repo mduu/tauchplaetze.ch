@@ -416,4 +416,19 @@
   <data name="Reports_Delete" xml:space="preserve"><value>Elimina</value></data>
   <data name="Reports_DeleteTitle" xml:space="preserve"><value>Eliminare la segnalazione?</value></data>
   <data name="Reports_DeleteText" xml:space="preserve"><value>La segnalazione per {0} del {1} sarà eliminata definitivamente. Per nasconderla basta «Nascondi».</value></data>
+  <data name="Translate_Button" xml:space="preserve"><value>Traduci automaticamente</value></data>
+  <data name="Translate_Running" xml:space="preserve"><value>Traduzione in corso …</value></data>
+  <data name="Translate_Source" xml:space="preserve"><value>Fonte</value></data>
+  <data name="Translate_SourceText" xml:space="preserve"><value>Fonte: {0}</value></data>
+  <data name="Translate_Replace" xml:space="preserve"><value>I testi in questa lingua verranno sostituiti.</value></data>
+  <data name="Translate_Confirm" xml:space="preserve"><value>Sostituisci</value></data>
+  <data name="Translate_Cancel" xml:space="preserve"><value>Annulla</value></data>
+  <data name="Translate_Done" xml:space="preserve"><value>Tradotto automaticamente. Controlla i testi, poi salva.</value></data>
+  <data name="Translate_Remaining" xml:space="preserve"><value>Ancora {0} traduzioni oggi.</value></data>
+  <data name="Translate_Error_NotAllowed" xml:space="preserve"><value>Non hai il permesso di tradurre.</value></data>
+  <data name="Translate_Error_Unavailable" xml:space="preserve"><value>La traduzione automatica non è disponibile.</value></data>
+  <data name="Translate_Error_InvalidInput" xml:space="preserve"><value>Il testo è vuoto o troppo lungo per la traduzione.</value></data>
+  <data name="Translate_Error_DailyLimit" xml:space="preserve"><value>Hai raggiunto il limite di oggi. Riprova domani.</value></data>
+  <data name="Translate_Error_BudgetExhausted" xml:space="preserve"><value>Il budget per le traduzioni di questo mese è esaurito.</value></data>
+  <data name="Translate_Error_Failed" xml:space="preserve"><value>La traduzione non è riuscita. Riprova più tardi.</value></data>
 </root>

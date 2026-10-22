@@ -22,6 +22,7 @@ using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Core.Features.Operations.Commands;
+using Tauchplaetze.Core.Features.Translations;
 using Testcontainers.MsSql;
 
 namespace Tauchplaetze.Core.Tests.Sql;
@@ -59,6 +60,8 @@ public sealed class SqlServer : IAsyncLifetime
     /// <summary>Kein Test ruft eine echte Quelle auf (architecture.md, Testing).</summary>
     internal FakeSources Sources { get; } = new();
 
+    internal FakeTranslator Translator { get; } = new();
+
     public IServiceProvider Services => host?.Services ?? throw new InvalidOperationException("SQL Server läuft nicht. Test ohne [SqlFact]?");
 
     public async ValueTask InitializeAsync()
@@ -81,6 +84,7 @@ public sealed class SqlServer : IAsyncLifetime
             ["Content:ImportEnabled"] = "true",
             ["Hydro:Forecast:Username"] = "test-user",
             ["Hydro:Forecast:Password"] = "test-password",
+            ["Translation:ApiKey"] = "test-key",
         });
         builder.AddTauchplaetzeCore();
         builder.Services.Replace(ServiceDescriptor.Singleton<IRevisionStore>(Revisions));
@@ -90,6 +94,7 @@ public sealed class SqlServer : IAsyncLifetime
         builder.Services.Replace(ServiceDescriptor.Singleton<TimeProvider>(Time));
         builder.Services.Replace(ServiceDescriptor.Singleton<IMailSender>(Mail));
         builder.Services.Replace(ServiceDescriptor.Singleton<IMailQueue>(MailQueue));
+        builder.Services.Replace(ServiceDescriptor.Singleton<ITextTranslator>(Translator));
         builder.Services.ConfigureHttpClientDefaults(client => client.ConfigurePrimaryHttpMessageHandler(() => Sources));
         builder.Services.PostConfigureAll<HttpStandardResilienceOptions>(options => options.Retry.Delay = TimeSpan.Zero);
         host = builder.Build();
@@ -156,6 +161,7 @@ public sealed class SqlServer : IAsyncLifetime
         Sources.Overrides.Clear();
         Sources.Requests.Clear();
         Sources.OnRequest = null;
+        Translator.Reset();
         Time.Now = FixedTime.SpikeDay;
     }
 

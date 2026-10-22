@@ -320,6 +320,24 @@ Meldung nach einem Tauchgang (`dive-site.md`, «Meldungen»). Tabelle `Reports`,
 
 Eindeutig: (`DiveSiteId`, `AuthorId`, `Date`) für Zeilen mit Autor. Eine zweite Meldung ersetzt die erste.
 
+### MachineTranslation
+
+Eine bezahlte maschinelle Übersetzung der Texte eines Platzes (`cms.md`, «Automatisch übersetzen»). Tabelle `MachineTranslations`, Migration `MachineTranslations` (22.10.2026). Cache, Zähler für Tageslimit und Monatsbudget, Beleg für `IsMachineTranslated`.
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `Id` | Guid (v7) | |
+| `RequestedBy` | string, optional | Konto. `null` nach Löschung des Kontos |
+| `CreatedAt` | DateTimeOffset | |
+| `SourceCulture`, `TargetCulture` | char(2) | |
+| `SourceHash` | char(64) | SHA-256 von Quelltext, Sprachen, Modell und Prompt-Version. Schlüssel des Cache |
+| `ResultHash` | char(64) | SHA-256 der übersetzten Felder mit Zielsprache |
+| `ResultJson` | string | übersetzte Felder als JSON |
+| `Model` | string(60) | Modell und Prompt-Version |
+| `InputTokens`, `OutputTokens` | int | aus der Antwort, für das Budget |
+
+Eine unbrauchbare Antwort hat `SourceHash` und `ResultHash` aus Nullen und `ResultJson` `{}`. Sie zählt für Limit und Budget, ist aber weder Cache noch Beleg.
+
 ### DiveShop (Phase 1)
 
 `DiveShop`: `Id`, `Name`, `WebsiteUrl`, `Address`, `Location` (geography), `Phone`, `HasFillingStation`. Die Platzseite zeigt die nächste Füllstation nach Distanz. Es gibt keine bezahlten Einträge (`vision.md`, «Finanzierung»).
@@ -380,6 +398,7 @@ Ohne Platz mit Index gibt es für den Tag keine Zeile (nie 0).
 - `MediaItems (DiveSiteId, Section, SortOrder)`.
 - `DailyForecasts (Date, DiveIndex DESC)` für die Rangliste.
 - `HydroHours (Hour)` für das Löschen nach 30 Tagen.
+- `MachineTranslations (SourceHash)` für den Cache, `(ResultHash)` für den Beleg, `(RequestedBy, CreatedAt)` für das Tageslimit, `(CreatedAt)` für das Monatsbudget.
 - `Reports (DiveSiteId, Date)` für die Platzseite, `Reports (DiveSiteId, AuthorId, Date)` eindeutig für Zeilen mit Autor, `Reports (AuthorId, CreatedAt)` für die Grenze pro Tag, `Reports (CommentStatus)` für die Moderation.
 
 ## Aufbewahrung
