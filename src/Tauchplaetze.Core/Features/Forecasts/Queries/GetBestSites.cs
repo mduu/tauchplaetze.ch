@@ -18,6 +18,7 @@ public record Area(double Latitude, double Longitude, int RadiusKm);
 /// Die Rangliste eines Tages nach <see cref="RankingRules"/>: bester Index zuerst, mit Ort abzüglich der Distanz, höchstens
 /// <see cref="RankingRules.SitesPerWaterBody"/> Plätze pro Gewässer (die weiteren in <see cref="RankedSite.MoreList"/>).
 /// Nur Plätze mit Index (`forecast.md`, «Datenstufe»), ohne Plätze, die an dem Tag gesperrt sind.
+/// Bergseen ab <see cref="MountainLakes.ExcursionFromMetres"/> stehen nicht in der Rangliste, sondern in <see cref="BestSites.MountainLakeSites"/>.
 /// Ohne <paramref name="Area"/> gilt die ganze Schweiz (`features.md`). Ohne <paramref name="Date"/> gilt heute.
 /// </summary>
 public record GetBestSitesQuery(string Culture, DateOnly? Date = null, Area? Area = null);
@@ -26,13 +27,18 @@ public record GetBestSitesQuery(string Culture, DateOnly? Date = null, Area? Are
 /// <param name="Coverage">Gewässer mit Index an dem Tag, solange weniger als 80 % der Plätze einen Index haben, sonst <c>null</c>.</param>
 /// <param name="WithoutForecast">Mit Ort: Plätze im Umkreis ohne Index, nächster zuerst, höchstens <see cref="GetBestSitesHandler.UnrankedLimit"/>.</param>
 /// <param name="WithoutForecastCount">Mit Ort: Zahl aller Plätze im Umkreis ohne Index.</param>
+/// <param name="MountainLakeSites">Bergseen ab <see cref="MountainLakes.ExcursionFromMetres"/>, gleich gereiht wie die Rangliste.</param>
 public record BestSites(
     DateOnly Date,
     IReadOnlyList<DateOnly> Days,
     IReadOnlyList<RankedSite> Ranking,
     ForecastCoverage? Coverage = null,
     IReadOnlyList<UnrankedSite>? WithoutForecast = null,
-    int WithoutForecastCount = 0);
+    int WithoutForecastCount = 0,
+    IReadOnlyList<RankedSite>? MountainLakeSites = null)
+{
+    public IReadOnlyList<RankedSite> MountainLakeSiteList => MountainLakeSites ?? [];
+}
 
 /// <summary>Für welche Gewässer es schon eine Prognose gibt (`ux.md`, «Startseite»).</summary>
 public record ForecastCoverage(IReadOnlyList<string> WaterBodyNames, int SitesWithIndex, int Sites);
@@ -132,11 +138,12 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
             .ThenByDescending(s => s.Site.DiveIndex)
             .ThenBy(s => s.Site.Name, StringComparer.Ordinal)
             .ToList();
-        var ranking = Spread(sites);
+        var ranking = Spread(sites.Where(s => !MountainLakes.IsExcursion(s.Site.MountainLakeElevation)).ToList());
+        var mountainLakes = Spread(sites.Where(s => MountainLakes.IsExcursion(s.Site.MountainLakeElevation)).ToList());
 
         var coverage = await Coverage(query.Culture, date, ct);
         var (withoutForecast, withoutForecastCount) = origin is null ? ([], 0) : await Unranked(query, date, origin, ct);
-        return new BestSites(date, days, ranking, coverage, withoutForecast, withoutForecastCount);
+        return new BestSites(date, days, ranking, coverage, withoutForecast, withoutForecastCount, mountainLakes);
     }
 
     private static List<RankedSite> Spread(IReadOnlyList<(int WaterBodyId, RankedSite Site)> sites)

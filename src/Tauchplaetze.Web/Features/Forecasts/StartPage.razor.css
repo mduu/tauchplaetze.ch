@@ -177,6 +177,10 @@
     margin-top: 0;
 }
 
+.mountain-lakes .note {
+    margin: 0 0 4px;
+}
+
 .best-pick-text {
     display: flex;
     flex-direction: column;

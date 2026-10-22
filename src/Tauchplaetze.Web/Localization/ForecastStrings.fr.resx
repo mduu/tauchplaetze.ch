@@ -181,4 +181,6 @@
   <data name="Start_Ranking_MoreAtWater" xml:space="preserve"><value>+ {0} autres sites – {1}</value></data>
   <data name="Start_Area_Locate" xml:space="preserve"><value>Utiliser ma position</value></data>
   <data name="Start_Area_Locate_Error" xml:space="preserve"><value>La position n'est pas disponible. Choisis un lieu dans la liste.</value></data>
+  <data name="Start_MountainLakes" xml:space="preserve"><value>Lacs de montagne dès {0} m ({1})</value></data>
+  <data name="Start_MountainLakes_Note" xml:space="preserve"><value>Le plus souvent une sortie planifiée, donc hors du classement.</value></data>
 </root>

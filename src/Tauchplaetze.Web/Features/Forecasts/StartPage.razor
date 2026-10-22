@@ -2,6 +2,7 @@
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.Forecasts
 @using Tauchplaetze.Core.Features.Forecasts.Queries
+@using Tauchplaetze.Core.Features.WaterBodies
 @inject IStringLocalizer<SharedStrings> L
 @inject IStringLocalizer<ForecastStrings> F
 @inject IQueryHandler<GetBestSitesQuery, BestSites> BestSitesQuery
@@ -111,6 +112,7 @@
                     </ol>
                 </details>
             }
+            @MountainLakeSection
             @Unranked
             <p class="note">@F["Start_Indicator"]</p>
         </div>
@@ -128,9 +130,10 @@
                 }
             </div>
         </article>
-        @if (best is { WithoutForecast.Count: > 0 })
+        @if (best is { WithoutForecast.Count: > 0 } or { MountainLakeSiteList.Count: > 0 })
         {
             <div class="card ranking">
+                @MountainLakeSection
                 @Unranked
             </div>
         }
@@ -197,13 +200,29 @@
         }
     </text>;
 
+    private RenderFragment MountainLakeSection => @<text>
+        @if (best is { MountainLakeSiteList: [_, ..] lakes })
+        {
+            <details class="ranking-more mountain-lakes" data-mountain-lakes>
+                <summary>@F["Start_MountainLakes", MountainLakes.ExcursionFromMetres, lakes.Sum(s => 1 + s.MoreList.Count)]</summary>
+                <p class="note">@F["Start_MountainLakes_Note"]</p>
+                <ol>
+                    @foreach (var site in lakes)
+                    {
+                        @RankingEntry(site, null)
+                    }
+                </ol>
+            </details>
+        }
+    </text>;
+
     private string Names(IReadOnlyList<string> names) => names.Count < 2
         ? string.Join("", names)
         : $"{string.Join(", ", names.Take(names.Count - 1))}{F["Start_Coverage_And"]}{names[^1]}";
 
     private IEnumerable<(RankedSite Site, int Rank)> RankedSites => best!.Ranking.Select((s, i) => (s, i + 1));
 
-    private RenderFragment RankingEntry(RankedSite site, int rank) =>
+    private RenderFragment RankingEntry(RankedSite site, int? rank) =>
         @<li class="@(site.MoreList.Count > 0 ? "has-more" : null)">
             <span class="rank">@rank</span>
             <div class="ranking-site">

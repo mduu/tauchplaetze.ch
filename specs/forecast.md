@@ -43,6 +43,7 @@ Entscheid Marc, 20.10.2026 (`RankingRules`, `GetBestSites`). Die Reihung ändert
 - **Mit Ort:** Reihung nach Index − 0.1 × (Distanz in km / 10), also 0.01 Punkte pro km. Bei 40 km Umkreis höchstens 0.4 Punkte. Ein naher Platz mit 7.8 steht so vor einem Platz mit 8.0 in 30 km.
 - **Streuung:** höchstens 2 Plätze pro Gewässer in der Rangliste, die weiteren beim zweiten Platz dieses Gewässers. «Beste Wahl» ist der erste Platz der Reihung.
 - **Bergsee:** ab 700 m ü. M. (`MountainLakes`, Höhe des Seespiegels in `WaterBody.Elevation`) nur als Notiz, keine Abwertung.
+- **Bergsee als Ausflugsziel:** ab 1500 m ü. M. (`MountainLakes.ExcursionFromMetres`) nicht in «Beste Wahl» und Rangliste, sondern in einer eigenen Liste mit derselben Reihung und Streuung. Diese Seen sind meist geplante, teils mehrtägige Ausflüge. Die Startseite beantwortet die spontane Frage (Entscheid Marc, 22.10.2026).
 
 ## Eingaben pro Platz und Tag
 
