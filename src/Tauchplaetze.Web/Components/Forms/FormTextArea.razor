@@ -1,15 +1,24 @@
 @* Mehrzeiliges Textfeld im Design der Website. *@
 <label class="field">
     <span class="field-label">@Label</span>
-    <textarea rows="@Rows" maxlength="@MaxLength" value="@Value" aria-describedby="@(Help is null ? null : helpId)" @onchange="Changed"></textarea>
+    <textarea rows="@Rows" maxlength="@MaxLength" value="@Value" aria-describedby="@(Help is null ? null : helpId)" @onchange="Changed" @oninput="Typed"></textarea>
     @if (Help is not null)
     {
         <span class="field-help" id="@helpId">@Help</span>
     }
 </label>
+@if (Preview is not null && !string.IsNullOrWhiteSpace(draft ?? Value))
+{
+    <details class="field-preview">
+        <summary>@PreviewLabel</summary>
+        <div class="site-text-body">@((MarkupString)Preview(draft ?? Value!))</div>
+    </details>
+}
 
 @code {
     private readonly string helpId = "help-" + Guid.NewGuid().ToString("N")[..8];
+
+    private string? draft;
 
     [Parameter, EditorRequired]
     public string Label { get; set; } = "";
@@ -29,5 +38,19 @@
     [Parameter]
     public int? MaxLength { get; set; }
 
-    private Task Changed(ChangeEventArgs e) => ValueChanged.InvokeAsync(e.Value as string);
+    /// <summary>Macht aus dem Text sicheres HTML für die Vorschau. Ohne Wert gibt es keine Vorschau.</summary>
+    [Parameter]
+    public Func<string, string>? Preview { get; set; }
+
+    [Parameter]
+    public string? PreviewLabel { get; set; }
+
+    private Task Changed(ChangeEventArgs e)
+    {
+        draft = null;
+        return ValueChanged.InvokeAsync(e.Value as string);
+    }
+
+    private EventCallback<ChangeEventArgs> Typed =>
+        Preview is null ? default : EventCallback.Factory.Create<ChangeEventArgs>(this, e => draft = e.Value as string);
 }

@@ -18,23 +18,3 @@
     font-size: 14px;
     font-style: italic;
 }
-
-.site-text-body {
-    max-width: 72ch;
-    color: var(--color-text-body);
-    font-size: 17px;
-    line-height: 1.6;
-}
-
-.site-text-body ::deep p,
-.site-text-body ::deep ul {
-    margin: 0 0 12px;
-}
-
-.site-text-body ::deep ul {
-    padding-left: 22px;
-}
-
-.site-text-body ::deep :last-child {
-    margin-bottom: 0;
-}

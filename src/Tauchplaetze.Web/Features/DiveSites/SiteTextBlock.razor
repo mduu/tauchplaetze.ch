@@ -16,7 +16,7 @@
         {
             <p class="site-text-note">@L["Text_MachineTranslated"]</p>
         }
-        <div class="site-text-body" lang="@(Text.OnlyGerman ? "de" : null)">@((MarkupString)SiteTextMarkup.ToHtml(Text.Text, Markdown))</div>
+        <div class="site-text-body" lang="@(Text.OnlyGerman ? "de" : null)">@((MarkupString)SiteTextMarkup.ToHtml(Text.Text))</div>
     </div>
 }
 
@@ -29,7 +29,4 @@
 
     [Parameter]
     public string? Title { get; set; }
-
-    [Parameter]
-    public bool Markdown { get; set; }
 }

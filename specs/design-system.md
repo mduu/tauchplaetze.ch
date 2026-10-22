@@ -143,7 +143,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 | `PracticalTile` | Label in Cyan oder Orange (Achtung), Text |
 | `BuddyCallout` (`.callout`, alle Hinweisboxen: «Kennst du diesen Platz?», «Über» › Prognose, offener Vorschlag, Plätze in der Nähe) | Fläche `--color-surface`, Rahmen 2 px in `--color-signal`, Text `--color-text-body`, Titel in `--color-signal`, Links fett und unterstrichen in `--color-primary`. Keine orange Fläche: Sie blendete und wurde übersehen (Marc, 19.10.2026). Kontrast Text 13:1, Titel 8:1 (WCAG AA) |
 | `DataSourceFooter` | Quellen, Sicherheitshinweis, Notfallnummern |
-| `SiteTextBlock` | Redaktioneller Text: Titel im Stil von `.tile-label` (Mono 12 px, Grossbuchstaben, `--color-primary`; Gefahren in `--color-signal`), optional Hinweis klein und kursiv in `--color-text-subtle` («Dieser Text ist nur auf Deutsch verfügbar.» bzw. «Automatisch übersetzt.»), Text bis 72 Zeichen breit, 17 px, Zeilenhöhe 1.6. `UnderwaterDescription` mit eingeschränktem Markdown (Absätze, Listen mit «- » oder «* », Fett mit `**`), die übrigen Texte nur Absätze und Zeilenumbrüche (`SiteTextMarkup`). Alles andere bleibt Text, HTML wird escaped. |
+| `SiteTextBlock` | Redaktioneller Text: Titel im Stil von `.tile-label` (Mono 12 px, Grossbuchstaben, `--color-primary`; Gefahren in `--color-signal`), optional Hinweis klein und kursiv in `--color-text-subtle` («Dieser Text ist nur auf Deutsch verfügbar.» bzw. «Automatisch übersetzt.»), Text bis 72 Zeichen breit, 17 px, Zeilenhöhe 1.6. Alle Texte mit einfachem Markdown (`SiteTextMarkup`): Absätze, Zeilenumbrüche, Zwischentitel mit «# » bis «### » (als `h4` bis `h6`, 1.1em bis 0.9em, kleiner als die Seitentitel), Listen mit «- » oder «* », Nummerierungen mit «1. », Fett mit `**`, Kursiv mit `*` oder `_`. Alles andere bleibt Text, HTML wird escaped. |
 | `PhotoPlaceholder` | gestrichelter Rahmen mit Beschreibung, bis echte Fotos da sind |
 
 ## Diagramme
@@ -205,7 +205,7 @@ Bausteine in `Components/Forms`, nur Tokens, kein MudBlazor:
 
 | Baustein | Aussehen |
 |---|---|
-| `FormText`, `FormTextArea`, `FormNumber`, `FormSelect` | Label in Mono, Grossbuchstaben, `--color-text-muted`; Feld mit `--color-surface`, Rand `--color-border`, Radius `--radius-tile-sm`, mindestens 44 px hoch; Fokus mit Rand in `--color-primary` |
+| `FormText`, `FormTextArea`, `FormNumber`, `FormSelect` | Label in Mono, Grossbuchstaben, `--color-text-muted`; Feld mit `--color-surface`, Rand `--color-border`, Radius `--radius-tile-sm`, mindestens 44 px hoch; Fokus mit Rand in `--color-primary`. `FormTextArea` zeigt mit `Preview` eine aufklappbare Vorschau im Stil von `.site-text-body`, gestrichelter Rand |
 | `FormChip` | Eigenschaft als Pille; an: Fläche `--color-primary`, Text `--color-bg` |
 | `LevelPicker` | Bewertung als Kachel: Name, «i» mit Legende (wie auf der Platzseite), Knöpfe «keine» und 1 bis 5. Qualität füllt die Knöpfe bis zum Wert in `--color-primary`, Stufe (Schwierigkeit, Strömung) in `--color-signal`. Darunter der Kurztext. |
 | `LanguageTabs` | Tabs DE, EN, FR, IT wie bei den Texten, Pfeiltasten wechseln die Sprache |
