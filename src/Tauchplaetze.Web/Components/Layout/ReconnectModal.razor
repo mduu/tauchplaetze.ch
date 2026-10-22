@@ -1,0 +1,47 @@
+@inject IStringLocalizer<SharedStrings> L
+
+@* Eigene Anzeige für den Reconnect der interaktiven Seiten. Blazor setzt die Zustände als Klassen auf den Dialog (reconnect.js). *@
+<dialog id="components-reconnect-modal" class="reconnect" aria-labelledby="reconnect-title" data-nosnippet>
+    <div class="reconnect-bubbles" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <p class="reconnect-label">@L["Reconnect_Label"]</p>
+
+    <div class="reconnect-state reconnect-connecting">
+        <h2 id="reconnect-title" class="reconnect-title">@L["Reconnect_Title"]</h2>
+        <p class="reconnect-text">@L["Reconnect_Connecting"]</p>
+        <p class="reconnect-text reconnect-retrying-visible">@retryPrefix<span id="components-seconds-to-next-attempt"></span>@retrySuffix</p>
+    </div>
+
+    <div class="reconnect-state reconnect-failed">
+        <h2 class="reconnect-title">@L["Reconnect_FailedTitle"]</h2>
+        <p class="reconnect-text">@L["Reconnect_Failed"]</p>
+        <button id="components-reconnect-button" type="button" class="button">@L["Reconnect_Retry"]</button>
+    </div>
+
+    <div class="reconnect-state reconnect-paused">
+        <h2 class="reconnect-title">@L["Reconnect_PausedTitle"]</h2>
+        <p class="reconnect-text">@L["Reconnect_Paused"]</p>
+        <button id="components-resume-button" type="button" class="button">@L["Reconnect_Resume"]</button>
+    </div>
+
+    <div class="reconnect-state reconnect-resume-failed">
+        <h2 class="reconnect-title">@L["Reconnect_FailedTitle"]</h2>
+        <p class="reconnect-text">@L["Reconnect_ResumeFailed"]</p>
+        <button id="components-reload-button" type="button" class="button">@L["Reconnect_Reload"]</button>
+    </div>
+</dialog>
+
+@code {
+    private string retryPrefix = "";
+    private string retrySuffix = "";
+
+    protected override void OnInitialized()
+    {
+        var parts = L["Reconnect_Retrying"].Value.Split("{0}");
+        retryPrefix = parts[0];
+        retrySuffix = parts.Length > 1 ? parts[1] : "";
+    }
+}
