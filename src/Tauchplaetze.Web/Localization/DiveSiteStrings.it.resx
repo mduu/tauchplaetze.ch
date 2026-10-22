@@ -43,7 +43,7 @@
   <data name="History_Changes" xml:space="preserve"><value>Modifiche nella versione {0}</value></data>
   <data name="History_Back" xml:space="preserve"><value>Torna al sito</value></data>
   <data name="Link_Versions" xml:space="preserve"><value>Versioni</value></data>
-  <data name="Link_Edit" xml:space="preserve"><value>Modifica il sito</value></data>
+  <data name="Link_Edit" xml:space="preserve"><value>Modifica il sito d'immersione</value></data>
   <data name="Navigate" xml:space="preserve"><value>Arrivo</value></data>
   <data name="Navigate_Google" xml:space="preserve"><value>Percorso in Google Maps</value></data>
   <data name="Navigate_Apple" xml:space="preserve"><value>Percorso in Mappe di Apple</value></data>

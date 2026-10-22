@@ -43,7 +43,7 @@
   <data name="History_Changes" xml:space="preserve"><value>Modifications de la version {0}</value></data>
   <data name="History_Back" xml:space="preserve"><value>Retour au site</value></data>
   <data name="Link_Versions" xml:space="preserve"><value>Versions</value></data>
-  <data name="Link_Edit" xml:space="preserve"><value>Modifier le site</value></data>
+  <data name="Link_Edit" xml:space="preserve"><value>Modifier le site de plongée</value></data>
   <data name="Navigate" xml:space="preserve"><value>Accès</value></data>
   <data name="Navigate_Google" xml:space="preserve"><value>Itinéraire dans Google Maps</value></data>
   <data name="Navigate_Apple" xml:space="preserve"><value>Itinéraire dans Plans d'Apple</value></data>

@@ -43,7 +43,7 @@
   <data name="History_Changes" xml:space="preserve"><value>Änderungen in Version {0}</value></data>
   <data name="History_Back" xml:space="preserve"><value>Zurück zum Platz</value></data>
   <data name="Link_Versions" xml:space="preserve"><value>Versionen</value></data>
-  <data name="Link_Edit" xml:space="preserve"><value>Platz bearbeiten</value></data>
+  <data name="Link_Edit" xml:space="preserve"><value>Tauchplatz bearbeiten</value></data>
   <data name="Navigate" xml:space="preserve"><value>Anfahrt</value></data>
   <data name="Navigate_Google" xml:space="preserve"><value>Route in Google Maps</value></data>
   <data name="Navigate_Apple" xml:space="preserve"><value>Route in Apple Karten</value></data>
