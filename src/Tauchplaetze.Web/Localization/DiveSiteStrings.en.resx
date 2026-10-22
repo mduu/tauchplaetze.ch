@@ -218,6 +218,7 @@
   <data name="EditMode_Comment_Help" xml:space="preserve"><value>What did you change and how do you know? This helps the moderators.</value></data>
   <data name="EditMode_NoChange" xml:space="preserve"><value>You did not change anything, there is nothing to save.</value></data>
   <data name="EditMode_WaterBody_Help" xml:space="preserve"><value>The moderators change the lake or river.</value></data>
+  <data name="EditMode_Location_Help" xml:space="preserve"><value>The main point of the site. Click the map or type the latitude and longitude. You set entry points under «Location and entry points».</value></data>
   <data name="EditMode_Saved_Pending" xml:space="preserve"><value>Thank you! Your proposal is with the moderators. You will get an e-mail as soon as it is published or rejected.</value></data>
   <data name="EditMode_Saved_Approved" xml:space="preserve"><value>Saved and live.</value></data>
   <data name="EditMode_Map_Label" xml:space="preserve"><value>Map for editing entry points, places and sketch</value></data>

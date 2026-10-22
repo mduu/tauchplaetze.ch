@@ -120,7 +120,7 @@ Wer einen Platz ändern will, bleibt im Design der Website (Entscheid Marc, 19.1
 - Pfad `/{lang}/tauchplaetze/{slug}/bearbeiten`, nur angemeldet, `noindex`. Kopf, Fuss, Farben und Kacheln der Website.
 - Leiste oben, klebt beim Scrollen: «Bearbeitungsmodus · Deine Änderungen gehen an die Moderation» (Moderatoren: «… sind sofort online»), Knöpfe «Abbrechen» und «Vorschlag senden» bzw. «Speichern und freigeben». Unterer Rand in `--color-signal`.
 - Abschnitte in der Reihenfolge der Platzseite:
-  1. **Name und Ort:** Name, «Auch bekannt als», Gemeinde, Kanton. Das Gewässer steht nur zur Info, es ändert die Moderation.
+  1. **Name und Ort:** Name, «Auch bekannt als», Gemeinde, Kanton. Das Gewässer steht nur zur Info, es ändert die Moderation. Darunter die Koordinate des Platzes: Klick in die Karte oder Breite und Länge.
   2. **Wichtige Hinweise:** Liste der Hinweise mit Art (Info, Warnung, Sperrung), «gültig ab», «gültig bis» (Kalender des Browsers, leer erlaubt) und Text pro Sprache (Tabs). Der Rand links zeigt die Farbe der Art. ↑ und ↓ ändern die Reihenfolge, «Entfernen» löscht den Hinweis, «Hinweis hinzufügen» legt einen neuen an. Siehe `dive-site.md`, «Hinweise».
   3. **Der Platz:** maximale Tiefe, Zugang, Eigenschaften als Chips, die sechs Bewertungen als Stufen 1 bis 5 oder «keine», jede mit dem «i» und der Legende aus `dive-site.md`.
   4. **Texte:** Tabs DE, EN, FR, IT mit Unter Wasser, Gefahren, Anfahrt, Umgebung, Einrichtungen.
