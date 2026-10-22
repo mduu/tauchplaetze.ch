@@ -348,6 +348,7 @@ a:hover {
 }
 
 .site-links {
+  max-width: none;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
