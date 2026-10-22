@@ -120,6 +120,24 @@ public class StartPageTests : IClassFixture<WebApp>
         Assert.Contains("Bergsee · 1796 m ü. M.", text);
     }
 
+    [Fact]
+    public async Task Bergseen_ab_1500_m_stehen_aufklappbar_unter_der_Rangliste()
+    {
+        // Arrange
+        var sils = new RankedSite("sils", "Sils Baselgia", "Sils", "Silsersee", 9.5m, 1, null, null, null, null, 2, [], null, MountainLakeElevation: 1796);
+        app.BestSites.MountainLakeSites = [sils];
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de", TestContext.Current.CancellationToken);
+
+        // Assert
+        app.BestSites.MountainLakeSites = [];
+        var text = VisibleText.Of(html);
+        Assert.Contains("Bergseen ab 1500 m (1)", text);
+        Assert.Contains("href=\"/de/tauchplaetze/sils\"", html);
+    }
+
     [Theory]
     [InlineData("/de?ort=zuerich", 25)]
     [InlineData("/de?ort=zuerich&km=15", 15)]

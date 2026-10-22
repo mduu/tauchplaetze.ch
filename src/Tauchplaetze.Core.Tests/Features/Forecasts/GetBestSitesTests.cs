@@ -199,7 +199,7 @@ public class GetBestSitesTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlTheory]
-    [InlineData(1796, 1796)]
+    [InlineData(1499, 1499)]
     [InlineData(700, 700)]
     [InlineData(699, null)]
     [InlineData(null, null)]
@@ -219,6 +219,29 @@ public class GetBestSitesTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         Assert.Equal(expected, Assert.Single(best.Ranking).MountainLakeElevation);
+    }
+
+    [SqlTheory]
+    [InlineData(1500, true)]
+    [InlineData(1499, false)]
+    public async Task Ein_Bergsee_ab_1500_m_steht_nicht_in_der_Rangliste_sondern_bei_den_Bergseen(int elevation, bool excursion)
+    {
+        // Arrange
+        await Sql.Arrange(db =>
+        {
+            var lake = Lake("silsersee");
+            lake.Elevation = elevation;
+            Add(db, lake, "sils", 46.42, 9.74, 9.5m);
+            Add(db, Lake("zugersee"), "zug", 47.17, 8.49, 6.0m);
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var best = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de"));
+
+        // Assert
+        Assert.Equal(excursion ? ["zug"] : ["sils", "zug"], best.Ranking.Select(r => r.Slug));
+        Assert.Equal(excursion ? ["sils"] : [], best.MountainLakeSiteList.Select(r => r.Slug));
     }
 
     [SqlTheory]

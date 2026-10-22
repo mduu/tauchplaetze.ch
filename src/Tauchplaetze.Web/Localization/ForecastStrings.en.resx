@@ -181,4 +181,6 @@
   <data name="Start_Ranking_MoreAtWater" xml:space="preserve"><value>+ {0} more at {1}</value></data>
   <data name="Start_Area_Locate" xml:space="preserve"><value>Use my location</value></data>
   <data name="Start_Area_Locate_Error" xml:space="preserve"><value>Your location is not available. Choose a place from the list.</value></data>
+  <data name="Start_MountainLakes" xml:space="preserve"><value>Mountain lakes from {0} m ({1})</value></data>
+  <data name="Start_MountainLakes_Note" xml:space="preserve"><value>Usually a planned trip, so not in the ranking.</value></data>
 </root>
