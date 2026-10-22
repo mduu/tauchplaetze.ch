@@ -1,0 +1,31 @@
+.report-action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px 14px;
+}
+
+.report-button {
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 16px;
+    font-size: 14px;
+}
+
+.report-count {
+    order: -1;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+@media (max-width: 640px) {
+    .report-action {
+        justify-content: flex-start;
+    }
+
+    .report-count {
+        order: 1;
+    }
+}

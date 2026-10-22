@@ -60,12 +60,24 @@
         <section class="page-section" aria-labelledby="conditions">
             @if (forecast is { Days.Count: > 0 })
             {
-                <ForecastPanel Forecast="forecast" Discharge="discharge" History="history" />
+                <ForecastPanel Forecast="forecast" Discharge="discharge" History="history">
+                    <HeadAction>
+                        <ReportButton Slug="@site.Slug" Count="reports.Count" />
+                    </HeadAction>
+                    <ChildContent>
+                        <SiteReports Reports="reports" />
+                    </ChildContent>
+                </ForecastPanel>
             }
             else
             {
-                <p class="eyebrow">@L["Conditions_Eyebrow"]</p>
-                <h2 id="conditions" class="section-title">@L["Conditions_Soon_Title"]</h2>
+                <div class="conditions-soon-head">
+                    <div>
+                        <p class="eyebrow">@L["Conditions_Eyebrow"]</p>
+                        <h2 id="conditions" class="section-title">@L["Conditions_Soon_Title"]</h2>
+                    </div>
+                    <ReportButton Slug="@site.Slug" Count="reports.Count" />
+                </div>
                 <div class="card pending">
                     <p>@L["Conditions_Soon_Text"]</p>
                 </div>
@@ -79,10 +91,9 @@
                         <DischargeTile Discharge="discharge" ShowSource="true" />
                     </div>
                 }
+                <SiteReports Reports="reports" />
             }
         </section>
-
-        <SiteReports Reports="reports" Slug="@site.Slug" />
 
         <SiteLocationMap Site="site" />
 

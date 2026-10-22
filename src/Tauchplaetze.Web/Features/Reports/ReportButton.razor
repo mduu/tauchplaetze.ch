@@ -1,0 +1,23 @@
+@inject IStringLocalizer<DiveSiteStrings> L
+
+<div class="report-action">
+    <a class="button secondary report-button" href="@PublicRoutes.DiveSiteReport(Language, Slug)" rel="nofollow" data-report-link>
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v12M1 7h12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+        @L["Reports_Report"]
+    </a>
+    @if (Count > 0)
+    {
+        <a class="report-count" href="#reports" data-report-count>@(Count == 1 ? L["Reports_CountOne"] : L["Reports_Count", Count])</a>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Slug { get; set; } = "";
+
+    /// <summary>Die Zahl der gezeigten Meldungen. Ab einer Meldung steht ein Link auf die Liste neben dem Knopf.</summary>
+    [Parameter]
+    public int Count { get; set; }
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}

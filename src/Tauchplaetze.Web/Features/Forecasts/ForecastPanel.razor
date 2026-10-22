@@ -6,22 +6,25 @@
         <p class="eyebrow">@Eyebrow</p>
         <h2 id="conditions" class="section-title">@L[ForecastFormat.Headline(Today)]</h2>
     </div>
-    @if (Today.DiveIndex is { } index)
-    {
-        <div class="index" data-index-band="@ForecastFormat.IndexBand(index)">
-            <span class="index-value">@ForecastFormat.Number(index)</span>
-            <div class="index-side">
-                @if (IndexTrend is { } trend)
-                {
-                    <div class="index-trend" title="@trend.Aria">
-                        <LineChart Series="[trend.Series]" Markers="trend.Markers" Compact="true" ShowDots="false" MaxGap="trend.Range.MaxGap" AriaLabel="@trend.Aria" />
-                        <span class="index-trend-range">@ShortDate(trend.Range.From)–@ShortDate(trend.Range.To)</span>
-                    </div>
-                }
-                <span class="index-label">@L["Index_Label"]</span>
+    <div class="conditions-side">
+        @HeadAction
+        @if (Today.DiveIndex is { } index)
+        {
+            <div class="index" data-index-band="@ForecastFormat.IndexBand(index)">
+                <span class="index-value">@ForecastFormat.Number(index)</span>
+                <div class="index-side">
+                    @if (IndexTrend is { } trend)
+                    {
+                        <div class="index-trend" title="@trend.Aria">
+                            <LineChart Series="[trend.Series]" Markers="trend.Markers" Compact="true" ShowDots="false" MaxGap="trend.Range.MaxGap" AriaLabel="@trend.Aria" />
+                            <span class="index-trend-range">@ShortDate(trend.Range.From)–@ShortDate(trend.Range.To)</span>
+                        </div>
+                    }
+                    <span class="index-label">@L["Index_Label"]</span>
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
 
 <div class="conditions-grid" data-profile="@(Forecast.HasDepthProfile ? "true" : "false")">
@@ -125,6 +128,8 @@
     </div>
 </div>
 
+@ChildContent
+
 <p class="sources">@Sources @(Forecast.ComputedAt is { } computed ? L["Computed", computed.ToLocalTime().ToString("dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture)] : "")</p>
 
 @code {
@@ -134,6 +139,14 @@
     /// <summary>Der Abfluss an einem Flussplatz, sonst <c>null</c>.</summary>
     [Parameter]
     public SiteDischarge? Discharge { get; set; }
+
+    /// <summary>Eine Aktion im Kopf rechts über dem Index, zum Beispiel «Tauchgang melden».</summary>
+    [Parameter]
+    public RenderFragment? HeadAction { get; set; }
+
+    /// <summary>Inhalt unter dem Raster, vor der Quellenzeile.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     /// <summary>Der Verlauf bis heute für die Mini-Diagramme der Kacheln Sicht und Algen.</summary>
     [Parameter]

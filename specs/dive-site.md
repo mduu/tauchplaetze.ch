@@ -203,9 +203,9 @@ Für das Sichtmodell speichert der Core dazu Autor, Zeitpunkt sowie Index und `M
 
 ### Auf der Platzseite
 
-- Kachel «Meldungen» bei den Bedingungen: die Meldungen der letzten 14 Tage, neueste zuerst, höchstens 5. Pro Meldung Datum, Sicht, Temperatur mit Tiefe, Name und der freigegebene Kommentar, dazu der Index der Prognose dieses Tages, z.B. «Sicht 6.5 m · 12.4 °C auf 15 m · 21.10.2026 · Taucher:in · Prognose: Index 6.1».
-- Ohne Meldung: «Noch keine Meldung in den letzten 14 Tagen.»
-- Knopf «Tauchgang melden»: eigene Seite (Static SSR, Antiforgery), mobil zuerst, wenige Felder, `noindex`.
+- Liste «Meldungen der letzten 14 Tage» im Block der Bedingungen: neueste zuerst, höchstens 5. Pro Meldung eine Zeile mit Datum, Sicht, Temperatur mit Tiefe, Name und dem Index der Prognose dieses Tages, der freigegebene Kommentar darunter, z.B. «21.10.2026 · Sicht 6.5 m · 12.4 °C auf 15 m · Taucher:in · Prognose: Index 6.1».
+- Ohne Meldung fehlt die Liste (Entscheid Marc, 22.10.2026).
+- Knopf «Tauchgang melden» klein im Kopf der Bedingungen beim Index (`ux.md`): eigene Seite (Static SSR, Antiforgery), mobil zuerst, wenige Felder, `noindex`.
 
 ### Moderation (`/admin/meldungen`)
 
