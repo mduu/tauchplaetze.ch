@@ -70,6 +70,20 @@ public class ClaritySourceTests
     }
 
     [Fact]
+    public void Der_gedrehte_Punkt_liegt_100_m_vom_Platz_45_Grad_im_Uhrzeigersinn_von_der_Richtung_zur_Seemitte()
+    {
+        // Arrange: Terlinden, die Richtung zum Satellitenpunkt des Zürichsees führt nach Süden dem Ufer entlang.
+        var (latitude, longitude) = (47.328987, 8.572828);
+
+        // Act
+        var turned = SeawardPoint.Turned(latitude, longitude, 47.28, 8.6, 100, 45);
+
+        // Assert
+        Assert.Equal((47.32817, 8.57228), turned);
+        Assert.InRange(Meters(latitude, longitude, turned.Latitude, turned.Longitude), 95, 105);
+    }
+
+    [Fact]
     public void Liegt_die_Seemitte_naeher_als_die_Distanz_gilt_die_Seemitte()
     {
         // Act

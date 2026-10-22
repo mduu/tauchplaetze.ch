@@ -9,6 +9,12 @@ internal static class ShorePoint
     /// <summary>Distanz des Rückfalls, wenn bei <see cref="NearMeters"/> kein Wert oder zu wenige Pixel kommen.</summary>
     public const double FarMeters = 100;
 
+    /// <summary>
+    /// Drehungen in Grad für weitere Punkte bei <see cref="FarMeters"/>, wenn 50 und 100 m keinen brauchbaren Wert liefern.
+    /// Führt die Richtung zur Seemitte dem Ufer entlang, liegen beide Punkte auf maskierten Uferpixeln (Terlinden, 22.10.2026).
+    /// </summary>
+    public static readonly double[] FallbackTurns = [45, -45, 90, -90];
+
     /// <summary>Mindestzahl gültiger Pixel für den neuesten Wert.</summary>
     public const int MinPixels = 3;
 
