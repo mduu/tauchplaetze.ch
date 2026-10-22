@@ -27,6 +27,10 @@
 
 <body>
     <Routes @rendermode="PageRenderMode" />
+    @if (PageRenderMode is not null)
+    {
+        <ReconnectModal />
+    }
     <script src="_framework/blazor.web.js"></script>
     <script src="@Assets["lib/leaflet/leaflet.js"]"></script>
     <script src="@Assets["lib/leaflet.markercluster/leaflet.markercluster.js"]"></script>
@@ -40,6 +44,7 @@
     @if (PageRenderMode is not null)
     {
         <script src="@Assets["js/editor.js"]"></script>
+        <script src="@Assets["js/reconnect.js"]"></script>
     }
 </body>
 
