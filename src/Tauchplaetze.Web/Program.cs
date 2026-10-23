@@ -31,6 +31,7 @@ builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(Fo
 builder.Services.AddHostedService<ForecastWorker>();
 builder.Services.AddHostedService<DischargeWorker>();
 builder.Services.AddHostedService<MediaPurgeWorker>();
+builder.Services.AddHostedService<UnconfirmedAccountsWorker>();
 builder.Services.AddHostedService<MailQueueWorker>();
 builder.Services.AddHostedService<DeadLetterMonitorWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));

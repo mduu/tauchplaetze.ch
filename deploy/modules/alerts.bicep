@@ -94,7 +94,8 @@ var logAlerts = [
     description: 'Ein Prognose-Lauf ist gescheitert.'
     severity: 2
     window: 'PT1H'
-    query: 'AppTraces | where Message startswith "Forecast run failed" or Message matches regex @"^Forecast run [0-9a-fA-F-]+: Failed"'
+    // Ein Fehler mit Exception landet in AppExceptions, der Text steht dort nur in Properties.OriginalFormat.
+    query: 'union AppTraces, AppExceptions | where tostring(Properties.OriginalFormat) == "Forecast run failed" or Message matches regex @"^Forecast run [0-9a-fA-F-]+: Failed"'
     operator: 'GreaterThan'
     threshold: 0
   }

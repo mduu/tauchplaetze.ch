@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Reflection;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -23,6 +25,10 @@ public static class Extensions
     private static readonly string[] StaticPathPrefixes = ["/_framework", "/_content", "/_blazor", "/bathymetry"];
 
     private static readonly string[] StaticFileExtensions = [".css", ".js", ".woff2", ".png", ".webp", ".ico", ".svg"];
+
+    private static readonly string[] InstrumentedMeters = ["Microsoft.AspNetCore", "System.", "OpenTelemetry.Instrumentation"];
+
+    private static readonly HashSet<string> KeptMetrics = ["http.server.request.duration", "http.client.request.duration", "dotnet.gc.last_collection.heap.size"];
 
     /// <summary>
     /// Adds the service defaults to the application.
@@ -59,13 +65,15 @@ public static class Extensions
             {
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation();
+                    .AddRuntimeInstrumentation()
+                    .AddView(instrument => IsKept(instrument) ? null : MetricStreamConfiguration.Drop);
             })
             .WithTracing(tracing =>
             {
                 tracing.AddSource(builder.Environment.ApplicationName)
                     .AddAspNetCoreInstrumentation(options => options.Filter = context => IsTraced(context.Request.Path))
-                    .AddHttpClientInstrumentation();
+                    .AddHttpClientInstrumentation()
+                    .AddProcessor(new WithoutStorageSpans());
             });
 
         builder.AddOpenTelemetryExporters();
@@ -81,6 +89,13 @@ public static class Extensions
         && !path.StartsWithSegments(AlivenessEndpointPath)
         && !StaticPathPrefixes.Any(prefix => path.StartsWithSegments(prefix))
         && !StaticFileExtensions.Contains(Path.GetExtension(path.Value ?? string.Empty), StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Von den Metriken der Instrumentierung bleiben nur Dauer der Requests, Dauer der ausgehenden Aufrufe und Heap. Keine Ansicht liest die übrigen,
+    /// sie machten mehr als die Hälfte des Tageslimits aus (`infrastructure.md`, «Betrieb»).
+    /// </summary>
+    private static bool IsKept(Instrument instrument) =>
+        KeptMetrics.Contains(instrument.Name) || !InstrumentedMeters.Any(prefix => instrument.Meter.Name.StartsWith(prefix, StringComparison.Ordinal));
 
     private static TBuilder AddOpenTelemetryExporters<TBuilder>(this TBuilder builder)
         where TBuilder : IHostApplicationBuilder
@@ -149,4 +164,23 @@ public static class Extensions
         context.Response.ContentType = "text/plain";
         return context.Response.WriteAsync(report.Status.ToString());
     }
+}
+
+/// <summary>
+/// Spans der Storage-Clients (Mail-Queue, Blobs, Lease) und ihre HTTP-Aufrufe gehen nicht an Application Insights.
+/// Die Mail-Queue fragt alle paar Sekunden ab, keine Ansicht liest diese Spans. Fehler kommen weiterhin als Log.
+/// </summary>
+public sealed class WithoutStorageSpans : BaseProcessor<Activity>
+{
+    public override void OnStart(Activity data)
+    {
+        if (IsStorage(data))
+        {
+            data.IsAllDataRequested = false;
+            data.ActivityTraceFlags &= ~ActivityTraceFlags.Recorded;
+        }
+    }
+
+    private static bool IsStorage(Activity? activity) =>
+        activity is not null && (activity.Source.Name.StartsWith("Azure.Storage.", StringComparison.Ordinal) || IsStorage(activity.Parent));
 }
