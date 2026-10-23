@@ -18,7 +18,7 @@ Das Projekt ist **nicht kommerziell** (`vision.md`, «Finanzierung»). Mehrere Q
 | Eawag Datalakes | In-situ-Messungen: Temperaturketten, Bojen, Profile, Secchi (LéXPLORE) | aktueller Stand, Kontrolle der Modelle | Phase 1 | ✅ |
 | BAFU Abfluss- und Seepegelvorhersagen | Prognose für etwa 50–60 Stationen | Prognose für Flussplätze | Phase 1 | ✅ Zugang HTTPS |
 | OpenStreetMap (Overpass API) | Tauchplätze (`sport=scuba_diving`) mit Name und Koordinate, Gewässer, Gemeinde, Kanton | Erstbestand des Verzeichnisses | MVP | ✅ Skript |
-| Eigenes Archiv (tauchfotos.ch, tauchvideos.ch) | Fotos, Videos | Dokumentation | MVP | Rechte bei Marc |
+| Eigenes Archiv (tauchfotos.ch) | Fotos | Dokumentation | MVP | Rechte bei Marc |
 
 ## Eawag Alplakes
 

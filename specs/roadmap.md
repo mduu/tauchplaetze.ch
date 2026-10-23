@@ -54,9 +54,10 @@ Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise
 - ✅ Meldungen nach dem Tauchgang (Sicht, Temperatur, Kommentar nach Freigabe), vorgezogen und gebaut am 21.10.2026 (`dive-site.md`, «Meldungen»).
 - ⏳ Tauchshops und Füllstationen (kostenlos, ohne Hervorhebung).
 - ⏳ Buddy-Gruppen (WhatsApp) pro Region.
-- ✅ Registrierung für alle öffnen: Mitwirkende schlagen vor, Moderatoren geben frei (`cms.md`).
-- ⏳ Optional: maschineller Übersetzungsvorschlag für redaktionelle Inhalte.
-- ⏳ Videos aus tauchvideos.ch.
+- 🟡 Registrierung für alle: Selbstregistrierung, Rollen vergeben (Admins ernennen Moderatoren) und Mails bei Freigabe oder Ablehnung sind gebaut (`cms.md`). In Prod ist die Registrierung noch zu, bis `Accounts:RegistrationOpen` gesetzt ist (⏳).
+- ✅ Texte automatisch übersetzen (Claude API mit Glossar), im CMS und im Bearbeiten-Modus (22.10.2026, `cms.md`).
+- ⏳ Videos: YouTube-Links pro Platz, eingebettet auf der Platzseite.
+- Später möglich: Kommentare unter Plätzen, eventuell nur für registrierte Konten und mit Freigabe (`features.md`).
 - Neue Fotos der Ein- und Ausstiege, nach und nach.
 
 ## Zusätzlich umgesetzt (nicht im ursprünglichen Plan)

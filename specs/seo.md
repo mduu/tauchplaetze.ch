@@ -16,7 +16,6 @@ Weitere Domains von Marc, nicht Teil der Plattform:
 | Domain | Rolle |
 |---|---|
 | `tauchfotos.ch` | Bestehendes Fotoarchiv, Quelle für Bilder |
-| `tauchvideos.ch` | Bestehendes Videoarchiv, Quelle für Videos |
 | `tauchbolde.ch` | Website der eigenen Tauchgruppe |
 
 `sichtweiten.ch` ist ein Einstieg für Suchen wie «Sichtweite Zürichsee». Es gibt keinen doppelten Inhalt. Darum nur Redirects, keine zweite Website.
