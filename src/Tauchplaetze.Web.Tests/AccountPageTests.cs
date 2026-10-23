@@ -19,6 +19,22 @@ public class AccountPageTests : IClassFixture<WebApp>
             ? new SignInOutcome(SignInStatus.Succeeded, new SignedInAccount("user-1", "Anna", "de", ["Contributor"]))
             : new SignInOutcome(SignInStatus.Failed);
         app.PersonalData.Answer = _ => new PersonalData("anna@example.org", "Anna", false, "de", ["Contributor"], true, null, [], []);
+        app.PersonalData.Yields = true;
+    }
+
+    [Fact]
+    public async Task Das_Profil_zeigt_das_Formular_auch_wenn_die_Datenbank_asynchron_antwortet_Fehler_vom_23_10_2026()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        using var _ = await SignIn(browser, "/de/account/sign-in", "richtiges-passwort");
+
+        // Act
+        using var profile = await browser.GetAsync("/de/account/profile", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, profile.StatusCode);
+        Assert.Matches("name=\"Input.DisplayName\"[^>]*value=\"Anna\"|value=\"Anna\"[^>]*name=\"Input.DisplayName\"", await profile.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
