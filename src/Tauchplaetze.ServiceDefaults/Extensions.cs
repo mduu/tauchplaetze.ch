@@ -108,7 +108,13 @@ public static class Extensions
 
         if (!string.IsNullOrWhiteSpace(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
         {
-            builder.Services.AddOpenTelemetry().UseAzureMonitor(options => options.TracesPerSecond = 1);
+            var samplingRatio = float.TryParse(builder.Configuration["Telemetry:SamplingRatio"], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var ratio) ? ratio : 1.0f;
+            builder.Services.AddOpenTelemetry().UseAzureMonitor(options =>
+            {
+                options.TracesPerSecond = null;
+                options.SamplingRatio = samplingRatio;
+                options.EnableTraceBasedLogsSampler = false;
+            });
         }
 
         return builder;
