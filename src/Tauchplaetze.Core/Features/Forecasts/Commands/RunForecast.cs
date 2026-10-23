@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.CrossCutting.Locks;
 using Tauchplaetze.Core.CrossCutting.Storage;
@@ -25,7 +27,8 @@ internal class RunForecastHandler(
     IRunLock runLock,
     ForecastProgress progress,
     WaterBodyIndexWriter indexWriter,
-    TimeProvider time) : ICommandHandler<RunForecastCommand, RunForecastResult>
+    TimeProvider time,
+    ILogger<RunForecastHandler> logger) : ICommandHandler<RunForecastCommand, RunForecastResult>
 {
     public const string LockName = "forecast";
 
@@ -79,6 +82,22 @@ internal class RunForecastHandler(
             run.FinishedAt = time.GetUtcNow();
             run.SourceStatus = recorder.StatusJson;
             await dbContext.SaveChangesAsync(CancellationToken.None);
+            LogFinished(run);
+        }
+    }
+
+    /// <summary>Die Zeile, auf die der Alert `alert-forecast-missing` prüft. Ohne Trace-Kontext, damit kein Sampling des Laufs sie verwirft.</summary>
+    private void LogFinished(ForecastRun run)
+    {
+        var activity = Activity.Current;
+        Activity.Current = null;
+        try
+        {
+            logger.LogInformation("Forecast run {RunId}: {Status}, {Sites} sites, skipped {Skipped}", run.Id, run.Status, run.Sites ?? 0, false);
+        }
+        finally
+        {
+            Activity.Current = activity;
         }
     }
 

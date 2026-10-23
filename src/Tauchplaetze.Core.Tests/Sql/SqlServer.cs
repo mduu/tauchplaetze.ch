@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Http.Resilience;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
@@ -53,6 +54,8 @@ public sealed class SqlServer : IAsyncLifetime
 
     internal InMemoryMailSender Mail { get; } = new();
 
+    internal CollectingLogger Logs { get; } = new();
+
     internal InMemoryMailQueue MailQueue => mailQueue ??= new InMemoryMailQueue(Time);
 
     private InMemoryMailQueue? mailQueue;
@@ -87,6 +90,7 @@ public sealed class SqlServer : IAsyncLifetime
             ["Translation:ApiKey"] = "test-key",
         });
         builder.AddTauchplaetzeCore();
+        builder.Logging.AddProvider(Logs);
         builder.Services.Replace(ServiceDescriptor.Singleton<IRevisionStore>(Revisions));
         builder.Services.Replace(ServiceDescriptor.Singleton<IRawDataStore>(RawData));
         builder.Services.Replace(ServiceDescriptor.Singleton<IMediaStore>(Media));

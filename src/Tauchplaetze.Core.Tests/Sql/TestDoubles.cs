@@ -5,6 +5,7 @@ using Tauchplaetze.Core.CrossCutting.Mail;
 using Tauchplaetze.Core.CrossCutting.Mail.Queue;
 using Tauchplaetze.Core.CrossCutting.Storage;
 using Tauchplaetze.Core.Features.Translations;
+using Microsoft.Extensions.Logging;
 using Tauchplaetze.Core.Tests.Features.Forecasts;
 
 namespace Tauchplaetze.Core.Tests.Sql;
@@ -283,5 +284,39 @@ internal sealed class FakeTranslator : ITextTranslator
     {
         Calls = 0;
         Translate = null;
+    }
+}
+
+/// <summary>Sammelt die Logzeilen, mit dem Trace-Kontext zum Zeitpunkt des Schreibens.</summary>
+internal sealed class CollectingLogger : ILoggerProvider, ILogger
+{
+    private readonly ConcurrentQueue<(string Category, string Message, bool InTrace)> entries = new();
+
+    public IReadOnlyList<(string Category, string Message, bool InTrace)> Entries => [.. entries];
+
+    public ILogger CreateLogger(string categoryName) => new Category(this, categoryName);
+
+    public void Clear() => entries.Clear();
+
+    public void Dispose()
+    {
+    }
+
+    IDisposable? ILogger.BeginScope<TState>(TState state) => null;
+
+    bool ILogger.IsEnabled(LogLevel logLevel) => true;
+
+    void ILogger.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    {
+    }
+
+    private sealed class Category(CollectingLogger owner, string name) : ILogger
+    {
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => logLevel >= LogLevel.Information;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) =>
+            owner.entries.Enqueue((name, formatter(state, exception), System.Diagnostics.Activity.Current is not null));
     }
 }

@@ -61,7 +61,10 @@ internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSche
             await using var scope = scopes.CreateAsyncScope();
             var result = await scope.ServiceProvider.GetRequiredService<ICommandHandler<RunForecastCommand, RunForecastResult>>()
                 .Handle(new RunForecastCommand(), ct);
-            logger.LogInformation("Forecast run {RunId}: {Status}, {Sites} sites, skipped {Skipped}", result.RunId, result.Status, result.Sites, result.Skipped);
+            if (result.Skipped)
+            {
+                logger.LogInformation("Forecast run skipped, another run holds the lock");
+            }
         }
         catch (Exception ex) when (!ct.IsCancellationRequested)
         {

@@ -377,6 +377,27 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Jeder_Lauf_meldet_sein_Ergebnis_ohne_Trace_Kontext_im_Format_des_Alerts_auch_von_Hand_gestartet()
+    {
+        // Arrange
+        await PrepareRiffWilliams();
+        var admin = (await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]))).UserIds[0];
+        Sql.Logs.Clear();
+        using var trace = new System.Diagnostics.Activity("forecast-run").Start();
+
+        // Act
+        var scheduled = await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+        var manual = await Command<StartForecastRunCommand, StartForecastRunResult>(new StartForecastRunCommand(admin));
+
+        // Assert
+        var lines = Sql.Logs.Entries.Where(e => e.Message.StartsWith("Forecast run ", StringComparison.Ordinal)).ToList();
+        Assert.Equal([scheduled.RunId, manual.Run!.RunId], lines.Select(l => (Guid?)Guid.Parse(l.Message["Forecast run ".Length..].Split(':')[0])));
+        Assert.All(lines, l => Assert.Matches(@"^Forecast run [0-9a-fA-F-]+: (Succeeded|PartiallySucceeded)", l.Message));
+        Assert.All(lines, l => Assert.False(l.InTrace));
+        Assert.Same(trace, System.Diagnostics.Activity.Current);
+    }
+
+    [SqlFact]
     public async Task Von_Hand_startet_nur_ein_Admin_den_Prognose_Lauf_und_nur_Admins_sehen_die_Laeufe()
     {
         // Arrange
