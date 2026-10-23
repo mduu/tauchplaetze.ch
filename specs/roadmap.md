@@ -40,8 +40,8 @@ Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise
 - ✅ Prognose-Job mit Datenstufen (heute `rules-1.6`), Rohdaten in Blob Storage, Status auf `/platform/prognose`. Quellen: Alplakes, Open-Meteo, BAFU (ADR-007).
 - 🟡 SEO-Grundlagen: Titel, Meta, `hreflang`, `robots.txt` und Sitemap pro Sprache (`/sitemap.xml`) umgesetzt. JSON-LD offen (⏳).
 - ✅ Deploy auf Azure (Bicep, GitHub Actions mit what-if und Freigabe, Deploy aus dem Paket, Health Check wartet auf die neue Version). Domains `tauchplaetze.ch`, `www.tauchplaetze.ch`, `sichtweiten.ch` und `www.sichtweiten.ch` mit Zertifikat (21.10.2026). Mail über Hostpoint mit SPF, DKIM und DMARC. DNS bleibt bei Hostpoint, Cloudflare ist ein späterer Ausbau.
-- ⏳ **Inhalt:** Zürichsee und Zugersee vollständig (je 8 bis 12 Plätze auf Stufe 2 mit Fotos aus tauchfotos.ch). Dazu der Rhein als erster Fluss. Alle weiteren bekannten Plätze als Stufe 0. Entscheid Marc, 17.10.2026: Marc taucht dort am meisten und kann die Prognose am besten beurteilen. Beide Seen haben ein 3D-Modell (Datenstufe 3).
-- ⏳ **Inhalt pro Platz:** 3–6 starke Fotos aus den Originalen von tauchfotos.ch. Fotos der Ein- und Ausstiege nach und nach bei eigenen Tauchgängen.
+- ⏳ **Inhalt:** Zürichsee und Zugersee vollständig (je 8 bis 12 Plätze auf Stufe 2 mit Fotos aus dem eigenen Archiv). Dazu der Rhein als erster Fluss. Alle weiteren bekannten Plätze als Stufe 0. Entscheid Marc, 17.10.2026: Marc taucht dort am meisten und kann die Prognose am besten beurteilen. Beide Seen haben ein 3D-Modell (Datenstufe 3).
+- ⏳ **Inhalt pro Platz:** 3–6 starke Fotos aus den Originalen des eigenen Archivs. Fotos der Ein- und Ausstiege nach und nach bei eigenen Tauchgängen.
 - 🟡 **Rechtliches:** Impressum, Datenschutz (nDSG) und Haftungshinweis sind online. Die Prüfung des Datenschutzes ist offen (`open-questions.md` #28).
 - ✅ **Sicherheit:** Security-Review von Infrastruktur und Software (20.10.2026), Befunde behoben: Rate Limits der Konto-Formulare, keine Konto-Enumeration, Security-Header, Rechte der Versionsansicht, Schwärzen von Versionen.
 - ⏳ **Validierung:** Link an alte Kontakte, Clubs, Shops, Facebook- und WhatsApp-Gruppen. Erfolgskriterien in `vision.md`.
@@ -54,9 +54,10 @@ Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise
 - ✅ Meldungen nach dem Tauchgang (Sicht, Temperatur, Kommentar nach Freigabe), vorgezogen und gebaut am 21.10.2026 (`dive-site.md`, «Meldungen»).
 - ⏳ Tauchshops und Füllstationen (kostenlos, ohne Hervorhebung).
 - ⏳ Buddy-Gruppen (WhatsApp) pro Region.
-- ✅ Registrierung für alle öffnen: Mitwirkende schlagen vor, Moderatoren geben frei (`cms.md`).
-- ⏳ Optional: maschineller Übersetzungsvorschlag für redaktionelle Inhalte.
-- ⏳ Videos aus tauchvideos.ch.
+- 🟡 Registrierung für alle: Selbstregistrierung, Rollen vergeben (Admins ernennen Moderatoren) und Mails bei Freigabe oder Ablehnung sind gebaut (`cms.md`). In Prod ist die Registrierung noch zu, bis `Accounts:RegistrationOpen` gesetzt ist (⏳).
+- ✅ Texte automatisch übersetzen (Claude API mit Glossar), im CMS und im Bearbeiten-Modus (22.10.2026, `cms.md`).
+- ⏳ Videos: YouTube-Links pro Platz, eingebettet auf der Platzseite.
+- Später möglich: Kommentare unter Plätzen, eventuell nur für registrierte Konten und mit Freigabe (`features.md`).
 - Neue Fotos der Ein- und Ausstiege, nach und nach.
 
 ## Zusätzlich umgesetzt (nicht im ursprünglichen Plan)

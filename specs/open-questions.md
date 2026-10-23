@@ -22,7 +22,7 @@ Stand: 17.10.2026. Erledigte Punkte wandern als Entscheid in die passende Spec o
 - #9 (Zusammenarbeit mit bestehenden Plattformen für Sichtweiten): vorerst keine.
 - #10 (Betreiber bestehender Tauchplatz-Apps anschreiben): vorerst nicht.
 - #12 (Bilder): öffentlicher Blob-Container mit Cloudflare davor, `infrastructure.md`.
-- #13 (maschinelle Übersetzung): Claude API mit Glossar, Phase 1, `cms.md`.
+- #13 (maschinelle Übersetzung): Claude API mit Glossar, `cms.md`. Gebaut am 22.10.2026.
 - #16 (Azure SQL Free Offer): für das Projekt nicht entscheidend. Bei der Einrichtung prüfen.
 - #17 (erste Gewässer): zuerst Zürichsee, Zugersee und der Rhein. Seit 19.10.2026 alle Seen mit Plätzen, die Alplakes abdeckt (Entscheid Marc), `data-sources.md`.
 - #18 bis #20 (Fotos, Einstiege, Rechtliches): als Aufgaben in `roadmap.md`.

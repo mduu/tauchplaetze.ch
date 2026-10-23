@@ -36,7 +36,7 @@ Ohne Anmeldung führt `/admin` zur Anmeldung. Fehlt die Rolle, antwortet der Ser
 
 **Alle können beitragen, Moderatoren geben frei** (Entscheid Marc, 17.10.2026, ADR-008). Wer ein Konto hat, kann Informationen zu Tauchplätzen beisteuern. Online sichtbar wird eine Änderung erst, wenn ein Moderator oder Admin sie freigibt. Jede Änderung ergibt eine Version, wie in einem Wiki. Die History zeigt Autor und Approver.
 
-Zu Beginn pflegt Marc die Inhalte allein. Das Modell mit Freigabe und Versionen gilt aber schon im MVP. In Phase 1 öffnen wir die Registrierung für alle.
+Zu Beginn pflegt Marc die Inhalte allein. Das Modell mit Freigabe und Versionen gilt aber schon im MVP. Die Registrierung für alle ist gebaut. In Prod öffnen wir sie mit `Accounts:RegistrationOpen`.
 
 ## Grundsatz: Verzeichnis zuerst
 
@@ -258,7 +258,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 - **Aufräumen** (Command `PurgeUnusedMedia`, täglich 03:30 Lokalzeit im Web-Host, Lock `locks/media-purge`): Ein privates Foto, das älter als 30 Tage ist (`Media:PurgeAfterDays`) und kein offener Vorschlag verwendet, verschwindet samt Dateien. Öffentliche Fotos und Fotos in offenen Vorschlägen bleiben.
 - **Reihenfolge** mit Pfeilen hoch und runter. Ein Foto als Titelbild wählen (Stern).
 - **Schutz:** höchstens 30 Uploads pro Stunde und 100 pro Tag und Konto (Moderation ausgenommen). Ein gesperrtes Konto lädt nichts hoch.
-- Import aus tauchfotos.ch: Marc lädt die Originale hoch. Kein automatischer Abzug von der alten Website.
+- Import aus dem eigenen Fotoarchiv: Marc lädt die Originale hoch. Kein automatischer Abzug von einer anderen Website.
 
 ### Seen, Shops, Buddy-Gruppen
 
@@ -305,7 +305,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 | `Admin` | alles, dazu Rollen vergeben, Admin-Konten sperren, Gewässer und Stationen zuordnen, Prognose-Lauf starten |
 
 - Anmeldung mit ASP.NET Core Identity: E-Mail plus Passwort. Passkeys sind geplant.
-- **Selbstregistrierung** für Mitwirkende (Entscheid Marc, 17.10.2026): E-Mail bestätigen, Anzeigename wählen (Pseudonym erlaubt). Öffentlich erscheint der Anzeigename nur mit Einwilligung (siehe «Datenschutz in der History»). Ab Phase 1 offen, im MVP ausgeschaltet (`Accounts:RegistrationOpen`).
+- **Selbstregistrierung** für Mitwirkende (Entscheid Marc, 17.10.2026): E-Mail bestätigen, Anzeigename wählen (Pseudonym erlaubt). Öffentlich erscheint der Anzeigename nur mit Einwilligung (siehe «Datenschutz in der History»). Gebaut. Ohne `Accounts:RegistrationOpen = true` ist sie zu (Standard, so in Prod). Lokal startet Aspire mit offener Registrierung.
 - **Schutz der Konten** (Security-Review, 20.10.2026):
   - **Keine Konto-Enumeration:** Die Registrierung prüft Anzeigename und Passwort zuerst, bei bekannter und neuer Adresse gleich. Danach meldet eine bekannte Adresse denselben Erfolg wie eine neue. Die Mail sagt «Du hast schon ein Konto», bei einem unbestätigten Konto kommt die Bestätigung noch einmal. Der bekannte Zweig rechnet einen Passwort-Hash wie ein neues Konto, damit die Antwortzeit nichts verrät. Die Registrierung sendet sofort (ADR-010), weil beide Zweige eine Mail senden. «Passwort vergessen» sendet über die Queue (5–30 s), weil nur der bekannte Zweig eine Mail hat und ein sofortiger Versand die Antwortzeit verlängern und so ein Konto verraten würde. Ein gesperrtes Konto (Lockout) bekommt bei der Anmeldung dieselbe Antwort wie ein falsches Passwort. «Passwort vergessen» antwortet immer gleich.
   - **Lockout:** nach 5 Fehlversuchen 15 Minuten, nicht eskalierend. Eine Eskalation würde das Sperren fremder Konten (DoS) verschärfen. Dagegen hilft das Rate Limit pro Client.
