@@ -14,7 +14,7 @@ Bicep: `deploy/main.bicep` (Resource-Group-Scope, die Resource Group legt Marc v
 | SQL Server (logisch) | `sql-tauchplaetze-prod` | – | nur Entra-Authentifizierung |
 | SQL Database | `sqldb-tauchplaetze` | **Basic, 5 DTU, 2 GB** (Entscheid Marc, 20.10.2026); Free Offer als Option `sqlPlan = 'Free'` | siehe unten |
 | Storage Account | `sttauchplaetzeprod` | Standard LRS | Container `media`, `forecast-raw`, `models`, `locks` |
-| Log Analytics + Application Insights | `log-tauchplaetze-prod`, `appi-tauchplaetze-prod` | Pay-as-you-go | Tageslimit 0.15 GB (unter dem Gratisvolumen von 5 GB im Monat), Sampling 50 % der Traces, Aufbewahrung 30 Tage, IP-Adressen nicht speichern (Standard von Application Insights, nicht ändern) |
+| Log Analytics + Application Insights | `log-tauchplaetze-prod`, `appi-tauchplaetze-prod` | Pay-as-you-go | Tageslimit 0.15 GB (unter dem Gratisvolumen von 5 GB im Monat), Sampling höchstens 1 Trace pro Sekunde, Aufbewahrung 30 Tage, IP-Adressen nicht speichern (Standard von Application Insights, nicht ändern) |
 | Key Vault | `kv-tauchplaetze-prod` | Standard, RBAC | Secrets der App, als Key-Vault-Referenzen in den App Settings |
 | Action Group, Alerts, Budget | `ag-tauchplaetze-prod`, `alert-*`, `budget-tauchplaetze-prod` | – | nur mit `ALERT_EMAIL`, siehe «Betrieb» |
 
@@ -144,4 +144,9 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 
 - Health Checks: `/alive` und `/health` prüfen nur die App, **ohne Datenbank**. App Service fragt `/alive` jede Minute ab, eine Abfrage der Datenbank jede Minute wäre unnötige Last (und mit der Option Free liesse sie Serverless nie pausieren). `/health/ready` prüft zusätzlich die Datenbank und einen brauchbaren Prognose-Lauf jünger als 30 h (`GetReadiness`). Der Endpoint ist öffentlich. Das Ergebnis gilt 30 s, so fragen viele Aufrufe die Datenbank höchstens zweimal pro Minute.
 - Alerts (`deploy/modules/alerts.bicep`, an `ALERT_EMAIL`): Health Check von App Service unter 100 %; Prognose-Lauf gescheitert; seit 30 h kein brauchbarer Lauf; Mail in der Dead-Letter-Queue (ADR-010); Free-Offer-Kontingent unter 10 000 vCore-Sekunden (nur mit `sqlPlan = 'Free'`). Die Log-Alerts suchen die Texte der Logs aus `ForecastWorker` und `ProcessMailQueue` in `AppTraces` und prüfen stündlich. Budget der Resource Group (Standard 25 im Monat): Mail bei 80 % und bei 100 % der Prognose.
+- Telemetrie (`Tauchplaetze.ServiceDefaults`): Requests, Exceptions, Logs ab `Information` und ausgehende Aufrufe (Dependencies) gehen an Application Insights, nur mit `APPLICATIONINSIGHTS_CONNECTION_STRING`. Health Checks, statische Dateien (`/_framework`, `/_content`, `/bathymetry`, CSS, JS, Fonts, Bilder) und `/_blazor` erzeugen keinen Trace. Sampling: höchstens 1 Trace pro Sekunde (`TracesPerSecond`). Darunter bleibt jeder Request erhalten, `ItemCount` rechnet gesampelte Requests hoch. Die Werte der Query-Parameter ersetzt OpenTelemetry durch `Redacted`. Seitenaufrufe zählen wir auf dem Server, kein Skript im Browser.
+- Abfragen in Log Analytics (`log-tauchplaetze-prod`, Logs):
+  - Seitenaufrufe pro Tag: `AppRequests | where Name startswith "GET" and ResultCode == "200" and Url !has "/admin" and Url !has "/platform" | summarize Aufrufe = sum(ItemCount) by bin(TimeGenerated, 1d)`
+  - Fehler: `AppRequests | where Success == false | summarize sum(ItemCount) by Name, ResultCode` und `AppExceptions | summarize count() by ProblemId, OuterMessage`
+  - Volumen pro Tabelle (Tageslimit 0.15 GB): `union withsource = Tabelle App* | where TimeGenerated > ago(1d) | summarize MB = sum(_BilledSize) / 1e6 by Tabelle`
 - Backups: Point-in-time Restore der Datenbank (7 Tage). Medien zusätzlich lokal bei Marc (Originale).

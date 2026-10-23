@@ -20,6 +20,10 @@ public static class Extensions
     private const string HealthEndpointPath = "/health";
     private const string AlivenessEndpointPath = "/alive";
 
+    private static readonly string[] StaticPathPrefixes = ["/_framework", "/_content", "/_blazor", "/bathymetry"];
+
+    private static readonly string[] StaticFileExtensions = [".css", ".js", ".woff2", ".png", ".webp", ".ico", ".svg"];
+
     /// <summary>
     /// Adds the service defaults to the application.
     /// </summary>
@@ -60,10 +64,7 @@ public static class Extensions
             .WithTracing(tracing =>
             {
                 tracing.AddSource(builder.Environment.ApplicationName)
-                    .AddAspNetCoreInstrumentation(options =>
-                        options.Filter = context =>
-                            !context.Request.Path.StartsWithSegments(HealthEndpointPath)
-                            && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath))
+                    .AddAspNetCoreInstrumentation(options => options.Filter = context => IsTraced(context.Request.Path))
                     .AddHttpClientInstrumentation();
             });
 
@@ -71,6 +72,15 @@ public static class Extensions
 
         return builder;
     }
+
+    /// <summary>
+    /// Health Checks, statische Dateien und die Blazor-Verbindung erzeugen keinen Trace. Sie füllen sonst das Tageslimit von Application Insights.
+    /// </summary>
+    private static bool IsTraced(PathString path) =>
+        !path.StartsWithSegments(HealthEndpointPath)
+        && !path.StartsWithSegments(AlivenessEndpointPath)
+        && !StaticPathPrefixes.Any(prefix => path.StartsWithSegments(prefix))
+        && !StaticFileExtensions.Contains(Path.GetExtension(path.Value ?? string.Empty), StringComparer.OrdinalIgnoreCase);
 
     private static TBuilder AddOpenTelemetryExporters<TBuilder>(this TBuilder builder)
         where TBuilder : IHostApplicationBuilder
@@ -83,7 +93,7 @@ public static class Extensions
 
         if (!string.IsNullOrWhiteSpace(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
         {
-            builder.Services.AddOpenTelemetry().UseAzureMonitor(options => options.SamplingRatio = 0.5f);
+            builder.Services.AddOpenTelemetry().UseAzureMonitor(options => options.TracesPerSecond = 1);
         }
 
         return builder;
