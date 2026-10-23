@@ -15,8 +15,10 @@ internal static class RateLimits
         services.Configure<ContactRateLimitOptions>(configuration.GetSection(ContactRateLimitOptions.Section))
             .Configure<AccountFormsRateLimitOptions>(configuration.GetSection(AccountFormsRateLimitOptions.Section))
             .Configure<ReportRateLimitOptions>(configuration.GetSection(ReportRateLimitOptions.Section))
+            .Configure<PageRateLimitOptions>(configuration.GetSection(PageRateLimitOptions.Section))
             .AddRateLimiter(options =>
         {
+            options.GlobalLimiter = PageRateLimit.Limiter();
             ContactRateLimit.AddPolicy(options);
             ContentEndpoints.AddRateLimitPolicy(options);
             AccountFormsRateLimit.AddPolicy(options);
@@ -42,12 +44,18 @@ internal static class RateLimits
         };
     }
 
-    /// <summary>Endpoints unter `/api` bekommen 429, Formulare eine Umleitung mit Hinweis auf derselben Seite.</summary>
+    /// <summary>Endpoints unter `/api` und Seiten bekommen 429, Formulare eine Umleitung mit Hinweis auf derselben Seite.</summary>
     private static ValueTask Reject(OnRejectedContext context, CancellationToken ct)
     {
         if (context.HttpContext.Request.Path.StartsWithSegments("/api"))
         {
             context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            return ValueTask.CompletedTask;
+        }
+
+        if (PageRateLimit.Handles(context.HttpContext))
+        {
+            PageRateLimit.Reject(context.HttpContext);
             return ValueTask.CompletedTask;
         }
 

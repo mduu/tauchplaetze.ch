@@ -29,6 +29,9 @@ internal class RunForecastHandler(
 {
     public const string LockName = "forecast";
 
+    /// <summary>Der Lauf speichert nach so vielen Plätzen. Ein einziges Speichern am Ende lastet SQL Basic minutenlang voll aus.</summary>
+    private const int SitesPerSave = 20;
+
     public async Task<RunForecastResult> Handle(RunForecastCommand command, CancellationToken ct = default)
     {
         await using var acquired = await runLock.TryAcquire(LockName, ct);
@@ -91,6 +94,7 @@ internal class RunForecastHandler(
         var forecastHours = await ForecastHours(ct);
         var forecastSites = sites.Where(s => !s.ForecastDisabled).ToList();
         await sources.PrepareWeather(forecastSites, recorder, ct);
+        var done = 0;
 
         foreach (var site in forecastSites)
         {
@@ -119,6 +123,10 @@ internal class RunForecastHandler(
             }
 
             progress.SiteDone(run.Id, recorder.Count);
+            if (++done % SitesPerSave == 0)
+            {
+                await dbContext.SaveChangesAsync(ct);
+            }
         }
     }
 

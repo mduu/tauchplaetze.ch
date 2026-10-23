@@ -262,12 +262,14 @@ internal class ImportDischargeHandler(
         {
             if (!existing.TryGetValue(hour, out var row))
             {
-                row = new HydroHour { StationId = station, Kind = HydroSeriesKind.Measured, Hour = hour };
+                row = new HydroHour { StationId = station, Kind = HydroSeriesKind.Measured, Hour = hour, Discharge = discharge, ImportedAt = now };
                 dbContext.HydroHours.Add(row);
             }
-
-            row.Discharge = discharge;
-            row.ImportedAt = now;
+            else if (row.Discharge != discharge)
+            {
+                row.Discharge = discharge;
+                row.ImportedAt = now;
+            }
         }
     }
 

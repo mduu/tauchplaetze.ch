@@ -81,7 +81,7 @@ Pfad `/de/ueber`, `/en/about`, `/fr/a-propos`, `/it/chi-siamo`. Nicht in der Hau
 
 Die E-Mail-Adresse des Betreibers erscheint nirgends auf der Website, auch nicht verschleiert (Entscheid Marc, 18.10.2026).
 
-`canonical` der Seite ist immer `/{lang}/{segment}` ohne Parameter (`?bezug`, `?kontakt`). Die Seite ist vom künftigen Output Cache ausgenommen: Das Formular trägt ein Antiforgery-Token und einen Timestamp pro Aufruf.
+`canonical` der Seite ist immer `/{lang}/{segment}` ohne Parameter (`?bezug`, `?kontakt`). Die Seite ist vom Output Cache ausgenommen: Das Formular trägt ein Antiforgery-Token und einen Timestamp pro Aufruf.
 
 ### Tauchplatzseite
 
@@ -156,7 +156,7 @@ Die Seite «Tauchplätze» ist der **Finder**: «Welcher Platz passt zu mir, ode
 - **Gewässer:** keine Pillen mehr. Link «Nach Gewässer stöbern» zur Gewässer-Übersicht. Alte Links mit `?gewaesser={slug}` filtern weiter auf das Gewässer und zeigen es als entfernbaren Chip.
 - URL-Parameter: `q`, `f` (mehrfach: `wall`, `wreck`, `beginner`, `training`, `river`, `cave`), `sort` (`index`, `name`, `distance`), `page`, `lat`, `lng`, `gewaesser`. Ungültige Werte (z.B. `page=abc`, `lat=x`, ein unbekanntes Gewässer) gelten als nicht gesetzt, nie als Fehler.
 - **Grenze:** Die Suche lädt alle öffentlichen Plätze in den Speicher und filtert dort (`FindDiveSites`). Das reicht bis etwa 2000 Plätze. Darüber kommen Suche, Filter und Paging in die SQL-Query.
-- **Später:** Output Cache für die Seite ohne Parameter (Tag `forecast`, wie die Startseite).
+- **Output Cache:** wie die übrigen öffentlichen Seiten, pro Kombination der Parameter (`architecture.md`, «Caching»).
 
 ### Gewässer-Übersicht
 

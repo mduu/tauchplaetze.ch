@@ -2,6 +2,7 @@
 @page "/en/waters"
 @page "/fr/eaux"
 @page "/it/acque"
+@attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(PolicyName = Tauchplaetze.Web.CrossCutting.Caching.PublicPageCache.Policy)]
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.WaterBodies
 @using Tauchplaetze.Core.Features.WaterBodies.Queries
