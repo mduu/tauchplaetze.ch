@@ -24,6 +24,7 @@ internal static class CommandCacheEviction
         typeof(RequestPasswordResetCommand),
         typeof(SendPasswordResetCommand),
         typeof(ResetPasswordCommand),
+        typeof(DeleteUnconfirmedAccountsCommand),
         typeof(SendContactMessageCommand),
         typeof(StartForecastRunCommand),
         typeof(ProcessMailQueueCommand),

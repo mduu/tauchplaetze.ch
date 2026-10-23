@@ -236,6 +236,28 @@ public class AccountTests(SqlServer sql) : SqlTest(sql)
         Assert.All(revisions, r => Assert.Equal((null, null), (r.AuthorId, r.ReviewerId)));
     }
 
+    [SqlFact]
+    public async Task Ein_Konto_ohne_Bestaetigung_nach_7_Tagen_wird_geloescht_bestaetigte_und_neue_bleiben()
+    {
+        // Arrange
+        await Register("Anna");
+        await Command<RegisterCommand, AccountResult>(new RegisterCommand("bert@example.org", Password, "Bert", "de", ConfirmTemplate));
+        await Command<ConfirmEmailCommand, AccountResult>(Confirmation(Sql.Mail.LinkTo("bert@example.org")));
+        Sql.Time.Now = Sql.Time.Now.AddDays(DeleteUnconfirmedAccountsCommand.AfterDays).AddMinutes(1);
+        await Command<RegisterCommand, AccountResult>(new RegisterCommand("carla@example.org", Password, "Carla", "de", ConfirmTemplate));
+
+        // Act
+        var result = await Command<DeleteUnconfirmedAccountsCommand, DeleteUnconfirmedAccountsResult>(new DeleteUnconfirmedAccountsCommand());
+        var again = await Command<DeleteUnconfirmedAccountsCommand, DeleteUnconfirmedAccountsResult>(new DeleteUnconfirmedAccountsCommand());
+
+        // Assert
+        Assert.Equal(1, result.Deleted);
+        Assert.Equal(0, again.Deleted);
+        Assert.Equal(SignInStatus.Failed, (await SignIn(Password)).Status);
+        Assert.Equal(SignInStatus.Succeeded, (await Command<SignInCommand, SignInOutcome>(new SignInCommand("bert@example.org", Password))).Status);
+        Assert.Equal(SignInStatus.NotConfirmed, (await Command<SignInCommand, SignInOutcome>(new SignInCommand("carla@example.org", Password))).Status);
+    }
+
     private Task<AccountResult> Register(string displayName) =>
         Command<RegisterCommand, AccountResult>(new RegisterCommand(Email, Password, displayName, "de", ConfirmTemplate));
 
