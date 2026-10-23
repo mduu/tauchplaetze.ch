@@ -28,7 +28,7 @@ public static class Extensions
 
     private static readonly string[] InstrumentedMeters = ["Microsoft.AspNetCore", "System.", "OpenTelemetry.Instrumentation"];
 
-    private static readonly HashSet<string> KeptMetrics = ["http.server.request.duration", "http.client.request.duration", "dotnet.gc.last_collection.heap.size"];
+    private static readonly HashSet<string> KeptMetrics = ["http.server.request.duration", "http.client.request.duration", "dotnet.gc.last_collection.heap.size", "dotnet.gc.pause.time"];
 
     /// <summary>
     /// Adds the service defaults to the application.
@@ -91,7 +91,7 @@ public static class Extensions
         && !StaticFileExtensions.Contains(Path.GetExtension(path.Value ?? string.Empty), StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
-    /// Von den Metriken der Instrumentierung bleiben nur Dauer der Requests, Dauer der ausgehenden Aufrufe und Heap. Keine Ansicht liest die übrigen,
+    /// Von den Metriken der Instrumentierung bleiben nur Dauer der Requests, Dauer der ausgehenden Aufrufe, Heap und GC-Pausen. Keine Ansicht liest die übrigen,
     /// sie machten mehr als die Hälfte des Tageslimits aus (`infrastructure.md`, «Betrieb»).
     /// </summary>
     private static bool IsKept(Instrument instrument) =>

@@ -38,6 +38,7 @@ builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(Ope
 builder.Services.AddRateLimits(builder.Configuration);
 builder.Services.AddPublicPageCache(builder.Configuration);
 builder.Services.AddSecurityHeaders();
+builder.Services.AddCompression();
 builder.Services.AddSingleton<FormBotTrap>();
 builder.Services.AddHostRedirects(builder.Configuration);
 ReadinessCheck.Register(builder.Services);
@@ -59,6 +60,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHostRedirects();
 app.UseSecurityHeaders();
+app.UseResponseCompression();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseRequestLocalization();
