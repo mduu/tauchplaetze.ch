@@ -117,6 +117,30 @@ module webApp 'modules/webApp.bicep' = {
   }
 }
 
+module workbook 'modules/workbook.bicep' = {
+  name: 'workbook'
+  params: {
+    location: location
+    insightsId: monitoring.outputs.insightsId
+    workspaceId: monitoring.outputs.workspaceId
+    webAppId: webApp.outputs.id
+    planId: webApp.outputs.planId
+    databaseId: sql.outputs.databaseId
+  }
+}
+
+module dashboard 'modules/dashboard.bicep' = {
+  name: 'dashboard'
+  params: {
+    location: location
+    workspaceId: monitoring.outputs.workspaceId
+    webAppId: webApp.outputs.id
+    planId: webApp.outputs.planId
+    databaseId: sql.outputs.databaseId
+    workbookId: workbook.outputs.id
+  }
+}
+
 module alerts 'modules/alerts.bicep' = if (!empty(alertEmail)) {
   name: 'alerts'
   params: {

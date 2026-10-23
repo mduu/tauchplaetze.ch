@@ -1,4 +1,4 @@
-// Alerts aus infrastructure.md (Betrieb): Health Check, Prognose-Lauf gescheitert oder ausgeblieben, Mail in der Dead-Letter-Queue,
+// Alerts aus infrastructure.md (Betrieb): Health Check, Prognose-Lauf gescheitert oder ausgeblieben, Mail in der Dead-Letter-Queue, Tageslimit der Logs,
 // Kontingent des Free Offer. Log-Alerts prüfen stündlich (günstigste Stufe). Die Texte der Logs kommen aus ForecastWorker und ProcessMailQueue.
 
 param actionGroupName string
@@ -113,6 +113,15 @@ var logAlerts = [
     severity: 3
     window: 'PT1H'
     query: 'AppTraces | where Message has "moved to deadletter" or Message has "awaiting investigation"'
+    operator: 'GreaterThan'
+    threshold: 0
+  }
+  {
+    name: 'alert-log-daily-cap'
+    description: 'Log Analytics hat das Tageslimit erreicht und nimmt bis zum Reset (14:00 UTC) keine Logs mehr an. Die übrigen Log-Alerts sind bis dahin blind.'
+    severity: 2
+    window: 'PT1H'
+    query: '_LogOperation | where Category == "Ingestion" and Detail has "OverQuota"'
     operator: 'GreaterThan'
     threshold: 0
   }

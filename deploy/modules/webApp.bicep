@@ -184,6 +184,7 @@ resource logs 'Microsoft.Web/sites/config@2023-12-01' = {
 }
 
 output id string = site.id
+output planId string = plan.id
 output name string = site.name
 output defaultHostName string = site.properties.defaultHostName
 output principalId string = site.identity.principalId

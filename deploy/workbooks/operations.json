@@ -1,0 +1,1928 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "param-timerange",
+            "version": "KqlParameterItem/1.0",
+            "name": "TimeRange",
+            "label": "Zeitraum",
+            "type": 4,
+            "isRequired": true,
+            "value": {
+              "durationMs": 604800000
+            },
+            "typeSettings": {
+              "selectableValues": [
+                {
+                  "durationMs": 3600000
+                },
+                {
+                  "durationMs": 14400000
+                },
+                {
+                  "durationMs": 86400000
+                },
+                {
+                  "durationMs": 259200000
+                },
+                {
+                  "durationMs": 604800000
+                },
+                {
+                  "durationMs": 1209600000
+                },
+                {
+                  "durationMs": 2592000000
+                }
+              ],
+              "allowCustom": true
+            }
+          },
+          {
+            "id": "param-tab",
+            "version": "KqlParameterItem/1.0",
+            "name": "Tab",
+            "type": 1,
+            "value": "betrieb",
+            "isHiddenWhenLocked": true
+          },
+          {
+            "id": "param-MonthStart",
+            "version": "KqlParameterItem/1.0",
+            "name": "MonthStart",
+            "type": 1,
+            "query": "print v = format_datetime(startofmonth(now()), \"yyyy-MM-ddTHH:mm:ssZ\")",
+            "isHiddenWhenLocked": true,
+            "timeContext": {
+              "durationMs": 3600000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "crossComponentResources": [
+              "__WORKSPACE_ID__"
+            ]
+          },
+          {
+            "id": "param-MonthEnd",
+            "version": "KqlParameterItem/1.0",
+            "name": "MonthEnd",
+            "type": 1,
+            "query": "print v = format_datetime(endofmonth(now()), \"yyyy-MM-ddTHH:mm:ssZ\")",
+            "isHiddenWhenLocked": true,
+            "timeContext": {
+              "durationMs": 3600000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "crossComponentResources": [
+              "__WORKSPACE_ID__"
+            ]
+          },
+          {
+            "id": "param-Today",
+            "version": "KqlParameterItem/1.0",
+            "name": "Today",
+            "type": 1,
+            "query": "print v = format_datetime(endofday(now()), \"yyyy-MM-ddTHH:mm:ssZ\")",
+            "isHiddenWhenLocked": true,
+            "timeContext": {
+              "durationMs": 3600000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "crossComponentResources": [
+              "__WORKSPACE_ID__"
+            ]
+          },
+          {
+            "id": "param-Days30",
+            "version": "KqlParameterItem/1.0",
+            "name": "Days30",
+            "type": 1,
+            "query": "print v = format_datetime(startofday(ago(29d)), \"yyyy-MM-ddTHH:mm:ssZ\")",
+            "isHiddenWhenLocked": true,
+            "timeContext": {
+              "durationMs": 3600000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "crossComponentResources": [
+              "__WORKSPACE_ID__"
+            ]
+          },
+          {
+            "id": "param-Months12",
+            "version": "KqlParameterItem/1.0",
+            "name": "Months12",
+            "type": 1,
+            "query": "print v = format_datetime(startofmonth(now(), -11), \"yyyy-MM-ddTHH:mm:ssZ\")",
+            "isHiddenWhenLocked": true,
+            "timeContext": {
+              "durationMs": 3600000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "crossComponentResources": [
+              "__WORKSPACE_ID__"
+            ]
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "parameters"
+    },
+    {
+      "type": 11,
+      "content": {
+        "version": "LinkItem/1.0",
+        "style": "tabs",
+        "links": [
+          {
+            "id": "tab-link-betrieb",
+            "cellValue": "Tab",
+            "linkTarget": "parameter",
+            "linkLabel": "Betrieb",
+            "subTarget": "betrieb",
+            "style": "link"
+          },
+          {
+            "id": "tab-link-jobs",
+            "cellValue": "Tab",
+            "linkTarget": "parameter",
+            "linkLabel": "Jobs",
+            "subTarget": "jobs",
+            "style": "link"
+          },
+          {
+            "id": "tab-link-db",
+            "cellValue": "Tab",
+            "linkTarget": "parameter",
+            "linkLabel": "Datenbank",
+            "subTarget": "db",
+            "style": "link"
+          },
+          {
+            "id": "tab-link-kosten",
+            "cellValue": "Tab",
+            "linkTarget": "parameter",
+            "linkLabel": "Kosten",
+            "subTarget": "kosten",
+            "style": "link"
+          },
+          {
+            "id": "tab-link-nutzung",
+            "cellValue": "Tab",
+            "linkTarget": "parameter",
+            "linkLabel": "Nutzung",
+            "subTarget": "nutzung",
+            "style": "link"
+          }
+        ]
+      },
+      "name": "tabs"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "Alle HTTP-Requests der Web-App ohne Health Checks und ohne Aufrufe im Admin-Bereich über SignalR. Ein Fehler ist ein Status ab 500. 4xx zählt nicht als Fehler."
+            },
+            "name": "ops-intro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppRequests\n| where TimeGenerated {TimeRange}\n| where not(Name startswith \"Microsoft.AspNetCore.Components.Server\")\n| summarize Requests = sum(ItemCount), P50 = percentilew(DurationMs, ItemCount, 50), P95 = percentilew(DurationMs, ItemCount, 95), Fehler = sumif(ItemCount, toint(ResultCode) >= 500)\n| extend Rate = iff(Requests == 0, 0.0, round(100.0 * Fehler / Requests, 2))\n| extend Exceptions = toscalar(AppExceptions | where TimeGenerated {TimeRange} | summarize sum(ItemCount))\n| project Kennzahl = pack_array(\"Requests\", \"Latenz P50 (ms)\", \"Latenz P95 (ms)\", \"Fehler 5xx\", \"Fehlerquote 5xx (%)\", \"Exceptions\"),\n          Wert = pack_array(Requests, round(P50, 0), round(P95, 0), Fehler, Rate, Exceptions)\n| mv-expand Kennzahl to typeof(string), Wert to typeof(real)",
+              "size": 4,
+              "title": "Übersicht",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "tiles",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "Kennzahl",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Wert",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "style": "decimal",
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                },
+                "showBorder": true,
+                "size": "auto"
+              }
+            },
+            "name": "ops-tiles"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let capMb = 150.0;\nlet resetAt = bin(now() - 14h, 1d) + 14h;\nlet today = toscalar(Usage | where TimeGenerated >= resetAt and IsBillable | summarize sum(Quantity));\nlet stops = toscalar(_LogOperation | where TimeGenerated > ago(30d) and Category == \"Ingestion\" and Detail has \"OverQuota\" | count);\nlet lastStop = toscalar(_LogOperation | where TimeGenerated > ago(30d) and Category == \"Ingestion\" and Detail has \"OverQuota\" | summarize max(TimeGenerated));\nprint Kennzahl = pack_array(\"Logs seit Reset (MB)\", \"Tageslimit belegt (%)\", \"Limit erreicht (30 Tage)\", \"Zuletzt erreicht\"),\n      Wert = pack_array(tostring(round(today, 1)), tostring(round(100 * today / capMb, 0)), tostring(stops), iff(isnull(lastStop), \"nie\", format_datetime(datetime_utc_to_local(lastStop, \"Europe/Zurich\"), \"dd.MM. HH:mm\")))\n| mv-expand Kennzahl to typeof(string), Wert to typeof(string)",
+              "size": 4,
+              "title": "Tageslimit der Logs (150 MB, Reset 14:00 UTC)",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "tiles",
+              "timeContext": {
+                "durationMs": 2592000000
+              },
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "Kennzahl",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Wert",
+                  "formatter": 1,
+                  "formatOptions": {
+                    "palette": "auto"
+                  }
+                },
+                "showBorder": true,
+                "size": "auto"
+              }
+            },
+            "name": "ops-logcap"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppRequests\n| where TimeGenerated {TimeRange}\n| where not(Name startswith \"Microsoft.AspNetCore.Components.Server\")\n| summarize Requests = sum(ItemCount) by bin(TimeGenerated, {TimeRange:grain}), Status = strcat(substring(ResultCode, 0, 1), \"xx\")\n| order by TimeGenerated asc",
+              "size": 0,
+              "title": "Requests nach Status",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "barchart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "chartSettings": {
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "2xx",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "3xx",
+                    "color": "blue"
+                  },
+                  {
+                    "seriesName": "4xx",
+                    "color": "orange"
+                  },
+                  {
+                    "seriesName": "5xx",
+                    "color": "redBright"
+                  }
+                ]
+              }
+            },
+            "name": "ops-requests",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppRequests\n| where TimeGenerated {TimeRange}\n| where not(Name startswith \"Microsoft.AspNetCore.Components.Server\")\n| where Name startswith \"GET /\"\n| summarize percentilesw(DurationMs, ItemCount, 50, 95, 99) by bin(TimeGenerated, {TimeRange:grain})\n| project TimeGenerated, P50 = percentile_DurationMs_50, P95 = percentile_DurationMs_95, P99 = percentile_DurationMs_99\n| order by TimeGenerated asc",
+              "size": 0,
+              "title": "Latenz der Seiten (ms)",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "timechart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "ops-latency",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppRequests\n| where TimeGenerated {TimeRange}\n| where not(Name startswith \"Microsoft.AspNetCore.Components.Server\")\n| summarize Fehler = sumif(ItemCount, toint(ResultCode) >= 500), Requests = sum(ItemCount) by bin(TimeGenerated, {TimeRange:grain})\n| project TimeGenerated, [\"Fehler 5xx\"] = Fehler\n| order by TimeGenerated asc",
+              "size": 0,
+              "title": "Fehler 5xx",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "barchart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "chartSettings": {
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Fehler 5xx",
+                    "color": "redBright"
+                  }
+                ]
+              }
+            },
+            "name": "ops-5xx-chart",
+            "customWidth": "50"
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook-ops-plan",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.web/serverfarms",
+              "metricScope": 0,
+              "resourceIds": [
+                "__PLAN_ID__"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.web/serverfarms",
+                  "metric": "microsoft.web/serverfarms--CpuPercentage",
+                  "aggregation": 4,
+                  "splitBy": null
+                },
+                {
+                  "namespace": "microsoft.web/serverfarms",
+                  "metric": "microsoft.web/serverfarms--MemoryPercentage",
+                  "aggregation": 4,
+                  "splitBy": null
+                }
+              ],
+              "title": "App Service: CPU und Arbeitsspeicher (%)",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "50",
+            "name": "ops-plan"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppRequests\n| where TimeGenerated {TimeRange}\n| where not(Name startswith \"Microsoft.AspNetCore.Components.Server\")\n| where toint(ResultCode) >= 500\n| summarize Anzahl = sum(ItemCount), Zuletzt = max(TimeGenerated), Beispiel = take_any(Url) by Endpoint = Name, Status = ResultCode\n| order by Zuletzt desc",
+              "size": 0,
+              "title": "Fehler 5xx nach Endpoint",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "ops-5xx",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppExceptions\n| where TimeGenerated {TimeRange}\n| summarize Anzahl = sum(ItemCount), Zuletzt = max(TimeGenerated), Meldung = take_any(OuterMessage) by Typ = ExceptionType, Quelle = tostring(Properties.CategoryName)\n| order by Zuletzt desc\n| take 50",
+              "size": 0,
+              "title": "Exceptions",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "ops-exceptions",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppRequests\n| where TimeGenerated {TimeRange}\n| where not(Name startswith \"Microsoft.AspNetCore.Components.Server\")\n| summarize Requests = sum(ItemCount), P50 = round(percentilew(DurationMs, ItemCount, 50), 0), P95 = round(percentilew(DurationMs, ItemCount, 95), 0), Max = round(max(DurationMs), 0), [\"5xx\"] = sumif(ItemCount, toint(ResultCode) >= 500) by Endpoint = Name\n| top 25 by Requests desc",
+              "size": 0,
+              "title": "Endpoints nach Anzahl Requests",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Requests",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "P95",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "orange"
+                    }
+                  },
+                  {
+                    "columnMatch": "5xx",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "red"
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "ops-endpoints"
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook-ops-health",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.web/sites",
+              "metricScope": 0,
+              "resourceIds": [
+                "__WEBAPP_ID__"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.web/sites",
+                  "metric": "microsoft.web/sites--HealthCheckStatus",
+                  "aggregation": 2,
+                  "splitBy": null
+                }
+              ],
+              "title": "Health Check von App Service (%)",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "50",
+            "name": "ops-health"
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook-ops-http",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.web/sites",
+              "metricScope": 0,
+              "resourceIds": [
+                "__WEBAPP_ID__"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.web/sites",
+                  "metric": "microsoft.web/sites--Http5xx",
+                  "aggregation": 1,
+                  "splitBy": null
+                },
+                {
+                  "namespace": "microsoft.web/sites",
+                  "metric": "microsoft.web/sites--Http4xx",
+                  "aggregation": 1,
+                  "splitBy": null
+                }
+              ],
+              "title": "HTTP-Fehler laut App Service",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "50",
+            "name": "ops-http"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "Tab",
+        "comparison": "isEqualTo",
+        "value": "betrieb"
+      },
+      "name": "tab-betrieb"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "**Prognose-Lauf** täglich 04:30 (voll) und 13:00 (Wetter und Messwerte). **Abfluss-Job** alle 30 Minuten. Der Start eines Laufs stammt aus der RunId (UUID v7). Fehlt ein Lauf, prüfe im Tab «Kosten» das Tageslimit der Logs."
+            },
+            "name": "jobs-intro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let runs = AppTraces\n| where TimeGenerated > ago(30d)\n| where Message matches regex @\"^Forecast run [0-9a-fA-F-]+: \"\n| project TimeGenerated, Status = tostring(Properties.Status);\nlet lastOk = toscalar(runs | where Status in (\"Succeeded\", \"PartiallySucceeded\") | summarize max(TimeGenerated));\nlet lastRun = runs | top 1 by TimeGenerated;\nlet next = toscalar(AppTraces | where TimeGenerated > ago(2d) and Message startswith \"Next forecast run at\" | top 1 by TimeGenerated | project tostring(Properties.NextRun));\nlastRun\n| project Kennzahl = pack_array(\"Letzter Lauf\", \"Status\", \"Letzter brauchbarer Lauf vor (h)\", \"Nächster Lauf\"),\n          Wert = pack_array(format_datetime(datetime_utc_to_local(TimeGenerated, \"Europe/Zurich\"), \"dd.MM. HH:mm\"), Status, tostring(round((now() - lastOk) / 1h, 1)), substring(next, 0, 16))\n| mv-expand Kennzahl to typeof(string), Wert to typeof(string)",
+              "size": 4,
+              "title": "Prognose-Lauf",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "tiles",
+              "timeContext": {
+                "durationMs": 2592000000
+              },
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "Kennzahl",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Wert",
+                  "formatter": 1,
+                  "formatOptions": {
+                    "palette": "auto"
+                  }
+                },
+                "showBorder": true,
+                "size": "auto"
+              }
+            },
+            "name": "jobs-forecast-tiles"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let failed = AppExceptions\n| where TimeGenerated {TimeRange}\n| where tostring(Properties.CategoryName) endswith \"ForecastWorker\"\n| project Ende = TimeGenerated, Status = \"Failed\", Meldung = OuterMessage;\nAppTraces\n| where TimeGenerated {TimeRange}\n| where Message matches regex @\"^Forecast run [0-9a-fA-F-]+: \" or Message startswith \"Forecast run failed\"\n| extend RunId = tostring(Properties.RunId)\n| project Ende = TimeGenerated, RunId, Status = coalesce(tostring(Properties.Status), \"Failed\"), [\"Plätze\"] = toint(Properties.Sites), [\"Übersprungen\"] = tostring(Properties.Skipped), Meldung = Message\n| union failed\n| extend Start = iff(isnotempty(RunId), unixtime_milliseconds_todatetime(tolong(strcat(\"0x\", substring(replace_string(RunId, \"-\", \"\"), 0, 12)))), datetime(null))\n| extend [\"Dauer (min)\"] = round((Ende - Start) / 1m, 1)\n| project Start = Start, Ende = Ende, [\"Dauer (min)\"], Status, [\"Plätze\"], [\"Übersprungen\"], RunId, Meldung\n| order by Ende desc",
+              "size": 0,
+              "title": "Prognose-Läufe",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Status",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Succeeded",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "PartiallySucceeded",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Failed",
+                          "representation": "failed",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "unknown",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "columnMatch": "Dauer (min)",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "jobs-forecast-runs"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "union AppTraces, AppExceptions\n| where TimeGenerated {TimeRange}\n| where tostring(Properties.CategoryName) endswith \"DischargeWorker\"\n| extend Status = case(\n    Type == \"AppExceptions\" or tostring(Properties.Failed) == \"True\", \"Fehlgeschlagen\",\n    tostring(Properties.Skipped) == \"True\", \"Übersprungen\",\n    toint(Properties.Missing) > 0, \"Teilweise\",\n    \"Erfolgreich\")\n| summarize [\"Läufe\"] = count() by bin(TimeGenerated, {TimeRange:grain}), Status\n| order by TimeGenerated asc",
+              "size": 0,
+              "title": "Abfluss-Job: Läufe",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "barchart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "chartSettings": {
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Erfolgreich",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "Teilweise",
+                    "color": "orange"
+                  },
+                  {
+                    "seriesName": "Übersprungen",
+                    "color": "gray"
+                  },
+                  {
+                    "seriesName": "Fehlgeschlagen",
+                    "color": "redBright"
+                  }
+                ]
+              }
+            },
+            "name": "jobs-discharge-chart",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppDependencies\n| where TimeGenerated {TimeRange}\n| where DependencyType == \"HTTP\" and Success == false\n| summarize Fehler = sum(ItemCount) by bin(TimeGenerated, {TimeRange:grain}), Quelle = Target\n| order by TimeGenerated asc",
+              "size": 0,
+              "title": "Externe Quellen: fehlgeschlagene Calls",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "barchart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "jobs-sources-chart",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppDependencies\n| where TimeGenerated {TimeRange}\n| where DependencyType == \"HTTP\"\n| summarize Calls = sum(ItemCount), Fehler = sumif(ItemCount, Success == false), [\"429\"] = sumif(ItemCount, ResultCode == \"429\"), [\"P50 (ms)\"] = round(percentilew(DurationMs, ItemCount, 50), 0), [\"P95 (ms)\"] = round(percentilew(DurationMs, ItemCount, 95), 0), Zuletzt = max(TimeGenerated) by Quelle = Target\n| extend [\"Fehlerquote (%)\"] = round(100.0 * Fehler / Calls, 1)\n| project Quelle, Calls, Fehler, [\"Fehlerquote (%)\"], [\"429\"], [\"P50 (ms)\"], [\"P95 (ms)\"], Zuletzt\n| order by Calls desc",
+              "size": 0,
+              "title": "Externe Quellen",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Calls",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "Fehlerquote (%)",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "red"
+                    }
+                  },
+                  {
+                    "columnMatch": "P95 (ms)",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "orange"
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "jobs-sources"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "union AppTraces, AppExceptions\n| where TimeGenerated {TimeRange}\n| where tostring(Properties.CategoryName) endswith \"DischargeWorker\"\n| extend Status = case(\n    Type == \"AppExceptions\" or tostring(Properties.Failed) == \"True\", \"Fehlgeschlagen\",\n    tostring(Properties.Skipped) == \"True\", \"Übersprungen\",\n    toint(Properties.Missing) > 0, \"Teilweise\",\n    \"Erfolgreich\")\n| project Zeit = TimeGenerated, Status, Stationen = toint(Properties.Stations), [\"Ohne Werte\"] = toint(Properties.Missing), [\"Neue Vorhersagen\"] = toint(Properties.Forecasts), Meldung = coalesce(OuterMessage, Message)\n| order by Zeit desc\n| take 50",
+              "size": 0,
+              "title": "Abfluss-Job: letzte Läufe",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Status",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Erfolgreich",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Teilweise",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Übersprungen",
+                          "representation": "4",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Fehlgeschlagen",
+                          "representation": "failed",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "unknown",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "jobs-discharge-runs",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "union AppTraces, AppExceptions\n| where TimeGenerated {TimeRange}\n| extend Quelle = tostring(Properties.CategoryName)\n| where Quelle has_any (\"MediaPurgeWorker\", \"MailQueueWorker\", \"ProcessMailQueue\")\n| where Type == \"AppExceptions\" or SeverityLevel >= 2 or Message startswith \"Media purge\"\n| project Zeit = TimeGenerated, Job = tostring(split(Quelle, \".\")[-1]), Stufe = iff(Type == \"AppExceptions\", \"Fehler\", case(SeverityLevel >= 3, \"Fehler\", SeverityLevel == 2, \"Warnung\", \"Info\")), Meldung = coalesce(OuterMessage, Message)\n| order by Zeit desc\n| take 50",
+              "size": 0,
+              "title": "Fotos löschen und Mail-Queue",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Stufe",
+                    "formatter": 18,
+                    "formatOptions": {
+                      "thresholdsOptions": "icons",
+                      "thresholdsGrid": [
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Info",
+                          "representation": "success",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Warnung",
+                          "representation": "2",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "==",
+                          "thresholdValue": "Fehler",
+                          "representation": "failed",
+                          "text": "{0}{1}"
+                        },
+                        {
+                          "operator": "Default",
+                          "thresholdValue": null,
+                          "representation": "unknown",
+                          "text": "{0}{1}"
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "jobs-other",
+            "customWidth": "50"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "Tab",
+        "comparison": "isEqualTo",
+        "value": "jobs"
+      },
+      "name": "tab-jobs"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "Azure SQL **Basic**: 5 DTU, 2 GB. Hält die DTU-Auslastung lange über 80 %, wird die Website langsam. Die Calls unten sieht die App selbst (alle SQL-Befehle über EF Core)."
+            },
+            "name": "db-intro"
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook-db-dtu",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.sql/servers/databases",
+              "metricScope": 0,
+              "resourceIds": [
+                "__DATABASE_ID__"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--dtu_consumption_percent",
+                  "aggregation": 4,
+                  "splitBy": null
+                },
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--dtu_consumption_percent",
+                  "aggregation": 3,
+                  "splitBy": null
+                }
+              ],
+              "title": "DTU-Auslastung (%)",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "50",
+            "name": "db-dtu"
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook-db-io",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.sql/servers/databases",
+              "metricScope": 0,
+              "resourceIds": [
+                "__DATABASE_ID__"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--cpu_percent",
+                  "aggregation": 4,
+                  "splitBy": null
+                },
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--physical_data_read_percent",
+                  "aggregation": 4,
+                  "splitBy": null
+                },
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--log_write_percent",
+                  "aggregation": 4,
+                  "splitBy": null
+                }
+              ],
+              "title": "CPU, Daten-IO und Log-IO (%)",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "50",
+            "name": "db-io"
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook-db-storage",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.sql/servers/databases",
+              "metricScope": 0,
+              "resourceIds": [
+                "__DATABASE_ID__"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--storage_percent",
+                  "aggregation": 3,
+                  "splitBy": null
+                }
+              ],
+              "title": "Speicher belegt (%)",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "50",
+            "name": "db-storage"
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook-db-storage-bytes",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.sql/servers/databases",
+              "metricScope": 0,
+              "resourceIds": [
+                "__DATABASE_ID__"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--storage",
+                  "aggregation": 3,
+                  "splitBy": null
+                }
+              ],
+              "title": "Speicher belegt (Bytes)",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "50",
+            "name": "db-storage-bytes"
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook-db-workers",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.sql/servers/databases",
+              "metricScope": 0,
+              "resourceIds": [
+                "__DATABASE_ID__"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--workers_percent",
+                  "aggregation": 3,
+                  "splitBy": null
+                },
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--sessions_percent",
+                  "aggregation": 3,
+                  "splitBy": null
+                }
+              ],
+              "title": "Worker und Sessions (%)",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "50",
+            "name": "db-workers"
+          },
+          {
+            "type": 10,
+            "content": {
+              "chartId": "workbook-db-connections",
+              "version": "MetricsItem/2.0",
+              "size": 0,
+              "chartType": 2,
+              "resourceType": "microsoft.sql/servers/databases",
+              "metricScope": 0,
+              "resourceIds": [
+                "__DATABASE_ID__"
+              ],
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "metrics": [
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--connection_successful",
+                  "aggregation": 1,
+                  "splitBy": null
+                },
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--connection_failed",
+                  "aggregation": 1,
+                  "splitBy": null
+                },
+                {
+                  "namespace": "microsoft.sql/servers/databases",
+                  "metric": "microsoft.sql/servers/databases--deadlock",
+                  "aggregation": 1,
+                  "splitBy": null
+                }
+              ],
+              "title": "Verbindungen und Deadlocks",
+              "gridSettings": {
+                "rowLimit": 10000
+              }
+            },
+            "customWidth": "50",
+            "name": "db-connections"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppDependencies\n| where TimeGenerated {TimeRange}\n| where DependencyType == \"SQL\"\n| summarize Calls = sum(ItemCount), Fehler = sumif(ItemCount, Success == false) by bin(TimeGenerated, {TimeRange:grain})\n| order by TimeGenerated asc",
+              "size": 0,
+              "title": "SQL-Calls der App",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "barchart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "chartSettings": {
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Calls",
+                    "color": "blue"
+                  },
+                  {
+                    "seriesName": "Fehler",
+                    "color": "redBright"
+                  }
+                ]
+              }
+            },
+            "name": "db-calls",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppDependencies\n| where TimeGenerated {TimeRange}\n| where DependencyType == \"SQL\"\n| summarize percentilesw(DurationMs, ItemCount, 50, 95, 99) by bin(TimeGenerated, {TimeRange:grain})\n| project TimeGenerated, P50 = percentile_DurationMs_50, P95 = percentile_DurationMs_95, P99 = percentile_DurationMs_99\n| order by TimeGenerated asc",
+              "size": 0,
+              "title": "Dauer der SQL-Calls (ms)",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "timechart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "db-latency",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "AppDependencies\n| where TimeGenerated {TimeRange}\n| where DependencyType == \"SQL\"\n| join kind=leftouter (AppRequests | where TimeGenerated {TimeRange} | project OperationId, Request = Name) on OperationId\n| extend Herkunft = coalesce(Request, \"Job / Hintergrund\")\n| summarize Calls = sum(ItemCount), [\"Total (s)\"] = round(sum(DurationMs * ItemCount) / 1000, 1), [\"P95 (ms)\"] = round(percentilew(DurationMs, ItemCount, 95), 0), Fehler = sumif(ItemCount, Success == false) by Herkunft\n| top 20 by [\"Total (s)\"] desc",
+              "size": 0,
+              "title": "SQL-Last nach Herkunft",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Total (s)",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "orange"
+                    }
+                  },
+                  {
+                    "columnMatch": "Calls",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "db-by-operation"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "Tab",
+        "comparison": "isEqualTo",
+        "value": "db"
+      },
+      "name": "tab-db"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "Kosten der Resource Group aus Cost Management. Die Zahlen kommen mit 8 bis 24 Stunden Verzug. Ziel: unter CHF 20 pro Monat, Budget CHF 25."
+            },
+            "name": "cost-intro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\": \"ARMEndpoint/1.0\", \"data\": null, \"headers\": [], \"method\": \"POST\", \"path\": \"__RESOURCE_GROUP_ID__/providers/Microsoft.CostManagement/query\", \"urlParams\": [{\"key\": \"api-version\", \"value\": \"2023-11-01\"}], \"batchDisabled\": false, \"transformers\": [{\"type\": \"jsonpath\", \"settings\": {\"tablePath\": \"$.properties.rows\", \"columns\": [{\"path\": \"$[0]\", \"columnid\": \"Kosten\", \"columnType\": \"number\"}, {\"path\": \"$[1]\", \"columnid\": \"Währung\"}]}}], \"body\": \"{\\\"type\\\": \\\"ActualCost\\\", \\\"timeframe\\\": \\\"MonthToDate\\\", \\\"dataset\\\": {\\\"granularity\\\": \\\"None\\\", \\\"aggregation\\\": {\\\"totalCost\\\": {\\\"name\\\": \\\"Cost\\\", \\\"function\\\": \\\"Sum\\\"}}}}\"}",
+              "size": 4,
+              "title": "Kosten Monat bis heute",
+              "queryType": 12,
+              "visualization": "tiles",
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "Währung",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Kosten",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 0,
+                    "options": {
+                      "style": "decimal",
+                      "minimumFractionDigits": 2,
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                },
+                "showBorder": true,
+                "size": "auto"
+              }
+            },
+            "name": "cost-mtd",
+            "customWidth": "25"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\": \"ARMEndpoint/1.0\", \"data\": null, \"headers\": [], \"method\": \"GET\", \"path\": \"__RESOURCE_GROUP_ID__/providers/Microsoft.Consumption/budgets/budget-tauchplaetze-prod\", \"urlParams\": [{\"key\": \"api-version\", \"value\": \"2023-11-01\"}], \"batchDisabled\": false, \"transformers\": [{\"type\": \"jsonpath\", \"settings\": {\"tablePath\": \"$\", \"columns\": [{\"path\": \"$.properties.amount\", \"columnid\": \"Budget\", \"columnType\": \"number\"}, {\"path\": \"$.properties.currentSpend.amount\", \"columnid\": \"Ausgegeben\", \"columnType\": \"number\"}, {\"path\": \"$.properties.forecastSpend.amount\", \"columnid\": \"Prognose\", \"columnType\": \"number\"}, {\"path\": \"$.properties.currentSpend.unit\", \"columnid\": \"Währung\"}]}}]}",
+              "size": 0,
+              "title": "Budget",
+              "queryType": 12,
+              "visualization": "table"
+            },
+            "name": "cost-budget",
+            "customWidth": "75"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\": \"ARMEndpoint/1.0\", \"data\": null, \"headers\": [], \"method\": \"POST\", \"path\": \"__RESOURCE_GROUP_ID__/providers/Microsoft.CostManagement/forecast\", \"urlParams\": [{\"key\": \"api-version\", \"value\": \"2023-11-01\"}], \"batchDisabled\": false, \"transformers\": [{\"type\": \"jsonpath\", \"settings\": {\"tablePath\": \"$.properties.rows\", \"columns\": [{\"path\": \"$[0]\", \"columnid\": \"Kosten\", \"columnType\": \"number\"}, {\"path\": \"$[1]\", \"columnid\": \"Tag\", \"columnType\": \"string\"}, {\"path\": \"$[2]\", \"columnid\": \"Währung\"}, {\"path\": \"$[3]\", \"columnid\": \"Art\"}]}}], \"body\": \"{\\\"type\\\": \\\"ActualCost\\\", \\\"timeframe\\\": \\\"Custom\\\", \\\"timePeriod\\\": {\\\"from\\\": \\\"{MonthStart}\\\", \\\"to\\\": \\\"{MonthEnd}\\\"}, \\\"dataset\\\": {\\\"granularity\\\": \\\"Daily\\\", \\\"aggregation\\\": {\\\"totalCost\\\": {\\\"name\\\": \\\"Cost\\\", \\\"function\\\": \\\"Sum\\\"}}}, \\\"includeActualCost\\\": true, \\\"includeFreshPartialCost\\\": true}\"}",
+              "size": 0,
+              "title": "Kosten pro Tag im laufenden Monat (Ist und Prognose)",
+              "queryType": 12,
+              "visualization": "barchart",
+              "chartSettings": {
+                "xAxis": "Tag",
+                "yAxis": [
+                  "Kosten"
+                ],
+                "group": "Art",
+                "createOtherGroup": 0,
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Actual",
+                    "label": "Ist",
+                    "color": "blue"
+                  },
+                  {
+                    "seriesName": "Forecast",
+                    "label": "Prognose",
+                    "color": "gray"
+                  }
+                ]
+              }
+            },
+            "name": "cost-month-daily",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\": \"ARMEndpoint/1.0\", \"data\": null, \"headers\": [], \"method\": \"POST\", \"path\": \"__RESOURCE_GROUP_ID__/providers/Microsoft.CostManagement/query\", \"urlParams\": [{\"key\": \"api-version\", \"value\": \"2023-11-01\"}], \"batchDisabled\": false, \"transformers\": [{\"type\": \"jsonpath\", \"settings\": {\"tablePath\": \"$.properties.rows\", \"columns\": [{\"path\": \"$[0]\", \"columnid\": \"Kosten\", \"columnType\": \"number\"}, {\"path\": \"$[1]\", \"columnid\": \"Tag\", \"columnType\": \"string\"}, {\"path\": \"$[2]\", \"columnid\": \"Dienst\"}, {\"path\": \"$[3]\", \"columnid\": \"Währung\"}]}}], \"body\": \"{\\\"type\\\": \\\"ActualCost\\\", \\\"timeframe\\\": \\\"Custom\\\", \\\"timePeriod\\\": {\\\"from\\\": \\\"{Days30}\\\", \\\"to\\\": \\\"{Today}\\\"}, \\\"dataset\\\": {\\\"granularity\\\": \\\"Daily\\\", \\\"aggregation\\\": {\\\"totalCost\\\": {\\\"name\\\": \\\"Cost\\\", \\\"function\\\": \\\"Sum\\\"}}, \\\"grouping\\\": [{\\\"type\\\": \\\"Dimension\\\", \\\"name\\\": \\\"ServiceName\\\"}]}}\"}",
+              "size": 0,
+              "title": "Kosten pro Tag nach Dienst (30 Tage)",
+              "queryType": 12,
+              "visualization": "barchart",
+              "chartSettings": {
+                "xAxis": "Tag",
+                "yAxis": [
+                  "Kosten"
+                ],
+                "group": "Dienst",
+                "createOtherGroup": 0
+              }
+            },
+            "name": "cost-daily-service",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\": \"ARMEndpoint/1.0\", \"data\": null, \"headers\": [], \"method\": \"POST\", \"path\": \"__RESOURCE_GROUP_ID__/providers/Microsoft.CostManagement/query\", \"urlParams\": [{\"key\": \"api-version\", \"value\": \"2023-11-01\"}], \"batchDisabled\": false, \"transformers\": [{\"type\": \"jsonpath\", \"settings\": {\"tablePath\": \"$.properties.rows\", \"columns\": [{\"path\": \"$[0]\", \"columnid\": \"Kosten\", \"columnType\": \"number\"}, {\"path\": \"$[1]\", \"columnid\": \"Monat\", \"columnType\": \"string\"}, {\"path\": \"$[2]\", \"columnid\": \"Dienst\"}, {\"path\": \"$[3]\", \"columnid\": \"Währung\"}]}}], \"body\": \"{\\\"type\\\": \\\"ActualCost\\\", \\\"timeframe\\\": \\\"Custom\\\", \\\"timePeriod\\\": {\\\"from\\\": \\\"{Months12}\\\", \\\"to\\\": \\\"{Today}\\\"}, \\\"dataset\\\": {\\\"granularity\\\": \\\"Monthly\\\", \\\"aggregation\\\": {\\\"totalCost\\\": {\\\"name\\\": \\\"Cost\\\", \\\"function\\\": \\\"Sum\\\"}}, \\\"grouping\\\": [{\\\"type\\\": \\\"Dimension\\\", \\\"name\\\": \\\"ServiceName\\\"}]}}\"}",
+              "size": 0,
+              "title": "Kosten pro Monat (12 Monate)",
+              "queryType": 12,
+              "visualization": "barchart",
+              "chartSettings": {
+                "xAxis": "Monat",
+                "yAxis": [
+                  "Kosten"
+                ],
+                "group": "Dienst",
+                "createOtherGroup": 0
+              }
+            },
+            "name": "cost-monthly",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "{\"version\": \"ARMEndpoint/1.0\", \"data\": null, \"headers\": [], \"method\": \"POST\", \"path\": \"__RESOURCE_GROUP_ID__/providers/Microsoft.CostManagement/query\", \"urlParams\": [{\"key\": \"api-version\", \"value\": \"2023-11-01\"}], \"batchDisabled\": false, \"transformers\": [{\"type\": \"jsonpath\", \"settings\": {\"tablePath\": \"$.properties.rows\", \"columns\": [{\"path\": \"$[0]\", \"columnid\": \"Kosten\", \"columnType\": \"number\"}, {\"path\": \"$[1]\", \"columnid\": \"Ressource\"}, {\"path\": \"$[2]\", \"columnid\": \"Zähler\"}, {\"path\": \"$[3]\", \"columnid\": \"Währung\"}]}}], \"body\": \"{\\\"type\\\": \\\"ActualCost\\\", \\\"timeframe\\\": \\\"MonthToDate\\\", \\\"dataset\\\": {\\\"granularity\\\": \\\"None\\\", \\\"aggregation\\\": {\\\"totalCost\\\": {\\\"name\\\": \\\"Cost\\\", \\\"function\\\": \\\"Sum\\\"}}, \\\"grouping\\\": [{\\\"type\\\": \\\"Dimension\\\", \\\"name\\\": \\\"ResourceId\\\"}, {\\\"type\\\": \\\"Dimension\\\", \\\"name\\\": \\\"MeterSubCategory\\\"}]}}\"}",
+              "size": 0,
+              "title": "Kosten Monat bis heute nach Ressource",
+              "queryType": 12,
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Kosten",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "blue"
+                    }
+                  },
+                  {
+                    "columnMatch": "Ressource",
+                    "formatter": 13,
+                    "formatOptions": {
+                      "linkTarget": "Resource",
+                      "showIcon": true
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "cost-resources",
+            "customWidth": "50"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "### Log-Volumen\nTageslimit 150 MB (0.15 GB) pro Tag ab 14:00 UTC. Danach nimmt Log Analytics bis zum nächsten Reset nichts mehr an. Dann fehlen Requests, Jobs und Alerts."
+            },
+            "name": "cost-logs-intro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "Usage\n| where TimeGenerated > ago(30d)\n| where IsBillable\n| summarize MB = sum(Quantity) by TimeGenerated = bin(TimeGenerated - 14h, 1d) + 14h, Tabelle = DataType\n| order by TimeGenerated asc",
+              "size": 0,
+              "title": "Log-Volumen pro Tag ab Reset 14:00 UTC (MB, 30 Tage)",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "barchart",
+              "timeContext": {
+                "durationMs": 2592000000
+              }
+            },
+            "name": "cost-ingestion",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "_LogOperation\n| where TimeGenerated > ago(30d)\n| where Category == \"Ingestion\" and Detail has \"daily limit\"\n| project Zeit = TimeGenerated, Ereignis = iff(Detail has \"stopped\", \"Gestoppt: Tageslimit erreicht\", \"Wieder gestartet\"), Detail\n| order by Zeit desc",
+              "size": 0,
+              "title": "Tageslimit erreicht",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContext": {
+                "durationMs": 2592000000
+              }
+            },
+            "name": "cost-ingestion-cap",
+            "customWidth": "50"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "Tab",
+        "comparison": "isEqualTo",
+        "value": "kosten"
+      },
+      "name": "tab-kosten"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "Nur Seitenaufrufe mit Status 200, ohne Dateien, Weiterleitungen und 404. Ohne Cookies und ohne IP-Adresse: Die Zahlen zählen Aufrufe, nicht Personen.\n\n- **Bot (erkannt):** Application Insights erkennt den Bot, oder der Client ist ein Skript (curl, Python, …).\n- **Bot (Verdacht):** veraltetes System (Android bis 7, iOS bis 14) oder ein Browser mehr als 12 Versionen hinter dem neuesten. Crawler tarnen sich oft so, z.B. der Googlebot für Smartphones als Android 6.\n- Ein iPad meldet sich als Mac und zählt als Desktop."
+            },
+            "name": "use-intro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| summarize Menschen = sumif(ItemCount, Besucher == \"Mensch\"), Erkannt = sumif(ItemCount, Besucher == \"Bot (erkannt)\"), Verdacht = sumif(ItemCount, Besucher == \"Bot (Verdacht)\"), Tage = dcount(bin(TimeGenerated, 1d))\n| extend Anteil = iff(Menschen + Erkannt + Verdacht == 0, 0.0, round(100.0 * Menschen / (Menschen + Erkannt + Verdacht), 1))\n| project Kennzahl = pack_array(\"Seitenaufrufe Menschen\", \"Ø pro Tag (Menschen)\", \"Bots (erkannt)\", \"Bots (Verdacht)\", \"Anteil Menschen (%)\"),\n          Wert = pack_array(Menschen, round(1.0 * Menschen / max_of(Tage, 1), 0), Erkannt, Verdacht, Anteil)\n| mv-expand Kennzahl to typeof(string), Wert to typeof(real)",
+              "size": 4,
+              "title": "Übersicht",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "tiles",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "tileSettings": {
+                "titleContent": {
+                  "columnMatch": "Kennzahl",
+                  "formatter": 1
+                },
+                "leftContent": {
+                  "columnMatch": "Wert",
+                  "formatter": 12,
+                  "formatOptions": {
+                    "palette": "auto"
+                  },
+                  "numberFormat": {
+                    "unit": 17,
+                    "options": {
+                      "style": "decimal",
+                      "maximumFractionDigits": 2
+                    }
+                  }
+                },
+                "showBorder": true,
+                "size": "auto"
+              }
+            },
+            "name": "use-tiles"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| summarize Seitenaufrufe = sum(ItemCount) by bin(TimeGenerated, {TimeRange:grain}), Besucher\n| order by TimeGenerated asc",
+              "size": 0,
+              "title": "Seitenaufrufe: Menschen und Bots",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "barchart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "chartSettings": {
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Mensch",
+                    "color": "green"
+                  },
+                  {
+                    "seriesName": "Bot (erkannt)",
+                    "color": "gray"
+                  },
+                  {
+                    "seriesName": "Bot (Verdacht)",
+                    "color": "orange"
+                  }
+                ]
+              }
+            },
+            "name": "use-timeline"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| where Besucher == \"Mensch\"\n| extend Lokal = datetime_utc_to_local(TimeGenerated, \"Europe/Zurich\")\n| extend Wochentag = case(dayofweek(Lokal) == 1d, \"Mo\", dayofweek(Lokal) == 2d, \"Di\", dayofweek(Lokal) == 3d, \"Mi\", dayofweek(Lokal) == 4d, \"Do\", dayofweek(Lokal) == 5d, \"Fr\", dayofweek(Lokal) == 6d, \"Sa\", \"So\"), Stunde = hourofday(Lokal)\n| summarize Aufrufe = sum(ItemCount) by Stunde, Wochentag\n| union (range Stunde from 0 to 23 step 1 | extend Wochentag = \"Mo\", Aufrufe = 0)\n| evaluate pivot(Wochentag, sum(Aufrufe))\n| project Uhrzeit = strcat(iff(Stunde < 10, \"0\", \"\"), tostring(Stunde), \":00\"), Mo = column_ifexists(\"Mo\", 0), Di = column_ifexists(\"Di\", 0), Mi = column_ifexists(\"Mi\", 0), Do = column_ifexists(\"Do\", 0), Fr = column_ifexists(\"Fr\", 0), Sa = column_ifexists(\"Sa\", 0), So = column_ifexists(\"So\", 0), Stunde\n| order by Stunde asc\n| project-away Stunde",
+              "size": 0,
+              "title": "Menschen nach Wochentag und Uhrzeit (Schweizer Zeit)",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Mo|Di|Mi|Do|Fr|Sa|So",
+                    "formatter": 8,
+                    "formatOptions": {
+                      "palette": "greenDark"
+                    }
+                  }
+                ],
+                "filter": false,
+                "rowLimit": 24
+              }
+            },
+            "name": "use-heatmap",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| where Besucher == \"Mensch\"\n| extend Lokal = datetime_utc_to_local(TimeGenerated, \"Europe/Zurich\")\n| extend Nr = toint(dayofweek(Lokal) / 1d)\n| summarize Aufrufe = sum(ItemCount) by Nr\n| extend Wochentag = case(Nr == 1, \"1 Mo\", Nr == 2, \"2 Di\", Nr == 3, \"3 Mi\", Nr == 4, \"4 Do\", Nr == 5, \"5 Fr\", Nr == 6, \"6 Sa\", \"7 So\")\n| project Wochentag, Aufrufe\n| order by Wochentag asc",
+              "size": 0,
+              "title": "Menschen nach Wochentag",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "barchart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "use-weekday",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| where Besucher == \"Mensch\"\n| summarize Aufrufe = sum(ItemCount) by [\"Gerät\"] = Geraet\n| order by Aufrufe desc",
+              "size": 0,
+              "title": "Gerät",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "piechart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "use-device",
+            "customWidth": "33"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| where Besucher == \"Mensch\"\n| extend System = case(ClientOS startswith \"Mac OS X\", \"macOS\", ClientOS startswith \"Windows\", \"Windows\", ClientOS startswith \"iOS\", \"iOS\", ClientOS startswith \"Android\", \"Android\", ClientOS has_any (\"Linux\", \"Ubuntu\", \"Fedora\"), \"Linux\", ClientOS)\n| summarize Aufrufe = sum(ItemCount) by System\n| order by Aufrufe desc",
+              "size": 0,
+              "title": "Betriebssystem",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "piechart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "use-os",
+            "customWidth": "33"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| where Besucher == \"Mensch\"\n| summarize Aufrufe = sum(ItemCount) by Browser = coalesce(Family, ClientBrowser)\n| order by Aufrufe desc",
+              "size": 0,
+              "title": "Browser",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "piechart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "use-browser",
+            "customWidth": "33"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "### Inhalte\nWelche Tauchplätze und Gewässer Menschen am meisten ansehen, über alle Sprachen. Nur die Hauptseite, ohne Versionen, Bearbeiten und Melden. Hilft beim Entscheid, wo sich redaktionelle Arbeit lohnt."
+            },
+            "name": "use-content-intro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| extend m = extract_all(@\"^/(de|fr|it|en)/(tauchplaetze|dive-sites|sites-de-plongee|siti-di-immersione|gewaesser|waters|eaux|acque)/([^/?]+)$\", tostring(parse_url(Url).Path))\n| where array_length(m) > 0\n| extend Sprache = tostring(m[0][0]), Art = iff(tostring(m[0][1]) in (\"gewaesser\", \"waters\", \"eaux\", \"acque\"), \"Gewässer\", \"Tauchplatz\"), Slug = tostring(m[0][2])\n| where Art == \"Tauchplatz\"\n| summarize Menschen = sumif(ItemCount, Besucher == \"Mensch\"), DE = sumif(ItemCount, Besucher == \"Mensch\" and Sprache == \"de\"), FR = sumif(ItemCount, Besucher == \"Mensch\" and Sprache == \"fr\"), IT = sumif(ItemCount, Besucher == \"Mensch\" and Sprache == \"it\"), EN = sumif(ItemCount, Besucher == \"Mensch\" and Sprache == \"en\"), Bots = sumif(ItemCount, Besucher != \"Mensch\"), Zuletzt = maxif(TimeGenerated, Besucher == \"Mensch\") by Tauchplatz = Slug\n| where Menschen > 0\n| order by Menschen desc\n| take 50",
+              "size": 0,
+              "title": "Tauchplätze nach Aufrufen von Menschen",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Menschen",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "green"
+                    }
+                  },
+                  {
+                    "columnMatch": "Bots",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "gray"
+                    }
+                  }
+                ],
+                "filter": true
+              }
+            },
+            "name": "use-sites",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| extend m = extract_all(@\"^/(de|fr|it|en)/(tauchplaetze|dive-sites|sites-de-plongee|siti-di-immersione|gewaesser|waters|eaux|acque)/([^/?]+)$\", tostring(parse_url(Url).Path))\n| where array_length(m) > 0\n| extend Sprache = tostring(m[0][0]), Art = iff(tostring(m[0][1]) in (\"gewaesser\", \"waters\", \"eaux\", \"acque\"), \"Gewässer\", \"Tauchplatz\"), Slug = tostring(m[0][2])\n| where Art == \"Gewässer\"\n| summarize Menschen = sumif(ItemCount, Besucher == \"Mensch\"), DE = sumif(ItemCount, Besucher == \"Mensch\" and Sprache == \"de\"), FR = sumif(ItemCount, Besucher == \"Mensch\" and Sprache == \"fr\"), IT = sumif(ItemCount, Besucher == \"Mensch\" and Sprache == \"it\"), EN = sumif(ItemCount, Besucher == \"Mensch\" and Sprache == \"en\"), Bots = sumif(ItemCount, Besucher != \"Mensch\"), Zuletzt = maxif(TimeGenerated, Besucher == \"Mensch\") by [\"Gewässer\"] = Slug\n| where Menschen > 0\n| order by Menschen desc\n| take 50",
+              "size": 0,
+              "title": "Gewässer nach Aufrufen von Menschen",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Menschen",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "green"
+                    }
+                  },
+                  {
+                    "columnMatch": "Bots",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "gray"
+                    }
+                  }
+                ],
+                "filter": true
+              }
+            },
+            "name": "use-waters",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| where Besucher == \"Mensch\"\n| extend Pfad = tostring(parse_url(Url).Path)\n| summarize Aufrufe = sum(ItemCount), [\"P95 (ms)\"] = round(percentilew(DurationMs, ItemCount, 95), 0) by Pfad\n| top 30 by Aufrufe desc",
+              "size": 0,
+              "title": "Meistbesuchte Seiten",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Aufrufe",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "green"
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "use-pages",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| where Besucher == \"Mensch\"\n| extend Sprache = extract(@\"^/(de|fr|it|en)(/|$)\", 1, tostring(parse_url(Url).Path))\n| summarize Aufrufe = sum(ItemCount) by Sprache = case(Sprache == \"de\", \"Deutsch\", Sprache == \"fr\", \"Französisch\", Sprache == \"it\", \"Italienisch\", Sprache == \"en\", \"Englisch\", \"ohne Sprache\")\n| order by Aufrufe desc",
+              "size": 0,
+              "title": "Sprache",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "piechart",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              }
+            },
+            "name": "use-language",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| where Besucher == \"Mensch\"\n| summarize Aufrufe = sum(ItemCount) by Browser = ClientBrowser, System = ClientOS, [\"Gerät\"] = Geraet\n| top 30 by Aufrufe desc",
+              "size": 0,
+              "title": "Browser und Versionen",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Aufrufe",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "green"
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "use-browser-versions",
+            "customWidth": "50"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "let window = AppRequests\n| where TimeGenerated {TimeRange};\nlet browserMax = AppRequests\n| where TimeGenerated > ago(30d) and isempty(SyntheticSource)\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| summarize MaxMajor = max(Major) by Family;\nlet pages = window\n| where Name startswith \"GET /\" and ResultCode == \"200\"\n| where not(Name has_any (\"/not-found\", \"/robots.txt\", \"/sitemap\", \"/health\", \"/alive\", \"/api/\", \"/admin\", \"/platform\"))\n| extend Family = extract(@\"^(.+?) \\d\", 1, ClientBrowser), Major = toint(extract(@\" (\\d+)\", 1, ClientBrowser))\n| lookup kind=leftouter browserMax on Family\n| extend Besucher = case(\n    isnotempty(SyntheticSource)\n      or ClientBrowser in (\"Other\", \"\")\n      or ClientBrowser matches regex @\"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia\", \"Bot (erkannt)\",\n    ClientOS matches regex @\"^Android [1-7](\\.|$)\"\n      or ClientOS matches regex @\"^iOS (\\d|1[0-4])\\.\"\n      or (Family in (\"Chrome\", \"Chrome Mobile\", \"Chrome Mobile iOS\", \"Edge\", \"Firefox\", \"Firefox Mobile\", \"Opera\") and Major < MaxMajor - 12), \"Bot (Verdacht)\",\n    \"Mensch\")\n| extend Geraet = case(\n    Besucher != \"Mensch\", \"Bot\",\n    ClientOS startswith \"iOS\" or (ClientOS startswith \"Android\" and not(ClientBrowser matches regex @\"^(Chrome|Firefox|Edge|Samsung Internet|Opera) \\d\")), \"Mobile\",\n    ClientOS startswith \"Android\", \"Tablet\",\n    \"Desktop\");\npages\n| where Besucher != \"Mensch\"\n| summarize Aufrufe = sum(ItemCount), Zuletzt = max(TimeGenerated) by Bot = coalesce(SyntheticSource, ClientBrowser), Klasse = Besucher, System = ClientOS\n| top 30 by Aufrufe desc",
+              "size": 0,
+              "title": "Bots",
+              "queryType": 0,
+              "resourceType": "microsoft.operationalinsights/workspaces",
+              "crossComponentResources": [
+                "__WORKSPACE_ID__"
+              ],
+              "visualization": "table",
+              "timeContextFromParameter": "TimeRange",
+              "timeContext": {
+                "durationMs": 604800000
+              },
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "Aufrufe",
+                    "formatter": 4,
+                    "formatOptions": {
+                      "palette": "gray"
+                    }
+                  }
+                ],
+                "filter": false
+              }
+            },
+            "name": "use-bots",
+            "customWidth": "50"
+          }
+        ]
+      },
+      "conditionalVisibility": {
+        "parameterName": "Tab",
+        "comparison": "isEqualTo",
+        "value": "nutzung"
+      },
+      "name": "tab-nutzung"
+    }
+  ],
+  "fallbackResourceIds": [
+    "__INSIGHTS_ID__"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
