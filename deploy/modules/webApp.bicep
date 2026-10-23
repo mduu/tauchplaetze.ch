@@ -87,6 +87,8 @@ var settings = union(secretSettings, {
   WEBSITES_CONTAINER_START_TIME_LIMIT: '600'
   // Startet die App direkt aus dem ZIP des Deploys: Der Wechsel ist atomar, die App lädt nie halb kopierte DLLs (500er beim Deploy am 21.10.2026).
   WEBSITE_RUN_FROM_PACKAGE: '1'
+  // Echte Client-IP und HTTPS aus den Headern des Frontends von App Service. Ohne das zählen alle Besucher im Rate Limit als derselbe Client.
+  ASPNETCORE_FORWARDEDHEADERS_ENABLED: 'true'
   // Nach einem Start fragt App Service zuerst die Startseite ab: Datenbank, EF und Rendering sind warm, bevor Besucher kommen.
   WEBSITE_WARMUP_PATH: '/de'
   Database__PrepareOnStartup: 'true'
