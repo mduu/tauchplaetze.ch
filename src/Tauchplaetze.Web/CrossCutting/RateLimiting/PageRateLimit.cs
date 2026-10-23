@@ -1,5 +1,6 @@
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Components.Endpoints;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Options;
 
 namespace Tauchplaetze.Web.CrossCutting.RateLimiting;
@@ -56,9 +57,10 @@ internal static class PageRateLimit
     public static bool Handles(HttpContext context) =>
         (HttpMethods.IsGet(context.Request.Method) || HttpMethods.IsHead(context.Request.Method)) && IsPage(context);
 
-    /// <summary>429 mit dem Hinweis, wann es wieder geht.</summary>
+    /// <summary>429 mit dem Hinweis, wann es wieder geht. Ohne Status-Code-Seite: Sie zeigte sonst «nicht gefunden» und zählte noch einmal.</summary>
     public static void Reject(HttpContext context)
     {
+        context.Features.Get<IStatusCodePagesFeature>()?.Enabled = false;
         context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
         context.Response.Headers.RetryAfter = "60";
     }

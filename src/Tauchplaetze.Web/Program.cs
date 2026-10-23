@@ -62,8 +62,8 @@ app.UseAuthentication();
 app.UseRequestLocalization();
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseAuthorization();
-app.UseRateLimiter();
 app.UseOutputCache();
+app.UseRateLimiter();
 app.UseAntiforgery();
 
 app.MapStaticAssets();

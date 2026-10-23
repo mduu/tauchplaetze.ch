@@ -219,7 +219,7 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   7. Rohdaten als JSON in Blob Storage ablegen (`forecast-raw/{date}/{runId}/{source}/{key}.json`).
   8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert). Das Wetter pro Stunde in `SiteWeatherOutlook` ersetzen. Der Lauf speichert nach je 20 Plätzen. Ein einziges Speichern am Ende hielt SQL Basic minutenlang auf 100 % DTU (23.10.2026), die Seiten wurden langsam.
   9. Den Median des Index pro Gewässer für heute schreiben (`WaterBodyDailyIndex`, Upsert, siehe «Verlauf»).
-  10. Output Cache der öffentlichen Seiten leeren. Das macht die Fassade nach jedem Command (`architecture.md`, «Caching»).
+  10. Output Cache der öffentlichen Seiten leeren. Das macht die Fassade nach jedem Command, auch nach einer Exception (`architecture.md`, «Caching»).
   11. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
   Stoppt der Host während eines Laufs (Neustart, Deployment), bricht der Lauf sofort ab und gilt als `Failed`. Die übrigen Plätze behalten die Werte des letzten Laufs. Ein abgebrochener Call ist kein Teilerfolg (Fehler vom 19.10.2026: Nach einem Neustart scheiterten 357 Calls in 1 ms, und der Lauf überschrieb gute Werte mit leeren).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.

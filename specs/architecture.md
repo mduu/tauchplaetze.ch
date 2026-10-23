@@ -208,6 +208,9 @@ Stand 23.10.2026 (Entscheid Marc): Output Cache für die öffentlichen Seiten in
 - **Invalidieren:** Jeder Command leert alle Seiten (Tag `public`), ausser Commands ohne Wirkung auf öffentliche Seiten (Anmeldung, Mail-Queue, Upload ohne Freigabe, Übersetzung im Editor). Die Liste steht in `CommandCacheEviction`. Ein neuer Command leert so im Zweifel zu viel, nie zu wenig. Der Abfluss-Job leert nur Seiten mit Abfluss (Tag `discharge`). Feinere Tags pro Platz (`site:{id}`) lohnen sich nicht: Änderungen sind selten.
 - **Variation:** Pfad (enthält die Sprache), alle Query-Parameter, das Cookie `tp_area` der Startseite, Enhanced Navigation von Blazor.
 - **Antiforgery-Cookie:** Blazor setzt es bei jeder Seite. Eine Antwort mit Cookie speichert der Output Cache nicht, Bots ohne Cookies füllten ihn so nie. Auf den Seiten im Cache entfernt `PublicPageCache` das Cookie. Diese Seiten haben kein Formular mit POST. Ein anderes Cookie (z.B. `tp_area` nach einer Wahl) verhindert das Speichern weiterhin.
+- **Leeren auch nach einer Exception:** Ein Command kann vorher schon einen Teil gespeichert haben (Prognose-Lauf).
+- **Bekannte Lücke:** Beginnt ein Render vor dem Speichern und legt die Seite nach dem Leeren ab, bleibt der alte Stand bis zum Ablauf im Cache (höchstens 60 Minuten). Bewusst in Kauf genommen.
+- **Treffer aus dem Cache** kommen vor dem Rate Limit (`UseOutputCache` vor `UseRateLimiter`). Sie zählen nicht und warten nie hinter Seiten, die rendern.
 - **Mehrere Anfragen auf dieselbe Seite** ohne Eintrag im Cache rendern nur einmal (Locking des Output Cache).
 - Speicher: höchstens 100 MB (Standard), rund 1700 Seiten zu etwa 50 KB.
 - Bilder: lange Cache-Dauer (`immutable`), Dateiname enthält die Version. Cloudflare davor ist ein späterer Ausbau.

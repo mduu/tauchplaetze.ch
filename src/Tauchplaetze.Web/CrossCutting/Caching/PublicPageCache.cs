@@ -84,7 +84,7 @@ internal static class PublicPageCache
     {
         public ValueTask CacheRequestAsync(OutputCacheContext context, CancellationToken cancellation)
         {
-            if (context.AllowCacheStorage)
+            if (context.EnableOutputCaching && context.AllowCacheStorage)
             {
                 var response = context.HttpContext.Response;
                 response.OnStarting(() =>

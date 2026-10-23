@@ -81,15 +81,20 @@ internal static class CommandCacheEviction
     private sealed class EvictingCommandHandler<TCommand, TResult>(ICommandHandler<TCommand, TResult> inner, string tag, IOutputCacheStore store)
         : ICommandHandler<TCommand, TResult>
     {
+        /// <remarks>Leert auch nach einer Exception: Der Command kann vorher schon einen Teil gespeichert haben.</remarks>
         public async Task<TResult> Handle(TCommand command, CancellationToken ct = default)
         {
-            var result = await inner.Handle(command, ct);
-            if (tag.Length > 0)
+            try
             {
-                await store.EvictByTagAsync(tag, CancellationToken.None);
+                return await inner.Handle(command, ct);
             }
-
-            return result;
+            finally
+            {
+                if (tag.Length > 0)
+                {
+                    await store.EvictByTagAsync(tag, CancellationToken.None);
+                }
+            }
         }
     }
 }
