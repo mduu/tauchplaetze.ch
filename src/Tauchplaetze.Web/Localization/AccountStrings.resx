@@ -18,6 +18,8 @@
   <data name="DisplayName" xml:space="preserve"><value>Anzeigename</value></data>
   <data name="DisplayName_Help" xml:space="preserve"><value>Ein Pseudonym ist erlaubt. Öffentlich erscheint er nur, wenn du das im Profil erlaubst.</value></data>
   <data name="Password_Help" xml:space="preserve"><value>Mindestens 10 Zeichen.</value></data>
+  <data name="Register_Trap" xml:space="preserve"><value>Dieses Feld leer lassen</value></data>
+  <data name="Register_Error_Expired" xml:space="preserve"><value>Das Formular ist abgelaufen. Bitte fülle es nochmals aus.</value></data>
   <data name="Register_Submit" xml:space="preserve"><value>Konto anlegen</value></data>
   <data name="Register_Done_Title" xml:space="preserve"><value>Fast geschafft</value></data>
   <data name="Register_Done_Text" xml:space="preserve"><value>Wir haben dir eine Mail geschickt. Bestätige deine E-Mail-Adresse mit dem Link darin.</value></data>

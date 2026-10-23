@@ -18,6 +18,8 @@
   <data name="DisplayName" xml:space="preserve"><value>Nome visualizzato</value></data>
   <data name="DisplayName_Help" xml:space="preserve"><value>È permesso uno pseudonimo. Appare pubblicamente solo se lo autorizzi nel profilo.</value></data>
   <data name="Password_Help" xml:space="preserve"><value>Almeno 10 caratteri.</value></data>
+  <data name="Register_Trap" xml:space="preserve"><value>Lascia vuoto questo campo</value></data>
+  <data name="Register_Error_Expired" xml:space="preserve"><value>Il modulo è scaduto. Compilalo di nuovo.</value></data>
   <data name="Register_Submit" xml:space="preserve"><value>Crea account</value></data>
   <data name="Register_Done_Title" xml:space="preserve"><value>Quasi fatto</value></data>
   <data name="Register_Done_Text" xml:space="preserve"><value>Ti abbiamo inviato un'e-mail. Conferma il tuo indirizzo con il link contenuto.</value></data>

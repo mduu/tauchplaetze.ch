@@ -3,9 +3,11 @@
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Core.Features.Accounts.Commands
+@using Tauchplaetze.Web.CrossCutting.Security
 @inject ICommandHandler<RegisterCommand, AccountResult> Register
 @inject IStringLocalizer<AccountStrings> L
 @inject NavigationManager Navigation
+@inject FormBotTrap Trap
 
 @if (done)
 {
@@ -15,18 +17,24 @@ else
 {
     <AccountLayout Title="@L["Register_Title"]" Lead="@L["Register_Lead"]" Messages="messages" IsError="true">
         <EditForm Model="Input" FormName="register" OnSubmit="Submit" class="form">
+            <input type="hidden" name="Input.Stamp" value="@stamp" />
             <label>@L["DisplayName"] <InputText autocomplete="nickname" required maxlength="60" @bind-Value="Input!.DisplayName" /></label>
             <p class="help">@L["DisplayName_Help"]</p>
             <label>@L["Email"] <InputText type="email" autocomplete="email" required @bind-Value="Input!.Email" /></label>
             <label>@L["Password"] <InputText type="password" autocomplete="new-password" required minlength="10" @bind-Value="Input!.Password" /></label>
             <p class="help">@L["Password_Help"]</p>
+            <label class="form-trap" aria-hidden="true">@L["Register_Trap"] <InputText tabindex="-1" autocomplete="off" @bind-Value="Input!.Website" /></label>
             <button type="submit" class="button">@L["Register_Submit"]</button>
         </EditForm>
     </AccountLayout>
 }
 
 @code {
+    private const string Form = "RegisterPage";
+
     private IReadOnlyList<string> messages = [];
+
+    private string stamp = "";
 
     private bool done;
 
@@ -44,6 +52,7 @@ else
     protected override void OnInitialized()
     {
         Input ??= new RegisterInput();
+        stamp = Trap.KeepStamp(Form, Input.Stamp);
         if (Limit is not null)
         {
             messages = [L["Account_Limit"]];
@@ -54,8 +63,23 @@ else
         }
     }
 
+    /// <remarks>Ein Bot (<see cref="FormBotTrap"/>) sieht dieselbe Bestätigung wie ein Mensch. Es entsteht kein Konto und keine Mail.</remarks>
     private async Task Submit()
     {
+        var trap = Trap.Check(Form, Input!.Stamp, Input.Website);
+        if (trap == FormTrapResult.Bot)
+        {
+            done = true;
+            return;
+        }
+
+        if (trap == FormTrapResult.Expired)
+        {
+            stamp = Trap.NewStamp(Form);
+            messages = [L["Register_Error_Expired"]];
+            return;
+        }
+
         var result = await Register.Handle(new RegisterCommand(Input!.Email, Input!.Password, Input!.DisplayName, Language, AccountPaths.ConfirmTemplate(Language), AccountPaths.SignIn(Language)));
         done = result.Succeeded;
         messages = AccountText.Errors(L, result);
@@ -68,5 +92,10 @@ else
         public string Email { get; set; } = "";
 
         public string Password { get; set; } = "";
+
+        public string? Stamp { get; set; }
+
+        /// <summary>Honeypot: Menschen sehen das Feld nicht und lassen es leer.</summary>
+        public string? Website { get; set; }
     }
 }

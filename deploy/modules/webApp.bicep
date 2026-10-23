@@ -91,6 +91,8 @@ var settings = union(secretSettings, {
   WEBSITE_WARMUP_PATH: '/de'
   Database__PrepareOnStartup: 'true'
   Accounts__Admins__0__DisplayName: adminDisplayName
+  // Selbstregistrierung offen (Entscheid Marc, 23.10.2026). Schutz: Honeypot, Zeitfalle, Rate Limit, Bestätigung per Mail.
+  Accounts__RegistrationOpen: 'true'
   Mail__Host: 'asmtp.mail.hostpoint.ch'
   Mail__Port: '587'
   Mail__UseTls: 'true'

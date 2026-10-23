@@ -73,6 +73,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<SendContactMessageCommand, ContactResult> Contact { get; } = new(_ => new ContactResult([]));
 
+    public FakeQuery<RegisterCommand, AccountResult> Register { get; } = new(_ => new AccountResult([]));
+
     public FakeQuery<GetPersonalDataQuery, PersonalData?> PersonalData { get; } = new(_ => null);
 
     public FakeQuery<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>> SitesForEditing { get; } = new(_ => []);
@@ -158,6 +160,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyQuery, WaterBodyDetails?>>(WaterBody));
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SignInCommand, SignInOutcome>>(SignIn));
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SendContactMessageCommand, ContactResult>>(Contact));
+            services.Replace(ServiceDescriptor.Singleton<ICommandHandler<RegisterCommand, AccountResult>>(Register));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPersonalDataQuery, PersonalData?>>(PersonalData));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetMyProposalsQuery, IReadOnlyList<MyProposal>>>(MyProposals));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSitesForEditingQuery, IReadOnlyList<EditableDiveSite>>>(SitesForEditing));

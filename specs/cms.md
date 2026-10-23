@@ -36,7 +36,7 @@ Ohne Anmeldung führt `/admin` zur Anmeldung. Fehlt die Rolle, antwortet der Ser
 
 **Alle können beitragen, Moderatoren geben frei** (Entscheid Marc, 17.10.2026, ADR-008). Wer ein Konto hat, kann Informationen zu Tauchplätzen beisteuern. Online sichtbar wird eine Änderung erst, wenn ein Moderator oder Admin sie freigibt. Jede Änderung ergibt eine Version, wie in einem Wiki. Die History zeigt Autor und Approver.
 
-Zu Beginn pflegt Marc die Inhalte allein. Das Modell mit Freigabe und Versionen gilt aber schon im MVP. Die Registrierung für alle ist gebaut. In Prod öffnen wir sie mit `Accounts:RegistrationOpen`.
+Zu Beginn pflegt Marc die Inhalte allein. Das Modell mit Freigabe und Versionen gilt aber schon im MVP. Die Registrierung für alle ist gebaut und in Prod offen (`Accounts:RegistrationOpen`, 23.10.2026).
 
 ## Grundsatz: Verzeichnis zuerst
 
@@ -305,9 +305,10 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 | `Admin` | alles, dazu Rollen vergeben, Admin-Konten sperren, Gewässer und Stationen zuordnen, Prognose-Lauf starten |
 
 - Anmeldung mit ASP.NET Core Identity: E-Mail plus Passwort. Passkeys sind geplant.
-- **Selbstregistrierung** für Mitwirkende (Entscheid Marc, 17.10.2026): E-Mail bestätigen, Anzeigename wählen (Pseudonym erlaubt). Öffentlich erscheint der Anzeigename nur mit Einwilligung (siehe «Datenschutz in der History»). Gebaut. Ohne `Accounts:RegistrationOpen = true` ist sie zu (Standard, so in Prod). Lokal startet Aspire mit offener Registrierung.
+- **Selbstregistrierung** für Mitwirkende (Entscheid Marc, 17.10.2026): E-Mail bestätigen, Anzeigename wählen (Pseudonym erlaubt). Öffentlich erscheint der Anzeigename nur mit Einwilligung (siehe «Datenschutz in der History»). Gebaut. Ohne `Accounts:RegistrationOpen = true` ist sie zu (Standard). In Prod offen seit 23.10.2026 (Entscheid Marc, App Setting in `deploy/modules/webApp.bicep`). Lokal startet Aspire mit offener Registrierung.
 - **Schutz der Konten** (Security-Review, 20.10.2026):
   - **Keine Konto-Enumeration:** Die Registrierung prüft Anzeigename und Passwort zuerst, bei bekannter und neuer Adresse gleich. Danach meldet eine bekannte Adresse denselben Erfolg wie eine neue. Die Mail sagt «Du hast schon ein Konto», bei einem unbestätigten Konto kommt die Bestätigung noch einmal. Der bekannte Zweig rechnet einen Passwort-Hash wie ein neues Konto, damit die Antwortzeit nichts verrät. Die Registrierung sendet sofort (ADR-010), weil beide Zweige eine Mail senden. «Passwort vergessen» sendet über die Queue (5–30 s), weil nur der bekannte Zweig eine Mail hat und ein sofortiger Versand die Antwortzeit verlängern und so ein Konto verraten würde. Ein gesperrtes Konto (Lockout) bekommt bei der Anmeldung dieselbe Antwort wie ein falsches Passwort. «Passwort vergessen» antwortet immer gleich.
+  - **Bots:** Honeypot und Zeitfalle wie beim Kontaktformular (`FormBotTrap`): ein unsichtbares Feld und ein signierter Zeitstempel. Feld gefüllt oder unter 3 s gesendet: Der Bot sieht «Fast geschafft», es entsteht kein Konto und keine Mail. Älter als 6 h: «Formular abgelaufen». Dazu das Rate Limit der Konto-Formulare (`infrastructure.md`) und die Bestätigung per Mail: Ein unbestätigtes Konto kann sich nicht anmelden.
   - **Lockout:** nach 5 Fehlversuchen 15 Minuten, nicht eskalierend. Eine Eskalation würde das Sperren fremder Konten (DoS) verschärfen. Dagegen hilft das Rate Limit pro Client.
   - **Abkühlzeit:** höchstens eine Mail derselben Art pro Konto in 15 Minuten (Bestätigung oder «Konto besteht schon», neues Passwort), nur im Arbeitsspeicher.
 - Admins ernennen Moderatoren.
