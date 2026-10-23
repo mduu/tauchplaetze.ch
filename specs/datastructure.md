@@ -190,7 +190,7 @@ Die Row in SQL enthält nur die Metadaten. Der Inhalt liegt als JSON in Blob Sto
 | `Depth` | int, optional | Aufnahmetiefe in m |
 | `Photographer` | string(120) | Namensnennung, Pflicht |
 | `PhotographerUrl` | string(300), optional | |
-| `SourceUrl` | string(300), optional | z.B. Seite auf tauchfotos.ch |
+| `SourceUrl` | string(300), optional | z.B. Seite des Fotografen |
 | `SortOrder` | int, optional | Position in der freigegebenen Version. `null`: Die freigegebene Version verwendet das Foto nicht (keine Galerie) |
 | `UploadedBy` | string, optional | Konto. `null` nach Löschung |
 | `UploadedAt` | DateTimeOffset | |

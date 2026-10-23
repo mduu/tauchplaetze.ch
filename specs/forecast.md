@@ -257,7 +257,7 @@ Ein kleiner zweiter Job holt den Abfluss öfter als der Prognose-Lauf. Er ruft n
 
 - **Meldungen** der Community (Sicht pro Tiefenband).
 - **Gemessene Secchi-Tiefen** (Datalakes LéXPLORE, später kantonale Messungen).
-- **Historische Labels von Marc:** Tauchlogs sowie Datum und Ort aus den EXIF-Daten der Fotos (tauchfotos.ch). Dazu eine Sichtbewertung von Marc pro Tauchgang.
+- **Historische Labels von Marc:** Tauchlogs sowie Datum und Ort aus den EXIF-Daten der eigenen Fotos. Dazu eine Sichtbewertung von Marc pro Tauchgang.
 
 ### Features
 

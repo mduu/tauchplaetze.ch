@@ -258,7 +258,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 - **Aufräumen** (Command `PurgeUnusedMedia`, täglich 03:30 Lokalzeit im Web-Host, Lock `locks/media-purge`): Ein privates Foto, das älter als 30 Tage ist (`Media:PurgeAfterDays`) und kein offener Vorschlag verwendet, verschwindet samt Dateien. Öffentliche Fotos und Fotos in offenen Vorschlägen bleiben.
 - **Reihenfolge** mit Pfeilen hoch und runter. Ein Foto als Titelbild wählen (Stern).
 - **Schutz:** höchstens 30 Uploads pro Stunde und 100 pro Tag und Konto (Moderation ausgenommen). Ein gesperrtes Konto lädt nichts hoch.
-- Import aus tauchfotos.ch: Marc lädt die Originale hoch. Kein automatischer Abzug von der alten Website.
+- Import aus dem eigenen Fotoarchiv: Marc lädt die Originale hoch. Kein automatischer Abzug von einer anderen Website.
 
 ### Seen, Shops, Buddy-Gruppen
 
