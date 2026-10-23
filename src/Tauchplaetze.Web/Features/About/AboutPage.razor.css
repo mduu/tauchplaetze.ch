@@ -111,13 +111,6 @@ address {
     max-width: 640px;
 }
 
-.contact-trap {
-    position: absolute;
-    left: -10000px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-}
 
 .contact-message {
     padding: 14px 18px;

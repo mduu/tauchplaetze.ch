@@ -1,11 +1,10 @@
-@using Microsoft.AspNetCore.DataProtection
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.Contact.Commands
+@using Tauchplaetze.Web.CrossCutting.Security
 @inject ICommandHandler<SendContactMessageCommand, ContactResult> SendMessage
-@inject IDataProtectionProvider Protection
+@inject FormBotTrap Trap
 @inject IStringLocalizer<AboutStrings> L
 @inject NavigationManager Navigation
-@inject TimeProvider Time
 
 @if (Status == ContactStatus.Sent)
 {
@@ -29,7 +28,7 @@ else
         <label>@L["Contact_Email"] <InputText type="email" autocomplete="email" required maxlength="@ContactRules.MaxEmail" @bind-Value="Input!.Email" /></label>
         <label>@L["Contact_Reference"] <InputText maxlength="@ContactRules.MaxReference" @bind-Value="Input!.Reference" /></label>
         <label>@L["Contact_Message"] <InputTextArea required rows="7" minlength="@ContactRules.MinMessage" maxlength="@ContactRules.MaxMessage" @bind-Value="Input!.Message" /></label>
-        <label class="contact-trap" aria-hidden="true">@L["Contact_Trap"] <InputText tabindex="-1" autocomplete="off" @bind-Value="Input!.Website" /></label>
+        <label class="form-trap" aria-hidden="true">@L["Contact_Trap"] <InputText tabindex="-1" autocomplete="off" @bind-Value="Input!.Website" /></label>
         <button type="submit" class="button">@L["Contact_Submit"]</button>
     </EditForm>
 }
@@ -38,9 +37,7 @@ else
     /// <summary>Name der Policy für das Rate Limit (`ContactRateLimit`).</summary>
     public const string RateLimitPolicy = "contact";
 
-    private static readonly TimeSpan MinFillTime = TimeSpan.FromSeconds(3);
-
-    private static readonly TimeSpan MaxFillTime = TimeSpan.FromHours(6);
+    private const string Form = "ContactForm";
 
     private IReadOnlyList<string> errors = [];
 
@@ -58,18 +55,13 @@ else
     [SupplyParameterFromForm(FormName = "contact")]
     private ContactInput? Input { get; set; }
 
-    private IDataProtector Protector => Protection.CreateProtector("Tauchplaetze.ContactForm.Stamp");
-
-    private string NewStamp() => Protector.Protect(Time.GetUtcNow().UtcTicks.ToString(CultureInfo.InvariantCulture));
-
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
-    /// <remarks>Nach einem Fehler bleibt der gesendete Stempel gültig. Ein neuer würde den zweiten Versuch als «zu schnell» verwerfen.</remarks>
     protected override void OnInitialized()
     {
         Input ??= new ContactInput { Reference = Reference };
 
-        stamp = Input.Stamp is { } posted && AgeOf(posted) is { } age && age <= MaxFillTime ? posted : NewStamp();
+        stamp = Trap.KeepStamp(Form, Input.Stamp);
         if (Status == ContactStatus.Limited)
         {
             errors = [L["Contact_Error_Limit"]];
@@ -77,21 +69,21 @@ else
     }
 
     /// <remarks>
-    /// Honeypot und Zeitfalle schützen den Transport: Ein Bot füllt das versteckte Feld oder sendet in unter 3 s. Er sieht trotzdem «gesendet» und lernt nichts.
+    /// Honeypot und Zeitfalle (<see cref="FormBotTrap"/>) schützen den Transport. Ein Bot sieht trotzdem «gesendet» und lernt nichts.
     /// Die Inhalte prüft der Core.
     /// </remarks>
     private async Task Submit()
     {
-        var age = AgeOf(Input!.Stamp);
-        if (!string.IsNullOrEmpty(Input.Website) || age < MinFillTime)
+        var trap = Trap.Check(Form, Input!.Stamp, Input.Website);
+        if (trap == FormTrapResult.Bot)
         {
             Navigation.NavigateTo(SentUrl);
             return;
         }
 
-        if (age is null || age > MaxFillTime)
+        if (trap == FormTrapResult.Expired)
         {
-            stamp = NewStamp();
+            stamp = Trap.NewStamp(Form);
             errors = [L["Contact_Error_Expired"]];
             return;
         }
@@ -104,19 +96,6 @@ else
         }
 
         errors = [.. result.Errors.Select(e => L[$"Contact_Error_{e}"].Value)];
-    }
-
-    private TimeSpan? AgeOf(string? stamp)
-    {
-        try
-        {
-            var ticks = long.Parse(Protector.Unprotect(stamp ?? ""), CultureInfo.InvariantCulture);
-            return Time.GetUtcNow() - new DateTimeOffset(ticks, TimeSpan.Zero);
-        }
-        catch (Exception exception) when (exception is System.Security.Cryptography.CryptographicException or FormatException)
-        {
-            return null;
-        }
     }
 
     private sealed class ContactInput

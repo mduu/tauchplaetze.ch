@@ -1664,3 +1664,12 @@ button.chip-toggle:focus-visible {
 html:has(dialog[data-lightbox-dialog][open]) {
   overflow: hidden;
 }
+
+/* Honeypot öffentlicher Formulare: für Menschen unsichtbar, für Bots ein normales Feld (FormBotTrap). */
+.form-trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
