@@ -271,10 +271,18 @@ public sealed class FakeQuery<TQuery, TResult>(Func<TQuery, TResult> answer) : I
 
     public int Calls { get; private set; }
 
-    public Task<TResult> Handle(TQuery query, CancellationToken ct = default)
+    /// <summary>Antwortet asynchron wie die Datenbank: Blazor rendert dann schon einmal vor der Antwort.</summary>
+    public bool Yields { get; set; }
+
+    public async Task<TResult> Handle(TQuery query, CancellationToken ct = default)
     {
         LastQuery = query;
         Calls++;
-        return Task.FromResult(Answer(query));
+        if (Yields)
+        {
+            await Task.Delay(10, ct);
+        }
+
+        return Answer(query);
     }
 }
