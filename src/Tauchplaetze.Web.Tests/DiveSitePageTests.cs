@@ -566,7 +566,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.DoesNotContain("data-discharge", html);
     }
 
-    private static SiteDischarge RiverDischarge()
+    internal static SiteDischarge RiverDischarge()
     {
         var now = DateTimeOffset.UtcNow;
         var hours = Enumerable.Range(0, 48).Select(h => new DischargeHour(now.AddHours(h - 47), 300 + h)).ToList();

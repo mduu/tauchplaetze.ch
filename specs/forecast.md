@@ -217,9 +217,9 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   5. Pro Gitterpunkt: Wetterprognose (Open-Meteo, ICON-CH1, ICON-CH2, DWD ICON, je 3 Tage zurück). Plätze im selben Gitterpunkt (zwei Dezimalen) teilen sich den Call. Pro zugeordneter Station: gemessener Wind und Regen (SwissMetNet). **Stand 18.10.2026:** SwissMetNet fehlt noch. Der Regen der vergangenen Tage kommt aus `past_days` von Open-Meteo.
   6. Pro Gewässer: Abfluss, Wassertemperatur und Trübung der zugeordneten BAFU-Stationen.
   7. Rohdaten als JSON in Blob Storage ablegen (`forecast-raw/{date}/{runId}/{source}/{key}.json`).
-  8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert). Das Wetter pro Stunde in `SiteWeatherOutlook` ersetzen.
+  8. Datenstufe und Index pro Platz und Tag berechnen. `DailyForecast` und `WaterBodyConditions` schreiben (Upsert). Das Wetter pro Stunde in `SiteWeatherOutlook` ersetzen. Der Lauf speichert nach je 20 Plätzen. Ein einziges Speichern am Ende hielt SQL Basic minutenlang auf 100 % DTU (23.10.2026), die Seiten wurden langsam.
   9. Den Median des Index pro Gewässer für heute schreiben (`WaterBodyDailyIndex`, Upsert, siehe «Verlauf»).
-  10. Output Cache der öffentlichen Seiten invalidieren (Tag `forecast`), sobald es ihn gibt (geplant, `architecture.md`, «Caching»).
+  10. Output Cache der öffentlichen Seiten leeren. Das macht die Fassade nach jedem Command (`architecture.md`, «Caching»).
   11. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
   Stoppt der Host während eines Laufs (Neustart, Deployment), bricht der Lauf sofort ab und gilt als `Failed`. Die übrigen Plätze behalten die Werte des letzten Laufs. Ein abgebrochener Call ist kein Teilerfolg (Fehler vom 19.10.2026: Nach einem Neustart scheiterten 357 Calls in 1 ms, und der Lauf überschrieb gute Werte mit leeren).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.
@@ -247,7 +247,7 @@ Ein kleiner zweiter Job holt den Abfluss öfter als der Prognose-Lauf. Er ruft n
 - **Zeitplan:** beim Start der Web-App und danach alle 30 Minuten.
 - **Lock:** `locks/discharge`. Hält ein anderer Lauf den Lock, endet der zweite sofort.
 - **Ein Call:** existenz.ch `hydro/daterange` mit allen Stationen der Flussplätze und `parameters=flow,temperature` (rund 15 Stationen). `startdate` ist ein UTC-Tag. Der Call holt ab der letzten gespeicherten Stunde, mindestens die letzten 4 Stunden. Eine neue Station holt 30 Tage nach.
-- **Ablauf:** Stundenmittel schreiben (Upsert, die laufende Stunde mit den Werten bis jetzt), Stunden älter als 30 Tage löschen, pro Station den neuesten Wert mit Wert vor 3 h, Median der 30 Tage und, wo gemessen, die neueste Wassertemperatur schreiben.
+- **Ablauf:** Stundenmittel schreiben (Upsert, die laufende Stunde mit den Werten bis jetzt, unveränderte Stunden bleiben unberührt), Stunden älter als 30 Tage löschen, pro Station den neuesten Wert mit Wert vor 3 h, Median der 30 Tage und, wo gemessen, die neueste Wassertemperatur schreiben.
 - **Rohdaten:** `forecast-raw/discharge/{date}/{HHmm}/hydro/flow-temperature.json`.
 - **Ausfall:** Scheitert der Call, bleiben die letzten Werte. Die Kachel zeigt sie mit Uhrzeit und nach 2 h als veraltet.
 

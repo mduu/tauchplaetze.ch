@@ -2,6 +2,7 @@
 @page "/en/dive-sites/{Slug}"
 @page "/fr/sites-de-plongee/{Slug}"
 @page "/it/siti-di-immersione/{Slug}"
+@attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(PolicyName = Tauchplaetze.Web.CrossCutting.Caching.PublicPageCache.Policy)]
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.DiveSites
 @using Tauchplaetze.Core.Features.DiveSites.Queries
@@ -11,6 +12,7 @@
 @using Tauchplaetze.Core.Features.Reports
 @using Tauchplaetze.Core.Features.Reports.Queries
 @using Tauchplaetze.Web.Features.Reports
+@using Tauchplaetze.Web.CrossCutting.Caching
 @inject IQueryHandler<GetDiveSiteQuery, DiveSiteLookup> DiveSites
 @inject IQueryHandler<GetSiteForecastQuery, SiteForecast> Forecasts
 @inject IQueryHandler<GetSiteDischargeQuery, SiteDischarge?> Discharges
@@ -216,6 +218,11 @@
             case DiveSiteLookup.Found found:
                 forecast = await Forecasts.Handle(new GetSiteForecastQuery(found.Site.Id));
                 discharge = await Discharges.Handle(new GetSiteDischargeQuery(found.Site.Id));
+                if (discharge is not null)
+                {
+                    PublicPageCache.Tag(HttpContext, PublicPageCache.DischargePages);
+                }
+
                 history = await IndexHistory.Handle(new GetSiteIndexHistoryQuery(found.Site.Id));
                 reports = await SiteReportsQuery.Handle(new GetSiteReportsQuery(found.Site.Id, HttpContext is null ? null : AccountCookie.UserId(HttpContext.User)));
                 break;

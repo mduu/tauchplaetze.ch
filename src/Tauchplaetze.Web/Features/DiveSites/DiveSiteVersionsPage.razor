@@ -2,6 +2,7 @@
 @page "/en/dive-sites/{Slug}/versions"
 @page "/fr/sites-de-plongee/{Slug}/versions"
 @page "/it/siti-di-immersione/{Slug}/versioni"
+@attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(PolicyName = Tauchplaetze.Web.CrossCutting.Caching.PublicPageCache.Policy)]
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.DiveSites.Queries
 @using Tauchplaetze.Core.Features.Editorial

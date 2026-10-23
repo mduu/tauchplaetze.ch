@@ -200,13 +200,17 @@ Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, ko
 
 ## Caching
 
-Stand 21.10.2026: Es gibt noch keinen Output Cache. Die Seiten lesen bei jeder Anfrage die Datenbank (SQL Basic). Die Regeln unten gelten, sobald er kommt.
+Stand 23.10.2026 (Entscheid Marc): Output Cache für die öffentlichen Seiten in Betrieb. Anlass: Ein Scraper holte am 23.10.2026 rund 400 Seiten in 3 Minuten, SQL Basic (5 DTU) lief voll, Antworten bis 31 s, dazu 500er. Ein Upgrade der Datenbank kommt nicht in Frage (Kosten).
 
-- **Output Cache** für öffentliche Seiten: Standard 15 Minuten. Tags `forecast`, `site:{id}`, `water:{id}`. Ausgenommen sind Seiten mit Formular (Antiforgery-Token, Timestamp pro Aufruf): «Über» mit dem Kontaktformular und die Konto-Seiten. Die Startseite liest Ort und Umkreis aus dem Cookie `tp_area`: Ihr Output Cache variiert nach diesem Cookie (`VaryByCookie`), sonst wird sie nicht gecacht. Sonst sähe ein Besucher die Rangliste eines anderen Orts.
-- Der Prognose-Lauf invalidiert `forecast`. Eine Speicherung im CMS invalidiert `site:{id}` und `water:{id}`.
-- Variation nach Kultur und Query-Parametern (Tag, Umkreis).
+- **Seiten im Cache** (`[OutputCache(PolicyName = PublicPageCache.Policy)]`): Startseite, Verzeichnis, Platz, Versionen eines Platzes, Gewässer, Gewässerseite. Nicht im Cache: Seiten mit Formular (POST) wie «Über» und die Konto-Seiten, Bearbeiten, Melden, Admin.
+- **Nur ohne Anmeldung.** Angemeldete Konten sehen immer die frische Seite (Standard des Output Cache).
+- **Dauer:** `OutputCache:Minutes` (Standard 60), nie über Mitternacht (Schweizer Zeit) hinaus. Sonst stimmen «heute», die Linie «jetzt» im Wetter und das Alter des Abflusses nicht mehr. 0 schaltet den Cache aus (Tests).
+- **Invalidieren:** Jeder Command leert alle Seiten (Tag `public`), ausser Commands ohne Wirkung auf öffentliche Seiten (Anmeldung, Mail-Queue, Upload ohne Freigabe, Übersetzung im Editor). Die Liste steht in `CommandCacheEviction`. Ein neuer Command leert so im Zweifel zu viel, nie zu wenig. Der Abfluss-Job leert nur Seiten mit Abfluss (Tag `discharge`). Feinere Tags pro Platz (`site:{id}`) lohnen sich nicht: Änderungen sind selten.
+- **Variation:** Pfad (enthält die Sprache), alle Query-Parameter, das Cookie `tp_area` der Startseite, Enhanced Navigation von Blazor.
+- **Antiforgery-Cookie:** Blazor setzt es bei jeder Seite. Eine Antwort mit Cookie speichert der Output Cache nicht, Bots ohne Cookies füllten ihn so nie. Auf den Seiten im Cache entfernt `PublicPageCache` das Cookie. Diese Seiten haben kein Formular mit POST. Ein anderes Cookie (z.B. `tp_area` nach einer Wahl) verhindert das Speichern weiterhin.
+- **Mehrere Anfragen auf dieselbe Seite** ohne Eintrag im Cache rendern nur einmal (Locking des Output Cache).
+- Speicher: höchstens 100 MB (Standard), rund 1700 Seiten zu etwa 50 KB.
 - Bilder: lange Cache-Dauer (`immutable`), Dateiname enthält die Version. Cloudflare davor ist ein späterer Ausbau.
-- Nebeneffekt: Die Datenbank bekommt wenig Anfragen.
 
 ## Security-Header
 

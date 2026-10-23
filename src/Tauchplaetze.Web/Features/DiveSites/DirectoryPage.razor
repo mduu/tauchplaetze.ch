@@ -2,6 +2,7 @@
 @page "/en/dive-sites"
 @page "/fr/sites-de-plongee"
 @page "/it/siti-di-immersione"
+@attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(PolicyName = Tauchplaetze.Web.CrossCutting.Caching.PublicPageCache.Policy)]
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.DiveSites.Queries
 @inject IQueryHandler<FindDiveSitesQuery, FoundDiveSites> Finder

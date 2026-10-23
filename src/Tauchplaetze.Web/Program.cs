@@ -2,6 +2,7 @@ using MudBlazor.Services;
 using Tauchplaetze.Core;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Web.Components;
+using Tauchplaetze.Web.CrossCutting.Caching;
 using Tauchplaetze.Web.CrossCutting.Database;
 using Tauchplaetze.Web.CrossCutting.Health;
 using Tauchplaetze.Web.CrossCutting.Hosting;
@@ -19,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.AddTauchplaetzeCore();
+builder.Services.EvictPublicPagesAfterCommands();
 
 builder.Services.AddPublicLocalization();
 builder.Services.AddAccountCookie();
@@ -33,6 +35,7 @@ builder.Services.AddHostedService<MailQueueWorker>();
 builder.Services.AddHostedService<DeadLetterMonitorWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));
 builder.Services.AddRateLimits(builder.Configuration);
+builder.Services.AddPublicPageCache(builder.Configuration);
 builder.Services.AddSecurityHeaders();
 builder.Services.AddHostRedirects(builder.Configuration);
 ReadinessCheck.Register(builder.Services);
@@ -60,6 +63,7 @@ app.UseRequestLocalization();
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseAuthorization();
 app.UseRateLimiter();
+app.UseOutputCache();
 app.UseAntiforgery();
 
 app.MapStaticAssets();

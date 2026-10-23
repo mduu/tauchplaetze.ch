@@ -1,4 +1,5 @@
 @page "/{Lang}"
+@attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(PolicyName = Tauchplaetze.Web.CrossCutting.Caching.PublicPageCache.Policy)]
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.Forecasts
 @using Tauchplaetze.Core.Features.Forecasts.Queries

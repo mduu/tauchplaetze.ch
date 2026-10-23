@@ -55,7 +55,7 @@ Stand 21.10.2026: noch nicht umgesetzt.
 
 ## Performance
 
-- Static SSR. Ein Output Cache ist geplant (`architecture.md`, «Caching»), Ziel: Antwortzeit unter 200 ms aus dem Cache.
+- Static SSR mit Output Cache (`architecture.md`, «Caching»), Ziel: Antwortzeit unter 200 ms aus dem Cache. Ein Crawler mit mehr als 60 Seiten pro Minute bekommt 429 mit `Retry-After` (`infrastructure.md`, «Rate Limit Seiten»).
 - Bilder responsiv (`srcset`, WebP), `loading="lazy"` ausser beim Hero.
 - Schriften selbst gehostet, `font-display: swap`.
 - Ziel: Core Web Vitals im grünen Bereich auf dem Handy.

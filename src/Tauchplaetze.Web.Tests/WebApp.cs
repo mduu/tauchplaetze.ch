@@ -135,6 +135,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
             ["Contact:MessagesPerHour"] = "1000",
             ["Accounts:RateLimit:SignInPerHour"] = "1000",
             ["Accounts:RateLimit:FormsPerHour"] = "1000",
+            ["OutputCache:Minutes"] = "0",
+            ["Pages:RateLimit:PerMinute"] = "0",
         }));
         builder.ConfigureTestServices(services =>
         {
