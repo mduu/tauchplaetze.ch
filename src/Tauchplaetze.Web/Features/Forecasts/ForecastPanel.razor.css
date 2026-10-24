@@ -179,7 +179,8 @@
 }
 
 .days li {
-    padding: 12px 8px;
+    min-width: 0;
+    padding: 12px 6px;
     border-radius: var(--radius-tile-sm);
     background: var(--color-bg);
     text-align: center;
@@ -214,12 +215,17 @@
 .day-word {
     margin-top: 8px;
     font-size: 12px;
+    line-height: 1.3;
     color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+    hyphens: auto;
 }
 
 .day-discharge {
     margin-top: 4px;
     font-size: 11px;
+    overflow-wrap: anywhere;
+    hyphens: auto;
     font-family: var(--font-mono);
 }
 
@@ -263,4 +269,19 @@
 [data-current="Strong"] .current-arrow,
 [data-current="Strong"] .stat-value {
     color: var(--color-signal);
+}
+
+@media (max-width: 430px) {
+    .days ol {
+        gap: 5px;
+    }
+
+    .day-index {
+        font-size: 22px;
+    }
+
+    .day-word,
+    .day-discharge {
+        font-size: 11px;
+    }
 }

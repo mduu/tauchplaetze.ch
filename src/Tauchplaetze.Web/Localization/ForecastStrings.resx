@@ -183,4 +183,16 @@
   <data name="Start_Area_Locate_Error" xml:space="preserve"><value>Der Standort ist nicht verfügbar. Wähle einen Ort aus der Liste.</value></data>
   <data name="Start_MountainLakes" xml:space="preserve"><value>Bergseen ab {0} m ({1})</value></data>
   <data name="Start_MountainLakes_Note" xml:space="preserve"><value>Meist ein geplanter Ausflug, darum nicht in der Rangliste.</value></data>
+  <data name="Reason_CalmLake_Short" xml:space="preserve"><value>ruhig</value></data>
+  <data name="Reason_Windy_Short" xml:space="preserve"><value>windig</value></data>
+  <data name="Reason_ClearWater_Short" xml:space="preserve"><value>klar</value></data>
+  <data name="Reason_TurbidWater_Short" xml:space="preserve"><value>trüb</value></data>
+  <data name="Reason_TurbidAfterRain_Short" xml:space="preserve"><value>trüb (Regen)</value></data>
+  <data name="Reason_ClearBelowThermocline_Short" xml:space="preserve"><value>unten klarer</value></data>
+  <data name="Reason_MixedLake_Short" xml:space="preserve"><value>durchmischt</value></data>
+  <data name="Reason_AlgaeBloom_Short" xml:space="preserve"><value>Algenblüte</value></data>
+  <data name="Reason_ClarityUnknown_Short" xml:space="preserve"><value>Sicht fehlt</value></data>
+  <data name="Reason_ClarityStale_Short" xml:space="preserve"><value>Satellit alt</value></data>
+  <data name="Reason_VisibilityLimitsIndex_Short" xml:space="preserve"><value>Sicht begrenzt</value></data>
+  <data name="Reason_StrongCurrent_Short" xml:space="preserve"><value>viel Strömung</value></data>
 </root>

@@ -183,4 +183,16 @@
   <data name="Start_Area_Locate_Error" xml:space="preserve"><value>La posizione non è disponibile. Scegli un luogo dalla lista.</value></data>
   <data name="Start_MountainLakes" xml:space="preserve"><value>Laghi di montagna da {0} m ({1})</value></data>
   <data name="Start_MountainLakes_Note" xml:space="preserve"><value>Di solito una gita pianificata, quindi fuori dalla classifica.</value></data>
+  <data name="Reason_CalmLake_Short" xml:space="preserve"><value>calmo</value></data>
+  <data name="Reason_Windy_Short" xml:space="preserve"><value>ventoso</value></data>
+  <data name="Reason_ClearWater_Short" xml:space="preserve"><value>limpido</value></data>
+  <data name="Reason_TurbidWater_Short" xml:space="preserve"><value>torbido</value></data>
+  <data name="Reason_TurbidAfterRain_Short" xml:space="preserve"><value>dopo pioggia</value></data>
+  <data name="Reason_ClearBelowThermocline_Short" xml:space="preserve"><value>limpido sotto</value></data>
+  <data name="Reason_MixedLake_Short" xml:space="preserve"><value>rimescolato</value></data>
+  <data name="Reason_AlgaeBloom_Short" xml:space="preserve"><value>alghe</value></data>
+  <data name="Reason_ClarityUnknown_Short" xml:space="preserve"><value>visib. ignota</value></data>
+  <data name="Reason_ClarityStale_Short" xml:space="preserve"><value>satell. datato</value></data>
+  <data name="Reason_VisibilityLimitsIndex_Short" xml:space="preserve"><value>visib. scarsa</value></data>
+  <data name="Reason_StrongCurrent_Short" xml:space="preserve"><value>corrente forte</value></data>
 </root>

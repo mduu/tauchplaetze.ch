@@ -110,7 +110,7 @@
                     {
                         <div class="day-index">–</div>
                     }
-                    <div class="day-word">@DayWord(day)</div>
+                    <div class="day-word" title="@DayTitle(day)">@DayWord(day)</div>
                     @if (Discharge?.Forecast?.Days.FirstOrDefault(d => d.Date == day.Date) is { Level: { } dischargeLevel })
                     {
                         <div class="day-discharge" data-discharge="@dischargeLevel">@L["Day_Discharge", L[$"Discharge_{dischargeLevel}"]]</div>
@@ -245,9 +245,13 @@
         _ => L["Visibility_NoSatellite"],
     };
 
+    /// <summary>Die Kurzform passt auch schmal in die Kachel. Die volle Begründung steht im <c>title</c>.</summary>
     private string DayWord(ForecastDay day) => day.IsOutlook
         ? L["Day_Outlook"]
-        : day.Reasons.Count > 0 ? L[$"Reason_{day.Reasons[0]}"] : "";
+        : day.Reasons.Count > 0 ? L[$"Reason_{day.Reasons[0]}_Short"] : "";
+
+    private string? DayTitle(ForecastDay day) =>
+        !day.IsOutlook && day.Reasons.Count > 0 ? L[$"Reason_{day.Reasons[0]}"].Value : null;
 
     private static string BarWidth(decimal index) => FormattableString.Invariant($"{Math.Clamp(index * 10, 10, 100):0}%");
 }

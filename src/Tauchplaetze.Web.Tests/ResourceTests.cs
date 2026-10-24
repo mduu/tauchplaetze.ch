@@ -53,6 +53,32 @@ public class ResourceTests
         Assert.True(findings.Count == 0, "Leer oder deutsch geblieben (i18n.md):\n  " + string.Join("\n  ", findings));
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("en")]
+    [InlineData("fr")]
+    [InlineData("it")]
+    public void Jede_Kurzform_einer_Begruendung_passt_in_eine_schmale_Tageskachel(string? language)
+    {
+        // Arrange
+        var entries = Entries("ForecastStrings", language);
+
+        // Act
+        var tooLong = entries
+            .Where(e => e.Key.StartsWith("Reason_", StringComparison.Ordinal) && e.Key.EndsWith("_Short", StringComparison.Ordinal))
+            .Where(e => e.Value.Length > 14)
+            .Select(e => $"{e.Key} = «{e.Value}» ({e.Value.Length})")
+            .ToList();
+        var missing = entries.Keys
+            .Where(k => k.StartsWith("Reason_", StringComparison.Ordinal) && !k.EndsWith("_Short", StringComparison.Ordinal))
+            .Where(k => !entries.ContainsKey($"{k}_Short"))
+            .ToList();
+
+        // Assert
+        Assert.True(tooLong.Count == 0, "Länger als 14 Zeichen:\n  " + string.Join("\n  ", tooLong));
+        Assert.True(missing.Count == 0, "Ohne Kurzform: " + string.Join(", ", missing));
+    }
+
     private static Dictionary<string, string> Entries(string resourceSet, string? language)
     {
         var file = Path.Combine(LocalizationFolder(), language is null ? $"{resourceSet}.resx" : $"{resourceSet}.{language}.resx");

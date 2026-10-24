@@ -183,4 +183,16 @@
   <data name="Start_Area_Locate_Error" xml:space="preserve"><value>La position n'est pas disponible. Choisis un lieu dans la liste.</value></data>
   <data name="Start_MountainLakes" xml:space="preserve"><value>Lacs de montagne dès {0} m ({1})</value></data>
   <data name="Start_MountainLakes_Note" xml:space="preserve"><value>Le plus souvent une sortie planifiée, donc hors du classement.</value></data>
+  <data name="Reason_CalmLake_Short" xml:space="preserve"><value>calme</value></data>
+  <data name="Reason_Windy_Short" xml:space="preserve"><value>venteux</value></data>
+  <data name="Reason_ClearWater_Short" xml:space="preserve"><value>clair</value></data>
+  <data name="Reason_TurbidWater_Short" xml:space="preserve"><value>trouble</value></data>
+  <data name="Reason_TurbidAfterRain_Short" xml:space="preserve"><value>pluie, trouble</value></data>
+  <data name="Reason_ClearBelowThermocline_Short" xml:space="preserve"><value>clair en bas</value></data>
+  <data name="Reason_MixedLake_Short" xml:space="preserve"><value>brassé</value></data>
+  <data name="Reason_AlgaeBloom_Short" xml:space="preserve"><value>algues</value></data>
+  <data name="Reason_ClarityUnknown_Short" xml:space="preserve"><value>pas de visib.</value></data>
+  <data name="Reason_ClarityStale_Short" xml:space="preserve"><value>image ancienne</value></data>
+  <data name="Reason_VisibilityLimitsIndex_Short" xml:space="preserve"><value>visib. limitée</value></data>
+  <data name="Reason_StrongCurrent_Short" xml:space="preserve"><value>fort courant</value></data>
 </root>
