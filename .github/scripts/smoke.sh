@@ -38,7 +38,7 @@ else
 fi
 
 if fetch /sitemap-de.xml; then
-  site=$(grep -o '<loc>[^<]*/de/tauchplaetze/[^<]*</loc>' <<<"$body" | head -1 | sed -E 's#<loc>https?://[^/]+##; s#</loc>##')
+  site=$(grep -m1 -o '<loc>[^<]*/de/tauchplaetze/[^<]*</loc>' <<<"$body" | sed -E 's#<loc>https?://[^/]+##; s#</loc>##')
   if [ -z "$site" ]; then
     fail "/sitemap-de.xml enthält keine Platzseite"
   elif fetch "$site"; then
