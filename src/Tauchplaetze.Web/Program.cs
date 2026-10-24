@@ -61,6 +61,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHostRedirects();
+app.UseHeadAsGet();
+app.UseRouting();
 app.UseSecurityHeaders();
 app.UseResponseCompression();
 app.UseHttpsRedirection();

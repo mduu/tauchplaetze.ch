@@ -7,7 +7,7 @@
     </a>
     @if (Count > 0)
     {
-        <a class="report-count" href="#reports" data-report-count>@(Count == 1 ? L["Reports_CountOne"] : L["Reports_Count", Count])</a>
+        <a class="report-count" href="@(PublicRoutes.DiveSite(Language, Slug))#reports" data-report-count>@(Count == 1 ? L["Reports_CountOne"] : L["Reports_Count", Count])</a>
     }
 </div>
 

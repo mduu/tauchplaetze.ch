@@ -37,7 +37,8 @@ public class ReportPageTests : IClassFixture<WebApp>
         using var browser = app.Browser();
 
         // Act
-        var german = VisibleText.Of(await browser.GetStringAsync($"/de/tauchplaetze/{Slug}", TestContext.Current.CancellationToken));
+        var html = await browser.GetStringAsync($"/de/tauchplaetze/{Slug}", TestContext.Current.CancellationToken);
+        var german = VisibleText.Of(html);
         var french = VisibleText.Of(await browser.GetStringAsync($"/fr/sites-de-plongee/{Slug}", TestContext.Current.CancellationToken));
 
         // Assert
@@ -45,6 +46,7 @@ public class ReportPageTests : IClassFixture<WebApp>
         Assert.Contains("«Unter 15 m sehr klar»", german);
         Assert.Contains("19.10.2026 Sicht 4 m Taucher:in", german);
         Assert.Contains("2 Meldungen", german);
+        Assert.Contains($"href=\"/de/tauchplaetze/{Slug}#reports\"", html);
         Assert.Contains("Signaler une plongée", french);
     }
 
