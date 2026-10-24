@@ -1,23 +1,13 @@
+using Tauchplaetze.Core.CrossCutting.Hosting;
+
 namespace Tauchplaetze.Web.CrossCutting.Localization;
 
 /// <summary>Übersetzte Pfadsegmente der öffentlichen Seiten (`i18n.md`, «URLs und Kultur»).</summary>
 internal static class PublicRoutes
 {
-    public static readonly IReadOnlyDictionary<string, string> DiveSites = new Dictionary<string, string>
-    {
-        ["de"] = "tauchplaetze",
-        ["en"] = "dive-sites",
-        ["fr"] = "sites-de-plongee",
-        ["it"] = "siti-di-immersione",
-    };
+    public static readonly IReadOnlyDictionary<string, string> DiveSites = PublicPaths.DiveSites;
 
-    public static readonly IReadOnlyDictionary<string, string> WaterBodies = new Dictionary<string, string>
-    {
-        ["de"] = "gewaesser",
-        ["en"] = "waters",
-        ["fr"] = "eaux",
-        ["it"] = "acque",
-    };
+    public static readonly IReadOnlyDictionary<string, string> WaterBodies = PublicPaths.WaterBodies;
 
     public static readonly IReadOnlyDictionary<string, string> Forecast = new Dictionary<string, string>
     {

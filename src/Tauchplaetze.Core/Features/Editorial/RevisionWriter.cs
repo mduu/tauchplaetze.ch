@@ -3,12 +3,13 @@ using NetTopologySuite.Geometries;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.IndexNow;
 using Tauchplaetze.Core.Features.Media;
 
 namespace Tauchplaetze.Core.Features.Editorial;
 
 /// <summary>Schreibt Versionen: zuerst den Inhalt in Blob Storage, dann die Row (ADR-008). Speichert nicht selbst. Das tut der Command.</summary>
-internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore store, MediaPublisher media, TimeProvider time)
+internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore store, MediaPublisher media, TimeProvider time, IndexNowOutbox indexNow)
 {
     /// <summary>Ein neuer Platz als Entwurf, mit leerem Inhalt in den Tabellen bis zur Freigabe. <paramref name="id"/> nur beim Import eines Inhaltspakets.</summary>
     public DiveSite NewDraft(DiveSiteContent content, string editorId, Guid? id = null)
@@ -71,6 +72,7 @@ internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore st
         content = await media.WithoutDeleted(content, ct);
         var now = time.GetUtcNow();
         var oldSlug = site.Status == DiveSiteStatus.Draft ? null : site.Slug;
+        int? oldWaterBodyId = site.Status == DiveSiteStatus.Draft ? null : site.WaterBodyId;
 
         DiveSiteContentMapping.ApplyTo(site, content);
         site.ContentLevel = ContentLevelRule.For(content, content.HeroMediaId);
@@ -84,6 +86,7 @@ internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore st
         revision.ReviewedAt = now;
 
         await UpdateRedirects(site, oldSlug, ct);
+        indexNow.DiveSiteChanged(site.Slug, oldSlug, site.WaterBodyId, oldWaterBodyId);
     }
 
     public async Task<DiveSiteContent> Load(DiveSiteRevision revision, CancellationToken ct) =>

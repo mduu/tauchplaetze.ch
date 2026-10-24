@@ -12,6 +12,7 @@ using Tauchplaetze.Core.Features.Content;
 using Tauchplaetze.Core.Features.Contact;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Hydro;
+using Tauchplaetze.Core.Features.IndexNow;
 using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Core.Features.Translations;
 
@@ -53,6 +54,10 @@ public static class CoreRegistration
         builder.Services.Configure<NotificationOptions>(builder.Configuration.GetSection(NotificationOptions.Section));
         builder.Services.Configure<ContentOptions>(builder.Configuration.GetSection(ContentOptions.Section));
         builder.Services.Configure<TranslationOptions>(builder.Configuration.GetSection(TranslationOptions.Section));
+        builder.Services.AddOptions<IndexNowOptions>()
+            .Bind(builder.Configuration.GetSection(IndexNowOptions.Section))
+            .Validate(o => o.HasValidKey, "IndexNow:Key must have 32-128 characters of letters, digits and '-'.")
+            .ValidateOnStart();
         BafuForecastOptions.Register(builder.Services, builder.Configuration.GetSection(BafuForecastOptions.Section));
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddHandlers(typeof(CoreRegistration).Assembly);

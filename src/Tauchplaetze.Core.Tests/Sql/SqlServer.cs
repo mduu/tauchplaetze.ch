@@ -24,6 +24,7 @@ using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Media;
 using Tauchplaetze.Core.Features.Operations.Commands;
 using Tauchplaetze.Core.Features.Translations;
+using Tauchplaetze.Core.Features.IndexNow;
 using Testcontainers.MsSql;
 
 namespace Tauchplaetze.Core.Tests.Sql;
@@ -36,6 +37,8 @@ public sealed class SqlServer : IAsyncLifetime
     public const string Image = "mcr.microsoft.com/mssql/server:2022-latest";
 
     private static readonly string[] SeededTables = ["AspNetRoles", "__EFMigrationsHistory"];
+
+    internal const string IndexNowKey = "0123456789abcdef0123456789abcdef";
 
     private MsSqlContainer? container;
 
@@ -88,6 +91,8 @@ public sealed class SqlServer : IAsyncLifetime
             ["Hydro:Forecast:Username"] = "test-user",
             ["Hydro:Forecast:Password"] = "test-password",
             ["Translation:ApiKey"] = "test-key",
+            ["IndexNow:Enabled"] = "true",
+            ["IndexNow:Key"] = IndexNowKey,
         });
         builder.AddTauchplaetzeCore();
         builder.Logging.AddProvider(Logs);
@@ -164,6 +169,9 @@ public sealed class SqlServer : IAsyncLifetime
         Sources.Failing = null;
         Sources.Overrides.Clear();
         Sources.Requests.Clear();
+        Sources.Posts.Clear();
+        Sources.Statuses.Clear();
+        Services.GetRequiredService<IndexNowOutbox>().Take();
         Sources.OnRequest = null;
         Translator.Reset();
         Time.Now = FixedTime.SpikeDay;

@@ -68,6 +68,9 @@ internal sealed class FakeSources : HttpMessageHandler
 
     public ConcurrentBag<string> Requests { get; } = [];
 
+    /// <summary>Inhalt gesendeter Anfragen mit Body, etwa die Meldungen an IndexNow.</summary>
+    public ConcurrentBag<(string Url, string Body)> Posts { get; } = [];
+
     public string? Failing { get; set; }
 
     /// <summary>Läuft bei jeder Anfrage, etwa um einen Lauf mitten im Abruf abzubrechen.</summary>
@@ -79,30 +82,39 @@ internal sealed class FakeSources : HttpMessageHandler
     /// <summary>Antworten, die für einen Teil der URL statt der Datei aus `TestData` gelten.</summary>
     public ConcurrentDictionary<string, string> Overrides { get; } = new();
 
-    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         var url = request.RequestUri!.ToString();
         Requests.Add(url);
-        OnRequest?.Invoke(url);
+        if (request.Content is not null)
+        {
+            Posts.Add((url, await request.Content.ReadAsStringAsync(cancellationToken)));
+        }
 
+        OnRequest?.Invoke(url);
+        return Answer(url);
+    }
+
+    private HttpResponseMessage Answer(string url)
+    {
         if (Statuses.FirstOrDefault(o => url.Contains(o.Key, StringComparison.Ordinal)) is { Key: not null, Value: var status })
         {
-            return Task.FromResult(new HttpResponseMessage(status) { Content = new StringContent("unavailable") });
+            return new HttpResponseMessage(status) { Content = new StringContent("unavailable") };
         }
 
         if (Overrides.FirstOrDefault(o => url.Contains(o.Key, StringComparison.Ordinal)) is { Value: { } body })
         {
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(body) });
+            return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(body) };
         }
 
         var route = Routes.FirstOrDefault(r => url.Contains(r.UrlPart, StringComparison.Ordinal));
         if (route.File is null || (Failing is { } failing && url.Contains(failing, StringComparison.Ordinal)))
         {
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound) { Content = new StringContent("not found") });
+            return new HttpResponseMessage(HttpStatusCode.NotFound) { Content = new StringContent("not found") };
         }
 
         var answer = TestData.Read(route.Source, route.File);
-        return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ForEachPoint(url, answer)) });
+        return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ForEachPoint(url, answer)) };
     }
 
     /// <summary>Open-Meteo antwortet bei mehreren Punkten mit einer Liste: dieselbe Antwort pro Punkt.</summary>
