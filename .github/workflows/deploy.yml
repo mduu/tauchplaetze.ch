@@ -114,6 +114,10 @@ jobs:
             echo "::warning::/health/ready answers HTTP $ready (no recent forecast run or database problem)"
           fi
 
+      - name: Rauchtest
+        if: steps.app.outputs.exists == 'true'
+        run: .github/scripts/smoke.sh
+
       - name: Logout
         if: always()
         run: az logout

@@ -23,6 +23,8 @@ concurrency:
 
 env:
   RESOURCE_GROUP: rg-tauchplaetze-prod
+  APP_NAME: app-tauchplaetze-prod
+  APP_URL: ${{ vars.PUBLIC_BASE_URL || 'https://app-tauchplaetze-prod.azurewebsites.net' }}
   # Secrets statt Variablen: Die Logs eines öffentlichen Repositorys sind öffentlich, Variablen maskiert GitHub nicht.
   SQL_ADMIN_LOGIN: ${{ secrets.SQL_ADMIN_LOGIN }}
   SQL_ADMIN_OBJECT_ID: ${{ secrets.SQL_ADMIN_OBJECT_ID }}
@@ -83,6 +85,32 @@ jobs:
             --template-file deploy/main.bicep \
             --parameters deploy/main.bicepparam \
             --output none
+
+      # Neue App Settings lösen einen Neustart aus, der mitten im Umstellen starten kann (24.10.2026: Impressum ohne Anschrift,
+      # Platz ohne Text bis zum nächsten Neustart). Ein gezielter Neustart danach lädt alles sauber und leert den Output Cache.
+      - name: App neu starten
+        run: |
+          if az webapp show --name "$APP_NAME" --resource-group "$RESOURCE_GROUP" --query id -o tsv > /dev/null 2>&1; then
+            az webapp restart --name "$APP_NAME" --resource-group "$RESOURCE_GROUP"
+            echo "restarted=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Warten auf die App
+        if: env.restarted == 'true'
+        run: |
+          sleep 30
+          for i in $(seq 1 40); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$APP_URL/alive" || echo 000)
+            echo "/alive attempt $i: HTTP $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 15
+          done
+          echo "::error::App antwortet nach dem Neustart nicht (letzter HTTP $code)"
+          exit 1
+
+      - name: Rauchtest
+        if: env.restarted == 'true'
+        run: .github/scripts/smoke.sh
 
       - name: Logout
         if: always()
