@@ -20,7 +20,7 @@
 
 @if (water is not null)
 {
-    <PageTitle>@L["Seo_WaterTitle", water.Name] · @Shared["Brand"]</PageTitle>
+    <PageTitle>@SeoText.PageTitle(L["Seo_WaterTitle", water.Name], Shared["Brand"])</PageTitle>
     <HeadContent>
         <HreflangLinks Title="@L["Seo_WaterTitle", water.Name]" Description="@SeoText.WaterDescription(L, water.Name, sites.Count, sites.Max(s => s.DiveIndexToday))" Type="article" />
         <JsonLd Json="@StructuredData.WaterBody(Site.Value, Language, water, SeoText.WaterDescription(L, water.Name, sites.Count, sites.Max(s => s.DiveIndexToday)), Shared["Brand"])" />

@@ -13,7 +13,7 @@
 @inject IOptions<OperatorOptions> Operator
 @inject IQueryHandler<GetForecastRulesQuery, ForecastRulesSummary> ForecastRules
 
-<PageTitle>@L["About_Title"] · @Shared["Brand"]</PageTitle>
+<PageTitle>@SeoText.PageTitle(L["About_Title"], Shared["Brand"])</PageTitle>
 <HeadContent>
     <HreflangLinks Title="@L["About_Title"]" Description="@L["About_MetaDescription"]" />
 </HeadContent>

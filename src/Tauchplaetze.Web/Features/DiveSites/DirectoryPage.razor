@@ -9,7 +9,7 @@
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
 
-<PageTitle>@L["Directory_Title"] · @Shared["Brand"]</PageTitle>
+<PageTitle>@SeoText.PageTitle(L["Directory_Title"], Shared["Brand"])</PageTitle>
 <HeadContent>
     <HreflangLinks Title="@L["Directory_Title"]" Description="@L["Directory_MetaDescription"]" />
 </HeadContent>

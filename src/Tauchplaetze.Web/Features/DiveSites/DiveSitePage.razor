@@ -26,7 +26,7 @@
 @switch (lookup)
 {
     case DiveSiteLookup.Found { Site: var site }:
-        <PageTitle>@L["Seo_SiteTitle", site.Name, site.WaterBodyName] · @Shared["Brand"]</PageTitle>
+        <PageTitle>@SeoText.PageTitle(L["Seo_SiteTitle", site.Name, site.WaterBodyName], Shared["Brand"])</PageTitle>
         <HeadContent>
             <HreflangLinks Title="@L["Seo_SiteTitle", site.Name, site.WaterBodyName]" Description="@SeoText.SiteDescription(L, site, Today)" Type="article" Image="@OgImageOf(site)" />
             <JsonLd Json="@StructuredData.DiveSite(Site.Value, Language, site, SeoText.SiteDescription(L, site, Today), OgImageOf(site)?.Url, Shared["Brand"])" />

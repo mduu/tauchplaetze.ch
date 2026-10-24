@@ -14,6 +14,21 @@ internal static class SeoText
     /// <summary>Google kürzt längere Beschreibungen im Suchergebnis.</summary>
     public const int MaxDescription = 160;
 
+    /// <summary>Bing meldet längere Titel als Fehler, Google kürzt sie.</summary>
+    public const int MaxTitle = 65;
+
+    /// <summary>Titel mit « · {Marke}», solange er in <see cref="MaxTitle"/> passt. Sonst ohne Marke und nötigenfalls gekürzt.</summary>
+    public static string PageTitle(string title, string brand)
+    {
+        var withBrand = $"{title} · {brand}";
+        if (withBrand.Length <= MaxTitle)
+        {
+            return withBrand;
+        }
+
+        return title.Length <= MaxTitle ? title : title[..(MaxTitle - 1)].TrimEnd() + "…";
+    }
+
     /// <summary>Platz: Ort und Gewässer, dazu die Prognose von heute, falls es eine gibt.</summary>
     public static string SiteDescription(IStringLocalizer l, DiveSiteDetails site, ForecastDay? today)
     {
