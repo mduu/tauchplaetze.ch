@@ -56,6 +56,16 @@ Umgesetzt am 24.10.2026 (`StructuredData`, Komponente `JsonLd`), als `<script ty
 - `/robots.txt` (Endpoint der App, `RobotsTxt`): sperrt `/admin`, `/platform`, `/api`, die Konto-Seiten (`/{Lang}/account/`), «Neuer Platz», Bearbeiten, Versionen und «Tauchgang melden» in allen vier Sprachen sowie Query-Varianten (`/*?`). Am Schluss steht `Sitemap: {PublicSite:BaseUri}/sitemap.xml`.
 - Die Seiten der Versionen (`…/versionen`) haben `noindex` und stehen nicht in der Sitemap (Datenschutz, `cms.md`). Ebenso der Bearbeiten-Modus (`…/bearbeiten`) und «Neuen Platz vorschlagen» (`…/neu`), beide nur angemeldet.
 
+## IndexNow
+
+Umgesetzt am 24.10.2026 (Entscheid Marc).
+
+- **Wer:** IndexNow ist ein offenes Protokoll von Bing, Yandex, Seznam, Naver und Yep. Eine Meldung an `api.indexnow.org` geht an alle Teilnehmer. Google macht nicht mit, dort bleiben Sitemap und Search Console.
+- **Was:** nur Änderungen an öffentlichen Inhalten, keine Prognose. Gemeldet werden die Seite des Platzes und die Seite seines Gewässers in allen vier Sprachen. Bei einem geänderten Slug auch die alte Adresse (sie leitet mit 301 weiter), bei einem Wechsel des Gewässers auch das frühere Gewässer.
+- **Wann:** Freigabe einer Version (auch durch die Moderation direkt), Wiederherstellen, Archivieren und Zurückholen eines Platzes. Fotos gehen mit der Version online und sind damit abgedeckt.
+- **Wie:** Die Commands legen die Änderung in einen Sammelpuffer im Speicher (`IndexNowOutbox`). Der `IndexNowWorker` meldet höchstens alle 10 Minuten (`IndexNow:Interval`), ohne Doppel, bis 10 000 Adressen pro Aufruf. Bei 429 oder 5xx versucht er es in den nächsten Intervallen noch höchstens zweimal (`IndexNow:MaxAttempts` = 3), andere Fehler (400, 403, 422) loggt er nur. Eine Meldung blockiert nie eine Freigabe. Geht der Puffer bei einem Neustart verloren, findet die Suchmaschine die Seite über die Sitemap.
+- **Schlüssel:** `IndexNow:Key` (32–128 Zeichen aus Buchstaben, Ziffern und `-`), öffentlich unter `/{Key}.txt`. Ohne Schlüssel oder mit `IndexNow:Enabled = false` (lokal) meldet die App nichts und die Datei gibt 404.
+
 ## Performance
 
 - Static SSR mit Output Cache (`architecture.md`, «Caching»), Ziel: Antwortzeit unter 200 ms aus dem Cache. Ein Crawler mit mehr als 60 Seiten pro Minute bekommt 429 mit `Retry-After` (`infrastructure.md`, «Rate Limit Seiten»).

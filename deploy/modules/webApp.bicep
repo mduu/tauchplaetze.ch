@@ -69,6 +69,7 @@ var secretNames = [
   'Hydro--Forecast--Password'
   'Content--ExportKey'
   'Translation--ApiKey'
+  'IndexNow--Key'
 ]
 
 var secretSettings = toObject(secretNames, name => replace(name, '--', '__'), name => '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=${name})')
@@ -92,6 +93,8 @@ var settings = union(secretSettings, {
   // Nach einem Start fragt App Service zuerst die Startseite ab: Datenbank, EF und Rendering sind warm, bevor Besucher kommen.
   WEBSITE_WARMUP_PATH: '/de'
   Database__PrepareOnStartup: 'true'
+  // Meldet freigegebene Inhalte an Bing und die anderen Teilnehmer von IndexNow (seo.md). Der Schlüssel kommt aus dem Key Vault.
+  IndexNow__Enabled: 'true'
   Accounts__Admins__0__DisplayName: adminDisplayName
   // Selbstregistrierung offen (Entscheid Marc, 23.10.2026). Schutz: Honeypot, Zeitfalle, Rate Limit, Bestätigung per Mail.
   Accounts__RegistrationOpen: 'true'

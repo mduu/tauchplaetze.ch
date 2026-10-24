@@ -117,7 +117,10 @@ az keyvault secret set --vault-name $KV --name "Hydro--Forecast--Username"  --va
 az keyvault secret set --vault-name $KV --name "Hydro--Forecast--Password"  --value "<BAFU-Passwort>"
 az keyvault secret set --vault-name $KV --name "Content--ExportKey"         --value "$(openssl rand -base64 32)"
 az keyvault secret set --vault-name $KV --name "Translation--ApiKey"        --value "<Schlüssel der Claude API>"
+az keyvault secret set --vault-name $KV --name "IndexNow--Key"              --value "$(openssl rand -hex 16)"
 ```
+
+**IndexNow (24.10.2026):** Das Secret `IndexNow--Key` muss **vor** dem Infra-Deploy mit `IndexNow__Enabled` im Key Vault stehen. Sonst bleibt der Verweis unaufgelöst und die App startet nicht. Prüfen: `https://tauchplaetze.ch/<Schlüssel>.txt` liefert den Schlüssel.
 
 Die App Settings verweisen mit `@Microsoft.KeyVault(VaultName=…;SecretName=…)` auf diese Secrets, App Service löst sie auf. Fehlt ein Secret oder die Rolle aus Schritt 4, bleibt der Verweis stehen. Die App startet dann nicht und nennt im Log den Key (nie den Wert). Nach einer Änderung im Key Vault die App neu starten: `az webapp restart -g rg-tauchplaetze-prod -n app-tauchplaetze-prod`.
 
