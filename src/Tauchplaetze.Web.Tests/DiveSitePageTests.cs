@@ -454,7 +454,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("<meta property=\"og:image:alt\" content=\"Ein Hecht vor der Felswand\"", html);
         Assert.Contains("<meta property=\"og:locale\" content=\"fr_CH\"", html);
         Assert.Contains("<meta property=\"og:locale:alternate\" content=\"de_CH\"", html);
-        Assert.Contains("Site de plongée Platz mit Prognose, Herrliberg ZH, Zürichsee. Aujourd'hui : indice de plongée 8.4/10", html);
+        Assert.Contains($"Site de plongée Platz mit Prognose, Herrliberg ZH, Zürichsee. Aujourd'hui : indice de plongée {French(8.4m)}/10", html);
     }
 
     [Fact]
@@ -525,9 +525,12 @@ public class DiveSitePageTests : IClassFixture<WebApp>
 
         // Assert
         var description = System.Text.RegularExpressions.Regex.Match(html, "<meta name=\"description\" content=\"([^\"]*)\"").Groups[1].Value;
-        Assert.Contains("indice de plongée 8.4/10", description);
+        Assert.Contains($"indice de plongée {French(8.4m)}/10", description);
         Assert.True(description.Length <= 160, description);
     }
+
+    /// <summary>Das Dezimalzeichen von fr-CH hängt von ICU ab: Linux schreibt ein Komma, macOS einen Punkt.</summary>
+    private static string French(decimal value) => value.ToString("0.#", System.Globalization.CultureInfo.GetCultureInfo("fr-CH"));
 
     private static List<System.Text.Json.JsonElement> JsonLdGraph(string html)
     {
