@@ -8,40 +8,46 @@ internal record DayInputs(
     AlgaeLevel Algae,
     double? DischargeRatio,
     bool IsRiver,
-    KnownThermocline? Thermocline = null);
+    KnownThermocline? Thermocline = null,
+    bool DischargeIsCurrent = false);
 
-/// <summary>Die gespeicherte Sprungschicht eines Tages. Die Neuberechnung hat nur noch vier Punkte des Profils, nicht das ganze.</summary>
+/// <summary>Die gespeicherte Sprungschicht eines Tages, auch eine unplausible. Die Neuberechnung hat nur noch vier Punkte des Profils, nicht das ganze.</summary>
 internal record KnownThermocline(Thermocline? Value);
 
 /// <summary>Die Teilwerte 1 bis 10. Die Klarheit hat immer einen Wert (ohne Satellit vorsichtig), Wind, Zuflüsse und Schichtung sind <c>null</c> ohne Daten.</summary>
 internal record SubScores(double? Clarity, double? Wind, double? Inflow, double? Stratification);
 
-/// <summary>Index und Begründung eines Tages. <see cref="DiveIndex"/> ist <c>null</c> ohne Wind oder ohne Wasserdaten (Ausblick).</summary>
+/// <summary>
+/// Index und Begründung eines Tages. <see cref="DiveIndex"/> ist <c>null</c> ohne Wind oder ohne Wasserdaten (Ausblick).
+/// <see cref="StoredThermocline"/> wird gespeichert, auch wenn sie nicht plausibel ist («nicht bestimmt»).
+/// </summary>
 internal record DayResult(
     double? DiveIndex,
     SubScores Scores,
     Thermocline? Thermocline,
     double? VisibilityGoodBelow,
-    IReadOnlyList<ReasonCode> Reasons);
+    IReadOnlyList<ReasonCode> Reasons,
+    Thermocline? StoredThermocline = null);
 
-/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.6`, ADR-004).</summary>
+/// <summary>Der regelbasierte Tauch-Index (`forecast.md`, `rules-1.7`, ADR-004).</summary>
 internal static class DiveIndexCalculator
 {
     public static DayResult Calculate(DayInputs inputs, DiveIndexRules rules)
     {
-        var thermocline = inputs.Thermocline is { } known
-            ? known.Value?.Plausible(rules.ThermoclineMinDepth, rules.ThermoclineMinThickness)
+        var finding = inputs.Thermocline is { } known
+            ? ThermoclineFinding.Of(known.Value, rules.ThermoclineMinDepth, rules.ThermoclineMinThickness)
             : inputs.Profile is { } profile
-                ? ThermoclineDetector.Detect(profile.Profile, rules.ThermoclineGradient, rules.ThermoclineMinDepth, rules.ThermoclineMinThickness)
-                : null;
+                ? ThermoclineDetector.Find(profile.Profile, rules.ThermoclineGradient, rules.ThermoclineMinDepth, rules.ThermoclineMinThickness)
+                : ThermoclineFinding.Mixed;
+        var thermocline = finding.Layer;
         var clarity = ClarityScore(inputs, rules);
         var scores = new SubScores(
             clarity,
             inputs.Weather.WindBeaufort is { } bft ? DiveIndexRules.Interpolate(rules.Wind, bft) : null,
             InflowScore(inputs, rules),
-            StratificationScore(inputs, thermocline, clarity, rules));
+            StratificationScore(inputs, finding, clarity, rules));
 
-        var hasWaterData = inputs.Clarity.ShoreDepth is not null || inputs.Profile is not null;
+        var hasWaterData = inputs.Clarity.ShoreDepth is not null || inputs.Profile is not null || RiverHasDischarge(inputs);
         double? uncapped = scores.Wind is not null && hasWaterData ? Capped(WeightedMean(scores, rules), inputs, rules) : null;
         var capped = uncapped is { } value ? Math.Min(value, VisibilityCap(inputs.Clarity.Indicator, rules)) : (double?)null;
         var penalty = CurrentPenalty(inputs, rules);
@@ -49,7 +55,7 @@ internal static class DiveIndexCalculator
             ? Math.Round(Math.Min(beforePenalty, Math.Max(beforePenalty - penalty, rules.MinIndexAfterCurrentPenalty)), 1)
             : capped;
 
-        var reasons = Reasons(inputs, thermocline, rules);
+        var reasons = Reasons(inputs, finding, rules);
         if (capped < uncapped)
         {
             reasons = [ReasonCode.VisibilityLimitsIndex, .. reasons];
@@ -60,8 +66,15 @@ internal static class DiveIndexCalculator
             reasons = [ReasonCode.StrongCurrent, .. reasons];
         }
 
-        return new DayResult(index, scores, thermocline, thermocline?.Bottom, reasons);
+        return new DayResult(index, scores, thermocline, thermocline?.Bottom, reasons, finding.Stored);
     }
+
+    /// <summary>
+    /// Am Fluss reicht der Abfluss als Wasserdaten, wenn er für den Tag gilt: frisch gemessen oder vom BAFU vorhergesagt (`rules-1.7`).
+    /// Der heutige Messwert, an einem künftigen Tag weitergetragen, reicht nicht.
+    /// </summary>
+    private static bool RiverHasDischarge(DayInputs inputs) =>
+        inputs is { IsRiver: true, DischargeRatio: not null, DischargeIsCurrent: true };
 
     /// <remarks>Ohne gültigen Satellitenwert zählt die Klarheit vorsichtig, statt ihr Gewicht den anderen Teilwerten zu geben. Ein Fluss ohne Sichtwert ebenso.</remarks>
     private static double ClarityScore(DayInputs inputs, DiveIndexRules rules)
@@ -105,7 +118,7 @@ internal static class DiveIndexCalculator
         return present.Count > 0 ? present.Min() : null;
     }
 
-    private static double? StratificationScore(DayInputs inputs, Thermocline? thermocline, double clarity, DiveIndexRules rules)
+    private static double? StratificationScore(DayInputs inputs, ThermoclineFinding finding, double clarity, DiveIndexRules rules)
     {
         if (inputs.IsRiver || inputs.Profile is null)
         {
@@ -113,7 +126,7 @@ internal static class DiveIndexCalculator
         }
 
         double score;
-        if (thermocline is null)
+        if (finding.Layer is not { } thermocline)
         {
             score = inputs.Algae switch
             {
@@ -121,6 +134,7 @@ internal static class DiveIndexCalculator
                 AlgaeLevel.Medium => 6,
                 _ => 10,
             };
+            score = finding.Undetermined ? Math.Min(score, rules.MaxStratificationUndeterminedThermocline) : score;
         }
         else
         {
@@ -175,8 +189,9 @@ internal static class DiveIndexCalculator
         return Math.Round(Math.Clamp(sum, 0, 10), 1);
     }
 
-    private static IReadOnlyList<ReasonCode> Reasons(DayInputs inputs, Thermocline? thermocline, DiveIndexRules rules)
+    private static IReadOnlyList<ReasonCode> Reasons(DayInputs inputs, ThermoclineFinding finding, DiveIndexRules rules)
     {
+        var thermocline = finding.Layer;
         var reasons = new List<ReasonCode>();
         var bft = inputs.Weather.WindBeaufort;
         var secchi = inputs.Clarity.ShoreDepth;
@@ -190,7 +205,7 @@ internal static class DiveIndexCalculator
         Add(reasons, ReasonCode.ClearBelowThermocline, thermocline?.Bottom <= 20 && SurfaceIsModerate(inputs, rules));
         Add(reasons, ReasonCode.ClearWater, secchi >= 8);
         Add(reasons, ReasonCode.CalmLake, bft <= 2 && !inputs.IsRiver);
-        Add(reasons, ReasonCode.MixedLake, inputs.Profile is not null && thermocline is null && !inputs.IsRiver);
+        Add(reasons, ReasonCode.MixedLake, inputs.Profile is not null && thermocline is null && !finding.Undetermined && !inputs.IsRiver);
 
         return reasons;
     }

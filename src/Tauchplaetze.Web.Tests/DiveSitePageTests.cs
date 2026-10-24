@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Forecasts;
+using Tauchplaetze.Core.Features.Forecasts.Queries;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Web.Tests;
@@ -750,6 +751,31 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains(forecast, text);
         Assert.Contains(note, text);
         Assert.Contains(day, text);
+    }
+
+    [Fact]
+    public async Task Eine_ungepruefte_Vorhersage_des_Abflusses_ist_in_der_Kachel_eines_kuenftigen_Tages_als_ungeprueft_markiert()
+    {
+        // Arrange: heute und morgen, die Vorhersage für morgen ist nur automatisch gerechnet.
+        using var browser = app.Browser();
+        var discharge = RiverDischarge() with
+        {
+            Forecast = new DischargeForecast(DateTimeOffset.UtcNow.AddHours(-4), false, [new DischargeForecastDay(new DateOnly(2026, 10, 19), 250, DischargeLevel.Low)]),
+        };
+        var answer = app.Discharge.Answer;
+        var forecast = await app.Forecasts.Handle(new GetSiteForecastQuery(RiverSiteId), TestContext.Current.CancellationToken);
+        app.Discharge.Answer = query => query.DiveSiteId == RiverSiteId ? discharge : null;
+        app.Forecasts.Add(RiverSiteId, new SiteForecast([Day(18, 7.2m, [ReasonCode.Windy]), Day(19, 6.8m, [ReasonCode.ClarityStale])], DateTimeOffset.UtcNow, [], WaterBodyType.River));
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + River, TestContext.Current.CancellationToken);
+
+        // Assert
+        app.Discharge.Answer = answer;
+        app.Forecasts.Add(RiverSiteId, forecast);
+        Assert.Single(Regex.Matches(html, "class=\"day-unchecked\""));
+        Assert.Contains(">Satellit alt<", html);
+        Assert.Contains("title=\"Satellitenbild älter\"", WebUtility.HtmlDecode(html));
     }
 
     [Theory]

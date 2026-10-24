@@ -229,6 +229,14 @@
     font-family: var(--font-mono);
 }
 
+.day-unchecked {
+    margin-top: 2px;
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--color-text-subtle);
+    overflow-wrap: anywhere;
+}
+
 .day-discharge[data-discharge="VeryLow"],
 .day-discharge[data-discharge="Low"] { color: var(--color-index-high); }
 .day-discharge[data-discharge="Medium"] { color: var(--color-index-mid); }

@@ -111,6 +111,8 @@ internal class RunForecastHandler(
         var waterBodies = new Dictionary<int, WaterBodyData>();
         var inflowForecasts = new Dictionary<int, IReadOnlyDictionary<(string StationId, DateOnly Day), double>>();
         var forecastHours = await ForecastHours(ct);
+        var storedMedians = await StoredMedians(ct);
+        var now = time.GetUtcNow();
         var forecastSites = sites.Where(s => !s.ForecastDisabled).ToList();
         await sources.PrepareWeather(forecastSites, recorder, ct);
         var done = 0;
@@ -120,14 +122,14 @@ internal class RunForecastHandler(
             var waterBody = site.WaterBody!;
             if (!waterBodies.TryGetValue(waterBody.Id, out var waterBodyData))
             {
-                waterBodyData = await sources.ForWaterBody(waterBody, today, recorder, ct);
+                waterBodyData = Fresh(await sources.ForWaterBody(waterBody, today, recorder, ct), now);
                 waterBodies[waterBody.Id] = waterBodyData;
-                inflowForecasts[waterBody.Id] = InflowForecast.Ratios(waterBodyData.Medians, forecastHours);
+                inflowForecasts[waterBody.Id] = InflowForecast.Ratios(WithStored(waterBodyData.Medians, waterBody.HydroStations.Select(s => s.StationId), storedMedians), forecastHours);
             }
 
             var siteData = await sources.ForSite(site, waterBody, today, recorder, ct);
             var inflows = SiteInflows.For(site, waterBody);
-            var (measured, forecastRatios) = await StationsOf(inflows, waterBodyData, inflowForecasts[waterBody.Id], forecastHours, today, recorder, ct);
+            var (measured, forecastRatios) = await StationsOf(inflows, waterBodyData, inflowForecasts[waterBody.Id], forecastHours, storedMedians, today, now, recorder, ct);
             SaveOutlook(outlooks.GetValueOrDefault(site.Id) ?? AddOutlook(site.Id), today, siteData, run);
             foreach (var day in days)
             {
@@ -158,11 +160,16 @@ internal class RunForecastHandler(
         WaterBodyData waterBodyData,
         IReadOnlyDictionary<(string StationId, DateOnly Day), double> forecast,
         List<ForecastHour> forecastHours,
+        IReadOnlyDictionary<string, double> storedMedians,
         DateOnly today,
+        DateTimeOffset now,
         SourceRecorder recorder,
         CancellationToken ct)
     {
-        var missing = inflows.Select(i => i.StationId).Where(id => !waterBodyData.Ratios.ContainsKey(id)).Distinct().ToList();
+        var missing = inflows.Select(i => i.StationId)
+            .Where(id => !waterBodyData.Ratios.ContainsKey(id) && !waterBodyData.Medians.ContainsKey(id))
+            .Distinct()
+            .ToList();
         if (missing.Count == 0)
         {
             return (waterBodyData.Ratios, forecast);
@@ -174,8 +181,16 @@ internal class RunForecastHandler(
         {
             if (await sources.StationFlow(stationId, today, recorder, ct) is { } flow)
             {
-                measured[stationId] = flow.Ratio;
+                if (IsFresh(flow.MeasuredAt, now))
+                {
+                    measured[stationId] = flow.Ratio;
+                }
+
                 medians[stationId] = flow.Median;
+            }
+            else if (storedMedians.TryGetValue(stationId, out var stored))
+            {
+                medians[stationId] = stored;
             }
         }
 
@@ -187,6 +202,42 @@ internal class RunForecastHandler(
 
         return (measured, forecastRatios);
     }
+
+    /// <summary>Nur frische Messwerte zählen als «gemessen» (`rules-1.7`). Ein älterer Wert lässt am Fluss die Vorhersage für heute zum Zug kommen.</summary>
+    private static WaterBodyData Fresh(WaterBodyData data, DateTimeOffset now) =>
+        data with
+        {
+            Ratios = data.Ratios
+                .Where(r => data.MeasuredAt?.TryGetValue(r.Key, out var at) != true || IsFresh(at, now))
+                .ToDictionary(r => r.Key, r => r.Value),
+        };
+
+    private static bool IsFresh(DateTimeOffset measuredAt, DateTimeOffset now) =>
+        now - measuredAt <= TimeSpan.FromHours(DiveIndexRules.Default.MaxDischargeAgeHours);
+
+    /// <summary>Fällt der Abruf der Messwerte aus, gilt für die Vorhersage der zuletzt gespeicherte Median der Station.</summary>
+    private static IReadOnlyDictionary<string, double> WithStored(
+        IReadOnlyDictionary<string, double> medians, IEnumerable<string> stationIds, IReadOnlyDictionary<string, double> stored)
+    {
+        var merged = new Dictionary<string, double>(medians);
+        foreach (var stationId in stationIds)
+        {
+            if (!merged.ContainsKey(stationId) && stored.TryGetValue(stationId, out var median))
+            {
+                merged[stationId] = median;
+            }
+        }
+
+        return merged;
+    }
+
+    private async Task<IReadOnlyDictionary<string, double>> StoredMedians(CancellationToken ct) =>
+        (await dbContext.HydroReadings
+            .AsNoTracking()
+            .Where(r => r.Median30Days != null)
+            .Select(r => new { r.StationId, r.Median30Days })
+            .ToListAsync(ct))
+        .ToDictionary(r => r.StationId, r => Math.Max((double)r.Median30Days!.Value, (double)DischargeRules.MinMedian));
 
     private SiteWeatherOutlook AddOutlook(Guid diveSiteId)
     {
@@ -211,7 +262,7 @@ internal class RunForecastHandler(
     }
 
     private static DayForecast DayFor(
-        DateOnly day, DateOnly today, WaterBody waterBody, WaterBodyData waterBodyData, double? dischargeRatio, SiteData siteData)
+        DateOnly day, DateOnly today, WaterBody waterBody, WaterBodyData waterBodyData, InflowRatio discharge, SiteData siteData)
     {
         var rules = DiveIndexRules.Default;
         var isRiver = waterBody.WaterBodyType == WaterBodyType.River;
@@ -223,13 +274,14 @@ internal class RunForecastHandler(
             siteData.ShoreSecchi,
             siteData.Secchi,
             imageDate => DayWeather.RainFromBestModel(siteData.Weather, imageDate.ToDateTime(TimeOnly.MinValue), day.ToDateTime(TimeOnly.MinValue)) ?? weather.PrecipitationLast72h,
-            dischargeRatio,
+            discharge.Value,
             rules);
         var algae = ClarityEstimate.AlgaeFor(day, siteData.Chlorophyll, rules);
 
-        var inputs = new DayInputs(weather, profile, clarity, algae, dischargeRatio, isRiver);
+        var inputs = new DayInputs(weather, profile, clarity, algae, discharge.Value, isRiver, DischargeIsCurrent: discharge.IsCurrent);
         var current = isRiver ? null : CurrentEstimate.For(day, siteData.Model3d, DiveWindow.Default, CurrentRules.Default);
-        return new DayForecast(inputs, DiveIndexCalculator.Calculate(inputs, rules), DataLevelRule.For(false, profile?.Source), current);
+        var source = profile?.Source ?? (isRiver && discharge is { Value: not null, IsCurrent: true } ? ProfileSource.RiverStation : null);
+        return new DayForecast(inputs, DiveIndexCalculator.Calculate(inputs, rules), DataLevelRule.For(false, source), current);
     }
 
     private async Task<List<ForecastHour>> ForecastHours(CancellationToken ct) =>
@@ -259,8 +311,8 @@ internal class RunForecastHandler(
         forecast.TemperatureAt10m = ToDecimal(profile?.TemperatureAt(10));
         forecast.TemperatureAt20m = ToDecimal(profile?.TemperatureAt(20));
         forecast.TemperatureAt30m = ToDecimal(profile?.TemperatureAt(30));
-        forecast.ThermoclineTop = ToDecimal(result.Thermocline?.Top);
-        forecast.ThermoclineBottom = ToDecimal(result.Thermocline?.Bottom);
+        forecast.ThermoclineTop = ToDecimal(result.StoredThermocline?.Top);
+        forecast.ThermoclineBottom = ToDecimal(result.StoredThermocline?.Bottom);
         forecast.SecchiDepth = ToDecimal(inputs.Clarity.SecchiDepth);
         forecast.SecchiDepthShore = ToDecimal(inputs.Clarity.ShoreDepth);
         forecast.SecchiObservedAt = inputs.Clarity.ObservedAt;

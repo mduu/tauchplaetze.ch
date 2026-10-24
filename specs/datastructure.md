@@ -225,7 +225,7 @@ Eine Zeile pro Platz und Tag. PK: (`DiveSiteId`, `Date`).
 | `ProfileSource` | enum, optional | `Model3d`, `Model1d`, `RiverStation`, `InSitu` (Phase 1) |
 | `SurfaceTemperature` | decimal(4,1), optional | °C |
 | `TemperatureAt10m`, `TemperatureAt20m`, `TemperatureAt30m` | decimal(4,1), optional | °C |
-| `ThermoclineTop`, `ThermoclineBottom` | decimal(4,1), optional | m |
+| `ThermoclineTop`, `ThermoclineBottom` | decimal(4,1), optional | m. Beide leer: durchmischt. Gespeichert, aber unplausibel (an der Oberfläche, dünner als 1 m, oder 0–0 m ohne Profil ab 1 m): Sprungschicht nicht bestimmt (`rules-1.7`) |
 | `SecchiDepth` | decimal(4,1), optional | geschätzte Sichttiefe aus dem Satellit am Punkt der Quelle, m (Sentinel-3: Seemitte, Sentinel-2: Ufernähe) |
 | `SecchiDepthShore` | decimal(4,1), optional | Secchi-Schätzung in Ufernähe (`rules-1.1`, Uferfaktor). Leer bei Rows von `rules-1.0`. |
 | `SecchiObservedAt` | DateOnly, optional | Datum des Satellitenbilds |

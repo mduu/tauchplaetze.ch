@@ -195,4 +195,6 @@
   <data name="Reason_ClarityStale_Short" xml:space="preserve"><value>old satellite</value></data>
   <data name="Reason_VisibilityLimitsIndex_Short" xml:space="preserve"><value>low visibility</value></data>
   <data name="Reason_StrongCurrent_Short" xml:space="preserve"><value>strong current</value></data>
+  <data name="Profile_Undetermined" xml:space="preserve"><value>Thermocline not determined</value></data>
+  <data name="Day_Forecast_Unchecked" xml:space="preserve"><value>unchecked</value></data>
 </root>

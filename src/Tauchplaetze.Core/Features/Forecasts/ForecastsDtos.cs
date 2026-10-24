@@ -59,7 +59,8 @@ public record ForecastDay(
     ClaritySource? ClaritySource = null,
     decimal? CurrentSpeed = null,
     int? CurrentDirection = null,
-    CurrentLevel? CurrentLevel = null)
+    CurrentLevel? CurrentLevel = null,
+    bool ThermoclineUndetermined = false)
 {
     public bool IsOutlook => DiveIndex is null;
 }

@@ -196,6 +196,23 @@ public class StartPageTests : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Laesst_sich_die_Sprungschicht_nicht_bestimmen_sagt_der_Querschnitt_das_statt_durchmischt()
+    {
+        // Arrange
+        using var browser = app.Browser();
+        var ranking = app.BestSites.Ranking;
+        app.BestSites.Ranking = [ranking[0] with { ThermoclineTop = null, ThermoclineBottom = null, ThermoclineUndetermined = true }, ranking[1]];
+
+        // Act
+        var html = await browser.GetStringAsync("/fr", TestContext.Current.CancellationToken);
+
+        // Assert
+        app.BestSites.Ranking = ranking;
+        Assert.Contains("Thermocline non déterminée", VisibleText.Of(html));
+        Assert.DoesNotContain("le lac est brassé", VisibleText.Of(html));
+    }
+
+    [Fact]
     public async Task Ist_der_See_der_Besten_Wahl_durchmischt_zeigt_der_Querschnitt_keine_Sprungschicht()
     {
         // Arrange

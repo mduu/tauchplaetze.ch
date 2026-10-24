@@ -33,7 +33,7 @@
         </HeadContent>
 
         <UnderwaterHero Photo="site.Hero" Credit="@(site.Hero is { } hero ? L["Hero_Credit", hero.Photographer].Value : null)"
-                        ThermoclineTop="Today?.ThermoclineTop" ThermoclineBottom="Today?.ThermoclineBottom" Mixed="@(Today is { ProfileSource: not null, ThermoclineTop: null })">
+                        ThermoclineTop="Today?.ThermoclineTop" ThermoclineBottom="Today?.ThermoclineBottom" Mixed="@(Today is { ProfileSource: not null, ThermoclineTop: null, ThermoclineUndetermined: false })">
             <nav aria-label="@L["Breadcrumb"]">
                 <ol class="breadcrumb">
                     <li>@site.WaterBodyName</li>

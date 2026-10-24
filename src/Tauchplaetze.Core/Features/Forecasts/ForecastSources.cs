@@ -12,7 +12,7 @@ using Tauchplaetze.Core.Features.WaterBodies;
 namespace Tauchplaetze.Core.Features.Forecasts;
 
 /// <summary>Neuester Abfluss geteilt durch den Median der letzten 30 Tage, und der Median selbst (mindestens <see cref="DischargeRules.MinMedian"/>).</summary>
-internal record StationFlowRatio(double Ratio, double Median);
+internal record StationFlowRatio(double Ratio, double Median, DateTimeOffset MeasuredAt);
 
 /// <summary>
 /// Die Daten eines Gewässers für einen Lauf. <see cref="Ratios"/>: neuester Abfluss geteilt durch den Median pro Station.
@@ -22,7 +22,8 @@ internal record WaterBodyData(
     DepthTimeSeries? LakeWide,
     IReadOnlyDictionary<string, double> Ratios,
     double? RiverTemperature,
-    IReadOnlyDictionary<string, double> Medians);
+    IReadOnlyDictionary<string, double> Medians,
+    IReadOnlyDictionary<string, DateTimeOffset>? MeasuredAt = null);
 
 /// <summary>Die Daten eines Platzes für einen Lauf.</summary>
 internal record SiteData(
@@ -69,6 +70,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
 
         var ratios = new Dictionary<string, double>();
         var medians = new Dictionary<string, double>();
+        var measuredAt = new Dictionary<string, DateTimeOffset>();
         double? riverTemperature = null;
         foreach (var station in waterBody.HydroStations)
         {
@@ -76,6 +78,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             {
                 ratios[station.StationId] = flow.Ratio;
                 medians[station.StationId] = flow.Median;
+                measuredAt[station.StationId] = flow.MeasuredAt;
             }
 
             if (station.Role == HydroStationRole.River)
@@ -86,7 +89,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             }
         }
 
-        return new WaterBodyData(lakeWide, ratios, riverTemperature, medians);
+        return new WaterBodyData(lakeWide, ratios, riverTemperature, medians, measuredAt);
     }
 
     /// <summary>
@@ -114,7 +117,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
         }
 
         var median = Median(flow);
-        return new StationFlowRatio(Math.Round(newest.Value / median, 2), median);
+        return new StationFlowRatio(Math.Round(newest.Value / median, 2), median, newest.Time);
     }
 
     public async Task<SiteData> ForSite(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)

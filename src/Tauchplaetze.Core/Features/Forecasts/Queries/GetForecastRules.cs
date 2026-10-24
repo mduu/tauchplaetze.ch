@@ -39,7 +39,8 @@ public record ForecastRulesSummary(
     double CurrentMinDepth,
     double CurrentMaxDepth,
     int ForecastDays,
-    IReadOnlyList<TimeOnly> RunTimes);
+    IReadOnlyList<TimeOnly> RunTimes,
+    double MaxDischargeAgeHours = 6);
 
 internal class GetForecastRulesHandler(IOptions<ForecastSchedule> schedule) : IQueryHandler<GetForecastRulesQuery, ForecastRulesSummary>
 {
@@ -80,7 +81,8 @@ internal class GetForecastRulesHandler(IOptions<ForecastSchedule> schedule) : IQ
             current.MinDepth,
             current.MaxDepth,
             ForecastSources.ForecastDays,
-            schedule.Value.Times));
+            schedule.Value.Times,
+            rules.MaxDischargeAgeHours));
     }
 
     private static int Percent(double share) => (int)Math.Round(share * 100);

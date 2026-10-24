@@ -114,6 +114,10 @@
                     @if (Discharge?.Forecast?.Days.FirstOrDefault(d => d.Date == day.Date) is { Level: { } dischargeLevel })
                     {
                         <div class="day-discharge" data-discharge="@dischargeLevel">@L["Day_Discharge", L[$"Discharge_{dischargeLevel}"]]</div>
+                        @if (day.Date > Today.Date && Discharge?.Forecast is { Official: false })
+                        {
+                            <div class="day-unchecked" title="@L["Discharge_Forecast_Unchecked"]">@L["Day_Forecast_Unchecked"]</div>
+                        }
                     }
                 </li>
             }
@@ -222,9 +226,12 @@
 
     private string Eyebrow => Today.ProfileSource is { } source ? L[$"Profile_Source_{source}"] : L["Day_Outlook"];
 
-    private string ProfileNote => Today is { ThermoclineTop: { } top, ThermoclineBottom: { } bottom }
-        ? L["Profile_Thermocline", ForecastFormat.Meters(top), ForecastFormat.Meters(bottom)]
-        : L["Profile_Mixed"];
+    private string ProfileNote => Today switch
+    {
+        { ThermoclineTop: { } top, ThermoclineBottom: { } bottom } => L["Profile_Thermocline", ForecastFormat.Meters(top), ForecastFormat.Meters(bottom)],
+        { ThermoclineUndetermined: true } => L["Profile_Undetermined"],
+        _ => L["Profile_Mixed"],
+    };
 
     private MarkupString Sources => Forecast.HasSatellite
         ? SourceLinks.Format(L["Sources"], SourceLinks.Alplakes(L), SourceLinks.MeteoSwiss(L), SourceLinks.OpenMeteo(L), SourceLinks.Bafu(L))

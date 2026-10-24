@@ -24,7 +24,7 @@ internal record DiveIndexRules
 {
     public static readonly DiveIndexRules Default = new();
 
-    public string ModelVersion { get; init; } = "rules-1.6";
+    public string ModelVersion { get; init; } = "rules-1.7";
 
     public double ClarityWeight { get; init; } = 0.35;
 
@@ -75,6 +75,12 @@ internal record DiveIndexRules
 
     /// <summary>Höchste Punkte für die Schichtung, wenn die Oberfläche nicht gut (unter <see cref="SurfaceGoodFrom"/>) oder unbekannt ist.</summary>
     public double MaxStratificationWithTurbidSurface { get; init; } = 7;
+
+    /// <summary>Höchste Punkte für die Schichtung, wenn das Profil da ist, die Sprungschicht sich aber nicht bestimmen lässt (`rules-1.7`).</summary>
+    public double MaxStratificationUndeterminedThermocline { get; init; } = 7;
+
+    /// <summary>So alt darf der gemessene Abfluss sein. Danach zählt am Fluss die Vorhersage des BAFU für heute (`rules-1.7`).</summary>
+    public double MaxDischargeAgeHours { get; init; } = 6;
 
     /// <summary>Secchi-Tiefe in m → Punkte.</summary>
     public IReadOnlyList<SupportPoint> Clarity { get; init; } = [new(2, 1), new(10, 10)];

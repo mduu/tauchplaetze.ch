@@ -241,20 +241,85 @@ public class DiveIndexTests
     }
 
     [Fact]
-    public void Eine_gespeicherte_Sprungschicht_an_der_Oberflaeche_zaehlt_bei_der_Neuberechnung_wie_keine()
+    public void Eine_gespeicherte_Sprungschicht_an_der_Oberflaeche_gilt_bei_der_Neuberechnung_als_nicht_bestimmt()
     {
-        // Arrange: so stand sie vor rules-1.6 in der Datenbank («0–0 m»).
-        var skin = new DayInputs(Calm, Summer, Clear(8), AlgaeLevel.Low, 1.0, IsRiver: false, new KnownThermocline(new Thermocline(0.1, 0.3)));
-        var none = skin with { Thermocline = new KnownThermocline(null) };
+        // Arrange: so stand sie vor rules-1.6 in der Datenbank («0–0 m»). Die Oberfläche ist gut (Ufernähe 8 m, frisch).
+        var skin = new DayInputs(Calm, Summer, Shore(8), AlgaeLevel.Low, 1.0, IsRiver: false, new KnownThermocline(new Thermocline(0.1, 0.3)));
+        var mixed = skin with { Thermocline = new KnownThermocline(null) };
 
         // Act
-        var withSkin = DiveIndexCalculator.Calculate(skin, DiveIndexRules.Default);
-        var withoutThermocline = DiveIndexCalculator.Calculate(none, DiveIndexRules.Default);
+        var undetermined = DiveIndexCalculator.Calculate(skin, DiveIndexRules.Default);
+        var withoutThermocline = DiveIndexCalculator.Calculate(mixed, DiveIndexRules.Default);
 
         // Assert
-        Assert.Null(withSkin.Thermocline);
-        Assert.Null(withSkin.VisibilityGoodBelow);
-        Assert.Equal(withoutThermocline.DiveIndex, withSkin.DiveIndex);
+        Assert.Null(undetermined.Thermocline);
+        Assert.Null(undetermined.VisibilityGoodBelow);
+        Assert.Equal(DiveIndexRules.Default.MaxStratificationUndeterminedThermocline, undetermined.Scores.Stratification);
+        Assert.Equal(10, withoutThermocline.Scores.Stratification);
+        Assert.DoesNotContain(ReasonCode.MixedLake, undetermined.Reasons);
+        Assert.Contains(ReasonCode.MixedLake, withoutThermocline.Reasons);
+    }
+
+    [Theory]
+    [InlineData(new[] { 0.0, 0.5 }, true)]
+    [InlineData(new[] { 0.0, 1.0, 2.0 }, false)]
+    public void Ohne_genug_Punkte_unter_1_m_ist_die_Sprungschicht_nicht_bestimmt_und_wird_als_0_bis_0_m_gespeichert(double[] depths, bool undetermined)
+    {
+        // Arrange: überall gleich warm. Mit zwei Punkten unter 1 m ist der See durchmischt.
+        var profile = new DayProfile(Profiles.Of([.. depths.Select(d => (d, 12.0))]), ProfileSource.Model1d);
+        var inputs = new DayInputs(Calm, profile, Shore(8), AlgaeLevel.Low, 1.0, IsRiver: false);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Null(result.Thermocline);
+        Assert.Equal(undetermined ? new Thermocline(0, 0) : null, result.StoredThermocline);
+        Assert.Equal(undetermined ? DiveIndexRules.Default.MaxStratificationUndeterminedThermocline : 10, result.Scores.Stratification);
+    }
+
+    [Theory]
+    [InlineData(true, true)]
+    [InlineData(false, false)]
+    public void Ein_Fluss_hat_an_einem_kuenftigen_Tag_nur_mit_Abfluss_fuer_den_Tag_einen_Index(bool dischargeIsCurrent, bool hasIndex)
+    {
+        // Arrange: kein Temperaturprofil (die Station misst nur heute), kein Satellit. Abfluss frisch gemessen oder vom BAFU vorhergesagt – oder nur der heutige Wert weitergetragen.
+        var inputs = new DayInputs(Calm, null, ClarityEstimate.Unknown, AlgaeLevel.Unknown, 1.0, IsRiver: true, DischargeIsCurrent: dischargeIsCurrent);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Equal(hasIndex, result.DiveIndex is not null);
+    }
+
+    [Fact]
+    public void Ein_See_ohne_Profil_und_ohne_Satellit_bleibt_im_Ausblick_auch_mit_Abfluss()
+    {
+        // Arrange
+        var inputs = new DayInputs(Calm, null, ClarityEstimate.Unknown, AlgaeLevel.Unknown, 1.0, IsRiver: false, DischargeIsCurrent: true);
+
+        // Act
+        var result = DiveIndexCalculator.Calculate(inputs, DiveIndexRules.Default);
+
+        // Assert
+        Assert.Null(result.DiveIndex);
+    }
+
+    [Fact]
+    public void Viel_vorhergesagter_Abfluss_gibt_am_Fluss_auch_an_einem_kuenftigen_Tag_den_Abzug_fuer_die_Stroemung()
+    {
+        // Arrange
+        var calm = new DayInputs(Calm, null, ClarityEstimate.Unknown, AlgaeLevel.Unknown, 1.0, IsRiver: true, DischargeIsCurrent: true);
+        var flood = calm with { DischargeRatio = 3.0 };
+
+        // Act
+        var normal = DiveIndexCalculator.Calculate(calm, DiveIndexRules.Default);
+        var high = DiveIndexCalculator.Calculate(flood, DiveIndexRules.Default);
+
+        // Assert
+        Assert.True(high.DiveIndex < normal.DiveIndex, $"{high.DiveIndex} < {normal.DiveIndex}");
+        Assert.Contains(ReasonCode.StrongCurrent, high.Reasons);
     }
 
     [Fact]

@@ -21,7 +21,7 @@ internal class GetSiteForecastHandler(TauchplaetzeDbContext dbContext, TimeProvi
             .OrderBy(f => f.Date)
             .ToListAsync(ct);
 
-        var days = rows.Select(f => (f, Thermocline: StoredThermocline.Read(f.ThermoclineTop, f.ThermoclineBottom)))
+        var days = rows.Select(f => (f, Thermocline: StoredThermocline.Find(f.ThermoclineTop, f.ThermoclineBottom)))
             .Select(t => new ForecastDay(
                 t.f.Date,
                 t.f.DataLevel,
@@ -31,12 +31,12 @@ internal class GetSiteForecastHandler(TauchplaetzeDbContext dbContext, TimeProvi
                 t.f.TemperatureAt10m,
                 t.f.TemperatureAt20m,
                 t.f.TemperatureAt30m,
-                t.Thermocline is null ? null : t.f.ThermoclineTop,
-                t.Thermocline is null ? null : t.f.ThermoclineBottom,
+                t.Thermocline.Layer is null ? null : t.f.ThermoclineTop,
+                t.Thermocline.Layer is null ? null : t.f.ThermoclineBottom,
                 t.f.SecchiDepth,
                 t.f.SecchiObservedAt,
                 t.f.VisibilityIndicator,
-                t.Thermocline is null ? null : t.f.VisibilityGoodBelow,
+                t.Thermocline.Layer is null ? null : t.f.VisibilityGoodBelow,
                 t.f.WindBeaufort,
                 t.f.WindSpeedKmh,
                 t.f.WindGustsKmh,
@@ -47,7 +47,8 @@ internal class GetSiteForecastHandler(TauchplaetzeDbContext dbContext, TimeProvi
                 t.f.ClaritySource,
                 t.f.CurrentSpeed,
                 t.f.CurrentDirection,
-                t.f.CurrentLevel))
+                t.f.CurrentLevel,
+                t.Thermocline.Undetermined))
             .ToList();
 
         var waterBodyType = await dbContext.DiveSites

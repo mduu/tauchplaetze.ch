@@ -63,7 +63,8 @@ public record RankedSite(
     double? DistanceKm,
     WaterBodyType WaterBodyType = WaterBodyType.Lake,
     int? MountainLakeElevation = null,
-    IReadOnlyList<RankedSite>? More = null)
+    IReadOnlyList<RankedSite>? More = null,
+    bool ThermoclineUndetermined = false)
 {
     /// <summary>Den Querschnitt mit Temperaturen gibt es nur im See.</summary>
     public bool HasDepthProfile => WaterBodyType != WaterBodyType.River;
@@ -117,7 +118,7 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
             })
             .ToListAsync(ct);
 
-        var sites = rows.Select(r => (r, Thermocline: StoredThermocline.Read(r.ThermoclineTop, r.ThermoclineBottom)))
+        var sites = rows.Select(r => (r, Thermocline: StoredThermocline.Find(r.ThermoclineTop, r.ThermoclineBottom)))
             .Select(t => (t.r.WaterBodyId, Site: new RankedSite(
                 t.r.Slug,
                 t.r.Name,
@@ -127,13 +128,14 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 t.r.DataLevel,
                 t.r.SurfaceTemperature,
                 t.r.TemperatureAt20m,
-                t.Thermocline is null ? null : t.r.ThermoclineTop,
-                t.Thermocline is null ? null : t.r.ThermoclineBottom,
+                t.Thermocline.Layer is null ? null : t.r.ThermoclineTop,
+                t.Thermocline.Layer is null ? null : t.r.ThermoclineBottom,
                 t.r.WindBeaufort,
                 StoredThermocline.Reasons(ReasonCodes.Parse(t.r.ReasonCodes), t.Thermocline),
                 origin is null ? null : Math.Round(Distance.Km(origin, t.r.Location), 0),
                 t.r.Water.WaterBodyType,
-                MountainLakes.Elevation(t.r.Water.WaterBodyType, t.r.Water.Elevation))))
+                MountainLakes.Elevation(t.r.Water.WaterBodyType, t.r.Water.Elevation),
+                ThermoclineUndetermined: t.Thermocline.Undetermined)))
             .OrderByDescending(s => RankingRules.Score(s.Site.DiveIndex, s.Site.DistanceKm))
             .ThenByDescending(s => s.Site.DiveIndex)
             .ThenBy(s => s.Site.Name, StringComparer.Ordinal)

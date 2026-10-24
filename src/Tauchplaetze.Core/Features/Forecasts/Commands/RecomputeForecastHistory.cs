@@ -88,6 +88,10 @@ internal class RecomputeForecastHistoryHandler(
         forecast.VisibilityGoodBelow = result.VisibilityGoodBelow is { } below ? Math.Round((decimal)below, 1) : null;
         forecast.ReasonCodes = string.Join(',', result.Reasons);
         forecast.ModelVersion = rules.ModelVersion;
+        if (inputs is { IsRiver: true, DischargeIsCurrent: true } && forecast.DataLevel < 2)
+        {
+            forecast.DataLevel = 2;
+        }
     }
 
     /// <remarks>
@@ -117,7 +121,8 @@ internal class RecomputeForecastHistoryHandler(
             forecast.ClaritySource ?? (shore is null ? null : ClaritySource.Sentinel3Lake));
 
         var thermocline = forecast is { ThermoclineTop: { } top, ThermoclineBottom: { } bottom } ? new Thermocline((double)top, (double)bottom) : null;
-        return new DayInputs(weather, profile, clarity, forecast.AlgaeLevel, (double?)forecast.InflowDischargeRatio, isRiver, new KnownThermocline(thermocline));
+        var dischargeIsCurrent = forecast.InflowDischargeRatio is not null && SwissTime.DayOf(forecast.ComputedAt) >= forecast.Date;
+        return new DayInputs(weather, profile, clarity, forecast.AlgaeLevel, (double?)forecast.InflowDischargeRatio, isRiver, new KnownThermocline(thermocline), dischargeIsCurrent);
     }
 
     private static TemperatureProfile ProfileOf(DailyForecast forecast)

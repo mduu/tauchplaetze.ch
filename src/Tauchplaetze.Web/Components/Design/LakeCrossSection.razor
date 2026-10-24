@@ -23,7 +23,7 @@
     else if (Surface is not null && ThermoclineTop is null)
     {
         <rect x="0" y="34" width="600" height="266" fill="var(--color-lake-epilimnion)" />
-        <SvgText x="20" y="160" fill="var(--color-text-muted)" font-family="IBM Plex Mono, monospace" font-size="13" data-mixed Content="@F["Profile_Mixed"]" />
+        <SvgText x="20" y="160" fill="var(--color-text-muted)" font-family="IBM Plex Mono, monospace" font-size="13" data-mixed="@(Undetermined ? "undetermined" : "mixed")" Content="@(Undetermined ? F["Profile_Undetermined"] : F["Profile_Mixed"])" />
     }
     else
     {
@@ -66,6 +66,10 @@
     /// <summary>Mit Ober- und Unterkante zeichnet der Querschnitt die Sprungschicht als Band in Tiefe (0 bis 40 m).</summary>
     [Parameter]
     public decimal? ThermoclineBottom { get; set; }
+
+    /// <summary>Das Profil ist da, die Sprungschicht liess sich aber nicht bestimmen (`rules-1.7`). Dann nicht «durchmischt».</summary>
+    [Parameter]
+    public bool Undetermined { get; set; }
 
     private const double LabelGap = 26;
 

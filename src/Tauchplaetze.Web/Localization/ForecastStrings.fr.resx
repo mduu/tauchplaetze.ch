@@ -195,4 +195,6 @@
   <data name="Reason_ClarityStale_Short" xml:space="preserve"><value>image ancienne</value></data>
   <data name="Reason_VisibilityLimitsIndex_Short" xml:space="preserve"><value>visib. limitée</value></data>
   <data name="Reason_StrongCurrent_Short" xml:space="preserve"><value>fort courant</value></data>
+  <data name="Profile_Undetermined" xml:space="preserve"><value>Thermocline non déterminée</value></data>
+  <data name="Day_Forecast_Unchecked" xml:space="preserve"><value>non vérifié</value></data>
 </root>

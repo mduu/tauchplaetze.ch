@@ -497,6 +497,43 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         Assert.Contains(ReasonCode.StrongCurrent, today.Reasons);
     }
 
+    [SqlFact]
+    public async Task Ist_der_Messwert_am_Fluss_veraltet_rechnet_der_Platz_heute_und_an_kuenftigen_Tagen_mit_der_Vorhersage()
+    {
+        // Arrange: Station 2104, letzter Messwert rund 9 Stunden alt. Das BAFU sagt für heute und die nächsten Tage viel Wasser voraus.
+        await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
+        var admins = await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]));
+        var rhein = (await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"))).Single(w => w.Slug == "rhein").Id;
+        var siteId = (await Command<ProposeDiveSiteCommand, EditorialResult>(
+            new ProposeDiveSiteCommand(admins.UserIds[0], "Strandbad", rhein, 47.55164, 7.7767, "Rheinfelden", "AG", null))).DiveSiteId!.Value;
+        await Sql.Arrange(async db =>
+        {
+            (await db.DiveSites.SingleAsync(s => s.Id == siteId)).InflowStationOverride = "2104";
+            db.HydroHours.AddRange(Enumerable.Range(0, 72).Select(hour => new HydroHour
+            {
+                StationId = "2104",
+                Kind = HydroSeriesKind.Forecast,
+                Hour = new DateTimeOffset(2026, 10, 16, 22, 0, 0, TimeSpan.Zero).AddHours(hour),
+                Discharge = 2000,
+                ImportedAt = FixedTime.SpikeDay,
+            }));
+            await db.SaveChangesAsync(TestContext.Current.CancellationToken);
+        });
+        Sql.Sources.Overrides["locations=2104&parameters=flow"] = Older(TestData.Read("hydro", "daterange-2104-flow.json"), hours: 12);
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        var days = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days;
+        Assert.All(days.Take(3), day =>
+        {
+            Assert.NotNull(day.DiveIndex);
+            Assert.Equal(2, day.DataLevel);
+            Assert.Contains(ReasonCode.StrongCurrent, day.Reasons);
+        });
+    }
+
     private async Task<Guid> AddSiteAtZuerichsee(string name, double latitude, double longitude, string municipality, string canton)
     {
         var waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery("de"));
@@ -512,6 +549,17 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
         var admins = await Command<EnsureAdminsCommand, EnsureAdminsResult>(new EnsureAdminsCommand([new AdminAccount("admin@example.org", "Admin")]));
         return await AddRiffWilliams(admins.UserIds[0]);
+    }
+
+    private static string Older(string json, double hours)
+    {
+        var root = JsonNode.Parse(json)!;
+        foreach (var point in root["payload"]!.AsArray())
+        {
+            point!["timestamp"] = point["timestamp"]!.GetValue<long>() - (long)(hours * 3600);
+        }
+
+        return root.ToJsonString();
     }
 
     private static string WithLatestFlow(string json, double times)

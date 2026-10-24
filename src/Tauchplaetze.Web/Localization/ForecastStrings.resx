@@ -195,4 +195,6 @@
   <data name="Reason_ClarityStale_Short" xml:space="preserve"><value>Satellit alt</value></data>
   <data name="Reason_VisibilityLimitsIndex_Short" xml:space="preserve"><value>Sicht begrenzt</value></data>
   <data name="Reason_StrongCurrent_Short" xml:space="preserve"><value>viel Strömung</value></data>
+  <data name="Profile_Undetermined" xml:space="preserve"><value>Sprungschicht nicht bestimmt</value></data>
+  <data name="Day_Forecast_Unchecked" xml:space="preserve"><value>ungeprüft</value></data>
 </root>
