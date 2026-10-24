@@ -29,12 +29,13 @@ Siehe `i18n.md`. Grundsätze:
 
 ## Pro Seite
 
-- `<title>` und `<meta name="description">` aus Ressourcen plus Daten, pro Sprache.
-  - Platz: «{Name}, {Gemeinde} – Tauchplatz {See} | tauchplaetze.ch»
-  - See: «Tauchplätze am {See}: Prognose, Sichtweite, Temperatur»
+- `<title>` und `<meta name="description">` aus Ressourcen plus Daten, pro Sprache (umgesetzt 24.10.2026, `SeoText`). Die Beschreibung hat höchstens 160 Zeichen: Sätze kommen nur dazu, solange sie passen.
+  - Platz: Titel «{Name} – Tauchplatz {Gewässer} · tauchplaetze.ch». Beschreibung «Tauchplatz {Name}, {Gemeinde} {Kanton}, {Gewässer}.», dazu mit Prognose «Heute: Tauch-Index {x}/10, Sicht ca. {s} m in Ufernähe, Sprungschicht {a}–{b} m.» (nur vorhandene und plausible Werte), sonst «Tägliche Tauchprognose, Karte und Einstiege.». Die Beschreibung ändert täglich; der Output Cache läuft vor Mitternacht ab.
+  - Gewässer: Titel «{Gewässer}: Tauchen und Sichtweite heute · tauchplaetze.ch». Beschreibung mit der Zahl der Plätze und dem besten Tauch-Index von heute.
+  - Startseite, Verzeichnis, Gewässerliste: Beschreibungen mit den Suchbegriffen Tauchen Schweiz, Tauchplätze, Sichtweite, Tauchprognose.
 - `<link rel="canonical">` auf die eigene Adresse in der Sprache der Seite: Hauptdomain aus `PublicSite:BaseUri`, ohne Query, in Kleinbuchstaben. Gesetzt zentral in `HreflangLinks` zusammen mit `hreflang`, also nur auf indexierbaren Seiten. Seiten mit `noindex` (Konto, Versionen, Bearbeiten, Neu, Melden, `/admin`, `/platform`, 404, 410) und die Weiterleitung `/` haben kein Canonical (22.10.2026: Search Console zeigte «User-declared canonical: None»).
 - `hreflang` für `de`, `en`, `fr`, `it` und `x-default` (= `de`).
-- Open Graph und Twitter Card mit dem Hero-Foto.
+- Open Graph und Twitter Card zentral in `HreflangLinks` (umgesetzt 24.10.2026), nur auf indexierbaren Seiten: `og:type` (`article` für Platz und Gewässer, sonst `website`), `og:site_name`, `og:title` (Titel ohne Markenname), `og:description` (= Meta-Description), `og:url` (= Canonical), `og:locale` (`de_CH`, `fr_CH`, `it_CH`, `en_GB`) mit `og:locale:alternate`, `og:image` mit Breite, Höhe und Alt-Text, `twitter:card` = `summary_large_image`. Bild: das Titelbild des Platzes (Bildgrösse ab 1200 px, sonst die grösste), ohne Titelbild das Standardbild `img/og-default.png` (1200 × 630, Logo mit «Wo tauchen wir heute?»).
 - Eine `<h1>` pro Seite.
 
 ## Strukturierte Daten (JSON-LD, geplant)

@@ -14,7 +14,7 @@
   <data name="Language_it" xml:space="preserve"><value>Italiano</value></data>
   <data name="Start_Title" xml:space="preserve"><value>Wo tauchen wir heute?</value></data>
   <data name="Start_Lead" xml:space="preserve"><value>Für jeden Tauchplatz gerechnet aus Seemodellen, Satellitendaten und Wetter: wo es sich lohnt, wie kalt es in der Tiefe ist und wo die Sprungschicht liegt.</value></data>
-  <data name="Start_MetaDescription" xml:space="preserve"><value>Tauchplatzführer für die Schweizer Seen und Flüsse mit täglicher Tauchprognose aus offenen Daten.</value></data>
+  <data name="Start_MetaDescription" xml:space="preserve"><value>Tauchen in der Schweiz: tägliche Tauchprognose mit Sichtweite, Sprungschicht und Wind für die Tauchplätze in Schweizer Seen und Flüssen.</value></data>
   <data name="NotFound_Title" xml:space="preserve"><value>Seite nicht gefunden</value></data>
   <data name="NotFound_Text" xml:space="preserve"><value>Diese Seite gibt es nicht. Vielleicht hilft die Startseite weiter.</value></data>
   <data name="NotFound_Home" xml:space="preserve"><value>Zur Startseite</value></data>
@@ -58,4 +58,6 @@
   <data name="Reconnect_Resume" xml:space="preserve"><value>Fortsetzen</value></data>
   <data name="Reconnect_ResumeFailed" xml:space="preserve"><value>Die Sitzung lässt sich nicht fortsetzen. Lade die Seite neu. Ungespeicherte Änderungen gehen dabei verloren.</value></data>
   <data name="Reconnect_Reload" xml:space="preserve"><value>Seite neu laden</value></data>
+  <data name="Og_DefaultImageAlt" xml:space="preserve"><value>Logo von tauchplaetze.ch: Wo tauchen wir heute?</value></data>
+  <data name="Start_SeoTitle" xml:space="preserve"><value>Wo tauchen wir heute? Tauchprognose für die Schweiz</value></data>
 </root>

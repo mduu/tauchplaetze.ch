@@ -4,7 +4,6 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="MetaDescription" xml:space="preserve"><value>{0}, {1}: dive site and dive forecast.</value></data>
   <data name="Breadcrumb" xml:space="preserve"><value>Breadcrumb</value></data>
   <data name="DirectoryOnly" xml:space="preserve"><value>This site is only in the directory so far. Description, photos and entry points will follow.</value></data>
   <data name="Conditions" xml:space="preserve"><value>Dive conditions</value></data>
@@ -20,18 +19,17 @@
   <data name="Map_Label" xml:space="preserve"><value>Map of dive sites</value></data>
   <data name="Directory_Title" xml:space="preserve"><value>Dive sites</value></data>
   <data name="Directory_Lead" xml:space="preserve"><value>Search by name, place or lake, near you or by features. The index is for today.</value></data>
-  <data name="Directory_MetaDescription" xml:space="preserve"><value>Directory of dive sites in Swiss lakes and rivers, with map and dive index.</value></data>
+  <data name="Directory_MetaDescription" xml:space="preserve"><value>All dive sites in Switzerland on one map: lakes and rivers with entry points, depths and a daily dive forecast.</value></data>
   <data name="DataLevel_0" xml:space="preserve"><value>no forecast</value></data>
   <data name="DataLevel_1" xml:space="preserve"><value>weather only</value></data>
   <data name="DataLevel_2" xml:space="preserve"><value>data for the water body</value></data>
   <data name="DataLevel_3" xml:space="preserve"><value>data at the site</value></data>
   <data name="WaterBodies_Title" xml:space="preserve"><value>Waters</value></data>
   <data name="WaterBodies_Lead" xml:space="preserve"><value>Lakes and rivers with dive sites.</value></data>
-  <data name="WaterBodies_MetaDescription" xml:space="preserve"><value>Swiss lakes and rivers with dive sites and dive forecast.</value></data>
+  <data name="WaterBodies_MetaDescription" xml:space="preserve"><value>Diving in Swiss lakes and rivers: visibility today, dive sites and dive forecast for every lake and river.</value></data>
   <data name="WaterBody_Lake" xml:space="preserve"><value>Lake</value></data>
   <data name="WaterBody_River" xml:space="preserve"><value>River</value></data>
   <data name="WaterBody_Sites" xml:space="preserve"><value>Dive sites</value></data>
-  <data name="WaterBody_MetaDescription" xml:space="preserve"><value>{0}: dive sites, map and dive forecast.</value></data>
   <data name="Index_Today" xml:space="preserve"><value>Index today</value></data>
   <data name="History_Title" xml:space="preserve"><value>Versions of {0}</value></data>
   <data name="History_Lead" xml:space="preserve"><value>Every approved change to this site, newest first. Names appear only if the person allows it.</value></data>
@@ -287,4 +285,13 @@
   <data name="ReportError_DailyLimit" xml:space="preserve"><value>You have already reported 10 dives today.</value></data>
   <data name="ReportError_NotFound" xml:space="preserve"><value>This report does not exist.</value></data>
   <data name="ReportError_CommentChanged" xml:space="preserve"><value>The comment has changed in the meantime.</value></data>
+  <data name="Seo_SiteTitle" xml:space="preserve"><value>{0} – dive site, {1}</value></data>
+  <data name="Seo_SiteIntro" xml:space="preserve"><value>Dive site {0}, {1}.</value></data>
+  <data name="Seo_SiteToday" xml:space="preserve"><value>Today: dive index {0}/10</value></data>
+  <data name="Seo_SiteVisibility" xml:space="preserve"><value>visibility approx. {0} m near the shore</value></data>
+  <data name="Seo_SiteThermocline" xml:space="preserve"><value>thermocline {0}–{1} m</value></data>
+  <data name="Seo_SiteFallback" xml:space="preserve"><value>Daily dive forecast, map and entry points.</value></data>
+  <data name="Seo_WaterTitle" xml:space="preserve"><value>{0}: diving and visibility today</value></data>
+  <data name="Seo_WaterDescription" xml:space="preserve"><value>{0}: {1} dive sites with map and daily dive forecast.</value></data>
+  <data name="Seo_WaterBest" xml:space="preserve"><value>Best dive index today: {0}/10.</value></data>
 </root>

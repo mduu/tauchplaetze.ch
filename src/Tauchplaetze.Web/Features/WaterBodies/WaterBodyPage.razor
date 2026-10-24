@@ -19,10 +19,9 @@
 
 @if (water is not null)
 {
-    <PageTitle>@water.Name · @Shared["Brand"]</PageTitle>
+    <PageTitle>@L["Seo_WaterTitle", water.Name] · @Shared["Brand"]</PageTitle>
     <HeadContent>
-        <meta name="description" content="@L["WaterBody_MetaDescription", water.Name]" />
-        <HreflangLinks />
+        <HreflangLinks Title="@L["Seo_WaterTitle", water.Name]" Description="@SeoText.WaterDescription(L, water.Name, sites.Count, sites.Max(s => s.DiveIndexToday))" Type="article" />
     </HeadContent>
 
     <UnderwaterHero>

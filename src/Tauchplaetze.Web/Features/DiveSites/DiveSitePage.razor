@@ -25,10 +25,9 @@
 @switch (lookup)
 {
     case DiveSiteLookup.Found { Site: var site }:
-        <PageTitle>@site.Name · @site.WaterBodyName · @Shared["Brand"]</PageTitle>
+        <PageTitle>@L["Seo_SiteTitle", site.Name, site.WaterBodyName] · @Shared["Brand"]</PageTitle>
         <HeadContent>
-            <meta name="description" content="@L["MetaDescription", site.Name, site.WaterBodyName]" />
-            <HreflangLinks />
+            <HreflangLinks Title="@L["Seo_SiteTitle", site.Name, site.WaterBodyName]" Description="@SeoText.SiteDescription(L, site, Today)" Type="article" Image="@OgImageOf(site)" />
         </HeadContent>
 
         <UnderwaterHero Photo="site.Hero" Credit="@(site.Hero is { } hero ? L["Hero_Credit", hero.Photographer].Value : null)"
@@ -266,4 +265,11 @@
 
     private static string Coordinates(DiveSiteDetails site) =>
         $"{site.Latitude.ToString("0.0000", CultureInfo.CurrentCulture)}° N, {site.Longitude.ToString("0.0000", CultureInfo.CurrentCulture)}° E";
+
+    private static OgImage? OgImageOf(DiveSiteDetails site) =>
+        site.Hero is { Renditions.Count: > 0 } hero
+            ? (hero.Renditions.FirstOrDefault(r => r.Width >= 1200) ?? hero.Renditions[^1]) is var rendition
+                ? new OgImage(rendition.Url, rendition.Width, hero.Height * rendition.Width / Math.Max(1, hero.Width), hero.AltText ?? hero.Caption)
+                : null
+            : null;
 }

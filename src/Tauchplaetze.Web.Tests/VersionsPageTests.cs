@@ -40,6 +40,7 @@ public class VersionsPageTests : IClassFixture<WebApp>
         Assert.Contains("<meta name=\"robots\" content=\"noindex, nofollow\"", html);
         Assert.Equal("noindex, nofollow", response.Headers.GetValues("X-Robots-Tag").Single());
         Assert.DoesNotContain("rel=\"canonical\"", html);
+        Assert.DoesNotContain("og:title", html);
     }
 
     [Fact]

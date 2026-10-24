@@ -4,7 +4,6 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="MetaDescription" xml:space="preserve"><value>{0}, {1} : site de plongée et prévision de plongée.</value></data>
   <data name="Breadcrumb" xml:space="preserve"><value>Fil d'Ariane</value></data>
   <data name="DirectoryOnly" xml:space="preserve"><value>Ce site ne figure pour l'instant que dans l'annuaire. Description, photos et points d'entrée suivront.</value></data>
   <data name="Conditions" xml:space="preserve"><value>Conditions de plongée</value></data>
@@ -20,18 +19,17 @@
   <data name="Map_Label" xml:space="preserve"><value>Carte des sites de plongée</value></data>
   <data name="Directory_Title" xml:space="preserve"><value>Sites de plongée</value></data>
   <data name="Directory_Lead" xml:space="preserve"><value>Cherche par nom, lieu ou lac, près de toi ou par caractéristiques. L'indice vaut pour aujourd'hui.</value></data>
-  <data name="Directory_MetaDescription" xml:space="preserve"><value>Annuaire des sites de plongée des lacs et rivières de Suisse, avec carte et indice de plongée.</value></data>
+  <data name="Directory_MetaDescription" xml:space="preserve"><value>Tous les sites de plongée de Suisse sur une carte : lacs et rivières avec points d'entrée, profondeurs et prévision quotidienne.</value></data>
   <data name="DataLevel_0" xml:space="preserve"><value>pas de prévision</value></data>
   <data name="DataLevel_1" xml:space="preserve"><value>météo seulement</value></data>
   <data name="DataLevel_2" xml:space="preserve"><value>données pour le plan d'eau</value></data>
   <data name="DataLevel_3" xml:space="preserve"><value>données au site</value></data>
   <data name="WaterBodies_Title" xml:space="preserve"><value>Eaux</value></data>
   <data name="WaterBodies_Lead" xml:space="preserve"><value>Lacs et rivières avec des sites de plongée.</value></data>
-  <data name="WaterBodies_MetaDescription" xml:space="preserve"><value>Lacs et rivières de Suisse avec sites et prévision de plongée.</value></data>
+  <data name="WaterBodies_MetaDescription" xml:space="preserve"><value>Plonger dans les lacs et rivières suisses : visibilité aujourd'hui, sites et prévision de plongée pour chaque plan d'eau.</value></data>
   <data name="WaterBody_Lake" xml:space="preserve"><value>Lac</value></data>
   <data name="WaterBody_River" xml:space="preserve"><value>Rivière</value></data>
   <data name="WaterBody_Sites" xml:space="preserve"><value>Sites de plongée</value></data>
-  <data name="WaterBody_MetaDescription" xml:space="preserve"><value>{0} : sites de plongée, carte et prévision.</value></data>
   <data name="Index_Today" xml:space="preserve"><value>Indice aujourd'hui</value></data>
   <data name="History_Title" xml:space="preserve"><value>Versions de {0}</value></data>
   <data name="History_Lead" xml:space="preserve"><value>Chaque modification validée de ce site, la plus récente d'abord. Les noms n'apparaissent que si la personne l'autorise.</value></data>
@@ -287,4 +285,13 @@
   <data name="ReportError_DailyLimit" xml:space="preserve"><value>Tu as déjà signalé 10 plongées aujourd'hui.</value></data>
   <data name="ReportError_NotFound" xml:space="preserve"><value>Ce signalement n'existe pas.</value></data>
   <data name="ReportError_CommentChanged" xml:space="preserve"><value>Le commentaire a été modifié entre-temps.</value></data>
+  <data name="Seo_SiteTitle" xml:space="preserve"><value>{0} – site de plongée, {1}</value></data>
+  <data name="Seo_SiteIntro" xml:space="preserve"><value>Site de plongée {0}, {1}.</value></data>
+  <data name="Seo_SiteToday" xml:space="preserve"><value>Aujourd'hui : indice de plongée {0}/10</value></data>
+  <data name="Seo_SiteVisibility" xml:space="preserve"><value>visibilité env. {0} m près de la rive</value></data>
+  <data name="Seo_SiteThermocline" xml:space="preserve"><value>thermocline {0}–{1} m</value></data>
+  <data name="Seo_SiteFallback" xml:space="preserve"><value>Prévision de plongée quotidienne, carte et points d'entrée.</value></data>
+  <data name="Seo_WaterTitle" xml:space="preserve"><value>{0} : plongée et visibilité aujourd'hui</value></data>
+  <data name="Seo_WaterDescription" xml:space="preserve"><value>{0} : {1} sites de plongée avec carte et prévision quotidienne.</value></data>
+  <data name="Seo_WaterBest" xml:space="preserve"><value>Meilleur indice de plongée aujourd'hui : {0}/10.</value></data>
 </root>

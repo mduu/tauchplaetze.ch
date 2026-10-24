@@ -14,7 +14,7 @@
   <data name="Language_it" xml:space="preserve"><value>Italiano</value></data>
   <data name="Start_Title" xml:space="preserve"><value>Dove ci immergiamo oggi?</value></data>
   <data name="Start_Lead" xml:space="preserve"><value>Calcolata per ogni sito da modelli dei laghi, dati satellitari e meteo: dove ne vale la pena, quanto fa freddo in profondità e dove si trova il termoclino.</value></data>
-  <data name="Start_MetaDescription" xml:space="preserve"><value>Guida ai siti d'immersione dei laghi e fiumi svizzeri, con una previsione giornaliera da dati aperti.</value></data>
+  <data name="Start_MetaDescription" xml:space="preserve"><value>Immersioni in Svizzera: previsione d'immersione giornaliera con visibilità, termoclino e vento per i siti d'immersione nei laghi e fiumi svizzeri.</value></data>
   <data name="NotFound_Title" xml:space="preserve"><value>Pagina non trovata</value></data>
   <data name="NotFound_Text" xml:space="preserve"><value>Questa pagina non esiste. La pagina iniziale può aiutarti.</value></data>
   <data name="NotFound_Home" xml:space="preserve"><value>Vai alla pagina iniziale</value></data>
@@ -58,4 +58,6 @@
   <data name="Reconnect_Resume" xml:space="preserve"><value>Riprendi</value></data>
   <data name="Reconnect_ResumeFailed" xml:space="preserve"><value>Impossibile riprendere la sessione. Ricarica la pagina. Le modifiche non salvate andranno perse.</value></data>
   <data name="Reconnect_Reload" xml:space="preserve"><value>Ricarica la pagina</value></data>
+  <data name="Og_DefaultImageAlt" xml:space="preserve"><value>Logo di tauchplaetze.ch: Dove ci immergiamo oggi?</value></data>
+  <data name="Start_SeoTitle" xml:space="preserve"><value>Dove ci immergiamo oggi? Previsione d'immersione in Svizzera</value></data>
 </root>

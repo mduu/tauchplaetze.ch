@@ -2,16 +2,74 @@
 @using Tauchplaetze.Core.CrossCutting.Mail
 @inject NavigationManager Navigation
 @inject IOptions<PublicSiteOptions> Site
+@inject IStringLocalizer<SharedStrings> Shared
 
 @* Gehört in das <HeadContent> der Seite: Von mehreren <HeadContent> zeigt Blazor nur das letzte. Nur auf indexierbaren Seiten, nicht neben `noindex`. *@
-<link rel="canonical" href="@Absolute(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)" />
+<meta name="description" content="@Description" />
+<link rel="canonical" href="@Canonical" />
 @foreach (var language in Languages.All)
 {
     <link rel="alternate" hreflang="@language" href="@Absolute(language)" />
 }
 <link rel="alternate" hreflang="x-default" href="@Absolute(Languages.Default)" />
+<meta property="og:type" content="@Type" />
+<meta property="og:site_name" content="@Shared["Brand"]" />
+<meta property="og:title" content="@Title" />
+<meta property="og:description" content="@Description" />
+<meta property="og:url" content="@Canonical" />
+<meta property="og:locale" content="@OgLocale(Language)" />
+@foreach (var language in Languages.All.Where(l => l != Language))
+{
+    <meta property="og:locale:alternate" content="@OgLocale(language)" />
+}
+<meta property="og:image" content="@ImageUrl" />
+<meta property="og:image:width" content="@(Image?.Width ?? DefaultImageWidth)" />
+<meta property="og:image:height" content="@(Image?.Height ?? DefaultImageHeight)" />
+<meta property="og:image:alt" content="@(Image?.Alt ?? Shared["Og_DefaultImageAlt"])" />
+<meta name="twitter:card" content="summary_large_image" />
 
 @code {
+    private const int DefaultImageWidth = 1200;
+
+    private const int DefaultImageHeight = 630;
+
+    /// <summary>Der Titel für geteilte Links, ohne den Namen der Website.</summary>
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = "";
+
+    /// <summary>Die Meta-Description, zugleich `og:description`.</summary>
+    [Parameter, EditorRequired]
+    public string Description { get; set; } = "";
+
+    /// <summary>`article` für Platz und Gewässer, sonst `website`.</summary>
+    [Parameter]
+    public string Type { get; set; } = "website";
+
+    /// <summary>Das Bild für geteilte Links. Ohne Bild das Standardbild mit Logo.</summary>
+    [Parameter]
+    public OgImage? Image { get; set; }
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string Canonical => Absolute(Language);
+
+    private string ImageUrl => Image is { } image
+        ? AbsoluteUrl(image.Url)
+        : AbsoluteUrl(Assets["img/og-default.png"]);
+
     /// <remarks>Adresse aus `PublicSite:BaseUri`, nicht aus der Anfrage: Hinter dem Ingress stimmen Schema und Host der Anfrage nicht. Ohne Query-String und in Kleinbuchstaben wie die Routen. Das Canonical ist die Adresse in der Sprache der Seite.</remarks>
     private string Absolute(string language) => Site.Value.Link(LanguagePaths.Switch(Navigation.ToBaseRelativePath(Navigation.Uri), language).ToLowerInvariant());
+
+    private string AbsoluteUrl(string url) =>
+        url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || url.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+            ? url
+            : Site.Value.Link("/" + url.TrimStart('/'));
+
+    private static string OgLocale(string language) => language switch
+    {
+        "en" => "en_GB",
+        "fr" => "fr_CH",
+        "it" => "it_CH",
+        _ => "de_CH",
+    };
 }

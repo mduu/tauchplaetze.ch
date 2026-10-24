@@ -10,10 +10,9 @@
 @inject NavigationManager Navigation
 @inject TimeProvider Time
 
-<PageTitle>@L["Start_Title"] · @L["Brand"]</PageTitle>
+<PageTitle>@L["Start_SeoTitle"] · @L["Brand"]</PageTitle>
 <HeadContent>
-    <meta name="description" content="@L["Start_MetaDescription"]" />
-    <HreflangLinks />
+    <HreflangLinks Title="@L["Start_SeoTitle"]" Description="@L["Start_MetaDescription"]" />
 </HeadContent>
 
 <section class="intro">

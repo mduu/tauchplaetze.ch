@@ -14,7 +14,7 @@
   <data name="Language_it" xml:space="preserve"><value>Italiano</value></data>
   <data name="Start_Title" xml:space="preserve"><value>Where shall we dive today?</value></data>
   <data name="Start_Lead" xml:space="preserve"><value>Calculated for every dive site from lake models, satellite data and weather: where it is worth it, how cold it is at depth and where the thermocline lies.</value></data>
-  <data name="Start_MetaDescription" xml:space="preserve"><value>Dive site guide for Swiss lakes and rivers with a daily dive forecast from open data.</value></data>
+  <data name="Start_MetaDescription" xml:space="preserve"><value>Diving in Switzerland: daily dive forecast with visibility, thermocline and wind for dive sites in Swiss lakes and rivers.</value></data>
   <data name="NotFound_Title" xml:space="preserve"><value>Page not found</value></data>
   <data name="NotFound_Text" xml:space="preserve"><value>This page does not exist. The home page may help.</value></data>
   <data name="NotFound_Home" xml:space="preserve"><value>Go to the home page</value></data>
@@ -58,4 +58,6 @@
   <data name="Reconnect_Resume" xml:space="preserve"><value>Continue</value></data>
   <data name="Reconnect_ResumeFailed" xml:space="preserve"><value>The session cannot be resumed. Reload the page. Unsaved changes will be lost.</value></data>
   <data name="Reconnect_Reload" xml:space="preserve"><value>Reload page</value></data>
+  <data name="Og_DefaultImageAlt" xml:space="preserve"><value>tauchplaetze.ch logo: Where shall we dive today?</value></data>
+  <data name="Start_SeoTitle" xml:space="preserve"><value>Where shall we dive today? Dive forecast for Switzerland</value></data>
 </root>

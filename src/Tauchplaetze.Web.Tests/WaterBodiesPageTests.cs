@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.RegularExpressions;
+using Tauchplaetze.Core.Features.DiveSites.Queries;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
@@ -79,4 +80,25 @@ public class WaterBodiesPageTests : IClassFixture<WebApp>
     }
 
     private static WaterBodySummary Water(string slug, string name, WaterBodyType type, int sites) => new(slug.Length, slug, name, type, 46.5, 8.0, sites);
+
+    [Fact]
+    public async Task Die_Gewaesserseite_nennt_Sichtweite_im_Titel_und_Zahl_der_Plaetze_und_besten_Index_in_der_Beschreibung()
+    {
+        // Arrange
+        app.WaterBody.Answer = _ => new WaterBodyDetails(7, "zuerichsee", "Zürichsee", WaterBodyType.Lake, 47.28, 8.6);
+        app.SiteList.Answer = _ =>
+        [
+            new DiveSiteListItem("a", "A", "Herrliberg", "zuerichsee", "Zürichsee", WaterBodyType.Lake, 47.28, 8.6, 0, 3, 6.4m),
+            new DiveSiteListItem("b", "B", "Küsnacht", "zuerichsee", "Zürichsee", WaterBodyType.Lake, 47.31, 8.58, 0, 3, 7.9m),
+        ];
+        using var browser = app.Browser();
+
+        // Act
+        var html = WebUtility.HtmlDecode(await browser.GetStringAsync("/de/gewaesser/zuerichsee", TestContext.Current.CancellationToken));
+        app.SiteList.Answer = _ => [];
+
+        // Assert
+        Assert.Contains("<title>Zürichsee: Tauchen und Sichtweite heute · tauchplaetze.ch</title>", html);
+        Assert.Contains("<meta name=\"description\" content=\"Zürichsee: 2 Tauchplätze mit Karte und täglicher Tauchprognose. Bester Tauch-Index heute: 7.9/10.\"", html);
+    }
 }

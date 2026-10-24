@@ -14,7 +14,7 @@
   <data name="Language_it" xml:space="preserve"><value>Italiano</value></data>
   <data name="Start_Title" xml:space="preserve"><value>Où plonger aujourd'hui ?</value></data>
   <data name="Start_Lead" xml:space="preserve"><value>Calculée pour chaque site à partir de modèles de lac, de données satellite et de la météo : où cela vaut la peine, quelle est la température en profondeur et où se trouve la thermocline.</value></data>
-  <data name="Start_MetaDescription" xml:space="preserve"><value>Guide des sites de plongée des lacs et rivières de Suisse, avec une prévision quotidienne issue de données ouvertes.</value></data>
+  <data name="Start_MetaDescription" xml:space="preserve"><value>Plonger en Suisse : prévision de plongée quotidienne avec visibilité, thermocline et vent pour les sites de plongée des lacs et rivières suisses.</value></data>
   <data name="NotFound_Title" xml:space="preserve"><value>Page introuvable</value></data>
   <data name="NotFound_Text" xml:space="preserve"><value>Cette page n'existe pas. La page d'accueil peut t'aider.</value></data>
   <data name="NotFound_Home" xml:space="preserve"><value>Aller à la page d'accueil</value></data>
@@ -58,4 +58,6 @@
   <data name="Reconnect_Resume" xml:space="preserve"><value>Reprendre</value></data>
   <data name="Reconnect_ResumeFailed" xml:space="preserve"><value>La session ne peut pas reprendre. Recharge la page. Les modifications non enregistrées seront perdues.</value></data>
   <data name="Reconnect_Reload" xml:space="preserve"><value>Recharger la page</value></data>
+  <data name="Og_DefaultImageAlt" xml:space="preserve"><value>Logo de tauchplaetze.ch : Où plonger aujourd'hui ?</value></data>
+  <data name="Start_SeoTitle" xml:space="preserve"><value>Où plonger aujourd'hui ? Prévision de plongée en Suisse</value></data>
 </root>

@@ -419,6 +419,58 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("<link rel=\"canonical\" href=\"https://tauchplaetze.ch/fr\"", html);
     }
 
+    [Fact]
+    public async Task Ein_Platz_mit_Prognose_nennt_Ort_Index_und_Sprungschicht_in_Titel_Beschreibung_und_Vorschau()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = WebUtility.HtmlDecode(await browser.GetStringAsync($"/de/tauchplaetze/{WithoutPhoto}", TestContext.Current.CancellationToken));
+
+        // Assert
+        Assert.Contains("<title>Platz ohne Foto – Tauchplatz Zürichsee · tauchplaetze.ch</title>", html);
+        Assert.Contains("<meta name=\"description\" content=\"Tauchplatz Platz ohne Foto, Herrliberg ZH, Zürichsee. Heute: Tauch-Index 8.4/10", html);
+        Assert.Contains("Sprungschicht 15–30 m.", html);
+        Assert.Contains("<meta property=\"og:title\" content=\"Platz ohne Foto – Tauchplatz Zürichsee\"", html);
+        Assert.Contains("<meta property=\"og:type\" content=\"article\"", html);
+        Assert.Contains($"<meta property=\"og:url\" content=\"https://tauchplaetze.ch/de/tauchplaetze/{WithoutPhoto}\"", html);
+        Assert.Contains("<meta property=\"og:locale\" content=\"de_CH\"", html);
+        Assert.Matches("<meta property=\"og:image\" content=\"https://tauchplaetze.ch/img/og-default[^\"]*\\.png\"", html);
+        Assert.Contains("<meta name=\"twitter:card\" content=\"summary_large_image\"", html);
+    }
+
+    [Fact]
+    public async Task Die_Vorschau_eines_Platzes_mit_Titelbild_zeigt_das_Titelbild_in_der_Sprache_der_Seite()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = WebUtility.HtmlDecode(await browser.GetStringAsync($"/fr/sites-de-plongee/{WithForecast}", TestContext.Current.CancellationToken));
+
+        // Assert
+        Assert.Contains("<meta property=\"og:image\" content=\"https://media.test/hero/960.webp\"", html);
+        Assert.Contains("<meta property=\"og:image:alt\" content=\"Ein Hecht vor der Felswand\"", html);
+        Assert.Contains("<meta property=\"og:locale\" content=\"fr_CH\"", html);
+        Assert.Contains("<meta property=\"og:locale:alternate\" content=\"de_CH\"", html);
+        Assert.Contains("Site de plongée Platz mit Prognose, Herrliberg ZH, Zürichsee. Aujourd'hui : indice de plongée 8.4/10", html);
+    }
+
+    [Fact]
+    public async Task Ein_Platz_ohne_Prognose_beschreibt_Ort_und_Angebot_ohne_Werte()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = WebUtility.HtmlDecode(await browser.GetStringAsync($"/it/siti-di-immersione/{Slug}", TestContext.Current.CancellationToken));
+
+        // Assert
+        Assert.Contains("<meta name=\"description\" content=\"Sito d'immersione Riff Williams, Herrliberg ZH, Zürichsee. Previsione d'immersione giornaliera, mappa e punti d'entrata.\"", html);
+        Assert.DoesNotContain("Oggi:", html);
+    }
+
     private static IReadOnlyList<WeatherHourForecast> Hours(DateTime start) =>
         [.. Enumerable.Range(0, 24).Select(hour => new WeatherHourForecast(
             start.AddHours(hour),
