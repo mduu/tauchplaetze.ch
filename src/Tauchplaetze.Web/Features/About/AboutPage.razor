@@ -11,13 +11,11 @@
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<AboutStrings> L
 @inject IOptions<OperatorOptions> Operator
-@inject IOptions<PublicSiteOptions> Site
 @inject IQueryHandler<GetForecastRulesQuery, ForecastRulesSummary> ForecastRules
 
 <PageTitle>@L["About_Title"] · @Shared["Brand"]</PageTitle>
 <HeadContent>
     <meta name="description" content="@L["About_MetaDescription"]" />
-    <link rel="canonical" href="@Site.Value.Link(PublicRoutes.AboutPage(Language))" />
     <HreflangLinks />
 </HeadContent>
 

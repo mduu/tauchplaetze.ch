@@ -387,6 +387,38 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains($"hreflang=\"en\" href=\"https://tauchplaetze.ch/en/dive-sites/{Slug}\"", html);
     }
 
+    [Theory]
+    [InlineData("?km=25")]
+    [InlineData("?v=3&x=1")]
+    public async Task Das_Canonical_zeigt_auf_die_Adresse_ohne_Query_auf_der_Hauptdomain(string query)
+    {
+        // Arrange
+        using var browser = app.Browser();
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"/de/tauchplaetze/{Slug}{query}");
+        request.Headers.Host = "app-tauchplaetze-prod.azurewebsites.net";
+
+        // Act
+        using var response = await browser.SendAsync(request, TestContext.Current.CancellationToken);
+
+        // Assert
+        var html = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        Assert.Single(System.Text.RegularExpressions.Regex.Matches(html, "rel=\"canonical\""));
+        Assert.Contains($"<link rel=\"canonical\" href=\"https://tauchplaetze.ch/de/tauchplaetze/{Slug}\"", html);
+    }
+
+    [Fact]
+    public async Task Die_Startseite_einer_Sprache_ist_ihr_eigenes_Canonical()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/fr", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("<link rel=\"canonical\" href=\"https://tauchplaetze.ch/fr\"", html);
+    }
+
     private static IReadOnlyList<WeatherHourForecast> Hours(DateTime start) =>
         [.. Enumerable.Range(0, 24).Select(hour => new WeatherHourForecast(
             start.AddHours(hour),

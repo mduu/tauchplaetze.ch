@@ -3,7 +3,8 @@
 @inject NavigationManager Navigation
 @inject IOptions<PublicSiteOptions> Site
 
-@* Gehört in das <HeadContent> der Seite: Von mehreren <HeadContent> zeigt Blazor nur das letzte. *@
+@* Gehört in das <HeadContent> der Seite: Von mehreren <HeadContent> zeigt Blazor nur das letzte. Nur auf indexierbaren Seiten, nicht neben `noindex`. *@
+<link rel="canonical" href="@Absolute(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)" />
 @foreach (var language in Languages.All)
 {
     <link rel="alternate" hreflang="@language" href="@Absolute(language)" />
@@ -11,6 +12,6 @@
 <link rel="alternate" hreflang="x-default" href="@Absolute(Languages.Default)" />
 
 @code {
-    /// <remarks>Adresse aus `PublicSite:BaseUri`, nicht aus der Anfrage: Hinter dem Ingress stimmen Schema und Host der Anfrage nicht. Ohne Query-String.</remarks>
-    private string Absolute(string language) => Site.Value.Link(LanguagePaths.Switch(Navigation.ToBaseRelativePath(Navigation.Uri), language));
+    /// <remarks>Adresse aus `PublicSite:BaseUri`, nicht aus der Anfrage: Hinter dem Ingress stimmen Schema und Host der Anfrage nicht. Ohne Query-String und in Kleinbuchstaben wie die Routen. Das Canonical ist die Adresse in der Sprache der Seite.</remarks>
+    private string Absolute(string language) => Site.Value.Link(LanguagePaths.Switch(Navigation.ToBaseRelativePath(Navigation.Uri), language).ToLowerInvariant());
 }

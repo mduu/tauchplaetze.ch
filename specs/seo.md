@@ -24,7 +24,7 @@ Siehe `i18n.md`. Grundsätze:
 - Ein geänderter Slug erzeugt automatisch einen 301 vom alten Slug.
 - Reserviert: `neu`, `new`, `nouveau`, `nuovo` (Seite «Neuer Platz», `ReservedSlugs`). Ein neuer oder importierter Platz bekommt dann `-2`, ein Slug von Hand ergibt `InvalidSlug`. Der Sprachwechsel übersetzt diese Seite wie ein Segment.
 - Die Startseite kennt `?tag=…`, `?ort=…` und `?km=…`. `?ort=schweiz` löscht den gemerkten Ort (Cookie `tp_area`, `ux.md`). Alle sind kanonisch auf `/{lang}`.
-- Query-Parameter (`?date=…`, Suche und Filter im Verzeichnis `?q=…&f=…&page=…`) sind kanonisch auf die Seite ohne Parameter. Das Verzeichnis setzt `<link rel="canonical">` auf `/{lang}/tauchplaetze`. Suchergebnisse sind keine eigenen Landingpages.
+- Query-Parameter (`?date=…`, Suche und Filter im Verzeichnis `?q=…&f=…&page=…`) sind kanonisch auf die Seite ohne Parameter. Das Canonical aller Seiten ist die Adresse ohne Query, das Verzeichnis also `/{lang}/tauchplaetze`. Suchergebnisse sind keine eigenen Landingpages.
 - Absolute Adressen in `canonical` und `hreflang` kommen aus `PublicSite:BaseUri`, nie aus der Anfrage (hinter Ingress und Cloudflare stimmen Schema und Host der Anfrage nicht), immer ohne Query-String.
 
 ## Pro Seite
@@ -32,7 +32,7 @@ Siehe `i18n.md`. Grundsätze:
 - `<title>` und `<meta name="description">` aus Ressourcen plus Daten, pro Sprache.
   - Platz: «{Name}, {Gemeinde} – Tauchplatz {See} | tauchplaetze.ch»
   - See: «Tauchplätze am {See}: Prognose, Sichtweite, Temperatur»
-- `<link rel="canonical">`.
+- `<link rel="canonical">` auf die eigene Adresse in der Sprache der Seite: Hauptdomain aus `PublicSite:BaseUri`, ohne Query, in Kleinbuchstaben. Gesetzt zentral in `HreflangLinks` zusammen mit `hreflang`, also nur auf indexierbaren Seiten. Seiten mit `noindex` (Konto, Versionen, Bearbeiten, Neu, Melden, `/admin`, `/platform`, 404, 410) und die Weiterleitung `/` haben kein Canonical (22.10.2026: Search Console zeigte «User-declared canonical: None»).
 - `hreflang` für `de`, `en`, `fr`, `it` und `x-default` (= `de`).
 - Open Graph und Twitter Card mit dem Hero-Foto.
 - Eine `<h1>` pro Seite.

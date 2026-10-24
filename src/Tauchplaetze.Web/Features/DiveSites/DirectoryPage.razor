@@ -8,14 +8,10 @@
 @inject IQueryHandler<FindDiveSitesQuery, FoundDiveSites> Finder
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
-@using Microsoft.Extensions.Options
-@using Tauchplaetze.Core.CrossCutting.Mail
-@inject IOptions<PublicSiteOptions> Site
 
 <PageTitle>@L["Directory_Title"] · @Shared["Brand"]</PageTitle>
 <HeadContent>
     <meta name="description" content="@L["Directory_MetaDescription"]" />
-    <link rel="canonical" href="@Site.Value.Link(BasePath)" />
     <HreflangLinks />
 </HeadContent>
 
