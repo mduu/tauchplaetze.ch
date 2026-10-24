@@ -10,6 +10,7 @@
 @using Tauchplaetze.Core.Features.Forecasts.Queries
 @using Tauchplaetze.Web.Features.DiveSites
 @using Tauchplaetze.Web.Features.Forecasts
+@inject Microsoft.Extensions.Options.IOptions<Tauchplaetze.Core.CrossCutting.Mail.PublicSiteOptions> Site
 @inject IQueryHandler<GetWaterBodyQuery, WaterBodyDetails?> WaterBodyQuery
 @inject IQueryHandler<GetWaterBodyIndexHistoryQuery, WaterBodyIndexHistory> IndexHistory
 @inject IQueryHandler<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>> DiveSites
@@ -22,6 +23,7 @@
     <PageTitle>@L["Seo_WaterTitle", water.Name] · @Shared["Brand"]</PageTitle>
     <HeadContent>
         <HreflangLinks Title="@L["Seo_WaterTitle", water.Name]" Description="@SeoText.WaterDescription(L, water.Name, sites.Count, sites.Max(s => s.DiveIndexToday))" Type="article" />
+        <JsonLd Json="@StructuredData.WaterBody(Site.Value, Language, water, SeoText.WaterDescription(L, water.Name, sites.Count, sites.Max(s => s.DiveIndexToday)), Shared["Brand"])" />
     </HeadContent>
 
     <UnderwaterHero>

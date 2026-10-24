@@ -13,6 +13,7 @@
 @using Tauchplaetze.Core.Features.Reports.Queries
 @using Tauchplaetze.Web.Features.Reports
 @using Tauchplaetze.Web.CrossCutting.Caching
+@inject Microsoft.Extensions.Options.IOptions<Tauchplaetze.Core.CrossCutting.Mail.PublicSiteOptions> Site
 @inject IQueryHandler<GetDiveSiteQuery, DiveSiteLookup> DiveSites
 @inject IQueryHandler<GetSiteForecastQuery, SiteForecast> Forecasts
 @inject IQueryHandler<GetSiteDischargeQuery, SiteDischarge?> Discharges
@@ -28,6 +29,7 @@
         <PageTitle>@L["Seo_SiteTitle", site.Name, site.WaterBodyName] · @Shared["Brand"]</PageTitle>
         <HeadContent>
             <HreflangLinks Title="@L["Seo_SiteTitle", site.Name, site.WaterBodyName]" Description="@SeoText.SiteDescription(L, site, Today)" Type="article" Image="@OgImageOf(site)" />
+            <JsonLd Json="@StructuredData.DiveSite(Site.Value, Language, site, SeoText.SiteDescription(L, site, Today), OgImageOf(site)?.Url, Shared["Brand"])" />
         </HeadContent>
 
         <UnderwaterHero Photo="site.Hero" Credit="@(site.Hero is { } hero ? L["Hero_Credit", hero.Photographer].Value : null)"

@@ -38,7 +38,7 @@ Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise
 - ✅ Redaktion: Platz erfassen (Schnellerfassung mit Karte), bearbeiten, Revisionen, Medien-Upload mit Bildgrössen.
 - ✅ Öffentliche Seiten: Start «Wo tauchen?», Tauchplatzseite, Verzeichnis mit Karte, Gewässerseite, Über/Impressum/Datenschutz.
 - ✅ Prognose-Job mit Datenstufen (heute `rules-1.6`), Rohdaten in Blob Storage, Status auf `/platform/prognose`. Quellen: Alplakes, Open-Meteo, BAFU (ADR-007).
-- 🟡 SEO-Grundlagen: Titel, Meta, `hreflang`, `robots.txt` und Sitemap pro Sprache (`/sitemap.xml`) umgesetzt. JSON-LD offen (⏳).
+- ✅ SEO-Grundlagen: Titel und Beschreibungen mit Daten des Tages, Canonical, `hreflang`, Open Graph, JSON-LD, `robots.txt` und Sitemap pro Sprache (`/sitemap.xml`), 24.10.2026.
 - ✅ Deploy auf Azure (Bicep, GitHub Actions mit what-if und Freigabe, Deploy aus dem Paket, Health Check wartet auf die neue Version). Domains `tauchplaetze.ch`, `www.tauchplaetze.ch`, `sichtweiten.ch` und `www.sichtweiten.ch` mit Zertifikat (21.10.2026). Mail über Hostpoint mit SPF, DKIM und DMARC. DNS bleibt bei Hostpoint, Cloudflare ist ein späterer Ausbau.
 - ⏳ **Inhalt:** Zürichsee und Zugersee vollständig (je 8 bis 12 Plätze auf Stufe 2 mit Fotos aus dem eigenen Archiv). Dazu der Rhein als erster Fluss. Alle weiteren bekannten Plätze als Stufe 0. Entscheid Marc, 17.10.2026: Marc taucht dort am meisten und kann die Prognose am besten beurteilen. Beide Seen haben ein 3D-Modell (Datenstufe 3).
 - ⏳ **Inhalt pro Platz:** 3–6 starke Fotos aus den Originalen des eigenen Archivs. Fotos der Ein- und Ausstiege nach und nach bei eigenen Tauchgängen.

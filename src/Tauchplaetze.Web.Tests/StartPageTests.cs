@@ -227,4 +227,20 @@ public class StartPageTests : IClassFixture<WebApp>
         app.BestSites.Ranking = ranking;
         Assert.Contains("Ancora nessun indice per questo giorno.", VisibleText.Of(html));
     }
+
+    [Fact]
+    public async Task Die_Startseite_beschreibt_die_Website_und_ihr_Logo_als_strukturierte_Daten()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/it", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("\"@type\":\"WebSite\"", html);
+        Assert.Contains("\"url\":\"https://tauchplaetze.ch/it\"", html);
+        Assert.Matches("\"logo\":\"https://tauchplaetze.ch/img/logo-128[^\"]*\\.png\"", html);
+        Assert.Contains("<meta property=\"og:locale\" content=\"it_CH\"", html);
+    }
 }

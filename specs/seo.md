@@ -38,14 +38,15 @@ Siehe `i18n.md`. Grundsätze:
 - Open Graph und Twitter Card zentral in `HreflangLinks` (umgesetzt 24.10.2026), nur auf indexierbaren Seiten: `og:type` (`article` für Platz und Gewässer, sonst `website`), `og:site_name`, `og:title` (Titel ohne Markenname), `og:description` (= Meta-Description), `og:url` (= Canonical), `og:locale` (`de_CH`, `fr_CH`, `it_CH`, `en_GB`) mit `og:locale:alternate`, `og:image` mit Breite, Höhe und Alt-Text, `twitter:card` = `summary_large_image`. Bild: das Titelbild des Platzes (Bildgrösse ab 1200 px, sonst die grösste), ohne Titelbild das Standardbild `img/og-default.png` (1200 × 630, Logo mit «Wo tauchen wir heute?»).
 - Eine `<h1>` pro Seite.
 
-## Strukturierte Daten (JSON-LD, geplant)
+## Strukturierte Daten (JSON-LD)
 
-Stand 21.10.2026: noch nicht umgesetzt.
+Umgesetzt am 24.10.2026 (`StructuredData`, Komponente `JsonLd`), als `<script type="application/ld+json">` im Kopf, nur auf indexierbaren Seiten.
 
-- Tauchplatz: `TouristAttraction` (bzw. `Place`) mit `geo` (`GeoCoordinates`), `containedInPlace` (der See), `image`.
-- Gewässer: `LakeBodyOfWater` (See) bzw. `RiverBodyOfWater` (Fluss).
-- Breadcrumbs: `BreadcrumbList`.
-- Organisation: `Organization` auf der Startseite.
+- Tauchplatz: `TouristAttraction` mit `name`, `description` (= Meta-Description), `url`, `geo` (`GeoCoordinates`, 5 Dezimalen), `address` (`addressLocality` = Gemeinde, `addressRegion` = Kanton, `addressCountry` = `CH`), `containedInPlace` (das Gewässer mit Typ und URL), `image` (Titelbild, falls vorhanden).
+- Gewässer: `LakeBodyOfWater` (See) bzw. `RiverBodyOfWater` (Fluss) mit `geo`.
+- Breadcrumbs: `BreadcrumbList` – Platz: tauchplaetze.ch › Gewässer › Platz; Gewässer: tauchplaetze.ch › Gewässer.
+- Startseite: `WebSite` (Name, URL der Sprache, `inLanguage`, Beschreibung) und `Organization` (Name, URL, Logo, keine Personendaten).
+- Sicherheit: `System.Text.Json` mit dem Standard-Encoder maskiert `<`, `>` und `&`; ein Name kann das `<script>` nicht schliessen (Test). Razor rendert kein `<script>` aus dem Markup einer Komponente, darum gibt `JsonLd` das ganze Element als Fragment aus.
 
 ## Sitemap und Robots
 

@@ -1,0 +1,8 @@
+@* Strukturierte Daten im <HeadContent>. Razor rendert kein <script> aus dem Markup einer Komponente, darum als ganzes Fragment. Der Inhalt kommt aus `StructuredData` und ist dort sicher kodiert. *@
+@((MarkupString)$"<script type=\"application/ld+json\">{Json}</script>")
+
+@code {
+    /// <summary>Das fertige JSON-LD aus <see cref="StructuredData"/>.</summary>
+    [Parameter, EditorRequired]
+    public string Json { get; set; } = "";
+}

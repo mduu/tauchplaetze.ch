@@ -100,5 +100,7 @@ public class WaterBodiesPageTests : IClassFixture<WebApp>
         // Assert
         Assert.Contains("<title>Zürichsee: Tauchen und Sichtweite heute · tauchplaetze.ch</title>", html);
         Assert.Contains("<meta name=\"description\" content=\"Zürichsee: 2 Tauchplätze mit Karte und täglicher Tauchprognose. Bester Tauch-Index heute: 7.9/10.\"", html);
+        Assert.Contains("\"@type\":\"LakeBodyOfWater\"", html);
+        Assert.Contains("\"@type\":\"BreadcrumbList\"", html);
     }
 }

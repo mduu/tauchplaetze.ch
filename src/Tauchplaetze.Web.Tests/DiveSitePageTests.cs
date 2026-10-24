@@ -471,6 +471,72 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.DoesNotContain("Oggi:", html);
     }
 
+    [Fact]
+    public async Task Ein_Platz_beschreibt_sich_als_Sehenswuerdigkeit_mit_Koordinaten_Ort_Gewaesser_und_Brotkrumen()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync($"/fr/sites-de-plongee/{WithForecast}", TestContext.Current.CancellationToken);
+
+        // Assert
+        var graph = JsonLdGraph(html);
+        var place = graph.Single(n => n.GetProperty("@type").GetString() == "TouristAttraction");
+        Assert.Equal("Platz mit Prognose", place.GetProperty("name").GetString());
+        Assert.Equal(47.28, place.GetProperty("geo").GetProperty("latitude").GetDouble());
+        Assert.Equal("Herrliberg", place.GetProperty("address").GetProperty("addressLocality").GetString());
+        Assert.Equal("CH", place.GetProperty("address").GetProperty("addressCountry").GetString());
+        Assert.Equal("LakeBodyOfWater", place.GetProperty("containedInPlace").GetProperty("@type").GetString());
+        Assert.Equal("https://tauchplaetze.ch/fr/eaux/zuerichsee", place.GetProperty("containedInPlace").GetProperty("url").GetString());
+        Assert.Equal("https://media.test/hero/960.webp", place.GetProperty("image").GetString());
+        var crumbs = graph.Single(n => n.GetProperty("@type").GetString() == "BreadcrumbList").GetProperty("itemListElement").EnumerateArray().Select(i => i.GetProperty("name").GetString()).ToList();
+        Assert.Equal(["tauchplaetze.ch", "Zürichsee", "Platz mit Prognose"], crumbs);
+    }
+
+    [Fact]
+    public async Task Ein_Name_mit_Script_Tag_bricht_nicht_aus_den_strukturierten_Daten_aus()
+    {
+        // Arrange
+        app.DiveSites.Add("boese", new DiveSiteLookup.Found(new DiveSiteDetails(
+            Guid.NewGuid(), "boese", "Platz </script><script>alert(1)</script>", "zuerichsee", "Zürichsee", WaterBodyType.Lake, null, null, 47.28, 8.6, 0, DateTimeOffset.UtcNow, [], [])));
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/boese", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.DoesNotContain("<script>alert(1)", html);
+        Assert.Equal("Platz </script><script>alert(1)</script>", JsonLdGraph(html).Single(n => n.GetProperty("@type").GetString() == "TouristAttraction").GetProperty("name").GetString());
+    }
+
+    [Fact]
+    public async Task Ist_die_Prognose_fuer_die_Beschreibung_zu_lang_kuerzt_sie_die_Werte_statt_sie_wegzulassen()
+    {
+        // Arrange
+        var id = Guid.NewGuid();
+        app.DiveSites.Add("langer-name", new DiveSiteLookup.Found(new DiveSiteDetails(
+            id, "langer-name", "Unterwasserpark beim alten Bootshaus", "zuerichsee", "lac de Zurich", WaterBodyType.Lake, "Herrliberg", "ZH", 47.28, 8.6, 0, DateTimeOffset.UtcNow, [], [])));
+        app.Forecasts.Add(id, new SiteForecast([Day(18, 8.4m, [ReasonCode.CalmLake]) with { SecchiDepthShore = 4.5m, ThermoclineTop = 18.5m, ThermoclineBottom = 24.5m }], DateTimeOffset.UtcNow, Hours(new DateTime(2030, 1, 7))));
+        using var browser = app.Browser();
+
+        // Act
+        var html = WebUtility.HtmlDecode(await browser.GetStringAsync("/fr/sites-de-plongee/langer-name", TestContext.Current.CancellationToken));
+
+        // Assert
+        var description = System.Text.RegularExpressions.Regex.Match(html, "<meta name=\"description\" content=\"([^\"]*)\"").Groups[1].Value;
+        Assert.Contains("indice de plongée 8.4/10", description);
+        Assert.True(description.Length <= 160, description);
+    }
+
+    private static List<System.Text.Json.JsonElement> JsonLdGraph(string html)
+    {
+        var json = System.Text.RegularExpressions.Regex.Match(html, "<script type=\"application/ld\\+json\">(.*?)</script>", System.Text.RegularExpressions.RegexOptions.Singleline).Groups[1].Value;
+        using var document = System.Text.Json.JsonDocument.Parse(json);
+        Assert.Equal("https://schema.org", document.RootElement.GetProperty("@context").GetString());
+        return [.. document.RootElement.GetProperty("@graph").EnumerateArray().Select(e => e.Clone())];
+    }
+
     private static IReadOnlyList<WeatherHourForecast> Hours(DateTime start) =>
         [.. Enumerable.Range(0, 24).Select(hour => new WeatherHourForecast(
             start.AddHours(hour),

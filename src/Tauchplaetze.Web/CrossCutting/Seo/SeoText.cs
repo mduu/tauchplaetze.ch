@@ -21,9 +21,13 @@ internal static class SeoText
             ? $"{municipality}{(site.Canton is { } canton ? " " + canton : "")}, {site.WaterBodyName}"
             : site.WaterBodyName;
         var intro = l["Seo_SiteIntro", site.Name, place].Value;
-        return today?.DiveIndex is { } index
-            ? Join(intro, TodaySentence(l, index, today), l["Seo_SiteFallback"].Value)
-            : Join(intro, l["Seo_SiteFallback"].Value);
+        if (today?.DiveIndex is not { } index)
+        {
+            return Join(intro, l["Seo_SiteFallback"].Value);
+        }
+
+        var todaySentence = TodaySentences(l, index, today).FirstOrDefault(sentence => intro.Length + 1 + sentence.Length <= MaxDescription);
+        return Join(intro, todaySentence, l["Seo_SiteFallback"].Value);
     }
 
     /// <summary>Gewässer: Zahl der Plätze und der beste Index von heute.</summary>
@@ -48,20 +52,16 @@ internal static class SeoText
         return text;
     }
 
-    private static string TodaySentence(IStringLocalizer l, decimal index, ForecastDay today)
+    /// <summary>Die Prognose von heute, zuerst mit allen Werten, dann kürzer: ohne Sprungschicht, nur der Index.</summary>
+    private static IEnumerable<string> TodaySentences(IStringLocalizer l, decimal index, ForecastDay today)
     {
-        var parts = new List<string> { l["Seo_SiteToday", Number(index)] };
-        if (today.SecchiDepthShore is { } shore)
-        {
-            parts.Add(l["Seo_SiteVisibility", Number(shore)]);
-        }
-
-        if (today is { ThermoclineTop: { } top, ThermoclineBottom: { } bottom })
-        {
-            parts.Add(l["Seo_SiteThermocline", Number(top), Number(bottom)]);
-        }
-
-        return string.Join(", ", parts) + ".";
+        var visibility = today.SecchiDepthShore is { } shore ? l["Seo_SiteVisibility", Number(shore)].Value : null;
+        var thermocline = today is { ThermoclineTop: { } top, ThermoclineBottom: { } bottom } ? l["Seo_SiteThermocline", Number(top), Number(bottom)].Value : null;
+        string Sentence(params string?[] parts) => string.Join(", ", parts.Where(p => p is not null)) + ".";
+        var head = l["Seo_SiteToday", Number(index)].Value;
+        yield return Sentence(head, visibility, thermocline);
+        yield return Sentence(head, visibility);
+        yield return Sentence(head);
     }
 
     private static string Number(decimal value) => value.ToString("0.#", CultureInfo.CurrentCulture);

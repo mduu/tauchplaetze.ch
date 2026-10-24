@@ -4,6 +4,7 @@
 @using Tauchplaetze.Core.Features.Forecasts
 @using Tauchplaetze.Core.Features.Forecasts.Queries
 @using Tauchplaetze.Core.Features.WaterBodies
+@inject Microsoft.Extensions.Options.IOptions<Tauchplaetze.Core.CrossCutting.Mail.PublicSiteOptions> Site
 @inject IStringLocalizer<SharedStrings> L
 @inject IStringLocalizer<ForecastStrings> F
 @inject IQueryHandler<GetBestSitesQuery, BestSites> BestSitesQuery
@@ -13,6 +14,7 @@
 <PageTitle>@L["Start_SeoTitle"] · @L["Brand"]</PageTitle>
 <HeadContent>
     <HreflangLinks Title="@L["Start_SeoTitle"]" Description="@L["Start_MetaDescription"]" />
+    <JsonLd Json="@StructuredData.Website(Site.Value, Language, L["Start_MetaDescription"], Site.Value.Link("/" + Assets["img/logo-128.png"]))" />
 </HeadContent>
 
 <section class="intro">
