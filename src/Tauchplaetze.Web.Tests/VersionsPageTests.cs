@@ -23,6 +23,20 @@ public class VersionsPageTests : IClassFixture<WebApp>
     }
 
     [Fact]
+    public async Task Der_Link_zu_den_Aenderungen_zeigt_auf_die_Versionsseite_und_nicht_auf_die_Startseite()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/riff-williams/versionen", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("href=\"/de/tauchplaetze/riff-williams/versionen?v=", html);
+        Assert.DoesNotContain("href=\"?v=", html);
+    }
+
+    [Fact]
     public async Task Die_History_zeigt_Namen_nur_mit_Einwilligung_und_ist_nicht_indexiert()
     {
         // Arrange
