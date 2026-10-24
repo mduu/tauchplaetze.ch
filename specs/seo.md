@@ -56,6 +56,13 @@ Umgesetzt am 24.10.2026 (`StructuredData`, Komponente `JsonLd`), als `<script ty
 - `/robots.txt` (Endpoint der App, `RobotsTxt`): sperrt `/admin`, `/platform`, `/api`, die Konto-Seiten (`/{Lang}/account/`), «Neuer Platz», Bearbeiten, Versionen und «Tauchgang melden» in allen vier Sprachen sowie Query-Varianten (`/*?`). Am Schluss steht `Sitemap: {PublicSite:BaseUri}/sitemap.xml`.
 - Die Seiten der Versionen (`…/versionen`) haben `noindex` und stehen nicht in der Sitemap (Datenschutz, `cms.md`). Ebenso der Bearbeiten-Modus (`…/bearbeiten`) und «Neuen Platz vorschlagen» (`…/neu`), beide nur angemeldet.
 
+## LLMs und KI-Crawler
+
+Entscheid Marc, 24.10.2026: KI-Crawler dürfen die Website lesen, auch für das Training. Ziel ist, dass Sprachmodelle und KI-Suchen tauchplaetze.ch kennen und darauf verweisen.
+
+- **robots.txt:** keine eigenen Blöcke für GPTBot, ClaudeBot, Google-Extended, CCBot usw. Die Sperren unter `User-agent: *` gelten für alle. Oben steht der Kommentar «# KI-Crawler (Suche, Antworten, Training) erlaubt. Siehe /llms.txt».
+- **llms.txt:** `/llms.txt` nach der Konvention von llmstxt.org, erzeugt in der App (`LlmsTxt`) mit absoluten Adressen aus `PublicSite:BaseUri`. Inhalt Deutsch mit Hinweis auf die anderen Sprachen: Kurzbeschreibung, Startseiten der vier Sprachen, Verzeichnis, Gewässer, «So entsteht die Prognose», Datenquellen mit Quellenangabe, Sitemap. Keine Personendaten. `Cache-Control: public, max-age=86400`.
+
 ## IndexNow
 
 Umgesetzt am 24.10.2026 (Entscheid Marc).

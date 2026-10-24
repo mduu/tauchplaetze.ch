@@ -7,6 +7,7 @@ namespace Tauchplaetze.Web.CrossCutting.Hosting;
 internal static class RobotsTxt
 {
     public const string Content = """
+        # KI-Crawler (Suche, Antworten, Training) erlaubt. Siehe /llms.txt
         User-agent: *
         Disallow: /admin
         Disallow: /platform

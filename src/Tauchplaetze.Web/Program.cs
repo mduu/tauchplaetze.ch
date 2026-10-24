@@ -77,6 +77,7 @@ app.MapLanguageRedirect();
 app.MapRobotsTxt();
 app.MapSitemap();
 app.MapIndexNowKey();
+app.MapLlmsTxt();
 app.MapAccountEndpoints();
 app.MapMediaEndpoints();
 app.MapContentEndpoints();
