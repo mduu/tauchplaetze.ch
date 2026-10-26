@@ -1,6 +1,7 @@
 using MudBlazor.Services;
 using Tauchplaetze.Core;
 using Tauchplaetze.Core.Features.Forecasts;
+using Tauchplaetze.Core.Features.Forecasts.Sources.Bathymetry;
 using Tauchplaetze.Web.Components;
 using Tauchplaetze.Web.CrossCutting.Caching;
 using Tauchplaetze.Web.CrossCutting.Database;
@@ -28,6 +29,8 @@ builder.Services.AddAccountCookie();
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddMudServices();
 builder.Services.AddMemoryCache();
+builder.Services.Configure<BathymetryOptions>(options =>
+    options.Directory = builder.Environment.WebRootPath is { } webRoot ? Path.Combine(webRoot, "bathymetry") : null);
 builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(ForecastSchedule.Section));
 builder.Services.AddHostedService<ForecastWorker>();
 builder.Services.AddHostedService<DischargeWorker>();
