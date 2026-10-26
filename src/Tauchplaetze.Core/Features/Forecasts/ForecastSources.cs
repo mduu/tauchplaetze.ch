@@ -1,10 +1,13 @@
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using NetTopologySuite.Geometries;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.Data.Entities;
+using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Forecasts.Calculation;
 using Tauchplaetze.Core.Features.Forecasts.Sources;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Alplakes;
+using Tauchplaetze.Core.Features.Forecasts.Sources.Bathymetry;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Hydro;
 using Tauchplaetze.Core.Features.Forecasts.Sources.OpenMeteo;
 using Tauchplaetze.Core.Features.WaterBodies;
@@ -34,7 +37,8 @@ internal record SiteData(
     SatelliteObservation? ShoreSecchi = null);
 
 /// <summary>Holt die Daten aller Quellen. Plätze und Gewässer mit denselben Abfragen teilen sich den Call.</summary>
-internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMeteo, HydroClient hydro, ILogger<ForecastSources> logger)
+internal class ForecastSources(
+    AlplakesClient alplakes, OpenMeteoClient openMeteo, HydroClient hydro, ContourTiles contours, ILogger<ForecastSources> logger)
 {
     public const int ForecastDays = 5;
 
@@ -142,7 +146,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
         var (start, end) = ModelPeriod(today);
         var best = await recorder.Record(AlplakesClient.Source, $"3d-{model}-{site.Slug}",
             alplakes.GetDepthTime(model, lake, start, end, site.Location.Y, site.Location.X, ct), ct);
-        var toward = site.SatellitePoint ?? waterBody.SatellitePoint ?? waterBody.Centroid;
+        var toward = Toward(site, waterBody);
         foreach (var meters in ModelPoint.SeawardMeters)
         {
             if (!ModelPoint.TooShallow(best))
@@ -164,10 +168,26 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
         return best;
     }
 
+    /// <summary>
+    /// Das Ziel für die Punkte Richtung See: rechtwinklig zum Ufer, zum nächsten Punkt der 10-m-Tiefenlinie (<see cref="ShoreNormal"/>).
+    /// Ohne Tiefenlinien und an Bootsplätzen der eigene Satellitenpunkt des Platzes, sonst der des Sees, sonst seine Mitte.
+    /// </summary>
+    private Point Toward(DiveSite site, WaterBody waterBody)
+    {
+        if (site.Access != DiveSiteAccess.Boat
+            && ShoreNormal.Toward(site.Location.Y, site.Location.X, contours.Near(waterBody.Slug, site.Location.Y, site.Location.X, ShoreNormal.ContourDepth, ShoreNormal.MaxMeters))
+                is var (latitude, longitude))
+        {
+            return new Point(longitude, latitude) { SRID = site.Location.SRID };
+        }
+
+        return site.SatellitePoint ?? waterBody.SatellitePoint ?? waterBody.Centroid;
+    }
+
     /// <remarks>
-    /// Zuerst 50 m vom Platz Richtung Seemitte, bei fehlendem, zu altem Wert oder zu wenigen Pixeln 100 m. Liefern beide nichts, folgen Punkte bei 100 m in gedrehter Richtung (<see cref="ShorePoint.FallbackTurns"/>), bis einer einen brauchbaren Wert hat.
+    /// Zuerst 50 m vom Platz in den See, bei fehlendem, zu altem Wert oder zu wenigen Pixeln 100 m. Liefern beide nichts, folgen Punkte bei 100 m in gedrehter Richtung (<see cref="ShorePoint.FallbackTurns"/>), bis einer einen brauchbaren Wert hat.
     /// Höchstens sechs Calls pro Platz.
-    /// Die Richtung gibt der eigene Satellitenpunkt des Platzes (für Sentinel-3 seewärts gesetzt), sonst der des Sees, sonst seine Mitte.
+    /// Die Richtung bestimmt <see cref="Toward"/>.
     /// Ist kein Wert da, gilt Sentinel-3.
     /// </remarks>
     private async Task<SatelliteObservation?> ShoreSecchi(DiveSite site, WaterBody waterBody, DateOnly today, SourceRecorder recorder, CancellationToken ct)
@@ -179,7 +199,7 @@ internal class ForecastSources(AlplakesClient alplakes, OpenMeteoClient openMete
             return null;
         }
 
-        var toward = site.SatellitePoint ?? waterBody.SatellitePoint ?? waterBody.Centroid;
+        var toward = Toward(site, waterBody);
         var nearPoint = SeawardPoint.Of(site.Location.Y, site.Location.X, toward.Y, toward.X, ShorePoint.NearMeters);
         var near = await ShoreSatelliteAt(lake, nearPoint.Latitude, nearPoint.Longitude, today, recorder, ct);
         var freshDays = DiveIndexRules.Default.SatelliteFullAgeDays;

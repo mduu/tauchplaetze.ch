@@ -9,7 +9,7 @@ internal static class SeawardPoint
     private const double MetersPerDegree = 111_320;
 
     /// <summary>
-    /// Rund <paramref name="meters"/> vom Platz zum Punkt <paramref name="towardLatitude"/>/<paramref name="towardLongitude"/> (Satellitenpunkt oder Mitte des Sees).
+    /// Rund <paramref name="meters"/> vom Platz zum Punkt <paramref name="towardLatitude"/>/<paramref name="towardLongitude"/> (Ziel aus den Tiefenlinien, Satellitenpunkt oder Mitte des Sees).
     /// Liegt das Ziel näher, gilt das Ziel. Fällt es mit dem Platz zusammen, gilt der Platz.
     /// </summary>
     public static (double Latitude, double Longitude) Of(double latitude, double longitude, double towardLatitude, double towardLongitude, double meters)

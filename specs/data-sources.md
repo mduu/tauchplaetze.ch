@@ -224,6 +224,7 @@ Das Skript `tools/bathymetry/contours.cs` rechnet einmalig Tiefenlinien. Die App
 - **Tiefe:** mittlere Seehöhe minus Höhe des Seegrunds. Die Seehöhen stehen als Tabelle im Skript (LN02, gerundet). Das Raster reicht nicht ganz ans Ufer: Beim Zürichsee liegt der höchste Wert 1.3 m unter dem Wasserspiegel. Ohne Tabelleneintrag gilt der höchste Wert. Stauseen schwanken stärker.
 - **Linien:** Marching Squares bei 5, 10, 15, 20, 25, 30, 35, 40, 50 und 60 m. Vereinfacht nach Douglas-Peucker (1.5 m), Linien unter 30 m Länge fallen weg. LV95 nach WGS84 mit den Näherungsformeln von swisstopo (rund 1 m).
 - **Ausgabe:** `wwwroot/bathymetry/{see}/{e}_{n}.json` (GeoJSON, ein `MultiLineString` pro Tiefe, Property `depth`; `e`, `n` = Kilometer in LV95 wie die Kacheln von swisstopo) und `wwwroot/bathymetry/index.json` mit Seehöhe, Datum der Daten, Bounding Box und Kacheln pro See.
+- **Prognose:** Der Prognose-Lauf liest die 10-m-Linie aus denselben Dateien. Sie gibt die Richtung vom Platz rechtwinklig zum Ufer in den See (`forecast.md`, «Richtung in den See»).
 - **Karte:** Ebene «Tiefenlinien», standardmässig an, ab Zoom 13 geladen, Beschriftung ab Zoom 15. Quellenangabe in der Karte «swissBATHY3D © swisstopo».
 - **Neu rechnen:** nur, wenn swisstopo neue Daten liefert. Der Stand ist pro See verschieden (2014 bis 2026) und steht in `index.json`.
 - **Grösse:** 22 Seen, 1671 Kacheln, zusammen 10 MB (gzip rund 3 MB). Die grössten: Bodensee 2.2 MB, Genfersee 1.6 MB, Vierwaldstättersee 1.4 MB.

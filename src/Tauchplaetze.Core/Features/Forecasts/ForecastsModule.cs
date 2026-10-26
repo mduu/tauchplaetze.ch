@@ -6,6 +6,7 @@ using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
 using Tauchplaetze.Core.CrossCutting.Modules;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Alplakes;
+using Tauchplaetze.Core.Features.Forecasts.Sources.Bathymetry;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Hydro;
 using Tauchplaetze.Core.Features.Forecasts.Sources.OpenMeteo;
 
@@ -32,6 +33,7 @@ internal class ForecastsModule : ICoreModule
                     Convert.ToBase64String(Encoding.UTF8.GetBytes($"{options.Username}:{options.Password}")));
             }
         });
+        services.AddSingleton<ContourTiles>();
         services.AddScoped<ForecastSources>();
         services.AddScoped<WaterBodyIndexWriter>();
         services.AddSingleton<ForecastProgress>();
