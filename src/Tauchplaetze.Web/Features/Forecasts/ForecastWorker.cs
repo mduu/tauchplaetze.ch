@@ -16,6 +16,10 @@ internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSche
         {
             await Run(stoppingToken);
         }
+        else if (await AbortedRunToResume(stoppingToken))
+        {
+            await Run(stoppingToken);
+        }
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -36,6 +40,28 @@ internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSche
         catch (Exception ex) when (!ct.IsCancellationRequested)
         {
             logger.LogError(ex, "Last forecast run could not be read");
+            return false;
+        }
+    }
+
+    /// <summary>Ein Deploy oder Neustart brach den Lauf von heute ab: nachholen, ausser der nächste geplante Lauf kommt bald (`forecast.md`, «Abbruch und Nachholen»).</summary>
+    private async Task<bool> AbortedRunToResume(CancellationToken ct)
+    {
+        try
+        {
+            await using var scope = scopes.CreateAsyncScope();
+            var state = await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetForecastRunStateQuery, ForecastRunState>>()
+                .Handle(new GetForecastRunStateQuery(), ct);
+            if (state.ResumeAborted)
+            {
+                logger.LogInformation("Aborted forecast run of today is resumed");
+            }
+
+            return state.ResumeAborted;
+        }
+        catch (Exception ex) when (!ct.IsCancellationRequested)
+        {
+            logger.LogError(ex, "Forecast run state could not be read");
             return false;
         }
     }

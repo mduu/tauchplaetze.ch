@@ -71,6 +71,11 @@ internal class RunForecastHandler(
             run.Status = recorder.AnyFailed ? ForecastRunStatus.PartiallySucceeded : ForecastRunStatus.Succeeded;
             return new RunForecastResult(false, run.Id, run.Status, sites.Count);
         }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested)
+        {
+            run.Status = ForecastRunStatus.Aborted;
+            throw;
+        }
         catch (Exception)
         {
             run.Status = ForecastRunStatus.Failed;

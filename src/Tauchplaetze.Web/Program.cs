@@ -90,6 +90,7 @@ app.MapMovedPages();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode(options => options.ContentSecurityFrameAncestorsPolicy = null);
 app.MapDefaultEndpoints();
 ReadinessCheck.Map(app);
+ForecastRunEndpoint.Map(app);
 
 app.Run();
 

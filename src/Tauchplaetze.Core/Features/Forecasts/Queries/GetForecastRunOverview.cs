@@ -47,8 +47,6 @@ internal class GetForecastRunOverviewHandler(
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
-    private static readonly TimeSpan AbortedAfter = TimeSpan.FromHours(2);
-
     public async Task<ForecastRunOverview?> Handle(GetForecastRunOverviewQuery query, CancellationToken ct = default)
     {
         if (!(await roles.Of(query.AdminId)).CanAdminister)
@@ -65,7 +63,7 @@ internal class GetForecastRunOverviewHandler(
         var durations = week.Where(r => r.FinishedAt is not null).Select(r => (r.FinishedAt!.Value - r.StartedAt).TotalSeconds).ToList();
 
         var runs = dbContext.ForecastRuns.AsNoTracking()
-            .Where(r => !query.OnlyWithErrors || r.Status == ForecastRunStatus.PartiallySucceeded || r.Status == ForecastRunStatus.Failed);
+            .Where(r => !query.OnlyWithErrors || r.Status == ForecastRunStatus.PartiallySucceeded || r.Status == ForecastRunStatus.Failed || r.Status == ForecastRunStatus.Aborted);
         var total = await runs.CountAsync(ct);
         var page = await runs.OrderByDescending(r => r.StartedAt).Skip(query.Page * query.PageSize).Take(query.PageSize).ToListAsync(ct);
         var last = await dbContext.ForecastRuns.AsNoTracking().OrderByDescending(r => r.StartedAt).FirstOrDefaultAsync(ct);
@@ -77,7 +75,7 @@ internal class GetForecastRunOverviewHandler(
                 week.Count,
                 week.Count(r => r.Status == ForecastRunStatus.Succeeded),
                 week.Count(r => r.Status == ForecastRunStatus.PartiallySucceeded),
-                week.Count(r => r.Status == ForecastRunStatus.Failed)),
+                week.Count(r => r.Status is ForecastRunStatus.Failed or ForecastRunStatus.Aborted)),
             durations.Count == 0 ? null : TimeSpan.FromSeconds(Math.Round(durations.Average())),
             [.. page.Select(r => Row(r, now))],
             total);
@@ -87,7 +85,7 @@ internal class GetForecastRunOverviewHandler(
     {
         var calls = JsonSerializer.Deserialize<List<SourceCallStatus>>(run.SourceStatus, JsonOptions) ?? [];
         var running = run.Status == ForecastRunStatus.Running ? progress.Of(run.Id) : null;
-        var status = run.Status == ForecastRunStatus.Running && running is null && now - run.StartedAt > AbortedAfter ? ForecastRunStatus.Aborted : run.Status;
+        var status = run.Status == ForecastRunStatus.Running && running is null && now - run.StartedAt > ForecastRunTimes.AbortedAfter ? ForecastRunStatus.Aborted : run.Status;
         return new ForecastRunRow(
             run.Id, run.StartedAt, run.FinishedAt - run.StartedAt, status, run.Sites,
             running?.Calls ?? calls.Count, calls.Count(c => !c.Ok), RunFailures.Group(calls), running);

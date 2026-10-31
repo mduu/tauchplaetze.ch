@@ -86,4 +86,23 @@ public class HealthTests
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(0, app.Readiness.Calls);
     }
+
+    [Theory]
+    [InlineData(true, "running")]
+    [InlineData(false, "idle")]
+    public async Task Health_run_meldet_ob_ein_Prognose_Lauf_laeuft(bool running, string expected)
+    {
+        // Arrange
+        await using var app = new WebApp();
+        app.RunState.Answer = _ => new Tauchplaetze.Core.Features.Forecasts.Queries.ForecastRunState(running, false);
+        using var client = app.Browser();
+
+        // Act
+        using var response = await client.GetAsync("/health/run", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(expected, await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        Assert.Equal("no-store", response.Headers.CacheControl?.ToString());
+    }
 }

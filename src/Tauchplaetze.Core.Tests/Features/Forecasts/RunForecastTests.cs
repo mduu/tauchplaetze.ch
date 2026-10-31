@@ -337,7 +337,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Bricht_der_Host_einen_Lauf_ab_bleiben_die_Werte_des_letzten_Laufs_und_er_zaehlt_nicht_als_letzter_Lauf()
+    public async Task Bricht_der_Host_einen_Lauf_ab_gilt_er_als_abgebrochen_die_Werte_des_letzten_Laufs_bleiben_und_er_zaehlt_nicht_als_letzter_Lauf()
     {
         // Arrange
         var siteId = await PrepareRiffWilliams();
@@ -356,6 +356,9 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         Assert.IsAssignableFrom<OperationCanceledException>(aborted);
+        ForecastRunStatus? stored = null;
+        await Sql.Arrange(async db => stored = (await db.ForecastRuns.OrderByDescending(r => r.StartedAt).FirstAsync()).Status);
+        Assert.Equal(ForecastRunStatus.Aborted, stored);
         var last = await Query<GetLastForecastRunQuery, LastForecastRun?>(new GetLastForecastRunQuery());
         Assert.Equal(complete.RunId, last!.Id);
         var today = (await Query<GetSiteForecastQuery, SiteForecast>(new GetSiteForecastQuery(siteId))).Days[0];

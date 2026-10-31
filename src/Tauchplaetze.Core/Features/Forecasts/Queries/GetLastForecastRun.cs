@@ -14,7 +14,7 @@ internal class GetLastForecastRunHandler(TauchplaetzeDbContext dbContext) : IQue
 {
     public Task<LastForecastRun?> Handle(GetLastForecastRunQuery query, CancellationToken ct = default) =>
         dbContext.ForecastRuns.AsNoTracking()
-            .Where(r => r.Status != ForecastRunStatus.Failed)
+            .Where(r => r.Status != ForecastRunStatus.Failed && r.Status != ForecastRunStatus.Aborted)
             .OrderByDescending(r => r.StartedAt)
             .Select(r => new LastForecastRun(r.Id, r.StartedAt, r.Status))
             .FirstOrDefaultAsync(ct);

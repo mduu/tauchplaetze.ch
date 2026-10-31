@@ -234,9 +234,16 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
   9. Den Median des Index pro Gewässer für heute schreiben (`WaterBodyDailyIndex`, Upsert, siehe «Verlauf»).
   10. Output Cache der öffentlichen Seiten leeren. Das macht die Fassade nach jedem Command, auch nach einer Exception (`architecture.md`, «Caching»).
   11. `ForecastRun` abschliessen (`Succeeded`, `PartiallySucceeded` oder `Failed`).
-  Stoppt der Host während eines Laufs (Neustart, Deployment), bricht der Lauf sofort ab und gilt als `Failed`. Die übrigen Plätze behalten die Werte des letzten Laufs. Ein abgebrochener Call ist kein Teilerfolg (Fehler vom 19.10.2026: Nach einem Neustart scheiterten 357 Calls in 1 ms, und der Lauf überschrieb gute Werte mit leeren).
+  Stoppt der Host während eines Laufs (Neustart, Deployment), bricht der Lauf sofort ab und gilt als `Aborted` (seit 31.10.2026; vorher `Failed`). Endet der Prozess ohne Vorwarnung, bleibt der Lauf auf `Running`. Die übrigen Plätze behalten die Werte des letzten Laufs. Ein abgebrochener Call ist kein Teilerfolg (Fehler vom 19.10.2026: Nach einem Neustart scheiterten 357 Calls in 1 ms, und der Lauf überschrieb gute Werte mit leeren).
 - **Höflich gegenüber den Quellen:** höchstens 2 Anfragen pro Sekunde und Quelle. Wiederholung mit Backoff (Polly über `Microsoft.Extensions.Http.Resilience`). Eindeutiger `User-Agent` mit Kontaktadresse.
 - **Ausfall einer Quelle:** Der Lauf schreibt die übrigen Werte. Die letzten gültigen Werte der ausgefallenen Quelle bleiben bis zu 48 h gültig. Die Seite zeigt das Datenalter.
+
+
+### Abbruch und Nachholen (31.10.2026, Entscheid Marc)
+
+- **Der Deploy wartet:** `/health/run` meldet `running`, solange ein Lauf auf `Running` steht und jünger als 2 Stunden ist, sonst `idle` (Query `GetForecastRunState`, ohne Details). `deploy.yml` und `infra.yml` warten vor dem Deploy bis zu 45 Minuten darauf (`.github/scripts/wait-for-forecast.sh`). Anlass: Am 24.10.2026 brachen zwei Deploys den Lauf von 13:00 ab; die Plätze nach dem Abbruch behielten die alten Werte.
+- **Nachholen beim Start:** Der Worker prüft beim Start, ob der letzte Lauf von heute (Schweizer Kalendertag) abgebrochen ist (`Aborted`, oder `Running` ohne laufenden Prozess) und danach kein Lauf durchkam. Ist der nächste geplante Lauf mehr als 1 Stunde entfernt, startet er einen Lauf. Der Lock verhindert einen zweiten gleichzeitigen Lauf. Ein abgebrochener Lauf von gestern wird nicht nachgeholt, der nächste geplante Lauf rechnet ohnehin neu.
+- Ein abgebrochener Lauf zählt nicht als letzter Lauf (`GetLastForecastRun`) und nicht als brauchbar für `/health/ready`.
 
 ## Verlauf
 

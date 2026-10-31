@@ -53,6 +53,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetReadinessQuery, Readiness> Readiness { get; } = new(_ => new Readiness(true, null, null));
 
+    public FakeQuery<GetForecastRunStateQuery, ForecastRunState> RunState { get; } = new(_ => new ForecastRunState(false, false));
+
     public FakeQuery<GetSiteReportsQuery, IReadOnlyList<SiteReport>> SiteReports { get; } = new(_ => []);
 
     public FakeQuery<SubmitReportCommand, ReportResult> SubmitReport { get; } = new(_ => new ReportResult([], Guid.NewGuid()));
@@ -145,6 +147,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.RemoveAll<IHostedService>();
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteQuery, DiveSiteLookup>>(DiveSites));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetReadinessQuery, Readiness>>(Readiness));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetForecastRunStateQuery, ForecastRunState>>(RunState));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteReportsQuery, IReadOnlyList<SiteReport>>>(SiteReports));
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<SubmitReportCommand, ReportResult>>(SubmitReport));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSitemapEntriesQuery, SitemapEntries>>(SitemapEntries));

@@ -130,8 +130,8 @@ public enum ForecastRunStatus
     Failed,
 
     /// <summary>
-    /// Nur in der Übersicht, nie gespeichert: Ein Lauf steht seit mehr als 2 Stunden auf <see cref="Running"/>, ohne Fortschritt in diesem Prozess.
-    /// Der Prozess endete vermutlich während des Laufs.
+    /// Der Lauf brach ab, weil die App stoppte (Deploy, Neustart). Gespeichert, wenn der Lauf den Stopp bemerkt.
+    /// Endet der Prozess ohne Vorwarnung, bleibt der Lauf auf <see cref="Running"/>; die Übersicht zeigt ihn nach 2 Stunden als abgebrochen.
     /// </summary>
     Aborted,
 }
