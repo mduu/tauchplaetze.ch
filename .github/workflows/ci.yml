@@ -31,3 +31,6 @@ jobs:
       # Die SQL-Tests starten SQL Server mit Testcontainers. Docker ist auf dem Runner vorhanden. In der CI wird nie übersprungen.
       - name: Test
         run: dotnet test --solution src/Tauchplaetze.slnx --no-build --configuration Release
+
+      - name: Test der Skripte
+        run: python3 -m unittest discover -s .github/scripts/tests

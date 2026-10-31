@@ -52,12 +52,9 @@ jobs:
             --name "tauchplaetze-${{ github.run_number }}" \
             --template-file deploy/main.bicep \
             --parameters deploy/main.bicepparam \
-            --no-pretty-print --result-format ResourceIdOnly --output json > whatif.json
-          {
-            echo "## What-if"
-            echo
-            jq -r '.changes[] | "- \(.changeType): \(.resourceId | split("/providers/") | last)"' whatif.json
-          } >> "$GITHUB_STEP_SUMMARY"
+            --no-pretty-print --result-format FullResourcePayloads --output json > whatif.json
+          # Nur echte Änderungen mit vorher/nachher, Rauschen von Azure ausgeklappt (.github/scripts/whatif-summary.py).
+          python3 .github/scripts/whatif-summary.py whatif.json
 
       - name: Logout
         if: always()

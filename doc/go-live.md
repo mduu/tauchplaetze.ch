@@ -72,6 +72,15 @@ Solange `AZURE_CLIENT_ID` fehlt, überspringt `deploy.yml` den Deploy.
 
 GitHub → Actions → **Infra** → «Run workflow». Standard ist `what-if`: Es zeigt nur die Änderungen in der Zusammenfassung. Mit `deploy` wendet der Workflow sie an, nach deiner Freigabe im Environment `prod`.
 
+**What-if lesen** (Zusammenfassung des Jobs «what-if», vor der Freigabe ansehen):
+- Die erste Zeile zählt: «Echt geändert: n Ressourcen (…). Neu: x. Gelöscht: y. Unverändert: z.»
+- Die Tabelle zeigt pro echter Änderung Ressource, Art, Eigenschaft und vorher → nachher. Lange Texte (Abfragen, Workbook) lassen sich aufklappen.
+- «Rauschen (n)» ist ausgeklappt: Standardwerte von Azure, die das Bicep nicht angibt oder die Azure beim Lesen nicht zurückgibt. Sie ändern nichts.
+- «⚠️ Gelöscht» heisst, eine Ressource verschwindet. Dann nicht freigeben, ohne den Grund zu kennen.
+- Geheimnisse und Mail-Adressen sind als `***` maskiert.
+
+Lokal mit derselben Zusammenfassung: `az deployment group what-if … --result-format FullResourcePayloads --no-pretty-print -o json > whatif.json && python3 .github/scripts/whatif-summary.py whatif.json`.
+
 Alternativ lokal:
 
 ```bash

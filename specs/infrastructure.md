@@ -123,7 +123,7 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 
 ## IaC
 
-- Azure Bicep in `/deploy` (wie feldnah), **Resource-Group-Scope**. Infra-Deploy manuell über `infra.yml` (`workflow_dispatch`): Standard what-if (Environment `prod-app`), Deploy erst nach Freigabe durch den Required Reviewer (Marc) im Environment `prod`.
+- Azure Bicep in `/deploy` (wie feldnah), **Resource-Group-Scope**. Infra-Deploy manuell über `infra.yml` (`workflow_dispatch`): Standard what-if (Environment `prod-app`; volles Ergebnis, zusammengefasst von `.github/scripts/whatif-summary.py`: nur echte Änderungen mit vorher/nachher, Rauschen von Azure ausgeklappt, Geheimnisse maskiert, 31.10.2026), Deploy erst nach Freigabe durch den Required Reviewer (Marc) im Environment `prod`.
 - **Environments in GitHub** (Entscheid Marc, 20.10.2026): `prod-app` ohne Freigabe für den App-Deploy und das what-if, `prod` mit Marc als Required Reviewer für den Infra-Deploy. Beide nur vom Branch `main`. OIDC mit je einer Federated Credential pro Environment, keine für den Branch.
 - **Key Vault mit Purge Protection:** Gelöschte Secrets lassen sich 90 Tage nicht endgültig löschen und bleiben wiederherstellbar. Kostet nichts. Nicht umkehrbar: Der Key Vault lässt sich danach nicht mehr ohne diese Frist entfernen.
 - **Von Hand, nicht im Template** (Entscheid Marc, 20.10.2026): die Resource Group, die Rollen der Managed Identity und der SQL-Benutzer der App (`doc/go-live.md`). Der GitHub-Service-Principal hat nur Contributor auf der Resource Group und vergibt keine Rechte.

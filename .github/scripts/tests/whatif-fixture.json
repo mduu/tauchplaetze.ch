@@ -1,0 +1,19 @@
+{
+  "changes": [
+    {"changeType": "NoChange", "resourceId": "/subscriptions/0/resourceGroups/rg/providers/Microsoft.KeyVault/vaults/kv-test"},
+    {"changeType": "Ignore", "resourceId": "/subscriptions/0/resourceGroups/rg/providers/Microsoft.Web/certificates/example.test"},
+    {"changeType": "Modify", "resourceId": "/subscriptions/0/resourceGroups/rg/providers/Microsoft.Storage/storageAccounts/sttest/blobServices/default/containers/media",
+     "delta": [{"path": "properties", "propertyChangeType": "Modify", "children": [
+       {"path": "defaultEncryptionScope", "propertyChangeType": "Delete", "before": "$account-encryption-key", "after": null},
+       {"path": "denyEncryptionScopeOverride", "propertyChangeType": "Delete", "before": false, "after": null}]}]},
+    {"changeType": "Modify", "resourceId": "/subscriptions/0/resourceGroups/rg/providers/Microsoft.Web/sites/app-test",
+     "delta": [
+       {"path": "properties.siteConfig.minTlsVersion", "propertyChangeType": "Create", "before": null, "after": "1.2"},
+       {"path": "properties.siteConfig.appSettings.0.value", "propertyChangeType": "Modify", "before": "alt", "after": "neu"},
+       {"path": "properties.httpsOnly", "propertyChangeType": "Modify", "before": false, "after": true},
+       {"path": "properties.connectionString", "propertyChangeType": "Modify", "before": "Server=a;Password=x", "after": "Server=b;Password=y"},
+       {"path": "properties.contact", "propertyChangeType": "Modify", "before": "alt@example.test", "after": "neu@example.test"}]},
+    {"changeType": "Create", "resourceId": "/subscriptions/0/resourceGroups/rg/providers/Microsoft.Insights/workbooks/wb-test"},
+    {"changeType": "Delete", "resourceId": "/subscriptions/0/resourceGroups/rg/providers/Microsoft.Storage/storageAccounts/sttest/queueServices/default/queues/old-queue"}
+  ]
+}
