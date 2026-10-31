@@ -357,7 +357,7 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
         // Assert
         Assert.IsAssignableFrom<OperationCanceledException>(aborted);
         ForecastRunStatus? stored = null;
-        await Sql.Arrange(async db => stored = (await db.ForecastRuns.OrderByDescending(r => r.StartedAt).FirstAsync()).Status);
+        await Sql.Arrange(async db => stored = (await db.ForecastRuns.SingleAsync(r => r.Id != complete.RunId)).Status);
         Assert.Equal(ForecastRunStatus.Aborted, stored);
         var last = await Query<GetLastForecastRunQuery, LastForecastRun?>(new GetLastForecastRunQuery());
         Assert.Equal(complete.RunId, last!.Id);
