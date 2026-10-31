@@ -71,6 +71,11 @@ jobs:
             echo "::notice::Web App $APP_NAME gibt es noch nicht (infra.yml zuerst). Deploy übersprungen."
           fi
 
+      # Ein Neustart bricht einen laufenden Prognose-Lauf ab (24.10.2026). Darum zuerst warten, bis keiner läuft.
+      - name: Auf Prognose-Lauf warten
+        if: steps.app.outputs.exists == 'true'
+        run: .github/scripts/wait-for-forecast.sh
+
       - name: Deploy
         if: steps.app.outputs.exists == 'true'
         uses: azure/webapps-deploy@02a81bead70021f5284939794bcec79c271ab383 # v3.0.8

@@ -77,6 +77,10 @@ jobs:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
+      # Neue App Settings starten die App neu und brächen einen laufenden Prognose-Lauf ab.
+      - name: Auf Prognose-Lauf warten
+        run: .github/scripts/wait-for-forecast.sh
+
       - name: Deploy
         run: |
           az deployment group create \
