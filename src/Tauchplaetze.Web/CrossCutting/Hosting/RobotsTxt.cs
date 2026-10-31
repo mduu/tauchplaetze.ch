@@ -16,10 +16,10 @@ internal static class RobotsTxt
         Disallow: /en/account/
         Disallow: /fr/account/
         Disallow: /it/account/
-        Disallow: /de/tauchplaetze/neu
-        Disallow: /en/dive-sites/new
-        Disallow: /fr/sites-de-plongee/nouveau
-        Disallow: /it/siti-di-immersione/nuovo
+        Disallow: /de/tauchplaetze/neu$
+        Disallow: /en/dive-sites/new$
+        Disallow: /fr/sites-de-plongee/nouveau$
+        Disallow: /it/siti-di-immersione/nuovo$
         Disallow: /de/tauchplaetze/*/bearbeiten
         Disallow: /en/dive-sites/*/edit
         Disallow: /fr/sites-de-plongee/*/modifier
