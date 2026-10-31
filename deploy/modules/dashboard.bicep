@@ -66,19 +66,28 @@ let browserMax = AppRequests
 | where TimeGenerated > ago(30d) and isempty(SyntheticSource)
 | extend Family = extract(@"^(.+?) \d", 1, ClientBrowser), Major = toint(extract(@" (\d+)", 1, ClientBrowser))
 | summarize MaxMajor = max(Major) by Family;
-AppRequests
+let pageViews = AppRequests
 | where TimeGenerated > ago(14d)
 | where Name startswith "GET /" and ResultCode == "200"
-| where not(Name has_any ("/not-found", "/robots.txt", "/sitemap", "/health", "/alive", "/api/", "/admin", "/platform"))
+| where not(Name has_any ("/not-found", "/robots.txt", "/sitemap", "/health", "/alive", "/api/", "/admin", "/platform"));
+let bulk = pageViews
+| summarize Aufrufe = sum(ItemCount), Anmeldungen = sumif(ItemCount, Name has "/account/sign-in") by Block = bin(TimeGenerated, 1h), ClientBrowser, ClientOS, ClientModel
+| where Aufrufe > 120 or Anmeldungen > 10
+| project Block, ClientBrowser, ClientOS, ClientModel, Massenabruf = 1;
+pageViews
 | extend Family = extract(@"^(.+?) \d", 1, ClientBrowser), Major = toint(extract(@" (\d+)", 1, ClientBrowser))
 | lookup kind=leftouter browserMax on Family
+| extend Block = bin(TimeGenerated, 1h)
+| lookup kind=leftouter bulk on Block, ClientBrowser, ClientOS, ClientModel
+| project-away Block
 | extend Besucher = case(
     isnotempty(SyntheticSource)
       or ClientBrowser in ("Other", "")
       or ClientBrowser matches regex @"(?i)bot|crawl|spider|slurp|curl|wget|python|go-http|java|okhttp|axios|node|headless|scrapy|http.?client|libwww|php|ruby|perl|postman|insomnia", "Bot (erkannt)",
     ClientOS matches regex @"^Android [1-7](\.|$)"
       or ClientOS matches regex @"^iOS (\d|1[0-4])\."
-      or (Family in ("Chrome", "Chrome Mobile", "Chrome Mobile iOS", "Edge", "Firefox", "Firefox Mobile", "Opera") and Major < MaxMajor - 12), "Bot (Verdacht)",
+      or (Family in ("Chrome", "Chrome Mobile", "Chrome Mobile iOS", "Edge", "Firefox", "Firefox Mobile", "Opera") and Major < MaxMajor - 12)
+      or isnotnull(Massenabruf), "Bot (Verdacht)",
     "Mensch")
 '''
 
