@@ -207,7 +207,7 @@ Ein Lauf des Prognose-Jobs.
 |---|---|---|
 | `Id` | Guid | |
 | `StartedAt`, `FinishedAt` | DateTimeOffset | |
-| `Status` | enum | `Running`, `Succeeded`, `PartiallySucceeded`, `Failed` |
+| `Status` | enum | `Running`, `Succeeded`, `PartiallySucceeded`, `Failed`, `Aborted` (Host stoppte während des Laufs, seit 31.10.2026) |
 | `SourceStatus` | nvarchar(max) | JSON: Status und Datenalter pro Quelle |
 | `Sites` | int, optional | Plätze mit Prognose im Lauf. Leer bei Läufen vor dem 19.10.2026 |
 | `RawDataPath` | string(300) | Ordner der Rohdaten in Blob Storage |
