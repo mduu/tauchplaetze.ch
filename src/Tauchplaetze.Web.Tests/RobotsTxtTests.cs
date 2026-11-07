@@ -57,8 +57,26 @@ public class RobotsTxtTests
         Assert.Equal(blocked, IsDisallowed(body, path));
     }
 
+    [Fact]
+    public async Task Robots_txt_sperrt_SEO_Crawler_ganz()
+    {
+        // Arrange
+        await using var app = new WebApp();
+        using var client = app.Browser();
+        var ct = TestContext.Current.CancellationToken;
+
+        // Act
+        var body = await client.GetStringAsync("/robots.txt", ct);
+
+        // Assert
+        var groups = body.Split("\n\n").Where(g => g.Contains("User-agent:")).ToList();
+        var seo = Assert.Single(groups, g => g.Contains("User-agent: SERankingBacklinksBot"));
+        Assert.Contains("User-agent: AhrefsBot", seo);
+        Assert.Contains("Disallow: /\n", seo + "\n");
+    }
+
     private static bool IsDisallowed(string robotsTxt, string path) =>
-        robotsTxt.Split('\n')
+        robotsTxt.Split("\n\n").Single(group => group.Contains("User-agent: *")).Split('\n')
             .Where(line => line.StartsWith("Disallow: ", StringComparison.Ordinal))
             .Select(line => "^" + Regex.Escape(line["Disallow: ".Length..].Trim()).Replace(@"\*", ".*").Replace(@"\$", "$"))
             .Any(pattern => Regex.IsMatch(path, pattern));

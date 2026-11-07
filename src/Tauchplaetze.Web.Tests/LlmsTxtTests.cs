@@ -44,6 +44,6 @@ public class LlmsTxtTests
         // Assert
         Assert.DoesNotContain(crawler, body);
         Assert.Contains("# KI-Crawler (Suche, Antworten, Training) erlaubt. Siehe /llms.txt", body);
-        Assert.Single(body.Split('\n'), line => line.StartsWith("User-agent:", StringComparison.Ordinal));
+        Assert.Single(body.Split('\n'), line => line == "User-agent: *");
     }
 }
