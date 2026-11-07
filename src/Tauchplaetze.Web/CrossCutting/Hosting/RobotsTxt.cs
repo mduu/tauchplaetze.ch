@@ -3,7 +3,7 @@ using Tauchplaetze.Core.CrossCutting.Mail;
 
 namespace Tauchplaetze.Web.CrossCutting.Hosting;
 
-/// <summary>`/robots.txt` (`seo.md`, «Sitemap und Robots»): Öffentliches erlaubt, Redaktion, Konten, Versionen und Query-Varianten nicht. Am Schluss der Verweis auf die Sitemap.</summary>
+/// <summary>`/robots.txt` (`seo.md`, «Sitemap und Robots»): Öffentliches erlaubt, Redaktion, Konten, Versionen und Query-Varianten nicht. SEO-Crawler ganz gesperrt. Am Schluss der Verweis auf die Sitemap.</summary>
 internal static class RobotsTxt
 {
     public const string Content = """
@@ -33,6 +33,17 @@ internal static class RobotsTxt
         Disallow: /fr/sites-de-plongee/*/signaler
         Disallow: /it/siti-di-immersione/*/segnala
         Disallow: /*?
+
+        # SEO-Crawler (Backlinks, Rankings) gesperrt: Sie bringen keine Besucher und rufen jede Seite in allen Sprachen ab.
+        User-agent: SERankingBacklinksBot
+        User-agent: AhrefsBot
+        User-agent: SemrushBot
+        User-agent: MJ12bot
+        User-agent: DotBot
+        User-agent: DataForSeoBot
+        User-agent: BLEXBot
+        User-agent: barkrowler
+        Disallow: /
         """;
 
     public static IEndpointRouteBuilder MapRobotsTxt(this IEndpointRouteBuilder endpoints)

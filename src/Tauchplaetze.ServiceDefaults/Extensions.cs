@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -73,7 +74,9 @@ public static class Extensions
                 tracing.AddSource(builder.Environment.ApplicationName)
                     .AddAspNetCoreInstrumentation(options => options.Filter = context => IsTraced(context.Request.Path))
                     .AddHttpClientInstrumentation()
-                    .AddProcessor(new WithoutStorageSpans());
+                    .AddProcessor(new WithoutStorageSpans())
+                    .AddProcessor(new WithoutBotSubSpans())
+                    .AddProcessor(new WithoutSqlText());
             });
 
         builder.AddOpenTelemetryExporters();
@@ -189,4 +192,50 @@ public sealed class WithoutStorageSpans : BaseProcessor<Activity>
 
     private static bool IsStorage(Activity? activity) =>
         activity is not null && (activity.Source.Name.StartsWith("Azure.Storage.", StringComparison.Ordinal) || IsStorage(activity.Parent));
+}
+
+/// <summary>
+/// Unter dem Request eines Bots gehen keine Spans hinaus (SQL, HTTP, Rendering), der Request selbst schon. Ein Crawl über alle Plätze füllt sonst
+/// mit seinen SQL-Spans das Tageslimit (`infrastructure.md`, «Betrieb»). Bot heisst: Der User-Agent enthält «bot», «crawl», «spider» oder «slurp».
+/// </summary>
+public sealed partial class WithoutBotSubSpans : BaseProcessor<Activity>
+{
+    private const string UserAgentTag = "user_agent.original";
+
+    public override void OnStart(Activity data)
+    {
+        if (IsBotRequest(Request(data.Parent)))
+        {
+            data.IsAllDataRequested = false;
+            data.ActivityTraceFlags &= ~ActivityTraceFlags.Recorded;
+        }
+    }
+
+    private static Activity? Request(Activity? activity) =>
+        activity is null || activity.Kind == ActivityKind.Server ? activity : Request(activity.Parent);
+
+    private static bool IsBotRequest(Activity? request) =>
+        request?.GetTagItem(UserAgentTag) is string userAgent && Bot().IsMatch(userAgent);
+
+    [GeneratedRegex("bot|crawl|spider|slurp", RegexOptions.IgnoreCase)]
+    private static partial Regex Bot();
+}
+
+/// <summary>
+/// SQL-Spans gehen ohne Statement-Text hinaus. Keine Ansicht liest ihn, er war der grösste Teil eines SQL-Spans. Den Namen gibt weiterhin `db.query.summary`.
+/// </summary>
+public sealed class WithoutSqlText : BaseProcessor<Activity>
+{
+    private static readonly string[] TextTags = ["db.query.text", "db.statement"];
+
+    public override void OnEnd(Activity data)
+    {
+        foreach (var tag in TextTags)
+        {
+            if (data.GetTagItem(tag) is not null)
+            {
+                data.SetTag(tag, null);
+            }
+        }
+    }
 }
