@@ -15,11 +15,10 @@
   <data name="Summary_NoData" xml:space="preserve"><value>No data yet.</value></data>
   <data name="Stand" xml:space="preserve"><value>As of {0}</value></data>
   <data name="Sounder_Label" xml:space="preserve"><value>Sonar display</value></data>
-  <data name="Sounder_Best" xml:space="preserve"><value>Best choice today: {0}, {1}</value></data>
   <data name="Sounder_Thermocline" xml:space="preserve"><value>Thermocline {0}–{1} m</value></data>
-  <data name="Sounder_Mixed" xml:space="preserve"><value>mixed, no thermocline</value></data>
-  <data name="Sounder_Undetermined" xml:space="preserve"><value>Thermocline not determined</value></data>
-  <data name="Sounder_None" xml:space="preserve"><value>No forecast yet today</value></data>
+  <data name="Sounder_Example" xml:space="preserve"><value>Example:</value></data>
+  <data name="Sounder_Date" xml:space="preserve"><value>forecast of {0}</value></data>
+  <data name="Sounder_None" xml:space="preserve"><value>No forecast with a thermocline yet</value></data>
   <data name="Status_Eyebrow" xml:space="preserve"><value>Data status</value></data>
   <data name="Status_Title" xml:space="preserve"><value>How fresh is the data?</value></data>
   <data name="Status_Lead" xml:space="preserve"><value>The forecast takes its data from public agencies. Here you see when each source last delivered.</value></data>

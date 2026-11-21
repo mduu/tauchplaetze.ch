@@ -128,6 +128,28 @@ public class EcholotTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal(DataHealth.Unknown, sources[DataSource.LakeLevel]);
     }
 
+    [SqlFact]
+    public async Task Die_Anzeige_nimmt_den_neuesten_Tag_bis_heute_mit_Sprungschicht()
+    {
+        // Arrange: gestern durchmischt, vorgestern geschichtet, morgen geschichtet (Prognose, zählt nicht).
+        var (_, site) = await Prepare("Riff Williams");
+        var today = new DateOnly(2026, 10, 1);
+        await Sql.Arrange(db =>
+        {
+            db.DailyForecasts.Add(new DailyForecast { DiveSiteId = site, Date = today.AddDays(-2), ThermoclineTop = 12, ThermoclineBottom = 16, SurfaceTemperature = 15.2m, ModelVersion = "x" });
+            db.DailyForecasts.Add(new DailyForecast { DiveSiteId = site, Date = today.AddDays(-1), ModelVersion = "x" });
+            db.DailyForecasts.Add(new DailyForecast { DiveSiteId = site, Date = today.AddDays(1), ThermoclineTop = 8, ThermoclineBottom = 10, ModelVersion = "x" });
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var sounding = (await Echolot()).Sounding;
+
+        // Assert
+        Assert.Equal(("Riff Williams", "Zürichsee", today.AddDays(-2), 12m, 16m, 15.2m),
+            (sounding!.Name, sounding.WaterBodyName, sounding.Date, sounding.ThermoclineTop, sounding.ThermoclineBottom, sounding.SurfaceTemperature));
+    }
+
     private async Task<(string Moderator, Guid Site)> Prepare(string name)
     {
         Sql.Time.Now = Start;

@@ -1,6 +1,4 @@
 using Tauchplaetze.Core.Features.Echolot;
-using Tauchplaetze.Core.Features.Forecasts;
-using Tauchplaetze.Core.Features.Forecasts.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -26,9 +24,8 @@ public class EcholotPageTests : IClassFixture<WebApp>
                 new EcholotEntry(new DateOnly(2026, 11, 19), EcholotEntryKind.Described, null, null,
                     [new DescribedSite("park-horn", "Park Horn", "Zürichsee"), new DescribedSite("chappeli-oberaegeri", "Chappeli", "Ägerisee")]),
             ],
-            HasOlderEntries: true);
-        app.BestSites.Ranking =
-            [new RankedSite("riff-williams-herrliberg", "Riff Williams", "Herrliberg", "Zürichsee", 8.4m, 3, 15.2m, 11.4m, 12m, 16m, 2, [ReasonCode.ClearBelowThermocline], null)];
+            HasOlderEntries: true,
+            new EcholotSounding("riff-williams-herrliberg", "Riff Williams", "Zürichsee", new DateOnly(2026, 10, 12), 12m, 16m, 15.2m, 6.1m));
     }
 
     [Theory]
@@ -57,7 +54,7 @@ public class EcholotPageTests : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Die_Anzeige_zeigt_die_Sprungschicht_der_besten_Wahl_von_heute_mit_Link_auf_den_Platz()
+    public async Task Die_Anzeige_zeigt_die_Sprungschicht_eines_Beispiels_und_nennt_Platz_und_Tag_der_Prognose()
     {
         // Arrange
         using var browser = app.Browser();
@@ -67,7 +64,8 @@ public class EcholotPageTests : IClassFixture<WebApp>
         var text = VisibleText.Of(html);
 
         // Assert
-        Assert.Contains("Beste Wahl heute: Riff Williams, Zürichsee", text);
+        Assert.Matches(@"Beispiel: Riff Williams ?, Zürichsee · Prognose vom 12\.10\.2026", text);
+        Assert.Contains("15.2 °C", text);
         Assert.Contains("Sprungschicht 12–16 m", text);
         Assert.Contains("href=\"/de/tauchplaetze/riff-williams-herrliberg\"", html);
         Assert.Contains("data-sounder=\"thermocline\"", html);

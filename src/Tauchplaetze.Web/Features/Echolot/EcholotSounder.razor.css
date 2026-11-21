@@ -13,8 +13,32 @@
     height: auto;
 }
 
-.screen {
-    fill: var(--color-chart-surface);
+.air {
+    fill: var(--color-surface-raised);
+}
+
+.warm {
+    fill: var(--color-lake-epilimnion);
+}
+
+.layer {
+    fill: var(--color-lake-thermocline);
+}
+
+.cold {
+    fill: var(--color-lake-hypolimnion);
+}
+
+.surface {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+}
+
+
+
+.sounder svg {
+    border-radius: 12px;
 }
 
 .grid line {
@@ -22,11 +46,6 @@
     stroke-width: 1;
 }
 
-.depths text {
-    fill: var(--color-text-subtle);
-    font-family: var(--font-mono);
-    font-size: 11px;
-}
 
 .band {
     fill: var(--color-signal);
@@ -72,9 +91,7 @@
 }
 
 figcaption {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
     gap: 4px 12px;
     margin-top: 8px;
     font-family: var(--font-mono);
@@ -92,11 +109,6 @@ figcaption a:hover {
     color: var(--color-primary);
 }
 
-.layer {
+.layer-text {
     color: var(--color-signal);
-}
-
-.sounder[data-sounder="mixed"] .layer,
-.sounder[data-sounder="undetermined"] .layer {
-    color: var(--color-text-subtle);
 }

@@ -29,7 +29,42 @@ internal class GetEcholotHandler(TauchplaetzeDbContext dbContext, TimeProvider t
     {
         var sources = await Sources(ct);
         var entries = await Entries(query.Culture, ct);
-        return new EcholotReport(sources, [.. entries.Take(EcholotRules.MaxEntries)], entries.Count > EcholotRules.MaxEntries);
+        return new EcholotReport(sources, [.. entries.Take(EcholotRules.MaxEntries)], entries.Count > EcholotRules.MaxEntries, await Sounding(query.Culture, ct));
+    }
+
+    /// <summary>
+    /// Der neueste Tag bis heute mit Sprungschicht an einem veröffentlichten Platz. Bei mehreren Plätzen zählt zuerst die Datenstufe, dann die dickere Sprungschicht.
+    /// Im Winter ist das oft ein Tag aus dem Herbst.
+    /// </summary>
+    private async Task<EcholotSounding?> Sounding(string culture, CancellationToken ct)
+    {
+        var today = SwissTime.Today(time);
+        var row = await dbContext.DailyForecasts.AsNoTracking()
+            .Where(f => f.Date <= today && f.ThermoclineTop != null && f.ThermoclineBottom != null)
+            .Join(dbContext.DiveSites.Where(s => s.Status == DiveSiteStatus.Published), f => f.DiveSiteId, s => s.Id, (f, s) => new { Forecast = f, Site = s })
+            .OrderByDescending(x => x.Forecast.Date)
+            .ThenByDescending(x => x.Forecast.DataLevel)
+            .ThenByDescending(x => x.Forecast.ThermoclineBottom - x.Forecast.ThermoclineTop)
+            .ThenBy(x => x.Site.Slug)
+            .Select(x => new
+            {
+                x.Site.Slug,
+                x.Site.Name,
+                x.Site.WaterBody!.NameDe,
+                x.Site.WaterBody.NameEn,
+                x.Site.WaterBody.NameFr,
+                x.Site.WaterBody.NameIt,
+                x.Forecast.Date,
+                Top = x.Forecast.ThermoclineTop!.Value,
+                Bottom = x.Forecast.ThermoclineBottom!.Value,
+                x.Forecast.SurfaceTemperature,
+                x.Forecast.TemperatureAt30m,
+            })
+            .FirstOrDefaultAsync(ct);
+        return row is null
+            ? null
+            : new EcholotSounding(row.Slug, row.Name, WaterBodyNames.In(culture, row.NameDe, row.NameEn, row.NameFr, row.NameIt), row.Date,
+                row.Top, row.Bottom, row.SurfaceTemperature, row.TemperatureAt30m);
     }
 
     private async Task<IReadOnlyList<DataSourceStatus>> Sources(CancellationToken ct)

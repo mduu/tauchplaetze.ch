@@ -15,11 +15,10 @@
   <data name="Summary_NoData" xml:space="preserve"><value>Noch keine Daten.</value></data>
   <data name="Stand" xml:space="preserve"><value>Stand {0}</value></data>
   <data name="Sounder_Label" xml:space="preserve"><value>Echolot-Anzeige</value></data>
-  <data name="Sounder_Best" xml:space="preserve"><value>Beste Wahl heute: {0}, {1}</value></data>
   <data name="Sounder_Thermocline" xml:space="preserve"><value>Sprungschicht {0}–{1} m</value></data>
-  <data name="Sounder_Mixed" xml:space="preserve"><value>durchmischt, keine Sprungschicht</value></data>
-  <data name="Sounder_Undetermined" xml:space="preserve"><value>Sprungschicht nicht bestimmt</value></data>
-  <data name="Sounder_None" xml:space="preserve"><value>Heute noch keine Prognose</value></data>
+  <data name="Sounder_Example" xml:space="preserve"><value>Beispiel:</value></data>
+  <data name="Sounder_Date" xml:space="preserve"><value>Prognose vom {0}</value></data>
+  <data name="Sounder_None" xml:space="preserve"><value>Noch keine Prognose mit Sprungschicht</value></data>
   <data name="Status_Eyebrow" xml:space="preserve"><value>Datenstand</value></data>
   <data name="Status_Title" xml:space="preserve"><value>Wie frisch sind die Daten?</value></data>
   <data name="Status_Lead" xml:space="preserve"><value>Die Prognose holt ihre Daten bei öffentlichen Stellen. Hier siehst du, wann jede Quelle zuletzt geliefert hat.</value></data>

@@ -6,13 +6,11 @@
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.Echolot
 @using Tauchplaetze.Core.Features.Echolot.Queries
-@using Tauchplaetze.Core.Features.Forecasts.Queries
 @using Tauchplaetze.Web.CrossCutting.Caching
 @using Tauchplaetze.Web.Features.Forecasts
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<EcholotStrings> L
 @inject IQueryHandler<GetEcholotQuery, EcholotReport> Echolot
-@inject IQueryHandler<GetBestSitesQuery, BestSites> BestSitesQuery
 @inject TimeProvider Time
 
 <PageTitle>@SeoText.PageTitle(L["Title"] + " – " + L["Subtitle"], Shared["Brand"])</PageTitle>
@@ -31,7 +29,7 @@
             <span class="summary-when">@L["Stand", DischargeFormat.Stamp(Time.GetUtcNow())]</span>
         </p>
     </div>
-    <EcholotSounder Best="best" />
+    <EcholotSounder Sounding="page.Sounding" />
 </section>
 
 <section class="page-section" aria-labelledby="datenstand">
@@ -114,8 +112,6 @@
 @code {
     private EcholotReport page = new([], [], false);
 
-    private RankedSite? best;
-
     [CascadingParameter]
     public HttpContext? HttpContext { get; set; }
 
@@ -124,7 +120,6 @@
     protected override async Task OnInitializedAsync()
     {
         page = await Echolot.Handle(new GetEcholotQuery(Language));
-        best = (await BestSitesQuery.Handle(new GetBestSitesQuery(Language))).Ranking.FirstOrDefault();
         PublicPageCache.Tag(HttpContext, PublicPageCache.DischargePages);
         PublicPageCache.Tag(HttpContext, PublicPageCache.LakeLevelPages);
     }

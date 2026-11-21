@@ -15,11 +15,10 @@
   <data name="Summary_NoData" xml:space="preserve"><value>Ancora nessun dato.</value></data>
   <data name="Stand" xml:space="preserve"><value>Stato al {0}</value></data>
   <data name="Sounder_Label" xml:space="preserve"><value>Display dell’ecoscandaglio</value></data>
-  <data name="Sounder_Best" xml:space="preserve"><value>Scelta migliore oggi: {0}, {1}</value></data>
   <data name="Sounder_Thermocline" xml:space="preserve"><value>Termoclino {0}–{1} m</value></data>
-  <data name="Sounder_Mixed" xml:space="preserve"><value>rimescolato, nessun termoclino</value></data>
-  <data name="Sounder_Undetermined" xml:space="preserve"><value>Termoclino non determinato</value></data>
-  <data name="Sounder_None" xml:space="preserve"><value>Oggi ancora nessuna previsione</value></data>
+  <data name="Sounder_Example" xml:space="preserve"><value>Esempio:</value></data>
+  <data name="Sounder_Date" xml:space="preserve"><value>previsione del {0}</value></data>
+  <data name="Sounder_None" xml:space="preserve"><value>Ancora nessuna previsione con termoclino</value></data>
   <data name="Status_Eyebrow" xml:space="preserve"><value>Stato dei dati</value></data>
   <data name="Status_Title" xml:space="preserve"><value>Quanto sono aggiornati i dati?</value></data>
   <data name="Status_Lead" xml:space="preserve"><value>La previsione prende i dati da enti pubblici. Qui vedi quando ogni fonte ha fornito dati l’ultima volta.</value></data>
