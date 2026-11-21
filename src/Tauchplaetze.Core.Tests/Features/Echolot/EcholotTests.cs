@@ -176,6 +176,20 @@ public class EcholotTests(SqlServer sql) : SqlTest(sql)
         Assert.Equal((DataHealth.Current, DataHealth.Late), (onlyFresh, withLate));
     }
 
+    [Theory]
+    [InlineData(20, 2, DataHealth.Current)]
+    [InlineData(20, 3, DataHealth.Late)]
+    [InlineData(3, 3, DataHealth.Down)]
+    [InlineData(0, 0, DataHealth.Current)]
+    public void Eine_Quelle_ist_erst_ab_mehr_als_10_Prozent_gescheiterten_Calls_verspaetet_und_gestoert_wenn_alle_scheitern(int calls, int failed, DataHealth expected)
+    {
+        // Act
+        var health = EcholotRules.ByCalls(calls, failed);
+
+        // Assert
+        Assert.Equal(expected, health);
+    }
+
     private async Task<(string Moderator, Guid Site)> Prepare(string name)
     {
         Sql.Time.Now = Start;

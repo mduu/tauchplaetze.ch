@@ -28,10 +28,16 @@ internal static class EcholotRules
         : age > lateAfter ? DataHealth.Late
         : DataHealth.Current;
 
-    /// <summary>Alle Calls gescheitert: gestört. Einzelne gescheitert: verspätet.</summary>
+    /// <summary>
+    /// So viele Calls einer Quelle dürfen scheitern, ohne dass sie als verspätet gilt. Einzelne Fehler pro Lauf sind normal
+    /// (Timeout, Punkt ohne Wert), die Prognose entsteht trotzdem (Entscheid Marc, 21.11.2026).
+    /// </summary>
+    public const double TolerableFailedShare = 0.1;
+
+    /// <summary>Alle Calls gescheitert: gestört. Mehr als <see cref="TolerableFailedShare"/> gescheitert: verspätet.</summary>
     public static DataHealth ByCalls(int calls, int failed) =>
         calls > 0 && failed == calls ? DataHealth.Down
-        : failed > 0 ? DataHealth.Late
+        : calls > 0 && (double)failed / calls > TolerableFailedShare ? DataHealth.Late
         : DataHealth.Current;
 
     public static DataHealth Worse(DataHealth a, DataHealth b) => (DataHealth)Math.Max((int)a, (int)b);
