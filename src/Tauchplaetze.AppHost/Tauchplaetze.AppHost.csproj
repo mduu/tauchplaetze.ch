@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.6.1">
+<Project Sdk="Aspire.AppHost.Sdk/13.6.5">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <!-- Dashboard und DCP kommen als NuGet-Packages. So läuft «dotnet run» ohne die Aspire CLI. -->
