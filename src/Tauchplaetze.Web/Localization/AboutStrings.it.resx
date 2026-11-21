@@ -21,6 +21,8 @@
   <data name="About_MetaDescription" xml:space="preserve"><value>Come nasce la previsione d’immersione, quali fonti di dati usiamo, note legali e protezione dei dati di tauchplaetze.ch.</value></data>
   <data name="About_Lead" xml:space="preserve"><value>Un progetto non commerciale di subacquei per tutti coloro che si immergono nei laghi e nei fiumi svizzeri. Senza pubblicità e senza tracciamento.</value></data>
   <data name="About_Nav_Label" xml:space="preserve"><value>Contenuto di questa pagina</value></data>
+  <data name="About_Nav_Echolot" xml:space="preserve"><value>Ecoscandaglio: stato dei dati e novità</value></data>
+  <data name="About_Sources_Echolot" xml:space="preserve"><value>L’Ecoscandaglio mostra quanto è aggiornata ogni fonte in questo momento.</value></data>
   <data name="About_Forecast_Title" xml:space="preserve"><value>Come nasce la previsione</value></data>
   <data name="About_Forecast_Lead" xml:space="preserve"><value>Nessuna segnalazione necessaria: il lago lo dice da sé. Due volte al giorno un processo raccoglie i dati da quattro fonti e calcola l’indice d’immersione di ogni sito per cinque giorni.</value></data>
   <data name="About_Levels_Title" xml:space="preserve"><value>Quanto è precisa la previsione?</value></data>

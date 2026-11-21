@@ -92,7 +92,8 @@ Die Platzliste im CMS zeigt die Stufe als Badge. So ist sichtbar, wo noch Arbeit
 6. **Veraltete Basis:** Wurde seit der Basis eine andere Version freigegeben, zeigt das CMS beide Vergleiche. Der Moderator übernimmt die Änderung von Hand (bearbeitet und gibt frei) oder lehnt ab. Keine automatische Zusammenführung.
 7. **Moderatoren und Admins** geben ihre eigenen Änderungen beim Speichern selbst frei. In der History steht dann Autor = Approver (Entscheid Marc, 17.10.2026).
 8. Mitwirkende werden per E-Mail über Freigabe oder Ablehnung informiert (siehe «Benachrichtigungen»).
-9. Jede Freigabe, jedes Wiederherstellen und jedes Archivieren meldet Platz und Gewässer an IndexNow (`seo.md`, «IndexNow»), gesammelt höchstens alle 10 Minuten. Die Meldung blockiert die Freigabe nie.
+9. **Erste Beschreibung:** Bringt eine Freigabe zum ersten Mal einen Text (Unter Wasser, Umgebung, Anfahrt, Gefahren oder Infrastruktur, nicht maschinell übersetzt), setzt sie `DiveSite.FirstDescribedAt`. Bewertungen, Fotos, Einstiege und der Hinweis zum Tauchverbot zählen nicht. Spätere Änderungen ändern das Datum nie. Der Platz erscheint dann in den Neuigkeiten des Echolots (`ux.md`, «Echolot»). Für bestehende Plätze rechnet `BackfillFirstDescribed` beim Start das Datum aus den gespeicherten Versionen nach (Entscheid Marc, 21.11.2026).
+10. Jede Freigabe, jedes Wiederherstellen und jedes Archivieren meldet Platz und Gewässer an IndexNow (`seo.md`, «IndexNow»), gesammelt höchstens alle 10 Minuten. Die Meldung blockiert die Freigabe nie.
 
 ### History
 

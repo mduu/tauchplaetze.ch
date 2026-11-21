@@ -13,7 +13,7 @@ internal static class DatabasePreparation
     public const string AdminsSection = "Accounts:Admins";
 
     /// <summary>
-    /// Migriert die Datenbank, legt fehlende Gewässer und Admins an und importiert fehlende Plätze,
+    /// Migriert die Datenbank, legt fehlende Gewässer und Admins an, importiert fehlende Plätze und ergänzt das Datum der ersten Beschreibung,
     /// wenn <see cref="Setting"/> gesetzt ist (lokal mit Aspire). Ohne Admin in <see cref="AdminsSection"/> fehlt der Autor, und der Import entfällt.
     /// </summary>
     public static async Task PrepareDatabase(this WebApplication app)
@@ -39,5 +39,7 @@ internal static class DatabasePreparation
         {
             app.Logger.LogWarning("No admin in {Section}. The import of dive sites is skipped.", AdminsSection);
         }
+
+        await services.GetRequiredService<ICommandHandler<BackfillFirstDescribedCommand, BackfillFirstDescribedResult>>().Handle(new BackfillFirstDescribedCommand());
     }
 }

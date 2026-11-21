@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Title" xml:space="preserve"><value>Ecoscandaglio</value></data>
+  <data name="Subtitle" xml:space="preserve"><value>Stato dei dati e novità</value></data>
+  <data name="Eyebrow" xml:space="preserve"><value>Sotto la superficie</value></data>
+  <data name="Lead" xml:space="preserve"><value>Qui vedi quanto sono aggiornati i dati della previsione d’immersione e le novità di tauchplaetze.ch.</value></data>
+  <data name="MetaDescription" xml:space="preserve"><value>Modelli dei laghi, meteo, satellite, portata e livello dei laghi sono aggiornati? In più nuove funzioni e siti descritti per la prima volta.</value></data>
+  <data name="Summary_AllCurrent" xml:space="preserve"><value>Tutti i dati sono aggiornati.</value></data>
+  <data name="Summary_Late" xml:space="preserve"><value>In ritardo: {0}.</value></data>
+  <data name="Summary_Down" xml:space="preserve"><value>Disturbato: {0}.</value></data>
+  <data name="Summary_NoData" xml:space="preserve"><value>Ancora nessun dato.</value></data>
+  <data name="Stand" xml:space="preserve"><value>Stato al {0}</value></data>
+  <data name="Sounder_Label" xml:space="preserve"><value>Display dell’ecoscandaglio</value></data>
+  <data name="Sounder_Best" xml:space="preserve"><value>Scelta migliore oggi: {0}, {1}</value></data>
+  <data name="Sounder_Thermocline" xml:space="preserve"><value>Termoclino {0}–{1} m</value></data>
+  <data name="Sounder_Mixed" xml:space="preserve"><value>rimescolato, nessun termoclino</value></data>
+  <data name="Sounder_Undetermined" xml:space="preserve"><value>Termoclino non determinato</value></data>
+  <data name="Sounder_None" xml:space="preserve"><value>Oggi ancora nessuna previsione</value></data>
+  <data name="Status_Eyebrow" xml:space="preserve"><value>Stato dei dati</value></data>
+  <data name="Status_Title" xml:space="preserve"><value>Quanto sono aggiornati i dati?</value></data>
+  <data name="Status_Lead" xml:space="preserve"><value>La previsione prende i dati da enti pubblici. Qui vedi quando ogni fonte ha fornito dati l’ultima volta.</value></data>
+  <data name="Legend_Label" xml:space="preserve"><value>Legenda</value></data>
+  <data name="Status_How" xml:space="preserve"><value>Come funziona tauchplaetze.ch? Come nasce la previsione →</value></data>
+  <data name="Health_Current" xml:space="preserve"><value>aggiornato</value></data>
+  <data name="Health_Late" xml:space="preserve"><value>in ritardo</value></data>
+  <data name="Health_Down" xml:space="preserve"><value>disturbato</value></data>
+  <data name="Health_Unknown" xml:space="preserve"><value>nessun dato</value></data>
+  <data name="When_Today" xml:space="preserve"><value>oggi alle {0}</value></data>
+  <data name="When_Yesterday" xml:space="preserve"><value>ieri alle {0}</value></data>
+  <data name="When_Date" xml:space="preserve"><value>il {0} alle {1}</value></data>
+  <data name="NoData" xml:space="preserve"><value>Ancora nessun dato.</value></data>
+  <data name="Source_Forecast_Label" xml:space="preserve"><value>tauchplaetze.ch</value></data>
+  <data name="Source_Forecast_Name" xml:space="preserve"><value>Indice d’immersione</value></data>
+  <data name="Source_Forecast_Text" xml:space="preserve"><value>Calcolato {0} per {1} siti.</value></data>
+  <data name="Source_LakeModels_Label" xml:space="preserve"><value>Eawag · Alplakes</value></data>
+  <data name="Source_LakeModels_Name" xml:space="preserve"><value>Modelli dei laghi</value></data>
+  <data name="Source_LakeModels_Text" xml:space="preserve"><value>Temperatura per profondità e termoclino, ottenuti {0}.</value></data>
+  <data name="Source_Weather_Label" xml:space="preserve"><value>MeteoSvizzera</value></data>
+  <data name="Source_Weather_Name" xml:space="preserve"><value>Meteo</value></data>
+  <data name="Source_Weather_Text" xml:space="preserve"><value>Vento e pioggia per i prossimi 5 giorni, ottenuti {0}.</value></data>
+  <data name="Source_Satellite_Label" xml:space="preserve"><value>Copernicus · Sentinel</value></data>
+  <data name="Source_Satellite_Name" xml:space="preserve"><value>Satellite</value></data>
+  <data name="Source_Satellite_Text" xml:space="preserve"><value>Limpidezza e alghe in superficie, ottenute {0}.</value></data>
+  <data name="Source_Satellite_Observed" xml:space="preserve"><value>Ultima immagine del {0}. Con le nuvole non ci sono nuove immagini.</value></data>
+  <data name="Source_Discharge_Label" xml:space="preserve"><value>UFAM</value></data>
+  <data name="Source_Discharge_Name" xml:space="preserve"><value>Portata dei fiumi</value></data>
+  <data name="Source_Discharge_Text" xml:space="preserve"><value>Misure di {0} stazioni, l’ultima {1}.</value></data>
+  <data name="Source_LakeLevel_Label" xml:space="preserve"><value>UFAM</value></data>
+  <data name="Source_LakeLevel_Name" xml:space="preserve"><value>Livello dei laghi</value></data>
+  <data name="Source_LakeLevel_Text" xml:space="preserve"><value>Misure di {0} stazioni, l’ultima {1}.</value></data>
+  <data name="News_Eyebrow" xml:space="preserve"><value>Novità</value></data>
+  <data name="News_Title" xml:space="preserve"><value>Le ultime novità</value></data>
+  <data name="News_Lead" xml:space="preserve"><value>Nuove funzioni e siti che hanno una descrizione per la prima volta.</value></data>
+  <data name="Entry_Feature" xml:space="preserve"><value>Nuova funzione</value></data>
+  <data name="Entry_Described_One" xml:space="preserve"><value>Descritto per la prima volta · 1 sito</value></data>
+  <data name="Entry_Described_Many" xml:space="preserve"><value>Descritti per la prima volta · {0} siti</value></data>
+  <data name="News_Older" xml:space="preserve"><value>Qui ci sono le ultime {0} novità. Quelle più vecchie non sono più elencate.</value></data>
+  <data name="News_Empty" xml:space="preserve"><value>Ancora nessuna novità.</value></data>
+</root>

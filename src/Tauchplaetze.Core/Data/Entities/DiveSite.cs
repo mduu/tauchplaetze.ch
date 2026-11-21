@@ -74,6 +74,9 @@ internal class DiveSite
 
     public DateTimeOffset UpdatedAt { get; set; }
 
+    /// <summary>Freigabe der ersten Version mit Text (<see cref="Features.Editorial.DescriptionRule"/>). Bleibt danach unverändert. <c>null</c>: noch keine Beschreibung.</summary>
+    public DateTimeOffset? FirstDescribedAt { get; set; }
+
     public string? CreatedBy { get; set; }
 
     public string? UpdatedBy { get; set; }

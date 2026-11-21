@@ -46,7 +46,7 @@ internal static class Sitemap
         new XDocument(new XElement(Ns + "sitemapindex",
             Languages.All.Select(l => new XElement(Ns + "sitemap", new XElement(Ns + "loc", site.Link($"/sitemap-{l}.xml")))))).ToString();
 
-    /// <summary>Die Seiten einer Sprache: Start, Verzeichnis, Gewässer, «Über», jeder Platz und jedes Gewässer.</summary>
+    /// <summary>Die Seiten einer Sprache: Start, Verzeichnis, Gewässer, «Über», «Echolot», jeder Platz und jedes Gewässer.</summary>
     public static string ForLanguage(string language, SitemapEntries entries, PublicSiteOptions site)
     {
         var pages = new List<(Func<string, string> Path, DateTimeOffset? LastModified)>
@@ -55,6 +55,7 @@ internal static class Sitemap
             (l => $"/{l}/{PublicRoutes.DiveSites[l]}", null),
             (l => $"/{l}/{PublicRoutes.WaterBodies[l]}", null),
             (l => PublicRoutes.AboutPage(l), null),
+            (l => PublicRoutes.EcholotPage(l), null),
         };
         pages.AddRange(entries.WaterBodies.Select(w => ((Func<string, string>)(l => $"/{l}/{PublicRoutes.WaterBodies[l]}/{w.Slug}"), (DateTimeOffset?)w.LastModified)));
         pages.AddRange(entries.DiveSites.Select(s => ((Func<string, string>)(l => PublicRoutes.DiveSite(l, s.Slug)), (DateTimeOffset?)s.LastModified)));

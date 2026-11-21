@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Title" xml:space="preserve"><value>Echolot</value></data>
+  <data name="Subtitle" xml:space="preserve"><value>Datenstand und Neuigkeiten</value></data>
+  <data name="Eyebrow" xml:space="preserve"><value>Unter der Oberfläche</value></data>
+  <data name="Lead" xml:space="preserve"><value>Hier siehst du, wie frisch die Daten hinter der Tauchprognose sind und was es auf tauchplaetze.ch Neues gibt.</value></data>
+  <data name="MetaDescription" xml:space="preserve"><value>Wie aktuell sind Seemodelle, Wetter, Satellit, Abfluss und Seepegel? Dazu neue Funktionen und neu beschriebene Tauchplätze.</value></data>
+  <data name="Summary_AllCurrent" xml:space="preserve"><value>Alle Daten sind aktuell.</value></data>
+  <data name="Summary_Late" xml:space="preserve"><value>Verspätet: {0}.</value></data>
+  <data name="Summary_Down" xml:space="preserve"><value>Gestört: {0}.</value></data>
+  <data name="Summary_NoData" xml:space="preserve"><value>Noch keine Daten.</value></data>
+  <data name="Stand" xml:space="preserve"><value>Stand {0}</value></data>
+  <data name="Sounder_Label" xml:space="preserve"><value>Echolot-Anzeige</value></data>
+  <data name="Sounder_Best" xml:space="preserve"><value>Beste Wahl heute: {0}, {1}</value></data>
+  <data name="Sounder_Thermocline" xml:space="preserve"><value>Sprungschicht {0}–{1} m</value></data>
+  <data name="Sounder_Mixed" xml:space="preserve"><value>durchmischt, keine Sprungschicht</value></data>
+  <data name="Sounder_Undetermined" xml:space="preserve"><value>Sprungschicht nicht bestimmt</value></data>
+  <data name="Sounder_None" xml:space="preserve"><value>Heute noch keine Prognose</value></data>
+  <data name="Status_Eyebrow" xml:space="preserve"><value>Datenstand</value></data>
+  <data name="Status_Title" xml:space="preserve"><value>Wie frisch sind die Daten?</value></data>
+  <data name="Status_Lead" xml:space="preserve"><value>Die Prognose holt ihre Daten bei öffentlichen Stellen. Hier siehst du, wann jede Quelle zuletzt geliefert hat.</value></data>
+  <data name="Legend_Label" xml:space="preserve"><value>Legende</value></data>
+  <data name="Status_How" xml:space="preserve"><value>Wie funktioniert tauchplaetze.ch? So entsteht die Prognose →</value></data>
+  <data name="Health_Current" xml:space="preserve"><value>aktuell</value></data>
+  <data name="Health_Late" xml:space="preserve"><value>verspätet</value></data>
+  <data name="Health_Down" xml:space="preserve"><value>gestört</value></data>
+  <data name="Health_Unknown" xml:space="preserve"><value>keine Daten</value></data>
+  <data name="When_Today" xml:space="preserve"><value>heute um {0}</value></data>
+  <data name="When_Yesterday" xml:space="preserve"><value>gestern um {0}</value></data>
+  <data name="When_Date" xml:space="preserve"><value>am {0} um {1}</value></data>
+  <data name="NoData" xml:space="preserve"><value>Noch keine Daten.</value></data>
+  <data name="Source_Forecast_Label" xml:space="preserve"><value>tauchplaetze.ch</value></data>
+  <data name="Source_Forecast_Name" xml:space="preserve"><value>Tauch-Index</value></data>
+  <data name="Source_Forecast_Text" xml:space="preserve"><value>Berechnet {0} für {1} Plätze.</value></data>
+  <data name="Source_LakeModels_Label" xml:space="preserve"><value>Eawag · Alplakes</value></data>
+  <data name="Source_LakeModels_Name" xml:space="preserve"><value>Seemodelle</value></data>
+  <data name="Source_LakeModels_Text" xml:space="preserve"><value>Temperatur nach Tiefe und Sprungschicht, geholt {0}.</value></data>
+  <data name="Source_Weather_Label" xml:space="preserve"><value>MeteoSchweiz</value></data>
+  <data name="Source_Weather_Name" xml:space="preserve"><value>Wetter</value></data>
+  <data name="Source_Weather_Text" xml:space="preserve"><value>Wind und Regen für die nächsten 5 Tage, geholt {0}.</value></data>
+  <data name="Source_Satellite_Label" xml:space="preserve"><value>Copernicus · Sentinel</value></data>
+  <data name="Source_Satellite_Name" xml:space="preserve"><value>Satellit</value></data>
+  <data name="Source_Satellite_Text" xml:space="preserve"><value>Klarheit und Algen an der Oberfläche, geholt {0}.</value></data>
+  <data name="Source_Satellite_Observed" xml:space="preserve"><value>Neuestes Bild vom {0}. Bei Wolken gibt es keine neuen Bilder.</value></data>
+  <data name="Source_Discharge_Label" xml:space="preserve"><value>BAFU</value></data>
+  <data name="Source_Discharge_Name" xml:space="preserve"><value>Abfluss der Flüsse</value></data>
+  <data name="Source_Discharge_Text" xml:space="preserve"><value>Messwerte von {0} Stationen, zuletzt {1}.</value></data>
+  <data name="Source_LakeLevel_Label" xml:space="preserve"><value>BAFU</value></data>
+  <data name="Source_LakeLevel_Name" xml:space="preserve"><value>Seepegel</value></data>
+  <data name="Source_LakeLevel_Text" xml:space="preserve"><value>Messwerte von {0} Stationen, zuletzt {1}.</value></data>
+  <data name="News_Eyebrow" xml:space="preserve"><value>Neuigkeiten</value></data>
+  <data name="News_Title" xml:space="preserve"><value>Die letzten Neuigkeiten</value></data>
+  <data name="News_Lead" xml:space="preserve"><value>Neue Funktionen und Plätze, die zum ersten Mal eine Beschreibung haben.</value></data>
+  <data name="Entry_Feature" xml:space="preserve"><value>Neue Funktion</value></data>
+  <data name="Entry_Described_One" xml:space="preserve"><value>Neu beschrieben · 1 Platz</value></data>
+  <data name="Entry_Described_Many" xml:space="preserve"><value>Neu beschrieben · {0} Plätze</value></data>
+  <data name="News_Older" xml:space="preserve"><value>Hier stehen die letzten {0} Neuigkeiten. Ältere sind nicht mehr aufgeführt.</value></data>
+  <data name="News_Empty" xml:space="preserve"><value>Noch keine Neuigkeiten.</value></data>
+</root>

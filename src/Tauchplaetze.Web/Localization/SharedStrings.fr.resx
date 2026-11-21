@@ -36,6 +36,7 @@
   <data name="Footer_Osm" xml:space="preserve"><value>Sites de plongée en partie issus d'OpenStreetMap : © contributeurs d'OpenStreetMap, ODbL</value></data>
   <data name="Start_HowLink" xml:space="preserve"><value>Comment la prévision est calculée</value></data>
   <data name="Footer_About" xml:space="preserve"><value>À propos</value></data>
+  <data name="Footer_Echolot" xml:space="preserve"><value>Sondeur</value></data>
   <data name="Footer_Imprint" xml:space="preserve"><value>Mentions légales</value></data>
   <data name="Footer_Privacy" xml:space="preserve"><value>Protection des données</value></data>
   <data name="Footer_Links" xml:space="preserve"><value>À propos du site</value></data>

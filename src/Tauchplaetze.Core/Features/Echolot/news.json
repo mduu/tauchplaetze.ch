@@ -1,0 +1,44 @@
+[
+  {
+    "date": "2026-11-21",
+    "texts": {
+      "de": {
+        "title": "Echolot: Datenstand und Neuigkeiten",
+        "text": "Auf dieser Seite siehst du, wie frisch die Daten hinter der Tauchprognose sind und was es auf tauchplaetze.ch Neues gibt."
+      },
+      "en": {
+        "title": "Sonar: data status and news",
+        "text": "This page shows how fresh the data behind the dive forecast is and what is new on tauchplaetze.ch."
+      },
+      "fr": {
+        "title": "Sondeur : état des données et nouveautés",
+        "text": "Cette page montre la fraîcheur des données de la prévision de plongée et les nouveautés de tauchplaetze.ch."
+      },
+      "it": {
+        "title": "Ecoscandaglio: stato dei dati e novità",
+        "text": "Questa pagina mostra quanto sono aggiornati i dati della previsione d’immersione e le novità di tauchplaetze.ch."
+      }
+    }
+  },
+  {
+    "date": "2026-11-21",
+    "texts": {
+      "de": {
+        "title": "Hinweis bei sehr tiefem oder hohem Seepegel",
+        "text": "Liegt ein See deutlich tiefer oder höher als sonst um diese Jahreszeit, zeigt die Platzseite einen Hinweis. Ein- und Ausstiege können dann schwieriger sein."
+      },
+      "en": {
+        "title": "Notice when the lake level is very low or very high",
+        "text": "If a lake is much lower or higher than usual for the time of year, the dive site page shows a notice. Entry and exit points can then be harder to use."
+      },
+      "fr": {
+        "title": "Avis lorsque le niveau du lac est très bas ou très haut",
+        "text": "Si un lac est nettement plus bas ou plus haut que d’habitude pour la saison, la page du site affiche un avis. Les mises à l’eau et les sorties peuvent alors être plus difficiles."
+      },
+      "it": {
+        "title": "Avviso con livello del lago molto basso o molto alto",
+        "text": "Se un lago è molto più basso o più alto del solito per il periodo, la pagina del sito mostra un avviso. Entrate e uscite possono essere più difficili."
+      }
+    }
+  }
+]

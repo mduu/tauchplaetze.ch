@@ -36,6 +36,7 @@
   <data name="Footer_Osm" xml:space="preserve"><value>Tauchplätze teilweise aus OpenStreetMap: © OpenStreetMap-Mitwirkende, ODbL</value></data>
   <data name="Start_HowLink" xml:space="preserve"><value>So entsteht die Prognose</value></data>
   <data name="Footer_About" xml:space="preserve"><value>Über</value></data>
+  <data name="Footer_Echolot" xml:space="preserve"><value>Echolot</value></data>
   <data name="Footer_Imprint" xml:space="preserve"><value>Impressum</value></data>
   <data name="Footer_Privacy" xml:space="preserve"><value>Datenschutz</value></data>
   <data name="Footer_Links" xml:space="preserve"><value>Über die Website</value></data>

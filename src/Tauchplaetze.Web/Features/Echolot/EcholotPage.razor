@@ -1,0 +1,189 @@
+@page "/de/echolot"
+@page "/en/sonar"
+@page "/fr/sondeur"
+@page "/it/ecoscandaglio"
+@attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(PolicyName = Tauchplaetze.Web.CrossCutting.Caching.PublicPageCache.Policy)]
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Echolot
+@using Tauchplaetze.Core.Features.Echolot.Queries
+@using Tauchplaetze.Core.Features.Forecasts.Queries
+@using Tauchplaetze.Web.CrossCutting.Caching
+@using Tauchplaetze.Web.Features.Forecasts
+@inject IStringLocalizer<SharedStrings> Shared
+@inject IStringLocalizer<EcholotStrings> L
+@inject IQueryHandler<GetEcholotQuery, EcholotReport> Echolot
+@inject IQueryHandler<GetBestSitesQuery, BestSites> BestSitesQuery
+@inject TimeProvider Time
+
+<PageTitle>@SeoText.PageTitle(L["Title"] + " – " + L["Subtitle"], Shared["Brand"])</PageTitle>
+<HeadContent>
+    <HreflangLinks Title="@(L["Title"] + " – " + L["Subtitle"])" Description="@L["MetaDescription"]" />
+</HeadContent>
+
+<section class="page-section echolot-hero">
+    <div class="hero-text">
+        <p class="eyebrow">@L["Eyebrow"]</p>
+        <h1 class="page-title">@L["Title"]</h1>
+        <p class="subtitle">@L["Subtitle"]</p>
+        <p class="lead">@L["Lead"]</p>
+        <p class="summary" role="status" data-summary="@SummaryState">
+            <span>@Summary</span>
+            <span class="summary-when">@L["Stand", DischargeFormat.Stamp(Time.GetUtcNow())]</span>
+        </p>
+    </div>
+    <EcholotSounder Best="best" />
+</section>
+
+<section class="page-section" aria-labelledby="datenstand">
+    <div class="section-head">
+        <p class="eyebrow">@L["Status_Eyebrow"]</p>
+        <h2 id="datenstand" class="section-title">@L["Status_Title"]</h2>
+        <p>@L["Status_Lead"]</p>
+    </div>
+    <div class="sources">
+        @foreach (var source in page.Sources)
+        {
+            <article class="source" data-source="@source.Source" data-health="@source.Health">
+                <span class="ping" aria-hidden="true"></span>
+                <p class="source-label">
+                    <span>@L[$"Source_{source.Source}_Label"]</span>
+                    <span class="health">● @L[$"Health_{source.Health}"]</span>
+                </p>
+                <h3 class="source-name">@L[$"Source_{source.Source}_Name"]</h3>
+                <p class="source-text">@SourceText(source)</p>
+            </article>
+        }
+    </div>
+    <p class="legend" aria-label="@L["Legend_Label"]">
+        <span data-health="Current"><i></i>@L["Health_Current"]</span>
+        <span data-health="Late"><i></i>@L["Health_Late"]</span>
+        <span data-health="Down"><i></i>@L["Health_Down"]</span>
+    </p>
+    <p class="how"><a href="@PublicRoutes.AboutPage(Language, "prognose")">@L["Status_How"]</a></p>
+</section>
+
+<section class="page-section" aria-labelledby="neuigkeiten">
+    <div class="section-head">
+        <p class="eyebrow">@L["News_Eyebrow"]</p>
+        <h2 id="neuigkeiten" class="section-title">@L["News_Title"]</h2>
+        <p>@L["News_Lead"]</p>
+    </div>
+    @if (page.Entries.Count == 0)
+    {
+        <p class="news-empty">@L["News_Empty"]</p>
+    }
+    else
+    {
+        <ol class="log">
+            @foreach (var entry in page.Entries)
+            {
+                <li class="entry" data-kind="@entry.Kind">
+                    <p class="date"><b>@entry.Date.ToString("dd.MM.", CultureInfo.InvariantCulture)</b>@entry.Date.Year</p>
+                    <span class="mark" aria-hidden="true"></span>
+                    <div class="entry-card">
+                        @if (entry.Kind == EcholotEntryKind.Feature)
+                        {
+                            <p class="kind">@L["Entry_Feature"]</p>
+                            <h3>@entry.Title</h3>
+                            <p>@entry.Text</p>
+                        }
+                        else
+                        {
+                            <p class="kind">@(entry.Sites.Count == 1 ? L["Entry_Described_One"] : L["Entry_Described_Many", entry.Sites.Count])</p>
+                            <ul class="sites">
+                                @foreach (var site in entry.Sites)
+                                {
+                                    <li><a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name <span>@site.WaterBodyName</span></a></li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </li>
+            }
+            @if (page.HasOlderEntries)
+            {
+                <li class="end">
+                    <span class="mark" aria-hidden="true"></span>
+                    <p>@L["News_Older", page.Entries.Count]</p>
+                </li>
+            }
+        </ol>
+    }
+</section>
+
+@code {
+    private EcholotReport page = new([], [], false);
+
+    private RankedSite? best;
+
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        page = await Echolot.Handle(new GetEcholotQuery(Language));
+        best = (await BestSitesQuery.Handle(new GetBestSitesQuery(Language))).Ranking.FirstOrDefault();
+        PublicPageCache.Tag(HttpContext, PublicPageCache.DischargePages);
+        PublicPageCache.Tag(HttpContext, PublicPageCache.LakeLevelPages);
+    }
+
+    private string SummaryState => page.Sources.Any(s => s.Health == DataHealth.Down) ? "Down"
+        : page.Sources.Any(s => s.Health == DataHealth.Late) ? "Late"
+        : page.Sources.All(s => s.Health == DataHealth.Unknown) ? "Unknown"
+        : "Current";
+
+    private string Summary
+    {
+        get
+        {
+            if (SummaryState == "Unknown")
+            {
+                return L["Summary_NoData"];
+            }
+
+            var parts = new List<string>();
+            AddNames(parts, DataHealth.Down, "Summary_Down");
+            AddNames(parts, DataHealth.Late, "Summary_Late");
+            return parts.Count == 0 ? L["Summary_AllCurrent"] : string.Join(" ", parts);
+        }
+    }
+
+    private void AddNames(List<string> parts, DataHealth health, string key)
+    {
+        var names = page.Sources.Where(s => s.Health == health).Select(s => L[$"Source_{s.Source}_Name"].Value).ToList();
+        if (names.Count > 0)
+        {
+            parts.Add(L[key, string.Join(", ", names)]);
+        }
+    }
+
+    private string SourceText(DataSourceStatus source)
+    {
+        if (source.UpdatedAt is not { } updated)
+        {
+            return L["NoData"];
+        }
+
+        var when = Format(updated);
+        return source.Source switch
+        {
+            DataSource.Forecast => L["Source_Forecast_Text", when, source.Count ?? 0],
+            DataSource.Satellite when source.ObservedOn is { } observed => L["Source_Satellite_Observed", ForecastFormat.Date(observed)],
+            DataSource.Discharge or DataSource.LakeLevel => L[$"Source_{source.Source}_Text", source.Count ?? 0, when],
+            _ => L[$"Source_{source.Source}_Text", when],
+        };
+    }
+
+    /// <summary>«heute um 06:32», «gestern um 13:00» oder «am 18.11. um 13:00», in Schweizer Zeit.</summary>
+    private string Format(DateTimeOffset value)
+    {
+        var day = DischargeFormat.Day(value);
+        var today = DischargeFormat.Today(Time);
+        var clock = DischargeFormat.Clock(value);
+        return day == today ? L["When_Today", clock]
+            : day == today.AddDays(-1) ? L["When_Yesterday", clock]
+            : L["When_Date", day.ToString("dd.MM.", CultureInfo.InvariantCulture), clock];
+    }
+}

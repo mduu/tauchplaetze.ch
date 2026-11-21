@@ -21,6 +21,12 @@ internal static class DischargeFormat
         return value.ToString($"+{pattern};−{pattern};0", CultureInfo.CurrentCulture);
     }
 
+    /// <summary>Uhrzeit in Lokalzeit, ohne Datum.</summary>
+    public static string Clock(DateTimeOffset value) => TimeZoneInfo.ConvertTime(value, Zone).ToString("HH:mm", CultureInfo.InvariantCulture);
+
+    /// <summary>Datum und Uhrzeit in Lokalzeit, zum Beispiel «21.11.2026 · 09:14».</summary>
+    public static string Stamp(DateTimeOffset value) => TimeZoneInfo.ConvertTime(value, Zone).ToString("dd.MM.yyyy · HH:mm", CultureInfo.InvariantCulture);
+
     /// <summary>Uhrzeit in Lokalzeit, mit Datum, wenn der Wert nicht von heute ist.</summary>
     public static string Time(DateTimeOffset value, TimeProvider time)
     {

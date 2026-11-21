@@ -371,6 +371,9 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.Property<int>("Features")
                         .HasColumnType("int");
 
+                    b.Property<DateTimeOffset?>("FirstDescribedAt")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<bool>("ForecastDisabled")
                         .HasColumnType("bit");
 

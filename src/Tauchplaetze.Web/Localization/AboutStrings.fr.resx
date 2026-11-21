@@ -21,6 +21,8 @@
   <data name="About_MetaDescription" xml:space="preserve"><value>Comment la prévision de plongée est calculée, quelles sources de données nous utilisons, mentions légales et protection des données de tauchplaetze.ch.</value></data>
   <data name="About_Lead" xml:space="preserve"><value>Un projet non commercial de plongeurs pour tous ceux qui plongent dans les lacs et rivières suisses. Sans publicité ni pistage.</value></data>
   <data name="About_Nav_Label" xml:space="preserve"><value>Contenu de cette page</value></data>
+  <data name="About_Nav_Echolot" xml:space="preserve"><value>Sondeur : état des données et nouveautés</value></data>
+  <data name="About_Sources_Echolot" xml:space="preserve"><value>Le Sondeur montre si chaque source est à jour en ce moment.</value></data>
   <data name="About_Forecast_Title" xml:space="preserve"><value>Comment la prévision est calculée</value></data>
   <data name="About_Forecast_Lead" xml:space="preserve"><value>Pas besoin de signalements : le lac le dit lui-même. Deux fois par jour, une tâche récupère les données de quatre sources et calcule l’indice de plongée de chaque site pour cinq jours.</value></data>
   <data name="About_Levels_Title" xml:space="preserve"><value>Quelle est la précision de la prévision ?</value></data>

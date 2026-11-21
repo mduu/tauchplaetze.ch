@@ -55,6 +55,14 @@ Use the `review` skill (`.claude/skills/review/`) before each push.
 - Write commit messages and PR titles as Conventional Commits: `type(scope): description`. The scope is the slice name in lower case.
 - Keep the PR description short. It becomes the squash commit message. Do not put HTML, Claude links or session IDs in it. Do not add a `Co-Authored-By` trailer. The details are in `specs/architecture.md`, section "Commits und Pull Requests".
 
+## News on the Echolot Page
+
+The public page «Echolot» (`/de/echolot`) shows the data status and the latest news (`specs/ux.md`, «Echolot»).
+
+- For each commit, examine if the change is a news item. A news item is a new function or a change that visitors can see and use. Examples: a new hint on the dive site page, a new data source, a new filter. Not a news item: a fix, a refactoring, a change to tests, specs or CI, and a change to the text of a dive site.
+- If it is a news item, add an entry to the news file in the same commit. Write the title and the text in German, English, French and Italian. Write for all persons, also for persons who do not dive. Use one or two short sentences.
+- Dive sites that get a description for the first time come from the database automatically. Do not add an entry for them.
+
 ## Coding
 
 - Write fields in camelCase. Do not use a `_` prefix. Use modern C#. Put braces on each `if`/`else` branch.

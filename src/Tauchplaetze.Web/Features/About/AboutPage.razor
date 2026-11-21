@@ -27,6 +27,7 @@
         <a href="@Anchor("impressum")">@L["About_Imprint_Title"]</a>
         <a href="@Anchor("kontakt")">@L["About_Contact_Title"]</a>
         <a href="@Anchor("datenschutz")">@L["About_Privacy_Title"]</a>
+        <a href="@PublicRoutes.EcholotPage(Language)">@L["About_Nav_Echolot"]</a>
     </nav>
 </section>
 
@@ -125,6 +126,7 @@
 <section id="quellen" class="page-section" aria-labelledby="sources-title">
     <h2 id="sources-title" class="about-title">@L["About_Sources_Title"]</h2>
     <p class="about-lead">@L["About_Sources_Lead"]</p>
+    <p class="about-lead"><a href="@PublicRoutes.EcholotPage(Language)">@L["About_Sources_Echolot"]</a></p>
     <dl class="sources">
         @foreach (var (key, url) in Sources)
         {

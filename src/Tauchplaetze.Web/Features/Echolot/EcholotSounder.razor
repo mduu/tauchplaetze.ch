@@ -1,0 +1,88 @@
+@using Tauchplaetze.Core.Features.Forecasts.Queries
+@inject IStringLocalizer<EcholotStrings> L
+
+<figure class="sounder" data-sounder="@State">
+    <svg viewBox="0 0 560 220" role="img" aria-label="@L["Sounder_Label"]">
+        <rect width="560" height="220" rx="12" class="screen" />
+        <g class="grid">
+            <line x1="0" y1="@Y(10)" x2="560" y2="@Y(10)" />
+            <line x1="0" y1="@Y(20)" x2="560" y2="@Y(20)" />
+            <line x1="0" y1="@Y(30)" x2="560" y2="@Y(30)" />
+        </g>
+        <g class="depths">
+            <text x="8" y="@Y(10, -4)">10 m</text>
+            <text x="8" y="@Y(20, -4)">20 m</text>
+            <text x="8" y="@Y(30, -4)">30 m</text>
+        </g>
+        @if (Best is { ThermoclineTop: { } top, ThermoclineBottom: { } bottom })
+        {
+            <rect x="0" y="@Y((double)top)" width="560" height="@Height(top, bottom)" class="band" />
+            <line x1="0" y1="@Y((double)top)" x2="560" y2="@Y((double)top)" class="band-edge" />
+            <line x1="0" y1="@Y((double)bottom)" x2="560" y2="@Y((double)bottom)" class="band-edge" />
+        }
+        <path d="@Ground L560 220 L0 220 Z" class="ground" />
+        <path d="@Ground" class="ground-line" />
+        <g class="fish">
+            <path d="M120 92 q6 -4 12 0 q-6 4 -12 0z" />
+            <path d="M300 74 q7 -5 14 0 q-7 5 -14 0z" />
+            <path d="M318 82 q5 -3 10 0 q-5 3 -10 0z" />
+            <path d="M455 98 q6 -4 12 0 q-6 4 -12 0z" />
+        </g>
+        <defs>
+            <linearGradient id="sounder-sweep" x1="0" x2="1">
+                <stop offset="0" stop-color="var(--color-primary)" stop-opacity="0" />
+                <stop offset="1" stop-color="var(--color-primary)" stop-opacity="0.18" />
+            </linearGradient>
+        </defs>
+        <g class="sweep"><rect x="-40" y="0" width="40" height="220" fill="url(#sounder-sweep)" /></g>
+    </svg>
+    <figcaption>
+        @if (Best is null)
+        {
+            <span>@L["Sounder_None"]</span>
+        }
+        else
+        {
+            <span><a href="@PublicRoutes.DiveSite(Language, Best.Slug)">@L["Sounder_Best", Best.Name, Best.WaterBodyName]</a></span>
+            <span class="layer">@Layer</span>
+        }
+    </figcaption>
+</figure>
+
+@code {
+    /// <summary>Die beste Wahl von heute. Ohne Prognose <c>null</c>: Die Anzeige zeigt nur den Grund.</summary>
+    [Parameter]
+    public RankedSite? Best { get; set; }
+
+    private const double PixelsPerMetre = 5.5;
+
+    private const string Ground = "M0 172 C60 162 90 140 140 144 S220 190 270 182 S350 150 410 156 S500 178 560 166";
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string State => Best switch
+    {
+        null => "none",
+        { ThermoclineTop: not null, ThermoclineBottom: not null } => "thermocline",
+        { ThermoclineUndetermined: true } => "undetermined",
+        _ => "mixed",
+    };
+
+    private string Layer => State switch
+    {
+        "thermocline" => L["Sounder_Thermocline", Metres(Best!.ThermoclineTop!.Value), Metres(Best.ThermoclineBottom!.Value)],
+        "undetermined" => L["Sounder_Undetermined"],
+        _ => L["Sounder_Mixed"],
+    };
+
+    /// <summary>Die Höhe im Bild für eine Tiefe, höchstens 40 m.</summary>
+    private static string Y(double metres, double offset = 0) => Number(Pixels(metres) + offset);
+
+    private static string Height(decimal top, decimal bottom) => Number(Math.Max(2, Pixels((double)bottom) - Pixels((double)top)));
+
+    private static double Pixels(double metres) => Math.Min(metres, 40) * PixelsPerMetre;
+
+    private static string Number(double value) => value.ToString("0.#", CultureInfo.InvariantCulture);
+
+    private static string Metres(decimal value) => Math.Round(value).ToString("0", CultureInfo.InvariantCulture);
+}

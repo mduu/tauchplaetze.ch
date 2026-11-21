@@ -33,6 +33,14 @@ internal static class PublicRoutes
         ["it"] = "chi-siamo",
     };
 
+    public static readonly IReadOnlyDictionary<string, string> Echolot = new Dictionary<string, string>
+    {
+        ["de"] = "echolot",
+        ["en"] = "sonar",
+        ["fr"] = "sondeur",
+        ["it"] = "ecoscandaglio",
+    };
+
     public static readonly IReadOnlyDictionary<string, string> Edit = new Dictionary<string, string>
     {
         ["de"] = "bearbeiten",
@@ -57,10 +65,13 @@ internal static class PublicRoutes
         ["it"] = "segnala",
     };
 
-    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions, About, Edit, New, Report];
+    private static readonly IReadOnlyList<IReadOnlyDictionary<string, string>> Sections = [DiveSites, WaterBodies, Forecast, Versions, About, Echolot, Edit, New, Report];
 
     /// <summary>Die Seite «Über», optional mit Anker (`prognose`, `quellen`, `impressum`, `datenschutz`).</summary>
     public static string AboutPage(string language, string? anchor = null) => $"/{language}/{About[language]}{(anchor is null ? "" : "#" + anchor)}";
+
+    /// <summary>Die Seite «Echolot»: Datenstand und Neuigkeiten (`ux.md`, «Echolot»).</summary>
+    public static string EcholotPage(string language) => $"/{language}/{Echolot[language]}";
 
     /// <summary>Das Kontaktformular auf «Über», optional mit vorausgefülltem Bezug (z.B. Name eines Platzes).</summary>
     public static string Contact(string language, string? reference = null) =>

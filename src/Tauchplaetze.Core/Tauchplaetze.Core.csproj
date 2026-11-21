@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Features/**/Seed/*.json" />
+    <EmbeddedResource Include="Features/Echolot/news.json" LogicalName="Tauchplaetze.Echolot.news.json" />
     <EmbeddedResource Update="Features/**/*.resx" />
     <EmbeddedResource Include="../../specs/ubiquitous-language.md" LogicalName="Tauchplaetze.Glossary.md" Link="Features/Translations/Glossary.md" />
   </ItemGroup>

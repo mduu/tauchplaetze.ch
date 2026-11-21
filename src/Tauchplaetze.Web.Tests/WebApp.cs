@@ -16,6 +16,8 @@ using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Accounts.Queries;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
+using Tauchplaetze.Core.Features.Echolot;
+using Tauchplaetze.Core.Features.Echolot.Queries;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
@@ -46,6 +48,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
     public FakeQuery<GetSiteDischargeQuery, SiteDischarge?> Discharge { get; } = new(_ => null);
 
     public FakeQuery<GetSiteLakeLevelQuery, SiteLakeLevel?> LakeLevel { get; } = new(_ => null);
+
+    public FakeQuery<GetEcholotQuery, EcholotReport> Echolot { get; } = new(_ => new EcholotReport([], [], false));
 
     public FakeQuery<GetSiteIndexHistoryQuery, SiteIndexHistory> SiteHistory { get; } = new(_ => new SiteIndexHistory([], []));
 
@@ -156,6 +160,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteForecastQuery, SiteForecast>>(Forecasts));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteDischargeQuery, SiteDischarge?>>(Discharge));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteLakeLevelQuery, SiteLakeLevel?>>(LakeLevel));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetEcholotQuery, EcholotReport>>(Echolot));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteIndexHistoryQuery, SiteIndexHistory>>(SiteHistory));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyIndexHistoryQuery, WaterBodyIndexHistory>>(WaterBodyHistory));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetBestSitesQuery, BestSites>>(BestSites));

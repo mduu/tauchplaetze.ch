@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Contact.Commands;
+using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Forecasts.Commands;
 using Tauchplaetze.Core.Features.Mail.Commands;
 using Tauchplaetze.Core.Features.Media.Commands;
@@ -35,6 +36,7 @@ internal static class CommandCacheEviction
         typeof(UploadMediaCommand),
         typeof(PurgeUnusedMediaCommand),
         typeof(MigrateDatabaseCommand),
+        typeof(BackfillFirstDescribedCommand),
         typeof(TranslateSiteTextCommand),
     ];
 

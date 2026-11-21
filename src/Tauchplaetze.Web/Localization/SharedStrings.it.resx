@@ -36,6 +36,7 @@
   <data name="Footer_Osm" xml:space="preserve"><value>Siti d’immersione in parte da OpenStreetMap: © collaboratori di OpenStreetMap, ODbL</value></data>
   <data name="Start_HowLink" xml:space="preserve"><value>Come nasce la previsione</value></data>
   <data name="Footer_About" xml:space="preserve"><value>Chi siamo</value></data>
+  <data name="Footer_Echolot" xml:space="preserve"><value>Ecoscandaglio</value></data>
   <data name="Footer_Imprint" xml:space="preserve"><value>Note legali</value></data>
   <data name="Footer_Privacy" xml:space="preserve"><value>Protezione dei dati</value></data>
   <data name="Footer_Links" xml:space="preserve"><value>Informazioni sul sito</value></data>

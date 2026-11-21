@@ -1,0 +1,102 @@
+.sounder {
+    min-width: 0;
+    margin: 0;
+    padding: 18px 18px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+}
+
+.sounder svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.screen {
+    fill: var(--color-chart-surface);
+}
+
+.grid line {
+    stroke: var(--color-chart-grid);
+    stroke-width: 1;
+}
+
+.depths text {
+    fill: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: 11px;
+}
+
+.band {
+    fill: var(--color-signal);
+    opacity: 0.14;
+}
+
+.band-edge {
+    stroke: var(--color-signal);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+    opacity: 0.7;
+}
+
+.ground {
+    fill: var(--color-rock);
+}
+
+.ground-line {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+.fish path {
+    fill: var(--color-bubble);
+}
+
+.sweep {
+    animation: sweep 6s linear infinite;
+}
+
+@keyframes sweep {
+    from { transform: translateX(0); }
+    to { transform: translateX(600px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sweep {
+        animation: none;
+        display: none;
+    }
+}
+
+figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+}
+
+figcaption a {
+    color: var(--color-text-muted);
+}
+
+figcaption a:hover {
+    color: var(--color-primary);
+}
+
+.layer {
+    color: var(--color-signal);
+}
+
+.sounder[data-sounder="mixed"] .layer,
+.sounder[data-sounder="undetermined"] .layer {
+    color: var(--color-text-subtle);
+}

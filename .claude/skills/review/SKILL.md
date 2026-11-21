@@ -134,6 +134,12 @@ git log @{upstream}..HEAD --format=%B | grep -niE '@[a-z0-9.-]+\.[a-z]{2,}|co-au
 - Fachbegriffe nach [`specs/ubiquitous-language.md`](../../../specs/ubiquitous-language.md).
 - Formate schweizerisch (`dd.MM.yyyy`, °C mit einer Dezimale, Meter).
 
+### Neuigkeiten (Echolot)
+
+- Bringt die Änderung eine neue Funktion, die Besucher sehen oder nutzen? Dann gehört ein Eintrag in die Neuigkeiten des Echolots, im selben Commit, mit Titel und Text in allen vier Sprachen (AGENTS.md, «News on the Echolot Page»). Fehlt er = **Blocker**.
+- Kein Eintrag für Fehlerbehebungen, Refactorings, Tests, Specs, CI und Texte von Plätzen. Erstmals beschriebene Plätze kommen automatisch aus der Datenbank.
+- Der Text ist für alle verständlich, auch für Leute, die nicht tauchen: ein bis zwei kurze Sätze, kein Fachjargon der Technik.
+
 ### Coding Guidelines und Tests
 
 Nach architecture.md, für die geänderten Stellen (nicht den ganzen Bestand):

@@ -36,6 +36,7 @@
   <data name="Footer_Osm" xml:space="preserve"><value>Dive sites partly from OpenStreetMap: © OpenStreetMap contributors, ODbL</value></data>
   <data name="Start_HowLink" xml:space="preserve"><value>How the forecast works</value></data>
   <data name="Footer_About" xml:space="preserve"><value>About</value></data>
+  <data name="Footer_Echolot" xml:space="preserve"><value>Sonar</value></data>
   <data name="Footer_Imprint" xml:space="preserve"><value>Legal notice</value></data>
   <data name="Footer_Privacy" xml:space="preserve"><value>Privacy</value></data>
   <data name="Footer_Links" xml:space="preserve"><value>About the website</value></data>

@@ -24,6 +24,7 @@ Die Oberfläche beantwortet zuerst die Frage «Wo soll ich tauchen gehen?». Dan
 /{lang}/gewaesser               Gewässer-Übersicht (Seen und Flüsse)
 /{lang}/gewaesser/{slug}        Gewässerseite
 /{lang}/ueber                   Über, Datenquellen, Impressum, Datenschutz
+/{lang}/echolot                 Echolot: Datenstand und Neuigkeiten
 /{lang}/site/{slug}             kurzer Link auf einen Platz (Mails, CMS), 301 auf den Pfad der Sprache
 /{lang}/account/…               Konto: Profil, Meine Vorschläge, Meine Daten, Konto löschen (noindex)
 /admin/…                        Moderation (Moderatoren und Admins, ohne Sprachpräfix)
@@ -70,7 +71,7 @@ Tagesauswahl und Umkreis ändern die URL (`?tag=2026-10-20`, `?ort=zuerich`, `&k
 
 ### Über
 
-Pfad `/de/ueber`, `/en/about`, `/fr/a-propos`, `/it/chi-siamo`. Nicht in der Hauptnavigation, sondern im Fuss («Über · Impressum · Datenschutz») und als Link von der Startseite. Abschnitte mit Ankern:
+Pfad `/de/ueber`, `/en/about`, `/fr/a-propos`, `/it/chi-siamo`. Nicht in der Hauptnavigation, sondern im Fuss («Über · Echolot · Impressum · Datenschutz») und als Link von der Startseite. Abschnitte mit Ankern:
 
 1. **So entsteht die Prognose** (`#prognose`): die vier Schritte (Seemodell, Satellit, Wetter und Zuflüsse, Community als Bonus), dann «Was in den Index einfliesst» (Entscheid Marc, 20.10.2026: nachlesbar, wie ganzheitlich gerechnet wird): eine Tabelle mit den vier Teilwerten, Gewicht und Quellen, darunter kurze Abschnitte zu Klarheit (Sentinel-2 in Ufernähe, Sentinel-3 mit Uferfaktor, Alter, Algen, Regen und Zuflüsse seit dem Bild), «Die Sicht begrenzt den Index», Wind im Tauchfenster, Zuflüsse und Regen (Median, Vorhersage BAFU, Distanz zur Mündung), Schichtung, Fluss (Station, Strömungsabzug), Strömung im See (nur Information), wann gerechnet wird und was bei fehlenden Daten passiert, dazu die Version der Regel. Alle Zahlen kommen aus der Query `GetForecastRules` (dieselben Werte wie der Lauf), nicht aus den Texten. Danach die Datenstufen 3 bis 1 kurz erklärt und der Hinweis «Der Index ist ein Indikator».
 2. **Datenquellen** (`#quellen`): Eawag Alplakes, MeteoSchweiz über Open-Meteo, BAFU Hydrodaten über existenz.ch und die Abflussvorhersage direkt vom BAFU, swisstopo (Landeskarte, Luftbild, swissBATHY3D), OpenStreetMap (ODbL), je mit Link und Lizenz (`data-sources.md`).
@@ -82,6 +83,15 @@ Pfad `/de/ueber`, `/en/about`, `/fr/a-propos`, `/it/chi-siamo`. Nicht in der Hau
 Die E-Mail-Adresse des Betreibers erscheint nirgends auf der Website, auch nicht verschleiert (Entscheid Marc, 18.10.2026).
 
 `canonical` der Seite ist immer `/{lang}/{segment}` ohne Parameter (`?bezug`, `?kontakt`). Die Seite ist vom Output Cache ausgenommen: Das Formular trägt ein Antiforgery-Token und einen Timestamp pro Aufruf.
+
+### Echolot
+
+Pfad `/de/echolot`, `/en/sonar`, `/fr/sondeur`, `/it/ecoscandaglio` (Entscheid Marc, 21.11.2026). Titel «Echolot» mit Untertitel «Datenstand und Neuigkeiten» (EN «Sonar – Data status and news», FR «Sondeur – État des données et nouveautés», IT «Ecoscandaglio – Stato dei dati e novità»). Für alle verständlich, auch für Leute, die nicht tauchen. Indexiert und in der Sitemap. Im Fuss neben «Über», dazu verlinkt aus «Über» (Navigation und Abschnitt Datenquellen). Static SSR im Output Cache; die Jobs für Abfluss und Pegel nehmen die Seite mit ihren Tags aus dem Cache.
+
+1. **Kopf:** Eyebrow «Unter der Oberfläche», Titel, Untertitel, Lead. Darunter ein Satz zur Lage mit Rand links in der Farbe des schlechtesten Zustands: «Alle Daten sind aktuell.» oder «Gestört: Wetter. Verspätet: Satellit.», dazu «Stand 21.11.2026 · 09:14». Daneben die **Echolot-Anzeige** (`EcholotSounder`, SVG): Raster 10/20/30 m, Seegrund, Fische, ein langsamer Lichtstreifen (aus bei `prefers-reduced-motion`). Die Sprungschicht ist das orange Band der **besten Wahl von heute** (`GetBestSites`, erster Platz), Beschriftung «Beste Wahl heute: Riff Williams, Zürichsee» mit Link und «Sprungschicht 12–16 m»; durchmischt oder nicht bestimmt ohne Band mit Text; ohne Prognose «Heute noch keine Prognose».
+2. **Datenstand** («Wie frisch sind die Daten?»): eine Kachel pro Quelle (`GetEcholot`): Tauch-Index, Seemodelle, Wetter, Satellit, Abfluss der Flüsse, Seepegel. Pro Kachel Herkunft (Mono), Zustand mit Punkt, Name, ein Satz mit Zeit («heute um 06:32», «gestern um 13:00», «am 18.11. um 13:00») und Zahl der Plätze oder Stationen; beim Satellit das Datum des neuesten Bilds. Zustände: aktuell (`--color-status-ok`), verspätet (`--color-signal`), gestört (`--color-notice-closure`), keine Daten. Das Wort steht immer neben der Farbe. Darunter Legende und Link «Wie funktioniert tauchplaetze.ch? So entsteht die Prognose →» auf «Über» (`#prognose`).
+   - Regeln (`EcholotRules`): Tauch-Index nach dem letzten brauchbaren Lauf, verspätet ab 18 h, gestört ab 30 h. Seemodelle, Wetter und Satellit nach den Calls dieses Laufs: einzelne gescheitert verspätet, alle gescheitert gestört, nie besser als der Lauf. Satellit zusätzlich verspätet, wenn das neueste Bild älter als 5 Tage ist (meist Wolken). Abfluss verspätet ab 2 h, Seepegel ab 3 h, beide gestört ab 24 h. Keine Fehlertexte, keine technischen Details.
+3. **Neuigkeiten** («Die letzten Neuigkeiten»): Einträge an einer gestrichelten Lotleine, neueste zuerst. Neue Funktionen aus `src/Tauchplaetze.Core/Features/Echolot/news.json` (Titel und Text in vier Sprachen, gepflegt mit jedem Commit, AGENTS.md) als Karte; erstmals beschriebene Plätze (`cms.md`, «Erste Beschreibung») pro Tag als ein Eintrag mit Links als Pillen («Neu beschrieben · 3 Plätze»). Höchstens 20 Einträge; gibt es ältere, steht am Ende «Hier stehen die letzten 20 Neuigkeiten. Ältere sind nicht mehr aufgeführt.» Bis 560 px steht das Datum über der Karte.
 
 ### Tauchplatzseite
 

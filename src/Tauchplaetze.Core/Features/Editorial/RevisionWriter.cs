@@ -80,6 +80,10 @@ internal class RevisionWriter(TauchplaetzeDbContext dbContext, IRevisionStore st
         site.Status = site.Status == DiveSiteStatus.Draft ? DiveSiteStatus.Published : site.Status;
         site.UpdatedAt = now;
         site.UpdatedBy = reviewerId;
+        if (site.FirstDescribedAt is null && DescriptionRule.IsDescribed(content))
+        {
+            site.FirstDescribedAt = now;
+        }
 
         revision.Status = RevisionStatus.Approved;
         revision.ReviewerId = reviewerId;

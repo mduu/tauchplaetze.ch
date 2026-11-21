@@ -21,6 +21,8 @@
   <data name="About_MetaDescription" xml:space="preserve"><value>Wie die Tauchprognose entsteht, welche Datenquellen wir nutzen, Impressum und Datenschutz von tauchplaetze.ch.</value></data>
   <data name="About_Lead" xml:space="preserve"><value>Ein nicht kommerzielles Projekt von Tauchern für alle, die in Schweizer Seen und Flüssen tauchen. Ohne Werbung und ohne Tracking.</value></data>
   <data name="About_Nav_Label" xml:space="preserve"><value>Inhalt dieser Seite</value></data>
+  <data name="About_Nav_Echolot" xml:space="preserve"><value>Echolot: Datenstand und Neuigkeiten</value></data>
+  <data name="About_Sources_Echolot" xml:space="preserve"><value>Wie aktuell jede Quelle gerade ist, siehst du im Echolot.</value></data>
   <data name="About_Forecast_Title" xml:space="preserve"><value>So entsteht die Prognose</value></data>
   <data name="About_Forecast_Lead" xml:space="preserve"><value>Keine Meldungen nötig: Der See verrät es selbst. Ein Job holt zweimal täglich die Daten aus vier Quellen und rechnet für jeden Platz den Tauch-Index für fünf Tage.</value></data>
   <data name="About_Levels_Title" xml:space="preserve"><value>Wie genau ist die Prognose?</value></data>

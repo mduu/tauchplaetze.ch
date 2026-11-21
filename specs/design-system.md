@@ -38,7 +38,8 @@ Es gibt im MVP **nur das dunkle Schema**. Ein helles Schema ist nicht geplant.
 |---|---|---|
 | `--color-notice-info` | `#7FE3D6` | Hinweis «Info» |
 | `--color-notice-warning` | `#FF9A4D` | Hinweis «Warnung» |
-| `--color-notice-closure` | `#FF6F61` | Hinweis «Sperrung», einzige rote Farbe |
+| `--color-notice-closure` | `#FF6F61` | Hinweis «Sperrung», einzige rote Farbe; im Echolot «gestört» |
+| `--color-status-ok` | `#6EDB8F` | Zustand «aktuell» im Echolot (Punkt, Doppelkreis, Wort, Legende). Mintgrün, damit «ok» als grün erkennbar ist (Entscheid Marc, 21.11.2026) |
 | `--color-sun` | `#E8C25A` | Sonne in der Wetter-Grafik (Balken, Symbol) |
 | `--color-rain` | `#5AA9E6` | Regen in der Wetter-Grafik (Balken, Tropfen, Achse) |
 | `--color-sketch-wall` | `#3B4B49` | Steilwand und Kante in der Skizze |
