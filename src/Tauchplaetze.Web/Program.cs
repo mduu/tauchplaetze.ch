@@ -34,6 +34,7 @@ builder.Services.Configure<BathymetryOptions>(options =>
 builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(ForecastSchedule.Section));
 builder.Services.AddHostedService<ForecastWorker>();
 builder.Services.AddHostedService<DischargeWorker>();
+builder.Services.AddHostedService<LakeLevelWorker>();
 builder.Services.AddHostedService<MediaPurgeWorker>();
 builder.Services.AddHostedService<UnconfirmedAccountsWorker>();
 builder.Services.AddHostedService<MailQueueWorker>();

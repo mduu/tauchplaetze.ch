@@ -56,6 +56,10 @@
   <data name="Notice_Warning" xml:space="preserve"><value>Warnung</value></data>
   <data name="Notice_Closure" xml:space="preserve"><value>Gesperrt</value></data>
   <data name="Notice_Until" xml:space="preserve"><value>bis {0}</value></data>
+  <data name="LakeLevel_VeryLow_Title" xml:space="preserve"><value>Seepegel sehr tief</value></data>
+  <data name="LakeLevel_VeryHigh_Title" xml:space="preserve"><value>Seepegel sehr hoch</value></data>
+  <data name="LakeLevel_VeryLow_Text" xml:space="preserve"><value>Der See steht auf {0} m ü. M., {1} cm unter dem üblichen Stand für diese Jahreszeit. Ein- und Ausstiege können schwieriger sein als beschrieben.</value></data>
+  <data name="LakeLevel_VeryHigh_Text" xml:space="preserve"><value>Der See steht auf {0} m ü. M., {1} cm über dem üblichen Stand für diese Jahreszeit. Ufer und Einstiege können überflutet sein.</value></data>
   <data name="Location_Title" xml:space="preserve"><value>Lage</value></data>
   <data name="Location_Title_EntryPoints" xml:space="preserve"><value>Lage und Einstiege</value></data>
   <data name="Location_Map_Label" xml:space="preserve"><value>Karte von {0}</value></data>

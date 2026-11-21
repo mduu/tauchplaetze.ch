@@ -45,3 +45,9 @@
 .notice[data-notice-kind="closure"] .notice-text {
     font-weight: 600;
 }
+
+.notice-source {
+    margin: 8px 0 0;
+    color: var(--color-text-muted);
+    font-size: 13px;
+}

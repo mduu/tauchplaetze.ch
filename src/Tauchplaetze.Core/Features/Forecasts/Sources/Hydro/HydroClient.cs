@@ -24,6 +24,14 @@ internal class HydroClient(HttpClient httpClient)
             $"apiv1/hydro/daterange?locations={string.Join(',', stationIds.Select(Uri.EscapeDataString))}&parameters=flow,temperature&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
             HydroStationSeries.Parse,
             ct);
+
+    /// <summary>Pegel mehrerer Seestationen in einem Call, pro Station zeitlich sortiert.</summary>
+    public Task<SourceResult<IReadOnlyDictionary<string, IReadOnlyList<HydroValue>>>> GetHeights(IEnumerable<string> stationIds, DateOnly start, DateOnly end, CancellationToken ct) =>
+        SourceHttp.Get(
+            httpClient,
+            $"apiv1/hydro/daterange?locations={string.Join(',', stationIds.Select(Uri.EscapeDataString))}&parameters=height&startdate={start:yyyy-MM-dd}&enddate={end:yyyy-MM-dd}&app={AppName}",
+            json => HydroValue.ParseByStation(json, "height"),
+            ct);
 }
 
 /// <summary>Abfluss und Wassertemperatur pro Station. Eine Station ohne Temperatur fehlt in <see cref="Temperature"/>.</summary>

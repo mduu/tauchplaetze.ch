@@ -180,6 +180,32 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("Parking payant.", text);
     }
 
+    [Theory]
+    [InlineData("/de/tauchplaetze/", "Seepegel sehr tief", "Der See steht auf 405.55 m ü. M., 37 cm unter dem üblichen Stand für diese Jahreszeit.")]
+    [InlineData("/en/dive-sites/", "Lake level very low", "The lake is at 405.55 m above sea level, 37 cm below the usual level for this time of year.")]
+    [InlineData("/fr/sites-de-plongee/", "Niveau du lac très bas", "Le lac est à 405.55 m d’altitude, 37 cm sous son niveau habituel pour la saison.")]
+    [InlineData("/it/siti-di-immersione/", "Livello del lago molto basso", "Il lago è a 405.55 m s.l.m., 37 cm sotto il livello abituale per questo periodo.")]
+    public async Task Bei_sehr_tiefem_Seepegel_steht_ein_Hinweis_mit_Pegel_und_Abstand_in_cm_im_ueblichen_Bereich_keiner(string path, string title, string sentence)
+    {
+        // Arrange
+        using var browser = app.Browser();
+        var answer = app.LakeLevel.Answer;
+        var level = new SiteLakeLevel("2209", "Zürichsee – Zürich", 405.55m, DateTimeOffset.UtcNow, LakeLevelDeviation.VeryLow, -0.374m);
+
+        // Act
+        app.LakeLevel.Answer = _ => level;
+        var low = VisibleText.Of(await browser.GetStringAsync(path + Slug, TestContext.Current.CancellationToken));
+        app.LakeLevel.Answer = _ => level with { Deviation = null };
+        var usual = await browser.GetStringAsync(path + Slug, TestContext.Current.CancellationToken);
+
+        // Assert
+        app.LakeLevel.Answer = answer;
+        Assert.Contains(title, low);
+        Assert.Contains(sentence, low);
+        Assert.Contains("Zürichsee – Zürich", low);
+        Assert.DoesNotContain("data-lake-level", usual);
+    }
+
     [Fact]
     public async Task Mit_Einstiegen_zeigt_die_Karte_die_Einstiege_statt_des_Platzpunkts()
     {

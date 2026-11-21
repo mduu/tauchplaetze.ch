@@ -1,8 +1,12 @@
+@using System.Globalization
 @using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.Forecasts
 @using Tauchplaetze.Web.Features.Forecasts
 @inject IStringLocalizer<DiveSiteStrings> L
+@inject IStringLocalizer<ForecastStrings> F
+@inject TimeProvider Time
 
-@if (Notices.Count > 0)
+@if (Notices.Count > 0 || LakeLevelDeviation is not null)
 {
     <section class="page-section notices" aria-label="@L["Notices_Label"]">
         @foreach (var notice in Notices)
@@ -18,10 +22,29 @@
                 <p class="notice-text" lang="@(notice.GermanOnly ? "de" : null)">@notice.Text</p>
             </div>
         }
+        @if (LakeLevel is { Deviation: { } deviation } level)
+        {
+            <div class="notice" data-notice-kind="warning" data-lake-level="@deviation">
+                <p class="notice-kind">@L[$"LakeLevel_{deviation}_Title"]</p>
+                <p class="notice-text">@L[$"LakeLevel_{deviation}_Text", level.Level.ToString("0.00", CultureInfo.CurrentCulture), Centimetres(level.FromMedian)]</p>
+                <p class="notice-source">
+                    @SourceLinks.Format(F["Discharge_Source"], SourceLinks.Bafu(F))
+                    · @F["Discharge_Station", level.StationName, DischargeFormat.Time(level.MeasuredAt, Time)]
+                </p>
+            </div>
+        }
     </section>
 }
 
 @code {
     [Parameter, EditorRequired]
     public IReadOnlyList<SiteNotice> Notices { get; set; } = [];
+
+    /// <summary>Der Pegel am See. Ein Hinweis erscheint nur ausserhalb des üblichen Bereichs.</summary>
+    [Parameter]
+    public SiteLakeLevel? LakeLevel { get; set; }
+
+    private LakeLevelDeviation? LakeLevelDeviation => LakeLevel?.Deviation;
+
+    private static string Centimetres(decimal metres) => Math.Round(Math.Abs(metres) * 100).ToString("0", CultureInfo.CurrentCulture);
 }

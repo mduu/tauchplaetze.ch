@@ -795,6 +795,45 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.ToTable("HydroReadings", (string)null);
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.LakeLevelReading", b =>
+                {
+                    b.Property<string>("StationId")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset>("ImportedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal>("Level")
+                        .HasPrecision(7, 3)
+                        .HasColumnType("decimal(7,3)");
+
+                    b.Property<DateTimeOffset>("MeasuredAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateOnly?>("NormDay")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("NormFetchedOn")
+                        .HasColumnType("date");
+
+                    b.Property<decimal?>("NormHigh")
+                        .HasPrecision(7, 3)
+                        .HasColumnType("decimal(7,3)");
+
+                    b.Property<decimal?>("NormLow")
+                        .HasPrecision(7, 3)
+                        .HasColumnType("decimal(7,3)");
+
+                    b.Property<decimal?>("NormMedian")
+                        .HasPrecision(7, 3)
+                        .HasColumnType("decimal(7,3)");
+
+                    b.HasKey("StationId");
+
+                    b.ToTable("LakeLevelReadings", (string)null);
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.MachineTranslation", b =>
                 {
                     b.Property<Guid>("Id")

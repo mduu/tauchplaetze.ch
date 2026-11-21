@@ -29,6 +29,9 @@ internal static class PublicPageCache
     /// <summary>Seiten mit Messwerten des Abfluss-Jobs.</summary>
     public const string DischargePages = "discharge";
 
+    /// <summary>Seiten mit dem Pegel einer Seestation.</summary>
+    public const string LakeLevelPages = "lake-level";
+
     private static readonly TimeZoneInfo Zone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Zurich");
 
     public static IServiceCollection AddPublicPageCache(this IServiceCollection services, IConfiguration configuration) =>

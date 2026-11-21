@@ -137,6 +137,16 @@ public enum ForecastRunStatus
 }
 
 
+/// <summary>Seepegel ausserhalb des üblichen Bereichs (`forecast.md`, «Seepegel»).</summary>
+public enum LakeLevelDeviation
+{
+    /// <summary>Tiefer als das 5. Perzentil des Kalendertags.</summary>
+    VeryLow,
+
+    /// <summary>Höher als das 95. Perzentil des Kalendertags.</summary>
+    VeryHigh,
+}
+
 /// <summary>Einordnung des Abflusses an einem Flussplatz (`forecast.md`, «Abfluss»).</summary>
 public enum DischargeLevel
 {

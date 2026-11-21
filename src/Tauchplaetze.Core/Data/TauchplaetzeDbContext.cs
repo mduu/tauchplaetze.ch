@@ -42,6 +42,8 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
 
     public DbSet<HydroReading> HydroReadings => Set<HydroReading>();
 
+    public DbSet<LakeLevelReading> LakeLevelReadings => Set<LakeLevelReading>();
+
     public DbSet<Report> Reports => Set<Report>();
 
     public DbSet<MachineTranslation> MachineTranslations => Set<MachineTranslation>();

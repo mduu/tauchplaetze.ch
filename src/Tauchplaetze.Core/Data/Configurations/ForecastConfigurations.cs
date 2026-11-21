@@ -96,6 +96,20 @@ internal class HydroReadingConfiguration : IEntityTypeConfiguration<HydroReading
     }
 }
 
+internal class LakeLevelReadingConfiguration : IEntityTypeConfiguration<LakeLevelReading>
+{
+    public void Configure(EntityTypeBuilder<LakeLevelReading> builder)
+    {
+        builder.ToTable("LakeLevelReadings");
+        builder.HasKey(r => r.StationId);
+        builder.Property(r => r.StationId).HasMaxLength(20);
+        builder.Property(r => r.Level).HasPrecision(7, 3);
+        builder.Property(r => r.NormLow).HasPrecision(7, 3);
+        builder.Property(r => r.NormMedian).HasPrecision(7, 3);
+        builder.Property(r => r.NormHigh).HasPrecision(7, 3);
+    }
+}
+
 internal class SiteWeatherOutlookConfiguration : IEntityTypeConfiguration<SiteWeatherOutlook>
 {
     public void Configure(EntityTypeBuilder<SiteWeatherOutlook> builder)

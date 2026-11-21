@@ -42,6 +42,7 @@ internal static class CommandCacheEviction
     public static string? TagFor(Type command) => command switch
     {
         _ when command == typeof(ImportDischargeCommand) => PublicPageCache.DischargePages,
+        _ when command == typeof(ImportLakeLevelsCommand) => PublicPageCache.LakeLevelPages,
         _ when WithoutPublicChange.Contains(command) => null,
         _ => PublicPageCache.AllPages,
     };

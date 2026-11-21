@@ -23,6 +23,7 @@ internal class ForecastsModule : ICoreModule
         services.AddOptions<OpenMeteoOptions>().BindConfiguration(OpenMeteoOptions.Section);
         services.AddSingleton<OpenMeteoBudget>();
         AddSourceClient<HydroClient>(services, "https://api.existenz.ch/");
+        AddSourceClient<BafuStatisticsClient>(services, "https://www.hydrodaten.admin.ch/");
         AddSourceClient<BafuForecastClient>(services, (provider, client) =>
         {
             var options = provider.GetRequiredService<IOptions<BafuForecastOptions>>().Value;

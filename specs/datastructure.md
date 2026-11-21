@@ -44,9 +44,9 @@ Zuordnung der BAFU-Stationen zu einem Gewässer. PK: (`WaterBodyId`, `StationId`
 |---|---|---|
 | `StationId` | string(20) | BAFU-Stationsnummer |
 | `Name` | string(100) | |
-| `Role` | enum | `Inflow` (Zufluss eines Sees), `River` (Station am Fluss selbst, für Flussplätze) |
+| `Role` | enum | `Inflow` (Zufluss eines Sees), `River` (Station am Fluss selbst, für Flussplätze), `Level` (Pegel eines Sees, `forecast.md`, «Seepegel») |
 | `Weight` | decimal, optional | Anteil am Teilwert «Zuflüsse», nur bei `Inflow` |
-| `Location` | geography (Point), optional | Lage der Station. Ein Flussplatz nimmt die nächste Station mit Rolle `River` (`forecast.md`, «Abfluss»). Der Seed ergänzt eine fehlende Lage. |
+| `Location` | geography (Point), optional | Lage der Station. Ein Flussplatz nimmt die nächste Station mit Rolle `River` (`forecast.md`, «Abfluss»), ein Seeplatz die nächste mit Rolle `Level`. Der Seed ergänzt eine fehlende Lage. |
 | `Mouth` | geography (Point), optional | Mündung eines Zuflusses (Rolle `Inflow`) in den See. Daraus folgt sein Gewicht am Platz (`forecast.md`, `rules-1.5`). Der Seed ergänzt eine fehlende Mündung. Stationen unter `removedHydroStations` entfernt der Seed. |
 
 ### WaterBodyWeatherStation (geplant)
@@ -292,6 +292,22 @@ Die neuesten Messwerte einer Station (Abfluss, Wassertemperatur). Eine Zeile pro
 | `ForecastIssuedAt` | DateTimeOffset, optional | Ausgabezeit der gespeicherten BAFU-Vorhersage. `null`: keine Vorhersage. |
 | `ForecastOfficial` | bool, optional | `true`: aus `pqprevi-official` (kontrolliert), `false`: aus `pqprevi-unofficial` (nur automatisch gerechnet) |
 | `ForecastFetchedAt` | DateTimeOffset, optional | letzter Abruf der Vorhersage, auch ohne Datei, für den Abstand von 3 Stunden |
+| `ImportedAt` | DateTimeOffset | |
+
+### LakeLevelReading
+
+Der neueste Pegel einer Seestation und der übliche Bereich für einen Kalendertag (`forecast.md`, «Seepegel»). Eine Zeile pro Station, jeder Import überschreibt sie. PK: `StationId`.
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `StationId` | string(20) | |
+| `MeasuredAt` | DateTimeOffset | Zeit des 10-Minuten-Werts |
+| `Level` | decimal(7,3) | m ü. M. |
+| `NormDay` | date, optional | Kalendertag der Statistik |
+| `NormLow` | decimal(7,3), optional | 5. Perzentil der langjährigen Tageswerte |
+| `NormMedian` | decimal(7,3), optional | Median der langjährigen Tageswerte |
+| `NormHigh` | decimal(7,3), optional | 95. Perzentil der langjährigen Tageswerte |
+| `NormFetchedOn` | date, optional | letzter Abruf der Statistik, auch ohne Ergebnis. Ein Abruf pro Tag. |
 | `ImportedAt` | DateTimeOffset | |
 
 ### WaterBodyConditions

@@ -17,6 +17,7 @@
 @inject IQueryHandler<GetDiveSiteQuery, DiveSiteLookup> DiveSites
 @inject IQueryHandler<GetSiteForecastQuery, SiteForecast> Forecasts
 @inject IQueryHandler<GetSiteDischargeQuery, SiteDischarge?> Discharges
+@inject IQueryHandler<GetSiteLakeLevelQuery, SiteLakeLevel?> LakeLevels
 @inject IQueryHandler<GetSiteIndexHistoryQuery, SiteIndexHistory> IndexHistory
 @inject IQueryHandler<GetSiteReportsQuery, IReadOnlyList<SiteReport>> SiteReportsQuery
 @inject IStringLocalizer<SharedStrings> Shared
@@ -58,7 +59,7 @@
         {
             <p class="saved-banner" role="status" data-saved="@Saved">@L[Saved == "online" ? "EditMode_Saved_Approved" : "EditMode_Saved_Pending"]</p>
         }
-        <SiteNotices Notices="site.Notices" />
+        <SiteNotices Notices="site.Notices" LakeLevel="lakeLevel" />
 
         <section class="page-section" aria-labelledby="conditions">
             @if (forecast is { Days.Count: > 0 })
@@ -198,6 +199,8 @@
 
     private SiteDischarge? discharge;
 
+    private SiteLakeLevel? lakeLevel;
+
     private SiteIndexHistory? history;
 
     private IReadOnlyList<SiteReport> reports = [];
@@ -222,6 +225,12 @@
                 if (discharge is not null)
                 {
                     PublicPageCache.Tag(HttpContext, PublicPageCache.DischargePages);
+                }
+
+                lakeLevel = await LakeLevels.Handle(new GetSiteLakeLevelQuery(found.Site.Id));
+                if (lakeLevel is not null)
+                {
+                    PublicPageCache.Tag(HttpContext, PublicPageCache.LakeLevelPages);
                 }
 
                 history = await IndexHistory.Handle(new GetSiteIndexHistoryQuery(found.Site.Id));

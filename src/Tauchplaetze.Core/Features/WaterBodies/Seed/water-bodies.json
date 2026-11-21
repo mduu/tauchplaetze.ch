@@ -25,6 +25,20 @@
         "role": "Inflow",
         "mouthLatitude": 47.224,
         "mouthLongitude": 8.944
+      },
+      {
+        "id": "2209",
+        "name": "Zürichsee – Zürich",
+        "role": "Level",
+        "latitude": 47.3548,
+        "longitude": 8.5505
+      },
+      {
+        "id": "2014",
+        "name": "Zürichsee – Schmerikon",
+        "role": "Level",
+        "latitude": 47.2248,
+        "longitude": 8.9401
       }
     ]
   },
@@ -54,6 +68,13 @@
         "role": "Inflow",
         "mouthLatitude": 47.1835,
         "mouthLongitude": 8.484
+      },
+      {
+        "id": "2017",
+        "name": "Zugersee – Zug",
+        "role": "Level",
+        "latitude": 47.1679,
+        "longitude": 8.5143
       }
     ]
   },
@@ -145,7 +166,16 @@
     "alplakesLakeKey": "ageri",
     "alplakesModel3d": "delft3d-flow",
     "alplakesSimstratKey": "aegeri",
-    "elevation": 724
+    "elevation": 724,
+    "hydroStations": [
+      {
+        "id": "2031",
+        "name": "Aegerisee – Unterägeri",
+        "role": "Level",
+        "latitude": 47.138,
+        "longitude": 8.5918
+      }
+    ]
   },
   {
     "slug": "alter-rhein",
@@ -204,7 +234,16 @@
     },
     "alplakesLakeKey": "baldegg",
     "alplakesSimstratKey": "baldegg",
-    "elevation": 463
+    "elevation": 463,
+    "hydroStations": [
+      {
+        "id": "2137",
+        "name": "Baldeggersee – Gelfingen",
+        "role": "Level",
+        "latitude": 47.2099,
+        "longitude": 8.2664
+      }
+    ]
   },
   {
     "slug": "bielersee",
@@ -234,6 +273,13 @@
         "longitude": 7.1844,
         "mouthLatitude": 47.055,
         "mouthLongitude": 7.177
+      },
+      {
+        "id": "2208",
+        "name": "Bielersee – Ligerz, Klein Twann",
+        "role": "Level",
+        "latitude": 47.0917,
+        "longitude": 7.1531
       }
     ]
   },
@@ -286,6 +332,13 @@
         "longitude": 7.8715,
         "mouthLatitude": 46.6905,
         "mouthLongitude": 7.893
+      },
+      {
+        "id": "2023",
+        "name": "Brienzersee – Ringgenberg",
+        "role": "Level",
+        "latitude": 46.7299,
+        "longitude": 7.9755
       }
     ]
   },
@@ -414,6 +467,20 @@
         "longitude": 6.8886,
         "mouthLatitude": 46.393,
         "mouthLongitude": 6.853
+      },
+      {
+        "id": "2027",
+        "name": "Lac Léman – St-Prex",
+        "role": "Level",
+        "latitude": 46.4828,
+        "longitude": 6.4611
+      },
+      {
+        "id": "2028",
+        "name": "Lac Léman – Genève, Sécheron",
+        "role": "Level",
+        "latitude": 46.2186,
+        "longitude": 6.1524
       }
     ]
   },
@@ -496,7 +563,16 @@
     "removedHydroStations": [
       "2416"
     ],
-    "elevation": 449
+    "elevation": 449,
+    "hydroStations": [
+      {
+        "id": "2097",
+        "name": "Hallwilersee – Meisterschwanden",
+        "role": "Level",
+        "latitude": 47.2958,
+        "longitude": 8.2203
+      }
+    ]
   },
   {
     "slug": "heidsee",
@@ -753,6 +829,20 @@
         "longitude": 8.7736,
         "mouthLatitude": 46.16,
         "mouthLongitude": 8.784
+      },
+      {
+        "id": "2022",
+        "name": "Lago Maggiore – Locarno",
+        "role": "Level",
+        "latitude": 46.1636,
+        "longitude": 8.8043
+      },
+      {
+        "id": "2074",
+        "name": "Lago Maggiore – Brissago",
+        "role": "Level",
+        "latitude": 46.1181,
+        "longitude": 8.7109
       }
     ],
     "removedHydroStations": [
@@ -855,6 +945,20 @@
         "longitude": 8.9625,
         "mouthLatitude": 46.004,
         "mouthLongitude": 8.96
+      },
+      {
+        "id": "2021",
+        "name": "Lago di Lugano – Ponte Tresa",
+        "role": "Level",
+        "latitude": 45.9688,
+        "longitude": 8.8603
+      },
+      {
+        "id": "2101",
+        "name": "Lago di Lugano – Melide, Ferrera",
+        "role": "Level",
+        "latitude": 45.9663,
+        "longitude": 8.9489
       }
     ]
   },
@@ -979,6 +1083,20 @@
         "longitude": 6.5239,
         "mouthLatitude": 46.784,
         "mouthLongitude": 6.64
+      },
+      {
+        "id": "2154",
+        "name": "Lac de Neuchâtel – Grandson",
+        "role": "Level",
+        "latitude": 46.8058,
+        "longitude": 6.6424
+      },
+      {
+        "id": "2642",
+        "name": "Lac de Neuchâtel – Neuchâtel, Nid-du-Crô",
+        "role": "Level",
+        "latitude": 46.9965,
+        "longitude": 6.951
       }
     ]
   },
@@ -1107,7 +1225,16 @@
     },
     "alplakesLakeKey": "sarnen",
     "alplakesSimstratKey": "sarnen",
-    "elevation": 469
+    "elevation": 469,
+    "hydroStations": [
+      {
+        "id": "2088",
+        "name": "Sarnersee – Sarnen",
+        "role": "Level",
+        "latitude": 46.8877,
+        "longitude": 8.2424
+      }
+    ]
   },
   {
     "slug": "schiffenensee",
@@ -1194,7 +1321,16 @@
     },
     "alplakesLakeKey": "sils",
     "alplakesSimstratKey": "sils",
-    "elevation": 1796
+    "elevation": 1796,
+    "hydroStations": [
+      {
+        "id": "2072",
+        "name": "Silsersee – Sils Baselgia",
+        "role": "Level",
+        "latitude": 46.4344,
+        "longitude": 9.7532
+      }
+    ]
   },
   {
     "slug": "silvaplanersee",
@@ -1213,7 +1349,16 @@
     },
     "alplakesLakeKey": "silvaplana",
     "alplakesSimstratKey": "silvaplana",
-    "elevation": 1791
+    "elevation": 1791,
+    "hydroStations": [
+      {
+        "id": "2073",
+        "name": "Silvaplanersee – Silvaplana",
+        "role": "Level",
+        "latitude": 46.4601,
+        "longitude": 9.8024
+      }
+    ]
   },
   {
     "slug": "stausee-garichti",
@@ -1345,6 +1490,13 @@
         "longitude": 7.6828,
         "mouthLatitude": 46.693,
         "mouthLongitude": 7.665
+      },
+      {
+        "id": "2093",
+        "name": "Thunersee – Spiez",
+        "role": "Level",
+        "latitude": 46.6967,
+        "longitude": 7.6646
       }
     ],
     "removedHydroStations": [
@@ -1458,6 +1610,20 @@
         "longitude": 8.4053,
         "mouthLatitude": 46.979,
         "mouthLongitude": 8.414
+      },
+      {
+        "id": "2025",
+        "name": "Vierwaldstättersee – Brunnen",
+        "role": "Level",
+        "latitude": 46.9935,
+        "longitude": 8.6038
+      },
+      {
+        "id": "2207",
+        "name": "Vierwaldstättersee – Luzern",
+        "role": "Level",
+        "latitude": 47.0549,
+        "longitude": 8.3198
       }
     ]
   },
@@ -1510,6 +1676,13 @@
         "longitude": 9.4182,
         "mouthLatitude": 47.121,
         "mouthLongitude": 9.315
+      },
+      {
+        "id": "2118",
+        "name": "Walensee – Murg",
+        "role": "Level",
+        "latitude": 47.1134,
+        "longitude": 9.21
       }
     ]
   }

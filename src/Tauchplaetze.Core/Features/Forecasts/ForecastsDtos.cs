@@ -99,6 +99,12 @@ public record DischargeForecast(DateTimeOffset IssuedAt, bool Official, IReadOnl
 /// <summary>Vorhergesagtes Tagesmittel mit Einordnung wie der Messwert. <see cref="Level"/> fehlt ohne Schwellen.</summary>
 public record DischargeForecastDay(DateOnly Date, decimal Discharge, DischargeLevel? Level);
 
+/// <summary>
+/// Der Pegel am See eines Platzes von der nächsten Pegelstation, in m ü. M. <see cref="Deviation"/>: <c>null</c> im üblichen Bereich, dann zeigt die Seite keinen Hinweis.
+/// <see cref="FromMedian"/>: Abstand zum Median des Kalendertags in m, negativ unter dem Median.
+/// </summary>
+public record SiteLakeLevel(string StationId, string StationName, decimal Level, DateTimeOffset MeasuredAt, LakeLevelDeviation? Deviation, decimal FromMedian);
+
 /// <summary>Die neueste Wassertemperatur der Station in °C. Fehlt, wenn die Station keine Temperatur misst.</summary>
 public record WaterTemperature(decimal Value, DateTimeOffset MeasuredAt, bool IsStale);
 

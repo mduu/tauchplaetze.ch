@@ -18,4 +18,7 @@ public enum HydroStationRole
 
     /// <summary>Station am Fluss selbst, für Flussplätze.</summary>
     River,
+
+    /// <summary>Pegel eines Sees, für den Hinweis auf der Platzseite (`forecast.md`, «Seepegel»).</summary>
+    Level,
 }

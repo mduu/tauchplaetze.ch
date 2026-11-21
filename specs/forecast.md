@@ -144,6 +144,19 @@ An Flussplätzen zeigt die Platzseite die Kachel «Abfluss» (`ux.md`, Tauchplat
 - **Speicher:** `HydroHour` (Stundenmittel pro Station, 30 Tage) und `HydroReading` (neuester Wert mit Wert vor 3 h und Median). Die Seite liest nur diese Tabellen.
 - Weil der Abfluss als Kachel nicht in den Index fliesst, ändert eine neue Schwelle die `ModelVersion` nicht. Das Verhältnis zum Median im Index (Zuflüsse) bleibt Teil von `RunForecast`.
 
+### Seepegel
+
+An Seeplätzen zeigt die Platzseite einen Hinweis, wenn der Pegel ausserhalb des üblichen Bereichs liegt (Entscheid Marc, 21.11.2026). Bei sehr tiefem oder sehr hohem Pegel sind Ein- und Ausstiege oft schwieriger. Der Hinweis ist eine Information und fliesst nicht in den Index.
+
+- **Station:** die nächste Station mit Rolle `Level` und Lage am See des Platzes (`WaterBodyHydroStation`). An Flüssen gibt es keinen Hinweis. Der Seed ordnet den Seen die Pegelstationen des BAFU mit Statistik zu (Stand 21.11.2026: 17 Seen, 23 Stationen). Greifensee und Pfäffikersee messen kantonal und haben keine Statistik des BAFU. Genfersee – Chillon hat keine Statistik, darum gilt dort St-Prex.
+- **Messwert:** der neueste 10-Minuten-Wert in m ü. M. Ist er älter als 24 h, fehlt der Hinweis.
+- **Üblicher Bereich:** 5. bis 95. Perzentil der langjährigen Tageswerte für denselben Kalendertag, aus der Statistik des BAFU (`data-sources.md`, «Seepegel»). Viele Seen sind reguliert und haben einen Jahresgang, darum gilt der Kalendertag, nicht das Jahr. Fehlt die Statistik für heute, gilt sie höchstens 3 Tage weiter.
+- **Einordnung (`LakeLevelRules`):** unter dem 5. Perzentil «sehr tief», über dem 95. Perzentil «sehr hoch», dazwischen kein Hinweis.
+- **Hinweis:** Banner bei den Hinweisen der Platzseite (`ux.md`, Tauchplatzseite), Farbe wie eine Warnung, mit Pegel und Abstand zum Median in cm, darunter Quelle, Station und Messzeit.
+- **Job:** `ImportLakeLevels` jede Stunde (`LakeLevelWorker`, ADR-006), Lock `locks/lake-level`. Ein Call an existenz.ch mit `parameters=height` für alle Pegelstationen. Pro Station und Tag ein Abruf der Statistik, 500 ms zwischen zwei Calls. Fällt das BAFU aus (5xx, Timeout), versucht es der nächste Lauf wieder. Rohdaten unter `forecast-raw/lake-level/{date}/{HHmm}/`.
+- **Speicher:** `LakeLevelReading`. Die Seite liest nur diese Tabelle.
+- Weil der Pegel nicht in den Index fliesst, ändert eine neue Schwelle die `ModelVersion` nicht.
+
 ## Wetter pro Stunde
 
 Die Platzseite zeigt unter den fünf Tagen eine Grafik mit dem Wetter pro Stunde (`ux.md`, Tauchplatzseite). Sie ist eine Information und fliesst nicht in den Index.
