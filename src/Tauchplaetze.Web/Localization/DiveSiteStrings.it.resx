@@ -56,6 +56,7 @@
   <data name="Notice_Warning" xml:space="preserve"><value>Avvertenza</value></data>
   <data name="Notice_Closure" xml:space="preserve"><value>Chiuso</value></data>
   <data name="Notice_Until" xml:space="preserve"><value>fino al {0}</value></data>
+  <data name="LakeLevel_Badge" xml:space="preserve"><value>Misura UFAM</value></data>
   <data name="LakeLevel_VeryLow_Title" xml:space="preserve"><value>Livello del lago molto basso</value></data>
   <data name="LakeLevel_VeryHigh_Title" xml:space="preserve"><value>Livello del lago molto alto</value></data>
   <data name="LakeLevel_VeryLow_Text" xml:space="preserve"><value>Il lago è a {0} m s.l.m., {1} cm sotto il livello abituale per questo periodo. Entrate e uscite possono essere più difficili di quanto descritto.</value></data>

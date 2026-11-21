@@ -56,6 +56,7 @@
   <data name="Notice_Warning" xml:space="preserve"><value>Warnung</value></data>
   <data name="Notice_Closure" xml:space="preserve"><value>Gesperrt</value></data>
   <data name="Notice_Until" xml:space="preserve"><value>bis {0}</value></data>
+  <data name="LakeLevel_Badge" xml:space="preserve"><value>Messwert BAFU</value></data>
   <data name="LakeLevel_VeryLow_Title" xml:space="preserve"><value>Seepegel sehr tief</value></data>
   <data name="LakeLevel_VeryHigh_Title" xml:space="preserve"><value>Seepegel sehr hoch</value></data>
   <data name="LakeLevel_VeryLow_Text" xml:space="preserve"><value>Der See steht auf {0} m ü. M., {1} cm unter dem üblichen Stand für diese Jahreszeit. Ein- und Ausstiege können schwieriger sein als beschrieben.</value></data>

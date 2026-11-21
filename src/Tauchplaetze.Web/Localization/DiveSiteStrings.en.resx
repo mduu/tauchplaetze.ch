@@ -56,6 +56,7 @@
   <data name="Notice_Warning" xml:space="preserve"><value>Warning</value></data>
   <data name="Notice_Closure" xml:space="preserve"><value>Closed</value></data>
   <data name="Notice_Until" xml:space="preserve"><value>until {0}</value></data>
+  <data name="LakeLevel_Badge" xml:space="preserve"><value>FOEN reading</value></data>
   <data name="LakeLevel_VeryLow_Title" xml:space="preserve"><value>Lake level very low</value></data>
   <data name="LakeLevel_VeryHigh_Title" xml:space="preserve"><value>Lake level very high</value></data>
   <data name="LakeLevel_VeryLow_Text" xml:space="preserve"><value>The lake is at {0} m above sea level, {1} cm below the usual level for this time of year. Entry and exit points may be harder to use than described.</value></data>

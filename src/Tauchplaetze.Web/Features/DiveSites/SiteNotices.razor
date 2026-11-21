@@ -6,7 +6,7 @@
 @inject IStringLocalizer<ForecastStrings> F
 @inject TimeProvider Time
 
-@if (Notices.Count > 0 || LakeLevelDeviation is not null)
+@if (Notices.Count > 0 || ShownDeviation is not null)
 {
     <section class="page-section notices" aria-label="@L["Notices_Label"]">
         @foreach (var notice in Notices)
@@ -24,13 +24,24 @@
         }
         @if (LakeLevel is { Deviation: { } deviation } level)
         {
-            <div class="notice" data-notice-kind="warning" data-lake-level="@deviation">
-                <p class="notice-kind">@L[$"LakeLevel_{deviation}_Title"]</p>
-                <p class="notice-text">@L[$"LakeLevel_{deviation}_Text", level.Level.ToString("0.00", CultureInfo.CurrentCulture), Centimetres(level.FromMedian)]</p>
-                <p class="notice-source">
-                    @SourceLinks.Format(F["Discharge_Source"], SourceLinks.Bafu(F))
-                    · @F["Discharge_Station", level.StationName, DischargeFormat.Time(level.MeasuredAt, Time)]
-                </p>
+            <div class="measured-notice" data-lake-level="@deviation">
+                <svg class="measured-icon" viewBox="0 0 40 40" aria-hidden="true">
+                    <rect x="11" y="5" width="8" height="30" rx="2" class="gauge" />
+                    <path d="M11 10h4M11 15h6M11 20h4M11 25h6M11 30h4" class="gauge-ticks" />
+                    <path d="@(deviation == LakeLevelDeviation.VeryLow ? "M5 27 q3 -2 6 0 t6 0 t6 0" : "M5 13 q3 -2 6 0 t6 0 t6 0")" class="gauge-water" />
+                    <path d="@(deviation == LakeLevelDeviation.VeryLow ? "M30 10v16m-5 -5l5 5l5 -5" : "M30 30v-16m-5 5l5 -5l5 5")" class="gauge-arrow" />
+                </svg>
+                <div class="measured-body">
+                    <p class="notice-kind">
+                        @L[$"LakeLevel_{deviation}_Title"]
+                        <span class="measured-badge">@L["LakeLevel_Badge"]</span>
+                    </p>
+                    <p class="notice-text">@L[$"LakeLevel_{deviation}_Text", level.Level.ToString("0.00", CultureInfo.CurrentCulture), Centimetres(level.FromMedian)]</p>
+                    <p class="notice-source">
+                        @SourceLinks.Format(F["Discharge_Source"], SourceLinks.Bafu(F))
+                        · @F["Discharge_Station", level.StationName, DischargeFormat.Time(level.MeasuredAt, Time)]
+                    </p>
+                </div>
             </div>
         }
     </section>
@@ -44,7 +55,7 @@
     [Parameter]
     public SiteLakeLevel? LakeLevel { get; set; }
 
-    private LakeLevelDeviation? LakeLevelDeviation => LakeLevel?.Deviation;
+    private LakeLevelDeviation? ShownDeviation => LakeLevel?.Deviation;
 
     private static string Centimetres(decimal metres) => Math.Round(Math.Abs(metres) * 100).ToString("0", CultureInfo.CurrentCulture);
 }
