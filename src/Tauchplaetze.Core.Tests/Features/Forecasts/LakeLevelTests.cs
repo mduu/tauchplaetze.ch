@@ -71,6 +71,43 @@ public class LakeLevelTests(SqlServer sql) : SqlTest(sql)
         Assert.Null(stale);
     }
 
+    [SqlFact]
+    public async Task Faellt_das_BAFU_aus_holt_der_naechste_Lauf_die_Statistik_nach()
+    {
+        // Arrange
+        var site = await PrepareErlenbach();
+        Sql.Sources.Statuses["p_annual"] = System.Net.HttpStatusCode.ServiceUnavailable;
+        var outage = await Command<ImportLakeLevelsCommand, ImportLakeLevelsResult>(new ImportLakeLevelsCommand());
+        Sql.Sources.Statuses.Clear();
+        Sql.Time.Now = Now.AddHours(1);
+
+        // Act
+        var retry = await Command<ImportLakeLevelsCommand, ImportLakeLevelsResult>(new ImportLakeLevelsCommand());
+
+        // Assert
+        Assert.Equal((0, 1), (outage.Norms, retry.Norms));
+        Assert.Equal(LakeLevelDeviation.VeryLow, (await LakeLevel(site))!.Deviation);
+    }
+
+    [SqlTheory]
+    [InlineData(3, true)]
+    [InlineData(4, false)]
+    public async Task Eine_Statistik_gilt_hoechstens_3_Tage_weiter_wenn_keine_neue_kommt(int days, bool shown)
+    {
+        // Arrange: Danach liefert das BAFU keine Statistik mehr (404), der Pegel kommt weiter.
+        var site = await PrepareErlenbach();
+        await Command<ImportLakeLevelsCommand, ImportLakeLevelsResult>(new ImportLakeLevelsCommand());
+        Sql.Sources.Overrides.TryRemove("p_annual/2209_", out _);
+        Sql.Time.Now = Now.AddDays(days);
+        Sql.Sources.Overrides["parameters=height"] = Height(405.55, Sql.Time.Now);
+
+        // Act
+        await Command<ImportLakeLevelsCommand, ImportLakeLevelsResult>(new ImportLakeLevelsCommand());
+
+        // Assert
+        Assert.Equal(shown, await LakeLevel(site) is not null);
+    }
+
     private async Task<Guid> PrepareErlenbach()
     {
         Sql.Time.Now = Now;
@@ -86,7 +123,7 @@ public class LakeLevelTests(SqlServer sql) : SqlTest(sql)
 
     private Task<SiteLakeLevel?> LakeLevel(Guid site) => Query<GetSiteLakeLevelQuery, SiteLakeLevel?>(new GetSiteLakeLevelQuery(site));
 
-    /// <summary>Eine Antwort von existenz.ch für die Station 2209 mit einem Wert um 07:00 UTC.</summary>
-    private static string Height(double value) =>
-        $$"""{"source":"BAFU","payload":[{"timestamp":{{Now.AddMinutes(-15).ToUnixTimeSeconds()}},"loc":"2209","par":"height","val":{{value.ToString(System.Globalization.CultureInfo.InvariantCulture)}}}]}""";
+    /// <summary>Eine Antwort von existenz.ch für die Station 2209 mit einem Wert 15 Minuten vor <paramref name="now"/> (ohne: 07:00 UTC am 21.11.2026).</summary>
+    private static string Height(double value, DateTimeOffset? now = null) =>
+        $$"""{"source":"BAFU","payload":[{"timestamp":{{(now ?? Now).AddMinutes(-15).ToUnixTimeSeconds()}},"loc":"2209","par":"height","val":{{value.ToString(System.Globalization.CultureInfo.InvariantCulture)}}}]}""";
 }

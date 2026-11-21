@@ -13,7 +13,7 @@ Das Projekt ist **nicht kommerziell** (`vision.md`, «Finanzierung»). Mehrere Q
 | Eawag Alplakes API | Seemodelle 3D und 1D (Temperatur nach Tiefe und Zeit), Satellit (Secchi, Chlorophyll) | Prognose Temperatur und Sprungschicht, Klarheit | MVP | ✅ Spike |
 | Open-Meteo (Modelle von MeteoSchweiz, DWD, ECMWF) | Wetterprognose am Punkt, stündlich | Prognose Wind und Regen | MVP | ✅ Spike |
 | MeteoSchweiz SwissMetNet | gemessener Wind, Böen, Niederschlag, alle 10 min | aktueller Stand, Regen der letzten Tage | geplant | Nutzung geklärt, nicht angebunden. Heute kommt der Regen der letzten 72 h aus Open-Meteo (`past_days`) |
-| BAFU Hydrodaten (über existenz.ch, Ziel: BAFU-Datenplattform) | Abfluss, Pegel, Wassertemperatur, an einigen Stationen Trübung | Zuflüsse, Flussplätze | MVP | ✅ Spike |
+| BAFU Hydrodaten (über existenz.ch, Ziel: BAFU-Datenplattform) | Abfluss, Pegel, Wassertemperatur, an einigen Stationen Trübung | Zuflüsse, Flussplätze, Seepegel | MVP | ✅ Spike |
 | swisstopo | Kartenkacheln, Gewässernetz (swissTLM3D), Bathymetrie (swissBATHY3D) | Karte, Stammdaten aller Gewässer, Tiefenkarten | MVP | ✅ |
 | Eawag Datalakes | In-situ-Messungen: Temperaturketten, Bojen, Profile, Secchi (LéXPLORE) | aktueller Stand, Kontrolle der Modelle | Phase 1 | ✅ |
 | BAFU Abfluss- und Seepegelvorhersagen | Prognose für etwa 50–60 Stationen | Prognose für Flussplätze | Phase 1 | ✅ Zugang HTTPS |

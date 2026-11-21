@@ -25,6 +25,7 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Algen | `Algae` | algae | algues | alghe | Algenaktivität aus Satellitendaten. |
 | Zufluss | `Inflow` | inflow | affluent | immissario | Fluss, der in den See mündet. |
 | Abfluss (Menge) | `Discharge` | discharge | débit | portata | Wassermenge eines Flusses (BAFU). |
+| Seepegel | `LakeLevel` | lake level | niveau du lac | livello del lago | Wasserstand eines Sees in m ü. M. (BAFU). Sehr tief oder sehr hoch erschwert Ein- und Ausstiege. |
 | Meldung | `Report` | report | signalement | segnalazione | Beobachtung einer Person nach einem Tauchgang. |
 | Taucher:in | – | diver | plongeur·euse | sub | Name einer meldenden Person ohne Einwilligung zur Anzeige des Namens. |
 | Ausbaustufe | `ContentLevel` | completeness | niveau de détail | livello di dettaglio | Wie vollständig ein Tauchplatz dokumentiert ist (0 bis 2). |

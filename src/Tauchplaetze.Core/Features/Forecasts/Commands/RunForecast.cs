@@ -129,7 +129,7 @@ internal class RunForecastHandler(
             {
                 waterBodyData = Fresh(await sources.ForWaterBody(waterBody, today, recorder, ct), now);
                 waterBodies[waterBody.Id] = waterBodyData;
-                inflowForecasts[waterBody.Id] = InflowForecast.Ratios(WithStored(waterBodyData.Medians, waterBody.HydroStations.Select(s => s.StationId), storedMedians), forecastHours);
+                inflowForecasts[waterBody.Id] = InflowForecast.Ratios(WithStored(waterBodyData.Medians, waterBody.HydroStations.Where(s => s.Role != HydroStationRole.Level).Select(s => s.StationId), storedMedians), forecastHours);
             }
 
             var siteData = await sources.ForSite(site, waterBody, today, recorder, ct);

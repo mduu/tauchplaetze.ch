@@ -39,6 +39,20 @@ public class RunForecastTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Ein_Lauf_holt_den_Abfluss_der_Zufluesse_aber_nicht_der_Pegelstationen_des_Sees()
+    {
+        // Arrange: Der Zürichsee hat den Zufluss 2104 und die Pegelstationen 2209 und 2014.
+        await PrepareRiffWilliams();
+
+        // Act
+        await Command<RunForecastCommand, RunForecastResult>(new RunForecastCommand());
+
+        // Assert
+        Assert.Contains(Sql.Sources.Requests, url => url.Contains("locations=2104&parameters=flow", StringComparison.Ordinal));
+        Assert.DoesNotContain(Sql.Sources.Requests, url => url.Contains("locations=2209&", StringComparison.Ordinal) || url.Contains("locations=2014&", StringComparison.Ordinal));
+    }
+
+    [SqlFact]
     public async Task Ein_Lauf_speichert_die_Stroemung_aus_dem_Seemodell_und_ohne_Werte_bleibt_sie_leer()
     {
         // Arrange: Die Antwort vom 17.10.2026 hatte noch keine Strömung (alle `u`/`v` leer).

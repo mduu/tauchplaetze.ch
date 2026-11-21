@@ -14,7 +14,7 @@ internal static class DatabasePreparation
 
     /// <summary>
     /// Migriert die Datenbank, legt fehlende Gewässer und Admins an, importiert fehlende Plätze und ergänzt das Datum der ersten Beschreibung,
-    /// wenn <see cref="Setting"/> gesetzt ist (lokal mit Aspire). Ohne Admin in <see cref="AdminsSection"/> fehlt der Autor, und der Import entfällt.
+    /// wenn <see cref="Setting"/> gesetzt ist (lokal mit Aspire und in Prod). Ohne Admin in <see cref="AdminsSection"/> fehlt der Autor, und der Import entfällt.
     /// </summary>
     public static async Task PrepareDatabase(this WebApplication app)
     {

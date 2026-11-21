@@ -76,7 +76,7 @@ internal class ForecastSources(
         var medians = new Dictionary<string, double>();
         var measuredAt = new Dictionary<string, DateTimeOffset>();
         double? riverTemperature = null;
-        foreach (var station in waterBody.HydroStations)
+        foreach (var station in waterBody.HydroStations.Where(s => s.Role != HydroStationRole.Level))
         {
             if (await StationFlow(station.StationId, today, recorder, ct) is { } flow)
             {
