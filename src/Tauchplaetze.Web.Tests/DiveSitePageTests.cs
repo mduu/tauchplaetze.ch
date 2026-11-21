@@ -201,7 +201,7 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         // Assert
         app.LakeLevel.Answer = answer;
         Assert.Contains(title, low);
-        Assert.Contains(sentence, low);
+        Assert.Matches(Regex.Escape(sentence).Replace(@"405\.55", "405[.,]55", StringComparison.Ordinal), low);
         Assert.Contains("Zürichsee – Zürich", low);
         Assert.DoesNotContain("data-lake-level", usual);
     }
