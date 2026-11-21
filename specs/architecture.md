@@ -202,7 +202,7 @@ Interactive WebAssembly ist bewusst nicht vorgesehen. Wird es später nötig, ko
 
 Stand 23.10.2026 (Entscheid Marc): Output Cache für die öffentlichen Seiten in Betrieb. Anlass: Ein Scraper holte am 23.10.2026 rund 400 Seiten in 3 Minuten, SQL Basic (5 DTU) lief voll, Antworten bis 31 s, dazu 500er. Ein Upgrade der Datenbank kommt nicht in Frage (Kosten).
 
-- **Seiten im Cache** (`[OutputCache(PolicyName = PublicPageCache.Policy)]`): Startseite, Verzeichnis, Platz, Versionen eines Platzes, Gewässer, Gewässerseite. Nicht im Cache: Seiten mit Formular (POST) wie «Über» und die Konto-Seiten, Bearbeiten, Melden, Admin.
+- **Seiten im Cache** (`[OutputCache(PolicyName = PublicPageCache.Policy)]`): Startseite, Verzeichnis, Platz, Versionen eines Platzes, Gewässer, Gewässerseite, Echolot. Nicht im Cache: Seiten mit Formular (POST) wie «Über» und die Konto-Seiten, Bearbeiten, Melden, Admin.
 - **Nur ohne Anmeldung.** Angemeldete Konten sehen immer die frische Seite (Standard des Output Cache).
 - **Dauer:** `OutputCache:Minutes` (Standard 60), nie über Mitternacht (Schweizer Zeit) hinaus. Sonst stimmen «heute», die Linie «jetzt» im Wetter und das Alter des Abflusses nicht mehr. 0 schaltet den Cache aus (Tests).
 - **Invalidieren:** Jeder Command leert alle Seiten (Tag `public`), ausser Commands ohne Wirkung auf öffentliche Seiten (Anmeldung, Mail-Queue, Upload ohne Freigabe, Übersetzung im Editor). Die Liste steht in `CommandCacheEviction`. Ein neuer Command leert so im Zweifel zu viel, nie zu wenig. Der Abfluss-Job leert nur Seiten mit Abfluss (Tag `discharge`), der Pegel-Job nur Seiten mit Seepegel (Tag `lake-level`). Das Echolot trägt beide Tags. Feinere Tags pro Platz (`site:{id}`) lohnen sich nicht: Änderungen sind selten.
@@ -213,6 +213,7 @@ Stand 23.10.2026 (Entscheid Marc): Output Cache für die öffentlichen Seiten in
 - **Treffer aus dem Cache** kommen vor dem Rate Limit (`UseOutputCache` vor `UseRateLimiter`). Sie zählen nicht und warten nie hinter Seiten, die rendern.
 - **Mehrere Anfragen auf dieselbe Seite** ohne Eintrag im Cache rendern nur einmal (Locking des Output Cache).
 - Speicher: höchstens 100 MB (Standard), rund 1700 Seiten zu etwa 50 KB.
+- **Gesamtzustand der Daten im Kopf** (Info-Menü, `GetDataHealth`): 5 Minuten im Speicher der App (`IMemoryCache`), wie die Sitemap. Mit dem Output Cache der Seite kann er bis rund 65 Minuten alt sein; kein Command leert ihn, bewusst in Kauf genommen. Scheitert die Abfrage, fehlt nur die Zeile im Info-Menü. Das Layout fragt ihn in einem eigenen Scope ab: Layout und Seite rendern in Static SSR gleichzeitig und dürfen sich keinen `DbContext` teilen.
 - Bilder: lange Cache-Dauer (`immutable`), Dateiname enthält die Version. Cloudflare davor ist ein späterer Ausbau.
 
 ## Security-Header

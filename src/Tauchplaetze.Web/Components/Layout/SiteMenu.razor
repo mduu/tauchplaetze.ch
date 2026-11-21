@@ -25,8 +25,7 @@
                 <a href="@LanguagePaths.Switch(Navigation.ToBaseRelativePath(Navigation.Uri), language)"
                    hreflang="@language"
                    lang="@language"
-                   aria-label="@L[$"Language_{language}"]"
-                   aria-current="@(language == Current ? "true" : null)">@language.ToUpperInvariant()</a>
+                   aria-current="@(language == Current ? "true" : null)">@language.ToUpperInvariant() <span class="visually-hidden">@L[$"Language_{language}"]</span></a>
             }
         </div>
     </div>

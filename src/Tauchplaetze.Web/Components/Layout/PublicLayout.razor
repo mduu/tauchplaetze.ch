@@ -7,6 +7,7 @@
 @inject NavigationManager Navigation
 @inject IServiceScopeFactory Scopes
 @inject IMemoryCache Cache
+@inject ILogger<PublicLayout> Logger
 
 <a class="skip-link" href="@MainAnchor">@L["SkipToContent"]</a>
 
@@ -57,17 +58,31 @@
 
     private DataHealth health = DataHealth.Unknown;
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            health = await Cache.GetOrCreateAsync(nameof(GetDataHealthQuery), async entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = HealthCacheFor;
+                return await LoadHealth();
+            });
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            Logger.LogWarning(ex, "Overall data health unavailable, the info menu shows no status");
+        }
+    }
+
     /// <remarks>
     /// Layout und Seite rendern gleichzeitig. Ein eigener Scope gibt der Query einen eigenen DbContext,
-    /// sonst greifen beide parallel auf denselben zu.
+    /// sonst greifen beide parallel auf denselben zu. Ohne Zustand fehlt nur die Zeile im Info-Menü.
     /// </remarks>
-    protected override async Task OnInitializedAsync() =>
-        health = await Cache.GetOrCreateAsync(nameof(GetDataHealthQuery), async entry =>
-        {
-            entry.AbsoluteExpirationRelativeToNow = HealthCacheFor;
-            await using var scope = Scopes.CreateAsyncScope();
-            return await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetDataHealthQuery, DataHealth>>().Handle(new GetDataHealthQuery());
-        });
+    private async Task<DataHealth> LoadHealth()
+    {
+        await using var scope = Scopes.CreateAsyncScope();
+        return await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetDataHealthQuery, DataHealth>>().Handle(new GetDataHealthQuery());
+    }
 
     /// <summary>Mit Pfad, weil `&lt;base href="/"&gt;` einen reinen Anker gegen die Startseite auflöst.</summary>
     private string MainAnchor => "/" + Navigation.ToBaseRelativePath(Navigation.Uri).Split('?', '#')[0] + "#main";

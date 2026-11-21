@@ -1,9 +1,9 @@
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
-using Tauchplaetze.Core.Features.Echolot.Queries;
 using System.Net;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Tauchplaetze.Core.Features.Echolot;
+using Tauchplaetze.Core.Features.Echolot.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -107,11 +107,18 @@ public class EcholotPageTests : IClassFixture<WebApp>
         cache.Remove(nameof(GetDataHealthQuery));
 
         // Act
-        var html = await browser.GetStringAsync(path, TestContext.Current.CancellationToken);
+        string html;
+        try
+        {
+            html = await browser.GetStringAsync(path, TestContext.Current.CancellationToken);
+        }
+        finally
+        {
+            app.DataHealth.Answer = answer;
+            cache.Remove(nameof(GetDataHealthQuery));
+        }
 
         // Assert
-        app.DataHealth.Answer = answer;
-        cache.Remove(nameof(GetDataHealthQuery));
         var header = html[..html.IndexOf("</header>", StringComparison.Ordinal)];
         Assert.Equal(2, Regex.Matches(VisibleText.Of(header + "</body>"), Regex.Escape(about)).Count);
         Assert.Equal(2, Regex.Matches(header, $"href=\"{echolot}\"").Count);
