@@ -1,0 +1,60 @@
+.info-link {
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 14px;
+    white-space: normal;
+}
+
+.info-icon {
+    flex: none;
+    margin-top: 2px;
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+}
+
+.info-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.info-title {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.info-text {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.info-health {
+    --health: var(--color-status-ok);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    color: var(--health);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.info-health[data-health="Late"] {
+    --health: var(--color-signal);
+}
+
+.info-health[data-health="Down"] {
+    --health: var(--color-notice-closure);
+}
+
+.info-health i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--health);
+}

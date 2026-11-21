@@ -51,6 +51,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
 
     public FakeQuery<GetEcholotQuery, EcholotReport> Echolot { get; } = new(_ => new EcholotReport([], [], false));
 
+    public FakeQuery<GetDataHealthQuery, DataHealth> DataHealth { get; } = new(_ => Core.Features.Echolot.DataHealth.Current);
+
     public FakeQuery<GetSiteIndexHistoryQuery, SiteIndexHistory> SiteHistory { get; } = new(_ => new SiteIndexHistory([], []));
 
     public FakeQuery<GetWaterBodyIndexHistoryQuery, WaterBodyIndexHistory> WaterBodyHistory { get; } = new(_ => new WaterBodyIndexHistory([], []));
@@ -161,6 +163,7 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteDischargeQuery, SiteDischarge?>>(Discharge));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteLakeLevelQuery, SiteLakeLevel?>>(LakeLevel));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetEcholotQuery, EcholotReport>>(Echolot));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDataHealthQuery, DataHealth>>(DataHealth));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteIndexHistoryQuery, SiteIndexHistory>>(SiteHistory));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetWaterBodyIndexHistoryQuery, WaterBodyIndexHistory>>(WaterBodyHistory));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetBestSitesQuery, BestSites>>(BestSites));

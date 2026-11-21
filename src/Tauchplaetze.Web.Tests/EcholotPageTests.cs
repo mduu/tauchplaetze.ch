@@ -1,3 +1,8 @@
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using Tauchplaetze.Core.Features.Echolot.Queries;
+using System.Net;
+using System.Text.RegularExpressions;
 using Tauchplaetze.Core.Features.Echolot;
 
 namespace Tauchplaetze.Web.Tests;
@@ -84,5 +89,33 @@ public class EcholotPageTests : IClassFixture<WebApp>
         // Assert
         Assert.Matches("href=\"/fr/a-propos#prognose\"[^>]*>Comment fonctionne tauchplaetze.ch", echolot);
         Assert.Matches("href=\"/fr/sondeur\"[^>]*>Le Sondeur montre si chaque source", about);
+    }
+
+    [Theory]
+    [InlineData("/de/tauchplaetze", "Über tauchplaetze.ch", "Teilweise verspätet", "/de/echolot")]
+    [InlineData("/en/dive-sites", "About tauchplaetze.ch", "Partly delayed", "/en/sonar")]
+    [InlineData("/fr/sites-de-plongee", "À propos de tauchplaetze.ch", "En partie en retard", "/fr/sondeur")]
+    [InlineData("/it/siti-di-immersione", "Chi siamo", "In parte in ritardo", "/it/ecoscandaglio")]
+    public async Task Das_Info_Menue_im_Kopf_fuehrt_zu_Ueber_und_zum_Echolot_mit_dem_Gesamtzustand_auch_im_Menue_fuer_schmale_Bildschirme(
+        string path, string about, string health, string echolot)
+    {
+        // Arrange
+        using var browser = app.Browser();
+        var answer = app.DataHealth.Answer;
+        app.DataHealth.Answer = _ => DataHealth.Late;
+        var cache = app.Services.GetRequiredService<IMemoryCache>();
+        cache.Remove(nameof(GetDataHealthQuery));
+
+        // Act
+        var html = await browser.GetStringAsync(path, TestContext.Current.CancellationToken);
+
+        // Assert
+        app.DataHealth.Answer = answer;
+        cache.Remove(nameof(GetDataHealthQuery));
+        var header = html[..html.IndexOf("</header>", StringComparison.Ordinal)];
+        Assert.Equal(2, Regex.Matches(VisibleText.Of(header + "</body>"), Regex.Escape(about)).Count);
+        Assert.Equal(2, Regex.Matches(header, $"href=\"{echolot}\"").Count);
+        Assert.Equal(2, Regex.Matches(header, "data-health=\"Late\"").Count);
+        Assert.Contains(health, WebUtility.HtmlDecode(header));
     }
 }

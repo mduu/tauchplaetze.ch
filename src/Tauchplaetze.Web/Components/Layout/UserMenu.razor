@@ -1,8 +1,5 @@
-@using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Web.Features.Accounts
 @inject IStringLocalizer<AccountStrings> L
-@inject IStringLocalizer<AdminStrings> Admin
-@inject IStringLocalizer<DiveSiteStrings> Site
 
 <AuthorizeView>
     <Authorized>
@@ -13,23 +10,7 @@
                 <DropdownChevron />
             </summary>
             <ul class="dropdown-menu">
-                <li><a href="@AccountPaths.Profile(Language)">@L["Profile_Title"]</a></li>
-                <li><a href="@AccountPaths.Proposals(Language)">@Admin["Nav_MyProposals"]</a></li>
-                <li><a href="@PublicRoutes.NewDiveSite(Language)" data-enhance-nav="false">@Site["NewSite_Link"]</a></li>
-                @if (context.User.IsInRole(Roles.Moderator) || context.User.IsInRole(Roles.Admin))
-                {
-                    <li><a href="/admin" data-enhance-nav="false">@Admin["Nav_Moderation"]</a></li>
-                }
-                @if (context.User.IsInRole(Roles.Admin))
-                {
-                    <li><a href="/platform" data-enhance-nav="false">@Admin["Nav_Platform"]</a></li>
-                }
-                <li>
-                    <form method="post" action="@AccountPaths.SignOut(Language)">
-                        <AntiforgeryToken />
-                        <button type="submit">@L["Nav_SignOut"]</button>
-                    </form>
-                </li>
+                <AccountLinks />
             </ul>
         </details>
     </Authorized>

@@ -1,6 +1,12 @@
 @inherits LayoutComponentBase
+@using Microsoft.Extensions.Caching.Memory
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Echolot
+@using Tauchplaetze.Core.Features.Echolot.Queries
 @inject IStringLocalizer<SharedStrings> L
 @inject NavigationManager Navigation
+@inject IServiceScopeFactory Scopes
+@inject IMemoryCache Cache
 
 <a class="skip-link" href="@MainAnchor">@L["SkipToContent"]</a>
 
@@ -16,8 +22,14 @@
         <MainNav />
     </div>
     <div class="header-tools">
-        <UserMenu />
-        <LanguageSwitch />
+        <div class="tools-wide">
+            <InfoMenu Health="health" />
+            <UserMenu />
+            <LanguageSwitch />
+        </div>
+        <div class="tools-narrow">
+            <SiteMenu Health="health" />
+        </div>
     </div>
 </header>
 
@@ -40,6 +52,23 @@
 </footer>
 
 @code {
+    /// <summary>So lange gilt der Gesamtzustand im Speicher. Er ändert sich mit den Jobs, höchstens alle 30 Minuten.</summary>
+    private static readonly TimeSpan HealthCacheFor = TimeSpan.FromMinutes(5);
+
+    private DataHealth health = DataHealth.Unknown;
+
+    /// <remarks>
+    /// Layout und Seite rendern gleichzeitig. Ein eigener Scope gibt der Query einen eigenen DbContext,
+    /// sonst greifen beide parallel auf denselben zu.
+    /// </remarks>
+    protected override async Task OnInitializedAsync() =>
+        health = await Cache.GetOrCreateAsync(nameof(GetDataHealthQuery), async entry =>
+        {
+            entry.AbsoluteExpirationRelativeToNow = HealthCacheFor;
+            await using var scope = Scopes.CreateAsyncScope();
+            return await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetDataHealthQuery, DataHealth>>().Handle(new GetDataHealthQuery());
+        });
+
     /// <summary>Mit Pfad, weil `&lt;base href="/"&gt;` einen reinen Anker gegen die Startseite auflöst.</summary>
     private string MainAnchor => "/" + Navigation.ToBaseRelativePath(Navigation.Uri).Split('?', '#')[0] + "#main";
 

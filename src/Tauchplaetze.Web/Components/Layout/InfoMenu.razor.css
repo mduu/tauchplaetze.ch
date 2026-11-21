@@ -1,0 +1,8 @@
+.info-menu > summary {
+    padding: 0;
+    justify-content: center;
+}
+
+.info-dropdown {
+    width: 340px;
+}

@@ -124,10 +124,7 @@
         PublicPageCache.Tag(HttpContext, PublicPageCache.LakeLevelPages);
     }
 
-    private string SummaryState => page.Sources.Any(s => s.Health == DataHealth.Down) ? "Down"
-        : page.Sources.Any(s => s.Health == DataHealth.Late) ? "Late"
-        : page.Sources.All(s => s.Health == DataHealth.Unknown) ? "Unknown"
-        : "Current";
+    private string SummaryState => page.Overall.ToString();
 
     private string Summary
     {

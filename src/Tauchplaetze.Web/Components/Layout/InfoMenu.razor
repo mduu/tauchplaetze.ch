@@ -1,0 +1,16 @@
+@using Tauchplaetze.Core.Features.Echolot
+@inject IStringLocalizer<SharedStrings> L
+
+<details class="dropdown info-menu" data-dropdown>
+    <summary aria-label="@L["Info_Label"]">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6" /><path d="M12 7.5v.01" /></svg>
+    </summary>
+    <ul class="dropdown-menu info-dropdown">
+        <InfoLinks Health="Health" />
+    </ul>
+</details>
+
+@code {
+    [Parameter]
+    public DataHealth Health { get; set; } = DataHealth.Unknown;
+}

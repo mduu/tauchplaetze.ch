@@ -3,6 +3,27 @@
     "date": "2026-11-21",
     "texts": {
       "de": {
+        "title": "Info-Menü oben rechts",
+        "text": "Über den Knopf «i» oben rechts erreichst du «Über tauchplaetze.ch» und das Echolot. Dort siehst du auch gleich, ob alle Daten aktuell sind."
+      },
+      "en": {
+        "title": "Info menu at the top right",
+        "text": "The «i» button at the top right leads to «About tauchplaetze.ch» and the Sonar. It also shows at a glance whether all data is up to date."
+      },
+      "fr": {
+        "title": "Menu d’infos en haut à droite",
+        "text": "Le bouton « i » en haut à droite mène à « À propos de tauchplaetze.ch » et au Sondeur. Il indique aussi d’un coup d’œil si toutes les données sont à jour."
+      },
+      "it": {
+        "title": "Menu info in alto a destra",
+        "text": "Il pulsante «i» in alto a destra porta a «Chi siamo» e all’Ecoscandaglio. Mostra anche subito se tutti i dati sono aggiornati."
+      }
+    }
+  },
+  {
+    "date": "2026-11-21",
+    "texts": {
+      "de": {
         "title": "Echolot: Datenstand und Neuigkeiten",
         "text": "Auf dieser Seite siehst du, wie frisch die Daten hinter der Tauchprognose sind und was es auf tauchplaetze.ch Neues gibt."
       },

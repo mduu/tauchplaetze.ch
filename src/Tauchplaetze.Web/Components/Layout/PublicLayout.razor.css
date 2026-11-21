@@ -68,6 +68,16 @@
     gap: 10px;
 }
 
+.tools-wide {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tools-narrow {
+    display: none;
+}
+
 /* Bis 1000 px: Logo und Werkzeuge in der ersten Zeile, Navigation darunter über die ganze Breite. */
 @media (max-width: 1000px) {
     .site-header {
@@ -116,6 +126,14 @@
 
     .header-tools {
         gap: 6px;
+    }
+
+    .tools-wide {
+        display: none;
+    }
+
+    .tools-narrow {
+        display: block;
     }
 }
 

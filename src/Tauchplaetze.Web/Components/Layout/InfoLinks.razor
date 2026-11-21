@@ -1,0 +1,33 @@
+@using Tauchplaetze.Core.Features.Echolot
+@inject IStringLocalizer<SharedStrings> L
+
+<li>
+    <a class="info-link" href="@PublicRoutes.AboutPage(Language)">
+        <svg class="info-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v6" /><path d="M12 7.5v.01" /></svg>
+        <span class="info-body">
+            <span class="info-title">@L["Info_About_Title"]</span>
+            <span class="info-text">@L["Info_About_Text"]</span>
+        </span>
+    </a>
+</li>
+<li>
+    <a class="info-link" href="@PublicRoutes.EcholotPage(Language)">
+        <svg class="info-icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0" /><path d="M6 11c1.5 2 4.5 3 6 3s4.5-1 6-3" /><path d="M8.5 15.5c1 1.4 2.3 2 3.5 2s2.5-.6 3.5-2" /><path d="M11 20h2" /></svg>
+        <span class="info-body">
+            <span class="info-title">@L["Footer_Echolot"]</span>
+            <span class="info-text">@L["Info_Echolot_Text"]</span>
+            @if (Health != DataHealth.Unknown)
+            {
+                <span class="info-health" data-health="@Health"><i aria-hidden="true"></i>@L[$"Info_Health_{Health}"]</span>
+            }
+        </span>
+    </a>
+</li>
+
+@code {
+    /// <summary>Der Gesamtzustand der Datenquellen. <see cref="DataHealth.Unknown"/>: keine Zeile.</summary>
+    [Parameter]
+    public DataHealth Health { get; set; } = DataHealth.Unknown;
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}

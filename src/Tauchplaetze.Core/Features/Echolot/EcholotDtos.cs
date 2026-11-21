@@ -3,7 +3,11 @@ namespace Tauchplaetze.Core.Features.Echolot;
 /// <summary>Die Seite «Echolot»: der Stand jeder Datenquelle und die letzten Neuigkeiten (`ux.md`, «Echolot»).</summary>
 /// <param name="HasOlderEntries">Es gibt ältere Neuigkeiten als die gezeigten.</param>
 /// <param name="Sounding">Das Beispiel für die Echolot-Anzeige. <c>null</c>: noch keine Prognose mit Sprungschicht.</param>
-public record EcholotReport(IReadOnlyList<DataSourceStatus> Sources, IReadOnlyList<EcholotEntry> Entries, bool HasOlderEntries, EcholotSounding? Sounding = null);
+public record EcholotReport(IReadOnlyList<DataSourceStatus> Sources, IReadOnlyList<EcholotEntry> Entries, bool HasOlderEntries, EcholotSounding? Sounding = null)
+{
+    /// <summary>Der schlechteste Zustand der Quellen mit Daten (<see cref="EcholotRules.Overall"/>).</summary>
+    public DataHealth Overall => EcholotRules.Overall(Sources);
+}
 
 /// <summary>Ein Platz mit Sprungschicht als Beispiel für die Echolot-Anzeige, mit dem Tag der Prognose. Temperaturen in °C, Tiefen in m.</summary>
 public record EcholotSounding(

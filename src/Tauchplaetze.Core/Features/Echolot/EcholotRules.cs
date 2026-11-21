@@ -35,4 +35,11 @@ internal static class EcholotRules
         : DataHealth.Current;
 
     public static DataHealth Worse(DataHealth a, DataHealth b) => (DataHealth)Math.Max((int)a, (int)b);
+
+    /// <summary>Der schlechteste Zustand der Quellen mit Daten. Ohne Daten bei allen Quellen <see cref="DataHealth.Unknown"/>.</summary>
+    public static DataHealth Overall(IEnumerable<DataSourceStatus> sources)
+    {
+        var known = sources.Where(s => s.Health != DataHealth.Unknown).Select(s => s.Health).ToList();
+        return known.Count == 0 ? DataHealth.Unknown : known.Max();
+    }
 }

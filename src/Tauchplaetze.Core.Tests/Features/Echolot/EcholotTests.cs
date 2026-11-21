@@ -61,7 +61,7 @@ public class EcholotTests(SqlServer sql) : SqlTest(sql)
     [SqlFact]
     public async Task Es_erscheinen_die_letzten_20_Neuigkeiten_Plaetze_eines_Tages_als_ein_Eintrag()
     {
-        // Arrange: zwei Funktionen aus news.json, dazu 20 Tage mit je einem Platz und ein Tag mit zwei Plätzen.
+        // Arrange: drei Funktionen aus news.json, dazu 20 Tage mit je einem Platz und ein Tag mit zwei Plätzen.
         var (moderator, first) = await Prepare("Platz 0");
         var sites = new List<Guid> { first };
         for (var i = 1; i <= 21; i++)
@@ -84,8 +84,8 @@ public class EcholotTests(SqlServer sql) : SqlTest(sql)
         // Assert
         Assert.Equal(20, echolot.Entries.Count);
         Assert.True(echolot.HasOlderEntries);
-        Assert.Equal([EcholotEntryKind.Feature, EcholotEntryKind.Feature, EcholotEntryKind.Described], echolot.Entries.Take(3).Select(e => e.Kind));
-        Assert.Equal(["Platz 20", "Platz 21"], echolot.Entries[2].Sites.Select(s => s.Name));
+        Assert.Equal([EcholotEntryKind.Feature, EcholotEntryKind.Feature, EcholotEntryKind.Feature, EcholotEntryKind.Described], echolot.Entries.Take(4).Select(e => e.Kind));
+        Assert.Equal(["Platz 20", "Platz 21"], echolot.Entries[3].Sites.Select(s => s.Name));
     }
 
     [SqlFact]
@@ -148,6 +148,32 @@ public class EcholotTests(SqlServer sql) : SqlTest(sql)
         // Assert
         Assert.Equal(("Riff Williams", "Zürichsee", today.AddDays(-2), 12m, 16m, 15.2m),
             (sounding!.Name, sounding.WaterBodyName, sounding.Date, sounding.ThermoclineTop, sounding.ThermoclineBottom, sounding.SurfaceTemperature));
+    }
+
+    [SqlFact]
+    public async Task Der_Gesamtzustand_ist_der_schlechteste_der_Quellen_mit_Daten()
+    {
+        // Arrange: nur ein frischer Abfluss, sonst keine Daten. Danach ein Abfluss vor 3 Stunden dazu.
+        await Prepare("Riff Williams");
+        var now = Start.AddDays(10);
+        Sql.Time.Now = now;
+        await Sql.Arrange(db =>
+        {
+            db.HydroReadings.Add(new HydroReading { StationId = "2091", MeasuredAt = now.AddMinutes(-30), Discharge = 300, ImportedAt = now });
+            return Task.CompletedTask;
+        });
+        var onlyFresh = await Query<GetDataHealthQuery, DataHealth>(new GetDataHealthQuery());
+        await Sql.Arrange(db =>
+        {
+            db.LakeLevelReadings.Add(new LakeLevelReading { StationId = "2209", MeasuredAt = now.AddHours(-5), Level = 405.5m, ImportedAt = now });
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var withLate = await Query<GetDataHealthQuery, DataHealth>(new GetDataHealthQuery());
+
+        // Assert
+        Assert.Equal((DataHealth.Current, DataHealth.Late), (onlyFresh, withLate));
     }
 
     private async Task<(string Moderator, Guid Site)> Prepare(string name)

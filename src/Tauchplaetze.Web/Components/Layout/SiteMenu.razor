@@ -1,0 +1,40 @@
+@using Tauchplaetze.Core.Features.Echolot
+@inject IStringLocalizer<SharedStrings> L
+@inject IStringLocalizer<AccountStrings> Account
+@inject NavigationManager Navigation
+
+@* Menü für schmale Bildschirme (`ux.md`, «Informationsarchitektur»): Info, Konto und Sprache hinter einem Knopf. Die Hauptnavigation bleibt sichtbar. *@
+<details class="dropdown site-menu" data-dropdown>
+    <summary aria-label="@L["Menu_Open"]">
+        <svg class="menu-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></svg>
+        <svg class="menu-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
+    </summary>
+    <div class="dropdown-menu site-menu-panel">
+        <p class="site-menu-heading">@L["Menu_Section_Info"]</p>
+        <ul>
+            <InfoLinks Health="Health" />
+        </ul>
+        <p class="site-menu-heading">@L["Menu_Section_Account"]</p>
+        <ul>
+            <AccountLinks WithSignIn="true" />
+        </ul>
+        <p class="site-menu-heading">@L["Menu_Section_Language"]</p>
+        <div class="site-menu-languages" role="group" aria-label="@L["Language_Choose"]">
+            @foreach (var language in Languages.All)
+            {
+                <a href="@LanguagePaths.Switch(Navigation.ToBaseRelativePath(Navigation.Uri), language)"
+                   hreflang="@language"
+                   lang="@language"
+                   aria-label="@L[$"Language_{language}"]"
+                   aria-current="@(language == Current ? "true" : null)">@language.ToUpperInvariant()</a>
+            }
+        </div>
+    </div>
+</details>
+
+@code {
+    [Parameter]
+    public DataHealth Health { get; set; } = DataHealth.Unknown;
+
+    private static string Current => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}
