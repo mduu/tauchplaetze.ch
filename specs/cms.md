@@ -277,7 +277,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 
 - `/platform/queues`, nur Admin, Navigation der Plattform.
 - Zähler: Mails in der Queue, Mails in der Dead-Letter-Queue (ungefähr).
-- Liste der Dead-Letter-Mails (höchstens 32, nur diese einzeln bearbeitbar): Betreff, Empfänger, Vorlage, Versuche, letzter Fehler, Zeit, Mail-Id. Unlesbare Nachrichten erscheinen als «Unlesbare Nachricht». Dead-Letter-Mails löscht Azure nach 30 Tagen (Datenschutz).
+- Liste der Dead-Letter-Mails (höchstens 32, nur diese einzeln bearbeitbar): Betreff, Empfänger, Antwort-Adresse (Reply-To), Vorlage, Versuche, letzter Fehler, Zeit, Mail-Id und der Inhalt als Text. So können Admins eine Kontaktnachricht von Hand beantworten. «Erneut senden» schickt eine Kontaktnachricht an die heutige Adresse aus `Operator:Email`. Unlesbare Nachrichten erscheinen als «Unlesbare Nachricht». Dead-Letter-Mails löscht Azure nach 30 Tagen (Datenschutz).
 - Hinweis: Konto-Mails tragen Links mit Ablauf. Erneut gesendet, können sie ungültig sein.
 - Erneut senden: eine oder alle. Sie beginnen wieder beim ersten Versuch.
 - Löschen: eine oder alle, mit Bestätigung. Endgültig.

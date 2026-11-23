@@ -30,15 +30,16 @@ internal class GetMailQueueStatusHandler(IMailQueue queue, MailDispatcher dispat
         }
 
         var envelope = deadLetter.Envelope;
-        return new DeadLetterItem(deadLetter.MessageId, envelope?.Template, envelope?.To, envelope is null ? null : Subject(envelope, dispatcher),
-            deadLetter.Attempts, deadLetter.Reason, deadLetter.FailedAt, envelope?.CreatedAt);
+        var mail = envelope is null ? null : Rendered(envelope, dispatcher);
+        return new DeadLetterItem(deadLetter.MessageId, envelope?.Template, envelope?.To, mail?.Subject,
+            deadLetter.Attempts, deadLetter.Reason, deadLetter.FailedAt, envelope?.CreatedAt, ReplyTo: envelope?.ReplyTo, Body: mail?.Body);
     }
 
-    private static string? Subject(MailEnvelope envelope, MailDispatcher dispatcher)
+    private static MailMessage? Rendered(MailEnvelope envelope, MailDispatcher dispatcher)
     {
         try
         {
-            return dispatcher.Render(envelope).Subject;
+            return dispatcher.Render(envelope);
         }
         catch (MailTemplateException)
         {

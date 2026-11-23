@@ -263,6 +263,8 @@
   <data name="Platform_NoDeadLetters" xml:space="preserve"><value>No mail in the dead-letter queue.</value></data>
   <data name="Platform_PeekLimit" xml:space="preserve"><value>The list shows at most 32 mails; only those can be handled one by one.</value></data>
   <data name="Platform_To" xml:space="preserve"><value>To</value></data>
+  <data name="Platform_ReplyTo" xml:space="preserve"><value>Reply to</value></data>
+  <data name="Platform_Body" xml:space="preserve"><value>Content</value></data>
   <data name="Platform_Template" xml:space="preserve"><value>Template</value></data>
   <data name="Platform_Attempts" xml:space="preserve"><value>Attempts</value></data>
   <data name="Platform_Reason" xml:space="preserve"><value>Error</value></data>

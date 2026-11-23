@@ -263,6 +263,8 @@
   <data name="Platform_NoDeadLetters" xml:space="preserve"><value>Nessuna e-mail nella coda dei messaggi non recapitati.</value></data>
   <data name="Platform_PeekLimit" xml:space="preserve"><value>L’elenco mostra al massimo 32 e-mail; solo queste si possono gestire singolarmente.</value></data>
   <data name="Platform_To" xml:space="preserve"><value>A</value></data>
+  <data name="Platform_ReplyTo" xml:space="preserve"><value>Rispondi a</value></data>
+  <data name="Platform_Body" xml:space="preserve"><value>Contenuto</value></data>
   <data name="Platform_Template" xml:space="preserve"><value>Modello</value></data>
   <data name="Platform_Attempts" xml:space="preserve"><value>Tentativi</value></data>
   <data name="Platform_Reason" xml:space="preserve"><value>Errore</value></data>

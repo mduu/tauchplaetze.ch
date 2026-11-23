@@ -8,7 +8,9 @@ internal record ContactMail(string? Name, string Email, string? Reference, strin
 
 internal class ContactMailTemplate : MailTemplate<ContactMail>
 {
-    public override string Name => "ContactMessage";
+    public const string TemplateName = "ContactMessage";
+
+    public override string Name => TemplateName;
 
     protected override MailContent Render(ContactMail model, CultureInfo culture) => new(
         T(culture, "Contact_Subject", model.Topic),
