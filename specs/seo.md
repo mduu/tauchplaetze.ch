@@ -29,7 +29,7 @@ Siehe `i18n.md`. Grundsätze:
 
 ## Pro Seite
 
-- `<title>` und `<meta name="description">` aus Ressourcen plus Daten, pro Sprache (umgesetzt 24.10.2026, `SeoText`). Die Beschreibung hat höchstens 160 Zeichen: Sätze kommen nur dazu, solange sie passen.
+- `<title>` und `<meta name="description">` aus Ressourcen plus Daten, pro Sprache (umgesetzt 24.10.2026, `SeoText`). Die Übersichten nennen das Land in Titel und `<h1>`: «Tauchplätze in der Schweiz», «Tauchen in der Schweiz: Seen und Flüsse» (23.11.2026). Anlass: Für «tauchplätze schweiz» stand die Site nach einem Monat auf Position 88, das Wort «Schweiz» fehlte im Titel. Die Beschreibung hat höchstens 160 Zeichen: Sätze kommen nur dazu, solange sie passen.
   - Platz: Titel «{Name} – Tauchplatz {Gewässer} · tauchplaetze.ch». Beschreibung «Tauchplatz {Name}, {Gemeinde} {Kanton}, {Gewässer}.», dazu mit Prognose «Heute: Tauch-Index {x}/10, Sicht ca. {s} m in Ufernähe, Sprungschicht {a}–{b} m.» (nur vorhandene und plausible Werte), sonst «Tägliche Tauchprognose, Karte und Einstiege.». Die Beschreibung ändert täglich; der Output Cache läuft vor Mitternacht ab.
   - Gewässer: Titel «{Gewässer}: Tauchen und Sichtweite heute · tauchplaetze.ch». Beschreibung mit der Zahl der Plätze und dem besten Tauch-Index von heute.
   - Länge: höchstens 65 Zeichen (Bing meldet längere als Fehler, Google kürzt). `SeoText.PageTitle` hängt « · tauchplaetze.ch» nur an, solange es passt; sonst ohne Marke, nötigenfalls mit «…» gekürzt (24.10.2026).
