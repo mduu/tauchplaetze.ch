@@ -6,6 +6,7 @@ using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Accounts;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Accounts.Queries;
+using Tauchplaetze.Core.Features.Contact;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Editorial.Queries;
@@ -108,6 +109,29 @@ public class NotificationTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
+    public async Task Eine_erneut_gesendete_Kontaktnachricht_geht_an_die_heutige_Adresse_des_Betreibers_und_die_Liste_zeigt_Absender_und_Inhalt()
+    {
+        // Arrange
+        var (admin, _, _, _) = await Prepare();
+        Sql.Mail.Sent.Clear();
+        var contact = new ContactMail("Vera", "vera@example.org", null, "Frage", "de", "Wo ist der Einstieg?");
+        await Sql.MailQueue.DeadLetter(DeadLetterBody("tippfehler@example-org", contact, replyTo: "vera@example.org"), TestContext.Current.CancellationToken);
+
+        // Act
+        var status = await Query<GetMailQueueStatusQuery, MailQueueStatus?>(new GetMailQueueStatusQuery(admin));
+        await Command<ReplayDeadLettersCommand, DeadLetterActionResult>(new ReplayDeadLettersCommand(admin));
+        await Sql.DeliverMail();
+
+        // Assert
+        var item = Assert.Single(status!.Items);
+        Assert.Equal("vera@example.org", item.ReplyTo);
+        Assert.Contains("Wo ist der Einstieg?", item.Body);
+        var sent = Assert.Single(Sql.Mail.Sent);
+        Assert.Equal("betreiber@example.org", sent.To);
+        Assert.Equal("vera@example.org", sent.ReplyTo);
+    }
+
+    [SqlFact]
     public async Task Eine_erneut_gesendete_Mail_beginnt_wieder_beim_ersten_Versuch()
     {
         // Arrange
@@ -148,10 +172,13 @@ public class NotificationTests(SqlServer sql) : SqlTest(sql)
         Assert.DoesNotContain(Sql.Mail.Sent, m => m.To is "dora@example.org" or "anna@example.org");
     }
 
-    private static string DeadLetterBody(string siteName)
+    private static string DeadLetterBody(string siteName) =>
+        DeadLetterBody("anna@example.org", new ProposalApprovedMail("Anna", siteName, "https://tauchplaetze.test/de/site/x"));
+
+    private static string DeadLetterBody<TModel>(string to, TModel model, string? replyTo = null) where TModel : notnull
     {
         var mail = new TestMail();
-        mail.Dispatcher.Enqueue("anna@example.org", "de", new ProposalApprovedMail("Anna", siteName, "https://tauchplaetze.test/de/site/x"), CancellationToken.None).Wait();
+        mail.Dispatcher.Enqueue(to, "de", model, CancellationToken.None, replyTo).Wait();
         mail.Sender.Failing = new IOException("SMTP nicht erreichbar");
         for (var attempt = 0; attempt < MailQueueRules.MaxAttempts; attempt++)
         {

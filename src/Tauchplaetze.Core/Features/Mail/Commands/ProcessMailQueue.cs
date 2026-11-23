@@ -95,13 +95,13 @@ internal class ProcessMailQueueHandler(IMailQueue queue, IMailSender sender, Mai
     }
 
     /// <summary>
-    /// Kein neuer Versuch hilft: unlesbar, unbekannte Vorlage, ungültige Adresse, Empfänger abgelehnt.
-    /// Andere 5xx (Absender, Anmeldung, Richtlinie) sind oft Konfiguration und bekommen den Backoff.
+    /// Kein neuer Versuch hilft: unlesbar, unbekannte Vorlage, ungültige Adresse, Empfänger mit 5xx abgelehnt.
+    /// Ein Empfänger mit 4xx (z.B. 451, Greylisting) und andere 5xx (Absender, Anmeldung, Richtlinie) bekommen den Backoff.
     /// </summary>
     internal static bool IsPermanent(Exception exception) => exception switch
     {
         JsonException or MailTemplateException or ParseException => true,
-        SmtpCommandException { ErrorCode: SmtpErrorCode.RecipientNotAccepted } => true,
+        SmtpCommandException { ErrorCode: SmtpErrorCode.RecipientNotAccepted, StatusCode: >= (SmtpStatusCode)500 } => true,
         _ => false,
     };
 

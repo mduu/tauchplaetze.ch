@@ -728,6 +728,16 @@ a:hover {
   word-break: break-word;
 }
 
+.platform-body {
+  margin: 4px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-tile-sm);
+  font: 13px/1.5 var(--font-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 /* Plattform (/platform): Navigation oben statt seitlich, damit der Bereich vom CMS zu unterscheiden ist. */
 .platform-bar {
   border-bottom: 2px solid var(--color-signal);

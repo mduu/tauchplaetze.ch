@@ -68,6 +68,10 @@ else
                     <MudSimpleTable Dense="true">
                         <tbody>
                             <tr><th>@L["Platform_To"]</th><td>@(item.To ?? "–")</td></tr>
+                            @if (item.ReplyTo is { } replyTo)
+                            {
+                                <tr><th>@L["Platform_ReplyTo"]</th><td><a href="mailto:@replyTo">@replyTo</a></td></tr>
+                            }
                             <tr><th>@L["Platform_Template"]</th><td>@(item.Template ?? "–")</td></tr>
                             <tr><th>@L["Platform_Attempts"]</th><td>@item.Attempts</td></tr>
                             <tr><th>@L["Platform_Reason"]</th><td class="platform-reason">@(item.Unreadable ? L["Platform_Unreadable"] : item.Reason ?? "–")</td></tr>
@@ -76,6 +80,11 @@ else
                             <tr><th>@L["Platform_MessageId"]</th><td><code>@item.MessageId</code></td></tr>
                         </tbody>
                     </MudSimpleTable>
+                    @if (item.Body is { } body)
+                    {
+                        <MudText Typo="Typo.overline" Class="mt-3 d-block">@L["Platform_Body"]</MudText>
+                        <pre class="platform-body">@body</pre>
+                    }
                     @if (item.MessageId is { } id)
                     {
                         <MudStack Row="true" Class="mt-3">

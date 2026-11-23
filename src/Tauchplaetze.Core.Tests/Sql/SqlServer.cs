@@ -87,6 +87,7 @@ public sealed class SqlServer : IAsyncLifetime
             [$"ConnectionStrings:{CoreRegistration.BlobsConnectionName}"] = "UseDevelopmentStorage=true",
             ["Accounts:RegistrationOpen"] = "true",
             ["PublicSite:BaseUri"] = "https://tauchplaetze.test",
+            ["Operator:Email"] = "betreiber@example.org",
             ["Content:ImportEnabled"] = "true",
             ["Hydro:Forecast:Username"] = "test-user",
             ["Hydro:Forecast:Password"] = "test-password",
