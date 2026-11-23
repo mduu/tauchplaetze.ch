@@ -58,7 +58,7 @@ public class MailQueueTests
 
     [Theory]
     [MemberData(nameof(TemporaryFailures))]
-    public async Task Zeitueberschreitung_volles_Postfach_oder_abgelehnter_Absender_warten_im_Backoff(Exception failure)
+    public async Task Zeitueberschreitung_volles_Postfach_abgelehnter_Absender_oder_voruebergehend_abgelehnter_Empfaenger_warten_im_Backoff(Exception failure)
     {
         // Arrange
         await Enqueue();
@@ -79,6 +79,7 @@ public class MailQueueTests
         new SmtpCommandException(SmtpErrorCode.MessageNotAccepted, SmtpStatusCode.MailboxBusy, "Mailbox busy"),
         new SmtpCommandException(SmtpErrorCode.SenderNotAccepted, SmtpStatusCode.MailboxUnavailable, "Sender rejected"),
         new SmtpCommandException(SmtpErrorCode.UnexpectedStatusCode, SmtpStatusCode.AuthenticationRequired, "Auth required"),
+        new SmtpCommandException(SmtpErrorCode.RecipientNotAccepted, SmtpStatusCode.ErrorInProcessing, "Try again later"),
     ];
 
     [Fact]
