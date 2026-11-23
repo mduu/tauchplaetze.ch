@@ -27,9 +27,10 @@ else
         <label>@L["Contact_Name"] <InputText autocomplete="name" maxlength="@ContactRules.MaxName" @bind-Value="Input!.Name" /></label>
         <label>@L["Contact_Email"] <InputText type="email" autocomplete="email" required maxlength="@ContactRules.MaxEmail" @bind-Value="Input!.Email" /></label>
         <label>@L["Contact_Reference"] <InputText maxlength="@ContactRules.MaxReference" @bind-Value="Input!.Reference" /></label>
-        <label>@L["Contact_Message"] <InputTextArea required rows="7" minlength="@ContactRules.MinMessage" maxlength="@ContactRules.MaxMessage" @bind-Value="Input!.Message" /></label>
+        <label>@L["Contact_Message"] <InputTextArea required rows="7" minlength="@ContactRules.MinMessage" maxlength="@ContactRules.MaxMessage" aria-describedby="contact-message-hint" @bind-Value="Input!.Message" /></label>
+        <p class="field-hint" id="contact-message-hint">@L["Contact_Message_Hint", ContactRules.MinMessage]</p>
         <label class="form-trap" aria-hidden="true">@L["Contact_Trap"] <InputText tabindex="-1" autocomplete="off" @bind-Value="Input!.Website" /></label>
-        <button type="submit" class="button">@L["Contact_Submit"]</button>
+        <button type="submit" class="button" data-busy-on-submit>@L["Contact_Submit"]</button>
     </EditForm>
 }
 
