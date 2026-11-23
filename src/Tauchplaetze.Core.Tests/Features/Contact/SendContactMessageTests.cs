@@ -75,9 +75,35 @@ public class SendContactMessageTests
         Assert.Empty(mail.Sender.Sent);
     }
 
-    private async Task<ContactResult> Send(SendContactMessageCommand command, string? recipient = "betrieb@example.org")
+    [Theory]
+    [InlineData("werbung@spam.example", "Eine genügend lange Nachricht.")]
+    [InlineData("werbung@mail.SPAM.example", "Eine genügend lange Nachricht.")]
+    [InlineData("anna@example.org", "Hier der Link zur Anmeldung: Spam.Example")]
+    public async Task Eine_Nachricht_mit_gesperrter_Domain_in_Adresse_oder_Text_meldet_gesendet_und_geht_nicht_raus(string email, string message)
     {
-        var result = await new SendContactMessageHandler(mail.Dispatcher, Options.Create(new ContactOptions { Email = recipient }), NullLogger<SendContactMessageHandler>.Instance)
+        // Act
+        var result = await Send(new SendContactMessageCommand(null, email, message, null, "en"), blockedDomains: "other.example, spam.example");
+
+        // Assert
+        Assert.True(result.Succeeded);
+        Assert.Empty(mail.Sender.Sent);
+    }
+
+    [Fact]
+    public async Task Eine_Domain_die_nur_aehnlich_endet_ist_nicht_gesperrt_und_ein_Eintrag_der_keine_Domain_ist_sperrt_nichts()
+    {
+        // Act
+        await Send(new SendContactMessageCommand(null, "anna@nospam.example", "Eine genügend lange Nachricht.", null, "de"), blockedDomains: "spam.example");
+        await Send(new SendContactMessageCommand(null, "anna@example.org", "Eine genügend lange Nachricht.", null, "de"), blockedDomains: "@Microsoft.KeyVault(VaultName=kv;SecretName=x) e");
+
+        // Assert
+        Assert.Equal(2, mail.Sender.Sent.Count);
+    }
+
+    private async Task<ContactResult> Send(SendContactMessageCommand command, string? recipient = "betrieb@example.org", string? blockedDomains = null)
+    {
+        var result = await new SendContactMessageHandler(mail.Dispatcher, Options.Create(new ContactOptions { Email = recipient }),
+                Options.Create(new ContactSpamOptions { BlockedDomains = blockedDomains }), NullLogger<SendContactMessageHandler>.Instance)
             .Handle(command, TestContext.Current.CancellationToken);
         await mail.Process();
         return result;

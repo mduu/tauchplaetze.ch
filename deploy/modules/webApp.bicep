@@ -63,6 +63,7 @@ resource plan 'Microsoft.Web/serverfarms@2023-12-01' = {
 var secretNames = [
   'Accounts--Admins--0--Email'
   'Operator--Email'
+  'Contact--BlockedDomains'
   'Mail--UserName'
   'Mail--Password'
   'Hydro--Forecast--Username'

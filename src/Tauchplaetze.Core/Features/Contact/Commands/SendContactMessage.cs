@@ -8,7 +8,7 @@ namespace Tauchplaetze.Core.Features.Contact.Commands;
 
 /// <summary>
 /// Schickt eine Nachricht aus dem Kontaktformular per Mail an den Betreiber (`ux.md`, «Über», Kontakt). Antworten gehen an <paramref name="Email"/>.
-/// Die Nachricht wird nicht gespeichert. <paramref name="Reference"/>: worauf sie sich bezieht, z.B. der Name eines Platzes.
+/// Die Nachricht wird nicht gespeichert. Eine Nachricht mit gesperrter Domain (`Contact:BlockedDomains`) wird still verworfen: Das Ergebnis ist «gesendet». <paramref name="Reference"/>: worauf sie sich bezieht, z.B. der Name eines Platzes.
 /// </summary>
 public record SendContactMessageCommand(string? Name, string Email, string Message, string? Reference, string Culture);
 
@@ -48,7 +48,7 @@ public static class ContactRules
     public const int MaxEmail = 254;
 }
 
-internal class SendContactMessageHandler(MailDispatcher mail, IOptions<ContactOptions> options, ILogger<SendContactMessageHandler> logger)
+internal class SendContactMessageHandler(MailDispatcher mail, IOptions<ContactOptions> options, IOptions<ContactSpamOptions> spam, ILogger<SendContactMessageHandler> logger)
     : ICommandHandler<SendContactMessageCommand, ContactResult>
 {
     public async Task<ContactResult> Handle(SendContactMessageCommand command, CancellationToken ct = default)
@@ -66,6 +66,12 @@ internal class SendContactMessageHandler(MailDispatcher mail, IOptions<ContactOp
         }
 
         var email = command.Email.Trim();
+        if (spam.Value.Blocks(email, command.Name, command.Reference, command.Message))
+        {
+            logger.LogInformation("Contact message dropped: blocked domain");
+            return new ContactResult([]);
+        }
+
         var model = new ContactMail(OneLine(command.Name), email, OneLine(command.Reference), Topic(command), command.Culture, command.Message.Trim());
         return await mail.Enqueue(options.Value.Email, "de", model, ct, replyTo: email)
             ? new ContactResult([])
