@@ -71,6 +71,7 @@
   <data name="Contact_Email" xml:space="preserve"><value>Ton adresse e-mail pour la réponse</value></data>
   <data name="Contact_Reference" xml:space="preserve"><value>Objet (facultatif, p. ex. nom du site)</value></data>
   <data name="Contact_Message" xml:space="preserve"><value>Message</value></data>
+  <data name="Contact_Message_Hint" xml:space="preserve"><value>Au moins {0} caractères.</value></data>
   <data name="Contact_Submit" xml:space="preserve"><value>Envoyer</value></data>
   <data name="Contact_Trap" xml:space="preserve"><value>Laisse ce champ vide</value></data>
   <data name="Contact_Sent" xml:space="preserve"><value>Merci ! Ton message est en route.</value></data>

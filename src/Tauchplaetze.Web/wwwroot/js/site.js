@@ -298,3 +298,31 @@ window.tauchplaetzeEdit = (function () {
     }
   });
 })();
+
+// Knöpfe mit data-busy-on-submit: nach dem Absenden gesperrt und mit Spinner, damit niemand doppelt sendet.
+(function () {
+  document.addEventListener('submit', function (event) {
+    const button = event.target.querySelector('button[data-busy-on-submit]');
+    if (!button || event.defaultPrevented) {
+      return;
+    }
+
+    if (button.classList.contains('busy')) {
+      event.preventDefault();
+      return;
+    }
+
+    button.classList.add('busy');
+    button.setAttribute('aria-disabled', 'true');
+    button.setAttribute('aria-busy', 'true');
+  });
+
+  // Zurück aus dem Browser-Cache: Der Knopf ist wieder frei.
+  window.addEventListener('pageshow', function () {
+    document.querySelectorAll('button[data-busy-on-submit].busy').forEach(function (button) {
+      button.classList.remove('busy');
+      button.removeAttribute('aria-disabled');
+      button.removeAttribute('aria-busy');
+    });
+  });
+})();
