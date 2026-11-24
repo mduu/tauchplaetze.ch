@@ -74,7 +74,7 @@ Die Specs beschreiben, was gilt. Zuerst [`vision.md`](specs/vision.md) und [`arc
 | URLs, Domains, SEO | [seo.md](specs/seo.md) |
 | Hosting, Betrieb | [infrastructure.md](specs/infrastructure.md), [doc/go-live.md](doc/go-live.md) |
 | Entscheide | [adrs/](specs/adrs/README.md) |
-| Offene Punkte | [open-questions.md](specs/open-questions.md) |
+| Stories (geplante Arbeit) | [stories/](specs/stories/) |
 
 Für Coding Agents gilt [`AGENTS.md`](AGENTS.md).
 

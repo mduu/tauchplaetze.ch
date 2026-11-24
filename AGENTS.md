@@ -19,6 +19,7 @@ The rules are in `specs/architecture.md`. Read the applicable section before you
 | Languages, resources | `specs/i18n.md` |
 | UX, pages, colours | `specs/ux.md`, `specs/design-system.md` |
 | URLs, sitemap, domains | `specs/seo.md` |
+| Stories (planned work: SUSV entries, partner page, shipping rules) | `specs/stories/` |
 | Hosting, deployment | `specs/infrastructure.md` |
 | Decisions | `specs/adrs/` |
 

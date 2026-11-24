@@ -16,4 +16,5 @@ Jeder Entscheid steht in einer eigenen Datei. Vorlage: [`_template.md`](_templat
 | Mails | Storage Queue mit Backoff und Dead-Letter, einheitliches Layout mit Textfassung | [010](010-mails-ueber-storage-queue.md) |
 | Inhalt von Prod nach lokal | ZIP-Paket nur mit öffentlichen Inhalten, Import lokal ohne Löschen | [011](011-inhalt-von-prod-nach-lokal.md) |
 | Mailversand in Prod | SMTP eines Schweizer Anbieters mit STARTTLS | [012](012-mail-ueber-hostpoint-smtp.md) |
+| Einträge des SUSV | Täglicher Import, Bestätigung durch die Moderation, Anzeige nach Thema mit Logo und Link | [013](013-susv-eintraege-importieren.md) |
 | Design | Dunkles Farbschema («Kaltwasser-Nacht») | [design-system.md](../design-system.md) |

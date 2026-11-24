@@ -17,7 +17,9 @@ Das Projekt ist **nicht kommerziell** (`vision.md`, «Finanzierung»). Mehrere Q
 | swisstopo | Kartenkacheln, Gewässernetz (swissTLM3D), Bathymetrie (swissBATHY3D) | Karte, Stammdaten aller Gewässer, Tiefenkarten | MVP | ✅ |
 | Eawag Datalakes | In-situ-Messungen: Temperaturketten, Bojen, Profile, Secchi (LéXPLORE) | aktueller Stand, Kontrolle der Modelle | Phase 1 | ✅ |
 | BAFU Abfluss- und Seepegelvorhersagen | Prognose für etwa 50–60 Stationen | Prognose für Flussplätze | Phase 1 | ✅ Zugang HTTPS |
+| BAV öV-Haltestellen, OpenStreetMap | Landungsstellen der Kursschiffe, Fahrlinien, Häfen | Ebene «Schifffahrt» auf der Platzkarte | geplant | ✅ Abfrage 24.11.2026 |
 | OpenStreetMap (Overpass API) | Tauchplätze (`sport=scuba_diving`) mit Name und Koordinate, Gewässer, Gemeinde, Kanton | Erstbestand des Verzeichnisses | MVP | ✅ Skript |
+| SUSV (Karten auf susv.ch) | Tauchverbote und Einschränkungen, Defibrillatoren, mobile Toiletten, Förderprojekte, Inklusions-Tauchplätze | Hinweise und Einträge auf der Platzseite | geplant | ✅ Abruf 24.11.2026, Zusage SUSV |
 | Eigenes Fotoarchiv | Fotos | Dokumentation | MVP | Rechte bei Marc |
 
 ## Eawag Alplakes
@@ -260,6 +262,25 @@ Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schw
 - **Herkunft:** Rund zwei Drittel der Punkte tragen `source=www.dive-links.com`. Entscheid Marc, 18.10.2026: alle übernehmen. Tauchplätze sind allgemein bekannte Ortsmarken, die in vielen Tauchführern stehen, kein besonderer Inhalt. Ob die Daten in OSM sein dürfen, verantwortet OSM. Wir übernehmen nur Name, Koordinate und Gewässer.
 - **Abfrage:** eine Overpass-Query, dazu eine kleine Query pro Punkt ohne Gewässer (Fläche um den Punkt, für Plätze mitten im See), `User-Agent` mit Projekt, Retry mit Backoff (Overpass antwortet bei Last mit 502 oder 504).
 
+## SUSV
+
+Der Schweizer Unterwasser-Sport-Verband veröffentlicht Einschränkungen und Projekte pro Tauchplatz. Ein Job übernimmt sie täglich über die Karten-Schnittstelle von susv.ch, mit Zusage des SUSV. Endpunkt, Eigenheiten, Job und Bedingungen stehen in `stories/002-susv-import-und-moderation.md`.
+
+## Schifffahrt
+
+Für die Ebene «Schifffahrt» der Platzkarte (`stories/005-tauchen-und-schifffahrt.md`). Geprüft am 24.11.2026. Das Skript `tools/shipping/` holt die Daten einmalig und schreibt den Seed. Die App ruft keine dieser Quellen auf. Ein zweiter Lauf pro Jahr genügt.
+
+| Inhalt | Quelle | Stand 24.11.2026 |
+|---|---|---|
+| Landungsstellen der Kursschiffe | BAV «öV-Haltestellen» (`ch.bav.haltestellen-oev`, geo.admin.ch): Betriebspunkttyp «Haltestelle», Verkehrsmittel «Schiff» | amtlich, schweizweit. Abfrage am Zürcher Seebecken geprüft |
+| Fahrlinien | OpenStreetMap `route=ferry` | 554 Wege |
+| Häfen | OpenStreetMap `leisure=marina` | 444 Objekte |
+| Bojenfelder, zugelassene Liegeplätze | keine schweizweite Quelle | geo.admin.ch hat keine Ebene. OSM kennt 302 Bojen (`seamark:type=mooring`) und deckt Bojenfelder damit nicht ab. Die Bewilligungen liegen bei den Kantonen. Die Redaktion zeichnet Bojenfelder in die Skizze |
+
+- **Bedingungen:** BAV: vor dem Import die Nutzungsbedingungen des Datensatzes lesen und die Quellenangabe festlegen. OSM: ODbL, Quellenangabe wie beim Erstbestand.
+- **Nur am Wasser:** Das Skript behält Objekte im Umkreis von 1 km um einen Tauchplatz.
+- **Quellenangabe** in der Karte bei eingeschalteter Ebene: «Schiffstationen: BAV · Fahrlinien und Häfen: © OpenStreetMap-Mitwirkende».
+
 ## Geprüft und nicht genutzt
 
 | Quelle | Grund |
@@ -274,7 +295,7 @@ Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schw
 | Wasserversorgung Zürich | Laborwerte ohne Sichttiefe, einmal pro Jahr. |
 | BAFU Badewasserqualität | E. coli, kein Bezug zur Sicht. |
 | Blaualgen-Warnungen | Keine offene Datenquelle, nur Medienmitteilungen der Kantone. Redaktionell erfassen. |
-| Schutzgebiete und Einschränkungen der Schifffahrt | Später für die Dokumentation (Hinweise, Verbote). Tauchverbote sind kantonal und lückenhaft. |
+| Schutzgebiete und Einschränkungen der Schifffahrt | Später für die Dokumentation (Hinweise, Verbote). Tauchverbote sind kantonal und lückenhaft. Die Einschränkungen, die der SUSV veröffentlicht, kommen aus dem Import (siehe «SUSV»). Schifffahrt: siehe «Schifffahrt». |
 
 ## Robustheit
 
@@ -287,4 +308,4 @@ Erstbestand des Verzeichnisses: alle Punkte mit `sport=scuba_diving` in der Schw
 ## Was wir nicht nutzen
 
 - **Keine Daten aus anderen Tauchplatzverzeichnissen oder Plattformen für Sichtweiten.** Kein Scraping.
-- Eine Zusammenarbeit ist möglich, aber nur mit Zustimmung der jeweiligen Betreiber.
+- Eine Zusammenarbeit ist möglich, aber nur mit Zustimmung der jeweiligen Betreiber. Der SUSV hat zugestimmt (siehe «SUSV»).

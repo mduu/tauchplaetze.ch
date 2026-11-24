@@ -141,6 +141,10 @@ Ein Platz kann wichtige Hinweise haben (`DiveSiteNotice`, Entscheid Marc, 18.10.
 - Eine gültige Sperrung nimmt den Platz an diesem Tag aus «Beste Wahl» und Rangliste (`forecast.md`). Verzeichnis und Platzseite zeigen ihn weiter.
 - Mehrere Hinweise: schwerster zuerst (Sperrung, Warnung, Info), sonst in der Reihenfolge der Redaktion.
 
+## SUSV und Schifffahrt
+
+Einschränkungen und Projekte des SUSV sowie die Regeln zur Schifffahrt stehen in den Stories 002 bis 005 (`stories/`). Sie sind kein Inhalt der Redaktion: nicht Teil der Version, ohne Wirkung auf die Ausbaustufe. Eine gültige Sperrung des SUSV wirkt wie eine Sperrung der Redaktion.
+
 ## Tauchskizze
 
 Die Tauchskizze (`SiteSketch`) zeigt den Platz unter Wasser. Alle Skizzen sehen gleich aus, darum zeichnet die Redaktion sie im CMS und lädt kein Bild hoch.
@@ -148,7 +152,7 @@ Die Tauchskizze (`SiteSketch`) zeigt den Platz unter Wasser. Alle Skizzen sehen 
 - **Erfassen:** Tab «Skizze» im CMS. Karte (Landeskarte oder Luftbild) mit Tiefenlinien. Art oben wählen, dann auf die Karte klicken: ein Klick setzt ein Symbol, Linien und Flächen entstehen Punkt für Punkt und enden mit Doppelklick oder «Fertig». Ein Klick auf ein Element wählt es: Punkte lassen sich ziehen, dazu Art (gleiche Form), Tiefe und Beschriftung pro Sprache. Escape bricht ab.
 - **Speichern:** als Teil der Version (`DiveSiteContent.Sketch`), mit Vorschlag und Freigabe wie bei allen Inhalten. Die Tabelle hält die aktuelle Skizze als JSON (`DiveSite.Sketch`, `datastructure.md`).
 - **Symbole (Punkte):** Skulptur, Baumstamm, Wrack, Gegenstand, Felsblock, Besonderheit (frei benannt), Gefahr. Einstiege und Orte kommen aus «Einstiege und Orte».
-- **Linien:** Steilwand, Kante, Tauchroute, Leine. **Flächen:** Pflanzenfeld.
+- **Linien:** Steilwand, Kante, Tauchroute, Leine. **Flächen:** Pflanzenfeld, Bojenfeld (`MooringField`, Entscheid Marc, 24.11.2026: Für Bojenfelder gibt es keine schweizweiten Daten, darum zeichnet die Redaktion sie ein; `stories/005-tauchen-und-schifffahrt.md`).
 - **Regeln:** höchstens 200 Elemente, je höchstens 200 Punkte, alle Punkte höchstens 2 km vom Platz, Tiefe 0 bis 200 m, Beschriftung bis 80 Zeichen. Die Art legt die Form fest (Punkt genau 1, Linie ab 2, Fläche ab 3 Punkten). Sonst Fehler `InvalidSketch`.
 - **Beschriftung:** in der Sprache der Seite, sonst Deutsch, sonst der Name der Art. Mit Tiefe «Madonna · 12 m».
 - **Tiefe:** Tiefenlinien aus swissBATHY3D, wo vorhanden (22 Seen), alle 5 m bis 40 m, dazu 50 und 60 m. Sie entstehen einmalig mit `tools/bathymetry/contours.cs` und liegen als statische Kacheln bei der App (`data-sources.md`, «Tiefenlinien»). Sonst Tiefenangaben von Hand an Symbolen und Linien.
@@ -163,7 +167,7 @@ Jedes Bild eines Platzes gehört zu genau einem Abschnitt (`MediaItem.Section`):
 Reihenfolge der Abschnitte siehe `ux.md`. Kurz:
 
 1. Hero mit Tags (aus Bewertungen und `Features`).
-2. Gültige Hinweise als Banner, schwerster zuerst.
+2. Gültige Hinweise und Einschränkungen des SUSV als Banner, schwerster zuerst. Die übrigen Einträge des SUSV stehen im Abschnitt ihres Themas (`stories/004-susv-projekte-nach-thema.md`).
 3. Tauchbedingungen und Prognose.
 4. Bewertungen als kompakter Block (nur bewertete Skalen).
 5. Unter Wasser: Text und Galerie.

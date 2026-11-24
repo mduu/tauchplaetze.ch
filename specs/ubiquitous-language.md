@@ -50,6 +50,16 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Hinweis | `Notice` | notice | avis | avviso |
 | Sperrung, gesperrt | `Closure` | closure, closed | fermeture, fermé | chiusura, chiuso |
 | Warnung | `Warning` | warning | avertissement | avvertenza |
+| Eintrag des SUSV | `SusvEntry` | SUSV entry | information de la FSSS | informazione della FSSS |
+| Tauchverbot, Einschränkung (SUSV) | `Restriction` | diving ban, restriction | interdiction, restriction de plongée | divieto, restrizione di immersione |
+| Defibrillator (AED) | `Defibrillator` | defibrillator (AED) | défibrillateur (DAE) | defibrillatore (DAE) |
+| Mobile Toilette | `MobileToilet` | mobile toilet | toilettes portables | servizi igienici mobili |
+| Förderprojekt | `SupportProject` | support project | projet de soutien | progetto di sostegno |
+| Inklusions-Tauchplatz | `InclusiveSite` | inclusive dive site | site de plongée inclusif | sito di immersione inclusivo |
+| Landungsstelle, Schiffstation | `LandingStage` | landing stage | débarcadère | imbarcadero |
+| Fahrlinie | `FerryRoute` | ferry route | ligne de navigation | linea di navigazione |
+| Hafen | `Harbour` | harbour | port | porto |
+| Bojenfeld | `MooringField` | mooring field | champ de bouées | campo boe |
 | Ausstieg | `ExitPoint` | exit point | point de sortie | punto d'uscita |
 | Uferzugang | `ShoreAccess` | shore access | accès depuis la rive | accesso da riva |
 | Bootstauchgang | `BoatDive` | boat dive | plongée depuis un bateau | immersione da barca |
@@ -81,6 +91,8 @@ Diese Liste legt die Fachbegriffe fest. Code verwendet den englischen Begriff. D
 | Tauchshop | `DiveShop` | dive shop | magasin de plongée | negozio di subacquea |
 | Tauchskizze | `SiteSketch` | site sketch | croquis du site | schizzo del sito |
 | Notfall | `Emergency` | emergency | urgence | emergenza |
+
+Der Verband heisst in der Oberfläche «SUSV» (Deutsch, Englisch) und «FSSS» (Französisch, Italienisch). Das Logo trägt «SUSV-FSSS». Die Begriffe der Themen folgen den Bezeichnungen des Verbands. Eine «Meldung» (`Report`) ist immer die Beobachtung nach einem Tauchgang, nie ein Eintrag des SUSV.
 
 ## Seen (amtliche Namen pro Sprache)
 

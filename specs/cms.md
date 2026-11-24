@@ -152,6 +152,7 @@ Mails gehen über die Mail-Queue (ADR-010), formatiert mit gemeinsamem Layout un
 | Mitwirkende schlagen eine Änderung oder einen neuen Platz vor | alle Moderatoren und Admins | Platz, Autorin, Kommentar, Link auf «Vorschläge» |
 | Ein Vorschlag wird freigegeben | Autorin oder Autor | Link auf den Platz |
 | Ein Vorschlag wird abgelehnt | Autorin oder Autor | Begründung als Zitat |
+| Der Import des SUSV findet neue, geänderte oder entfernte Einträge (`ImportSusvEntries`) | alle Moderatoren und Admins, eine Mail pro Lauf | Zahl und Titel der Einträge pro Gruppe (neu, geändert, entfernt), Link auf `/admin/susv` |
 | Die Moderation ändert einen Platz direkt (speichern, neuer Platz, wiederherstellen) | alle übrigen Admins, solange `Notifications:NotifyAdminsOnModeratorChanges` gilt (Standard an, gedacht für die Anfangsphase) | Platz, Version, Link auf die Versionen |
 
 Konto-Mails (Bestätigung, Passwort) und das Kontaktformular nutzen dasselbe Layout.
@@ -268,6 +269,10 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 - Einfache Listen mit Bearbeiten-Dialog.
 - Seen enthalten zusätzlich die Alplakes-Zuordnung (`AlplakesLakeKey`, Modellnamen). Nur Admins ändern diese Felder.
 
+### Einträge des SUSV (`/admin/susv`)
+
+Die Moderation bestätigt jeden Eintrag des SUSV einmal: Plätze, bei einer Einschränkung Art und Zeitraum. Ablauf und Seite in `stories/002-susv-import-und-moderation.md`.
+
 ### Meldungen (`/admin/meldungen`)
 
 - Kommentare, die auf Freigabe warten (älteste zuerst): «Freigeben» oder «Ablehnen» (Kommentar weg, Sicht und Temperatur bleiben).
@@ -303,8 +308,8 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 | Rolle | Darf |
 |---|---|
 | `Contributor` (Mitwirkende) | Änderungen und neue Plätze vorschlagen, Fotos hochladen, eigene Vorschläge sehen und zurückziehen |
-| `Moderator` | alles von `Contributor`, dazu Vorschläge freigeben oder ablehnen, eigene Änderungen direkt freigeben, archivieren, Konten sperren (ausser Admin-Konten), Meldungen ausblenden |
-| `Admin` | alles, dazu Rollen vergeben, Admin-Konten sperren, Gewässer und Stationen zuordnen, Prognose-Lauf starten |
+| `Moderator` | alles von `Contributor`, dazu Vorschläge freigeben oder ablehnen, eigene Änderungen direkt freigeben, archivieren, Konten sperren (ausser Admin-Konten), Meldungen ausblenden, Einträge des SUSV bestätigen |
+| `Admin` | alles, dazu Rollen vergeben, Admin-Konten sperren, Gewässer und Stationen zuordnen, Prognose-Lauf starten, Import des SUSV starten |
 
 - Anmeldung mit ASP.NET Core Identity: E-Mail plus Passwort. Passkeys sind geplant.
 - **Selbstregistrierung** für Mitwirkende (Entscheid Marc, 17.10.2026): E-Mail bestätigen, Anzeigename wählen (Pseudonym erlaubt). Öffentlich erscheint der Anzeigename nur mit Einwilligung (siehe «Datenschutz in der History»). Gebaut. Ohne `Accounts:RegistrationOpen = true` ist sie zu (Standard). In Prod offen seit 23.10.2026 (Entscheid Marc, App Setting in `deploy/modules/webApp.bicep`). Lokal startet Aspire mit offener Registrierung.
@@ -321,6 +326,7 @@ Abschnitt «Fotos» im Bearbeiten-Modus und Tab «Fotos» im Editor der Moderati
 
 - `Features/Editorial/Commands`: `ProposeDiveSite`, `ProposeChange`, `WithdrawRevision`, `ApproveRevision`, `RejectRevision`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`.
 - `Features/Editorial/Queries`: `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetPendingRevisions`, `GetRevisions`, `CompareRevisions`, `GetMyContributions`.
+- `Features/Susv/Commands`: `ImportSusvEntries` (Job), `StartSusvImport` (Admin), `ReviewSusvEntry` (bestätigen, ändern, ignorieren, «gesehen»). `Features/Susv/Queries`: `GetSusvEntriesForReview`, `GetSusvEntryForReview`. Die Platzseite bekommt die sichtbaren Einträge mit `GetDiveSite`, das Verzeichnis den Filter mit `GetDiveSites`.
 - `Features/Accounts/Queries`: `GetPersonalData` (Seite «Meine Daten», Download und Auskunft durch einen Admin). Eine Query für alle drei Wege.
 - `Features/DiveSites/Queries`: `GetPublicRevisions`, `ComparePublicRevisions` für die öffentliche History.
 - `ProposeChange` eines Moderators ruft intern dieselbe Regel wie `ApproveRevision`. Die Regel steht an einer Stelle.

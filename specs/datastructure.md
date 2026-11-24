@@ -140,6 +140,47 @@ Wichtiger Hinweis zu einem Platz (`dive-site.md`, «Hinweise»). Ein Platz hat n
 
 Der Hinweis gehört zum Aggregat `DiveSite` und ist Teil der Revision (Feld `notices` im Snapshot, fehlt bei Versionen ohne Hinweise).
 
+### SusvEntry
+
+Eintrag des SUSV zu einem Tauchplatz, importiert vom Job `ImportSusvEntries` (ADR-013, `stories/002-susv-import-und-moderation.md`). Nicht Teil der Revision und nicht im Inhaltspaket.
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `Id` | Guid | |
+| `SourceId` | int | `id` der Quelle. Eindeutig zusammen mit `Topic` |
+| `Topic` | enum | `Restriction`, `Defibrillator`, `MobileToilet`, `SupportProject`, `InclusiveSite` |
+| `Location` | geography (Point) | Koordinate der Quelle, nur für den Vorschlag der Plätze |
+| `SourcePublishedAt` | DateTimeOffset, optional | `date` der Quelle |
+| `ContentHash` | char(64) | SHA-256 über Titel, Kurztext, Text und Datum aller Sprachen der Quelle. Ändert er sich, gilt der Eintrag als geändert |
+| `FirstSeenAt`, `LastSeenAt` | DateTimeOffset | erster und letzter Lauf mit diesem Eintrag |
+| `MissedRuns` | tinyint | Läufe in Folge ohne den Eintrag. Ab 2 setzt der Job `RemovedAt` |
+| `RemovedAt` | DateTimeOffset, optional | bei der Quelle entfernt. Der Eintrag ist unsichtbar. Erscheint er wieder, wird das Feld leer |
+| `ReviewStatus` | enum | `Pending` (Standard), `Confirmed`, `Ignored` |
+| `ChangedSinceReview` | bool | Die Quelle hat den Eintrag nach der Prüfung geändert |
+| `NoticeKind` | enum, optional | `Info`, `Warning`, `Closure`. Pflicht bei `Restriction` mit `Confirmed`, sonst leer |
+| `ValidFrom`, `ValidUntil` | date, optional | nur `Restriction`, wie bei `DiveSiteNotice` |
+| `RecursYearly` | bool | nur mit beiden Daten. Es zählen Tag und Monat |
+| `ReviewedAt`, `ReviewedBy` | optional | letzte Prüfung durch die Moderation |
+
+Übersetzbar in `SusvEntryTranslation` (`EntryId`, `Culture`, `Title` string(200), `Teaser` string(300) optional, `Text` string(2000) optional, `DetailUrl` string(300), `IsMachineTranslated`). Deutsch ist Pflicht. `fr` und `it` kommen aus der Quelle, `en` aus der automatischen Übersetzung, mit dem deutschen `DetailUrl`.
+
+Zuordnung zu Plätzen in `SusvEntrySite` (`EntryId`, `DiveSiteId`), PK über beide, je Cascade Delete. Nur bei `Confirmed`.
+
+Sichtbar ist ein Eintrag mit `Confirmed`, ohne `RemovedAt`, an einem veröffentlichten Platz. Eine `Restriction` muss dazu am Tag gültig sein.
+
+### ShippingFeature
+
+Objekt der Schifffahrt für die Ebene «Schifffahrt» (`stories/005-tauchen-und-schifffahrt.md`). Einmalig importiert mit `tools/shipping/` (`data-sources.md`, «Schifffahrt»), als Seed. Nicht Teil der Revision.
+
+| Feld | Typ | Bemerkung |
+|---|---|---|
+| `Id` | int | |
+| `Kind` | enum | `LandingStage` (Punkt), `FerryRoute` (Linie), `Harbour` (Fläche) |
+| `Name` | string(120), optional | Name der Schiffstation oder des Hafens, nicht übersetzt |
+| `Geometry` | geography | Spatial Index |
+| `Source` | enum | `Bav`, `OpenStreetMap` |
+| `SourceKey` | string(40) | Nummer der Haltestelle bzw. OSM-Id. Eindeutig mit `Source` |
+
 ### DiveSiteRevision
 
 Eine Version eines Platzes. Jede Speicherung im CMS erzeugt eine. Ablauf und Datenschutz in `cms.md`, Entscheid in ADR-008.
@@ -390,7 +431,7 @@ Austausch der öffentlichen Inhalte von Prod nach lokal (ADR-011). ZIP mit JSON 
 | `photos.json` | Öffentliche Fotos der Plätze: Id, Platz, Bereich, Einstieg, Art, Grösse, Aufnahmedatum, Tiefe, Fotograf, Links, Reihenfolge, Legende und Alternativtext pro Sprache |
 | `photos/{id}/{breite}.webp` | Öffentliche Bildgrössen, höchstens 20 MB je Datei. Keine Originale. Fehlt eine Grösse, übernimmt der Import das Foto nicht |
 
-Nicht im Paket: Konten, Autoren, Uploader, Kommentare der Versionen, offene oder abgelehnte Vorschläge, Entwürfe, private Fotos, Mails, Prognosen.
+Nicht im Paket: Einträge des SUSV (der lokale Job holt sie selbst), Konten, Autoren, Uploader, Kommentare der Versionen, offene oder abgelehnte Vorschläge, Entwürfe, private Fotos, Mails, Prognosen.
 
 ### WaterBodyDailyIndex
 
@@ -412,6 +453,8 @@ Ohne Platz mit Index gibt es für den Tag keine Zeile (nie 0).
 - `DiveSites (WaterBodyId, Status)`.
 - `DiveSiteEntryPoints (DiveSiteId, SortOrder)`.
 - `DiveSiteNotices (DiveSiteId, SortOrder)`.
+- `ShippingFeatures.Geometry`: Spatial Index. `ShippingFeatures (Source, SourceKey)` eindeutig.
+- `SusvEntries (SourceId, Topic)` eindeutig, `SusvEntries (ReviewStatus)` für die Moderation, `SusvEntrySites (DiveSiteId)` für die Platzseite.
 - `MediaItems (DiveSiteId, Section, SortOrder)`.
 - `DailyForecasts (Date, DiveIndex DESC)` für die Rangliste.
 - `HydroHours (Hour)` für das Löschen nach 30 Tagen.
@@ -422,5 +465,6 @@ Ohne Platz mit Index gibt es für den Tag keine Zeile (nie 0).
 
 - `DailyForecasts`: 2 Jahre in SQL. Danach nur noch als Rohdaten in Blob Storage.
 - `WaterBodyDailyIndexes`: unbegrenzt. Rund 30 000 Zeilen pro Jahr (80 Gewässer × 365 Tage), unter 1 MB.
+- `SusvEntries`: solange die Quelle den Eintrag führt. 30 Tage nach `RemovedAt` löscht der Import den Eintrag mit Übersetzungen und Zuordnungen.
 - `HydroHours`: 30 Tage. Jeder Import löscht ältere Stunden. Die Rohdaten bleiben in Blob Storage.
 - Rohdaten in Blob Storage: unbegrenzt (Trainingsdaten für Phase 2). Lifecycle-Regel: nach 90 Tagen in die Cool-Stufe.

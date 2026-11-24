@@ -176,7 +176,6 @@ Die Specs müssen den neuen Stand beschreiben, im selben Push.
 | Sprache, Format, Ressourcen | `specs/i18n.md` |
 | Fachbegriff neu oder umbenannt | `specs/ubiquitous-language.md` |
 | Architektur, Regeln | `specs/architecture.md` |
-| Erledigter offener Punkt | `specs/open-questions.md` (Punkt entfernen, Entscheid in die passende Spec oder ins ADR) |
 | Entscheid, der ein ADR berührt | Nachtrag im ADR |
 
 **Ist eine Datenquelle betroffen**, zusätzlich prüfen:

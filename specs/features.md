@@ -18,7 +18,7 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 ### Tauchplatz-Verzeichnis – Slice `DiveSites`
 
 - Liste aller Plätze, filterbar nach See, Schwierigkeit und Zugang.
-- Karte mit allen Plätzen (Leaflet mit swisstopo- oder OSM-Kacheln, siehe `open-questions.md`).
+- Karte mit allen Plätzen (Leaflet mit swisstopo-Kacheln, siehe `data-sources.md`).
 - Tauchplatzseite:
   - Hero mit Foto oder Unterwasser-Illustration, Name, See, Tags.
   - Tauchbedingungen heute: Index, Temperaturprofil mit Sprungschicht, Sicht-Indikator, Wind, Algen.
@@ -74,6 +74,15 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 - **Buddy-Gruppen (Slice `BuddyGroups`):** WhatsApp-Gruppen pro Region verwalten und auf Platz- und Gewässerseiten verlinken.
 - **Registrierung für alle (gebaut):** Selbstregistrierung für Mitwirkende mit Bestätigung der E-Mail. Admins ernennen Moderatoren (`/platform/konten`). Mails bei Freigabe oder Ablehnung. In Prod ist die Registrierung noch zu (`Accounts:RegistrationOpen`).
 - **Videos:** Links auf YouTube-Videos pro Platz, eingebettet auf der Platzseite.
+
+### Einträge des SUSV – Slice `Susv` (geplant, Entscheid Marc 24.11.2026)
+
+- Täglicher Import der Einschränkungen und Projekte des SUSV (ADR-013, `data-sources.md`).
+- Die Moderation bestätigt jeden Eintrag einmal: Plätze, bei einer Einschränkung Art und Zeitraum (`/admin/susv`).
+- Platzseite: Einschränkungen im Banner, Defibrillator bei «Notfall», mobile Toilette bei «Restaurants und Toiletten», Förderprojekt und Inklusions-Tauchplatz bei «Lage und Einstiege». Jeder Eintrag mit Logo und Link zum SUSV.
+- Eine Sperrung nimmt den Platz aus «Beste Wahl» und Rangliste. Filter «Inklusion» im Verzeichnis.
+- Seite «Partner» mit dem SUSV als erstem Eintrag (`ux.md`).
+- Details in `stories/` (Stories 001 bis 005).
 
 ## Phase 2
 

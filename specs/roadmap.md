@@ -42,7 +42,7 @@ Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise
 - ✅ Deploy auf Azure (Bicep, GitHub Actions mit what-if und Freigabe, Deploy aus dem Paket, Health Check wartet auf die neue Version). Domains `tauchplaetze.ch`, `www.tauchplaetze.ch`, `sichtweiten.ch` und `www.sichtweiten.ch` mit Zertifikat (21.10.2026). Mail über Hostpoint mit SPF, DKIM und DMARC. DNS bleibt bei Hostpoint, Cloudflare ist ein späterer Ausbau.
 - ⏳ **Inhalt:** Zürichsee und Zugersee vollständig (je 8 bis 12 Plätze auf Stufe 2 mit Fotos aus dem eigenen Archiv). Dazu der Rhein als erster Fluss. Alle weiteren bekannten Plätze als Stufe 0. Entscheid Marc, 17.10.2026: Marc taucht dort am meisten und kann die Prognose am besten beurteilen. Beide Seen haben ein 3D-Modell (Datenstufe 3).
 - ⏳ **Inhalt pro Platz:** 3–6 starke Fotos aus den Originalen des eigenen Archivs. Fotos der Ein- und Ausstiege nach und nach bei eigenen Tauchgängen.
-- 🟡 **Rechtliches:** Impressum, Datenschutz (nDSG) und Haftungshinweis sind online. Die Prüfung des Datenschutzes ist offen (`open-questions.md` #28).
+- 🟡 **Rechtliches:** Impressum, Datenschutz (nDSG) und Haftungshinweis sind online. Die Prüfung des Datenschutzes ist offen.
 - ✅ **Sicherheit:** Security-Review von Infrastruktur und Software (20.10.2026), Befunde behoben: Rate Limits der Konto-Formulare, keine Konto-Enumeration, Security-Header, Rechte der Versionsansicht, Schwärzen von Versionen.
 - ⏳ **Validierung:** Link an alte Kontakte, Clubs, Shops, Facebook- und WhatsApp-Gruppen. Erfolgskriterien in `vision.md`.
 
@@ -57,6 +57,7 @@ Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise
 - ✅ Registrierung für alle: Selbstregistrierung mit Schutz gegen Bots, Rollen vergeben (Admins ernennen Moderatoren) und Mails bei Freigabe oder Ablehnung (`cms.md`). In Prod offen seit 23.10.2026.
 - ✅ Texte automatisch übersetzen (Claude API mit Glossar), im CMS und im Bearbeiten-Modus (22.10.2026, `cms.md`).
 - ⏳ Videos: YouTube-Links pro Platz, eingebettet auf der Platzseite.
+- ⏳ Einträge des SUSV (ADR-013, Specs vom 24.11.2026). Reihenfolge: Seite «Partner», Import mit Bestätigung, Einschränkungen im Banner, Projekte nach Thema. Danach «Tauchen und Schifffahrt»: Ebene «Schifffahrt», Bojenfeld in der Skizze, eigene Seite (`dive-site.md`).
 - Später möglich: Kommentare unter Plätzen, eventuell nur für registrierte Konten und mit Freigabe (`features.md`).
 - Neue Fotos der Ein- und Ausstiege, nach und nach.
 
