@@ -3,6 +3,18 @@ name: CI
 on:
   push:
     branches: [main]
+    # Ein Push nur mit Doku baut und deployt nicht (der Deploy hängt an dieser CI).
+    # Ausnahme: specs/ubiquitous-language.md ist als Glossar der Übersetzung in den Core eingebettet
+    # (Tauchplaetze.Core.csproj). Das spätere Muster gewinnt, darum steht die Datei am Schluss.
+    paths:
+      - '**'
+      - '!specs/**'
+      - '!doc/**'
+      - '!.claude/**'
+      - '!README.md'
+      - '!AGENTS.md'
+      - '!CLAUDE.md'
+      - 'specs/ubiquitous-language.md'
   pull_request:
 
 permissions:

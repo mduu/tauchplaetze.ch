@@ -142,7 +142,7 @@ Nicht verwenden: Azure Front Door (allein teurer als das ganze Budget), Cosmos D
 
 | Workflow | Auslöser | Schritte |
 |---|---|---|
-| `ci.yml` | Push auf `main`, Pull Request | Restore, Build (`TreatWarningsAsErrors`), Tests (inkl. Testcontainers), Prüfung der `.resx`-Vollständigkeit |
+| `ci.yml` | Push auf `main` (nicht bei reiner Doku: `specs/`, `doc/`, `.claude/`, `README.md`, `AGENTS.md`, `CLAUDE.md`; Ausnahme `specs/ubiquitous-language.md`, das Glossar ist in den Core eingebettet), jeder Pull Request | Restore, Build (`TreatWarningsAsErrors`), Tests (inkl. Testcontainers), Prüfung der `.resx`-Vollständigkeit |
 | `deploy.yml` | grüne CI eines Pushes auf `main` in diesem Repository (`workflow_run`), manuell | Publish, Deploy auf App Service (OIDC, Environment `prod-app` ohne Freigabe), Prüfung von `/alive` und `/de`. Läuft erst, wenn `AZURE_CLIENT_ID` gesetzt ist. `workflow_run` mit `branches: [main]` prüft nur den Namen: Der Job prüft darum zusätzlich Ereignis `push` und das eigene Repository, sonst könnte ein Pull Request aus einem Fork mit einem Branch «main» deployen. Actions sind auf Commit-SHAs gepinnt. |
 | `infra.yml` | manuell | what-if (Zusammenfassung im Job), Deploy nach Freigabe |
 
