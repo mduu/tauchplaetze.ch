@@ -61,7 +61,7 @@ public class EcholotTests(SqlServer sql) : SqlTest(sql)
     [SqlFact]
     public async Task Es_erscheinen_die_letzten_20_Neuigkeiten_Plaetze_eines_Tages_als_ein_Eintrag()
     {
-        // Arrange: drei Funktionen aus news.json, dazu 20 Tage mit je einem Platz und ein Tag mit zwei Plätzen.
+        // Arrange: die Funktionen aus news.json, dazu 20 Tage mit je einem Platz und ein Tag mit zwei Plätzen.
         var (moderator, first) = await Prepare("Platz 0");
         var sites = new List<Guid> { first };
         for (var i = 1; i <= 21; i++)
@@ -84,8 +84,9 @@ public class EcholotTests(SqlServer sql) : SqlTest(sql)
         // Assert
         Assert.Equal(20, echolot.Entries.Count);
         Assert.True(echolot.HasOlderEntries);
-        Assert.Equal([EcholotEntryKind.Feature, EcholotEntryKind.Feature, EcholotEntryKind.Feature, EcholotEntryKind.Described], echolot.Entries.Take(4).Select(e => e.Kind));
-        Assert.Equal(["Platz 20", "Platz 21"], echolot.Entries[3].Sites.Select(s => s.Name));
+        var newestDescribed = echolot.Entries.First(e => e.Kind == EcholotEntryKind.Described);
+        Assert.All(echolot.Entries.TakeWhile(e => e != newestDescribed), e => Assert.Equal(EcholotEntryKind.Feature, e.Kind));
+        Assert.Equal(["Platz 20", "Platz 21"], newestDescribed.Sites.Select(s => s.Name));
     }
 
     [SqlFact]

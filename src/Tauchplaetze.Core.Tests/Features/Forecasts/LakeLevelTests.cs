@@ -38,8 +38,9 @@ public class LakeLevelTests(SqlServer sql) : SqlTest(sql)
 
     [SqlTheory]
     [InlineData(405.90, null)]
-    [InlineData(406.10, LakeLevelDeviation.VeryHigh)]
-    public async Task Zwischen_dem_5_und_dem_95_Perzentil_gibt_es_keinen_Hinweis_darueber_ist_der_Pegel_sehr_hoch(double value, LakeLevelDeviation? expected)
+    [InlineData(406.10, null)]
+    [InlineData(406.30, LakeLevelDeviation.VeryHigh)]
+    public async Task Einen_Hinweis_gibt_es_erst_ausserhalb_des_ueblichen_Bereichs_und_ab_30_cm_Abstand_zum_Median(double value, LakeLevelDeviation? expected)
     {
         // Arrange
         var site = await PrepareErlenbach();

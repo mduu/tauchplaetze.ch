@@ -45,7 +45,7 @@ internal class GetSiteLakeLevelHandler(TauchplaetzeDbContext dbContext, TimeProv
             station.Name,
             reading.Level,
             reading.MeasuredAt,
-            LakeLevelRules.DeviationOf(reading.Level, low, high),
+            LakeLevelRules.DeviationOf(reading.Level, low, median, high),
             reading.Level - median);
     }
 }

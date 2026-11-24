@@ -64,7 +64,7 @@
         <section class="page-section" aria-labelledby="conditions">
             @if (forecast is { Days.Count: > 0 })
             {
-                <ForecastPanel Forecast="forecast" Discharge="discharge" History="history">
+                <ForecastPanel Forecast="forecast" Discharge="discharge" History="history" LakeLevel="lakeLevel">
                     <HeadAction>
                         <ReportButton Slug="@site.Slug" Count="reports.Count" />
                     </HeadAction>

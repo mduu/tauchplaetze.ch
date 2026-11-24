@@ -206,6 +206,30 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.DoesNotContain("data-lake-level", usual);
     }
 
+    [Theory]
+    [InlineData(-0.14, "−14 cm", "Seepegel 405.78 m ü. M. · 14 cm unter üblich")]
+    [InlineData(0.21, "+21 cm", "Seepegel 405.78 m ü. M. · 21 cm über üblich")]
+    [InlineData(0.004, "üblich", "Seepegel 405.78 m ü. M. · wie üblich")]
+    public async Task Die_Kachel_Stroemung_zeigt_den_Seepegel_mit_Abstand_zum_ueblichen_Stand_auch_ohne_Hinweis(double fromMedian, string shown, string label)
+    {
+        // Arrange
+        using var browser = app.Browser();
+        var answer = app.LakeLevel.Answer;
+        app.LakeLevel.Answer = _ => new SiteLakeLevel("2209", "Zürichsee – Zürich", 405.78m, DateTimeOffset.UtcNow, null, (decimal)fromMedian);
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithForecast, TestContext.Current.CancellationToken);
+
+        // Assert
+        app.LakeLevel.Answer = answer;
+        var text = VisibleText.Of(html);
+        Assert.Contains("Strömung und Pegel", text);
+        Assert.Contains("405.78 m ü. M.", text);
+        Assert.Contains(shown, text);
+        Assert.Contains($"aria-label=\"{label}\"", System.Net.WebUtility.HtmlDecode(html));
+        Assert.DoesNotContain("data-lake-level=", html);
+    }
+
     [Fact]
     public async Task Mit_Einstiegen_zeigt_die_Karte_die_Einstiege_statt_des_Platzpunkts()
     {

@@ -1,0 +1,46 @@
+.level-gauge {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    background: var(--color-chart-surface);
+    overflow: hidden;
+}
+
+.water {
+    fill: var(--color-primary);
+    opacity: 0.18;
+}
+
+.water-line {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 2;
+}
+
+.level-gauge[data-lake-level-gauge="unusual"] .water {
+    fill: var(--color-signal);
+}
+
+.level-gauge[data-lake-level-gauge="unusual"] .water-line {
+    stroke: var(--color-signal);
+}
+
+.usual-line {
+    stroke: var(--color-text-muted);
+    stroke-width: 1;
+    stroke-dasharray: 4 3;
+}
+
+.usual-label {
+    fill: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 8px;
+}
+
+.offset-label text {
+    fill: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+}

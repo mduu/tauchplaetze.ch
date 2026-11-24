@@ -106,10 +106,16 @@
   <data name="Reason_ClarityStale" xml:space="preserve"><value>older satellite image</value></data>
   <data name="Visibility_Sentinel2Shore" xml:space="preserve"><value>Satellite (Sentinel-2) of {0}: approx. {1} m near the shore</value></data>
   <data name="Tile_Current" xml:space="preserve"><value>Current</value></data>
+  <data name="Tile_CurrentAndLevel" xml:space="preserve"><value>Current and level</value></data>
   <data name="Current_Calm" xml:space="preserve"><value>calm</value></data>
   <data name="Current_Noticeable" xml:space="preserve"><value>noticeable</value></data>
   <data name="Current_Strong" xml:space="preserve"><value>strong</value></data>
   <data name="Current_Detail" xml:space="preserve"><value>{0} cm/s towards {1} · 5–30 m</value></data>
+  <data name="LakeLevel_Note_Below" xml:space="preserve"><value>Lake level {0} m a.s.l. · {1} cm below usual</value></data>
+  <data name="LakeLevel_Note_Above" xml:space="preserve"><value>Lake level {0} m a.s.l. · {1} cm above usual</value></data>
+  <data name="LakeLevel_Note_Usual" xml:space="preserve"><value>Lake level {0} m a.s.l. · as usual</value></data>
+  <data name="LakeLevel_Usual" xml:space="preserve"><value>usual</value></data>
+  <data name="LakeLevel_Value" xml:space="preserve"><value>{0} m a.s.l.</value></data>
   <data name="Compass_N" xml:space="preserve"><value>north</value></data>
   <data name="Compass_NE" xml:space="preserve"><value>north-east</value></data>
   <data name="Compass_E" xml:space="preserve"><value>east</value></data>

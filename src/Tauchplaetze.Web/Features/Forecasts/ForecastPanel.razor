@@ -65,14 +65,25 @@
         @if (Today is { CurrentLevel: { } level, CurrentSpeed: { } speed, CurrentDirection: { } direction })
         {
             <div class="stat" data-current="@level">
-                <div class="label">@L["Tile_Current"]</div>
-                <div class="stat-value">
-                    <svg class="current-arrow" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="transform: rotate(@(direction)deg)">
-                        <path d="M9 2v14M9 2l-4 5M9 2l4 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                    @L[$"Current_{level}"]
+                <div class="label">@L[LakeLevel is null ? "Tile_Current" : "Tile_CurrentAndLevel"]</div>
+                <div class="stat-split" data-with-level="@(LakeLevel is null ? "false" : "true")">
+                    <div>
+                        <div class="stat-value">
+                            <svg class="current-arrow" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" style="transform: rotate(@(direction)deg)">
+                                <path d="M9 2v14M9 2l-4 5M9 2l4 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            @L[$"Current_{level}"]
+                        </div>
+                        <div class="stat-note">@L["Current_Detail", ForecastFormat.CentimetresPerSecond(speed), L[$"Compass_{ForecastFormat.Compass(direction)}"]]</div>
+                    </div>
+                    @if (LakeLevel is not null)
+                    {
+                        <div class="level">
+                            <LakeLevelGauge Level="LakeLevel" Label="@LakeLevelNote(LakeLevel)" />
+                            <span class="level-caption" data-lake-level-note>@L["LakeLevel_Value", LakeLevel.Level.ToString("0.00", CultureInfo.CurrentCulture)]</span>
+                        </div>
+                    }
                 </div>
-                <div class="stat-note">@L["Current_Detail", ForecastFormat.CentimetresPerSecond(speed), L[$"Compass_{ForecastFormat.Compass(direction)}"]]</div>
             </div>
         }
         @if (Discharge is { Temperature: { } temperature })
@@ -144,6 +155,10 @@
     [Parameter]
     public SiteDischarge? Discharge { get; set; }
 
+    /// <summary>Der Pegel am See als Zeile in der Kachel «Strömung», sonst <c>null</c>.</summary>
+    [Parameter]
+    public SiteLakeLevel? LakeLevel { get; set; }
+
     /// <summary>Eine Aktion im Kopf rechts über dem Index, zum Beispiel «Tauchgang melden».</summary>
     [Parameter]
     public RenderFragment? HeadAction { get; set; }
@@ -157,6 +172,15 @@
     public SiteIndexHistory? History { get; set; }
 
     private ForecastDay Today => Forecast.Days[0];
+
+    private string LakeLevelNote(SiteLakeLevel level)
+    {
+        var metres = level.Level.ToString("0.00", CultureInfo.CurrentCulture);
+        var centimetres = Math.Round(Math.Abs(level.FromMedian) * 100);
+        return centimetres == 0
+            ? L["LakeLevel_Note_Usual", metres]
+            : L[level.FromMedian < 0 ? "LakeLevel_Note_Below" : "LakeLevel_Note_Above", metres, centimetres.ToString("0", CultureInfo.CurrentCulture)];
+    }
 
     private sealed record Trend(ChartSeries Series, IReadOnlyList<ChartTick> Markers, HistoryCharts.Range Range, string Aria);
 

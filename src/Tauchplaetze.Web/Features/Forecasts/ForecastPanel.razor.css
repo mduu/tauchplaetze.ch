@@ -157,6 +157,33 @@
     color: var(--color-text-muted);
 }
 
+/* Kachel «Strömung und Pegel»: links die Strömung, rechts der Pegel als Grafik. Mit Pegel ist die Strömung kleiner. */
+.stat-split[data-with-level="true"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    margin-top: 6px;
+}
+
+/* Beschriftung unter der Grafik, wie bei den Mini-Diagrammen der anderen Kacheln. */
+.level-caption {
+    display: block;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-subtle);
+}
+
+.stat-split[data-with-level="true"] .stat-value {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.stat-split[data-with-level="true"] .stat-note {
+    font-size: 13px;
+}
+
 .days {
     background: var(--color-surface);
     border: 1px solid var(--color-border);

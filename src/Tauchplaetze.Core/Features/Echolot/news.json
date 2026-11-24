@@ -1,5 +1,26 @@
 [
   {
+    "date": "2026-11-24",
+    "texts": {
+      "de": {
+        "title": "Seepegel bei den Tauchbedingungen",
+        "text": "Die Kachel «Strömung und Pegel» zeigt neu auch den Seepegel und wie weit er vom üblichen Stand entfernt ist. Der Hinweis auf einen sehr tiefen oder sehr hohen Pegel erscheint erst ab 30 cm Abstand."
+      },
+      "en": {
+        "title": "Lake level with the dive conditions",
+        "text": "The «Current and level» tile now also shows the lake level and how far it is from the usual level. The notice about a very low or very high level only appears from a difference of 30 cm."
+      },
+      "fr": {
+        "title": "Niveau du lac dans les conditions de plongée",
+        "text": "La tuile « Courant et niveau » indique désormais aussi le niveau du lac et son écart par rapport au niveau habituel. L’avis de niveau très bas ou très haut n’apparaît qu’à partir de 30 cm d’écart."
+      },
+      "it": {
+        "title": "Livello del lago nelle condizioni d’immersione",
+        "text": "Il riquadro «Corrente e livello» mostra ora anche il livello del lago e quanto si scosta dal livello abituale. L’avviso di livello molto basso o molto alto compare solo a partire da 30 cm di scarto."
+      }
+    }
+  },
+  {
     "date": "2026-11-21",
     "texts": {
       "de": {

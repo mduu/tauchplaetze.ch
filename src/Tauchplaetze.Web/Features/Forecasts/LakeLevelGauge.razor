@@ -1,0 +1,55 @@
+@using Tauchplaetze.Core.Features.Forecasts
+@inject IStringLocalizer<ForecastStrings> L
+
+<svg class="level-gauge" viewBox="0 0 @Svg(Width) @Svg(Height)" role="img" aria-label="@Label" data-lake-level-gauge="@(Level.Deviation is null ? "usual" : "unusual")">
+    <path class="water" d="@Wave(close: true)" />
+    <path class="water-line" d="@Wave(close: false)" />
+    <line class="usual-line" x1="0" y1="@Svg(Y(0))" x2="@Svg(Width)" y2="@Svg(Y(0))" />
+    <text class="usual-label" x="@Svg(Width - 3)" y="@Svg(UsualLabelY)" text-anchor="end">@L["LakeLevel_Usual"]</text>
+    @if (Centimetres != 0)
+    {
+        <g class="offset-label"><text x="5" y="@Svg(OffsetLabelY)">@OffsetText</text></g>
+    }
+</svg>
+
+@code {
+    /// <summary>Der Pegel mit Abstand zum üblichen Stand und üblichem Bereich.</summary>
+    [Parameter, EditorRequired]
+    public SiteLakeLevel Level { get; set; } = default!;
+
+    /// <summary>Textalternative: dieselbe Aussage wie die Zeile unter der Grafik.</summary>
+    [Parameter, EditorRequired]
+    public string Label { get; set; } = "";
+
+    private const double Width = 120;
+
+    private const double Height = 52;
+
+    private const double Middle = 32;
+
+    private const double HalfRange = 13;
+
+    private decimal Centimetres => Math.Round(Level.FromMedian * 100);
+
+    /// <summary>Die Skala zeigt mindestens ±30 cm, bei grösserem Abstand so viel, dass der Pegel Platz hat.</summary>
+    private double Span => (double)Math.Max(0.30m, Math.Abs(Level.FromMedian));
+
+    private double Y(decimal fromMedian) => Middle - (double)fromMedian / Span * HalfRange;
+
+    private string OffsetText => (Level.FromMedian < 0 ? "−" : "+") + Math.Abs(Centimetres).ToString("0", CultureInfo.CurrentCulture) + " cm";
+
+    /// <summary>Über der oberen der beiden Linien, damit die Zahl keine Linie überdeckt.</summary>
+    private double OffsetLabelY => Math.Min(Y(0), Y(Level.FromMedian)) - 6;
+
+    /// <summary>Unter der Linie, wenn der Pegel darüber steht. Sonst läge das Wort im Wasser über der Linie.</summary>
+    private double UsualLabelY => Level.FromMedian > 0 ? Y(0) + 9 : Y(0) - 4;
+
+    private string Wave(bool close)
+    {
+        var y = Y(Level.FromMedian);
+        var line = $"M0 {Svg(y)} q5 -3 10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0";
+        return close ? $"{line} V{Svg(Height)} H0 Z" : line;
+    }
+
+    private static string Svg(double value) => value.ToString("0.#", CultureInfo.InvariantCulture);
+}
