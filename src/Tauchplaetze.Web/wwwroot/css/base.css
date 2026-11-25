@@ -463,8 +463,8 @@ a:hover {
 }
 
 .map-place-flagholder {
-  background: var(--color-bg);
-  border-color: var(--color-text);
+  border-color: transparent;
+  background: none;
 }
 
 .map-label-kind {

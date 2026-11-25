@@ -176,7 +176,7 @@ window.tauchplaetzeMap = (function () {
   }
 
   // Orte an Land (Parkplatz, Toilette, Flaggenhalter) als Schild, Einstiege als Punkt.
-  const placeSigns = { parking: 'P', toilet: 'WC', flagholder: '<svg viewBox="0 0 14 10" width="14" height="10" aria-hidden="true"><path d="M0 0h7v10H0z" style="fill:#fff"/><path d="M7 0h7l-3 5 3 5H7z" style="fill:var(--color-place-parking)"/></svg>' };
+  const placeSigns = { parking: 'P', toilet: 'WC', flagholder: '<svg viewBox="-1 -1 26 20" width="26" height="20" aria-hidden="true" style="display:block"><path d="M0 0h12v18H0z" style="fill:#fff"/><path d="M12 0h12l-5 9 5 9H12z" style="fill:var(--color-place-parking)"/><path d="M0 0h24l-5 9 5 9H0z" style="fill:none;stroke:var(--color-bg);stroke-width:1.5;stroke-linejoin:round"/></svg>' };
 
   function entryMarker(point) {
     const name = point.name ? escapeHtml(point.name) + ' ' : '';

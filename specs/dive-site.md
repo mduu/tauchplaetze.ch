@@ -122,7 +122,7 @@ Ein Platz hat null, einen oder mehrere Einstiege und Orte (`DiveSiteEntryPoint`)
 - Optional: Name (z.B. «Treppe beim Bootshaus»), Beschreibung, Bilder.
 - Die Reihenfolge legt die Redaktion fest. Der erste Einstieg ist der Hauptzugang.
 - Für die Ausbaustufe zählt nur ein beschriebener Weg ins Wasser, kein Parkplatz, keine Toilette und kein Flaggenhalter.
-- Karte: Einstiege als Punkt, Parkplatz als blaues Schild «P», Toilette als Schild «WC», Flaggenhalter als Schild mit der Flagge «A» (weiss und blau), alle mit Name und Art beschriftet.
+- Karte: Einstiege als Punkt, Parkplatz als blaues Schild «P», Toilette als Schild «WC», Flaggenhalter als Flagge «A» (weiss und blau, mit Kontur, ohne Schild), alle mit Name und Art beschriftet.
 - `DiveSite.Location` bleibt die Position für Prognose und Karte. Ohne Einstieg zeigt die Karte nur diese Position.
 
 ## Hinweise
