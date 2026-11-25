@@ -462,6 +462,11 @@ a:hover {
   color: var(--color-place-parking-text);
 }
 
+.map-place-flagholder {
+  background: var(--color-bg);
+  border-color: var(--color-text);
+}
+
 .map-label-kind {
   margin-left: 2px;
   color: var(--color-text-subtle);

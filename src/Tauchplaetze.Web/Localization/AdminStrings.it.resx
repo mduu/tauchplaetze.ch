@@ -167,6 +167,7 @@
   <data name="Error_InvalidNotice" xml:space="preserve"><value>Un avviso richiede un testo in tedesco (al massimo 500 caratteri). «Valido fino al» non può precedere «Valido dal».</value></data>
   <data name="Kind_Parking" xml:space="preserve"><value>Parcheggio</value></data>
   <data name="Kind_Toilet" xml:space="preserve"><value>Servizi igienici</value></data>
+  <data name="Kind_FlagHolder" xml:space="preserve"><value>Supporto per bandiera</value></data>
   <data name="Edit_Tab_Sketch" xml:space="preserve"><value>Schizzo</value></data>
   <data name="Sketch_Help" xml:space="preserve"><value>Scegli un tipo qui sopra e posizionalo sulla mappa. Clicca su un elemento per spostarlo, etichettarlo o assegnargli una profondità.</value></data>
   <data name="Sketch_Hint_Point" xml:space="preserve"><value>Clicca sulla mappa per posizionare il simbolo.</value></data>

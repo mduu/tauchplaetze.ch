@@ -167,6 +167,7 @@
   <data name="Error_InvalidNotice" xml:space="preserve"><value>A notice needs a German text (at most 500 characters). «Valid until» must not be before «Valid from».</value></data>
   <data name="Kind_Parking" xml:space="preserve"><value>Parking</value></data>
   <data name="Kind_Toilet" xml:space="preserve"><value>Toilet</value></data>
+  <data name="Kind_FlagHolder" xml:space="preserve"><value>Flag holder</value></data>
   <data name="Edit_Tab_Sketch" xml:space="preserve"><value>Sketch</value></data>
   <data name="Sketch_Help" xml:space="preserve"><value>Pick a kind above and place it on the map. Click an element to move it, label it or give it a depth.</value></data>
   <data name="Sketch_Hint_Point" xml:space="preserve"><value>Click on the map to place the symbol.</value></data>

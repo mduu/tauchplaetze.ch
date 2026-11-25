@@ -66,6 +66,9 @@ public enum EntryPointKind
 
     /// <summary>Toilette.</summary>
     Toilet,
+
+    /// <summary>Fester Halter für die Taucherflagge «A».</summary>
+    FlagHolder,
 }
 
 /// <summary>Regeln zur Art eines Orts.</summary>

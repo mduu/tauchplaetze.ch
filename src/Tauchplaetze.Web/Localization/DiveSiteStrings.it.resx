@@ -69,6 +69,7 @@
   <data name="EntryPoint_Exit" xml:space="preserve"><value>Punto d'uscita</value></data>
   <data name="EntryPoint_Parking" xml:space="preserve"><value>Parcheggio</value></data>
   <data name="EntryPoint_Toilet" xml:space="preserve"><value>Servizi igienici</value></data>
+  <data name="EntryPoint_FlagHolder" xml:space="preserve"><value>Supporto per bandiera</value></data>
   <data name="Ratings_Title" xml:space="preserve"><value>Il sito</value></data>
   <data name="Rating_Value" xml:space="preserve"><value>{0} su 5</value></data>
   <data name="Rating_Info" xml:space="preserve"><value>Cosa significa «{0}»?</value></data>

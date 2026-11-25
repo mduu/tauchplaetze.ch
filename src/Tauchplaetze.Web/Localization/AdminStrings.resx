@@ -167,6 +167,7 @@
   <data name="Error_InvalidNotice" xml:space="preserve"><value>Ein Hinweis braucht einen deutschen Text (höchstens 500 Zeichen). «Gültig bis» darf nicht vor «Gültig ab» liegen.</value></data>
   <data name="Kind_Parking" xml:space="preserve"><value>Parkplatz</value></data>
   <data name="Kind_Toilet" xml:space="preserve"><value>Toilette</value></data>
+  <data name="Kind_FlagHolder" xml:space="preserve"><value>Flaggenhalter</value></data>
   <data name="Edit_Tab_Sketch" xml:space="preserve"><value>Skizze</value></data>
   <data name="Sketch_Help" xml:space="preserve"><value>Wähle oben eine Art und setze sie auf der Karte. Klicke ein Element an, um es zu verschieben, zu beschriften oder mit einer Tiefe zu versehen.</value></data>
   <data name="Sketch_Hint_Point" xml:space="preserve"><value>Klicke auf die Karte, um das Symbol zu setzen.</value></data>

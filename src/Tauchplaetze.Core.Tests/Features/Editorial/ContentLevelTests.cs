@@ -42,7 +42,8 @@ public class ContentLevelTests
     [InlineData(EntryPointKind.Entry, "en")]
     [InlineData(EntryPointKind.Parking, "de")]
     [InlineData(EntryPointKind.Toilet, "de")]
-    public void Ohne_deutsch_beschriebenen_Einstieg_bleibt_Stufe_0_ein_Parkplatz_oder_eine_Toilette_zaehlt_nicht(EntryPointKind kind, string culture)
+    [InlineData(EntryPointKind.FlagHolder, "de")]
+    public void Ohne_deutsch_beschriebenen_Einstieg_bleibt_Stufe_0_ein_Ort_an_Land_zaehlt_nicht(EntryPointKind kind, string culture)
     {
         // Arrange
         var content = Basic with { EntryPoints = [new EntryPointContent(Guid.NewGuid(), 47.28, 8.6, kind, [new EntryPointText(culture, "Beim Hafen", "Gleich neben dem Hafen.")])] };

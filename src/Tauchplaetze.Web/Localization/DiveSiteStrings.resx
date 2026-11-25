@@ -69,6 +69,7 @@
   <data name="EntryPoint_Exit" xml:space="preserve"><value>Ausstieg</value></data>
   <data name="EntryPoint_Parking" xml:space="preserve"><value>Parkplatz</value></data>
   <data name="EntryPoint_Toilet" xml:space="preserve"><value>Toilette</value></data>
+  <data name="EntryPoint_FlagHolder" xml:space="preserve"><value>Flaggenhalter</value></data>
   <data name="Ratings_Title" xml:space="preserve"><value>Der Platz</value></data>
   <data name="Rating_Value" xml:space="preserve"><value>{0} von 5</value></data>
   <data name="Rating_Info" xml:space="preserve"><value>Was heisst «{0}»?</value></data>

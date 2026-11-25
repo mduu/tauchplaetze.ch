@@ -109,14 +109,14 @@ Alle `…Rating`-Felder haben einen Check Constraint `BETWEEN 1 AND 5`. Im Code 
 
 ### DiveSiteEntryPoint
 
-Einstieg, Ausstieg oder Ort an Land (Parkplatz, Toilette) eines Platzes. Ein Platz hat null bis viele.
+Einstieg, Ausstieg oder Ort an Land (Parkplatz, Toilette, Flaggenhalter) eines Platzes. Ein Platz hat null bis viele.
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
 | `Id` | Guid | |
 | `DiveSiteId` | Guid | FK `DiveSite`, Cascade Delete |
 | `Location` | geography (Point) | Pin auf der Karte |
-| `Kind` | enum | `EntryAndExit` (Standard), `Entry`, `Exit`, `Parking`, `Toilet` |
+| `Kind` | enum | `EntryAndExit` (Standard), `Entry`, `Exit`, `Parking`, `Toilet`, `FlagHolder` |
 | `SortOrder` | int | erster Eintrag = Hauptzugang |
 
 Übersetzbar in `DiveSiteEntryPointTranslation` (`EntryPointId`, `Culture`, `Name` string(80) optional, `Description` string(1000) optional).

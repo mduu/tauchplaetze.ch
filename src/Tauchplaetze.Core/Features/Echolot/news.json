@@ -1,5 +1,26 @@
 [
   {
+    "date": "2026-11-25",
+    "texts": {
+      "de": {
+        "title": "Flaggenhalter auf der Karte",
+        "text": "Die Karte eines Tauchplatzes kann neu zeigen, wo ein fester Halter für die Taucherflagge steht. Die Halter kommen nach und nach dazu."
+      },
+      "en": {
+        "title": "Flag holders on the map",
+        "text": "The map of a dive site can now show where a fixed holder for the diver flag stands. The holders are added step by step."
+      },
+      "fr": {
+        "title": "Supports de pavillon sur la carte",
+        "text": "La carte d’un site de plongée peut désormais indiquer où se trouve un support fixe pour le pavillon de plongée. Les supports s’ajoutent peu à peu."
+      },
+      "it": {
+        "title": "Supporti per bandiera sulla mappa",
+        "text": "La mappa di un sito d’immersione può ora mostrare dove si trova un supporto fisso per la bandiera di immersione. I supporti si aggiungono poco a poco."
+      }
+    }
+  },
+  {
     "date": "2026-11-24",
     "texts": {
       "de": {

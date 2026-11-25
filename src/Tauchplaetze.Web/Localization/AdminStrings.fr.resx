@@ -167,6 +167,7 @@
   <data name="Error_InvalidNotice" xml:space="preserve"><value>Un avis demande un texte en allemand (500 caractères au plus). « Valable jusqu'au » ne peut pas précéder « Valable dès le ».</value></data>
   <data name="Kind_Parking" xml:space="preserve"><value>Parking</value></data>
   <data name="Kind_Toilet" xml:space="preserve"><value>Toilettes</value></data>
+  <data name="Kind_FlagHolder" xml:space="preserve"><value>Support de pavillon</value></data>
   <data name="Edit_Tab_Sketch" xml:space="preserve"><value>Croquis</value></data>
   <data name="Sketch_Help" xml:space="preserve"><value>Choisis un type ci-dessus et place-le sur la carte. Clique sur un élément pour le déplacer, le nommer ou lui donner une profondeur.</value></data>
   <data name="Sketch_Hint_Point" xml:space="preserve"><value>Clique sur la carte pour placer le symbole.</value></data>

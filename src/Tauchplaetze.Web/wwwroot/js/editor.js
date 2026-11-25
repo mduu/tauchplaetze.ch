@@ -224,8 +224,8 @@ window.tauchplaetzeSketchEditor = (function () {
     }
   }
 
-  // Einstiege und Orte als verschiebbare Punkte. Orte an Land (Parkplatz, Toilette) als Schild wie auf der Platzseite.
-  const placeSigns = { parking: 'P', toilet: 'WC' };
+  // Einstiege und Orte als verschiebbare Punkte. Orte an Land (Parkplatz, Toilette, Flaggenhalter) als Schild wie auf der Platzseite.
+  const placeSigns = { parking: 'P', toilet: 'WC', flagholder: '<svg viewBox="0 0 14 10" width="14" height="10" aria-hidden="true"><path d="M0 0h7v10H0z" style="fill:#fff"/><path d="M7 0h7l-3 5 3 5H7z" style="fill:var(--color-place-parking)"/></svg>' };
 
   // Namen kommen von Mitwirkenden: nur als Text ins DOM, nie als HTML.
   function textElement(text) {

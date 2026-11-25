@@ -118,11 +118,11 @@ Viele Plätze haben mehrere Namen, z.B. Steinrad, auch «Grosser Parkplatz» ode
 Ein Platz hat null, einen oder mehrere Einstiege und Orte (`DiveSiteEntryPoint`). Die Redaktion erfasst sie im selben Tab.
 
 - Jeder Eintrag hat eine Koordinate (Pin auf der Karte).
-- Art: Wege ins Wasser (`EntryAndExit`, `Entry`, `Exit`) oder Orte an Land (`Parking`, `Toilet`). Weitere Orte an Land kommen als neue Art dazu.
+- Art: Wege ins Wasser (`EntryAndExit`, `Entry`, `Exit`) oder Orte an Land (`Parking`, `Toilet`, `FlagHolder`). Ein Flaggenhalter ist ein fester Halter für die Taucherflagge «A» (Entscheid Marc, 25.11.2026). Weitere Orte an Land kommen als neue Art dazu.
 - Optional: Name (z.B. «Treppe beim Bootshaus»), Beschreibung, Bilder.
 - Die Reihenfolge legt die Redaktion fest. Der erste Einstieg ist der Hauptzugang.
-- Für die Ausbaustufe zählt nur ein beschriebener Weg ins Wasser, kein Parkplatz und keine Toilette.
-- Karte: Einstiege als Punkt, Parkplatz als blaues Schild «P», Toilette als Schild «WC», alle mit Name und Art beschriftet.
+- Für die Ausbaustufe zählt nur ein beschriebener Weg ins Wasser, kein Parkplatz, keine Toilette und kein Flaggenhalter.
+- Karte: Einstiege als Punkt, Parkplatz als blaues Schild «P», Toilette als Schild «WC», Flaggenhalter als Schild mit der Flagge «A» (weiss und blau), alle mit Name und Art beschriftet.
 - `DiveSite.Location` bleibt die Position für Prognose und Karte. Ohne Einstieg zeigt die Karte nur diese Position.
 
 ## Hinweise
