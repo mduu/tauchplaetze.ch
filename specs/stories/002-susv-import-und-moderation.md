@@ -10,7 +10,9 @@ Ein Job übernimmt täglich die Einschränkungen und Projekte, die der SUSV pro 
 
 - **Zusage:** Die Geschäftsführung des SUSV erlaubt die Übernahme der Publikationen zu Einschränkungen (Antwort auf die Anfrage von Marc, November 2026). Sie wünscht, dass die Massnahmen des SUSV an den Plätzen sichtbar sind.
 - **Quellenangabe:** Jeder Eintrag trägt das Logo des SUSV und einen Link auf seine Seite bei susv.ch. Die Seite «Über» nennt den SUSV bei den Datenquellen.
-- **Logo:** das SVG aus dem Kopf von susv.ch, unverändert. Nur mit der Erlaubnis des SUSV. Bis dahin steht «SUSV» als Text.
+- **Logo:** Der SUSV hat das Logo geliefert und die Nutzung erlaubt (25.11.2026). Korrekt ist die Fassung mit dem Namen des Verbands in drei Sprachen und den Webadressen. Wo der Platz fehlt, ist das Signet ohne Namen erlaubt. Das Logo bleibt unverändert. Das Signet gibt es als SVG im Kopf von susv.ch. Die gelieferten Dateien liegen in `assets/partner/susv/` (`susv-signet.jpg`, `susv-logo-mit-namen.jpg`).
+- **Abruf:** Der SUSV erlaubt den regelmässigen Abruf seiner Seite (25.11.2026). Die Quelle ändert nicht täglich.
+- **Vollständigkeit:** Der SUSV veröffentlicht nur, was ihm gemeldet wird. Die Liste der Einschränkungen ist nie vollständig.
 - **Texte:** unverändert, gekürzt nur am Satzende. Fotos übernehmen wir nicht.
 
 ## Bestätigung durch die Moderation
@@ -107,7 +109,6 @@ Entität: `SusvEntry` (`datastructure.md`). Slice und Handler: `cms.md`, «Slice
 
 | Punkt | Nächster Schritt |
 |---|---|
-| **Abruf:** Der Import ruft täglich die Karten-Schnittstelle von susv.ch ab. Sie ist nicht als öffentliche API beschrieben. | Marc informiert den SUSV über Zeitplan, Zahl der Calls und `User-Agent`. |
-| **Abgeschlossene Projekte ohne Daten:** Die Seite des SUSV nennt 19 Plätze als Text, nur 5 sind Einträge der Karte. Art und Jahr der Massnahme fehlen. | Den SUSV fragen, ob er die übrigen auf der Karte erfasst. Sonst erfasst die Redaktion sie von Hand. |
+| **Abgeschlossene Projekte ohne Daten:** Die Seite des SUSV nennt 19 Plätze als Text, nur 5 sind Einträge der Karte. Art und Jahr der Massnahme fehlen. | Der SUSV klärt intern, ob und wie er die übrigen nachträgt (Antwort vom 25.11.2026). Bis dahin erfasst die Redaktion sie von Hand. |
 
 Hängt von keiner anderen Story ab. Die Stories 003 und 004 bauen darauf auf.

@@ -28,7 +28,8 @@ Wunsch des SUSV (November 2026): Die Publikationen zu Einschränkungen sollen au
 Gilt für jeden Eintrag des SUSV, auch in Story 004 (Komponente `SusvBadge`, `design-system.md`).
 
 - **Logo und Link:** Jeder Eintrag trägt das Logo des SUSV und einen Link auf seine eigene Seite bei susv.ch (`DetailUrl`), in der Sprache der Seite, sonst auf Deutsch. Der Link öffnet in einem neuen Tab. Bei einer Einschränkung heisst er «Mehr beim SUSV».
-- Ohne Erlaubnis für das Logo steht «SUSV» als Text.
+- Im Banner steht das Signet ohne Namen, denn der Platz ist knapp (erlaubt vom SUSV, Story 002).
+- **Kein Eintrag heisst nicht «erlaubt»:** Die Liste des SUSV ist nie vollständig (Story 002). Die Seite schreibt darum nirgends, dass an einem Platz keine Einschränkung gilt.
 
 Aufbau der Platzseite: `ux.md`, «Tauchplatzseite», Abschnitt 2. Rangliste: `forecast.md`, «Rangliste».
 
@@ -44,8 +45,6 @@ Aufbau der Platzseite: `ux.md`, «Tauchplatzseite», Abschnitt 2. Rangliste: `fo
 
 ## Abhängigkeiten und offene Punkte
 
-| Punkt | Nächster Schritt |
-|---|---|
-| **Logo:** Die Antwort des SUSV steht aus (Story 001). | Bis dahin steht «SUSV» als Text. |
+Keine offenen Punkte. Das Logo ist geklärt (Story 002).
 
 Braucht Story 002.

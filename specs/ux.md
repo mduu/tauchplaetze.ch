@@ -112,7 +112,7 @@ Pfad `/de/schifffahrt`, `/en/shipping`, `/fr/navigation`, `/it/navigazione` (Vor
 1. **Kopf:** Titel, Lead: An vielen Plätzen ist das Tauchen nur geduldet. Wer die Regeln kennt, hilft, dass es so bleibt.
 2. **Wo Sporttauchen verboten ist:** die fünf Fälle aus Art. 77 Abs. 3 BSV, je ein Satz, mit dem Zeichen der Ebene «Schifffahrt» daneben (Kreis, Linie, Fläche).
 3. **So verhältst du dich:** Flagge «A» setzen (Art. 32), Schiffe halten 50 m Abstand zur Flagge (Art. 49), Einstieg und Route abseits von Hafen und Landungsstelle wählen.
-4. **Was die Karte zeigt und was nicht:** belegte Daten, kein Radius um Häfen und Bojenfelder, «Orientierung, nicht rechtsverbindlich».
+4. **Was die Karte zeigt und was nicht:** belegte Daten, 100 m um Landungsstellen, 50 m um die Mitte von Häfen und Bojenfeldern, «Orientierung, nicht rechtsverbindlich».
 5. **Der SUSV:** Er spricht mit Seepolizei und Schifffahrtsgesellschaften. Link auf «Partner».
 6. **Quelle:** Link auf die BSV bei Fedlex mit dem Stand der gelesenen Fassung.
 

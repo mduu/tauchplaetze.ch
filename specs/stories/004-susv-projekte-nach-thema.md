@@ -41,7 +41,8 @@ Aufbau der Platzseite: `ux.md`, «Tauchplatzseite», Abschnitte 1, 4, 6 und 7.
 
 | Punkt | Nächster Schritt |
 |---|---|
-| **Abgeschlossene Projekte ohne Daten** (Story 002): 14 Plätze stehen beim SUSV nur als Text. | Antwort des SUSV abwarten. Sonst erfasst die Redaktion sie von Hand. |
+| **Abgeschlossene Projekte ohne Daten** (Story 002): 14 Plätze stehen beim SUSV nur als Text. | Der SUSV klärt intern, ob und wie er sie nachträgt (Story 002). Bis dahin erfasst die Redaktion sie von Hand. |
+| **Flaggenhalter aus der Quelle:** Der SUSV hat an vielen Plätzen Halter für die Taucherflagge montiert (Hinweis vom 25.11.2026). Die Quelle führt sie nicht als Thema. Die Redaktion erfasst sie als Ort (`FlagHolder`, `dive-site.md`). | Den SUSV nach einer Liste mit Koordinaten fragen. Dann setzt ein Import die Orte. |
 | **Absprachen mit Behörden:** Die Quelle führt sie nur, soweit sie unter den Einschränkungen stehen (Story 003). | Den SUSV fragen, ob es dafür ein eigenes Thema geben soll. |
 
 Braucht Story 002 und die Kennzeichnung aus Story 003.
