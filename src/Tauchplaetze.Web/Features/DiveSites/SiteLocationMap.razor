@@ -47,10 +47,6 @@
             }
         </ul>
     }
-    @foreach (var project in Site.SusvProjectList.Where(p => p.Topic is SusvTopic.SupportProject or SusvTopic.InclusiveSite))
-    {
-        <SusvLine Project="project" />
-    }
     @if (Later.Count > 0)
     {
         <div class="later-notices" data-later-notices>

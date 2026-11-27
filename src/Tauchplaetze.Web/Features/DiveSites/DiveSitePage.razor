@@ -108,11 +108,11 @@
 
         <SiteLocationMap Site="site" Shipping="shipping" />
 
-        @if (site.Ratings?.Rated.Count > 0 || HasSiteTexts(site))
+        @if (site.Ratings?.Rated.Count > 0 || HasSiteTexts(site) || PlaceProjects(site).Count > 0)
         {
             <section class="page-section" aria-labelledby="ratings">
                 <h2 id="ratings" class="section-heading">@L["Ratings_Title"]</h2>
-                <SiteRatingsBlock Ratings="site.Ratings" />
+                <SiteRatingsBlock Ratings="site.Ratings" Footer="ProjectsFooter(site)" />
                 @if (HasSiteTexts(site))
                 {
                     <div class="site-details">
@@ -276,6 +276,17 @@
             HttpContext.Response.StatusCode = statusCode;
         }
     }
+
+    /// <summary>Projekte des SUSV, die den Platz als Ganzes betreffen: Fusszeile der Box «Der Platz» (Entscheid Marc, 27.11.2026).</summary>
+    private static List<SiteSusvProject> PlaceProjects(DiveSiteDetails site) =>
+        [.. site.SusvProjectList.Where(p => p.Topic is SusvTopic.SupportProject or SusvTopic.InclusiveSite)];
+
+    private static RenderFragment? ProjectsFooter(DiveSiteDetails site) => PlaceProjects(site) is { Count: > 0 } projects
+        ? @<text>@foreach (var project in projects)
+        {
+            <SusvLine Project="project" />
+        }</text>
+        : null;
 
     private static RenderFragment? MobileToilet(DiveSiteDetails site) =>
         site.SusvProject(SusvTopic.MobileToilet) is { } toilet ? @<SusvLine Project="toilet" /> : null;

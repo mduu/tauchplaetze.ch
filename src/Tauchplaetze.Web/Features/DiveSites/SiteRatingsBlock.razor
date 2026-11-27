@@ -1,44 +1,57 @@
 @using Tauchplaetze.Core.Features.DiveSites
 @inject IStringLocalizer<DiveSiteStrings> L
 
-@if (Rated.Any())
+@if (Rated.Any() || Footer is not null)
 {
-        <ul class="ratings">
-            @foreach (var (scale, value, isLevel) in Rated)
-            {
-                var legendId = $"rating-legend-{scale.ToLowerInvariant()}";
-                <li class="rating" data-rating="@scale">
-                    <span class="rating-name">@L[$"Rating_{scale}"]</span>
-                    <div class="rating-scale" data-kind="@(isLevel ? "level" : "quality")" data-value="@value" role="img" aria-label="@L["Rating_Value", value]">
-                        @for (var step = 1; step <= 5; step++)
-                        {
-                            <span class="rating-step" data-on="@(step <= value ? "true" : "false")"></span>
-                        }
-                    </div>
-                    <div class="rating-value"><span class="rating-number">@value</span> @L[$"Rating_{scale}_{value}"]</div>
-                    <button type="button" class="rating-info" popovertarget="@legendId" data-hover-popover
-                            aria-label="@L["Rating_Info", L[$"Rating_{scale}"]]"><span aria-hidden="true">i</span></button>
-
-                    <div id="@legendId" popover class="rating-legend">
-                        <p class="rating-legend-title">@L[$"Rating_{scale}"]</p>
-                        <ol>
+    <div class="ratings-box">
+        @if (Rated.Any())
+        {
+            <ul class="ratings">
+                @foreach (var (scale, value, isLevel) in Rated)
+                {
+                    var legendId = $"rating-legend-{scale.ToLowerInvariant()}";
+                    <li class="rating" data-rating="@scale">
+                        <span class="rating-name">@L[$"Rating_{scale}"]</span>
+                        <div class="rating-scale" data-kind="@(isLevel ? "level" : "quality")" data-value="@value" role="img" aria-label="@L["Rating_Value", value]">
                             @for (var step = 1; step <= 5; step++)
                             {
-                                <li aria-current="@(step == value ? "true" : null)" data-step="@step">
-                                    <span class="rating-legend-number">@step</span>
-                                    <span><strong>@L[$"Rating_{scale}_{step}"]</strong> · @L[$"Rating_{scale}_{step}_Text"]</span>
-                                </li>
+                                <span class="rating-step" data-on="@(step <= value ? "true" : "false")"></span>
                             }
-                        </ol>
-                    </div>
-                </li>
-            }
-        </ul>
+                        </div>
+                        <div class="rating-value"><span class="rating-number">@value</span> @L[$"Rating_{scale}_{value}"]</div>
+                        <button type="button" class="rating-info" popovertarget="@legendId" data-hover-popover
+                                aria-label="@L["Rating_Info", L[$"Rating_{scale}"]]"><span aria-hidden="true">i</span></button>
+
+                        <div id="@legendId" popover class="rating-legend">
+                            <p class="rating-legend-title">@L[$"Rating_{scale}"]</p>
+                            <ol>
+                                @for (var step = 1; step <= 5; step++)
+                                {
+                                    <li aria-current="@(step == value ? "true" : null)" data-step="@step">
+                                        <span class="rating-legend-number">@step</span>
+                                        <span><strong>@L[$"Rating_{scale}_{step}"]</strong> · @L[$"Rating_{scale}_{step}_Text"]</span>
+                                    </li>
+                                }
+                            </ol>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        @if (Footer is not null)
+        {
+            <div class="ratings-footer" data-ratings-footer>@Footer</div>
+        }
+    </div>
 }
 
 @code {
     [Parameter, EditorRequired]
     public SiteRatings? Ratings { get; set; }
+
+    /// <summary>Fusszeile der Box, etwa die Projekte des SUSV (Förderprojekt, Inklusion). Zeigt die Box auch ohne Bewertung.</summary>
+    [Parameter]
+    public RenderFragment? Footer { get; set; }
 
     private IEnumerable<(string Scale, byte Value, bool IsLevel)> Rated =>
         (Ratings?.Rated ?? []).Select(r => (r.Scale.ToString(), r.Value, r.Scale == RatingScale.Difficulty));

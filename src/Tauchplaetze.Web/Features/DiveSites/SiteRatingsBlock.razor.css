@@ -1,13 +1,26 @@
-.ratings {
-    display: grid;
-    grid-template-columns: 1fr;
-    column-gap: 40px;
+.ratings-box {
     margin: 22px 0 0;
     padding: 6px 22px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-tile);
     background: var(--color-surface);
+}
+
+.ratings {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 40px;
+    margin: 0;
+    padding: 0;
     list-style: none;
+}
+
+.ratings + .ratings-footer {
+    border-top: 1px solid var(--color-border);
+}
+
+.ratings-footer {
+    padding: 6px 0 10px;
 }
 
 .rating {
@@ -117,7 +130,7 @@
 }
 
 @media (max-width: 520px) {
-    .ratings {
+    .ratings-box {
         padding: 4px 16px;
     }
 

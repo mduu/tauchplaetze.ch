@@ -139,6 +139,9 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("Site de plongée inclusif", text);
         Assert.Contains("data-inclusive", html);
         Assert.Contains("data-text=\"facilities\"", html);
+        var footer = html[html.IndexOf("data-ratings-footer", StringComparison.Ordinal)..];
+        Assert.Contains("data-susv-topic=\"SupportProject\"", footer[..footer.IndexOf("</div>", StringComparison.Ordinal)]);
+        Assert.Contains("data-susv-topic=\"InclusiveSite\"", footer);
         Assert.Contains("href=\"https://susv.ch/de/defi/\"", html);
     }
 

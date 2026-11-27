@@ -14,8 +14,8 @@ Wunsch des SUSV (November 2026): Die Seite soll vermerken, wo der SUSV einen Pla
 |---|---|---|---|
 | Defibrillator | `Defibrillator` | Kachel «Notfall» | «Defibrillator (AED) am Platz» |
 | Mobile Toilette | `MobileToilet` | «Restaurants und Toiletten» | «Mobile Toilette am Platz» |
-| Förderprojekt | `SupportProject` | «Lage und Einstiege», unter der Liste der Einstiege | «Der SUSV hat diesen Platz verbessert.» |
-| Inklusions-Tauchplatz | `InclusiveSite` | Tag im Hero, Filter im Verzeichnis, Zeile bei «Lage und Einstiege» | «Inklusions-Tauchplatz: geeignet für Tauchende mit Behinderung.» |
+| Förderprojekt | `SupportProject` | «Der Platz», Fusszeile der Kachel mit den Bewertungen (Entscheid Marc, 27.11.2026) | «Der SUSV hat diesen Platz verbessert.» |
+| Inklusions-Tauchplatz | `InclusiveSite` | Tag im Hero, Filter im Verzeichnis, Fusszeile der Kachel «Der Platz» | «Inklusions-Tauchplatz: geeignet für Tauchende mit Behinderung.» |
 
 - **Feste Texte bei Projekten:** Die Texte der Themen ausser `Restriction` kommen aus den Ressourcen, nicht aus dem Titel der Quelle. Die Titel der Quelle sind für die Karte des SUSV geschrieben, nicht für eine Zeile auf der Platzseite.
 - **Abschnitt ohne anderen Inhalt:** Ein Eintrag zeigt seinen Abschnitt auch, wenn die Redaktion dort nichts erfasst hat.
@@ -30,7 +30,7 @@ Aufbau der Platzseite: `ux.md`, «Tauchplatzseite», Abschnitte 1, 4, 6 und 7.
 
 1. Ein bestätigter Defibrillator steht in der Kachel «Notfall».
 2. Eine bestätigte mobile Toilette steht bei «Restaurants und Toiletten», auch ohne Text der Redaktion.
-3. Förderprojekt und Inklusions-Tauchplatz stehen unter der Liste der Einstiege.
+3. Förderprojekt und Inklusions-Tauchplatz stehen als Fusszeile in der Kachel «Der Platz», auch ohne Bewertung.
 4. Ein Inklusions-Tauchplatz trägt das Tag «Inklusion» im Hero. Das Verzeichnis filtert danach.
 5. Jeder Eintrag trägt Logo und Link zum SUSV.
 6. Die Ausbaustufe eines Platzes ändert sich durch Einträge des SUSV nicht.
