@@ -1,6 +1,6 @@
 # Story 001: Seite «Partner»
 
-**Status:** 👷‍♂️ in Arbeit (27.11.2026), auf Branch `feat/susv-import`, noch nicht deployt. Ausgeblendet (`Partner:Visible` = `false`), bis der SUSV den Wortlaut freigibt (Entscheid Marc, 27.11.2026).
+**Status:** 👷‍♂️ gebaut und deployt am 27.11.2026, aber ausgeblendet (`Partner:Visible` = `false`), bis der SUSV den Wortlaut freigibt (Entscheid Marc, 27.11.2026).
 
 ## Ziel
 

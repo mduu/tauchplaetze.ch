@@ -1,6 +1,6 @@
 # Story 003: Einschränkungen des SUSV im Banner
 
-**Status:** 👷‍♂️ in Arbeit (27.11.2026), auf dem Branch `feat/susv-import`, noch nicht deployt.
+**Status:** ✅ erledigt, deployt am 27.11.2026.
 
 ## Ziel
 

@@ -1,6 +1,6 @@
 # Story 002: SUSV-Einträge importieren und bestätigen
 
-**Status:** 👷‍♂️ in Arbeit (26.11.2026), auf dem Branch `feat/susv-import`, noch nicht deployt. Entscheid: ADR-013.
+**Status:** ✅ erledigt, deployt am 27.11.2026. Entscheid: ADR-013.
 
 ## Ziel
 

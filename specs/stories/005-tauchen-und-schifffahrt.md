@@ -1,6 +1,6 @@
 # Story 005: Tauchen und Schifffahrt
 
-**Status:** 👷‍♂️ in Arbeit (27.11.2026), auf dem Branch `feat/susv-import`, noch nicht deployt. Wortlaut der Seite als Entwurf, Marc stimmt ihn mit dem SUSV ab.
+**Status:** ✅ erledigt, deployt am 27.11.2026. Der Wortlaut der Seite ist ein Entwurf, Marc stimmt ihn mit dem SUSV ab.
 
 ## Ziel
 

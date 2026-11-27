@@ -1,6 +1,6 @@
 # Story 004: Projekte des SUSV auf der Platzseite
 
-**Status:** 👷‍♂️ in Arbeit (27.11.2026), auf dem Branch `feat/susv-import`, noch nicht deployt.
+**Status:** ✅ erledigt, deployt am 27.11.2026.
 
 ## Ziel
 

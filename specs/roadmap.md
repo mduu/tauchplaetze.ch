@@ -57,7 +57,10 @@ Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise
 - ✅ Registrierung für alle: Selbstregistrierung mit Schutz gegen Bots, Rollen vergeben (Admins ernennen Moderatoren) und Mails bei Freigabe oder Ablehnung (`cms.md`). In Prod offen seit 23.10.2026.
 - ✅ Texte automatisch übersetzen (Claude API mit Glossar), im CMS und im Bearbeiten-Modus (22.10.2026, `cms.md`).
 - ⏳ Videos: YouTube-Links pro Platz, eingebettet auf der Platzseite.
-- ⏳ Einträge des SUSV (ADR-013, Specs vom 24.11.2026). Reihenfolge: Seite «Partner», Import mit Bestätigung, Einschränkungen im Banner, Projekte nach Thema. Danach «Tauchen und Schifffahrt»: Ebene «Schifffahrt», Bojenfeld in der Skizze, eigene Seite (`dive-site.md`).
+- ✅ Einträge des SUSV (ADR-013, Stories 002 bis 004, deployt am 27.11.2026): Import mit Bestätigung, Einschränkungen im Banner, Projekte nach Thema.
+- ✅ «Tauchen und Schifffahrt» (Story 005, deployt am 27.11.2026): Ebene «Schifffahrt», Bojenfeld in der Skizze, eigene Seite. Wortlaut mit dem SUSV offen.
+- ⏳ Seite «Partner» (Story 001): gebaut, ausgeblendet bis zur Freigabe durch den SUSV.
+- ⏳ Symbole der Plätze (Story 006): Entwurf, Entscheide offen.
 - Später möglich: Kommentare unter Plätzen, eventuell nur für registrierte Konten und mit Freigabe (`features.md`).
 - Neue Fotos der Ein- und Ausstiege, nach und nach.
 
