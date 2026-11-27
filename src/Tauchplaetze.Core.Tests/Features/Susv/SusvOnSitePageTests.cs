@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.DiveSites;
@@ -50,6 +51,7 @@ public class SusvOnSitePageTests(SqlServer sql) : SqlTest(sql)
 
         // Act
         await Confirm(admin, site, NoticeKind.Closure);
+        await Command<TranslateSusvEntryCommand, Unit>(new TranslateSusvEntryCommand(await EntryId()));
         var english = Assert.Single((await Site(slug, "en")).Notices);
 
         // Assert
@@ -66,6 +68,7 @@ public class SusvOnSitePageTests(SqlServer sql) : SqlTest(sql)
 
         // Act
         await Confirm(admin, site, NoticeKind.Closure);
+        await Command<TranslateSusvEntryCommand, Unit>(new TranslateSusvEntryCommand(await EntryId()));
         var english = Assert.Single((await Site(slug, "en")).Notices);
 
         // Assert

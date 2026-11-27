@@ -28,7 +28,7 @@ public record ReviewSusvEntryResult(SusvReviewError? Error)
     public static readonly ReviewSusvEntryResult Ok = new((SusvReviewError?)null);
 }
 
-internal class ReviewSusvEntryHandler(TauchplaetzeDbContext dbContext, AccountRoles roles, IRunLock runLock, SusvEnglish english, TimeProvider time)
+internal class ReviewSusvEntryHandler(TauchplaetzeDbContext dbContext, AccountRoles roles, IRunLock runLock, TimeProvider time)
     : ICommandHandler<ReviewSusvEntryCommand, ReviewSusvEntryResult>
 {
     public async Task<ReviewSusvEntryResult> Handle(ReviewSusvEntryCommand command, CancellationToken ct = default)
@@ -66,11 +66,6 @@ internal class ReviewSusvEntryHandler(TauchplaetzeDbContext dbContext, AccountRo
 
         MarkReviewed(entry, command.ReviewerId);
         await dbContext.SaveChangesAsync(ct);
-        if (command.Action == SusvReviewAction.Confirm && entry.Topic == SusvTopic.Restriction)
-        {
-            await english.Update(entry.Id, ct);
-        }
-
         return ReviewSusvEntryResult.Ok;
     }
 

@@ -38,6 +38,8 @@ builder.Services.AddHostedService<ForecastWorker>();
 builder.Services.AddHostedService<DischargeWorker>();
 builder.Services.AddHostedService<LakeLevelWorker>();
 builder.Services.AddHostedService<SusvWorker>();
+builder.Services.AddSingleton<SusvTranslationQueue>();
+builder.Services.AddHostedService<SusvTranslationWorker>();
 builder.Services.AddHostedService<MediaPurgeWorker>();
 builder.Services.AddHostedService<UnconfirmedAccountsWorker>();
 builder.Services.AddHostedService<MailQueueWorker>();

@@ -10,6 +10,7 @@
 @using Tauchplaetze.Core.Features.Susv.Queries
 @using Tauchplaetze.Web.Features.Editorial
 @inject SusvReviewSignal SusvSignal
+@inject SusvTranslationQueue Translations
 
 <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
     <MudText Typo="Typo.h4">@L["Susv_Title"]</MudText>
@@ -285,6 +286,11 @@
             {
                 forms[item.Id].Error = error;
                 return;
+            }
+
+            if (command.Action == SusvReviewAction.Confirm)
+            {
+                Translations.Enqueue(item.Id);
             }
 
             await Load();
