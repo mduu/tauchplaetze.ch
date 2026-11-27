@@ -37,7 +37,8 @@ internal static class DiveSiteContentMapping
             [.. e.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new EntryPointText(t.Culture.Trim(), t.Name, t.Description))]))],
         [.. site.Notices.OrderBy(n => n.SortOrder).Select(n => new NoticeContent(
             n.Id, n.Kind, n.ValidFrom, n.ValidUntil,
-            [.. n.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new NoticeText(t.Culture.Trim(), t.Text))]))],
+            [.. n.Translations.OrderBy(t => t.Culture, StringComparer.Ordinal).Select(t => new NoticeText(t.Culture.Trim(), t.Text))],
+            n.RecursYearly))],
         SketchJson.Read(site.Sketch),
         HeroMediaId: site.HeroMediaId,
         OtherNames: OtherNameJson.Read(site.OtherNames),
@@ -116,6 +117,7 @@ internal static class DiveSiteContentMapping
             Kind = n.Kind,
             ValidFrom = n.ValidFrom,
             ValidUntil = n.ValidUntil,
+            RecursYearly = n.RecursYearly,
             SortOrder = index,
             Translations = [.. n.Texts.Where(t => Blank(t.Text) is not null).Select(t => new DiveSiteNoticeTranslation
             {

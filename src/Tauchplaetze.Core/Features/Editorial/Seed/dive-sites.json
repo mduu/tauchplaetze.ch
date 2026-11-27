@@ -3823,5 +3823,551 @@
     "maxDepth": 50,
     "difficultyRating": 3,
     "wallRating": 4
+  },
+  {
+    "name": "Ansaugkörbe",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.6508,
+    "longitude": 9.20249,
+    "municipality": "Kreuzlingen",
+    "canton": "TG",
+    "osm": [
+      "node/663870427"
+    ]
+  },
+  {
+    "name": "Baywatch",
+    "waterBody": "bodensee-untersee",
+    "latitude": 47.67231,
+    "longitude": 9.01035,
+    "municipality": "Berlingen",
+    "canton": "TG",
+    "osm": [
+      "node/663870388"
+    ]
+  },
+  {
+    "name": "Die Jura (Wrack)",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.65323,
+    "longitude": 9.21563,
+    "municipality": "Bottighofen",
+    "canton": "TG",
+    "osm": [
+      "node/663870428"
+    ]
+  },
+  {
+    "name": "Eschenz-Stein am Rhein",
+    "waterBody": "bodensee-untersee",
+    "latitude": 47.651382,
+    "longitude": 8.883525,
+    "municipality": "Eschenz",
+    "canton": "TG",
+    "osm": [
+      "node/663870374"
+    ],
+    "otherNames": [
+      "Hafen Eschenz"
+    ]
+  },
+  {
+    "name": "Lädine",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.54317,
+    "longitude": 9.40456,
+    "municipality": "Egnach",
+    "canton": "TG",
+    "osm": [
+      "node/663870419"
+    ]
+  },
+  {
+    "name": "Landungssteg",
+    "waterBody": "bodensee-untersee",
+    "latitude": 47.668377,
+    "longitude": 8.981599,
+    "municipality": "Steckborn",
+    "canton": "TG",
+    "osm": [
+      "node/663870385"
+    ]
+  },
+  {
+    "name": "Restaurant Schloss",
+    "waterBody": "bodensee-untersee",
+    "latitude": 47.66705,
+    "longitude": 8.980305,
+    "municipality": "Steckborn",
+    "canton": "TG",
+    "osm": [
+      "node/663870384",
+      "node/663870387"
+    ],
+    "otherNames": [
+      "Dorfbach",
+      "Schloss"
+    ]
+  },
+  {
+    "name": "Restaurant Waaghaus",
+    "waterBody": "bodensee-untersee",
+    "latitude": 47.66455,
+    "longitude": 9.135218,
+    "municipality": "Gottlieben",
+    "canton": "TG",
+    "osm": [
+      "node/663870383"
+    ]
+  },
+  {
+    "name": "Rietli Goldach",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.485295,
+    "longitude": 9.477459,
+    "municipality": "Goldach",
+    "canton": "SG",
+    "osm": [
+      "node/665087369"
+    ],
+    "entryPoints": [
+      {
+        "kind": "Entry",
+        "name": null,
+        "latitude": 47.485295,
+        "longitude": 9.477459
+      }
+    ]
+  },
+  {
+    "name": "Schifflände",
+    "waterBody": "bodensee-untersee",
+    "latitude": 47.67547,
+    "longitude": 9.01777,
+    "municipality": "Berlingen",
+    "canton": "TG",
+    "osm": [
+      "node/663870382"
+    ]
+  },
+  {
+    "name": "Seegarten",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.6475,
+    "longitude": 9.1988,
+    "municipality": "Kreuzlingen",
+    "canton": "TG",
+    "osm": [
+      "node/663870425"
+    ]
+  },
+  {
+    "name": "Wiedenhorn",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.53833,
+    "longitude": 9.40042,
+    "municipality": "Egnach",
+    "canton": "TG",
+    "osm": [
+      "node/663870417"
+    ]
+  },
+  {
+    "name": "Wildsau",
+    "waterBody": "bodensee-untersee",
+    "latitude": 47.67481,
+    "longitude": 9.02167,
+    "municipality": "Berlingen",
+    "canton": "TG",
+    "osm": [
+      "node/663870380"
+    ]
+  },
+  {
+    "name": "Brücke-Camping",
+    "waterBody": "espi",
+    "latitude": 47.66047,
+    "longitude": 8.85699,
+    "municipality": "Stein am Rhein",
+    "canton": "SH",
+    "osm": [
+      "node/663870379"
+    ]
+  },
+  {
+    "name": "Badi Goldach",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.488333,
+    "longitude": 9.475,
+    "municipality": "Goldach",
+    "canton": "SG",
+    "osm": [
+      "node/665087367",
+      "node/663870422"
+    ],
+    "entryPoints": [
+      {
+        "kind": "Entry",
+        "name": null,
+        "latitude": 47.488333,
+        "longitude": 9.475
+      }
+    ]
+  },
+  {
+    "name": "Boudry Plage",
+    "waterBody": "neuenburgersee",
+    "latitude": 46.949038,
+    "longitude": 6.870942,
+    "municipality": "Boudry",
+    "canton": "NE",
+    "osm": [
+      "node/663869994"
+    ]
+  },
+  {
+    "name": "Robinson",
+    "waterBody": "neuenburgersee",
+    "latitude": 46.963317,
+    "longitude": 6.873999,
+    "municipality": "Milvignes",
+    "canton": "NE",
+    "osm": [
+      "node/665087339"
+    ]
+  },
+  {
+    "name": "Serrieres",
+    "waterBody": "neuenburgersee",
+    "latitude": 46.978611,
+    "longitude": 6.897111,
+    "municipality": "Neuchâtel",
+    "canton": "NE",
+    "osm": [
+      "node/665087338"
+    ]
+  },
+  {
+    "name": "Camping-Hemishofen",
+    "waterBody": "rhein",
+    "latitude": 47.66325,
+    "longitude": 8.84245,
+    "municipality": "Wagenhausen",
+    "canton": "TG",
+    "osm": [
+      "node/663870377"
+    ]
+  },
+  {
+    "name": "Hemishofen-Rheinklingen",
+    "waterBody": "rhein",
+    "latitude": 47.67558,
+    "longitude": 8.82911,
+    "municipality": "Hemishofen",
+    "canton": "SH",
+    "osm": [
+      "node/663870375"
+    ]
+  },
+  {
+    "name": "Rheinklingen-Schupfen",
+    "waterBody": "rhein",
+    "latitude": 47.67594,
+    "longitude": 8.80861,
+    "municipality": "Wagenhausen",
+    "canton": "TG",
+    "osm": [
+      "node/663870376"
+    ]
+  },
+  {
+    "name": "Pozzo della Misura",
+    "waterBody": "verzasca",
+    "latitude": 46.24847,
+    "longitude": 8.845,
+    "municipality": "Verzasca",
+    "canton": "TI",
+    "osm": [
+      "node/663870182"
+    ],
+    "otherNames": [
+      "Amslerbecken"
+    ]
+  },
+  {
+    "name": "Alter Hafen",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.80122,
+    "longitude": 9.03847,
+    "municipality": "Bodman-Ludwigshafen",
+    "osm": [
+      "node/663870397"
+    ]
+  },
+  {
+    "name": "Badi",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.49584,
+    "longitude": 9.467,
+    "municipality": "Horn",
+    "canton": "TG",
+    "osm": [
+      "node/663870423",
+      "node/663870418"
+    ],
+    "otherNames": [
+      "Mole Ost"
+    ]
+  },
+  {
+    "name": "Bunker",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.66244,
+    "longitude": 9.38705,
+    "municipality": "Immenstaad am Bodensee"
+  },
+  {
+    "name": "Feldbach",
+    "waterBody": "bodensee-untersee",
+    "latitude": 47.66176,
+    "longitude": 8.97141,
+    "municipality": "Steckborn",
+    "canton": "TG"
+  },
+  {
+    "name": "Fischzucht",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.47953,
+    "longitude": 9.51394,
+    "municipality": "Rorschacherberg",
+    "canton": "SG"
+  },
+  {
+    "name": "HB",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.47857,
+    "longitude": 9.50231,
+    "municipality": "Rorschach",
+    "canton": "SG",
+    "osm": [
+      "node/665087373",
+      "node/3357571193"
+    ],
+    "otherNames": [
+      "Bootsrampe Schlipf"
+    ]
+  },
+  {
+    "name": "Kirche",
+    "waterBody": "bodensee-untersee",
+    "latitude": 47.67453,
+    "longitude": 9.01564,
+    "municipality": "Berlingen",
+    "canton": "TG"
+  },
+  {
+    "name": "Kornhaus",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.4798,
+    "longitude": 9.49201,
+    "municipality": "Rorschach",
+    "canton": "SG",
+    "osm": [
+      "node/665087361"
+    ]
+  },
+  {
+    "name": "Lädine",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.81603,
+    "longitude": 9.04873,
+    "municipality": "Bodman-Ludwigshafen",
+    "osm": [
+      "node/663870493"
+    ],
+    "otherNames": [
+      "Ludwigshafen"
+    ]
+  },
+  {
+    "name": "Marienschlucht",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.76262,
+    "longitude": 9.11007,
+    "municipality": "Allensbach",
+    "osm": [
+      "node/663870395"
+    ]
+  },
+  {
+    "name": "Parkhaus Post",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.76416,
+    "longitude": 9.16291,
+    "municipality": "Überlingen",
+    "osm": [
+      "node/663870434"
+    ],
+    "otherNames": [
+      "Parkplatz Post"
+    ]
+  },
+  {
+    "name": "Schlössli",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.49335,
+    "longitude": 9.46996,
+    "municipality": "Horn",
+    "canton": "TG",
+    "osm": [
+      "node/665087364"
+    ],
+    "otherNames": [
+      "Uhlandbucht"
+    ]
+  },
+  {
+    "name": "Seezeichen 24",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.76982,
+    "longitude": 9.13986,
+    "municipality": "Überlingen",
+    "osm": [
+      "node/663870390"
+    ],
+    "otherNames": [
+      "Uferpark"
+    ]
+  },
+  {
+    "name": "Seezeichen 99",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.51333,
+    "longitude": 9.56,
+    "municipality": "Thal",
+    "canton": "SG",
+    "osm": [
+      "node/663870439"
+    ]
+  },
+  {
+    "name": "Springbrunnen",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.48064,
+    "longitude": 9.48486,
+    "municipality": "Rorschach",
+    "canton": "SG"
+  },
+  {
+    "name": "Strandbad Klausenhorn",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.74842,
+    "longitude": 9.14695,
+    "municipality": "Konstanz",
+    "osm": [
+      "node/663870430"
+    ],
+    "otherNames": [
+      "Dingelsdorf"
+    ]
+  },
+  {
+    "name": "Uhland-Ansaugstutzen",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.49639,
+    "longitude": 9.47167,
+    "municipality": "Horn",
+    "canton": "TG",
+    "osm": [
+      "node/665087372"
+    ]
+  },
+  {
+    "name": "Steilwand",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.74925,
+    "longitude": 9.13267,
+    "municipality": "Konstanz",
+    "osm": [
+      "node/663870392"
+    ],
+    "otherNames": [
+      "Wallhausen Steilwand",
+      "Hochhaus"
+    ]
+  },
+  {
+    "name": "Krebsgarten",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.68779,
+    "longitude": 9.28085,
+    "municipality": "Meersburg",
+    "osm": [
+      "node/7731283319"
+    ]
+  },
+  {
+    "name": "s'Plätzle",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.69695,
+    "longitude": 9.26124,
+    "municipality": "Meersburg",
+    "osm": [
+      "node/663870433"
+    ],
+    "otherNames": [
+      "Meersburg s’Plätzle"
+    ]
+  },
+  {
+    "name": "Tennisplatz",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.76064,
+    "longitude": 9.17137,
+    "municipality": "Überlingen",
+    "osm": [
+      "node/663870435"
+    ]
+  },
+  {
+    "name": "Liebesinsel",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.76189,
+    "longitude": 9.16888,
+    "municipality": "Überlingen",
+    "osm": [
+      "node/663870436"
+    ]
+  },
+  {
+    "name": "Tauchplatz Sipplingen",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.79522,
+    "longitude": 9.09497,
+    "municipality": "Sipplingen",
+    "osm": [
+      "node/663870394"
+    ],
+    "otherNames": [
+      "Schiffsanleger",
+      "Schifflände"
+    ]
+  },
+  {
+    "name": "Teufelstisch",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.75375,
+    "longitude": 9.12514,
+    "municipality": "Konstanz",
+    "otherNames": [
+      "Seezeichen 22"
+    ]
+  },
+  {
+    "name": "Wilder Mann",
+    "waterBody": "bodensee-obersee",
+    "latitude": 47.69344,
+    "longitude": 9.26903,
+    "municipality": "Meersburg"
   }
 ]

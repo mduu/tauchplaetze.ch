@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Tauchplaetze.Core.Data.Entities;
+using Tauchplaetze.Core.Features.Shipping;
+using Tauchplaetze.Core.Features.Susv;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Editorial;
 using Tauchplaetze.Core.Features.Forecasts;
@@ -48,6 +50,10 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
 
     public DbSet<MachineTranslation> MachineTranslations => Set<MachineTranslation>();
 
+    public DbSet<SusvEntry> SusvEntries => Set<SusvEntry>();
+
+    public DbSet<ShippingFeature> ShippingFeatures => Set<ShippingFeature>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -70,5 +76,9 @@ internal class TauchplaetzeDbContext(DbContextOptions<TauchplaetzeDbContext> opt
         configurationBuilder.Properties<HydroStationRole>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<EntryPointKind>().HaveConversion<string>().HaveMaxLength(20);
         configurationBuilder.Properties<NoticeKind>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<SusvTopic>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<SusvReviewStatus>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<ShippingFeatureKind>().HaveConversion<string>().HaveMaxLength(20);
+        configurationBuilder.Properties<ShippingSource>().HaveConversion<string>().HaveMaxLength(20);
     }
 }

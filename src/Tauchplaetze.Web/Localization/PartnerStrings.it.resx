@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Partner_Title" xml:space="preserve"><value>Partner</value></data>
+  <data name="Lead" xml:space="preserve"><value>Queste organizzazioni rendono possibile l’immersione in Svizzera.</value></data>
+  <data name="Unpaid" xml:space="preserve"><value>Nessun partner paga per comparire qui.</value></data>
+  <data name="MetaDescription" xml:space="preserve"><value>Chi rende possibile l’immersione in Svizzera: la Federazione Svizzera di Sport Subacquei FSSS e il suo lavoro per i siti d’immersione.</value></data>
+  <data name="Susv_Name" xml:space="preserve"><value>Federazione Svizzera di Sport Subacquei FSSS</value></data>
+  <data name="Susv_LogoAlt" xml:space="preserve"><value>Logo della Federazione Svizzera di Sport Subacquei FSSS</value></data>
+  <data name="Susv_Text" xml:space="preserve"><value>La FSSS negozia con le autorità soluzioni per i siti d’immersione. Migliora i punti d’entrata e installa servizi igienici e defibrillatori. Nella maggior parte dei siti l’immersione è solo tollerata. Diventando socio, aiuti a far sì che resti così.</value></data>
+  <data name="Susv_Member" xml:space="preserve"><value>Diventa socio</value></data>
+  <data name="Susv_Promotion" xml:space="preserve"><value>Promozione dei siti d’immersione della FSSS</value></data>
+</root>

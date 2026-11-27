@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Partner_Title" xml:space="preserve"><value>Partner</value></data>
+  <data name="Lead" xml:space="preserve"><value>Diese Organisationen machen das Tauchen in der Schweiz möglich.</value></data>
+  <data name="Unpaid" xml:space="preserve"><value>Kein Partner bezahlt für seinen Eintrag.</value></data>
+  <data name="MetaDescription" xml:space="preserve"><value>Wer das Tauchen in der Schweiz möglich macht: der Schweizer Unterwasser-Sport-Verband SUSV und seine Arbeit für die Tauchplätze.</value></data>
+  <data name="Susv_Name" xml:space="preserve"><value>Schweizer Unterwasser-Sport-Verband SUSV</value></data>
+  <data name="Susv_LogoAlt" xml:space="preserve"><value>Logo des Schweizer Unterwasser-Sport-Verbands SUSV</value></data>
+  <data name="Susv_Text" xml:space="preserve"><value>Der SUSV handelt mit Behörden Lösungen für die Tauchplätze aus. Er verbessert Einstiege und stellt Toiletten und Defibrillatoren auf. An den meisten Plätzen ist das Tauchen nur geduldet. Wer Mitglied wird, hilft, dass es so bleibt.</value></data>
+  <data name="Susv_Member" xml:space="preserve"><value>Mitglied werden</value></data>
+  <data name="Susv_Promotion" xml:space="preserve"><value>Tauchplatzförderung des SUSV</value></data>
+</root>

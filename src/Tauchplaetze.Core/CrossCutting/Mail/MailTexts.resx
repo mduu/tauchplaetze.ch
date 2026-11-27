@@ -44,4 +44,11 @@
   <data name="Exists_Text" xml:space="preserve"><value>Mit deiner E-Mail-Adresse wollte jemand ein neues Konto anlegen. Du hast schon eines. Melde dich an. Weisst du das Passwort nicht mehr, wähle bei der Anmeldung «Passwort vergessen».</value></data>
   <data name="Exists_Button" xml:space="preserve"><value>Anmelden</value></data>
   <data name="Exists_Ignore" xml:space="preserve"><value>Wolltest du kein Konto anlegen? Dann ignoriere diese Mail.</value></data>
+  <data name="Susv_Subject" xml:space="preserve"><value>SUSV: {0} Einträge zu prüfen</value></data>
+  <data name="Susv_Text" xml:space="preserve"><value>Der Abgleich mit den Karten des SUSV hat Einträge gefunden, die du prüfen sollst.</value></data>
+  <data name="Susv_Added" xml:space="preserve"><value>Neu ({0}): {1}.</value></data>
+  <data name="Susv_Changed" xml:space="preserve"><value>Geändert seit der Prüfung ({0}): {1}.</value></data>
+  <data name="Susv_Removed" xml:space="preserve"><value>Beim SUSV entfernt ({0}): {1}.</value></data>
+  <data name="Susv_More" xml:space="preserve"><value>Dazu {0} weitere.</value></data>
+  <data name="Susv_Button" xml:space="preserve"><value>Einträge prüfen</value></data>
 </root>

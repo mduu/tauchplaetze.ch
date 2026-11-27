@@ -55,6 +55,9 @@ public enum DataSource
 
     /// <summary>Seepegel (BAFU).</summary>
     LakeLevel,
+
+    /// <summary>Einschränkungen und Projekte des SUSV.</summary>
+    Susv,
 }
 
 /// <summary>Zustand einer Datenquelle (`ux.md`, «Echolot»).</summary>

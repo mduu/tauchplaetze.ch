@@ -5,6 +5,8 @@
 @attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(PolicyName = Tauchplaetze.Web.CrossCutting.Caching.PublicPageCache.Policy)]
 @using Tauchplaetze.Core.CrossCutting.UseCases
 @using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.Susv
+@using Tauchplaetze.Core.Features.Shipping.Queries
 @using Tauchplaetze.Core.Features.DiveSites.Queries
 @using Tauchplaetze.Core.Features.Forecasts
 @using Tauchplaetze.Core.Features.Forecasts.Queries
@@ -20,6 +22,7 @@
 @inject IQueryHandler<GetSiteLakeLevelQuery, SiteLakeLevel?> LakeLevels
 @inject IQueryHandler<GetSiteIndexHistoryQuery, SiteIndexHistory> IndexHistory
 @inject IQueryHandler<GetSiteReportsQuery, IReadOnlyList<SiteReport>> SiteReportsQuery
+@inject IQueryHandler<GetSiteShippingQuery, SiteShipping> ShippingQuery
 @inject IStringLocalizer<SharedStrings> Shared
 @inject IStringLocalizer<DiveSiteStrings> L
 @inject NavigationManager Navigation
@@ -53,6 +56,10 @@
             {
                 <p class="mountain-lake" data-mountain-lake>@Shared["MountainLake", elevation]</p>
             }
+            @if (site.SusvProject(SusvTopic.InclusiveSite) is not null)
+            {
+                <p class="hero-tag" data-inclusive>@L["Trait_Inclusive"]</p>
+            }
         </UnderwaterHero>
 
         @if (Saved is "vorschlag" or "online")
@@ -64,7 +71,7 @@
         <section class="page-section" aria-labelledby="conditions">
             @if (forecast is { Days.Count: > 0 })
             {
-                <ForecastPanel Forecast="forecast" Discharge="discharge" History="history" LakeLevel="lakeLevel">
+                <ForecastPanel Forecast="forecast" Discharge="discharge" History="history" LakeLevel="lakeLevel" ClosedDays="site.ClosedDayList">
                     <HeadAction>
                         <ReportButton Slug="@site.Slug" Count="reports.Count" />
                     </HeadAction>
@@ -99,7 +106,7 @@
             }
         </section>
 
-        <SiteLocationMap Site="site" />
+        <SiteLocationMap Site="site" Shipping="shipping" />
 
         @if (site.Ratings?.Rated.Count > 0 || HasSiteTexts(site))
         {
@@ -128,7 +135,8 @@
                                 </div>
                             }
                             <SiteTextBlock Text="site.Texts?.Surroundings" Name="surroundings" Title="@L["Rating_Surroundings"]" />
-                            <SiteTextBlock Text="site.Texts?.Facilities" Name="facilities" Title="@L["Text_Facilities"]" />
+                            <SiteTextBlock Text="site.Texts?.Facilities" Name="facilities" Title="@L["Text_Facilities"]"
+                                           Lead="MobileToilet(site)" />
                         </div>
                     </div>
                 }
@@ -157,6 +165,10 @@
                         <li><a href="tel:1414"><span class="emergency-number">1414</span><span class="emergency-name">Rega</span></a></li>
                         <li><a href="tel:117"><span class="emergency-number">117</span><span class="emergency-name">@L["Emergency_Police"]</span></a></li>
                     </ul>
+                    @if (site.SusvProject(SusvTopic.Defibrillator) is { } defibrillator)
+                    {
+                        <SusvLine Project="defibrillator" />
+                    }
                     <p class="emergency-note">@L["Emergency_Dan_Note"] <a href="@L["Emergency_Factsheet_Url"]" rel="noopener" target="_blank" data-emergency-factsheet>@L["Emergency_Factsheet"]</a></p>
                 </div>
             </div>
@@ -205,6 +217,8 @@
 
     private IReadOnlyList<SiteReport> reports = [];
 
+    private SiteShipping shipping = SiteShipping.None;
+
     [Parameter]
     public string Slug { get; set; } = "";
 
@@ -234,6 +248,7 @@
                 }
 
                 history = await IndexHistory.Handle(new GetSiteIndexHistoryQuery(found.Site.Id));
+                shipping = await ShippingQuery.Handle(new GetSiteShippingQuery(found.Site.Id));
                 reports = await SiteReportsQuery.Handle(new GetSiteReportsQuery(found.Site.Id, HttpContext is null ? null : AccountCookie.UserId(HttpContext.User)));
                 break;
             case DiveSiteLookup.Moved moved:
@@ -262,8 +277,12 @@
         }
     }
 
+    private static RenderFragment? MobileToilet(DiveSiteDetails site) =>
+        site.SusvProject(SusvTopic.MobileToilet) is { } toilet ? @<SusvLine Project="toilet" /> : null;
+
     private static bool HasSiteTexts(DiveSiteDetails site) =>
-        site.HasDivingBan || site.Texts is { Underwater: not null } or { Hazards: not null } or { Surroundings: not null } or { Facilities: not null };
+        site.HasDivingBan || site.Texts is { Underwater: not null } or { Hazards: not null } or { Surroundings: not null } or { Facilities: not null }
+        || site.SusvProject(SusvTopic.MobileToilet) is not null;
 
     private static string MapLink(DiveSiteDetails site) =>
         string.Create(CultureInfo.InvariantCulture, $"https://map.geo.admin.ch/?lang={Language}&swisssearch={site.Latitude:0.0000},{site.Longitude:0.0000}");

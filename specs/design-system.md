@@ -20,6 +20,7 @@ Es gibt im MVP **nur das dunkle Schema**. Ein helles Schema ist nicht geplant.
 | `--color-text-body` | `#CFE0DC` | Fliesstext |
 | `--color-text-muted` | `#A9C2BE` | Nebentext |
 | `--color-text-subtle` | `#8FAAA6` | Labels, Einheiten, Fussnoten |
+| `--color-logo-plate` | `#FFFFFF` | Helle Plakette hinter fremden Logos (Partner), damit sie auf dunklem Grund lesbar sind |
 
 ### Akzente
 
@@ -107,7 +108,7 @@ Entwurf vom 17.10.2026, generiert mit Gemini. Die Quellen liegen in `assets/logo
 
 - Alle Schriften stehen unter der SIL Open Font License. Sie werden **selbst gehostet** (`wwwroot/fonts`), nicht von Google Fonts geladen (Datenschutz, Tempo).
 - `font-display: swap`.
-- Max. Textbreite: 58–70 Zeichen.
+- Keine eigene Lesebreite: Texte nutzen die Breite des Inhalts (`--content-max`, 1240 px), damit sie nicht mitten im Satz umbrechen (Entscheid Marc, 27.11.2026). Ausnahmen: die Überschrift der Startseite (bewusst zweizeilig) und gekürzte Namen.
 
 ## Abstände und Formen
 
@@ -142,6 +143,7 @@ Layout: Raster mit `repeat(auto-fit, minmax(min(100%, 440px), 1fr))` für zweisp
 | `SiteSketch` | Ebene auf der Leaflet-Karte (`sketch.js`): Symbole als runde Schilder (`--color-surface-raised`, Farbe pro Art: Baumstamm `--color-wood`, Besonderheit `--color-signal`, Gefahr `--color-notice-closure`, sonst `--color-primary`), Steilwand dick und Kante gestrichelt in `--color-sketch-wall`, Route gepunktet in `--color-primary`, Leine in `--color-sketch-line`, Pflanzenfeld als Fläche in `--color-sketch-plants`, Bojenfeld als schraffierte Fläche in `--color-notice-closure`. Die Linienfarben sind dunkel, weil Landeskarte und Luftbild hell sind. |
 | `SitePhotos` | Galerie: Titel wie «Der Platz», alle Fotos in einem Raster `repeat(auto-fill, minmax(min(100%, 220px), 1fr))`, nach Abschnitt sortiert, bis 520 px zwei Spalten (Entscheid Marc, 22.10.2026: einzelne Gruppen brauchten zu viel Platz). Abschnitt als Mono-Label in Grossbuchstaben (11 px, `--color-text-muted`) über der Legende, Bild 3:2 mit `object-fit: cover`, Rahmen `--color-border`, Radius `--radius-tile`. Legende in `--color-text-body`, Fotograf in `--color-text-subtle`. Lightbox als `<dialog>`: Hintergrund abgedunkelt, Foto ganz sichtbar (`object-fit: contain`) mit Rahmen und Radius wie in der Galerie, Legende und Fotograf darunter. Runde Knöpfe (48 px, `--color-surface-raised`, Rahmen `--color-border-strong`, beim Darüberfahren `--color-primary`) für Schliessen, vorheriges und nächstes Foto; schmal unten in der Mitte. Zähler «3 / 7» in Mono. Pfeiltasten blättern, Escape oder Klick daneben schliesst. |
 | `LakeLevelGauge` | Kleine Grafik in der rechten Hälfte der Kachel «Strömung und Pegel», Grund `--color-chart-surface` und Radius 10 px wie die Mini-Diagramme, Beschriftung darunter in Mono 11 px: üblicher Stand als gestrichelte Linie in `--color-text-muted` mit «üblich» in Mono, Pegel als Wellenlinie in `--color-primary` mit heller Fläche darunter, Abstand in cm in Mono über der oberen Linie. Bei einem Hinweis Linie und Fläche in `--color-signal`. Textalternative als `aria-label` («Seepegel 405.76 m ü. M. · 13 cm unter üblich») |
+| `PartnerCard` (Seite «Partner») | Karte wie `.card`: links das Logo auf einer Plakette in `--color-logo-plate` (Radius `--radius-tile`), rechts Name, Text und die Links als `.button` und `.button.secondary`. Schmal steht das Logo über dem Text. Logo als WebP mit PNG als Rückfall (`wwwroot/img/partner/`, 600 px breit, aus `assets/partner/`). |
 | `PracticalTile` | Label in Cyan oder Orange (Achtung), Text |
 | `SusvBadge` | Kennzeichnung eines Eintrags des SUSV: Signet des SUSV ohne Namen (20 px hoch, auf heller Plakette, damit es auf dunklem Grund lesbar ist) und Link in `--color-primary`, zusammen ein Link auf die Seite des Eintrags bei susv.ch, neuer Tab, `aria-label` «Quelle: SUSV, öffnet susv.ch». Ohne Logo-Datei steht «SUSV» in Mono. Mindestens 44 px hoch auf Touch. Im Banner rechts oben, in Zeilen am Ende. |
 | `BuddyCallout` (`.callout`, alle Hinweisboxen: «Kennst du diesen Platz?», «Über» › Prognose, offener Vorschlag, Plätze in der Nähe) | Fläche `--color-surface`, Rahmen 2 px in `--color-signal`, Text `--color-text-body`, Titel in `--color-signal`, Links fett und unterstrichen in `--color-primary`. Keine orange Fläche: Sie blendete und wurde übersehen (Marc, 19.10.2026). Kontrast Text 13:1, Titel 8:1 (WCAG AA) |

@@ -94,6 +94,7 @@ public sealed class SqlServer : IAsyncLifetime
             ["Translation:ApiKey"] = "test-key",
             ["IndexNow:Enabled"] = "true",
             ["IndexNow:Key"] = IndexNowKey,
+            ["Susv:CallInterval"] = "00:00:00",
         });
         builder.AddTauchplaetzeCore();
         builder.Logging.AddProvider(Logs);
@@ -169,6 +170,7 @@ public sealed class SqlServer : IAsyncLifetime
         MailQueue.Clear();
         Sources.Failing = null;
         Sources.Overrides.Clear();
+        Sources.SusvMaps.Clear();
         Sources.Requests.Clear();
         Sources.Posts.Clear();
         Sources.Statuses.Clear();

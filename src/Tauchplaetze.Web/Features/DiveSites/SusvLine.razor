@@ -1,0 +1,13 @@
+@using Tauchplaetze.Core.Features.DiveSites
+@inject IStringLocalizer<DiveSiteStrings> L
+
+<p class="susv-line" data-susv-topic="@Project.Topic">
+    <span>@L[$"Susv_{Project.Topic}"]</span>
+    <SusvBadge Url="@Project.DetailUrl" />
+</p>
+
+@code {
+    /// <summary>Ein Projekt des SUSV als Zeile mit festem Text aus den Ressourcen (Story 004).</summary>
+    [Parameter, EditorRequired]
+    public SiteSusvProject Project { get; set; } = default!;
+}

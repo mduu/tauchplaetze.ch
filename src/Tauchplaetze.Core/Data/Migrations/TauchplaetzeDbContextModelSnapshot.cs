@@ -18,7 +18,7 @@ namespace Tauchplaetze.Core.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.13")
+                .HasAnnotation("ProductVersion", "10.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -540,6 +540,9 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<bool>("RecursYearly")
+                        .HasColumnType("bit");
 
                     b.Property<int>("SortOrder")
                         .HasColumnType("int");
@@ -1077,6 +1080,46 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.ToTable("Reports", (string)null);
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.ShippingFeature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Geometry>("Geometry")
+                        .IsRequired()
+                        .HasColumnType("geography");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("SourceKey")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(40)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Source", "SourceKey")
+                        .IsUnique();
+
+                    b.ToTable("ShippingFeatures", (string)null);
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SiteWeatherOutlook", b =>
                 {
                     b.Property<Guid>("DiveSiteId")
@@ -1114,6 +1157,145 @@ namespace Tauchplaetze.Core.Data.Migrations
                     b.HasIndex("DiveSiteId");
 
                     b.ToTable("SlugRedirects", (string)null);
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SusvEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("ChangedSinceReview")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ContentHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("char(64)")
+                        .IsFixedLength();
+
+                    b.Property<DateTimeOffset>("FirstSeenAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("LastSeenAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Point>("Location")
+                        .IsRequired()
+                        .HasColumnType("geography");
+
+                    b.Property<byte>("MissedRuns")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("NoticeKind")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<bool>("RecursYearly")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("RemovedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ReviewStatus")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset?>("ReviewedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ReviewedBy")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SourceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("SourcePublishedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateOnly?>("TextsFetchedOn")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateOnly?>("ValidFrom")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("ValidUntil")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewStatus");
+
+                    b.HasIndex("SourceId", "Topic")
+                        .IsUnique();
+
+                    b.ToTable("SusvEntries", (string)null);
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SusvEntrySite", b =>
+                {
+                    b.Property<Guid>("EntryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DiveSiteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("EntryId", "DiveSiteId");
+
+                    b.HasIndex("DiveSiteId");
+
+                    b.ToTable("SusvEntrySites", (string)null);
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SusvEntryTranslation", b =>
+                {
+                    b.Property<Guid>("EntryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Culture")
+                        .HasMaxLength(2)
+                        .HasColumnType("nchar(2)")
+                        .IsFixedLength();
+
+                    b.Property<string>("DetailUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsMachineTranslated")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReviewedText")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("ReviewedTitle")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Teaser")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Text")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("EntryId", "Culture");
+
+                    b.ToTable("SusvEntryTranslations", (string)null);
                 });
 
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.User", b =>
@@ -1519,6 +1701,30 @@ namespace Tauchplaetze.Core.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SusvEntrySite", b =>
+                {
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.DiveSite", null)
+                        .WithMany()
+                        .HasForeignKey("DiveSiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.SusvEntry", null)
+                        .WithMany("Sites")
+                        .HasForeignKey("EntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SusvEntryTranslation", b =>
+                {
+                    b.HasOne("Tauchplaetze.Core.Data.Entities.SusvEntry", null)
+                        .WithMany("Translations")
+                        .HasForeignKey("EntryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.WaterBodyDailyIndex", b =>
                 {
                     b.HasOne("Tauchplaetze.Core.Data.Entities.WaterBody", null)
@@ -1558,6 +1764,13 @@ namespace Tauchplaetze.Core.Data.Migrations
 
             modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.MediaItem", b =>
                 {
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Tauchplaetze.Core.Data.Entities.SusvEntry", b =>
+                {
+                    b.Navigation("Sites");
+
                     b.Navigation("Translations");
                 });
 

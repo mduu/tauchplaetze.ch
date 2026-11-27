@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MetaDescription" xml:space="preserve"><value>Wo Sporttauchen wegen der Schifffahrt verboten ist: Landungsstellen, Fahrlinien, Häfen und Liegeplätze nach der Binnenschifffahrtsverordnung.</value></data>
+  <data name="Eyebrow" xml:space="preserve"><value>Regeln am Wasser</value></data>
+  <data name="Title" xml:space="preserve"><value>Tauchen und Schifffahrt</value></data>
+  <data name="Lead" xml:space="preserve"><value>An vielen Plätzen ist das Tauchen nur geduldet. Wer die Regeln kennt, hilft, dass es so bleibt.</value></data>
+  <data name="Forbidden_Title" xml:space="preserve"><value>Wo Sporttauchen verboten ist</value></data>
+  <data name="Forbidden_Intro" xml:space="preserve"><value>Die Binnenschifffahrtsverordnung (Art. 77 Abs. 3) verbietet das Sporttauchen an diesen Stellen:</value></data>
+  <data name="Case_LandingStage" xml:space="preserve"><value>im Umkreis von 100 m um die bewilligten Landungsstellen der Kursschiffe;</value></data>
+  <data name="Case_Routes" xml:space="preserve"><value>auf den Fahrlinien der Kursschiffe;</value></data>
+  <data name="Case_Harbour" xml:space="preserve"><value>bei Hafeneinfahrten;</value></data>
+  <data name="Case_Moorings" xml:space="preserve"><value>in der Nähe von bewilligten Liegeplätzen, zum Beispiel Bojenfeldern;</value></data>
+  <data name="Case_Fairway" xml:space="preserve"><value>in engem Fahrwasser.</value></data>
+  <data name="Case_Exception" xml:space="preserve"><value>Der Kanton kann den Umkreis um eine Landungsstelle verkleinern (Art. 163). Es gelten auch die Regeln des Kantons und der Gemeinde.</value></data>
+  <data name="Behaviour_Title" xml:space="preserve"><value>So verhältst du dich</value></data>
+  <data name="Behaviour_Flag" xml:space="preserve"><value>Setze beim Tauchen die Flagge «A»: weiss und blau, am Ufer oder am Boot gut sichtbar (Art. 32).</value></data>
+  <data name="Behaviour_Distance" xml:space="preserve"><value>Schiffe halten mindestens 50 m Abstand zu dieser Flagge (Art. 49). Bleib in ihrer Nähe.</value></data>
+  <data name="Behaviour_Choose" xml:space="preserve"><value>Wähle Einstieg und Route abseits von Häfen, Landungsstellen und Bojenfeldern.</value></data>
+  <data name="Behaviour_Local" xml:space="preserve"><value>Viele lokale Regeln stehen nirgends gesammelt. Tauchst du zum ersten Mal an einem Platz, frag vorher einen Club oder ein Tauchgeschäft am Ort.</value></data>
+  <data name="Map_Title" xml:space="preserve"><value>Was die Karte zeigt</value></data>
+  <data name="Map_LandingStage" xml:space="preserve"><value>Landungsstellen der Kursschiffe mit einem Kreis von 100 m.</value></data>
+  <data name="Map_Routes" xml:space="preserve"><value>Fahrlinien der Kursschiffe als gestrichelte Linie.</value></data>
+  <data name="Map_Harbour" xml:space="preserve"><value>Häfen als Fläche und Bojenfelder aus der Tauchskizze, je mit einem Kreis von 50 m um die Mitte.</value></data>
+  <data name="Map_Limits" xml:space="preserve"><value>Jeder Abstand gilt ab der Mitte. Enges Fahrwasser und nicht erfasste Liegeplätze fehlen auf der Karte. Die Karte dient der Orientierung und ist nicht rechtsverbindlich.</value></data>
+  <data name="Susv_Title" xml:space="preserve"><value>Der SUSV</value></data>
+  <data name="Susv_Text" xml:space="preserve"><value>Der Schweizer Unterwasser-Sport-Verband spricht mit Seepolizei und Schifffahrtsgesellschaften, damit Tauchen an den Plätzen möglich bleibt.</value></data>
+  <data name="Susv_Link" xml:space="preserve"><value>Zum SUSV</value></data>
+  <data name="Source_Title" xml:space="preserve"><value>Quelle</value></data>
+  <data name="Source_Text" xml:space="preserve"><value>Binnenschifffahrtsverordnung (BSV, SR 747.201.1), Stand am 1. Januar 2022, Art. 32, 49, 77 und 163.</value></data>
+  <data name="Source_Link" xml:space="preserve"><value>Art. 77 auf Fedlex lesen</value></data>
+  <data name="Source_Url" xml:space="preserve"><value>https://www.fedlex.admin.ch/eli/cc/1979/337_337_337/de#art_77</value></data>
+</root>

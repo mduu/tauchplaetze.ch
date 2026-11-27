@@ -1685,5 +1685,123 @@
         "longitude": 9.21
       }
     ]
+  },
+  {
+    "slug": "bodensee-obersee",
+    "nameDe": "Bodensee (Obersee)",
+    "nameEn": "Lake Constance (Obersee)",
+    "nameFr": "Lac de Constance (Obersee)",
+    "nameIt": "Lago di Costanza (Obersee)",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.6014,
+      "longitude": 9.4281
+    },
+    "satellitePoint": {
+      "latitude": 47.6,
+      "longitude": 9.4
+    },
+    "alplakesLakeKey": "constance",
+    "alplakesSimstratKey": "upperconstance",
+    "elevation": 396,
+    "hydroStations": [
+      {
+        "id": "2473",
+        "name": "Rhein – Diepoldsau, Rietbrücke",
+        "role": "Inflow",
+        "latitude": 47.3832,
+        "longitude": 9.6412,
+        "mouthLatitude": 47.5254,
+        "mouthLongitude": 9.6448
+      },
+      {
+        "id": "2308",
+        "name": "Goldach – Goldach, Bleiche",
+        "role": "Inflow",
+        "latitude": 47.4867,
+        "longitude": 9.4707,
+        "mouthLatitude": 47.4894,
+        "mouthLongitude": 9.4763
+      },
+      {
+        "id": "2312",
+        "name": "Aach – Salmsach, Hungerbühl",
+        "role": "Inflow",
+        "latitude": 47.5505,
+        "longitude": 9.3572,
+        "mouthLatitude": 47.5563,
+        "mouthLongitude": 9.3806
+      },
+      {
+        "id": "2032",
+        "name": "Bodensee (Obersee) – Romanshorn",
+        "role": "Level",
+        "latitude": 47.5644,
+        "longitude": 9.381
+      }
+    ]
+  },
+  {
+    "slug": "bodensee-untersee",
+    "nameDe": "Bodensee (Untersee)",
+    "nameEn": "Lake Constance (Untersee)",
+    "nameFr": "Lac de Constance (Untersee)",
+    "nameIt": "Lago di Costanza (Untersee)",
+    "type": "Lake",
+    "centroid": {
+      "latitude": 47.6941,
+      "longitude": 9.0163
+    },
+    "satellitePoint": {
+      "latitude": 47.683,
+      "longitude": 9.01
+    },
+    "alplakesLakeKey": "constance",
+    "alplakesSimstratKey": "lowerconstance",
+    "elevation": 395,
+    "hydroStations": [
+      {
+        "id": "2043",
+        "name": "Bodensee (Untersee) – Berlingen",
+        "role": "Level",
+        "latitude": 47.6754,
+        "longitude": 9.0177
+      }
+    ]
+  },
+  {
+    "slug": "thur",
+    "nameDe": "Thur",
+    "nameEn": null,
+    "nameFr": null,
+    "nameIt": null,
+    "type": "River",
+    "centroid": {
+      "latitude": 47.4136,
+      "longitude": 9.0773
+    },
+    "hydroStations": [
+      {
+        "id": "2303",
+        "name": "Thur – Jonschwil, Mühlau",
+        "role": "River",
+        "latitude": 47.4137,
+        "longitude": 9.0776
+      },
+      {
+        "id": "2181",
+        "name": "Thur – Halden",
+        "role": "River",
+        "latitude": 47.5058,
+        "longitude": 9.2115
+      },
+      {
+        "id": "2044",
+        "name": "Thur – Andelfingen",
+        "role": "River",
+        "latitude": 47.5966,
+        "longitude": 8.6818
+      }
+    ]
   }
 ]

@@ -1,0 +1,68 @@
+@page "/de/partner"
+@page "/en/partners"
+@page "/fr/partenaires"
+@page "/it/partner"
+@attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(PolicyName = Tauchplaetze.Web.CrossCutting.Caching.PublicPageCache.Policy)]
+@inject IStringLocalizer<SharedStrings> Shared
+@inject IStringLocalizer<PartnerStrings> L
+@inject Microsoft.Extensions.Options.IOptions<Tauchplaetze.Web.Features.Partner.PartnerOptions> Options
+@inject NavigationManager Navigation
+
+<PageTitle>@SeoText.PageTitle(L["Partner_Title"], Shared["Brand"])</PageTitle>
+<HeadContent>
+    <HreflangLinks Title="@L["Partner_Title"]" Description="@L["MetaDescription"]" />
+</HeadContent>
+
+<section class="page-section">
+    <h1 class="page-title">@L["Partner_Title"]</h1>
+    <p class="lead">@L["Lead"]</p>
+    <p class="unpaid">@L["Unpaid"]</p>
+</section>
+
+<section class="page-section partners" aria-label="@L["Partner_Title"]">
+    <article class="partner" data-partner="susv">
+        <div class="partner-logo">
+            <picture>
+                <source srcset="@Assets["img/partner/susv-logo.webp"]" type="image/webp" />
+                <img src="@Assets["img/partner/susv-logo.png"]" width="600" height="161" alt="@L["Susv_LogoAlt"]" />
+            </picture>
+        </div>
+        <div class="partner-body">
+            <h2 class="partner-name">@L["Susv_Name"]</h2>
+            <p>@L["Susv_Text"]</p>
+            <p class="partner-links">
+                <a class="button" href="@SusvMembership[Language]" rel="noopener">@L["Susv_Member"]</a>
+                <a class="button secondary" href="@SusvSitePromotion[Language]" rel="noopener">@L["Susv_Promotion"]</a>
+            </p>
+        </div>
+    </article>
+</section>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (!Options.Value.Visible)
+        {
+            Navigation.NotFound();
+        }
+    }
+
+    /// <remarks>susv.ch hat keine englischen Seiten. Englisch verlinkt die deutsche Fassung.</remarks>
+    private static readonly IReadOnlyDictionary<string, string> SusvMembership = new Dictionary<string, string>
+    {
+        ["de"] = "https://susv.ch/de/verband/mitglieder-partner/einzelmitglied/",
+        ["en"] = "https://susv.ch/de/verband/mitglieder-partner/einzelmitglied/",
+        ["fr"] = "https://susv.ch/fr/la-fede/membres-partenaires/membre-individuel/",
+        ["it"] = "https://susv.ch/it/la-federazione/membri-partner/membro-individuale/",
+    };
+
+    private static readonly IReadOnlyDictionary<string, string> SusvSitePromotion = new Dictionary<string, string>
+    {
+        ["de"] = "https://susv.ch/de/tauchen/bereiche/tauchplatzfoerderung/",
+        ["en"] = "https://susv.ch/de/tauchen/bereiche/tauchplatzfoerderung/",
+        ["fr"] = "https://susv.ch/fr/plongee/domaines/amelioration-de-site-de-plongee/",
+        ["it"] = "https://susv.ch/it/immersione/ambiti/promozione-del-sito-di-immersione/",
+    };
+
+    private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}

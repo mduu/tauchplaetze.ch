@@ -23,7 +23,7 @@ const string Query = """
       (way(around.s:300)[natural=water][name];rel(around.s:300)[natural=water][name];way(around.s:300)[waterway~"^(river|canal)$"][name];);
       out tags center;
       (.s;node(w.s););is_in->.a;
-      area.a[admin_level~"^(4|8)$"][boundary=administrative];
+      area.a[admin_level~"^(2|4|8)$"][boundary=administrative];
       out tags;
     );
     """;
@@ -33,7 +33,7 @@ var outDir = Path.Combine(root, "tools", "osm-import", "out");
 var rawPath = Path.Combine(outDir, "overpass.json");
 var waterSeedPath = Path.Combine(root, "src", "Tauchplaetze.Core", "Features", "WaterBodies", "Seed", "water-bodies.json");
 var siteSeedPath = Path.Combine(root, "src", "Tauchplaetze.Core", "Features", "Editorial", "Seed", "dive-sites.json");
-var excludeSource = new Regex(Option("--exclude-source") ?? "swiss-divers", RegexOptions.IgnoreCase);
+var excludeSource = Option("--exclude-source") is { } excluded ? new Regex(excluded, RegexOptions.IgnoreCase) : null;
 Directory.CreateDirectory(outDir);
 
 if (!args.Contains("--cached") || !File.Exists(rawPath))
@@ -50,14 +50,28 @@ var siteSeeds = JsonNode.Parse(await File.ReadAllTextAsync(siteSeedPath))!.AsArr
 var waterSlugs = waterSeeds.Select(w => (string)w!["slug"]!).ToHashSet();
 var newWaters = new Dictionary<string, NewWater>();
 
+var knownOsmIds = siteSeeds.SelectMany(s => s!["osm"]?.AsArray().Select(id => (string)id!) ?? []).ToHashSet();
+var bodenseeSites = siteSeeds
+    .Where(s => (string?)s!["waterBody"] is Bodensee.Obersee or Bodensee.Untersee)
+    .Select(s => ((double)s!["latitude"]!, (double)s["longitude"]!))
+    .ToList();
 var usable = new List<Candidate>();
-foreach (var candidate in candidates)
+foreach (var found in candidates)
 {
-    if (candidate.Name is null)
+    var candidate = Bodensee.Assign(found, bodenseeSites);
+    if (knownOsmIds.Contains(candidate.OsmId))
+    {
+        review.Duplicates.Add($"{candidate.Name}: OSM {candidate.OsmId} gehört schon zu einem Platz");
+    }
+    else if (candidate.Country is not null and not "CH" && candidate.Water?.Slug is not (Bodensee.Obersee or Bodensee.Untersee))
+    {
+        review.Skipped.Add($"ausserhalb der Schweiz, nicht am Bodensee: {candidate.Name} ({candidate.Country}, {Coordinates(candidate)})");
+    }
+    else if (candidate.Name is null)
     {
         review.Skipped.Add($"ohne Namen: OSM {candidate.OsmId} ({Coordinates(candidate)})");
     }
-    else if (excludeSource.IsMatch(candidate.Source ?? ""))
+    else if (excludeSource?.IsMatch(candidate.Source ?? "") == true)
     {
         review.Skipped.Add($"Quelle ausgeschlossen ({candidate.Source}): {candidate.Name}");
     }
@@ -230,9 +244,12 @@ static IEnumerable<Candidate> Candidates(JsonArray elements)
         }
         else if (type == "area")
         {
-            current = (string?)tags?["admin_level"] == "4"
-                ? current with { Canton = Osm.Tag(tags, "ISO3166-2")?.Replace("CH-", "") }
-                : Patterns.LakeTerritory.IsMatch(Osm.Tag(tags, "name") ?? "") ? current : current with { Municipality = Osm.Tag(tags, "name") };
+            current = (string?)tags?["admin_level"] switch
+            {
+                "2" => current with { Country = Osm.Tag(tags, "ISO3166-1") },
+                "4" => Osm.Tag(tags, "ISO3166-2") is { } region && region.StartsWith("CH-", StringComparison.Ordinal) ? current with { Canton = region[3..] } : current,
+                _ => Patterns.LakeTerritory.IsMatch(Osm.Tag(tags, "name") ?? "") ? current : current with { Municipality = Osm.Tag(tags, "name") },
+            };
         }
         else if (Water.From(tags!, element, current.Latitude, current.Longitude) is { } water)
         {
@@ -396,7 +413,50 @@ static class Patterns
 
 }
 
-sealed record Candidate(string OsmId, string? Name, double Latitude, double Longitude, string? Source, Water? Water, string? Municipality, string? Canton, Facts? Facts = null, List<string>? OtherNames = null);
+sealed record Candidate(string OsmId, string? Name, double Latitude, double Longitude, string? Source, Water? Water, string? Municipality, string? Canton, Facts? Facts = null, List<string>? OtherNames = null, string? Country = null);
+
+/// <summary>
+/// Der Bodensee in zwei Gewässern: Obersee (mit Überlinger See) und Untersee (mit Zeller See und Gnadensee), Grenze beim Seerhein (Entscheid Marc, 27.11.2026).
+/// Plätze an beiden Ufern zählen, auch in Deutschland und Österreich. Ein Punkt im Hafen (etwa Rorschach) hat in OSM kein Gewässer: Im Gebiet des Sees gilt dann der See.
+/// </summary>
+static class Bodensee
+{
+    public const string Obersee = "bodensee-obersee";
+
+    public const string Untersee = "bodensee-untersee";
+
+    private static readonly HashSet<string> Parts = ["Bodensee", "Obersee", "Untersee", "Überlinger See", "Zeller See", "Gnadensee", "Rheinsee", "Konstanzer Trichter"];
+
+    /// <summary>Ohne Gewässer aus OSM gilt der See nur im Ausland oder höchstens so weit von einem bekannten Platz am See (das Gebiet umfasst auch Land im Thurgau).</summary>
+    private const double NearKnownSiteKm = 2;
+
+    public static Candidate Assign(Candidate candidate, List<(double Latitude, double Longitude)> knownSites)
+    {
+        var inArea = candidate.Latitude is >= 47.40 and <= 47.90 && candidate.Longitude is >= 8.80 and <= 9.80;
+        var atLake = candidate.Water is { } water
+            ? Parts.Contains(water.NameDe)
+            : candidate.Country is not null and not "CH" || knownSites.Any(s => Km(s, candidate) <= NearKnownSiteKm);
+        if (!inArea || !atLake)
+        {
+            return candidate;
+        }
+
+        var untersee = candidate.Longitude < 9.16 && (candidate.Latitude < 47.745 || candidate.Longitude < 9.0);
+        return candidate with
+        {
+            Water = untersee
+                ? new Water("Bodensee (Untersee)", "Lake Constance (Untersee)", "Lac de Constance (Untersee)", "Lago di Costanza (Untersee)", "Lake", 47.6941, 9.0163)
+                : new Water("Bodensee (Obersee)", "Lake Constance (Obersee)", "Lac de Constance (Obersee)", "Lago di Costanza (Obersee)", "Lake", 47.6014, 9.4281),
+        };
+    }
+
+    private static double Km((double Latitude, double Longitude) site, Candidate candidate)
+    {
+        var dy = (site.Latitude - candidate.Latitude) * 111.2;
+        var dx = (site.Longitude - candidate.Longitude) * 111.2 * Math.Cos(candidate.Latitude * Math.PI / 180);
+        return Math.Sqrt(dx * dx + dy * dy);
+    }
+}
 
 // Namen, die Marc korrigiert oder ergänzt hat. Punkte mit sport=scuba_diving sind Tauchplätze, auch wenn sie «Parkplatz» heissen.
 static class Names

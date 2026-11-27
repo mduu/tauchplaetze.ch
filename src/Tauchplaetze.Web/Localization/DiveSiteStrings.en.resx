@@ -300,4 +300,22 @@
   <data name="Seo_WaterTitle" xml:space="preserve"><value>{0}: diving and visibility today</value></data>
   <data name="Seo_WaterDescription" xml:space="preserve"><value>{0}: {1} dive sites with map and daily dive forecast.</value></data>
   <data name="Seo_WaterBest" xml:space="preserve"><value>Best dive index today: {0}/10.</value></data>
+  <data name="Notice_From" xml:space="preserve"><value>from {0}</value></data>
+  <data name="Notice_Period" xml:space="preserve"><value>{0} to {1}</value></data>
+  <data name="Notice_Yearly" xml:space="preserve"><value>every year {0}–{1}</value></data>
+  <data name="Notices_Later_Title" xml:space="preserve"><value>Notices with a period</value></data>
+  <data name="Susv_More" xml:space="preserve"><value>More from the SUSV</value></data>
+  <data name="Susv_SourceLabel" xml:space="preserve"><value>Source: SUSV, opens susv.ch</value></data>
+  <data name="Trait_Inclusive" xml:space="preserve"><value>Inclusion</value></data>
+  <data name="Susv_Defibrillator" xml:space="preserve"><value>Defibrillator (AED) at the site</value></data>
+  <data name="Susv_MobileToilet" xml:space="preserve"><value>Mobile toilet at the site</value></data>
+  <data name="Susv_SupportProject" xml:space="preserve"><value>The SUSV has improved this site.</value></data>
+  <data name="Susv_InclusiveSite" xml:space="preserve"><value>Inclusive dive site: suitable for divers with a disability.</value></data>
+  <data name="SketchKind_MooringField" xml:space="preserve"><value>Mooring field</value></data>
+  <data name="Map_Layer_Shipping" xml:space="preserve"><value>Shipping</value></data>
+  <data name="Shipping_Line" xml:space="preserve"><value>Scheduled boats operate near this site. Recreational diving is prohibited at the marked places (Art. 77 BSV).</value></data>
+  <data name="Shipping_NearLandingStage" xml:space="preserve"><value>This site is less than 100 m from the landing stage {0}.</value></data>
+  <data name="Shipping_Link" xml:space="preserve"><value>Diving and shipping</value></data>
+  <data name="Shipping_NotBinding" xml:space="preserve"><value>For orientation only, not legally binding.</value></data>
+  <data name="Shipping_Attribution" xml:space="preserve"><value>Landing stages: öV-Haltestellen Bundesamt für Verkehr BAV · Routes and harbours: © OpenStreetMap contributors</value></data>
 </root>

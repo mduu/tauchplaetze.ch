@@ -33,7 +33,7 @@ Jeder Platz hat eine **Datenstufe** (`DataLevel`). Sie sagt, wie genau die Daten
 - Die Datenstufe kann pro Tag sinken, wenn eine Quelle ausfällt.
 - **Profil am Platz (22.10.2026):** Am Ufer liegt der nächste Gitterpunkt des 3D-Modells oft im Flachwasser. Reicht sein Profil nicht bis 30 m (`ModelPoint.MinDepth`), fragt der Lauf zusätzlich Punkte 100 m und 250 m Richtung See ab (siehe «Richtung in den See»). Es gilt das tiefste Profil. Die Distanz zum Gitterpunkt zählt für die Datenstufe ab dem Platz (Distanz draussen plus 100 bzw. 250 m). Bei Tellskapelle Sisikon endete das Profil am Platz bei 1.5 m: keine Werte auf 10, 20 und 30 m, keine Sprungschicht. 100 m draussen reicht es bis 79 m: 15.1 °C bis 15 m, 12.9 °C auf 20 m, 8.2 °C auf 30 m.
 - Die Rangliste «Wo tauchen?» zeigt nur Plätze mit Index. Plätze ohne Index erscheinen im Verzeichnis und auf der Gewässerseite.
-- Ein Platz mit gültiger Sperrung (`dive-site.md`, «Hinweise») fehlt an diesem Tag in «Beste Wahl» und Rangliste. Der Index wird trotzdem berechnet.
+- Ein Platz mit gültiger Sperrung (`dive-site.md`, «Hinweise») fehlt an diesem Tag in «Beste Wahl» und Rangliste. Der Index wird trotzdem berechnet. Die Prognose der Platzseite zeigt an diesem Tag neben dem Index «Gesperrt». So sieht man, wenn eine Sperrung mitten in der Prognose beginnt.
 
 ### Rangliste
 

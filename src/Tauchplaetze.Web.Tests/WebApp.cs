@@ -35,6 +35,8 @@ using Tauchplaetze.Core.Features.Translations.Queries;
 using Tauchplaetze.Core.Features.Reports;
 using Tauchplaetze.Core.Features.Reports.Commands;
 using Tauchplaetze.Core.Features.Reports.Queries;
+using Tauchplaetze.Core.Features.Shipping.Queries;
+using Tauchplaetze.Core.Features.Susv.Queries;
 
 namespace Tauchplaetze.Web.Tests;
 
@@ -98,6 +100,10 @@ public sealed class WebApp : WebApplicationFactory<Program>
     public FakeQuery<WithdrawRevisionCommand, EditorialResult> Withdraw { get; } = new(_ => new EditorialResult([]));
 
     public FakeQuery<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>> PendingRevisions { get; } = new(_ => []);
+
+    public FakeQuery<GetSusvReviewCountQuery, int> SusvReviewCount { get; } = new(_ => 0);
+
+    public FakeQuery<GetSiteShippingQuery, SiteShipping> Shipping { get; } = new(_ => SiteShipping.None);
 
     public FakeQuery<GetDiveSiteForEditingQuery, DiveSiteForEditing?> ForEditing { get; } = new(_ => null);
 
@@ -182,6 +188,8 @@ public sealed class WebApp : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<ComparePublicRevisionsQuery, IReadOnlyList<FieldChange>?>>(PublicChanges));
             services.Replace(ServiceDescriptor.Singleton<ICommandHandler<WithdrawRevisionCommand, EditorialResult>>(Withdraw));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetPendingRevisionsQuery, IReadOnlyList<PendingRevision>>>(PendingRevisions));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSusvReviewCountQuery, int>>(SusvReviewCount));
+            services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteShippingQuery, SiteShipping>>(Shipping));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetDiveSiteForEditingQuery, DiveSiteForEditing?>>(ForEditing));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetTranslationAllowanceQuery, TranslationAllowance>>(TranslationAllowance));
             services.Replace(ServiceDescriptor.Singleton<IQueryHandler<GetSiteMediaQuery, IReadOnlyList<SiteMediaItem>>>(SiteMedia));

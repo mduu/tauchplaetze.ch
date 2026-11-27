@@ -59,4 +59,7 @@
   <data name="Entry_Described_Many" xml:space="preserve"><value>Neu beschrieben · {0} Plätze</value></data>
   <data name="News_Older" xml:space="preserve"><value>Hier stehen die letzten {0} Neuigkeiten. Ältere sind nicht mehr aufgeführt.</value></data>
   <data name="News_Empty" xml:space="preserve"><value>Noch keine Neuigkeiten.</value></data>
+  <data name="Source_Susv_Label" xml:space="preserve"><value>SUSV</value></data>
+  <data name="Source_Susv_Name" xml:space="preserve"><value>Hinweise des SUSV</value></data>
+  <data name="Source_Susv_Text" xml:space="preserve"><value>{0} bestätigte Einträge an Plätzen, abgeglichen {1}.</value></data>
 </root>

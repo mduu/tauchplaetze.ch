@@ -6,6 +6,7 @@ using Tauchplaetze.Core.CrossCutting.Mail;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
 using Tauchplaetze.Web.CrossCutting.Localization;
+using Tauchplaetze.Web.Features.Partner;
 
 namespace Tauchplaetze.Web.CrossCutting.Hosting;
 
@@ -24,7 +25,7 @@ internal static class Sitemap
         endpoints.MapGet("/sitemap.xml", (IOptions<PublicSiteOptions> site) =>
             Xml(Index(site.Value)));
 
-        endpoints.MapGet("/sitemap-{lang}.xml", async (string lang, IMemoryCache cache, IQueryHandler<GetSitemapEntriesQuery, SitemapEntries> entries, IOptions<PublicSiteOptions> site, CancellationToken ct) =>
+        endpoints.MapGet("/sitemap-{lang}.xml", async (string lang, IMemoryCache cache, IQueryHandler<GetSitemapEntriesQuery, SitemapEntries> entries, IOptions<PublicSiteOptions> site, IOptions<PartnerOptions> partner, CancellationToken ct) =>
         {
             if (!Languages.All.Contains(lang))
             {
@@ -34,7 +35,7 @@ internal static class Sitemap
             var content = await cache.GetOrCreateAsync($"sitemap:{lang}", async e =>
             {
                 e.AbsoluteExpirationRelativeToNow = CacheFor;
-                return ForLanguage(lang, await entries.Handle(new GetSitemapEntriesQuery(), ct), site.Value);
+                return ForLanguage(lang, await entries.Handle(new GetSitemapEntriesQuery(), ct), site.Value, partner.Value.Visible);
             });
             return Xml(content!);
         });
@@ -46,8 +47,8 @@ internal static class Sitemap
         new XDocument(new XElement(Ns + "sitemapindex",
             Languages.All.Select(l => new XElement(Ns + "sitemap", new XElement(Ns + "loc", site.Link($"/sitemap-{l}.xml")))))).ToString();
 
-    /// <summary>Die Seiten einer Sprache: Start, Verzeichnis, Gewässer, «Über», «Echolot», jeder Platz und jedes Gewässer.</summary>
-    public static string ForLanguage(string language, SitemapEntries entries, PublicSiteOptions site)
+    /// <summary>Die Seiten einer Sprache: Start, Verzeichnis, Gewässer, «Über», «Echolot», «Partner», «Tauchen und Schifffahrt», jeder Platz und jedes Gewässer.</summary>
+    public static string ForLanguage(string language, SitemapEntries entries, PublicSiteOptions site, bool partnerVisible = false)
     {
         var pages = new List<(Func<string, string> Path, DateTimeOffset? LastModified)>
         {
@@ -56,7 +57,13 @@ internal static class Sitemap
             (l => $"/{l}/{PublicRoutes.WaterBodies[l]}", null),
             (l => PublicRoutes.AboutPage(l), null),
             (l => PublicRoutes.EcholotPage(l), null),
+            (l => PublicRoutes.ShippingPage(l), null),
         };
+        if (partnerVisible)
+        {
+            pages.Add((l => PublicRoutes.PartnerPage(l), null));
+        }
+
         pages.AddRange(entries.WaterBodies.Select(w => ((Func<string, string>)(l => $"/{l}/{PublicRoutes.WaterBodies[l]}/{w.Slug}"), (DateTimeOffset?)w.LastModified)));
         pages.AddRange(entries.DiveSites.Select(s => ((Func<string, string>)(l => PublicRoutes.DiveSite(l, s.Slug)), (DateTimeOffset?)s.LastModified)));
 

@@ -1,6 +1,6 @@
 # Story 004: Projekte des SUSV auf der Platzseite
 
-**Status:** geplant (24.11.2026).
+**Status:** 👷‍♂️ in Arbeit (27.11.2026), auf dem Branch `feat/susv-import`, noch nicht deployt.
 
 ## Ziel
 
@@ -46,3 +46,9 @@ Aufbau der Platzseite: `ux.md`, «Tauchplatzseite», Abschnitte 1, 4, 6 und 7.
 | **Absprachen mit Behörden:** Die Quelle führt sie nur, soweit sie unter den Einschränkungen stehen (Story 003). | Den SUSV fragen, ob es dafür ein eigenes Thema geben soll. |
 
 Braucht Story 002 und die Kennzeichnung aus Story 003.
+
+## Umsetzung
+
+- Pro Thema zeigt die Seite höchstens eine Zeile, auch wenn mehrere Einträge zum Platz gehören. Der Link führt auf den ältesten Eintrag (kleinste Nummer der Quelle).
+- Das Tag «Inklusion» im Hero hat den Stil des Tags «Bergsee».
+- Filter im Verzeichnis: URL-Parameter `f=inclusive`.

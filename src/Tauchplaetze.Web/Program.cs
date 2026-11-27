@@ -17,6 +17,8 @@ using Tauchplaetze.Web.Features.IndexNow;
 using Tauchplaetze.Web.Features.Mail;
 using Tauchplaetze.Web.Features.Media;
 using Tauchplaetze.Web.Features.Platform;
+using Tauchplaetze.Web.Features.Partner;
+using Tauchplaetze.Web.Features.Susv;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,17 +37,20 @@ builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(Fo
 builder.Services.AddHostedService<ForecastWorker>();
 builder.Services.AddHostedService<DischargeWorker>();
 builder.Services.AddHostedService<LakeLevelWorker>();
+builder.Services.AddHostedService<SusvWorker>();
 builder.Services.AddHostedService<MediaPurgeWorker>();
 builder.Services.AddHostedService<UnconfirmedAccountsWorker>();
 builder.Services.AddHostedService<MailQueueWorker>();
 builder.Services.AddHostedService<DeadLetterMonitorWorker>();
 builder.Services.AddHostedService<IndexNowWorker>();
 builder.Services.Configure<OperatorOptions>(builder.Configuration.GetSection(OperatorOptions.Section));
+builder.Services.Configure<PartnerOptions>(builder.Configuration.GetSection(PartnerOptions.Section));
 builder.Services.AddRateLimits(builder.Configuration);
 builder.Services.AddPublicPageCache(builder.Configuration);
 builder.Services.AddSecurityHeaders();
 builder.Services.AddCompression();
 builder.Services.AddSingleton<FormBotTrap>();
+builder.Services.AddScoped<SusvReviewSignal>();
 builder.Services.AddHostRedirects(builder.Configuration);
 ReadinessCheck.Register(builder.Services);
 

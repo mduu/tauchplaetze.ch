@@ -14,6 +14,8 @@ internal class DiveSiteNotice
 
     public DateOnly? ValidUntil { get; set; }
 
+    public bool RecursYearly { get; set; }
+
     public int SortOrder { get; set; }
 
     public List<DiveSiteNoticeTranslation> Translations { get; set; } = [];

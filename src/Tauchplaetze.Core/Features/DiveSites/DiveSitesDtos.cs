@@ -1,4 +1,5 @@
 using Tauchplaetze.Core.Features.Media;
+using Tauchplaetze.Core.Features.Susv;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.DiveSites;
@@ -19,7 +20,7 @@ public abstract record DiveSiteLookup
     public sealed record NotFound : DiveSiteLookup;
 }
 
-/// <summary>Ein öffentlicher Platz, mit dem Namen des Gewässers in der gewünschten Sprache, den heute gültigen Hinweisen (schwerster zuerst) und den Einstiegen.</summary>
+/// <summary>Ein öffentlicher Platz, mit dem Namen des Gewässers in der gewünschten Sprache, den sichtbaren Hinweisen (heute gültige zuerst, schwerster zuerst) und den Einstiegen.</summary>
 public record DiveSiteDetails(
     Guid Id,
     string Slug,
@@ -42,8 +43,19 @@ public record DiveSiteDetails(
     IReadOnlyList<string>? OtherNames = null,
     SiteTexts? Texts = null,
     bool HasDivingBan = false,
-    int? MountainLakeElevation = null)
+    int? MountainLakeElevation = null,
+    IReadOnlyList<DateOnly>? ClosedDays = null,
+    IReadOnlyList<SiteSusvProject>? SusvProjects = null)
 {
+    /// <summary>Bestätigte Projekte des SUSV an diesem Platz (Story 004). Sie ändern die Ausbaustufe nicht.</summary>
+    public IReadOnlyList<SiteSusvProject> SusvProjectList => SusvProjects ?? [];
+
+    /// <summary>Das Projekt des SUSV zu diesem Thema, falls bestätigt.</summary>
+    public SiteSusvProject? SusvProject(SusvTopic topic) => SusvProjectList.FirstOrDefault(p => p.Topic == topic);
+
+    /// <summary>Tage der Prognose (ab heute), an denen eine Sperrung gilt.</summary>
+    public IReadOnlyList<DateOnly> ClosedDayList => ClosedDays ?? [];
+
     /// <summary>Weitere Namen («auch bekannt als»).</summary>
     public IReadOnlyList<string> OtherNameList => OtherNames ?? [];
 
@@ -119,8 +131,28 @@ public enum RatingScale
 /// <summary>Eine bewertete Skala. <see cref="IsLevel"/>: eine Stufe (mehr ist anspruchsvoller), sonst eine Qualität (mehr ist besser).</summary>
 public record RatedScale(RatingScale Scale, byte Value, bool IsLevel);
 
-/// <summary>Ein gültiger Hinweis in der gewünschten Sprache. Fehlt die Übersetzung, kommt er auf Deutsch (<see cref="GermanOnly"/>).</summary>
-public record SiteNotice(NoticeKind Kind, string Text, DateOnly? ValidUntil, bool GermanOnly);
+/// <summary>
+/// Ein sichtbarer Hinweis der Redaktion oder eine Einschränkung des SUSV (<see cref="Susv"/>), in der gewünschten Sprache.
+/// Fehlt die Übersetzung, kommt er auf Deutsch (<see cref="GermanOnly"/>). <see cref="MachineTranslated"/>: Text des SUSV, automatisch übersetzt.
+/// <see cref="Timing"/>: Stufe der Anzeige (`dive-site.md`, «Anzeige nach Zeitraum»). <see cref="Start"/> und <see cref="ValidUntil"/>:
+/// der laufende oder nächste Zeitraum, bei <see cref="RecursYearly"/> mit dem Jahr dieses Zeitraums.
+/// </summary>
+public record SiteNotice(
+    NoticeKind Kind,
+    string Text,
+    DateOnly? ValidUntil,
+    bool GermanOnly,
+    NoticeTiming Timing = NoticeTiming.Today,
+    DateOnly? Start = null,
+    bool RecursYearly = false,
+    SiteNoticeSusv? Susv = null,
+    bool MachineTranslated = false);
+
+/// <summary>Ein Projekt des SUSV am Platz: Thema und Link auf die Seite des Eintrags bei susv.ch, in der Sprache der Seite, sonst auf Deutsch.</summary>
+public record SiteSusvProject(SusvTopic Topic, string DetailUrl);
+
+/// <summary>Herkunft SUSV: Titel und Link auf die Seite des Eintrags bei susv.ch, in der Sprache der Seite, sonst auf Deutsch.</summary>
+public record SiteNoticeSusv(string Title, string DetailUrl);
 
 /// <summary>Ein Einstieg mit dem Namen in der gewünschten Sprache, sonst auf Deutsch, sonst ohne Namen.</summary>
 public record SiteEntryPoint(EntryPointKind Kind, double Latitude, double Longitude, string? Name);

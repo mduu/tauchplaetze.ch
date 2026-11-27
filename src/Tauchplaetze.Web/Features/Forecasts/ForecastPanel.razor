@@ -110,7 +110,7 @@
         <ol>
             @foreach (var day in Forecast.Days)
             {
-                <li data-outlook="@(day.IsOutlook ? "true" : "false")">
+                <li data-outlook="@(day.IsOutlook ? "true" : "false")" data-closed="@(ClosedDays.Contains(day.Date) ? "true" : null)">
                     <div class="day-name">@(day.Date == Today.Date ? L["Day_Today_Short"] : ForecastFormat.Weekday(day.Date))</div>
                     @if (day.DiveIndex is { } dayIndex)
                     {
@@ -122,6 +122,10 @@
                         <div class="day-index">–</div>
                     }
                     <div class="day-word" title="@DayTitle(day)">@DayWord(day)</div>
+                    @if (ClosedDays.Contains(day.Date))
+                    {
+                        <div class="day-closed">@L["Day_Closed"]</div>
+                    }
                     @if (Discharge?.Forecast?.Days.FirstOrDefault(d => d.Date == day.Date) is { Level: { } dischargeLevel })
                     {
                         <div class="day-discharge" data-discharge="@dischargeLevel">@L["Day_Discharge", L[$"Discharge_{dischargeLevel}"]]</div>
@@ -154,6 +158,10 @@
     /// <summary>Der Abfluss an einem Flussplatz, sonst <c>null</c>.</summary>
     [Parameter]
     public SiteDischarge? Discharge { get; set; }
+
+    /// <summary>Tage mit gültiger Sperrung (`forecast.md`, «Sperrung»).</summary>
+    [Parameter]
+    public IReadOnlyList<DateOnly> ClosedDays { get; set; } = [];
 
     /// <summary>Der Pegel am See als Zeile in der Kachel «Strömung», sonst <c>null</c>.</summary>
     [Parameter]

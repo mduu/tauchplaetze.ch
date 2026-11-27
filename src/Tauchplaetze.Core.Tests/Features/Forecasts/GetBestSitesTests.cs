@@ -4,6 +4,7 @@ using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
+using Tauchplaetze.Core.Features.Susv;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Tests.Sql;
 
@@ -70,6 +71,30 @@ public class GetBestSitesTests(SqlServer sql) : SqlTest(sql)
             AddForecast(db, riff, Today.AddDays(1), 8.0m);
             riff.Notices.Add(new DiveSiteNotice { Id = Guid.CreateVersion7(), Kind = NoticeKind.Closure, ValidUntil = Today, Translations = [new() { Culture = "de", Text = "Gesperrt" }] });
             riff.Notices.Add(new DiveSiteNotice { Id = Guid.CreateVersion7(), Kind = NoticeKind.Warning, Translations = [new() { Culture = "de", Text = "Parkplatz zu" }] });
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var today = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de"));
+        var tomorrow = await Query<GetBestSitesQuery, BestSites>(new GetBestSitesQuery("de", Today.AddDays(1)));
+
+        // Assert
+        Assert.Equal(["genf-plage"], today.Ranking.Select(r => r.Slug));
+        Assert.Equal(["riff-williams"], tomorrow.Ranking.Select(r => r.Slug));
+    }
+
+    [SqlFact]
+    public async Task Eine_bestaetigte_Sperrung_des_SUSV_jedes_Jahr_wirkt_wie_eine_der_Redaktion_eine_ungepruefte_nicht()
+    {
+        // Arrange
+        await Sql.Arrange(db =>
+        {
+            var lake = new WaterBody { Slug = "see", NameDe = "See", WaterBodyType = WaterBodyType.Lake, Centroid = GeoPoints.Create(47, 8), IsActive = true };
+            var riff = Add(db, lake, "riff-williams", 47.2849, 8.6085, 8.4m);
+            var genf = Add(db, lake, "genf-plage", 46.21, 6.15, 6.1m);
+            AddForecast(db, riff, Today.AddDays(1), 8.0m);
+            AddSusvClosure(db, riff, SusvReviewStatus.Confirmed, 1);
+            AddSusvClosure(db, genf, SusvReviewStatus.Pending, 2);
             return Task.CompletedTask;
         });
 
@@ -311,6 +336,27 @@ public class GetBestSitesTests(SqlServer sql) : SqlTest(sql)
         db.DiveSites.Add(site);
         AddForecast(db, site, Today, index);
         return site;
+    }
+
+    /// <summary>Sperrung jedes Jahr vom 15.10. bis 17.10., eingetragen 2020.</summary>
+    private static void AddSusvClosure(TauchplaetzeDbContext db, DiveSite site, SusvReviewStatus status, int sourceId)
+    {
+        var id = Guid.CreateVersion7();
+        db.SusvEntries.Add(new SusvEntry
+        {
+            Id = id,
+            SourceId = sourceId,
+            Topic = SusvTopic.Restriction,
+            Location = site.Location,
+            ContentHash = "x",
+            ReviewStatus = status,
+            NoticeKind = NoticeKind.Closure,
+            ValidFrom = new DateOnly(2020, 10, 15),
+            ValidUntil = new DateOnly(2020, 10, 17),
+            RecursYearly = true,
+            Translations = [new() { Culture = "de", Title = "Laichzeit", DetailUrl = "https://susv.ch/de/x/" }],
+            Sites = [new() { EntryId = id, DiveSiteId = site.Id }],
+        });
     }
 
     private static void AddForecast(TauchplaetzeDbContext db, DiveSite site, DateOnly date, decimal? index) =>

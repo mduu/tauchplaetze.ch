@@ -300,4 +300,22 @@
   <data name="Seo_WaterTitle" xml:space="preserve"><value>{0}: immersioni e visibilità oggi</value></data>
   <data name="Seo_WaterDescription" xml:space="preserve"><value>{0}: {1} siti d'immersione con mappa e previsione giornaliera.</value></data>
   <data name="Seo_WaterBest" xml:space="preserve"><value>Miglior indice d'immersione oggi: {0}/10.</value></data>
+  <data name="Notice_From" xml:space="preserve"><value>dal {0}</value></data>
+  <data name="Notice_Period" xml:space="preserve"><value>dal {0} al {1}</value></data>
+  <data name="Notice_Yearly" xml:space="preserve"><value>ogni anno dal {0} al {1}</value></data>
+  <data name="Notices_Later_Title" xml:space="preserve"><value>Avvisi temporanei</value></data>
+  <data name="Susv_More" xml:space="preserve"><value>Di più sul sito della FSSS</value></data>
+  <data name="Susv_SourceLabel" xml:space="preserve"><value>Fonte: FSSS, apre susv.ch</value></data>
+  <data name="Trait_Inclusive" xml:space="preserve"><value>Inclusione</value></data>
+  <data name="Susv_Defibrillator" xml:space="preserve"><value>Defibrillatore (DAE) sul sito</value></data>
+  <data name="Susv_MobileToilet" xml:space="preserve"><value>Toilette mobile sul sito</value></data>
+  <data name="Susv_SupportProject" xml:space="preserve"><value>La FSSS ha migliorato questo sito.</value></data>
+  <data name="Susv_InclusiveSite" xml:space="preserve"><value>Sito d’immersione inclusivo: adatto a subacquei con disabilità.</value></data>
+  <data name="SketchKind_MooringField" xml:space="preserve"><value>Campo boe</value></data>
+  <data name="Map_Layer_Shipping" xml:space="preserve"><value>Navigazione</value></data>
+  <data name="Shipping_Line" xml:space="preserve"><value>Vicino al sito circolano battelli di linea. L’immersione sportiva è vietata nei luoghi segnati (art. 77 ONI).</value></data>
+  <data name="Shipping_NearLandingStage" xml:space="preserve"><value>Questo sito si trova a meno di 100 m dall’approdo {0}.</value></data>
+  <data name="Shipping_Link" xml:space="preserve"><value>Immersioni e navigazione</value></data>
+  <data name="Shipping_NotBinding" xml:space="preserve"><value>Solo orientamento, non vincolante.</value></data>
+  <data name="Shipping_Attribution" xml:space="preserve"><value>Approdi: öV-Haltestellen Bundesamt für Verkehr BAV · Linee e porti: © collaboratori di OpenStreetMap</value></data>
 </root>

@@ -42,7 +42,7 @@
   <data name="About_Source_Swisstopo_Name" xml:space="preserve"><value>swisstopo</value></data>
   <data name="About_Source_Swisstopo_Text" xml:space="preserve"><value>Landeskarte, Luftbild (SWISSIMAGE) und Tiefendaten der Seen (swissBATHY3D) für die Tiefenlinien. Open Government Data, © swisstopo.</value></data>
   <data name="About_Source_Osm_Name" xml:space="preserve"><value>OpenStreetMap</value></data>
-  <data name="About_Source_Osm_Text" xml:space="preserve"><value>Grundbestand der Tauchplätze mit Name, Lage und einigen Angaben. © OpenStreetMap-Mitwirkende, Open Database License (ODbL). Die übernommenen Daten stehen ebenfalls unter der ODbL.</value></data>
+  <data name="About_Source_Osm_Text" xml:space="preserve"><value>Grundbestand der Tauchplätze mit Name, Lage und einigen Angaben. © OpenStreetMap-Mitwirkende, Open Database License (ODbL). Die übernommenen Daten stehen ebenfalls unter der ODbL. Dazu Fahrlinien der Kursschiffe und Häfen für die Ebene «Schifffahrt».</value></data>
   <data name="About_Imprint_Title" xml:space="preserve"><value>Impressum</value></data>
   <data name="About_Imprint_Operator" xml:space="preserve"><value>Betrieb</value></data>
   <data name="About_Imprint_Contact" xml:space="preserve"><value>Kontakt</value></data>
@@ -116,4 +116,9 @@
   <data name="About_Missing_Text" xml:space="preserve"><value>Fehlt ein Teilwert, rechnen wir mit den übrigen. Nur die Sicht zählt immer: Ohne Satellitenwert zählt sie vorsichtig, und der Index liegt höchstens bei {0}. Ohne Wind oder ohne Wasserdaten gibt es keinen Index, nur einen Ausblick mit Wind und Regen.</value></data>
   <data name="About_Rules_Version" xml:space="preserve"><value>Regel {0}. Die Zahlen auf dieser Seite kommen direkt aus der Rechnung.</value></data>
   <data name="About_And" xml:space="preserve"><value> und </value></data>
+  <data name="About_Nav_Shipping" xml:space="preserve"><value>Tauchen und Schifffahrt</value></data>
+  <data name="About_Source_Susv_Name" xml:space="preserve"><value>Schweizer Unterwasser-Sport-Verband (SUSV)</value></data>
+  <data name="About_Source_Susv_Text" xml:space="preserve"><value>Tauchverbote, Einschränkungen und Projekte an den Plätzen, etwa Defibrillatoren und Toiletten. Die Moderation prüft jeden Eintrag, bevor er erscheint. Jeder Eintrag verlinkt auf seine Seite beim SUSV.</value></data>
+  <data name="About_Source_Bav_Name" xml:space="preserve"><value>Bundesamt für Verkehr BAV</value></data>
+  <data name="About_Source_Bav_Text" xml:space="preserve"><value>Schiffstationen für die Ebene «Schifffahrt» der Karte. Quelle: öV-Haltestellen Bundesamt für Verkehr BAV, Opendata BY.</value></data>
 </root>

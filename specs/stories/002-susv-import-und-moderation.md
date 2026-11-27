@@ -1,6 +1,6 @@
 # Story 002: SUSV-Einträge importieren und bestätigen
 
-**Status:** geplant (24.11.2026). Entscheid: ADR-013.
+**Status:** 👷‍♂️ in Arbeit (26.11.2026), auf dem Branch `feat/susv-import`, noch nicht deployt. Entscheid: ADR-013.
 
 ## Ziel
 
@@ -36,8 +36,8 @@ Ein Eintrag erscheint erst nach der Bestätigung (siehe «Seite `/admin/susv`»)
 Die Moderation bestätigt jeden Eintrag einmal (ADR-013).
 
 - **Liste:** zuerst offene Einträge (`Pending`), dann bestätigte mit «geändert seit der Prüfung», dann die übrigen. Filter nach Thema und Status. Die Navigation der Moderation zeigt die Zahl der offenen und geänderten Einträge.
-- **Pro Eintrag:** Thema, Titel, Text, Datum der Quelle, Link auf susv.ch, kleine Karte mit der Koordinate und den vorgeschlagenen Plätzen (Umkreis 500 m, mit Distanz).
-- **Bestätigen:** Plätze wählen (Vorschlag angekreuzt, Suche nach weiteren). Bei einer Einschränkung dazu Art (Pflicht), «gültig ab», «gültig bis» und «jedes Jahr». Der Eintrag ist danach sofort auf den Platzseiten.
+- **Pro Eintrag:** Thema, Titel, Text, Datum der Quelle, Link auf susv.ch, die vorgeschlagenen Plätze (Umkreis 500 m, mit Distanz) und eine Karte zum Aufklappen («Karte zeigen»). Sie zeigt den Punkt des SUSV, den Umkreis und die vorgeschlagenen und gewählten Plätze. Ein Klick auf einen Platz wählt ihn an oder ab (Entscheid Marc, 26.11.2026).
+- **Bestätigen:** Plätze wählen (der nächste Vorschlag ist angekreuzt, Suche nach weiteren). Bei einer Einschränkung dazu Art (Pflicht), «gültig ab», «gültig bis» und «jedes Jahr». Mit Story 003 und 004 erscheint der Eintrag danach sofort auf den Platzseiten.
 - **Ignorieren:** für Einträge ohne Bezug zu einem Platz. Lässt sich zurücknehmen.
 - **Geändert seit der Prüfung:** Die Seite zeigt alten und neuen Text nebeneinander. «Gesehen» nimmt die Markierung weg. Art, Zeitraum und Plätze lassen sich dabei ändern.
 - **Entfernte Einträge** stehen 30 Tage in der Liste, mit «bei der Quelle entfernt». Danach löscht der Job sie.
@@ -84,14 +84,27 @@ Command `ImportSusvEntries`, aufgerufen von `SusvWorker` (`DailyWorker`, ADR-006
 
 - **Zeitplan:** täglich 04:30 Lokalzeit.
 - **Lock:** `locks/susv`. Hält ein anderer Lauf den Lock, endet der zweite sofort.
-- **Calls:** 5 Themen × 3 Sprachen = 15 Calls. Dazu die Detailseite eines Eintrags pro Sprache, wenn er neu ist oder sich Titel, Kurztext oder Datum geändert haben. Jeden Montag holt der Job alle Detailseiten, weil sich der Text ohne diese Felder ändern kann (rund 180 Calls).
-- **Text:** der Haupttext der Detailseite ohne HTML, höchstens 2000 Zeichen. Lässt er sich nicht lesen, gilt der Kurztext.
+- **Calls:** 5 Themen × 3 Sprachen = 15 Calls, mit 500 ms Pause dazwischen. Dazu bei einer Einschränkung die Detailseite pro Sprache, wenn die Sprache neu ist oder sich Titel, Kurztext, Link oder Datum geändert haben. Jeden Montag holt der Job alle Detailseiten der Einschränkungen, weil sich der Text ohne diese Felder ändern kann (69 Calls bei 23 Einschränkungen).
+- **Text:** der Haupttext der Detailseite ohne HTML, höchstens 4000 Zeichen, gekürzt am Ende eines Satzes. Der längste Text hatte am 27.11.2026 etwa 2400 Zeichen. Scheitert der Abruf, bleibt der bisherige Text, sonst gilt der Kurztext.
+- **Nur Einschränkungen mit Text:** Die Platzseite zeigt bei Projekten einen festen Text (Story 004). Ihre Detailseiten sind zudem oft Platzseiten mit Messwerten wie Wassertemperatur und Pegel, die sich täglich ändern (Abruf vom 26.11.2026). Der Job holt sie darum nicht.
 - **Abgleich:** Upsert nach `(SourceId, Topic)`. Fehlt ein Eintrag in zwei Läufen nacheinander, gilt er als entfernt (`RemovedAt`). Erscheint er wieder, ist er wieder da, mit seiner Bestätigung.
 - **Schutz:** Liefert ein Thema keinen Eintrag, obwohl es vorher welche hatte, gilt der Call als gescheitert. So entfernt eine leere Antwort nichts.
-- **Englisch:** über die automatische Übersetzung aus dem Deutschen (`cms.md`, «Automatisch übersetzen»), nur bei neuem oder geändertem Text.
-- **Rohdaten:** `forecast-raw/susv/{date}/{topic}-{lang}.json`.
+- **Englisch:** über die automatische Übersetzung aus dem Deutschen (`cms.md`, «Automatisch übersetzen»), nur für sichtbare Einschränkungen (Story 003). Nach jedem Lauf und nach jedem Bestätigen bringt der Core Titel und Text auf den Stand des Deutschen. Gleicher deutscher Text kommt aus dem Cache und kostet nichts. Es gilt das Budget des Monats. Ist es aufgebraucht, bleibt das bisherige Englisch, sonst erscheint Deutsch.
+- **Rohdaten:** `forecast-raw/susv/{date}/{HHmm}/susv/{topic}-{lang}.json`, Detailseiten als `detail-{id}-{lang}.html`.
 - **Mail:** eine Mail pro Lauf an die Moderation, wenn Einträge neu, geändert oder entfernt sind (`cms.md`, «Benachrichtigungen»).
-- **Ausfall:** Der letzte Stand bleibt. Echolot: verspätet ab 36 h ohne erfolgreichen Lauf, gestört ab 72 h (`ux.md`).
+- **Ausfall:** Der letzte Stand bleibt. Echolot: verspätet ab 36 h ohne erfolgreichen Lauf, gestört ab 72 h (`ux.md`). Massgebend ist das Thema mit dem ältesten letzten Abgleich (`LastSeenAt`). So zeigt auch ein einzelnes Thema, das nicht mehr liefert, «verspätet».
+
+### Robust gegen Umbauten der Seite
+
+Die Website des SUSV ist im Aufbau (Antwort SUSV, 25.11.2026). Der Import soll darum nicht bei jeder kleinen Änderung brechen, und ein Bruch darf nie Einträge löschen (Entscheid Marc, 26.11.2026).
+
+- **Nachsichtig lesen:** Die Liste darf unter `content.entries`, `entries` oder als Array an der Wurzel stehen. Zahlen dürfen als Text kommen, das Datum als Objekt oder als Text, der Link relativ. Unbekannte Felder zählen nicht. Pflicht sind nur Nummer, Titel, Koordinate und Link.
+- **Einzeln verwerfen:** Ein unlesbarer Eintrag (ohne Koordinate, Koordinate ausserhalb der Schweiz, Link auf einen fremden Host) fällt weg. Die übrigen zählen. Das Log nennt die Zahl.
+- **Detailseite ohne CSS-Klassen:** Der Text kommt aus `main` (sonst `body`), ohne Navigation, Kopf, Fuss, Formulare und Knöpfe, aus den Absätzen und Listenpunkten. Ein Absatz, der in einem längeren steckt, fällt weg.
+- **Nichts entfernen bei Zweifel:** Fehlt die Liste ganz, ist die Antwort leer, oder fehlt mehr als die Hälfte der bekannten Einträge eines Themas (ab 4 bekannten), zählt der Lauf für dieses Thema nicht als «fehlt».
+- **Sprachen einzeln:** Scheitert Französisch oder Italienisch, bleibt die bisherige Übersetzung. Ohne Deutsch gilt das Thema als gescheitert.
+- **Im Code:** Basis-URL und die Nummern der Themen stehen im Code (`SusvRules.Filters`). Eine Änderung der Konfiguration braucht ebenfalls ein Deployment, darum bringt sie keinen Vorteil (Entscheid Marc, 26.11.2026). Nur die Pause steht in der Konfiguration (`Susv:CallInterval`), damit die Tests ohne Pause laufen.
+- **Rohdaten:** Jede Antwort, auch jede Detailseite, liegt unverändert in Blob Storage. Ein Fehler im Parser lässt sich so nachträglich prüfen.
 
 Entität: `SusvEntry` (`datastructure.md`). Slice und Handler: `cms.md`, «Slices im Code».
 

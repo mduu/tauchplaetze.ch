@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MetaDescription" xml:space="preserve"><value>Dove l’immersione sportiva è vietata a causa della navigazione: approdi, linee dei battelli, porti e luoghi di stazionamento secondo l’ordinanza sulla navigazione interna.</value></data>
+  <data name="Eyebrow" xml:space="preserve"><value>Regole sull’acqua</value></data>
+  <data name="Title" xml:space="preserve"><value>Immersioni e navigazione</value></data>
+  <data name="Lead" xml:space="preserve"><value>In molti siti l’immersione è solo tollerata. Chi conosce le regole aiuta a far sì che resti così.</value></data>
+  <data name="Forbidden_Title" xml:space="preserve"><value>Dove l’immersione sportiva è vietata</value></data>
+  <data name="Forbidden_Intro" xml:space="preserve"><value>L’ordinanza sulla navigazione interna (art. 77 cpv. 3) vieta l’immersione sportiva in questi luoghi:</value></data>
+  <data name="Case_LandingStage" xml:space="preserve"><value>nel raggio di 100 m dagli approdi autorizzati dei battelli di linea;</value></data>
+  <data name="Case_Routes" xml:space="preserve"><value>sulle linee dei battelli di linea;</value></data>
+  <data name="Case_Harbour" xml:space="preserve"><value>agli ingressi dei porti e nelle loro vicinanze;</value></data>
+  <data name="Case_Moorings" xml:space="preserve"><value>vicino ai luoghi di stazionamento autorizzati, per esempio i campi boe;</value></data>
+  <data name="Case_Fairway" xml:space="preserve"><value>nei canali navigabili stretti.</value></data>
+  <data name="Case_Exception" xml:space="preserve"><value>Il cantone può ridurre il raggio attorno a un approdo (art. 163). Valgono anche le regole del cantone e del comune.</value></data>
+  <data name="Behaviour_Title" xml:space="preserve"><value>Come comportarti</value></data>
+  <data name="Behaviour_Flag" xml:space="preserve"><value>Quando ti immergi, esponi la bandiera «A» (bianca e blu), ben visibile a riva o sulla barca (art. 32).</value></data>
+  <data name="Behaviour_Distance" xml:space="preserve"><value>Le imbarcazioni restano ad almeno 50 m da questa bandiera (art. 49). Resta nelle sue vicinanze.</value></data>
+  <data name="Behaviour_Choose" xml:space="preserve"><value>Scegli l’ingresso e il percorso lontano da porti, approdi e campi boe.</value></data>
+  <data name="Behaviour_Local" xml:space="preserve"><value>Molte regole locali non sono raccolte da nessuna parte. Se ti immergi per la prima volta in un sito, chiedi prima a un club o a un negozio di subacquea del posto.</value></data>
+  <data name="Map_Title" xml:space="preserve"><value>Cosa mostra la mappa</value></data>
+  <data name="Map_LandingStage" xml:space="preserve"><value>Gli approdi dei battelli di linea con un cerchio di 100 m.</value></data>
+  <data name="Map_Routes" xml:space="preserve"><value>Le linee dei battelli di linea come linea tratteggiata.</value></data>
+  <data name="Map_Harbour" xml:space="preserve"><value>I porti come superficie e i campi boe dello schizzo d’immersione, ciascuno con un cerchio di 50 m attorno al centro.</value></data>
+  <data name="Map_Limits" xml:space="preserve"><value>Ogni distanza vale dal centro. I canali stretti e i luoghi di stazionamento non registrati mancano sulla mappa. La mappa serve da orientamento e non è giuridicamente vincolante.</value></data>
+  <data name="Susv_Title" xml:space="preserve"><value>La FSSS</value></data>
+  <data name="Susv_Text" xml:space="preserve"><value>La Federazione Svizzera Sport Subacquei dialoga con la polizia lacuale e le società di navigazione affinché le immersioni nei siti restino possibili.</value></data>
+  <data name="Susv_Link" xml:space="preserve"><value>Alla FSSS</value></data>
+  <data name="Source_Title" xml:space="preserve"><value>Fonte</value></data>
+  <data name="Source_Text" xml:space="preserve"><value>Ordinanza sulla navigazione interna (ONI, RS 747.201.1), stato 1° gennaio 2022, art. 32, 49, 77 e 163.</value></data>
+  <data name="Source_Link" xml:space="preserve"><value>Leggere l’art. 77 su Fedlex</value></data>
+  <data name="Source_Url" xml:space="preserve"><value>https://www.fedlex.admin.ch/eli/cc/1979/337_337_337/it#art_77</value></data>
+</root>

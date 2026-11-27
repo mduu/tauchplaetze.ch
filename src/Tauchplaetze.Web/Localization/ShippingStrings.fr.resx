@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MetaDescription" xml:space="preserve"><value>Où la plongée sportive est interdite à cause de la navigation : débarcadères, lignes de bateaux, ports et places d’amarrage selon l’ordonnance sur la navigation intérieure.</value></data>
+  <data name="Eyebrow" xml:space="preserve"><value>Règles sur l’eau</value></data>
+  <data name="Title" xml:space="preserve"><value>Plongée et navigation</value></data>
+  <data name="Lead" xml:space="preserve"><value>Sur de nombreux sites, la plongée est seulement tolérée. Si tu connais les règles, tu aides à ce que cela reste ainsi.</value></data>
+  <data name="Forbidden_Title" xml:space="preserve"><value>Où la plongée sportive est interdite</value></data>
+  <data name="Forbidden_Intro" xml:space="preserve"><value>L’ordonnance sur la navigation intérieure (art. 77, al. 3) interdit la plongée sportive à ces endroits :</value></data>
+  <data name="Case_LandingStage" xml:space="preserve"><value>dans un rayon de 100 m autour des débarcadères autorisés des bateaux à horaire ;</value></data>
+  <data name="Case_Routes" xml:space="preserve"><value>sur les lignes des bateaux à horaire ;</value></data>
+  <data name="Case_Harbour" xml:space="preserve"><value>aux entrées des ports et à proximité ;</value></data>
+  <data name="Case_Moorings" xml:space="preserve"><value>à proximité des places d’amarrage autorisées, par exemple les champs de bouées ;</value></data>
+  <data name="Case_Fairway" xml:space="preserve"><value>dans les chenaux étroits.</value></data>
+  <data name="Case_Exception" xml:space="preserve"><value>Le canton peut réduire le rayon autour d’un débarcadère (art. 163). Les règles du canton et de la commune s’appliquent aussi.</value></data>
+  <data name="Behaviour_Title" xml:space="preserve"><value>Comment te comporter</value></data>
+  <data name="Behaviour_Flag" xml:space="preserve"><value>Quand tu plonges, place le pavillon « A » (blanc et bleu), bien visible sur la rive ou sur le bateau (art. 32).</value></data>
+  <data name="Behaviour_Distance" xml:space="preserve"><value>Les bateaux restent à au moins 50 m de ce pavillon (art. 49). Reste à proximité.</value></data>
+  <data name="Behaviour_Choose" xml:space="preserve"><value>Choisis ton entrée et ton itinéraire loin des ports, des débarcadères et des champs de bouées.</value></data>
+  <data name="Behaviour_Local" xml:space="preserve"><value>De nombreuses règles locales ne sont réunies nulle part. Si tu plonges pour la première fois sur un site, renseigne-toi d’abord auprès d’un club ou d’un magasin de plongée local.</value></data>
+  <data name="Map_Title" xml:space="preserve"><value>Ce que montre la carte</value></data>
+  <data name="Map_LandingStage" xml:space="preserve"><value>Les débarcadères des bateaux à horaire avec un cercle de 100 m.</value></data>
+  <data name="Map_Routes" xml:space="preserve"><value>Les lignes des bateaux à horaire en trait tireté.</value></data>
+  <data name="Map_Harbour" xml:space="preserve"><value>Les ports en surface et les champs de bouées de l’esquisse de plongée, chacun avec un cercle de 50 m autour du centre.</value></data>
+  <data name="Map_Limits" xml:space="preserve"><value>Chaque distance se mesure depuis le centre. Les chenaux étroits et les places d’amarrage non saisies ne figurent pas sur la carte. La carte sert d’orientation et n’a pas de valeur juridique.</value></data>
+  <data name="Susv_Title" xml:space="preserve"><value>La FSSS</value></data>
+  <data name="Susv_Text" xml:space="preserve"><value>La Fédération Suisse de Sports Subaquatiques discute avec la police du lac et les compagnies de navigation pour que la plongée reste possible sur les sites.</value></data>
+  <data name="Susv_Link" xml:space="preserve"><value>Vers la FSSS</value></data>
+  <data name="Source_Title" xml:space="preserve"><value>Source</value></data>
+  <data name="Source_Text" xml:space="preserve"><value>Ordonnance sur la navigation intérieure (ONI, RS 747.201.1), état le 1er janvier 2022, art. 32, 49, 77 et 163.</value></data>
+  <data name="Source_Link" xml:space="preserve"><value>Lire l’art. 77 sur Fedlex</value></data>
+  <data name="Source_Url" xml:space="preserve"><value>https://www.fedlex.admin.ch/eli/cc/1979/337_337_337/fr#art_77</value></data>
+</root>

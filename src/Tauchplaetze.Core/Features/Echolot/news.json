@@ -1,5 +1,89 @@
 [
   {
+    "date": "2026-11-27",
+    "texts": {
+      "de": {
+        "title": "Bodensee neu im Verzeichnis",
+        "text": "Der Bodensee ist neu dabei, als Obersee und Untersee, mit über 30 Tauchplätzen an beiden Ufern, auch in Deutschland. Dazu kommen weitere Plätze am Neuenburgersee, am Rhein bei Stein am Rhein und im Tessin."
+      },
+      "en": {
+        "title": "Lake Constance now in the directory",
+        "text": "Lake Constance is new, as Obersee and Untersee, with more than 30 dive sites on both shores, also in Germany. More sites at Lake Neuchâtel, on the Rhine near Stein am Rhein and in Ticino have been added too."
+      },
+      "fr": {
+        "title": "Le lac de Constance dans l’annuaire",
+        "text": "Le lac de Constance fait son entrée, en Obersee et Untersee, avec plus de 30 sites de plongée sur les deux rives, y compris en Allemagne. S’y ajoutent d’autres sites au lac de Neuchâtel, sur le Rhin près de Stein am Rhein et au Tessin."
+      },
+      "it": {
+        "title": "Il lago di Costanza nell’elenco",
+        "text": "Il lago di Costanza è nuovo, come Obersee e Untersee, con oltre 30 siti d’immersione su entrambe le rive, anche in Germania. Si aggiungono altri siti sul lago di Neuchâtel, sul Reno presso Stein am Rhein e in Ticino."
+      }
+    }
+  },
+  {
+    "date": "2026-11-27",
+    "texts": {
+      "de": {
+        "title": "Schiffe auf der Karte",
+        "text": "Die Karte eines Tauchplatzes zeigt neu Schiffstationen, Fahrlinien der Kursschiffe und Häfen. Dort ist das Tauchen verboten. Die Seite «Tauchen und Schifffahrt» erklärt die Regeln."
+      },
+      "en": {
+        "title": "Boats on the map",
+        "text": "The map of a dive site now shows landing stages, routes of scheduled boats and harbours. Diving is prohibited there. The page «Diving and shipping» explains the rules."
+      },
+      "fr": {
+        "title": "Les bateaux sur la carte",
+        "text": "La carte d’un site de plongée montre désormais les débarcadères, les lignes des bateaux à horaire et les ports. La plongée y est interdite. La page « Plongée et navigation » explique les règles."
+      },
+      "it": {
+        "title": "Le barche sulla mappa",
+        "text": "La mappa di un sito d’immersione mostra ora gli approdi, le linee dei battelli di linea e i porti. Lì l’immersione è vietata. La pagina «Immersioni e navigazione» spiega le regole."
+      }
+    }
+  },
+  {
+    "date": "2026-11-27",
+    "texts": {
+      "de": {
+        "title": "Was der SUSV an einem Platz getan hat",
+        "text": "Die Seite eines Tauchplatzes zeigt neu, wo der SUSV einen Defibrillator oder eine Toilette aufgestellt oder den Platz verbessert hat. Im Verzeichnis lassen sich Inklusions-Tauchplätze filtern, die sich für Tauchende mit Behinderung eignen."
+      },
+      "en": {
+        "title": "What the SUSV has done at a site",
+        "text": "The page of a dive site now shows where the SUSV has installed a defibrillator or a toilet or has improved the site. In the directory you can filter for inclusive dive sites, which suit divers with a disability."
+      },
+      "fr": {
+        "title": "Ce que la FSSS a fait sur un site",
+        "text": "La page d’un site de plongée indique désormais où la FSSS a installé un défibrillateur ou des toilettes, ou a amélioré le site. Dans l’annuaire, on peut filtrer les sites de plongée inclusifs, adaptés aux plongeurs en situation de handicap."
+      },
+      "it": {
+        "title": "Cosa ha fatto la FSSS in un sito",
+        "text": "La pagina di un sito d’immersione mostra ora dove la FSSS ha installato un defibrillatore o una toilette, o ha migliorato il sito. Nell’elenco si possono filtrare i siti d’immersione inclusivi, adatti a subacquei con disabilità."
+      }
+    }
+  },
+  {
+    "date": "2026-11-27",
+    "texts": {
+      "de": {
+        "title": "Tauchverbote des SUSV auf den Platzseiten",
+        "text": "Sperrungen und Einschränkungen, die der Schweizer Unterwasser-Sport-Verband veröffentlicht, stehen neu auf der Seite des Tauchplatzes, mit Link zum SUSV. Wer plant, sieht auch Sperrungen, die erst später im Jahr gelten."
+      },
+      "en": {
+        "title": "SUSV diving bans on the site pages",
+        "text": "Closures and restrictions published by the Swiss Underwater Sports Federation now appear on the page of the dive site, with a link to the SUSV. For planning, you also see closures that start later in the year."
+      },
+      "fr": {
+        "title": "Interdictions de plongée de la FSSS sur les pages des sites",
+        "text": "Les fermetures et restrictions publiées par la Fédération Suisse de Sports Subaquatiques figurent désormais sur la page du site de plongée, avec un lien vers la FSSS. Pour planifier, on voit aussi les fermetures qui commencent plus tard dans l’année."
+      },
+      "it": {
+        "title": "Divieti di immersione della FSSS sulle pagine dei siti",
+        "text": "Le chiusure e le limitazioni pubblicate dalla Federazione Svizzera Sport Subacquei figurano ora sulla pagina del sito d’immersione, con un link alla FSSS. Per pianificare si vedono anche le chiusure che iniziano più avanti nell’anno."
+      }
+    }
+  },
+  {
     "date": "2026-11-25",
     "texts": {
       "de": {

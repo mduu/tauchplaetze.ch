@@ -134,6 +134,7 @@ Wichtiger Hinweis zu einem Platz (`dive-site.md`, «Hinweise»). Ein Platz hat n
 | `Kind` | enum | `Info`, `Warning`, `Closure` |
 | `ValidFrom` | date, optional | erster gültiger Tag, Schweizer Zeit |
 | `ValidUntil` | date, optional | letzter gültiger Tag (inklusive) |
+| `RecursYearly` | bool | nur mit beiden Daten. Es zählen Tag und Monat (Story 003, geplant) |
 | `SortOrder` | int | Reihenfolge der Redaktion |
 
 Übersetzbar in `DiveSiteNoticeTranslation` (`NoticeId`, `Culture`, `Text` string(500)). Deutsch ist Pflicht.
@@ -161,8 +162,9 @@ Eintrag des SUSV zu einem Tauchplatz, importiert vom Job `ImportSusvEntries` (AD
 | `ValidFrom`, `ValidUntil` | date, optional | nur `Restriction`, wie bei `DiveSiteNotice` |
 | `RecursYearly` | bool | nur mit beiden Daten. Es zählen Tag und Monat |
 | `ReviewedAt`, `ReviewedBy` | optional | letzte Prüfung durch die Moderation |
+| `TextsFetchedOn` | date, optional | Tag des letzten vollen Abrufs der Detailseiten (montags, nur Einschränkungen) |
 
-Übersetzbar in `SusvEntryTranslation` (`EntryId`, `Culture`, `Title` string(200), `Teaser` string(300) optional, `Text` string(2000) optional, `DetailUrl` string(300), `IsMachineTranslated`). Deutsch ist Pflicht. `fr` und `it` kommen aus der Quelle, `en` aus der automatischen Übersetzung, mit dem deutschen `DetailUrl`.
+Übersetzbar in `SusvEntryTranslation` (`EntryId`, `Culture`, `Title` string(200), `Teaser` string(300) optional, `Text` string(4000) optional, `DetailUrl` string(500), `IsMachineTranslated`, `ReviewedTitle` und `ReviewedText` (4000) optional: Stand der letzten Prüfung, für den Vergleich «geändert seit der Prüfung»). Deutsch ist Pflicht. `fr` und `it` kommen aus der Quelle, `en` aus der automatischen Übersetzung, mit dem deutschen `DetailUrl`.
 
 Zuordnung zu Plätzen in `SusvEntrySite` (`EntryId`, `DiveSiteId`), PK über beide, je Cascade Delete. Nur bei `Confirmed`.
 
@@ -170,14 +172,14 @@ Sichtbar ist ein Eintrag mit `Confirmed`, ohne `RemovedAt`, an einem veröffentl
 
 ### ShippingFeature
 
-Objekt der Schifffahrt für die Ebene «Schifffahrt» (`stories/005-tauchen-und-schifffahrt.md`). Einmalig importiert mit `tools/shipping/` (`data-sources.md`, «Schifffahrt»), als Seed. Nicht Teil der Revision.
+Objekt der Schifffahrt für die Ebene «Schifffahrt» (`stories/005-tauchen-und-schifffahrt.md`). Das Skript `tools/shipping/` schreibt den Seed `Features/Shipping/Seed/shipping-features.json` (`data-sources.md`, «Schifffahrt»). Beim Start gleicht `SeedShippingFeatures` die Tabelle mit dem Seed ab: neue anlegen, geänderte nachführen, fehlende entfernen. Nicht Teil der Revision.
 
 | Feld | Typ | Bemerkung |
 |---|---|---|
 | `Id` | int | |
 | `Kind` | enum | `LandingStage` (Punkt), `FerryRoute` (Linie), `Harbour` (Fläche) |
 | `Name` | string(120), optional | Name der Schiffstation oder des Hafens, nicht übersetzt |
-| `Geometry` | geography | Spatial Index |
+| `Geometry` | geography | WGS84. Der äussere Ring einer Fläche läuft gegen den Uhrzeigersinn (SQL Server). Ohne Spatial Index: rund 500 Objekte |
 | `Source` | enum | `Bav`, `OpenStreetMap` |
 | `SourceKey` | string(40) | Nummer der Haltestelle bzw. OSM-Id. Eindeutig mit `Source` |
 

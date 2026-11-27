@@ -454,7 +454,7 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlFact]
-    public async Task Hinweise_gelten_nur_in_ihrem_Zeitraum_der_schwerste_zuerst_und_ohne_Uebersetzung_auf_Deutsch()
+    public async Task Heute_gueltige_Hinweise_kommen_zuerst_der_schwerste_voran_bald_beginnende_danach_vorbei_ist_unsichtbar_ohne_Uebersetzung_auf_Deutsch()
     {
         // Arrange
         var (moderator, _, site) = await Prepare();
@@ -474,8 +474,8 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
 
         // Assert
         Assert.Equal(
-            [(NoticeKind.Closure, "Gesperrt bis heute", true), (NoticeKind.Info, "Parking payant", false)],
-            details.Notices.Select(n => (n.Kind, n.Text, n.GermanOnly)));
+            [(NoticeKind.Closure, "Gesperrt bis heute", true, NoticeTiming.Today), (NoticeKind.Info, "Parking payant", false, NoticeTiming.Today), (NoticeKind.Warning, "Ab morgen Bauarbeiten", true, NoticeTiming.Soon)],
+            details.Notices.Select(n => (n.Kind, n.Text, n.GermanOnly, n.Timing)));
         Assert.Equal(NoticeKind.Closure, listed.NoticeToday);
     }
 
@@ -505,20 +505,56 @@ public class EditorialTests(SqlServer sql) : SqlTest(sql)
     }
 
     [SqlTheory]
-    [InlineData(null, null, null)]
-    [InlineData("Gesperrt", "2026-11-02", "2026-11-01")]
-    public async Task Ein_Hinweis_braucht_deutschen_Text_und_endet_nicht_vor_seinem_Beginn(string? german, string? from, string? until)
+    [InlineData(null, null, null, false)]
+    [InlineData("Gesperrt", "2026-11-02", "2026-11-01", false)]
+    [InlineData("Gesperrt", "2026-11-01", null, true)]
+    public async Task Ein_Hinweis_braucht_deutschen_Text_endet_nicht_vor_seinem_Beginn_und_jedes_Jahr_braucht_beide_Daten(string? german, string? from, string? until, bool yearly)
     {
         // Arrange
         var (_, anna, site) = await Prepare();
         var edit = await ForEditing(site);
-        var notice = Notice(NoticeKind.Closure, Date(from), Date(until), ("de", german), ("fr", "Fermé"));
+        var notice = Notice(NoticeKind.Closure, Date(from), Date(until), ("de", german), ("fr", "Fermé")) with { RecursYearly = yearly };
 
         // Act
         var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(anna, site, edit.BaseNumber, edit.Content with { Notices = [notice] }, null));
 
         // Assert
         Assert.Equal([EditorialError.InvalidNotice], result.Errors);
+    }
+
+    [SqlFact]
+    public async Task Ein_Hinweis_jedes_Jahr_darf_ueber_den_Jahreswechsel_gehen_und_erscheint_bis_zum_Beginn_klein()
+    {
+        // Arrange
+        var (moderator, _, site) = await Prepare();
+        var edit = await ForEditing(site);
+        var notice = Notice(NoticeKind.Closure, new DateOnly(2020, 11, 1), new DateOnly(2021, 3, 31), ("de", "Winterruhe der Fische")) with { RecursYearly = true };
+
+        // Act
+        var result = await Command<ProposeChangeCommand, EditorialResult>(new ProposeChangeCommand(moderator, site, edit.BaseNumber, edit.Content with { Notices = [notice] }, null));
+        var shown = Assert.Single(await PublicNotices(site), n => n.Text == "Winterruhe der Fische");
+
+        // Assert
+        Assert.True(result.Succeeded);
+        Assert.Equal((NoticeTiming.Later, new DateOnly(2026, 11, 1), new DateOnly(2027, 3, 31), true), (shown.Timing, shown.Start, shown.ValidUntil, shown.RecursYearly));
+        Assert.True(Assert.Single((await ForEditing(site)).Content.NoticeList).RecursYearly);
+    }
+
+    [Fact]
+    public void Ein_Snapshot_ohne_jedes_Jahr_bleibt_gleich_wie_vor_dem_Feld_und_liest_sich_als_nicht_jaehrlich()
+    {
+        // Arrange
+        var content = new DiveSiteContent("Platz", "platz", 1, 47, 8, null, null, null, null, null, null, null, null, null, null, default, false, null, null, null, false, [])
+            with { Notices = [Notice(NoticeKind.Info, null, null, ("de", "Parkplatz"))] };
+
+        // Act
+        var json = DiveSiteSnapshot.ToJson(content);
+        var yearly = DiveSiteSnapshot.FromJson(DiveSiteSnapshot.ToJson(content with { Notices = [content.NoticeList[0] with { RecursYearly = true }] }));
+
+        // Assert
+        Assert.DoesNotContain("recursYearly", System.Text.Encoding.UTF8.GetString(json));
+        Assert.False(DiveSiteSnapshot.FromJson(json).NoticeList[0].RecursYearly);
+        Assert.True(yearly.NoticeList[0].RecursYearly);
     }
 
     [SqlFact]

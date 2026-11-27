@@ -67,8 +67,11 @@ public record EntryPointContent(Guid Id, double Latitude, double Longitude, Entr
 /// <summary>Name und Beschreibung eines Einstiegs in einer Sprache.</summary>
 public record EntryPointText(string Culture, string? Name, string? Description);
 
-/// <summary>Ein Hinweis zum Platz: Info, Warnung oder Sperrung, optional mit Zeitraum (`dive-site.md`, «Hinweise»).</summary>
-public record NoticeContent(Guid Id, NoticeKind Kind, DateOnly? ValidFrom, DateOnly? ValidUntil, IReadOnlyList<NoticeText> Texts);
+/// <summary>
+/// Ein Hinweis zum Platz: Info, Warnung oder Sperrung, optional mit Zeitraum (`dive-site.md`, «Hinweise»).
+/// <see cref="RecursYearly"/>: «jedes Jahr», nur mit beiden Daten. Ein alter Snapshot ohne das Feld gilt als «nicht jährlich».
+/// </summary>
+public record NoticeContent(Guid Id, NoticeKind Kind, DateOnly? ValidFrom, DateOnly? ValidUntil, IReadOnlyList<NoticeText> Texts, bool RecursYearly = false);
 
 /// <summary>Text eines Hinweises in einer Sprache.</summary>
 public record NoticeText(string Culture, string? Text);

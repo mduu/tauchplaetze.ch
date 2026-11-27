@@ -29,13 +29,14 @@ internal class GetDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
     public async Task<IReadOnlyList<DiveSiteListItem>> Handle(GetDiveSitesQuery query, CancellationToken ct = default)
     {
         var today = SwissTime.Today(time);
-        var active = NoticeRules.ActiveOn(today);
+        var restrictions = await SiteRestrictions.Load(dbContext, ct);
         var rows = await dbContext.DiveSites
             .AsNoTracking()
             .Where(d => d.Status == DiveSiteStatus.Published)
             .Where(d => query.WaterBodySlug == null || d.WaterBody!.Slug == query.WaterBodySlug)
             .Select(d => new
             {
+                d.Id,
                 d.Slug,
                 d.Name,
                 d.Municipality,
@@ -44,7 +45,6 @@ internal class GetDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 d.DataLevel,
                 Water = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType },
                 Index = dbContext.DailyForecasts.Where(f => f.DiveSiteId == d.Id && f.Date == today).Select(f => f.DiveIndex).FirstOrDefault(),
-                Notices = d.Notices.AsQueryable().Where(active).Select(n => n.Kind).ToList(),
             })
             .ToListAsync(ct);
 
@@ -61,7 +61,7 @@ internal class GetDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 r.ContentLevel,
                 r.DataLevel,
                 r.Index,
-                r.Notices.Count == 0 ? null : r.Notices.Max()))
+                restrictions[r.Id].WorstOn(today)))
             .OrderBy(s => s.WaterBodyName, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo(query.Culture), true))
             .ThenBy(s => s.Name, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo(query.Culture), true))
             .ToList();

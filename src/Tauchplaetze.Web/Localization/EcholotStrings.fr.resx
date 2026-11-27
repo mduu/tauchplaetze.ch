@@ -59,4 +59,7 @@
   <data name="Entry_Described_Many" xml:space="preserve"><value>Nouvellement décrits · {0} sites</value></data>
   <data name="News_Older" xml:space="preserve"><value>Voici les {0} dernières nouveautés. Les plus anciennes ne sont plus affichées.</value></data>
   <data name="News_Empty" xml:space="preserve"><value>Pas encore de nouveautés.</value></data>
+  <data name="Source_Susv_Label" xml:space="preserve"><value>FSSS</value></data>
+  <data name="Source_Susv_Name" xml:space="preserve"><value>Avis de la FSSS</value></data>
+  <data name="Source_Susv_Text" xml:space="preserve"><value>{0} entrées confirmées sur des sites, synchronisées {1}.</value></data>
 </root>

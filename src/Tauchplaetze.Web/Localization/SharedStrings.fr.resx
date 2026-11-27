@@ -37,6 +37,7 @@
   <data name="Start_HowLink" xml:space="preserve"><value>Comment la prévision est calculée</value></data>
   <data name="Footer_About" xml:space="preserve"><value>À propos</value></data>
   <data name="Footer_Echolot" xml:space="preserve"><value>Sondeur</value></data>
+  <data name="Footer_Partner" xml:space="preserve"><value>Partenaires</value></data>
   <data name="Info_Label" xml:space="preserve"><value>Infos</value></data>
   <data name="Info_About_Title" xml:space="preserve"><value>À propos de tauchplaetze.ch</value></data>
   <data name="Info_About_Text" xml:space="preserve"><value>Comment la prévision est calculée, sources, contact</value></data>

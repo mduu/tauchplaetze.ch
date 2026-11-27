@@ -41,6 +41,9 @@ public enum SketchKind
 
     /// <summary>Seegras- oder Pflanzenfeld (Fläche).</summary>
     PlantField = 11,
+
+    /// <summary>Bojenfeld, zugelassene Liegeplätze (Fläche). Dort ist Sporttauchen verboten (Story 005).</summary>
+    MooringField = 12,
 }
 
 /// <summary>Form eines Skizzenelements.</summary>
@@ -78,7 +81,7 @@ public static class SketchRules
     public static SketchShape ShapeOf(this SketchKind kind) => kind switch
     {
         SketchKind.Wall or SketchKind.Edge or SketchKind.Route or SketchKind.Line => SketchShape.Line,
-        SketchKind.PlantField => SketchShape.Area,
+        SketchKind.PlantField or SketchKind.MooringField => SketchShape.Area,
         _ => SketchShape.Point,
     };
 }

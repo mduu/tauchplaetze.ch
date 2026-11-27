@@ -1,0 +1,22 @@
+.susv-badge {
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: 8px;
+    align-items: center;
+    min-height: 44px;
+    color: var(--color-primary);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.susv-badge:hover span,
+.susv-badge:focus-visible span {
+    text-decoration: underline;
+}
+
+.susv-badge img {
+    padding: 2px;
+    border-radius: 4px;
+    background: #fff;
+    box-sizing: content-box;
+}

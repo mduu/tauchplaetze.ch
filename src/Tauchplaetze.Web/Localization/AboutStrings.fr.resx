@@ -42,7 +42,7 @@
   <data name="About_Source_Swisstopo_Name" xml:space="preserve"><value>swisstopo</value></data>
   <data name="About_Source_Swisstopo_Text" xml:space="preserve"><value>Carte nationale, image aérienne (SWISSIMAGE) et données de profondeur des lacs (swissBATHY3D) pour les isobathes. Données publiques ouvertes, © swisstopo.</value></data>
   <data name="About_Source_Osm_Name" xml:space="preserve"><value>OpenStreetMap</value></data>
-  <data name="About_Source_Osm_Text" xml:space="preserve"><value>Base des sites de plongée avec nom, emplacement et quelques indications. © contributeurs d’OpenStreetMap, Open Database License (ODbL). Les données reprises sont également sous ODbL.</value></data>
+  <data name="About_Source_Osm_Text" xml:space="preserve"><value>Base des sites de plongée avec nom, emplacement et quelques indications. © contributeurs d’OpenStreetMap, Open Database License (ODbL). Les données reprises sont également sous ODbL. Également les lignes des bateaux à horaire et les ports pour la couche « Navigation ».</value></data>
   <data name="About_Imprint_Title" xml:space="preserve"><value>Mentions légales</value></data>
   <data name="About_Imprint_Operator" xml:space="preserve"><value>Exploitant</value></data>
   <data name="About_Imprint_Contact" xml:space="preserve"><value>Contact</value></data>
@@ -116,4 +116,9 @@
   <data name="About_Missing_Text" xml:space="preserve"><value>S'il manque une composante, nous calculons avec les autres. Seule la clarté compte toujours : sans valeur satellite, elle compte prudemment, et l'indice vaut au plus {0}. Sans vent ou sans données sur l'eau, il n'y a pas d'indice, seulement un aperçu avec le vent et la pluie.</value></data>
   <data name="About_Rules_Version" xml:space="preserve"><value>Règles {0}. Les chiffres de cette page viennent directement du calcul.</value></data>
   <data name="About_And" xml:space="preserve"><value> et </value></data>
+  <data name="About_Nav_Shipping" xml:space="preserve"><value>Plongée et navigation</value></data>
+  <data name="About_Source_Susv_Name" xml:space="preserve"><value>Fédération Suisse de Sports Subaquatiques (FSSS)</value></data>
+  <data name="About_Source_Susv_Text" xml:space="preserve"><value>Interdictions de plongée, restrictions et projets sur les sites, par exemple défibrillateurs et toilettes. La modération vérifie chaque entrée avant sa publication. Chaque entrée renvoie à sa page sur le site de la FSSS.</value></data>
+  <data name="About_Source_Bav_Name" xml:space="preserve"><value>Office fédéral des transports OFT</value></data>
+  <data name="About_Source_Bav_Text" xml:space="preserve"><value>Débarcadères pour la couche « Navigation » de la carte. Source : öV-Haltestellen Bundesamt für Verkehr BAV, Opendata BY.</value></data>
 </root>

@@ -9,6 +9,7 @@ namespace Tauchplaetze.Core.Features.Editorial;
 /// </summary>
 /// <remarks>
 /// Format 1 vom 17.10.2026 hatte zuerst keine Einstiege, bis 18.10.2026 keine Hinweise, keine Skizze und keine Fotos. Fehlen sie, gilt eine leere Liste.
+/// Bis 27.11.2026 hatten Hinweise kein «jedes Jahr». Fehlt es, gilt «nicht jährlich».
 /// Neue Felder nur optional anhängen.
 /// </remarks>
 internal static class DiveSiteSnapshot
@@ -44,6 +45,7 @@ internal static class DiveSiteSnapshot
             node.Remove("heroMediaId");
         }
 
+        RemoveNotYearly(node);
         RemoveEmpty(node, "notices");
         RemoveEmpty(node, "sketch");
         node["snapshotVersion"] = CurrentVersion;
@@ -62,6 +64,18 @@ internal static class DiveSiteSnapshot
         if (node[property] is JsonArray { Count: 0 })
         {
             node.Remove(property);
+        }
+    }
+
+    /// <remarks>«Jedes Jahr» kam am 27.11.2026 dazu. Ohne das Feld bleibt das JSON wie vorher, und der Hash erkennt «keine Änderung».</remarks>
+    private static void RemoveNotYearly(JsonObject node)
+    {
+        foreach (var notice in (node["notices"] as JsonArray ?? []).OfType<JsonObject>())
+        {
+            if (notice["recursYearly"]?.GetValue<bool>() == false)
+            {
+                notice.Remove("recursYearly");
+            }
         }
     }
 

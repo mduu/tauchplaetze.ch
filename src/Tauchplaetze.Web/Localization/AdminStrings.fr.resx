@@ -436,4 +436,63 @@
   <data name="Translate_Error_DailyLimit" xml:space="preserve"><value>Ta limite du jour est atteinte. Réessaie demain.</value></data>
   <data name="Translate_Error_BudgetExhausted" xml:space="preserve"><value>Le budget de traduction de ce mois est épuisé.</value></data>
   <data name="Translate_Error_Failed" xml:space="preserve"><value>La traduction n'a pas fonctionné. Réessaie plus tard.</value></data>
+  <data name="Nav_Susv" xml:space="preserve"><value>FSSS</value></data>
+  <data name="Susv_Title" xml:space="preserve"><value>Entrées de la FSSS</value></data>
+  <data name="Susv_Intro" xml:space="preserve"><value>La FSSS publie des restrictions et des projets sur les sites de plongée. Une entrée n’apparaît sur la page du site qu’après ta confirmation et l’attribution à des sites.</value></data>
+  <data name="Susv_SyncNow" xml:space="preserve"><value>Synchroniser maintenant</value></data>
+  <data name="Susv_SyncDone" xml:space="preserve"><value>Synchronisé : {0} entrées, {1} nouvelles, {2} modifiées, {3} supprimées.</value></data>
+  <data name="Susv_SyncFailed" xml:space="preserve"><value>{0} thèmes n’ont pas pu être synchronisés. Ils gardent le dernier état.</value></data>
+  <data name="Susv_SyncLocked" xml:space="preserve"><value>Une synchronisation est déjà en cours.</value></data>
+  <data name="Susv_FilterTopic" xml:space="preserve"><value>Thème</value></data>
+  <data name="Susv_FilterStatus" xml:space="preserve"><value>Statut</value></data>
+  <data name="Susv_All" xml:space="preserve"><value>Tous</value></data>
+  <data name="Susv_Topic_Restriction" xml:space="preserve"><value>Restriction</value></data>
+  <data name="Susv_Topic_Defibrillator" xml:space="preserve"><value>Défibrillateur</value></data>
+  <data name="Susv_Topic_MobileToilet" xml:space="preserve"><value>Toilettes portables</value></data>
+  <data name="Susv_Topic_SupportProject" xml:space="preserve"><value>Projet de soutien</value></data>
+  <data name="Susv_Topic_InclusiveSite" xml:space="preserve"><value>Site de plongée inclusif</value></data>
+  <data name="Susv_Status_Open" xml:space="preserve"><value>Ouvert</value></data>
+  <data name="Susv_Status_Changed" xml:space="preserve"><value>Modifiée depuis la vérification</value></data>
+  <data name="Susv_Status_Confirmed" xml:space="preserve"><value>Confirmée</value></data>
+  <data name="Susv_Status_Ignored" xml:space="preserve"><value>Ignorée</value></data>
+  <data name="Susv_Status_Removed" xml:space="preserve"><value>Supprimée par la FSSS</value></data>
+  <data name="Susv_None" xml:space="preserve"><value>Aucune entrée dans cette sélection.</value></data>
+  <data name="Susv_SourceDate" xml:space="preserve"><value>À la FSSS depuis le {0}</value></data>
+  <data name="Susv_OpenSource" xml:space="preserve"><value>Voir sur susv.ch</value></data>
+  <data name="Susv_ShowMap" xml:space="preserve"><value>Afficher la carte</value></data>
+  <data name="Susv_HideMap" xml:space="preserve"><value>Masquer la carte</value></data>
+  <data name="Susv_MapHint" xml:space="preserve"><value>Turquoise : point de la FSSS. Tirets : rayon de 500 m. Un clic sur un site le sélectionne ou le désélectionne.</value></data>
+  <data name="Susv_MapPoint" xml:space="preserve"><value>Point FSSS</value></data>
+  <data name="Susv_NoText" xml:space="preserve"><value>Pas de texte à la FSSS.</value></data>
+  <data name="Susv_Previous" xml:space="preserve"><value>Lors de la vérification</value></data>
+  <data name="Susv_Current" xml:space="preserve"><value>Maintenant</value></data>
+  <data name="Susv_Sites" xml:space="preserve"><value>Sites</value></data>
+  <data name="Susv_NoSuggestions" xml:space="preserve"><value>Aucun site publié dans un rayon de 500 m.</value></data>
+  <data name="Susv_Distance" xml:space="preserve"><value>{0} m</value></data>
+  <data name="Susv_AddSite" xml:space="preserve"><value>Chercher un autre site</value></data>
+  <data name="Susv_Kind" xml:space="preserve"><value>Type</value></data>
+  <data name="Susv_ValidFrom" xml:space="preserve"><value>Valable dès</value></data>
+  <data name="Susv_ValidUntil" xml:space="preserve"><value>Valable jusqu’au</value></data>
+  <data name="Susv_Yearly" xml:space="preserve"><value>Chaque année (seuls le jour et le mois comptent)</value></data>
+  <data name="Susv_Confirm" xml:space="preserve"><value>Confirmer</value></data>
+  <data name="Susv_Save" xml:space="preserve"><value>Enregistrer</value></data>
+  <data name="Susv_Ignore" xml:space="preserve"><value>Ignorer</value></data>
+  <data name="Susv_Reopen" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Susv_MarkSeen" xml:space="preserve"><value>Vu</value></data>
+  <data name="Susv_Error_NotAllowed" xml:space="preserve"><value>Tu n’as pas le droit de le faire.</value></data>
+  <data name="Susv_Error_Blocked" xml:space="preserve"><value>Ton compte est bloqué.</value></data>
+  <data name="Susv_Error_NotFound" xml:space="preserve"><value>L’entrée n’existe plus.</value></data>
+  <data name="Susv_Error_NoSites" xml:space="preserve"><value>Choisis au moins un site.</value></data>
+  <data name="Susv_Error_UnknownSite" xml:space="preserve"><value>Un site choisi n’est pas publié.</value></data>
+  <data name="Susv_Error_KindRequired" xml:space="preserve"><value>Une restriction a besoin d’un type.</value></data>
+  <data name="Susv_Error_KindNotAllowed" xml:space="preserve"><value>Le type et la période n’existent que pour une restriction.</value></data>
+  <data name="Susv_Error_YearlyNeedsDates" xml:space="preserve"><value>« Chaque année » a besoin de « valable dès » et « valable jusqu’au ».</value></data>
+  <data name="Susv_Error_InvalidPeriod" xml:space="preserve"><value>« Valable jusqu’au » est avant « valable dès ».</value></data>
+  <data name="Susv_Error_NotChanged" xml:space="preserve"><value>L’entrée n’a pas de modification ouverte.</value></data>
+  <data name="Field_InvalidDate" xml:space="preserve"><value>Saisir la date au format JJ.MM.AAAA, par exemple 15.05.2027.</value></data>
+  <data name="Field_NoticeYearly" xml:space="preserve"><value>Chaque année (seuls le jour et le mois comptent)</value></data>
+  <data name="Susv_NewSite" xml:space="preserve"><value>Créer un site</value></data>
+  <data name="New_FromSusv" xml:space="preserve"><value>Le nom, la position et le plan d’eau viennent de l’entrée de la FSSS. Merci de les vérifier. Après l’enregistrement, tu reviens à la vérification, où le nouveau site est proposé.</value></data>
+  <data name="SketchKind_MooringField" xml:space="preserve"><value>Champ de bouées</value></data>
+  <data name="Susv_Error_Busy" xml:space="preserve"><value>La synchronisation avec la FSSS est en cours. Réessaie dans une minute.</value></data>
 </root>

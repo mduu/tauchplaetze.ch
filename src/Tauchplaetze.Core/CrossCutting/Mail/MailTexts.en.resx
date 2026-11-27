@@ -44,4 +44,11 @@
   <data name="Exists_Text" xml:space="preserve"><value>Someone tried to create a new account with your e-mail address. You already have one. Sign in. If you do not remember the password, choose «Forgot password» on the sign-in page.</value></data>
   <data name="Exists_Button" xml:space="preserve"><value>Sign in</value></data>
   <data name="Exists_Ignore" xml:space="preserve"><value>Did you not try to create an account? Then ignore this e-mail.</value></data>
+  <data name="Susv_Subject" xml:space="preserve"><value>SUSV: {0} entries to review</value></data>
+  <data name="Susv_Text" xml:space="preserve"><value>The sync with the SUSV maps found entries for you to review.</value></data>
+  <data name="Susv_Added" xml:space="preserve"><value>New ({0}): {1}.</value></data>
+  <data name="Susv_Changed" xml:space="preserve"><value>Changed since the review ({0}): {1}.</value></data>
+  <data name="Susv_Removed" xml:space="preserve"><value>Removed by the SUSV ({0}): {1}.</value></data>
+  <data name="Susv_More" xml:space="preserve"><value>And {0} more.</value></data>
+  <data name="Susv_Button" xml:space="preserve"><value>Review entries</value></data>
 </root>

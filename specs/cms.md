@@ -18,7 +18,7 @@ Mitwirkende sehen die Moderation nicht (403). Sie bearbeiten und schlagen Plätz
 | `/admin` | Übersicht: Plätze, offene Vorschläge | Moderatoren, Admins |
 | `/admin/plaetze` | Liste mit Suche, Status, Ausbaustufe, Datenstufe, offenen Vorschlägen | Moderatoren, Admins |
 | `/admin/plaetze/neu` | neuer Platz: Name, Gewässer, Koordinate (Klick in die Karte) | Moderatoren, Admins |
-| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten (mit «Auch bekannt als», Namen mit Komma getrennt), Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum, Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station, Schwellen des Abflusses) | Moderatoren, Admins |
+| `/admin/plaetze/{id}` | Bearbeiten in Tabs: Grunddaten (mit «Auch bekannt als», Namen mit Komma getrennt), Bewertungen, Texte pro Sprache, Einstiege und Orte, Fotos (Hochladen, Abschnitt, Reihenfolge, Titelbild), Skizze (Editor auf der Karte, `dive-site.md`, «Tauchskizze»), Hinweise (Art, Zeitraum mit «jedes Jahr», Text pro Sprache), nur Moderation (Slug, Prognose aus, Satellitenpunkt, BAFU-Station, Schwellen des Abflusses) | Moderatoren, Admins |
 | `/admin/plaetze/{id}/versionen` | Versionen mit Vergleich zum Vorgänger, Wiederherstellen | Moderatoren und Admins (Security-Review 20.10.2026: zeigte Mitwirkenden Namen ohne Einwilligung, Begründungen und fremde Vorschläge). Der Core liefert ohne Recht nichts. |
 | `/admin/vorschlaege` | offene Vorschläge mit Vergleich zur Basis, Freigeben, Ablehnen mit Begründung | Moderatoren, Admins |
 | `/admin/konten` | Konten sperren (ohne E-Mail-Adressen und Rollen) | Moderatoren; Admins nutzen `/platform/konten` |
@@ -326,7 +326,7 @@ Die Moderation bestätigt jeden Eintrag des SUSV einmal: Plätze, bei einer Eins
 
 - `Features/Editorial/Commands`: `ProposeDiveSite`, `ProposeChange`, `WithdrawRevision`, `ApproveRevision`, `RejectRevision`, `ArchiveDiveSite`, `RestoreRevision`, `UploadMedia`.
 - `Features/Editorial/Queries`: `GetDiveSitesForEditing`, `GetDiveSiteForEditing`, `GetPendingRevisions`, `GetRevisions`, `CompareRevisions`, `GetMyContributions`.
-- `Features/Susv/Commands`: `ImportSusvEntries` (Job), `StartSusvImport` (Admin), `ReviewSusvEntry` (bestätigen, ändern, ignorieren, «gesehen»). `Features/Susv/Queries`: `GetSusvEntriesForReview`, `GetSusvEntryForReview`. Die Platzseite bekommt die sichtbaren Einträge mit `GetDiveSite`, das Verzeichnis den Filter mit `GetDiveSites`.
+- `Features/Susv/Commands`: `ImportSusvEntries` (Job), `StartSusvImport` (Admin), `ReviewSusvEntry` (bestätigen, ändern, ignorieren, «gesehen»). `Features/Susv/Queries`: `GetSusvEntriesForReview` (Liste mit Vorschlägen), `GetSusvReviewCount` (Zahl in der Navigation). Die Platzseite bekommt die sichtbaren Einträge mit `GetDiveSite`, das Verzeichnis den Filter mit `GetDiveSites`.
 - `Features/Accounts/Queries`: `GetPersonalData` (Seite «Meine Daten», Download und Auskunft durch einen Admin). Eine Query für alle drei Wege.
 - `Features/DiveSites/Queries`: `GetPublicRevisions`, `ComparePublicRevisions` für die öffentliche History.
 - `ProposeChange` eines Moderators ruft intern dieselbe Regel wie `ApproveRevision`. Die Regel steht an einer Stelle.

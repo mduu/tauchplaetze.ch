@@ -136,14 +136,25 @@ Ein Platz kann wichtige Hinweise haben (`DiveSiteNotice`, Entscheid Marc, 18.10.
 | Sperrung | `Closure` | am Platz nicht tauchen | `--color-notice-closure` (Korallenrot) |
 
 - Text pro Sprache, höchstens 500 Zeichen. Deutsch ist Pflicht. Fehlt eine Übersetzung, erscheint der deutsche Text.
-- Optional ein Zeitraum: «gültig ab» und «gültig bis» (inklusive, Schweizer Zeit). Ausserhalb ist der Hinweis unsichtbar, ohne neue Version. Ein unscharfes Ende («bis Sommer 2028») steht im Text, das Datum bleibt leer.
+- Optional ein Zeitraum: «gültig ab» und «gültig bis» (inklusive, Schweizer Zeit), dazu «jedes Jahr» (nur mit beiden Daten, es zählen Tag und Monat, auch über den Jahreswechsel). Ein unscharfes Ende («bis Sommer 2028») steht im Text, das Datum bleibt leer.
+- **Anzeige nach Zeitraum** (Entscheid Marc, 27.11.2026). Wer plant, soll auch eine Einschränkung sehen, die heute nicht gilt, aber kleiner:
+
+  | Lage | Anzeige |
+  |---|---|
+  | gilt heute | Banner unter dem Hero (`ux.md`, «Tauchplatzseite», Abschnitt 2) |
+  | beginnt in den nächsten 14 Tagen | schmale Zeile unter dem Hero, ohne Banner: «Ab 15.10. gesperrt · bis 15.12.» |
+  | später, oder ausserhalb des Zeitraums «jedes Jahr» | kleine Zeile im Abschnitt «Lage und Einstiege»: «Jedes Jahr 15.10.–15.12. gesperrt» oder «Vom 01.06.2027 bis 30.06.2027: Warnung», der Text zum Aufklappen |
+  | vorbei, ohne «jedes Jahr» | unsichtbar |
+
+  Der Wechsel zwischen den Stufen braucht keine neue Version. Ein Zeitraum «jedes Jahr» ist nie vorbei.
+- Die Prognose markiert jeden Tag, an dem eine Sperrung gilt, mit «Gesperrt» (`forecast.md`, «Sperrung»).
 - Hinweise sind Teil des Inhalts: Mitwirkende schlagen sie vor, Moderatoren geben sie frei (ADR-008).
 - Eine gültige Sperrung nimmt den Platz an diesem Tag aus «Beste Wahl» und Rangliste (`forecast.md`). Verzeichnis und Platzseite zeigen ihn weiter.
 - Mehrere Hinweise: schwerster zuerst (Sperrung, Warnung, Info), sonst in der Reihenfolge der Redaktion.
 
 ## SUSV und Schifffahrt
 
-Einschränkungen und Projekte des SUSV sowie die Regeln zur Schifffahrt stehen in den Stories 002 bis 005 (`stories/`). Sie sind kein Inhalt der Redaktion: nicht Teil der Version, ohne Wirkung auf die Ausbaustufe. Eine gültige Sperrung des SUSV wirkt wie eine Sperrung der Redaktion.
+Einschränkungen und Projekte des SUSV sowie die Regeln zur Schifffahrt stehen in den Stories 002 bis 005 (`stories/`). Sie sind kein Inhalt der Redaktion: nicht Teil der Version, ohne Wirkung auf die Ausbaustufe. Eine gültige Sperrung des SUSV wirkt wie eine Sperrung der Redaktion. Eine Einschränkung des SUSV mit Zeitraum erscheint nach denselben Stufen wie ein Hinweis («Anzeige nach Zeitraum»).
 
 ## Tauchskizze
 

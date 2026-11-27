@@ -1,0 +1,10 @@
+.susv-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 12px;
+    align-items: center;
+    max-width: none;
+    margin: 8px 0 0;
+    color: var(--color-text-body);
+    font-size: 15px;
+}

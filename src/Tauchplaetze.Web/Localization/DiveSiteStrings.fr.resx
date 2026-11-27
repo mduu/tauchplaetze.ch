@@ -300,4 +300,22 @@
   <data name="Seo_WaterTitle" xml:space="preserve"><value>{0} : plongée et visibilité aujourd'hui</value></data>
   <data name="Seo_WaterDescription" xml:space="preserve"><value>{0} : {1} sites de plongée avec carte et prévision quotidienne.</value></data>
   <data name="Seo_WaterBest" xml:space="preserve"><value>Meilleur indice de plongée aujourd'hui : {0}/10.</value></data>
+  <data name="Notice_From" xml:space="preserve"><value>dès le {0}</value></data>
+  <data name="Notice_Period" xml:space="preserve"><value>du {0} au {1}</value></data>
+  <data name="Notice_Yearly" xml:space="preserve"><value>chaque année du {0} au {1}</value></data>
+  <data name="Notices_Later_Title" xml:space="preserve"><value>Avis temporaires</value></data>
+  <data name="Susv_More" xml:space="preserve"><value>Plus sur le site de la FSSS</value></data>
+  <data name="Susv_SourceLabel" xml:space="preserve"><value>Source : FSSS, ouvre susv.ch</value></data>
+  <data name="Trait_Inclusive" xml:space="preserve"><value>Inclusion</value></data>
+  <data name="Susv_Defibrillator" xml:space="preserve"><value>Défibrillateur (DAE) sur le site</value></data>
+  <data name="Susv_MobileToilet" xml:space="preserve"><value>Toilettes mobiles sur le site</value></data>
+  <data name="Susv_SupportProject" xml:space="preserve"><value>La FSSS a amélioré ce site.</value></data>
+  <data name="Susv_InclusiveSite" xml:space="preserve"><value>Site de plongée inclusif : adapté aux plongeurs en situation de handicap.</value></data>
+  <data name="SketchKind_MooringField" xml:space="preserve"><value>Champ de bouées</value></data>
+  <data name="Map_Layer_Shipping" xml:space="preserve"><value>Navigation</value></data>
+  <data name="Shipping_Line" xml:space="preserve"><value>Des bateaux à horaire circulent près du site. La plongée sportive est interdite aux endroits marqués (art. 77 ONI).</value></data>
+  <data name="Shipping_NearLandingStage" xml:space="preserve"><value>Ce site se trouve à moins de 100 m du débarcadère {0}.</value></data>
+  <data name="Shipping_Link" xml:space="preserve"><value>Plongée et navigation</value></data>
+  <data name="Shipping_NotBinding" xml:space="preserve"><value>Pour orientation, sans valeur juridique.</value></data>
+  <data name="Shipping_Attribution" xml:space="preserve"><value>Débarcadères : öV-Haltestellen Bundesamt für Verkehr BAV · Lignes et ports : © contributeurs OpenStreetMap</value></data>
 </root>

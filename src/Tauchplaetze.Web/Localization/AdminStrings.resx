@@ -436,4 +436,63 @@
   <data name="Translate_Error_DailyLimit" xml:space="preserve"><value>Dein Limit für heute ist erreicht. Morgen geht es wieder.</value></data>
   <data name="Translate_Error_BudgetExhausted" xml:space="preserve"><value>Das Budget für Übersetzungen ist diesen Monat aufgebraucht.</value></data>
   <data name="Translate_Error_Failed" xml:space="preserve"><value>Die Übersetzung hat nicht geklappt. Versuche es später noch einmal.</value></data>
+  <data name="Nav_Susv" xml:space="preserve"><value>SUSV</value></data>
+  <data name="Susv_Title" xml:space="preserve"><value>Einträge des SUSV</value></data>
+  <data name="Susv_Intro" xml:space="preserve"><value>Der SUSV veröffentlicht Einschränkungen und Projekte an Tauchplätzen. Ein Eintrag erscheint erst auf der Platzseite, wenn du ihn bestätigst und Plätzen zuordnest.</value></data>
+  <data name="Susv_SyncNow" xml:space="preserve"><value>Jetzt abgleichen</value></data>
+  <data name="Susv_SyncDone" xml:space="preserve"><value>Abgeglichen: {0} Einträge, {1} neu, {2} geändert, {3} entfernt.</value></data>
+  <data name="Susv_SyncFailed" xml:space="preserve"><value>{0} Themen liessen sich nicht abgleichen. Dort bleibt der letzte Stand.</value></data>
+  <data name="Susv_SyncLocked" xml:space="preserve"><value>Ein Abgleich läuft schon.</value></data>
+  <data name="Susv_FilterTopic" xml:space="preserve"><value>Thema</value></data>
+  <data name="Susv_FilterStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Susv_All" xml:space="preserve"><value>Alle</value></data>
+  <data name="Susv_Topic_Restriction" xml:space="preserve"><value>Einschränkung</value></data>
+  <data name="Susv_Topic_Defibrillator" xml:space="preserve"><value>Defibrillator</value></data>
+  <data name="Susv_Topic_MobileToilet" xml:space="preserve"><value>Mobile Toilette</value></data>
+  <data name="Susv_Topic_SupportProject" xml:space="preserve"><value>Förderprojekt</value></data>
+  <data name="Susv_Topic_InclusiveSite" xml:space="preserve"><value>Inklusions-Tauchplatz</value></data>
+  <data name="Susv_Status_Open" xml:space="preserve"><value>Offen</value></data>
+  <data name="Susv_Status_Changed" xml:space="preserve"><value>Geändert seit der Prüfung</value></data>
+  <data name="Susv_Status_Confirmed" xml:space="preserve"><value>Bestätigt</value></data>
+  <data name="Susv_Status_Ignored" xml:space="preserve"><value>Ignoriert</value></data>
+  <data name="Susv_Status_Removed" xml:space="preserve"><value>Beim SUSV entfernt</value></data>
+  <data name="Susv_None" xml:space="preserve"><value>Keine Einträge in dieser Auswahl.</value></data>
+  <data name="Susv_SourceDate" xml:space="preserve"><value>Beim SUSV seit {0}</value></data>
+  <data name="Susv_OpenSource" xml:space="preserve"><value>Auf susv.ch ansehen</value></data>
+  <data name="Susv_ShowMap" xml:space="preserve"><value>Karte zeigen</value></data>
+  <data name="Susv_HideMap" xml:space="preserve"><value>Karte ausblenden</value></data>
+  <data name="Susv_MapHint" xml:space="preserve"><value>Türkis: Punkt des SUSV. Gestrichelt: Umkreis von 500 m. Ein Klick auf einen Platz wählt ihn an oder ab.</value></data>
+  <data name="Susv_MapPoint" xml:space="preserve"><value>Punkt des SUSV</value></data>
+  <data name="Susv_NoText" xml:space="preserve"><value>Kein Text beim SUSV.</value></data>
+  <data name="Susv_Previous" xml:space="preserve"><value>Bei der Prüfung</value></data>
+  <data name="Susv_Current" xml:space="preserve"><value>Jetzt</value></data>
+  <data name="Susv_Sites" xml:space="preserve"><value>Plätze</value></data>
+  <data name="Susv_NoSuggestions" xml:space="preserve"><value>Kein veröffentlichter Platz im Umkreis von 500 m.</value></data>
+  <data name="Susv_Distance" xml:space="preserve"><value>{0} m</value></data>
+  <data name="Susv_AddSite" xml:space="preserve"><value>Weiteren Platz suchen</value></data>
+  <data name="Susv_Kind" xml:space="preserve"><value>Art</value></data>
+  <data name="Susv_ValidFrom" xml:space="preserve"><value>Gültig ab</value></data>
+  <data name="Susv_ValidUntil" xml:space="preserve"><value>Gültig bis</value></data>
+  <data name="Susv_Yearly" xml:space="preserve"><value>Jedes Jahr (nur Tag und Monat zählen)</value></data>
+  <data name="Susv_Confirm" xml:space="preserve"><value>Bestätigen</value></data>
+  <data name="Susv_Save" xml:space="preserve"><value>Speichern</value></data>
+  <data name="Susv_Ignore" xml:space="preserve"><value>Ignorieren</value></data>
+  <data name="Susv_Reopen" xml:space="preserve"><value>Zurücknehmen</value></data>
+  <data name="Susv_MarkSeen" xml:space="preserve"><value>Gesehen</value></data>
+  <data name="Susv_Error_NotAllowed" xml:space="preserve"><value>Dazu fehlt dir das Recht.</value></data>
+  <data name="Susv_Error_Blocked" xml:space="preserve"><value>Dein Konto ist gesperrt.</value></data>
+  <data name="Susv_Error_NotFound" xml:space="preserve"><value>Den Eintrag gibt es nicht mehr.</value></data>
+  <data name="Susv_Error_NoSites" xml:space="preserve"><value>Wähle mindestens einen Platz.</value></data>
+  <data name="Susv_Error_UnknownSite" xml:space="preserve"><value>Ein gewählter Platz ist nicht veröffentlicht.</value></data>
+  <data name="Susv_Error_KindRequired" xml:space="preserve"><value>Eine Einschränkung braucht eine Art.</value></data>
+  <data name="Susv_Error_KindNotAllowed" xml:space="preserve"><value>Art und Zeitraum gibt es nur bei einer Einschränkung.</value></data>
+  <data name="Susv_Error_YearlyNeedsDates" xml:space="preserve"><value>«Jedes Jahr» braucht «gültig ab» und «gültig bis».</value></data>
+  <data name="Susv_Error_InvalidPeriod" xml:space="preserve"><value>«Gültig bis» liegt vor «gültig ab».</value></data>
+  <data name="Susv_Error_NotChanged" xml:space="preserve"><value>Der Eintrag hat keine offene Änderung.</value></data>
+  <data name="Field_InvalidDate" xml:space="preserve"><value>Datum als TT.MM.JJJJ eingeben, zum Beispiel 15.05.2027.</value></data>
+  <data name="Field_NoticeYearly" xml:space="preserve"><value>Jedes Jahr (nur Tag und Monat zählen)</value></data>
+  <data name="Susv_NewSite" xml:space="preserve"><value>Platz anlegen</value></data>
+  <data name="New_FromSusv" xml:space="preserve"><value>Name, Lage und Gewässer stammen aus dem Eintrag des SUSV. Bitte prüfen. Nach dem Speichern geht es zurück zur Prüfung, der neue Platz ist dort vorgeschlagen.</value></data>
+  <data name="SketchKind_MooringField" xml:space="preserve"><value>Bojenfeld</value></data>
+  <data name="Susv_Error_Busy" xml:space="preserve"><value>Der Abgleich mit dem SUSV läuft gerade. Bitte in einer Minute nochmals versuchen.</value></data>
 </root>

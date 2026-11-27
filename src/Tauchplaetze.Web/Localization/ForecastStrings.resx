@@ -203,4 +203,5 @@
   <data name="Reason_StrongCurrent_Short" xml:space="preserve"><value>viel Strömung</value></data>
   <data name="Profile_Undetermined" xml:space="preserve"><value>Sprungschicht nicht bestimmt</value></data>
   <data name="Day_Forecast_Unchecked" xml:space="preserve"><value>ungeprüft</value></data>
+  <data name="Day_Closed" xml:space="preserve"><value>Gesperrt</value></data>
 </root>

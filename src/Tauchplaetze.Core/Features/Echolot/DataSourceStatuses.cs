@@ -6,6 +6,7 @@ using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Sources.Alplakes;
 using Tauchplaetze.Core.Features.Forecasts.Sources.OpenMeteo;
+using Tauchplaetze.Core.Features.Susv;
 
 namespace Tauchplaetze.Core.Features.Echolot;
 
@@ -34,6 +35,7 @@ internal static class DataSourceStatuses
             await Satellite(dbContext, time, run, runHealth, calls.Where(c => c.Source == AlplakesClient.Source && IsSatellite(c)), ct),
             await Discharge(dbContext, now, ct),
             await LakeLevel(dbContext, now, ct),
+            await Susv(dbContext, now, ct),
         ];
     }
 
@@ -79,6 +81,27 @@ internal static class DataSourceStatuses
     {
         var readings = await dbContext.LakeLevelReadings.AsNoTracking().Select(r => r.MeasuredAt).ToListAsync(ct);
         return Measured(DataSource.LakeLevel, readings, now, EcholotRules.LakeLevelLateAfter);
+    }
+
+    /// <summary>
+    /// Stand des SUSV: der älteste letzte Abgleich unter den Themen mit Einträgen. So zeigt auch ein einzelnes Thema, das nicht mehr liefert, «verspätet».
+    /// <see cref="DataSourceStatus.Count"/>: bestätigte Einträge, die nicht entfernt sind.
+    /// </summary>
+    private static async Task<DataSourceStatus> Susv(TauchplaetzeDbContext dbContext, DateTimeOffset now, CancellationToken ct)
+    {
+        var topics = await dbContext.SusvEntries.AsNoTracking()
+            .Where(e => e.RemovedAt == null)
+            .GroupBy(e => e.Topic)
+            .Select(g => g.Max(e => e.LastSeenAt))
+            .ToListAsync(ct);
+        if (topics.Count == 0)
+        {
+            return new DataSourceStatus(DataSource.Susv, DataHealth.Unknown, null);
+        }
+
+        var synced = topics.Min();
+        var confirmed = await dbContext.SusvEntries.CountAsync(e => e.RemovedAt == null && e.ReviewStatus == SusvReviewStatus.Confirmed, ct);
+        return new DataSourceStatus(DataSource.Susv, EcholotRules.ByAge(now - synced, EcholotRules.SusvLateAfter, EcholotRules.SusvDownAfter), synced, confirmed);
     }
 
     private static DataSourceStatus Measured(DataSource source, List<DateTimeOffset> measuredAt, DateTimeOffset now, TimeSpan lateAfter)

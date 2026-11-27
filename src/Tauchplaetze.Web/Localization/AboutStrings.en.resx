@@ -42,7 +42,7 @@
   <data name="About_Source_Swisstopo_Name" xml:space="preserve"><value>swisstopo</value></data>
   <data name="About_Source_Swisstopo_Text" xml:space="preserve"><value>National map, aerial imagery (SWISSIMAGE) and lake depth data (swissBATHY3D) for the depth contours. Open government data, © swisstopo.</value></data>
   <data name="About_Source_Osm_Name" xml:space="preserve"><value>OpenStreetMap</value></data>
-  <data name="About_Source_Osm_Text" xml:space="preserve"><value>Initial set of dive sites with name, location and some details. © OpenStreetMap contributors, Open Database License (ODbL). The data we took over is also available under the ODbL.</value></data>
+  <data name="About_Source_Osm_Text" xml:space="preserve"><value>Initial set of dive sites with name, location and some details. © OpenStreetMap contributors, Open Database License (ODbL). The data we took over is also available under the ODbL. It also provides the routes of scheduled boats and the harbours for the «Shipping» layer.</value></data>
   <data name="About_Imprint_Title" xml:space="preserve"><value>Legal notice</value></data>
   <data name="About_Imprint_Operator" xml:space="preserve"><value>Operator</value></data>
   <data name="About_Imprint_Contact" xml:space="preserve"><value>Contact</value></data>
@@ -116,4 +116,9 @@
   <data name="About_Missing_Text" xml:space="preserve"><value>If a part is missing, we calculate with the others. Only clarity always counts: without a satellite value it counts carefully, and the index is at most {0}. Without wind or without water data there is no index, only an outlook with wind and rain.</value></data>
   <data name="About_Rules_Version" xml:space="preserve"><value>Rules {0}. The numbers on this page come straight from the calculation.</value></data>
   <data name="About_And" xml:space="preserve"><value> and </value></data>
+  <data name="About_Nav_Shipping" xml:space="preserve"><value>Diving and shipping</value></data>
+  <data name="About_Source_Susv_Name" xml:space="preserve"><value>Swiss Underwater Sports Federation (SUSV)</value></data>
+  <data name="About_Source_Susv_Text" xml:space="preserve"><value>Diving bans, restrictions and projects at the sites, for example defibrillators and toilets. The moderators check each entry before it appears. Each entry links to its page at the SUSV.</value></data>
+  <data name="About_Source_Bav_Name" xml:space="preserve"><value>Federal Office of Transport FOT</value></data>
+  <data name="About_Source_Bav_Text" xml:space="preserve"><value>Landing stages for the «Shipping» layer of the map. Source: öV-Haltestellen Bundesamt für Verkehr BAV, Opendata BY.</value></data>
 </root>

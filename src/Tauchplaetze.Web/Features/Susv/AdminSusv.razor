@@ -1,0 +1,354 @@
+@page "/admin/susv"
+@layout AdminLayout
+@attribute [Authorize(Roles = "Moderator,Admin")]
+@inherits AdminPage
+@using Microsoft.AspNetCore.Authorization
+@using Tauchplaetze.Core.Features.Accounts
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.Susv
+@using Tauchplaetze.Core.Features.Susv.Commands
+@using Tauchplaetze.Core.Features.Susv.Queries
+@using Tauchplaetze.Web.Features.Editorial
+@inject SusvReviewSignal SusvSignal
+
+<MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
+    <MudText Typo="Typo.h4">@L["Susv_Title"]</MudText>
+    <MudSpacer />
+    @if (IsAdmin)
+    {
+        <MudButton Variant="Variant.Outlined" Disabled="busy" OnClick="Sync" data-susv-sync>@L["Susv_SyncNow"]</MudButton>
+    }
+</MudStack>
+<MudText Class="mb-4">@L["Susv_Intro"]</MudText>
+@if (syncMessage is not null)
+{
+    <MudAlert Severity="@syncSeverity" Dense="true" Class="mb-4">@syncMessage</MudAlert>
+}
+
+<MudStack Row="true" Spacing="4" Class="mb-4">
+    <MudSelect T="SusvTopic?" @bind-Value="topicFilter" Label="@L["Susv_FilterTopic"]" Dense="true" Style="max-width: 16rem">
+        <MudSelectItem T="SusvTopic?" Value="null">@L["Susv_All"]</MudSelectItem>
+        @foreach (var topic in Enum.GetValues<SusvTopic>())
+        {
+            <MudSelectItem T="SusvTopic?" Value="topic">@L[$"Susv_Topic_{topic}"]</MudSelectItem>
+        }
+    </MudSelect>
+    <MudSelect T="string" @bind-Value="statusFilter" Label="@L["Susv_FilterStatus"]" Dense="true" Style="max-width: 16rem">
+        <MudSelectItem T="string" Value="@All">@L["Susv_All"]</MudSelectItem>
+        @foreach (var state in States)
+        {
+            <MudSelectItem T="string" Value="state">@L[$"Susv_Status_{state}"]</MudSelectItem>
+        }
+    </MudSelect>
+</MudStack>
+
+@if (Visible.Count == 0)
+{
+    <MudText>@L["Susv_None"]</MudText>
+}
+
+<MudStack Spacing="4">
+    @foreach (var item in Visible)
+    {
+        var form = forms[item.Id];
+        <MudPaper Outlined="true" Class="pa-4" data-susv-entry="@item.Id" data-susv-state="@State(item)">
+            <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center" Wrap="Wrap.Wrap">
+                <MudChip T="string" Size="Size.Small">@L[$"Susv_Topic_{item.Topic}"]</MudChip>
+                <MudChip T="string" Size="Size.Small" Color="@StateColor(item)">@L[$"Susv_Status_{State(item)}"]</MudChip>
+                @if (item.SourcePublishedAt is { } published)
+                {
+                    <MudText Typo="Typo.caption">@L["Susv_SourceDate", SwissClock.Date(published)]</MudText>
+                }
+            </MudStack>
+            <MudText Typo="Typo.h6" Class="mt-2">@item.Title</MudText>
+            <MudStack Row="true" Spacing="4" Class="mb-2" AlignItems="AlignItems.Center">
+                <MudLink Href="@item.DetailUrl" Target="_blank" rel="noopener">@L["Susv_OpenSource"]</MudLink>
+                <MudButton Variant="Variant.Text" Size="Size.Small" StartIcon="@(openMaps.Contains(item.Id) ? Icons.Material.Outlined.ExpandLess : Icons.Material.Outlined.Map)" OnClick="@(() => ToggleMap(item.Id))" aria-expanded="@(openMaps.Contains(item.Id) ? "true" : "false")" data-susv-map-toggle>
+                    @(openMaps.Contains(item.Id) ? L["Susv_HideMap"] : L["Susv_ShowMap"])
+                </MudButton>
+            </MudStack>
+            @if (openMaps.Contains(item.Id))
+            {
+                <div class="mb-2">
+                    <SusvReviewMap Id="@($"susv-map-{item.Id:N}")" Latitude="item.Latitude" Longitude="item.Longitude" RadiusMeters="list.SuggestionRadiusMeters"
+                                   Sites="MapSites(item)" Selected="form.Sites" OnToggle="@(site => Toggle(form, site, !form.Sites.Contains(site)))" />
+                    <MudButton Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Outlined.ExpandLess" Class="mt-1" OnClick="@(() => ToggleMap(item.Id))" data-susv-map-close>
+                        @L["Susv_HideMap"]
+                    </MudButton>
+                </div>
+            }
+
+            @if (item.ChangedSinceReview)
+            {
+                <MudGrid Spacing="2" Class="mb-2">
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.subtitle2">@L["Susv_Previous"]</MudText>
+                        <MudText Typo="Typo.body2"><strong>@item.PreviousTitle</strong></MudText>
+                        <MudText Typo="Typo.body2" Style="white-space: pre-line">@(item.PreviousText ?? L["Susv_NoText"])</MudText>
+                    </MudItem>
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.subtitle2">@L["Susv_Current"]</MudText>
+                        <MudText Typo="Typo.body2"><strong>@item.Title</strong></MudText>
+                        <MudText Typo="Typo.body2" Style="white-space: pre-line">@(item.Text ?? L["Susv_NoText"])</MudText>
+                    </MudItem>
+                </MudGrid>
+            }
+            else
+            {
+                <MudText Typo="Typo.body2" Style="white-space: pre-line" Class="mb-2">@(item.Text ?? L["Susv_NoText"])</MudText>
+            }
+
+            @if (item.RemovedAt is null && item.Status != SusvReviewStatus.Ignored)
+            {
+                <MudText Typo="Typo.subtitle2" Class="mt-2">@L["Susv_Sites"]</MudText>
+                @if (item.Suggestions.Count == 0)
+                {
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.body2">@L["Susv_NoSuggestions"]</MudText>
+                        <MudButton Variant="Variant.Outlined" Size="Size.Small" Href="@($"/admin/plaetze/neu?susv={item.Id}")" data-susv-new-site>@L["Susv_NewSite"]</MudButton>
+                    </MudStack>
+                }
+                @foreach (var site in SiteChoices(item))
+                {
+                    <MudCheckBox T="bool" Value="form.Sites.Contains(site.Id)" ValueChanged="@(on => Toggle(form, site.Id, on))" Dense="true"
+                                 Label="@SiteLabel(item, site.Id)" />
+                }
+                <MudAutocomplete T="SusvSiteOption" Label="@L["Susv_AddSite"]" SearchFunc="Search" ToStringFunc="@(s => s is null ? "" : $"{s.Name} ({s.WaterBodyName})")"
+                                 ValueChanged="@(s => Add(form, s))" Dense="true" ResetValueOnEmptyText="true" CoerceText="false" Style="max-width: 28rem" />
+
+                @if (item.Topic == SusvTopic.Restriction)
+                {
+                    <MudStack Row="true" Spacing="4" Class="mt-2" Wrap="Wrap.Wrap">
+                        <MudSelect T="NoticeKind?" @bind-Value="form.Kind" Label="@L["Susv_Kind"]" Dense="true" Style="max-width: 12rem">
+                            @foreach (var kind in Enum.GetValues<NoticeKind>())
+                            {
+                                <MudSelectItem T="NoticeKind?" Value="kind">@L[$"NoticeKind_{kind}"]</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <div style="width: 12rem"><MudDatePicker @bind-Date="form.From" Label="@L["Susv_ValidFrom"]" Converter="Dates" Editable="true" Clearable="true" /></div>
+                        <div style="width: 12rem"><MudDatePicker @bind-Date="form.Until" Label="@L["Susv_ValidUntil"]" Converter="Dates" Editable="true" Clearable="true" /></div>
+                        <MudCheckBox T="bool" @bind-Value="form.Yearly" Label="@L["Susv_Yearly"]" />
+                    </MudStack>
+                }
+            }
+
+            @if (form.Error is { } error)
+            {
+                <MudAlert Severity="Severity.Error" Dense="true" Class="mt-2">@L[$"Susv_Error_{error}"]</MudAlert>
+            }
+
+            <MudStack Row="true" Spacing="2" Class="mt-3">
+                @if (item.RemovedAt is null && item.Status != SusvReviewStatus.Ignored)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="busy" OnClick="@(() => Confirm(item))" data-susv-confirm>
+                        @(item.Status == SusvReviewStatus.Confirmed ? L["Susv_Save"] : L["Susv_Confirm"])
+                    </MudButton>
+                }
+                @if (item.ChangedSinceReview)
+                {
+                    <MudButton Variant="Variant.Outlined" Disabled="busy" OnClick="@(() => Decide(item, SusvReviewAction.MarkSeen))">@L["Susv_MarkSeen"]</MudButton>
+                }
+                @if (item.Status == SusvReviewStatus.Ignored)
+                {
+                    <MudButton Variant="Variant.Outlined" Disabled="busy" OnClick="@(() => Decide(item, SusvReviewAction.Reopen))">@L["Susv_Reopen"]</MudButton>
+                }
+                else if (item.RemovedAt is null)
+                {
+                    <MudButton Variant="Variant.Text" Color="Color.Secondary" Disabled="busy" OnClick="@(() => Decide(item, SusvReviewAction.Ignore))">@L["Susv_Ignore"]</MudButton>
+                }
+            </MudStack>
+        </MudPaper>
+    }
+</MudStack>
+
+@code {
+    private const string All = "All";
+
+    private static readonly string[] States = ["Open", "Changed", "Confirmed", "Ignored", "Removed"];
+
+    private SusvReviewList list = new([], []);
+
+    private readonly Dictionary<Guid, EntryForm> forms = [];
+
+    private readonly HashSet<Guid> openMaps = [];
+
+    private SusvTopic? topicFilter;
+
+    private string statusFilter = All;
+
+    private bool busy;
+
+    private SwissDateConverter? dates;
+
+    private SwissDateConverter Dates => dates ??= new SwissDateConverter(L["Field_InvalidDate"]);
+
+    private string? syncMessage;
+
+    private Severity syncSeverity = Severity.Info;
+
+    private List<SusvReviewItem> Visible => list.Entries
+        .Where(e => topicFilter is null || e.Topic == topicFilter)
+        .Where(e => statusFilter == All || State(e) == statusFilter)
+        .ToList();
+
+    protected override async Task Load()
+    {
+        list = await Query<GetSusvEntriesForReviewQuery, SusvReviewList?>(new GetSusvEntriesForReviewQuery(UserId, Language)) ?? new SusvReviewList([], []);
+        forms.Clear();
+        foreach (var item in list.Entries)
+        {
+            forms[item.Id] = EntryForm.Of(item);
+        }
+    }
+
+    private static string State(SusvReviewItem item) => item.State.ToString();
+
+    private static Color StateColor(SusvReviewItem item) => State(item) switch
+    {
+        "Open" or "Changed" => Color.Warning,
+        "Confirmed" => Color.Success,
+        _ => Color.Default,
+    };
+
+    /// <summary>Vorschläge im Umkreis und dazu die schon gewählten Plätze ausserhalb.</summary>
+    private IEnumerable<(Guid Id, string Name)> SiteChoices(SusvReviewItem item) =>
+        item.Suggestions.Select(s => (s.Id, s.Name))
+            .Concat(forms[item.Id].Sites.Where(id => item.Suggestions.All(s => s.Id != id))
+                .Select(id => (id, list.Sites.FirstOrDefault(s => s.Id == id)?.Name ?? id.ToString())));
+
+    private string SiteLabel(SusvReviewItem item, Guid id) =>
+        item.Suggestions.FirstOrDefault(s => s.Id == id) is { } suggestion
+            ? $"{suggestion.Name} ({suggestion.WaterBodyName}) · {L["Susv_Distance", suggestion.DistanceMeters]}"
+            : list.Sites.FirstOrDefault(s => s.Id == id) is { } site ? $"{site.Name} ({site.WaterBodyName})" : id.ToString();
+
+    private void ToggleMap(Guid id)
+    {
+        if (!openMaps.Remove(id))
+        {
+            openMaps.Add(id);
+        }
+    }
+
+    /// <summary>Vorgeschlagene und schon gewählte Plätze, mit Koordinate.</summary>
+    private List<SusvSiteOption> MapSites(SusvReviewItem item) =>
+        list.Sites.Where(s => item.Suggestions.Any(x => x.Id == s.Id) || forms[item.Id].Sites.Contains(s.Id)).ToList();
+
+    private Task<IEnumerable<SusvSiteOption>> Search(string? text, CancellationToken ct) =>
+        Task.FromResult(string.IsNullOrWhiteSpace(text)
+            ? Enumerable.Empty<SusvSiteOption>()
+            : list.Sites.Where(s => s.Name.Contains(text, StringComparison.OrdinalIgnoreCase) || s.WaterBodyName.Contains(text, StringComparison.OrdinalIgnoreCase)).Take(20));
+
+    private static void Toggle(EntryForm form, Guid site, bool on)
+    {
+        if (on)
+        {
+            form.Sites.Add(site);
+        }
+        else
+        {
+            form.Sites.Remove(site);
+        }
+    }
+
+    private static void Add(EntryForm form, SusvSiteOption? site)
+    {
+        if (site is not null)
+        {
+            form.Sites.Add(site.Id);
+        }
+    }
+
+    private Task Confirm(SusvReviewItem item)
+    {
+        var form = forms[item.Id];
+        return Run(item, new ReviewSusvEntryCommand(UserId, item.Id, SusvReviewAction.Confirm, [.. form.Sites],
+            item.Topic == SusvTopic.Restriction ? form.Kind : null,
+            item.Topic == SusvTopic.Restriction ? ToDate(form.From) : null,
+            item.Topic == SusvTopic.Restriction ? ToDate(form.Until) : null,
+            item.Topic == SusvTopic.Restriction && form.Yearly));
+    }
+
+    private Task Decide(SusvReviewItem item, SusvReviewAction action) => Run(item, new ReviewSusvEntryCommand(UserId, item.Id, action));
+
+    private async Task Run(SusvReviewItem item, ReviewSusvEntryCommand command)
+    {
+        if (busy)
+        {
+            return;
+        }
+
+        busy = true;
+        try
+        {
+            var result = await Command<ReviewSusvEntryCommand, ReviewSusvEntryResult>(command);
+            if (result.Error is { } error)
+            {
+                forms[item.Id].Error = error;
+                return;
+            }
+
+            await Load();
+            await SusvSignal.Notify();
+        }
+        finally
+        {
+            busy = false;
+        }
+    }
+
+    private async Task Sync()
+    {
+        if (busy)
+        {
+            return;
+        }
+
+        busy = true;
+        try
+        {
+            var result = await Command<StartSusvImportCommand, StartSusvImportResult>(new StartSusvImportCommand(UserId));
+            (syncMessage, syncSeverity) = result switch
+            {
+                { Error: AccountError.Blocked } => (L["Susv_Error_Blocked"].Value, Severity.Error),
+                { Error: not null } => (L["Susv_Error_NotAllowed"].Value, Severity.Error),
+                { Import.Locked: true } => (L["Susv_SyncLocked"].Value, Severity.Info),
+                { Import: { FailedTopics: > 0 } import } => (L["Susv_SyncDone", import.Entries, import.New, import.Changed, import.Removed] + " " + L["Susv_SyncFailed", import.FailedTopics], Severity.Warning),
+                { Import: { } import } => (L["Susv_SyncDone", import.Entries, import.New, import.Changed, import.Removed].Value, Severity.Success),
+                _ => (null, Severity.Info),
+            };
+            await Load();
+            await SusvSignal.Notify();
+        }
+        finally
+        {
+            busy = false;
+        }
+    }
+
+    private static DateOnly? ToDate(DateTime? value) => value is { } date ? DateOnly.FromDateTime(date) : null;
+
+    /// <summary>Eingaben zu einem Eintrag. Offen: der nächste vorgeschlagene Platz ist angekreuzt.</summary>
+    private sealed class EntryForm
+    {
+        public HashSet<Guid> Sites { get; init; } = [];
+
+        public NoticeKind? Kind { get; set; }
+
+        public DateTime? From { get; set; }
+
+        public DateTime? Until { get; set; }
+
+        public bool Yearly { get; set; }
+
+        public SusvReviewError? Error { get; set; }
+
+        public static EntryForm Of(SusvReviewItem item) => new()
+        {
+            Sites = item.Status == SusvReviewStatus.Pending && item.Suggestions.Count > 0 ? [item.Suggestions[0].Id] : [.. item.SiteIds],
+            Kind = item.Kind,
+            From = item.ValidFrom?.ToDateTime(TimeOnly.MinValue),
+            Until = item.ValidUntil?.ToDateTime(TimeOnly.MinValue),
+            Yearly = item.RecursYearly,
+        };
+    }
+}

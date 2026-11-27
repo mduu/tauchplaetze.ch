@@ -75,7 +75,8 @@ internal static partial class ContentValidation
     private static bool IsInvalid(NoticeContent notice) =>
         string.IsNullOrWhiteSpace(notice.Texts.FirstOrDefault(t => t.Culture == "de")?.Text)
         || notice.Texts.Any(t => t.Text?.Trim().Length > NoticeRules.TextLength)
-        || notice is { ValidFrom: { } from, ValidUntil: { } until } && until < from;
+        || notice is { RecursYearly: true } and ({ ValidFrom: null } or { ValidUntil: null })
+        || notice is { RecursYearly: false, ValidFrom: { } from, ValidUntil: { } until } && until < from;
 
     private static bool HasInvalidMedia(DiveSiteContent content) =>
         content.MediaList.DistinctBy(m => m.MediaId).Count() != content.MediaList.Count

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="MetaDescription" xml:space="preserve"><value>Where the Swiss inland navigation rules prohibit recreational diving: landing stages, ferry routes, harbours and moorings.</value></data>
+  <data name="Eyebrow" xml:space="preserve"><value>Rules on the water</value></data>
+  <data name="Title" xml:space="preserve"><value>Diving and shipping</value></data>
+  <data name="Lead" xml:space="preserve"><value>At many sites, diving is only tolerated. If you know the rules, you help to keep it that way.</value></data>
+  <data name="Forbidden_Title" xml:space="preserve"><value>Where recreational diving is prohibited</value></data>
+  <data name="Forbidden_Intro" xml:space="preserve"><value>The Swiss Inland Navigation Ordinance (Art. 77 para. 3) prohibits recreational diving at these places:</value></data>
+  <data name="Case_LandingStage" xml:space="preserve"><value>within 100 m of the authorised landing stages of scheduled boats;</value></data>
+  <data name="Case_Routes" xml:space="preserve"><value>on the routes of scheduled boats;</value></data>
+  <data name="Case_Harbour" xml:space="preserve"><value>at harbour entrances;</value></data>
+  <data name="Case_Moorings" xml:space="preserve"><value>near authorised moorings, for example mooring fields;</value></data>
+  <data name="Case_Fairway" xml:space="preserve"><value>in narrow fairways.</value></data>
+  <data name="Case_Exception" xml:space="preserve"><value>The canton can reduce the distance around a landing stage (Art. 163). Cantonal and local rules also apply.</value></data>
+  <data name="Behaviour_Title" xml:space="preserve"><value>How to behave</value></data>
+  <data name="Behaviour_Flag" xml:space="preserve"><value>When you dive, show the flag «A» (white and blue), clearly visible on the shore or on the boat (Art. 32).</value></data>
+  <data name="Behaviour_Distance" xml:space="preserve"><value>Boats keep at least 50 m away from this flag (Art. 49). Stay close to it.</value></data>
+  <data name="Behaviour_Choose" xml:space="preserve"><value>Choose your entry and your route away from harbours, landing stages and mooring fields.</value></data>
+  <data name="Behaviour_Local" xml:space="preserve"><value>Many local rules are not collected anywhere. If you dive at a site for the first time, ask a local club or dive shop first.</value></data>
+  <data name="Map_Title" xml:space="preserve"><value>What the map shows</value></data>
+  <data name="Map_LandingStage" xml:space="preserve"><value>Landing stages of scheduled boats with a circle of 100 m.</value></data>
+  <data name="Map_Routes" xml:space="preserve"><value>Routes of scheduled boats as a dashed line.</value></data>
+  <data name="Map_Harbour" xml:space="preserve"><value>Harbours as an area and mooring fields from the dive sketch, each with a circle of 50 m around the centre.</value></data>
+  <data name="Map_Limits" xml:space="preserve"><value>Every distance is measured from the centre. Narrow fairways and moorings that are not recorded are not on the map. The map is for orientation only and is not legally binding.</value></data>
+  <data name="Susv_Title" xml:space="preserve"><value>The SUSV</value></data>
+  <data name="Susv_Text" xml:space="preserve"><value>The Swiss Underwater Sports Federation talks with the lake police and the shipping companies so that diving at the sites remains possible.</value></data>
+  <data name="Susv_Link" xml:space="preserve"><value>To the SUSV</value></data>
+  <data name="Source_Title" xml:space="preserve"><value>Source</value></data>
+  <data name="Source_Text" xml:space="preserve"><value>Inland Navigation Ordinance (BSV, SR 747.201.1), status as of 1 January 2022, Art. 32, 49, 77 and 163. Only available in German, French and Italian.</value></data>
+  <data name="Source_Link" xml:space="preserve"><value>Read Art. 77 on Fedlex (German)</value></data>
+  <data name="Source_Url" xml:space="preserve"><value>https://www.fedlex.admin.ch/eli/cc/1979/337_337_337/de#art_77</value></data>
+</root>

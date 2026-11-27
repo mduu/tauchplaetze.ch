@@ -436,4 +436,63 @@
   <data name="Translate_Error_DailyLimit" xml:space="preserve"><value>You have reached your limit for today. Try again tomorrow.</value></data>
   <data name="Translate_Error_BudgetExhausted" xml:space="preserve"><value>The translation budget for this month is used up.</value></data>
   <data name="Translate_Error_Failed" xml:space="preserve"><value>The translation did not work. Try again later.</value></data>
+  <data name="Nav_Susv" xml:space="preserve"><value>SUSV</value></data>
+  <data name="Susv_Title" xml:space="preserve"><value>SUSV entries</value></data>
+  <data name="Susv_Intro" xml:space="preserve"><value>The SUSV publishes restrictions and projects at dive sites. An entry only appears on the site page after you confirm it and assign it to sites.</value></data>
+  <data name="Susv_SyncNow" xml:space="preserve"><value>Sync now</value></data>
+  <data name="Susv_SyncDone" xml:space="preserve"><value>Synced: {0} entries, {1} new, {2} changed, {3} removed.</value></data>
+  <data name="Susv_SyncFailed" xml:space="preserve"><value>{0} topics could not be synced. They keep the last state.</value></data>
+  <data name="Susv_SyncLocked" xml:space="preserve"><value>A sync is already running.</value></data>
+  <data name="Susv_FilterTopic" xml:space="preserve"><value>Topic</value></data>
+  <data name="Susv_FilterStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Susv_All" xml:space="preserve"><value>All</value></data>
+  <data name="Susv_Topic_Restriction" xml:space="preserve"><value>Restriction</value></data>
+  <data name="Susv_Topic_Defibrillator" xml:space="preserve"><value>Defibrillator</value></data>
+  <data name="Susv_Topic_MobileToilet" xml:space="preserve"><value>Mobile toilet</value></data>
+  <data name="Susv_Topic_SupportProject" xml:space="preserve"><value>Support project</value></data>
+  <data name="Susv_Topic_InclusiveSite" xml:space="preserve"><value>Inclusive dive site</value></data>
+  <data name="Susv_Status_Open" xml:space="preserve"><value>Open</value></data>
+  <data name="Susv_Status_Changed" xml:space="preserve"><value>Changed since the review</value></data>
+  <data name="Susv_Status_Confirmed" xml:space="preserve"><value>Confirmed</value></data>
+  <data name="Susv_Status_Ignored" xml:space="preserve"><value>Ignored</value></data>
+  <data name="Susv_Status_Removed" xml:space="preserve"><value>Removed by the SUSV</value></data>
+  <data name="Susv_None" xml:space="preserve"><value>No entries in this selection.</value></data>
+  <data name="Susv_SourceDate" xml:space="preserve"><value>At the SUSV since {0}</value></data>
+  <data name="Susv_OpenSource" xml:space="preserve"><value>View on susv.ch</value></data>
+  <data name="Susv_ShowMap" xml:space="preserve"><value>Show map</value></data>
+  <data name="Susv_HideMap" xml:space="preserve"><value>Hide map</value></data>
+  <data name="Susv_MapHint" xml:space="preserve"><value>Turquoise: SUSV point. Dashed: radius of 500 m. Click a site to select or deselect it.</value></data>
+  <data name="Susv_MapPoint" xml:space="preserve"><value>SUSV point</value></data>
+  <data name="Susv_NoText" xml:space="preserve"><value>No text at the SUSV.</value></data>
+  <data name="Susv_Previous" xml:space="preserve"><value>At the review</value></data>
+  <data name="Susv_Current" xml:space="preserve"><value>Now</value></data>
+  <data name="Susv_Sites" xml:space="preserve"><value>Sites</value></data>
+  <data name="Susv_NoSuggestions" xml:space="preserve"><value>No published site within 500 m.</value></data>
+  <data name="Susv_Distance" xml:space="preserve"><value>{0} m</value></data>
+  <data name="Susv_AddSite" xml:space="preserve"><value>Search for another site</value></data>
+  <data name="Susv_Kind" xml:space="preserve"><value>Type</value></data>
+  <data name="Susv_ValidFrom" xml:space="preserve"><value>Valid from</value></data>
+  <data name="Susv_ValidUntil" xml:space="preserve"><value>Valid until</value></data>
+  <data name="Susv_Yearly" xml:space="preserve"><value>Every year (only day and month count)</value></data>
+  <data name="Susv_Confirm" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Susv_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Susv_Ignore" xml:space="preserve"><value>Ignore</value></data>
+  <data name="Susv_Reopen" xml:space="preserve"><value>Undo</value></data>
+  <data name="Susv_MarkSeen" xml:space="preserve"><value>Seen</value></data>
+  <data name="Susv_Error_NotAllowed" xml:space="preserve"><value>You do not have the right to do this.</value></data>
+  <data name="Susv_Error_Blocked" xml:space="preserve"><value>Your account is blocked.</value></data>
+  <data name="Susv_Error_NotFound" xml:space="preserve"><value>The entry no longer exists.</value></data>
+  <data name="Susv_Error_NoSites" xml:space="preserve"><value>Select at least one site.</value></data>
+  <data name="Susv_Error_UnknownSite" xml:space="preserve"><value>A selected site is not published.</value></data>
+  <data name="Susv_Error_KindRequired" xml:space="preserve"><value>A restriction needs a type.</value></data>
+  <data name="Susv_Error_KindNotAllowed" xml:space="preserve"><value>Type and period exist only for a restriction.</value></data>
+  <data name="Susv_Error_YearlyNeedsDates" xml:space="preserve"><value>«Every year» needs «valid from» and «valid until».</value></data>
+  <data name="Susv_Error_InvalidPeriod" xml:space="preserve"><value>«Valid until» is before «valid from».</value></data>
+  <data name="Susv_Error_NotChanged" xml:space="preserve"><value>The entry has no open change.</value></data>
+  <data name="Field_InvalidDate" xml:space="preserve"><value>Enter the date as DD.MM.YYYY, for example 15.05.2027.</value></data>
+  <data name="Field_NoticeYearly" xml:space="preserve"><value>Every year (only day and month count)</value></data>
+  <data name="Susv_NewSite" xml:space="preserve"><value>Create site</value></data>
+  <data name="New_FromSusv" xml:space="preserve"><value>Name, location and water body come from the SUSV entry. Please check them. After saving you return to the review, where the new site is suggested.</value></data>
+  <data name="SketchKind_MooringField" xml:space="preserve"><value>Mooring field</value></data>
+  <data name="Susv_Error_Busy" xml:space="preserve"><value>The sync with the SUSV is running. Please try again in a minute.</value></data>
 </root>

@@ -17,5 +17,6 @@ Echte Antworten der Quellen aus dem Spike 0.5 (Riff Williams, Zürichsee). Die C
 | `hydro/` (Vorhersage, unkontrolliert) | BAFU-Abflussvorhersage `pqprevi-unofficial/Pqprevi_ICH2_Ctrl_2605.txt` (Verzasca – Lavertezzo), ausgegeben 20.10.2026, 12:56 MEWZ, aus den Rohdaten des lokalen Abfluss-Jobs | 20.10.2026, 14:23 |
 | `hydro/` (Temperatur) | BAFU über existenz.ch, Stationen 2091 Rhein – Rheinfelden und 2605 Verzasca – Lavertezzo, `parameters=flow,temperature`, 2605 ohne Temperatur | 19.10.2026, 16:15 |
 | `hydro/` (Seepegel) | BAFU über existenz.ch, Stationen 2014 Zürichsee – Schmerikon und 2209 Zürichsee – Zürich, `parameters=height`, `startdate=2026-11-20`, `enddate=2026-11-22`; Statistik «Jahresverlauf» der Station 2209 von hydrodaten.admin.ch (`p_annual`) | 21.11.2026, 08:15 |
+| `susv/` | SUSV, Karten aller fünf Themen in `de`, `fr` und `it` (`POST /{lang}/api/v1/map-result`) und die Detailseite «Arth, Tauchplatz Strick» (49178) in `de` und `fr`. In den Detailseiten sind E-Mail-Adresse, Telefonnummer und Postadresse des Verbands durch Platzhalter ersetzt | 26.11.2026, 07:45 |
 
 Ändert eine Quelle ihr Format, kommt eine neue Antwort dazu. Die alte bleibt, solange der Parser sie lesen muss.

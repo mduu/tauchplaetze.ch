@@ -1,6 +1,6 @@
 # Story 001: Seite «Partner»
 
-**Status:** geplant (24.11.2026).
+**Status:** 👷‍♂️ in Arbeit (27.11.2026), auf Branch `feat/susv-import`, noch nicht deployt. Ausgeblendet (`Partner:Visible` = `false`), bis der SUSV den Wortlaut freigibt (Entscheid Marc, 27.11.2026).
 
 ## Ziel
 
@@ -29,7 +29,25 @@ Nicht in dieser Story: weitere Partner.
 
 | Punkt | Nächster Schritt |
 |---|---|
-| **Wortlaut** des Eintrags. | Marc stimmt ihn mit dem SUSV ab. |
+| **Wortlaut** des Eintrags. Der Text auf der Seite ist ein Entwurf in vier Sprachen (`PartnerStrings.resx`). | Marc stimmt ihn mit dem SUSV ab. |
+| **Englische Links:** susv.ch hat keine englischen Seiten. | Englisch verlinkt die deutsche Fassung mit dem Zusatz «(in German)». |
 | **Gegenlink:** Marc hat den SUSV um einen Link auf tauchplaetze.ch gebeten. | Antwort abwarten. |
 
-Hängt von keiner anderen Story ab.
+Hängt von keiner anderen Story ab. Die Zeile mit der Zahl der Plätze (Kriterium 3) kommt mit den bestätigten Einträgen (Story 002) und ihrer Anzeige (Stories 003 und 004). Bis dahin gibt es keine bestätigten Einträge, die Zeile fehlt, und die Seite liest keine Daten.
+
+## Umsetzung
+
+- Seite `Features/Partner/PartnerPage.razor`, Texte in `Localization/PartnerStrings.resx`, Link im Fuss (`Footer_Partner` in `SharedStrings.resx`), Sitemap (`Sitemap.cs`).
+- Logo aus `assets/partner/susv/susv-logo-mit-namen.jpg`, verkleinert auf 600 px als `wwwroot/img/partner/susv-logo.webp` und `.png`.
+- Links auf susv.ch: Einzelmitglied und Tauchplatzförderung, je in der Sprache der Seite.
+
+## Freischalten
+
+Sobald der SUSV den Wortlaut freigibt:
+
+1. `Partner:Visible` auf `true` setzen (`appsettings.json`). Dann erscheint die Seite, der Link im Fuss und der Eintrag in der Sitemap. Die Seite «Tauchen und Schifffahrt» verlinkt dann auf die Partnerseite statt auf susv.ch.
+2. Die Neuigkeit fürs Echolot in `news.json` eintragen, mit dem Datum des Freischaltens:
+   - de: «Neue Seite «Partner»» – «Die Seite «Partner» zeigt, wer das Tauchen in der Schweiz möglich macht. Der erste Partner ist der Schweizer Unterwasser-Sport-Verband SUSV.»
+   - en: «New page «Partners»» – «The page «Partners» shows who makes diving in Switzerland possible. The first partner is the Swiss Underwater Sports Federation SUSV.»
+   - fr: «Nouvelle page « Partenaires »» – «La page « Partenaires » montre qui rend la plongée possible en Suisse. Le premier partenaire est la Fédération Suisse de Sports Subaquatiques FSSS.»
+   - it: «Nuova pagina «Partner»» – «La pagina «Partner» mostra chi rende possibile l’immersione in Svizzera. Il primo partner è la Federazione Svizzera di Sport Subacquei FSSS.»

@@ -9,6 +9,8 @@ using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Features.WaterBodies;
 
+using Tauchplaetze.Core.Features.Susv;
+
 namespace Tauchplaetze.Core.Features.DiveSites.Queries;
 
 /// <summary>
@@ -48,6 +50,9 @@ public enum SiteTrait
 
     /// <summary>Höhle.</summary>
     Cave,
+
+    /// <summary>Inklusions-Tauchplatz des SUSV, bestätigt (Story 004).</summary>
+    Inclusive,
 }
 
 /// <summary>Sortierung im Verzeichnis.</summary>
@@ -102,11 +107,17 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
     public async Task<FoundDiveSites> Handle(FindDiveSitesQuery query, CancellationToken ct = default)
     {
         var today = SwissTime.Today(time);
-        var active = NoticeRules.ActiveOn(today);
+        var restrictions = await SiteRestrictions.Load(dbContext, ct);
+        var inclusive = (await dbContext.SusvEntries
+            .Where(SusvRules.ShownProject)
+            .Where(e => e.Topic == SusvTopic.InclusiveSite)
+            .SelectMany(e => e.Sites.Select(s => s.DiveSiteId))
+            .ToListAsync(ct)).ToHashSet();
         var rows = await dbContext.DiveSites
             .AsNoTracking()
             .Where(d => d.Status == DiveSiteStatus.Published)
             .Select(d => new Row(
+                d.Id,
                 d.Slug,
                 d.Name,
                 d.Municipality,
@@ -126,9 +137,9 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 d.WaterBody.NameIt,
                 d.WaterBody.WaterBodyType,
                 dbContext.DailyForecasts.Where(f => f.DiveSiteId == d.Id && f.Date == today).Select(f => f.DiveIndex).FirstOrDefault(),
-                d.Notices.AsQueryable().Where(active).Select(n => n.Kind).ToList(),
                 d.OtherNames))
             .ToListAsync(ct);
+        rows = [.. rows.Select(r => r with { NoticeToday = restrictions[r.Id].WorstOn(today), Inclusive = inclusive.Contains(r.Id) })];
         var otherNames = rows.ToDictionary(r => r.Slug, r => OtherNameJson.Read(r.OtherNames, logger));
 
         var hasLocation = query is { Latitude: not null, Longitude: not null };
@@ -175,7 +186,7 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 m.Row.Latitude,
                 m.Row.Longitude,
                 m.Row.Index,
-                Worst(m.Row.Notices),
+                m.Row.NoticeToday,
                 m.Row.MaxDepth,
                 m.Traits,
                 m.Distance is { } km ? Math.Round(km, 1) : null,
@@ -186,7 +197,7 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
             sort,
             [.. matches.Select(m => new DiveSiteListItem(
                 m.Row.Slug, m.Row.Name, m.Row.Municipality, m.Row.WaterSlug, WaterName(m.Row, query.Culture), m.Row.WaterType,
-                m.Row.Latitude, m.Row.Longitude, m.Row.ContentLevel, m.Row.DataLevel, m.Row.Index, Worst(m.Row.Notices)))],
+                m.Row.Latitude, m.Row.Longitude, m.Row.ContentLevel, m.Row.DataLevel, m.Row.Index, m.Row.NoticeToday))],
             rows.Count,
             rows.Select(r => r.WaterSlug).Distinct().Count(),
             waterName);
@@ -225,14 +236,18 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
             traits.Add(SiteTrait.Cave);
         }
 
+        if (row.Inclusive)
+        {
+            traits.Add(SiteTrait.Inclusive);
+        }
+
         return traits;
     }
 
     private static string WaterName(Row row, string culture) => WaterBodyNames.In(culture, row.NameDe, row.NameEn, row.NameFr, row.NameIt);
 
-    private static NoticeKind? Worst(List<NoticeKind> notices) => notices.Count == 0 ? null : notices.Max();
-
     private sealed record Row(
+        Guid Id,
         string Slug,
         string Name,
         string? Municipality,
@@ -252,9 +267,12 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
         string? NameIt,
         WaterBodyType WaterType,
         decimal? Index,
-        List<NoticeKind> Notices,
         string? OtherNames)
     {
+        public NoticeKind? NoticeToday { get; init; }
+
+        public bool Inclusive { get; init; }
+
         public double Latitude => Location.Y;
 
         public double Longitude => Location.X;

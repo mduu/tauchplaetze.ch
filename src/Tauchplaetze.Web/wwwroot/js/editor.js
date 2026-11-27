@@ -54,7 +54,66 @@ window.tauchplaetzeAdmin = (function () {
     }
   }
 
-  return { show: show, dispose: dispose };
+  // Karte zur Prüfung eines Eintrags des SUSV (Story 002): Punkt des SUSV, Umkreis der Vorschläge und die Plätze.
+  // Gewählte Plätze leuchten. Ein Klick auf einen Platz wählt ihn an oder ab.
+  function showReview(id, latitude, longitude, radius, pointLabel, sites, dotnet) {
+    const element = document.getElementById(id);
+    if (!element) {
+      return;
+    }
+
+    let entry = maps.get(id);
+    if (entry && entry.map.getContainer() !== element) {
+      dispose(id);
+      entry = null;
+    }
+
+    const style = getComputedStyle(document.documentElement);
+    const color = function (name) { return style.getPropertyValue(name).trim(); };
+    if (!entry) {
+      const map = L.map(element, { scrollWheelZoom: false });
+      window.tauchplaetzeMap.addBaseLayers(map, element);
+      window.tauchplaetzeMap.addContours(map, element);
+      L.circle([latitude, longitude], { radius: radius, color: color('--color-text-subtle'), weight: 1, dashArray: '4 4', fill: false, interactive: false }).addTo(map);
+      L.circleMarker([latitude, longitude], { radius: 9, color: color('--color-bg'), weight: 2, fillColor: color('--color-notice-info'), fillOpacity: 1 })
+        .bindTooltip(label(pointLabel), { permanent: true, direction: 'top', offset: [0, -10], className: 'map-label' })
+        .addTo(map);
+      entry = { map: map, sites: L.layerGroup().addTo(map) };
+      maps.set(id, entry);
+
+      const points = [[latitude, longitude]].concat(sites.map(function (s) { return [s.lat, s.lng]; }));
+      if (points.length > 1) {
+        map.fitBounds(L.latLngBounds(points).pad(0.3), { maxZoom: 17 });
+      } else {
+        map.setView([latitude, longitude], 16);
+      }
+    }
+
+    entry.sites.clearLayers();
+    sites.forEach(function (site) {
+      L.circleMarker([site.lat, site.lng], {
+        radius: 7,
+        color: site.selected ? color('--color-bg') : color('--color-text-subtle'),
+        weight: 2,
+        fillColor: site.selected ? color('--color-signal') : color('--color-bg'),
+        fillOpacity: 1
+      })
+        .bindTooltip(label(site.name), { permanent: true, direction: 'right', offset: [10, 0], className: 'map-label' })
+        .on('click', function () { dotnet.invokeMethodAsync('Toggle', site.id); })
+        .addTo(entry.sites);
+    });
+
+    setTimeout(function () { entry.map.invalidateSize(); }, 150);
+  }
+
+  // Namen kommen von Mitwirkenden und vom SUSV: nur als Text ins DOM, nie als HTML.
+  function label(text) {
+    const span = document.createElement('span');
+    span.textContent = text;
+    return span;
+  }
+
+  return { show: show, showReview: showReview, dispose: dispose };
 })();
 
 // Editor der Tauchskizze und der Einstiege (dive-site.md, «Tauchskizze», «Einstiege und Orte»).

@@ -1,6 +1,6 @@
 # Story 005: Tauchen und Schifffahrt
 
-**Status:** geplant (24.11.2026).
+**Status:** 👷‍♂️ in Arbeit (27.11.2026), auf dem Branch `feat/susv-import`, noch nicht deployt. Wortlaut der Seite als Entwurf, Marc stimmt ihn mit dem SUSV ab.
 
 ## Ziel
 
@@ -26,7 +26,7 @@ Die Binnenschifffahrtsverordnung (BSV, SR 747.201.1) verbietet das Sporttauchen 
 - **Kein Banner und keine Wirkung auf die Rangliste.** Die Regel gilt dauernd und ist keine Sperrung des Platzes. Eine konkrete Einschränkung kommt als Hinweis der Redaktion oder des SUSV.
 - **Unter der Ebene steht:** «Orientierung, nicht rechtsverbindlich.» Die Daten sind nicht die amtliche Bewilligung.
 - **Seite «Tauchen und Schifffahrt»** (`ux.md`): der ganze Text mit allen fünf Verboten.
-- Vor dem Bau die aktuelle Fassung der BSV prüfen. Gelesen ist der Stand 1.1.2022.
+- **BSV geprüft am 27.11.2026:** Die geltende Fassung hat weiterhin den Stand vom 1.1.2022 (Fedlex, `eli/cc/1979/337_337_337`, nur Deutsch, Französisch und Italienisch). Art. 77 Abs. 3 nennt die fünf Fälle, eine feste Distanz nur bei Landungsstellen (100 m). Art. 163 Abs. 1 Bst. n erlaubt dem Kanton, diesen Umkreis zu verkleinern; die Seite nennt das. Art. 32 (Flagge «A») und Art. 49 (Schiffe 50 m Abstand) wie angenommen.
 
 Daten und Import: `data-sources.md`, «Schifffahrt». Entität: `ShippingFeature` (`datastructure.md`).
 
@@ -44,8 +44,10 @@ Daten und Import: `data-sources.md`, «Schifffahrt». Entität: `ShippingFeature
 
 | Punkt | Nächster Schritt |
 |---|---|
-| **Ort des Textes:** eigene Seite (Vorschlag in `ux.md`) oder Abschnitt auf «Über». | Entscheid Marc. |
+| **Ort des Textes:** eigene Seite `/de/schifffahrt` (Entscheid Marc, 27.11.2026). | erledigt |
 | **Wortlaut** des Textes. Der SUSV begrüsst den Verweis auf die BSV und auf die Eigenverantwortung. Er ergänzt: Viele lokale Sonderregeln sind nirgends zusammengefasst. Wer zum ersten Mal an einem Platz taucht, fragt vorher bei einem Club oder Tauchgeschäft am Ort. | Diesen Punkt in den Text aufnehmen. Marc stimmt den Wortlaut mit dem SUSV ab. |
-| **BSV und BAV-Daten:** Gelesen ist die BSV im Stand 1.1.2022. Die Nutzungsbedingungen der BAV-Haltestellen sind nicht geprüft. | Vor dem Bau prüfen. |
+| **BSV und BAV-Daten:** geprüft am 27.11.2026 (siehe oben und `data-sources.md`, «Schifffahrt»). | erledigt |
+| **Jede Schiffshaltestelle eine bewilligte Landungsstelle?** Der Datensatz des BAV kennt keine Saison und keine Bedarfshalte. Die Karte zeigt alle gültigen Schiffshaltestellen. | Mit dem SUSV klären, ob das passt. |
+| **Grenzgewässer:** Landungsstellen im Ausland (Bodensee, Genfersee, Lago Maggiore, Luganersee) fehlen im Datensatz des BAV. | Offen. |
 
 Hängt von keiner anderen Story ab. Der Text verlinkt auf «Partner» (Story 001).

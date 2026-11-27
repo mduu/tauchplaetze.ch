@@ -15,7 +15,6 @@
 }
 
 .about-lead {
-    max-width: 70ch;
     color: var(--color-text-body);
     font-size: 18px;
     line-height: 1.55;
@@ -38,7 +37,6 @@
 
 .page-section p,
 .about-list {
-    max-width: 70ch;
     color: var(--color-text-body);
     line-height: 1.6;
 }
@@ -79,7 +77,6 @@
 .sources {
     display: grid;
     gap: 18px;
-    max-width: 80ch;
     margin: 24px 0 0;
 }
 
@@ -127,7 +124,6 @@ address {
 }
 
 .factors {
-    max-width: 860px;
     margin-top: 16px;
     overflow-x: auto;
     background: var(--color-surface);

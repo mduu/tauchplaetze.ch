@@ -1,0 +1,71 @@
+@page "/de/schifffahrt"
+@page "/en/shipping"
+@page "/fr/navigation"
+@page "/it/navigazione"
+@attribute [Microsoft.AspNetCore.OutputCaching.OutputCache(PolicyName = Tauchplaetze.Web.CrossCutting.Caching.PublicPageCache.Policy)]
+@inject IStringLocalizer<SharedStrings> Shared
+@inject IStringLocalizer<ShippingStrings> L
+@inject Microsoft.Extensions.Options.IOptions<Tauchplaetze.Web.Features.Partner.PartnerOptions> Partner
+
+<PageTitle>@SeoText.PageTitle(L["Title"], Shared["Brand"])</PageTitle>
+<HeadContent>
+    <HreflangLinks Title="@L["Title"]" Description="@L["MetaDescription"]" />
+</HeadContent>
+
+<section class="page-section">
+    <p class="eyebrow">@L["Eyebrow"]</p>
+    <h1 class="page-title">@L["Title"]</h1>
+    <p class="lead">@L["Lead"]</p>
+</section>
+
+<section class="page-section shipping-body">
+<div class="shipping-block" role="group" aria-labelledby="forbidden">
+    <h2 id="forbidden" class="section-heading">@L["Forbidden_Title"]</h2>
+    <p>@L["Forbidden_Intro"]</p>
+    <ul class="shipping-cases">
+        <li data-case="landing-stage"><span class="shipping-sign" data-sign="circle" aria-hidden="true"></span>@L["Case_LandingStage"]</li>
+        <li data-case="routes"><span class="shipping-sign" data-sign="line" aria-hidden="true"></span>@L["Case_Routes"]</li>
+        <li data-case="harbour"><span class="shipping-sign" data-sign="area" aria-hidden="true"></span>@L["Case_Harbour"]</li>
+        <li data-case="moorings"><span class="shipping-sign" data-sign="area" aria-hidden="true"></span>@L["Case_Moorings"]</li>
+        <li data-case="fairway"><span class="shipping-sign" data-sign="none" aria-hidden="true"></span>@L["Case_Fairway"]</li>
+    </ul>
+    <p class="shipping-note">@L["Case_Exception"]</p>
+</div>
+
+<div class="shipping-block" role="group" aria-labelledby="behaviour">
+    <h2 id="behaviour" class="section-heading">@L["Behaviour_Title"]</h2>
+    <ul class="shipping-list">
+        <li>@L["Behaviour_Flag"]</li>
+        <li>@L["Behaviour_Distance"]</li>
+        <li>@L["Behaviour_Choose"]</li>
+        <li>@L["Behaviour_Local"]</li>
+    </ul>
+</div>
+
+<div class="shipping-block" role="group" aria-labelledby="map">
+    <h2 id="map" class="section-heading">@L["Map_Title"]</h2>
+    <ul class="shipping-cases">
+        <li><span class="shipping-sign" data-sign="circle" aria-hidden="true"></span>@L["Map_LandingStage"]</li>
+        <li><span class="shipping-sign" data-sign="line" aria-hidden="true"></span>@L["Map_Routes"]</li>
+        <li><span class="shipping-sign" data-sign="area" aria-hidden="true"></span>@L["Map_Harbour"]</li>
+    </ul>
+    <p class="shipping-note">@L["Map_Limits"]</p>
+</div>
+
+<div class="shipping-block" role="group" aria-labelledby="susv">
+    <h2 id="susv" class="section-heading">@L["Susv_Title"]</h2>
+    <p>@L["Susv_Text"] <a href="@SusvLink" rel="@(Partner.Value.Visible ? null : "noopener")" target="@(Partner.Value.Visible ? null : "_blank")">@L["Susv_Link"]</a></p>
+</div>
+
+<div class="shipping-block" role="group" aria-labelledby="source">
+    <h2 id="source" class="section-heading">@L["Source_Title"]</h2>
+    <p>@L["Source_Text"] <a href="@L["Source_Url"]" rel="noopener" target="_blank" data-fedlex>@L["Source_Link"]</a></p>
+</div>
+</section>
+
+@code {
+    /// <summary>Auf die Partnerseite, solange sie ausgeblendet ist direkt auf susv.ch.</summary>
+    private string SusvLink => Partner.Value.Visible ? PublicRoutes.PartnerPage(Language) : "https://www.susv.ch";
+
+    private static string Language => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+}

@@ -1,8 +1,15 @@
 @inherits LayoutComponentBase
+@implements IDisposable
 @using MudBlazor
 @using Tauchplaetze.Core.Features.Accounts
 @using Tauchplaetze.Web.Features.Accounts
 @inject IStringLocalizer<AdminStrings> L
+@inject IServiceScopeFactory Scopes
+@inject SusvReviewSignal SusvSignal
+@using System.Security.Claims
+@using Tauchplaetze.Core.CrossCutting.UseCases
+@using Tauchplaetze.Core.Features.Susv.Queries
+@using Tauchplaetze.Web.Features.Susv
 
 <MudThemeProvider Theme="AdminTheme.Dark" IsDarkMode="true" />
 <MudPopoverProvider />
@@ -27,6 +34,13 @@
                 <MudNavLink Href="/admin/plaetze" Icon="@Icons.Material.Outlined.Place">@L["Nav_Sites"]</MudNavLink>
                 <MudNavLink Href="/admin/vorschlaege" Icon="@Icons.Material.Outlined.FactCheck">@L["Nav_Pending"]</MudNavLink>
                 <MudNavLink Href="/admin/meldungen" Icon="@Icons.Material.Outlined.Visibility">@L["Nav_Reports"]</MudNavLink>
+                <MudNavLink Href="/admin/susv" Icon="@Icons.Material.Outlined.Flag">
+                    @L["Nav_Susv"]
+                    @if (susvOpen > 0)
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Warning" Class="ml-2" data-susv-open>@susvOpen</MudChip>
+                    }
+                </MudNavLink>
                 @if (!context.User.IsInRole(Roles.Admin))
                 {
                     <MudNavLink Href="/admin/konten" Icon="@Icons.Material.Outlined.People">@L["Nav_Accounts"]</MudNavLink>
@@ -46,5 +60,39 @@
 </MudLayout>
 
 @code {
+    private int susvOpen;
+
+    private string? userId;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+
     private static string Language => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    /// <summary>Zahl der offenen und geänderten Einträge des SUSV. Ohne Recht 0, dann fehlt die Zahl.</summary>
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthenticationState is null || (await AuthenticationState).User.FindFirstValue(ClaimTypes.NameIdentifier) is not { } id)
+        {
+            return;
+        }
+
+        userId = id;
+        susvOpen = await SusvOpen();
+        SusvSignal.Changed += RefreshSusv;
+    }
+
+    private async Task<int> SusvOpen()
+    {
+        await using var scope = Scopes.CreateAsyncScope();
+        return await scope.ServiceProvider.GetRequiredService<IQueryHandler<GetSusvReviewCountQuery, int>>().Handle(new GetSusvReviewCountQuery(userId!));
+    }
+
+    private async Task RefreshSusv()
+    {
+        susvOpen = await SusvOpen();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose() => SusvSignal.Changed -= RefreshSusv;
 }

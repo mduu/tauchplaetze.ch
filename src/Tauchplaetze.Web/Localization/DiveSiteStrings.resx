@@ -300,4 +300,22 @@
   <data name="Seo_WaterTitle" xml:space="preserve"><value>{0}: Tauchen und Sichtweite heute</value></data>
   <data name="Seo_WaterDescription" xml:space="preserve"><value>{0}: {1} Tauchplätze mit Karte und täglicher Tauchprognose.</value></data>
   <data name="Seo_WaterBest" xml:space="preserve"><value>Bester Tauch-Index heute: {0}/10.</value></data>
+  <data name="Notice_From" xml:space="preserve"><value>ab {0}</value></data>
+  <data name="Notice_Period" xml:space="preserve"><value>{0} bis {1}</value></data>
+  <data name="Notice_Yearly" xml:space="preserve"><value>jedes Jahr {0}–{1}</value></data>
+  <data name="Notices_Later_Title" xml:space="preserve"><value>Hinweise mit Zeitraum</value></data>
+  <data name="Susv_More" xml:space="preserve"><value>Mehr beim SUSV</value></data>
+  <data name="Susv_SourceLabel" xml:space="preserve"><value>Quelle: SUSV, öffnet susv.ch</value></data>
+  <data name="Trait_Inclusive" xml:space="preserve"><value>Inklusion</value></data>
+  <data name="Susv_Defibrillator" xml:space="preserve"><value>Defibrillator (AED) am Platz</value></data>
+  <data name="Susv_MobileToilet" xml:space="preserve"><value>Mobile Toilette am Platz</value></data>
+  <data name="Susv_SupportProject" xml:space="preserve"><value>Der SUSV hat diesen Platz verbessert.</value></data>
+  <data name="Susv_InclusiveSite" xml:space="preserve"><value>Inklusions-Tauchplatz: geeignet für Tauchende mit Behinderung.</value></data>
+  <data name="SketchKind_MooringField" xml:space="preserve"><value>Bojenfeld</value></data>
+  <data name="Map_Layer_Shipping" xml:space="preserve"><value>Schifffahrt</value></data>
+  <data name="Shipping_Line" xml:space="preserve"><value>Nahe am Platz verkehren Kursschiffe. Sporttauchen ist an den markierten Stellen verboten (Art. 77 BSV).</value></data>
+  <data name="Shipping_NearLandingStage" xml:space="preserve"><value>Dieser Platz liegt weniger als 100 m von der Schiffstation {0}.</value></data>
+  <data name="Shipping_Link" xml:space="preserve"><value>Tauchen und Schifffahrt</value></data>
+  <data name="Shipping_NotBinding" xml:space="preserve"><value>Orientierung, nicht rechtsverbindlich.</value></data>
+  <data name="Shipping_Attribution" xml:space="preserve"><value>Schiffstationen: öV-Haltestellen Bundesamt für Verkehr BAV · Fahrlinien und Häfen: © OpenStreetMap-Mitwirkende</value></data>
 </root>

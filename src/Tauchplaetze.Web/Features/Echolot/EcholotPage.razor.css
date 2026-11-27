@@ -290,7 +290,7 @@
 
 .entry-card p {
     margin: 0;
-    max-width: 68ch;
+    max-width: none;
 }
 
 .kind {

@@ -2,6 +2,9 @@ using Tauchplaetze.Core.Features.Media;
 using System.Net;
 using System.Text.RegularExpressions;
 using Tauchplaetze.Core.Features.DiveSites;
+using Tauchplaetze.Core.Features.Susv;
+using Tauchplaetze.Core.Features.Shipping.Queries;
+using Tauchplaetze.Core.Features.Shipping;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
 using Tauchplaetze.Core.Features.WaterBodies;
@@ -19,6 +22,10 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     private const string River = "strandbad-rheinfelden";
 
     private const string WithTexts = "terlinden-kuesnacht-zh";
+
+    private const string WithSusv = "strick-arth";
+
+    private static readonly Guid SusvSiteId = Guid.NewGuid();
 
     private const string WithoutPhoto = "platz-ohne-foto";
 
@@ -71,8 +78,88 @@ public class DiveSitePageTests : IClassFixture<WebApp>
                 new SiteText("Restaurant Sonne am Hafen.", false, false),
                 new SiteText("Im Hafen ist Tauchen verboten.", false, false)),
             HasDivingBan: true)));
+        app.DiveSites.Add(WithSusv, new DiveSiteLookup.Found(new DiveSiteDetails(
+            SusvSiteId, WithSusv, "Strick", "zugersee", "Zugersee", WaterBodyType.Lake, "Arth", "SZ", 47.066, 8.524, 0, DateTimeOffset.UtcNow,
+            [
+                new SiteNotice(NoticeKind.Closure, "Vom 15. Oktober bis 15. Dezember ist das Tauchen untersagt.", new DateOnly(2026, 12, 15), false, NoticeTiming.Today, new DateOnly(2026, 10, 15), true,
+                    new SiteNoticeSusv("Arth, Tauchplatz Strick", "https://susv.ch/de/arth-tauchplatz-strick/")),
+                new SiteNotice(NoticeKind.Warning, "Bauarbeiten am Einstieg.", new DateOnly(2026, 11, 10), false, NoticeTiming.Soon, new DateOnly(2026, 11, 1)),
+                new SiteNotice(NoticeKind.Closure, "Laichzeit der Felchen.", new DateOnly(2027, 1, 31), false, NoticeTiming.Later, new DateOnly(2027, 1, 5), true,
+                    new SiteNoticeSusv("Laichschutz", "https://susv.ch/de/laichschutz/")),
+            ],
+            [],
+            ClosedDays: [new DateOnly(2026, 10, 18), new DateOnly(2026, 10, 19)],
+            SusvProjects:
+            [
+                new SiteSusvProject(SusvTopic.Defibrillator, "https://susv.ch/de/defi/"),
+                new SiteSusvProject(SusvTopic.MobileToilet, "https://susv.ch/de/wc/"),
+                new SiteSusvProject(SusvTopic.SupportProject, "https://susv.ch/de/projekt/"),
+                new SiteSusvProject(SusvTopic.InclusiveSite, "https://susv.ch/de/inklusion/"),
+            ])));
+        app.Forecasts.Add(SusvSiteId, new SiteForecast([Day(18, 8.4m, [ReasonCode.CalmLake]), Day(19, 6.2m, [ReasonCode.Windy])], DateTimeOffset.UtcNow, Hours(new DateTime(2030, 1, 7))));
         app.DiveSites.Add("alter-name", new DiveSiteLookup.Moved(Slug));
         app.DiveSites.Add("archiviert", new DiveSiteLookup.Gone());
+    }
+
+    [Fact]
+    public async Task Eine_Sperrung_des_SUSV_steht_im_Banner_mit_Link_bald_Beginnendes_schmal_Spaeteres_klein_in_der_Lage_und_gesperrte_Tage_in_der_Prognose()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithSusv, TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains("href=\"https://susv.ch/de/arth-tauchplatz-strick/\" target=\"_blank\"", html);
+        Assert.Contains("Arth, Tauchplatz Strick", text);
+        Assert.Contains("bis 15.12.2026", text);
+        Assert.Contains("01.11.2026 bis 10.11.2026", text);
+        Assert.Contains("jedes Jahr 05.01.–31.01.", text);
+        Assert.Contains("data-notice-timing=\"soon\"", html);
+        Assert.Contains("data-later-notices", html);
+        Assert.Equal(2, System.Text.RegularExpressions.Regex.Matches(html, "class=\"day-closed\"").Count);
+    }
+
+    [Fact]
+    public async Task Projekte_des_SUSV_stehen_an_ihrer_Stelle_mit_Link_die_Toilette_auch_ohne_Text_der_Redaktion()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/fr/sites-de-plongee/" + WithSusv, TestContext.Current.CancellationToken);
+        var text = VisibleText.Of(html);
+
+        // Assert
+        Assert.Contains("Défibrillateur (DAE) sur le site", text);
+        Assert.Contains("Toilettes mobiles sur le site", text);
+        Assert.Contains("La FSSS a amélioré ce site.", text);
+        Assert.Contains("Site de plongée inclusif", text);
+        Assert.Contains("data-inclusive", html);
+        Assert.Contains("data-text=\"facilities\"", html);
+        Assert.Contains("href=\"https://susv.ch/de/defi/\"", html);
+    }
+
+    [Fact]
+    public async Task Nahe_an_einer_Landungsstelle_nennt_die_Zeile_unter_der_Karte_die_Station_und_verlinkt_die_Regeln()
+    {
+        // Arrange
+        app.Shipping.Answer = query => query.DiveSiteId == SusvSiteId
+            ? new SiteShipping([new SiteShippingFeature(ShippingFeatureKind.LandingStage, "Arth (See)", [[new SitePoint(47.066, 8.525)]], null)], "Arth (See)")
+            : SiteShipping.None;
+        using var browser = app.Browser();
+
+        // Act
+        var html = await browser.GetStringAsync("/de/tauchplaetze/" + WithSusv, TestContext.Current.CancellationToken);
+        var other = await browser.GetStringAsync("/de/tauchplaetze/" + Slug, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("weniger als 100 m von der Schiffstation Arth (See)", VisibleText.Of(html));
+        Assert.Contains("href=\"/de/schifffahrt\"", html);
+        Assert.Contains("LandingStage", html);
+        Assert.DoesNotContain("data-shipping-note", other);
     }
 
     [Theory]

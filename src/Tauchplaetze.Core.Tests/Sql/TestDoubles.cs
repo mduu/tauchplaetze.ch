@@ -86,25 +86,43 @@ internal sealed class FakeSources : HttpMessageHandler
     {
         var url = request.RequestUri!.ToString();
         Requests.Add(url);
-        if (request.Content is not null)
+        var body = request.Content is null ? null : await request.Content.ReadAsStringAsync(cancellationToken);
+        if (body is not null)
         {
-            Posts.Add((url, await request.Content.ReadAsStringAsync(cancellationToken)));
+            Posts.Add((url, body));
         }
 
         OnRequest?.Invoke(url);
-        return Answer(url);
+        return Answer(url, body);
     }
 
-    private HttpResponseMessage Answer(string url)
+    /// <summary>Karten des SUSV nach Thema und Sprache, Schlüssel wie die Datei: `restriction-de`. Ersetzt die Datei aus `TestData/susv`.</summary>
+    public ConcurrentDictionary<string, string> SusvMaps { get; } = new();
+
+    private static readonly Dictionary<string, string> SusvTopics = new()
+    {
+        ["15547"] = "restriction",
+        ["12630"] = "defibrillator",
+        ["12629"] = "mobiletoilet",
+        ["12628"] = "supportproject",
+        ["70259"] = "inclusivesite",
+    };
+
+    private HttpResponseMessage Answer(string url, string? body)
     {
         if (Statuses.FirstOrDefault(o => url.Contains(o.Key, StringComparison.Ordinal)) is { Key: not null, Value: var status })
         {
             return new HttpResponseMessage(status) { Content = new StringContent("unavailable") };
         }
 
-        if (Overrides.FirstOrDefault(o => url.Contains(o.Key, StringComparison.Ordinal)) is { Value: { } body })
+        if (Overrides.FirstOrDefault(o => url.Contains(o.Key, StringComparison.Ordinal)) is { Value: { } overridden })
         {
-            return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(body) };
+            return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(overridden) };
+        }
+
+        if (url.StartsWith("https://susv.ch/", StringComparison.Ordinal))
+        {
+            return Susv(url, body);
         }
 
         var route = Routes.FirstOrDefault(r => url.Contains(r.UrlPart, StringComparison.Ordinal));
@@ -115,6 +133,28 @@ internal sealed class FakeSources : HttpMessageHandler
 
         var answer = TestData.Read(route.Source, route.File);
         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(ForEachPoint(url, answer)) };
+    }
+
+    /// <summary>Eine Karte nach Filter und Sprache aus dem Body, eine Detailseite nach der Nummer im Dateinamen. Sonst 404.</summary>
+    private HttpResponseMessage Susv(string url, string? body)
+    {
+        if (url.Contains("api/v1/map-result", StringComparison.Ordinal) && body is not null)
+        {
+            using var request = System.Text.Json.JsonDocument.Parse(body);
+            var filter = request.RootElement.GetProperty("mapFilter")[0].GetInt32().ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var key = $"{SusvTopics[filter]}-{request.RootElement.GetProperty("lang").GetString()}";
+            return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(SusvMaps.TryGetValue(key, out var map) ? map : TestData.Read("susv", $"map-{key}.json")) };
+        }
+
+        var page = url switch
+        {
+            _ when url.EndsWith("/de/arth-tauchplatz-strick/", StringComparison.Ordinal) => "detail-49178-de.html",
+            _ when url.EndsWith("/fr/arth-site-de-plongee-strick/", StringComparison.Ordinal) => "detail-49178-fr.html",
+            _ => null,
+        };
+        return page is null
+            ? new HttpResponseMessage(HttpStatusCode.NotFound) { Content = new StringContent("not found") }
+            : new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(TestData.Read("susv", page)) };
     }
 
     /// <summary>Open-Meteo antwortet bei mehreren Punkten mit einer Liste: dieselbe Antwort pro Punkt.</summary>

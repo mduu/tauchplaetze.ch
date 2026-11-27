@@ -6,21 +6,57 @@
 @inject IStringLocalizer<ForecastStrings> F
 @inject TimeProvider Time
 
-@if (Notices.Count > 0 || ShownDeviation is not null)
+@if (Today.Count > 0 || Soon.Count > 0 || ShownDeviation is not null)
 {
     <section class="page-section notices" aria-label="@L["Notices_Label"]">
-        @foreach (var notice in Notices)
+        @foreach (var notice in Today)
         {
-            <div class="notice" data-notice-kind="@notice.Kind.ToString().ToLowerInvariant()">
-                <p class="notice-kind">
-                    @L[$"Notice_{notice.Kind}"]
-                    @if (notice.ValidUntil is { } until)
+            <div class="notice" data-notice-kind="@notice.Kind.ToString().ToLowerInvariant()" data-notice-source="@(notice.Susv is null ? "editorial" : "susv")">
+                <div class="notice-head">
+                    <p class="notice-kind">
+                        @L[$"Notice_{notice.Kind}"]
+                        @if (NoticeLabels.Today(notice, L) is { } until)
+                        {
+                            <span class="notice-until">· @until</span>
+                        }
+                    </p>
+                    @if (notice.Susv is { } susv)
                     {
-                        <span class="notice-until">· @L["Notice_Until", ForecastFormat.Date(until)]</span>
+                        <SusvBadge Url="@susv.DetailUrl" />
                     }
-                </p>
+                </div>
+                @if (notice.Susv is { } source)
+                {
+                    <p class="notice-title" lang="@(notice.GermanOnly ? "de" : null)">@source.Title</p>
+                }
                 <p class="notice-text" lang="@(notice.GermanOnly ? "de" : null)">@notice.Text</p>
+                @if (notice.MachineTranslated)
+                {
+                    <p class="notice-source" data-machine-translated>@L["Text_MachineTranslated"]</p>
+                }
             </div>
+        }
+        @foreach (var notice in Soon)
+        {
+            <details class="notice-soon" data-notice-kind="@notice.Kind.ToString().ToLowerInvariant()" data-notice-timing="soon">
+                <summary>
+                    <span class="notice-kind">@L[$"Notice_{notice.Kind}"]</span>
+                    <span class="notice-until">@NoticeLabels.Period(notice, L)</span>
+                    @if (notice.Susv is { } susv)
+                    {
+                        <span class="notice-soon-title" lang="@(notice.GermanOnly ? "de" : null)">@susv.Title</span>
+                    }
+                </summary>
+                <p class="notice-text" lang="@(notice.GermanOnly ? "de" : null)">@notice.Text</p>
+                @if (notice.MachineTranslated)
+                {
+                    <p class="notice-source" data-machine-translated>@L["Text_MachineTranslated"]</p>
+                }
+                @if (notice.Susv is { } source)
+                {
+                    <SusvBadge Url="@source.DetailUrl" />
+                }
+            </details>
         }
         @if (LakeLevel is { Deviation: { } deviation } level)
         {
@@ -50,6 +86,10 @@
 @code {
     [Parameter, EditorRequired]
     public IReadOnlyList<SiteNotice> Notices { get; set; } = [];
+
+    private List<SiteNotice> Today => [.. Notices.Where(n => n.Timing == NoticeTiming.Today)];
+
+    private List<SiteNotice> Soon => [.. Notices.Where(n => n.Timing == NoticeTiming.Soon)];
 
     /// <summary>Der Pegel am See. Ein Hinweis erscheint nur ausserhalb des üblichen Bereichs.</summary>
     [Parameter]

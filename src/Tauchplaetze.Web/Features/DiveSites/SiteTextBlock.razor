@@ -1,22 +1,26 @@
 @using Tauchplaetze.Core.Features.DiveSites
 @inject IStringLocalizer<DiveSiteStrings> L
 
-@if (Text is not null)
+@if (Text is not null || Lead is not null)
 {
     <div class="site-text" data-text="@Name">
         @if (Title is not null)
         {
             <h3 class="site-text-title">@Title</h3>
         }
-        @if (Text.OnlyGerman)
+        @Lead
+        @if (Text is not null)
         {
-            <p class="site-text-note">@L["Text_OnlyGerman"]</p>
+            @if (Text.OnlyGerman)
+            {
+                <p class="site-text-note">@L["Text_OnlyGerman"]</p>
+            }
+            else if (Text.MachineTranslated)
+            {
+                <p class="site-text-note">@L["Text_MachineTranslated"]</p>
+            }
+            <div class="site-text-body" lang="@(Text.OnlyGerman ? "de" : null)">@((MarkupString)SiteTextMarkup.ToHtml(Text.Text))</div>
         }
-        else if (Text.MachineTranslated)
-        {
-            <p class="site-text-note">@L["Text_MachineTranslated"]</p>
-        }
-        <div class="site-text-body" lang="@(Text.OnlyGerman ? "de" : null)">@((MarkupString)SiteTextMarkup.ToHtml(Text.Text))</div>
     </div>
 }
 
@@ -29,4 +33,8 @@
 
     [Parameter]
     public string? Title { get; set; }
+
+    /// <summary>Steht vor dem Text und zeigt den Block auch ohne Text, etwa die mobile Toilette des SUSV.</summary>
+    [Parameter]
+    public RenderFragment? Lead { get; set; }
 }

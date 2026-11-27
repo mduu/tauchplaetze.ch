@@ -1,0 +1,12 @@
+@inject IStringLocalizer<DiveSiteStrings> L
+
+<a class="susv-badge" href="@Url" target="_blank" rel="noopener" aria-label="@L["Susv_SourceLabel"]" data-susv-badge>
+    <img src="@Assets["img/partner/susv-signet.png"]" alt="" width="15" height="20" />
+    <span>@L["Susv_More"]</span>
+</a>
+
+@code {
+    /// <summary>Seite des Eintrags bei susv.ch (`design-system.md`, `SusvBadge`).</summary>
+    [Parameter, EditorRequired]
+    public string Url { get; set; } = "";
+}

@@ -46,12 +46,12 @@ internal class ForecastsModule : ICoreModule
     /// Ohne <c>RemoveAllResilienceHandlers</c> brach er Calls von `mitgcm` am Zugersee nach 30 s ab (Lauf vom 19.10.2026).
     /// </remarks>
 #pragma warning disable EXTEXP0001 // RemoveAllResilienceHandlers ist experimentell, aber der einzige Weg, den Handler der Service Defaults pro Client zu ersetzen.
-    private static void AddSourceClient<TClient>(IServiceCollection services, string baseAddress)
+    internal static void AddSourceClient<TClient>(IServiceCollection services, string baseAddress)
         where TClient : class =>
         AddSourceClient<TClient>(services, (_, client) => client.BaseAddress = new Uri(baseAddress));
 
     /// <param name="retryTooManyRequests">Ohne Retry bei 429 entscheidet der Client selbst (Open-Meteo: Minutenlimit, `OpenMeteoClient`).</param>
-    private static void AddSourceClient<TClient>(IServiceCollection services, Action<IServiceProvider, HttpClient> configure, bool retryTooManyRequests = true)
+    internal static void AddSourceClient<TClient>(IServiceCollection services, Action<IServiceProvider, HttpClient> configure, bool retryTooManyRequests = true)
         where TClient : class =>
         services.AddHttpClient<TClient>((provider, client) =>
             {

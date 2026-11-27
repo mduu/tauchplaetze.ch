@@ -84,13 +84,14 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
         var today = SwissTime.Today(time);
         var days = Enumerable.Range(0, ForecastSources.ForecastDays).Select(today.AddDays).ToList();
         var date = query.Date is { } wanted && days.Contains(wanted) ? wanted : today;
-        var closed = NoticeRules.ClosureOn(date);
+        var restrictions = await SiteRestrictions.Load(dbContext, ct);
+        var closed = restrictions.Where(r => r.IsClosedOn(date)).Select(r => r.Key).ToList();
         var origin = query.Area is { } area ? GeoPoints.Create(area.Latitude, area.Longitude) : null;
 
         var forecasts = dbContext.DailyForecasts
             .AsNoTracking()
             .Where(f => f.Date == date && f.DiveIndex != null)
-            .Join(dbContext.DiveSites.Where(d => d.Status == DiveSiteStatus.Published && !d.Notices.AsQueryable().Any(closed)), f => f.DiveSiteId, d => d.Id, (f, d) => new { f, d });
+            .Join(dbContext.DiveSites.Where(d => d.Status == DiveSiteStatus.Published && !closed.Contains(d.Id)), f => f.DiveSiteId, d => d.Id, (f, d) => new { f, d });
 
         if (origin is not null)
         {

@@ -8,6 +8,7 @@
 @inject IServiceScopeFactory Scopes
 @inject IMemoryCache Cache
 @inject ILogger<PublicLayout> Logger
+@inject Microsoft.Extensions.Options.IOptions<Tauchplaetze.Web.Features.Partner.PartnerOptions> Partner
 
 <a class="skip-link" href="@MainAnchor">@L["SkipToContent"]</a>
 
@@ -46,6 +47,10 @@
         <nav class="footer-links" aria-label="@L["Footer_Links"]">
             <a href="@PublicRoutes.AboutPage(CurrentLanguage)">@L["Footer_About"]</a>
             <a href="@PublicRoutes.EcholotPage(CurrentLanguage)">@L["Footer_Echolot"]</a>
+            @if (Partner.Value.Visible)
+            {
+                <a href="@PublicRoutes.PartnerPage(CurrentLanguage)">@L["Footer_Partner"]</a>
+            }
             <a href="@PublicRoutes.AboutPage(CurrentLanguage, "impressum")">@L["Footer_Imprint"]</a>
             <a href="@PublicRoutes.AboutPage(CurrentLanguage, "datenschutz")">@L["Footer_Privacy"]</a>
         </nav>

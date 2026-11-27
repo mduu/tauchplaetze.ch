@@ -45,6 +45,10 @@ internal class TranslationQuota(TauchplaetzeDbContext dbContext, IOptions<Transl
         return Math.Max(0, limit - used);
     }
 
+    /// <summary>Für Übersetzungen ohne Konto (Import des SUSV): nur das Budget des Monats zählt.</summary>
+    public async Task<bool> WithinBudget(CancellationToken ct) =>
+        options.Value.IsConfigured && await SpentThisMonth(ct) < options.Value.MonthlyBudgetUsd;
+
     private async Task<decimal> SpentThisMonth(CancellationToken ct)
     {
         var today = SwissTime.DayOf(time.GetUtcNow());

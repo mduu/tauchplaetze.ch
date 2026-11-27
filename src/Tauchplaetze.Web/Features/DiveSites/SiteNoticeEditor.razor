@@ -27,6 +27,10 @@
                         <FormDate Label="@L["Field_NoticeValidFrom"]" Value="current.ValidFrom" ValueChanged="@(date => Set(() => current.ValidFrom = date))" />
                         <FormDate Label="@L["Field_NoticeValidUntil"]" Value="current.ValidUntil" ValueChanged="@(date => Set(() => current.ValidUntil = date))" />
                     </div>
+                    <label class="check-field">
+                        <input type="checkbox" checked="@current.RecursYearly" @onchange="@(e => Set(() => current.RecursYearly = e.Value is true))" />
+                        <span>@L["Field_NoticeYearly"]</span>
+                    </label>
                     <LanguageTabs Label="@L["Field_NoticeText"]" @bind-Selected="textLanguage">
                         <FormTextArea Label="@L["Field_NoticeText"]" Value="@current.Texts[context]" ValueChanged="@(text => Set(() => current.Texts[context] = text))" Rows="2" MaxLength="NoticeRules.TextLength" />
                     </LanguageTabs>

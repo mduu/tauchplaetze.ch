@@ -17,6 +17,11 @@ internal static class EcholotRules
 
     public static readonly TimeSpan MeasurementDownAfter = TimeSpan.FromHours(24);
 
+    /// <summary>Der Abgleich mit dem SUSV läuft täglich um 04:30 (`stories/002-susv-import-und-moderation.md`).</summary>
+    public static readonly TimeSpan SusvLateAfter = TimeSpan.FromHours(36);
+
+    public static readonly TimeSpan SusvDownAfter = TimeSpan.FromHours(72);
+
     /// <summary>Älter ist das neueste Satellitenbild meist wegen Wolken.</summary>
     public const int SatelliteLateAfterDays = 5;
 

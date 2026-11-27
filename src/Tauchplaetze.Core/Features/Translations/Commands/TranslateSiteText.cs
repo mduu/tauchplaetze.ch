@@ -23,9 +23,6 @@ internal class TranslateSiteTextHandler(
     TimeProvider time,
     ILogger<TranslateSiteTextHandler> logger) : ICommandHandler<TranslateSiteTextCommand, TranslationResult>
 {
-    /// <summary>Hash einer unbrauchbaren Antwort. Sie zählt für Limit und Budget, ist aber weder Cache noch Beleg.</summary>
-    private static readonly string NoHash = new('0', 64);
-
     public async Task<TranslationResult> Handle(TranslateSiteTextCommand command, CancellationToken ct = default)
     {
         var rights = await roles.Of(command.UserId);
@@ -67,8 +64,8 @@ internal class TranslateSiteTextHandler(
             CreatedAt = time.GetUtcNow(),
             SourceCulture = command.Source.Culture,
             TargetCulture = command.TargetCulture,
-            SourceHash = result is null ? NoHash : sourceHash,
-            ResultHash = result is null ? NoHash : SiteTextFields.HashOf(command.TargetCulture, result),
+            SourceHash = result is null ? SiteTextFields.NoHash : sourceHash,
+            ResultHash = result is null ? SiteTextFields.NoHash : SiteTextFields.HashOf(command.TargetCulture, result),
             ResultJson = JsonSerializer.Serialize(result ?? new Dictionary<string, string>()),
             Model = translator.Version,
             InputTokens = reply.InputTokens,

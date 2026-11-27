@@ -1,0 +1,74 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject IStringLocalizer<AdminStrings> L
+@using System.Text.Json
+@using Tauchplaetze.Core.Features.Susv.Queries
+
+<div id="@Id" class="admin-map" data-layer-map="@L["Map_Layer_Map"]" data-layer-grey="@L["Map_Layer_Grey"]" data-layer-photo="@L["Map_Layer_Photo"]"></div>
+<MudText Typo="Typo.caption">@L["Susv_MapHint"]</MudText>
+
+@code {
+    private DotNetObjectReference<SusvReviewMap>? reference;
+
+    private bool shown;
+
+    private string? drawn;
+
+    [Parameter, EditorRequired]
+    public string Id { get; set; } = "";
+
+    [Parameter, EditorRequired]
+    public double Latitude { get; set; }
+
+    [Parameter, EditorRequired]
+    public double Longitude { get; set; }
+
+    [Parameter, EditorRequired]
+    public double RadiusMeters { get; set; }
+
+    /// <summary>Vorgeschlagene und gewählte Plätze.</summary>
+    [Parameter, EditorRequired]
+    public IReadOnlyList<SusvSiteOption> Sites { get; set; } = [];
+
+    [Parameter, EditorRequired]
+    public IReadOnlySet<Guid> Selected { get; set; } = new HashSet<Guid>();
+
+    [Parameter]
+    public EventCallback<Guid> OnToggle { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var sites = Sites.Select(s => new { id = s.Id, name = s.Name, lat = s.Latitude, lng = s.Longitude, selected = Selected.Contains(s.Id) }).ToList();
+        var state = JsonSerializer.Serialize(sites);
+        if (state == drawn)
+        {
+            return;
+        }
+
+        reference ??= DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("tauchplaetzeAdmin.showReview", Id, Latitude, Longitude, RadiusMeters, L["Susv_MapPoint"].Value, sites, reference);
+        drawn = state;
+        shown = true;
+    }
+
+    [JSInvokable]
+    public Task Toggle(Guid site) => OnToggle.InvokeAsync(site);
+
+    public async ValueTask DisposeAsync()
+    {
+        reference?.Dispose();
+        if (!shown)
+        {
+            return;
+        }
+
+        try
+        {
+            await JS.InvokeVoidAsync("tauchplaetzeAdmin.dispose", Id);
+        }
+        catch (JSDisconnectedException)
+        {
+            return;
+        }
+    }
+}

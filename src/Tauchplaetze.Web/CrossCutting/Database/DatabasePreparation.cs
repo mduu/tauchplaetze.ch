@@ -2,6 +2,7 @@ using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.Accounts.Commands;
 using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Operations.Commands;
+using Tauchplaetze.Core.Features.Shipping.Commands;
 using Tauchplaetze.Core.Features.WaterBodies.Commands;
 
 namespace Tauchplaetze.Web.CrossCutting.Database;
@@ -27,6 +28,7 @@ internal static class DatabasePreparation
         var services = scope.ServiceProvider;
         await services.GetRequiredService<ICommandHandler<MigrateDatabaseCommand, Unit>>().Handle(new MigrateDatabaseCommand());
         await services.GetRequiredService<ICommandHandler<SeedWaterBodiesCommand, SeedWaterBodiesResult>>().Handle(new SeedWaterBodiesCommand());
+        await services.GetRequiredService<ICommandHandler<SeedShippingFeaturesCommand, SeedShippingFeaturesResult>>().Handle(new SeedShippingFeaturesCommand());
 
         var admins = app.Configuration.GetSection(AdminsSection).Get<List<AdminAccount>>() ?? [];
         var adminIds = await services.GetRequiredService<ICommandHandler<EnsureAdminsCommand, EnsureAdminsResult>>().Handle(new EnsureAdminsCommand(admins));

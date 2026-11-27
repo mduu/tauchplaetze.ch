@@ -41,5 +41,8 @@ internal static class SiteTextFields
     public static string HashOf(string culture, IReadOnlyDictionary<string, string> fields, string extra = "") =>
         Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new { culture, extra, fields = new SortedDictionary<string, string>(fields.ToDictionary()) }))));
 
+    /// <summary>Hash einer unbrauchbaren Antwort. Sie zählt für Limit und Budget, ist aber weder Cache noch Beleg.</summary>
+    public static readonly string NoHash = new('0', 64);
+
     public static string HashOf(DiveSiteContentTranslation text) => HashOf(text.Culture, Of(text));
 }

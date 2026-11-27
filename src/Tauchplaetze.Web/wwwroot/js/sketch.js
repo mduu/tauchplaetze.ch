@@ -27,10 +27,19 @@ window.tauchplaetzeSketch = (function () {
     Edge: function () { return { color: token('--color-sketch-wall', '#3B4B49'), weight: 3, dashArray: '8 6', opacity: 0.9 }; },
     Route: function () { return { color: token('--color-primary', '#7FE3D6'), weight: 3, dashArray: '2 8', lineCap: 'round', opacity: 1 }; },
     Line: function () { return { color: token('--color-sketch-line', '#B8740F'), weight: 2, opacity: 1 }; },
-    PlantField: function () { return { color: token('--color-sketch-plants', '#2F8F55'), weight: 1.5, fillOpacity: 0.25, opacity: 0.9 }; }
+    PlantField: function () { return { color: token('--color-sketch-plants', '#2F8F55'), weight: 1.5, fillOpacity: 0.25, opacity: 0.9 }; },
+    MooringField: function () { return { color: token('--color-notice-closure', '#FF6F61'), weight: 1.5, dashArray: '4 4', fillOpacity: 0.15, opacity: 0.9 }; }
   };
 
-  const shapes = { Wall: 'line', Edge: 'line', Route: 'line', Line: 'line', PlantField: 'area' };
+  const shapes = { Wall: 'line', Edge: 'line', Route: 'line', Line: 'line', PlantField: 'area', MooringField: 'area' };
+
+  // Bojenfeld: Sporttauchen ist in der Nähe verboten. Ein Kreis von 50 m um die Mitte (stories/005-tauchen-und-schifffahrt.md).
+  const mooringRadius = 50;
+
+  function center(latlngs) {
+    const sum = latlngs.reduce(function (s, p) { return [s[0] + p[0], s[1] + p[1]]; }, [0, 0]);
+    return [sum[0] / latlngs.length, sum[1] / latlngs.length];
+  }
 
   function shapeOf(kind) {
     return shapes[kind] || 'point';
@@ -61,6 +70,10 @@ window.tauchplaetzeSketch = (function () {
       layer = L.marker(latlngs[0], { icon: icon(feature.kind, selected), keyboard: false });
     } else if (shapeOf(feature.kind) === 'area') {
       layer = L.polygon(latlngs, Object.assign(lineStyles[feature.kind](), selected ? { weight: 3 } : {}));
+      if (feature.kind === 'MooringField') {
+        const style = lineStyles.MooringField();
+        layer = L.featureGroup([layer, L.circle(center(latlngs), { radius: mooringRadius, color: style.color, weight: 1, fill: false, interactive: false })]);
+      }
     } else {
       layer = L.polyline(latlngs, Object.assign(lineStyles[feature.kind](), selected ? { weight: 7 } : {}));
     }

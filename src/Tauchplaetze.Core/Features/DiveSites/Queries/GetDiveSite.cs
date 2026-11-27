@@ -5,7 +5,9 @@ using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
 using Tauchplaetze.Core.Data.Entities;
 using Tauchplaetze.Core.Features.Editorial;
+using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Media;
+using Tauchplaetze.Core.Features.Susv;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.DiveSites.Queries;
@@ -40,6 +42,8 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
             })
             .SingleOrDefaultAsync(ct);
 
+        var today = SwissTime.Today(time);
+        var notices = site?.Status == DiveSiteStatus.Published ? await Notices(site.Id, query.Culture, today, ct) : [];
         return site?.Status switch
         {
             DiveSiteStatus.Published => new DiveSiteLookup.Found(new DiveSiteDetails(
@@ -55,7 +59,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 site.Location.X,
                 site.ContentLevel,
                 site.UpdatedAt,
-                await Notices(site.Id, query.Culture, ct),
+                notices,
                 await EntryPoints(site.Id, query.Culture, ct),
                 site.Ratings,
                 Sketch(site.Sketch, query.Culture),
@@ -64,7 +68,9 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 OtherNameJson.Read(site.OtherNames, logger),
                 await Texts(site.Id, query.Culture, ct),
                 site.HasDivingBan,
-                MountainLakes.Elevation(site.WaterBody.WaterBodyType, site.WaterBody.Elevation))),
+                MountainLakes.Elevation(site.WaterBody.WaterBodyType, site.WaterBody.Elevation),
+                ClosedDays(notices, today),
+                await SusvProjects(site.Id, query.Culture, ct))),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),
@@ -127,25 +133,74 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
             f.Depth,
             f.Texts.FirstOrDefault(t => t.Culture == culture)?.Label ?? f.Texts.FirstOrDefault(t => t.Culture == "de")?.Label))];
 
-    private async Task<IReadOnlyList<SiteNotice>> Notices(Guid siteId, string culture, CancellationToken ct)
+    /// <summary>
+    /// Hinweise der Redaktion und bestätigte Einschränkungen des SUSV, die nicht vorbei sind (Story 003).
+    /// Heute gültige zuerst (schwerste Art zuerst, bei gleicher Art die Redaktion vor dem SUSV), dann nach Beginn.
+    /// </summary>
+    private async Task<IReadOnlyList<SiteNotice>> Notices(Guid siteId, string culture, DateOnly today, CancellationToken ct)
     {
         var notices = await dbContext.DiveSiteNotices
             .AsNoTracking()
             .Where(n => n.DiveSiteId == siteId)
-            .Where(NoticeRules.ActiveOn(SwissTime.Today(time)))
             .Include(n => n.Translations)
             .ToListAsync(ct);
+        var susv = await dbContext.SusvEntries
+            .AsNoTracking()
+            .Where(SusvRules.ShownRestriction)
+            .Where(e => e.Sites.Any(s => s.DiveSiteId == siteId))
+            .Include(e => e.Translations)
+            .ToListAsync(ct);
 
-        return notices
-            .OrderByDescending(n => n.Kind)
-            .ThenBy(n => n.SortOrder)
-            .Select(n =>
-            {
-                var text = n.Translations.FirstOrDefault(t => t.Culture == culture) ?? n.Translations.FirstOrDefault(t => t.Culture == "de") ?? n.Translations.First();
-                return new SiteNotice(n.Kind, text.Text, n.ValidUntil, text.Culture != culture);
-            })
+        var editorial = notices.Select(n =>
+        {
+            var text = n.Translations.FirstOrDefault(t => t.Culture == culture) ?? n.Translations.FirstOrDefault(t => t.Culture == "de") ?? n.Translations.First();
+            return (Notice: Visible(n.Kind, text.Text, text.Culture != culture, new NoticePeriod(n.ValidFrom, n.ValidUntil, n.RecursYearly), today, null), Order: n.SortOrder);
+        });
+        var fromSusv = susv.Select(e =>
+        {
+            var text = e.Translations.FirstOrDefault(t => t.Culture == culture) ?? e.Translations.First(t => t.Culture == "de");
+            var body = SusvRules.Shorten(text.Text ?? text.Teaser ?? "", SusvRules.BannerTextLength);
+            var notice = Visible(e.NoticeKind!.Value, body, text.Culture != culture, new NoticePeriod(e.ValidFrom, e.ValidUntil, e.RecursYearly), today, new SiteNoticeSusv(text.Title, text.DetailUrl));
+            return (Notice: notice is null ? null : notice with { MachineTranslated = text.IsMachineTranslated }, Order: int.MaxValue);
+        });
+
+        return editorial.Concat(fromSusv)
+            .Where(x => x.Notice is not null)
+            .OrderBy(x => x.Notice!.Timing)
+            .ThenByDescending(x => x.Notice!.Timing == NoticeTiming.Today ? x.Notice.Kind : default)
+            .ThenBy(x => x.Notice!.Start)
+            .ThenBy(x => x.Order)
+            .Select(x => x.Notice!)
             .ToList();
     }
+
+    private async Task<IReadOnlyList<SiteSusvProject>> SusvProjects(Guid siteId, string culture, CancellationToken ct)
+    {
+        var entries = await dbContext.SusvEntries
+            .AsNoTracking()
+            .Where(SusvRules.ShownProject)
+            .Where(e => e.Sites.Any(s => s.DiveSiteId == siteId))
+            .Select(e => new { e.Topic, e.SourceId, Urls = e.Translations.Select(t => new { t.Culture, t.DetailUrl }).ToList() })
+            .ToListAsync(ct);
+
+        return entries
+            .OrderBy(e => e.Topic)
+            .ThenBy(e => e.SourceId)
+            .DistinctBy(e => e.Topic)
+            .Select(e => new SiteSusvProject(e.Topic, (e.Urls.FirstOrDefault(u => u.Culture == culture) ?? e.Urls.First(u => u.Culture == "de")).DetailUrl))
+            .ToList();
+    }
+
+    private static SiteNotice? Visible(NoticeKind kind, string text, bool germanOnly, NoticePeriod period, DateOnly today, SiteNoticeSusv? susv) =>
+        period.Timing(today) is { } timing && period.Next(today) is { } next
+            ? new SiteNotice(kind, text, next.End, germanOnly, timing, next.Start, period.Yearly && period.From is not null && period.Until is not null, susv)
+            : null;
+
+    /// <summary>Tage der Prognose ab heute, an denen eine Sperrung der Redaktion oder des SUSV gilt.</summary>
+    private static IReadOnlyList<DateOnly> ClosedDays(IReadOnlyList<SiteNotice> notices, DateOnly today) =>
+        [.. Enumerable.Range(0, ForecastSources.ForecastDays)
+            .Select(today.AddDays)
+            .Where(day => notices.Any(n => n.Kind == NoticeKind.Closure && (n.Start is null || n.Start <= day) && (n.ValidUntil is null || n.ValidUntil >= day)))];
 
     private async Task<IReadOnlyList<SiteEntryPoint>> EntryPoints(Guid siteId, string culture, CancellationToken ct)
     {

@@ -221,6 +221,8 @@ public class NoticeForm
 
     public DateTime? ValidUntil { get; set; }
 
+    public bool RecursYearly { get; set; }
+
     public Dictionary<string, string?> Texts { get; } = Languages.All.ToDictionary(l => l, _ => (string?)null);
 
     public static NoticeForm From(NoticeContent notice)
@@ -231,6 +233,7 @@ public class NoticeForm
             Kind = notice.Kind,
             ValidFrom = notice.ValidFrom?.ToDateTime(TimeOnly.MinValue),
             ValidUntil = notice.ValidUntil?.ToDateTime(TimeOnly.MinValue),
+            RecursYearly = notice.RecursYearly,
         };
         foreach (var text in notice.Texts.Where(t => form.Texts.ContainsKey(t.Culture)))
         {
@@ -245,7 +248,8 @@ public class NoticeForm
         Kind,
         ValidFrom is { } from ? DateOnly.FromDateTime(from) : null,
         ValidUntil is { } until ? DateOnly.FromDateTime(until) : null,
-        [.. Texts.Where(t => !string.IsNullOrWhiteSpace(t.Value)).Select(t => new NoticeText(t.Key, t.Value))]);
+        [.. Texts.Where(t => !string.IsNullOrWhiteSpace(t.Value)).Select(t => new NoticeText(t.Key, t.Value))],
+        RecursYearly);
 }
 
 /// <summary>Bearbeitbares Element der Tauchskizze. Öffentlich, weil der Editor es als Parameter bekommt.</summary>

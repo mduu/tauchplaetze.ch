@@ -1,5 +1,7 @@
 @using System.Text.Json
 @using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.Susv
+@using Tauchplaetze.Core.Features.Shipping.Queries
 @using Tauchplaetze.Core.Features.WaterBodies
 @inject IStringLocalizer<DiveSiteStrings> L
 
@@ -9,10 +11,26 @@
          data-layer-map="@L["Map_Layer_Map"]" data-layer-grey="@L["Map_Layer_Grey"]" data-layer-photo="@L["Map_Layer_Photo"]"
          data-contours="@(Site.WaterBodyType == WaterBodyType.Lake ? "auto" : null)" data-layer-contours="@L["Map_Layer_Contours"]"
          data-sketch="@SketchJson" data-sketch-kinds="@SketchKinds" data-layer-sketch="@L["Map_Layer_Sketch"]"
+         data-shipping="@ShippingJson" data-layer-shipping="@L["Map_Layer_Shipping"]" data-shipping-attribution="@(Shipping.Features.Count > 0 ? L["Shipping_Attribution"].Value : null)"
          role="region" aria-label="@L["Location_Map_Label", Site.Name]"></div>
     @if (Site.SketchList.Count > 0)
     {
         <p class="sketch-note">@L["Sketch_NotForNavigation"]</p>
+    }
+    @if (Shipping.Features.Count > 0)
+    {
+        <p class="shipping-note" data-shipping-note data-near="@(Shipping.NearLandingStage is null ? null : "true")">
+            @if (Shipping.NearLandingStage is { } stage)
+            {
+                @L["Shipping_NearLandingStage", stage]
+            }
+            else
+            {
+                @L["Shipping_Line"]
+            }
+            <a href="@PublicRoutes.ShippingPage(Language)">@L["Shipping_Link"]</a>
+            <span class="shipping-binding">@L["Shipping_NotBinding"]</span>
+        </p>
     }
     @if (Site.EntryPoints.Count > 0)
     {
@@ -28,6 +46,38 @@
                 </li>
             }
         </ul>
+    }
+    @foreach (var project in Site.SusvProjectList.Where(p => p.Topic is SusvTopic.SupportProject or SusvTopic.InclusiveSite))
+    {
+        <SusvLine Project="project" />
+    }
+    @if (Later.Count > 0)
+    {
+        <div class="later-notices" data-later-notices>
+            <h3 class="later-title">@L["Notices_Later_Title"]</h3>
+            @foreach (var notice in Later)
+            {
+                <details class="later-notice" data-notice-kind="@notice.Kind.ToString().ToLowerInvariant()" data-notice-timing="later">
+                    <summary>
+                        <span class="later-kind">@L[$"Notice_{notice.Kind}"]</span>
+                        <span>@NoticeLabels.Period(notice, L)</span>
+                        @if (notice.Susv is { } susv)
+                        {
+                            <span class="later-source" lang="@(notice.GermanOnly ? "de" : null)">@susv.Title</span>
+                        }
+                    </summary>
+                    <p lang="@(notice.GermanOnly ? "de" : null)">@notice.Text</p>
+                    @if (notice.MachineTranslated)
+                    {
+                        <p class="later-translated" data-machine-translated>@L["Text_MachineTranslated"]</p>
+                    }
+                    @if (notice.Susv is { } source)
+                    {
+                        <SusvBadge Url="@source.DetailUrl" />
+                    }
+                </details>
+            }
+        </div>
     }
 </section>
 
@@ -46,6 +96,22 @@
     [Parameter, EditorRequired]
     public DiveSiteDetails Site { get; set; } = default!;
 
+    /// <summary>Objekte der Schifffahrt in der Nähe (Story 005). Leer: Ebene und Zeile fehlen.</summary>
+    [Parameter]
+    public SiteShipping Shipping { get; set; } = SiteShipping.None;
+
+    private static string Language => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string ShippingJson => JsonSerializer.Serialize(Shipping.Features.Select(f => new
+    {
+        kind = f.Kind.ToString(),
+        name = f.Name,
+        parts = f.Parts.Select(part => part.Select(p => new { lat = p.Latitude, lng = p.Longitude })),
+        centre = f.Centre is { } c ? new { lat = c.Latitude, lng = c.Longitude } : null,
+    }));
+
+    /// <summary>Hinweise, die später beginnen: klein, für die Planung (`dive-site.md`, «Anzeige nach Zeitraum»).</summary>
+    private List<SiteNotice> Later => [.. Site.Notices.Where(n => n.Timing == NoticeTiming.Later)];
 
     private string Title => L[Site.EntryPoints.Any(e => e.Kind.IsWaterAccess()) ? "Location_Title_EntryPoints" : "Location_Title"];
 

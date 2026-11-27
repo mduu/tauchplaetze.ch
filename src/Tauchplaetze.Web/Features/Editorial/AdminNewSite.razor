@@ -5,12 +5,17 @@
 @using Microsoft.AspNetCore.Authorization
 @using Tauchplaetze.Core.Features.Editorial
 @using Tauchplaetze.Core.Features.Editorial.Commands
+@using Tauchplaetze.Core.Features.Susv.Queries
 @using Tauchplaetze.Core.Features.WaterBodies
 @using Tauchplaetze.Core.Features.WaterBodies.Queries
 @inject NavigationManager Navigation
 
 <MudText Typo="Typo.h4">@L["New_Title"]</MudText>
 <MudText Class="mb-4" Color="Color.Default">@L["New_Lead"]</MudText>
+@if (Susv is not null)
+{
+    <MudAlert Severity="Severity.Info" Dense="true" Class="mb-4">@L["New_FromSusv"]</MudAlert>
+}
 
 <ErrorList Errors="errors" />
 
@@ -54,10 +59,19 @@
 
     private bool saving;
 
+    /// <summary>Eintrag des SUSV, aus dem der Platz entsteht. Name, Koordinate und Gewässer kommen als Vorschlag.</summary>
+    [SupplyParameterFromQuery(Name = "susv")]
+    public Guid? Susv { get; set; }
+
     protected override async Task Load()
     {
         waterBodies = await Query<GetWaterBodiesQuery, IReadOnlyList<WaterBodySummary>>(new GetWaterBodiesQuery(Language));
         waterBodyId = waterBodies.FirstOrDefault()?.Id ?? 0;
+        if (Susv is { } entry && await Query<GetSusvSiteDraftQuery, SusvSiteDraft?>(new GetSusvSiteDraftQuery(UserId, entry)) is { } draft)
+        {
+            (name, latitude, longitude) = (draft.Name, draft.Latitude, draft.Longitude);
+            waterBodyId = draft.WaterBodyId ?? waterBodyId;
+        }
     }
 
     private async Task Submit()
@@ -68,7 +82,7 @@
         errors = result.Errors;
         if (result is { Succeeded: true, DiveSiteId: { } id })
         {
-            Navigation.NavigateTo($"/admin/plaetze/{id}");
+            Navigation.NavigateTo(Susv is null ? $"/admin/plaetze/{id}" : "/admin/susv");
         }
     }
 }

@@ -163,7 +163,7 @@
         {
             DataSource.Forecast => L["Source_Forecast_Text", when, source.Count ?? 0],
             DataSource.Satellite when source.ObservedOn is { } observed => L["Source_Satellite_Observed", ForecastFormat.Date(observed)],
-            DataSource.Discharge or DataSource.LakeLevel => L[$"Source_{source.Source}_Text", source.Count ?? 0, when],
+            DataSource.Discharge or DataSource.LakeLevel or DataSource.Susv => L[$"Source_{source.Source}_Text", source.Count ?? 0, when],
             _ => L[$"Source_{source.Source}_Text", when],
         };
     }

@@ -187,8 +187,9 @@ else
                                     <MudSelectItem T="NoticeKind" Value="kind">@L[$"NoticeKind_{kind}"]</MudSelectItem>
                                 }
                             </MudSelect>
-                            <MudDatePicker @bind-Date="notice.ValidFrom" Label="@L["Field_NoticeValidFrom"]" DateFormat="dd.MM.yyyy" Editable="true" Clearable="true" />
-                            <MudDatePicker @bind-Date="notice.ValidUntil" Label="@L["Field_NoticeValidUntil"]" DateFormat="dd.MM.yyyy" Editable="true" Clearable="true" />
+                            <MudDatePicker @bind-Date="notice.ValidFrom" Label="@L["Field_NoticeValidFrom"]" Converter="Dates" Editable="true" Clearable="true" />
+                            <MudDatePicker @bind-Date="notice.ValidUntil" Label="@L["Field_NoticeValidUntil"]" Converter="Dates" Editable="true" Clearable="true" />
+                            <MudCheckBox T="bool" @bind-Value="notice.RecursYearly" Label="@L["Field_NoticeYearly"]" />
                         </MudStack>
                         @foreach (var language in Languages.All)
                         {
@@ -233,6 +234,10 @@ else
 }
 
 @code {
+    private SwissDateConverter? dates;
+
+    private SwissDateConverter Dates => dates ??= new SwissDateConverter(L["Field_InvalidDate"]);
+
     private DiveSiteForEditing? site;
 
     private SiteForm? form;

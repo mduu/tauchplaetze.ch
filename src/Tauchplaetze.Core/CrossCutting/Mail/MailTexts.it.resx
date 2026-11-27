@@ -44,4 +44,11 @@
   <data name="Exists_Text" xml:space="preserve"><value>Qualcuno ha voluto creare un nuovo account con il tuo indirizzo e-mail. Ne hai già uno. Accedi. Se non ricordi la password, scegli «Password dimenticata» nella pagina di accesso.</value></data>
   <data name="Exists_Button" xml:space="preserve"><value>Accedi</value></data>
   <data name="Exists_Ignore" xml:space="preserve"><value>Non volevi creare un account? Allora ignora questa e-mail.</value></data>
+  <data name="Susv_Subject" xml:space="preserve"><value>FSSS: {0} voci da verificare</value></data>
+  <data name="Susv_Text" xml:space="preserve"><value>La sincronizzazione con le mappe della FSSS ha trovato voci che devi verificare.</value></data>
+  <data name="Susv_Added" xml:space="preserve"><value>Nuove ({0}): {1}.</value></data>
+  <data name="Susv_Changed" xml:space="preserve"><value>Modificate dopo la verifica ({0}): {1}.</value></data>
+  <data name="Susv_Removed" xml:space="preserve"><value>Rimosse dalla FSSS ({0}): {1}.</value></data>
+  <data name="Susv_More" xml:space="preserve"><value>E altre {0}.</value></data>
+  <data name="Susv_Button" xml:space="preserve"><value>Verifica le voci</value></data>
 </root>

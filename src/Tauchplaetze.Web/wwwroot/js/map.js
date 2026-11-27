@@ -397,6 +397,58 @@ window.tauchplaetzeMap = (function () {
     return lines;
   }
 
+  // Ebene «Schifffahrt» (stories/005-tauchen-und-schifffahrt.md): Kreis von 100 m um Landungsstellen, Fahrlinien,
+  // Häfen als Fläche mit Kreis von 50 m um die Mitte. Jeder Abstand gilt ab der Mitte des Objekts.
+  function addShipping(map, element) {
+    const features = JSON.parse(element.dataset.shipping || '[]');
+    if (features.length === 0) {
+      return null;
+    }
+
+    const color = token('--color-notice-closure');
+    const group = L.featureGroup();
+    features.forEach(function (feature) {
+      const parts = feature.parts.map(function (part) { return part.map(function (p) { return [p.lat, p.lng]; }); });
+      if (feature.kind === 'LandingStage') {
+        L.circle(parts[0][0], { radius: 100, color: color, weight: 1.5, fillColor: color, fillOpacity: 0.12, interactive: false }).addTo(group);
+        L.circleMarker(parts[0][0], { radius: 4, color: color, weight: 2, fillColor: color, fillOpacity: 1 })
+          .bindTooltip(textLabel(feature.name || ''), { direction: 'top', offset: [0, -6], className: 'map-label' })
+          .addTo(group);
+      } else if (feature.kind === 'FerryRoute') {
+        parts.forEach(function (line) {
+          L.polyline(line, { color: color, weight: 2, dashArray: '6 6', opacity: 0.9, interactive: false }).addTo(group);
+        });
+      } else {
+        parts.forEach(function (ring) {
+          L.polygon(ring, { color: color, weight: 1, fillColor: color, fillOpacity: 0.18, interactive: false }).addTo(group);
+        });
+        if (feature.centre) {
+          L.circle([feature.centre.lat, feature.centre.lng], { radius: 50, color: color, weight: 1, fill: false, interactive: false }).addTo(group);
+        }
+      }
+    });
+
+    const attribution = element.dataset.shippingAttribution;
+    group.addTo(map);
+    if (attribution) {
+      map.attributionControl.addAttribution(attribution);
+      map.on('overlayadd', function (event) { if (event.layer === group) { map.attributionControl.addAttribution(attribution); } });
+      map.on('overlayremove', function (event) { if (event.layer === group) { map.attributionControl.removeAttribution(attribution); } });
+    }
+    if (map.tauchplaetzeLayers) {
+      map.tauchplaetzeLayers.addOverlay(group, element.dataset.layerShipping || 'Schifffahrt');
+    }
+
+    return group;
+  }
+
+  // Namen kommen aus fremden Daten: nur als Text ins DOM, nie als HTML.
+  function textLabel(text) {
+    const span = document.createElement('span');
+    span.textContent = text;
+    return span;
+  }
+
   function create(element) {
     const map = L.map(element, { scrollWheelZoom: false });
     addBaseLayers(map, element);
@@ -420,6 +472,7 @@ window.tauchplaetzeMap = (function () {
       markers.forEach(function (marker) { marker.addTo(map); });
     }
 
+    addShipping(map, element);
     const sketch = window.tauchplaetzeSketch ? window.tauchplaetzeSketch.addTo(map, element, map.tauchplaetzeLayers) : null;
     if (sketch) {
       markers.push(sketch);
