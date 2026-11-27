@@ -24,6 +24,33 @@ internal static class DatabasePreparation
             return;
         }
 
+        var started = TimeProvider.System.GetTimestamp();
+        for (var attempt = 1; ; attempt++)
+        {
+            try
+            {
+                await Prepare(app);
+                return;
+            }
+            catch (Exception ex) when (TimeProvider.System.GetElapsedTime(started) < Patience)
+            {
+                app.Logger.LogWarning(ex, "Database preparation failed (attempt {Attempt}), retrying in {Delay}", attempt, RetryDelay);
+                await Task.Delay(RetryDelay);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Beim Deploy startet App Service die Managed Identity neu. Einige Minuten lang scheitert dann die Anmeldung bei der Datenbank
+    /// (Deploy vom 27.11.2026: gut 4 Minuten). Die App wartet so lange, statt abzustürzen und einen zweiten Startzyklus auszulösen.
+    /// Die Startfrist von App Service (`WEBSITES_CONTAINER_START_TIME_LIMIT`, 10 Minuten, `deploy/modules/webApp.bicep`) liegt darüber.
+    /// </summary>
+    private static readonly TimeSpan Patience = TimeSpan.FromMinutes(8);
+
+    private static readonly TimeSpan RetryDelay = TimeSpan.FromSeconds(20);
+
+    private static async Task Prepare(WebApplication app)
+    {
         await using var scope = app.Services.CreateAsyncScope();
         var services = scope.ServiceProvider;
         await services.GetRequiredService<ICommandHandler<MigrateDatabaseCommand, Unit>>().Handle(new MigrateDatabaseCommand());
