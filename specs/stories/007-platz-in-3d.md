@@ -1,6 +1,6 @@
 # Story 007: Der Platz in 3D
 
-**Status:** Entwurf (28.11.2026), Vorschau gebaut, Entscheide offen (siehe unten).
+**Status:** umgesetzt im Branch `feature/007-platz-in-3d` (28.11.2026), nicht gemergt. Marc testet lokal.
 
 ## Ziel
 
