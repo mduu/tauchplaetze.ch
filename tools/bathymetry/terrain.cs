@@ -103,6 +103,12 @@ foreach (var block in blocks.OrderBy(b => b.Lake).ThenBy(b => b.Name, StringComp
     }
 
     var data = block.Encode();
+    if (MinDecimetres(data) > -50)
+    {
+        Console.WriteLine($"{block.Name}: kaum Seegrund im Ausschnitt, ausgelassen");
+        continue;
+    }
+
     var name = $"{block.X0}_{block.Y0}.bin";
     await File.WriteAllBytesAsync(Path.Combine(outDir, name), data);
     bytes += data.Length;
@@ -151,6 +157,17 @@ async Task<string?> AltiTile(int e, int n)
     await Curl(["-s", "--fail", "--max-time", "600", "-o", path, href]);
     Console.WriteLine($"swissALTI3D {e}-{n}: geladen");
     return path;
+}
+
+static int MinDecimetres(byte[] data)
+{
+    var min = int.MaxValue;
+    for (var i = 0; i < data.Length; i += 2)
+    {
+        min = Math.Min(min, BitConverter.ToInt16(data, i));
+    }
+
+    return min;
 }
 
 string? Option(string name)
@@ -336,7 +353,7 @@ static class Grids
                     var east = left + (col + 0.5) * size;
                     col++;
                     var value = double.Parse(token, CultureInfo.InvariantCulture);
-                    if (value == noData)
+                    if (value == noData || value < -100)
                     {
                         continue;
                     }
@@ -370,6 +387,11 @@ static class Grids
 
                 var north = double.Parse(parts[1], CultureInfo.InvariantCulture);
                 var height = double.Parse(parts[2], CultureInfo.InvariantCulture);
+                if (height < -100)
+                {
+                    continue;
+                }
+
                 foreach (var block in blocks)
                 {
                     if (block.Contains(east, north))
