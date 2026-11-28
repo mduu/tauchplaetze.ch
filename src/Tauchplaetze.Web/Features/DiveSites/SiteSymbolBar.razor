@@ -15,9 +15,8 @@
             <li class="site-symbol" data-symbol="difficulty" data-band="@difficulty.ToString().ToLowerInvariant()" title="@Title(text)">
                 @if (Large)
                 {
-                    <svg width="30" height="20" viewBox="0 0 36 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M7 3h5l1.5 9 3.5 8H4.5l1.5-8z" />
-                        @Dots((int)difficulty, 21)
+                    <svg width="32" height="12" viewBox="0 0 32 12" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+                        @Dots((int)difficulty, 5, 6, 11, 4)
                     </svg>
                     <span class="site-symbol-text">@L[$"Symbol_Difficulty_{difficulty}"]</span>
                 }

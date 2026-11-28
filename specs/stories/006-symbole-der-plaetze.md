@@ -70,7 +70,7 @@ Marc hat die Vorschläge am 28.11.2026 übernommen:
 
 | Frage | Entscheid |
 |---|---|
-| Schwierigkeit: ein Symbol mit drei Stufen oder drei Symbole? | Ein Symbol mit 1, 2 oder 3 gefüllten Punkten in der Farbe der Stufe (Einsteiger, Fortgeschrittene, Erfahrene). In den Listen nur die Punkte mit Tooltip, im Hero mit Flosse und Text (Entscheid Marc, 28.11.2026: die Flosse ist klein nicht erkennbar) |
+| Schwierigkeit: ein Symbol mit drei Stufen oder drei Symbole? | Ein Symbol mit 1, 2 oder 3 gefüllten Punkten in der Farbe der Stufe (Einsteiger, Fortgeschrittene, Erfahrene). In den Listen nur die Punkte mit Tooltip, im Hero mit Punkten und Text, ohne Flosse (Entscheid Marc, 28.11.2026: die Flosse ist nicht erkennbar) |
 | Tiefe als Zahl auf der Kachel? | Ja, als kurzer Text «42 m» |
 | Ersetzt die Leiste die Tags der Eigenschaften im Verzeichnis ganz? | Ja. Auch das Warnzeichen «Gesperrt» der Listen entfällt, die Leiste zeigt es als erstes Symbol |
 | Toilette aus einem Ort «Toilette» der Redaktion oder nur vom SUSV? | Beides |
