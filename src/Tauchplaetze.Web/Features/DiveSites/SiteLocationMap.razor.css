@@ -629,23 +629,30 @@
 
 @media (max-width: 640px) {
     .location-stage:has(.sticker-3d:not([hidden])) ::deep .leaflet-top.leaflet-left {
-        top: 126px;
+        top: 100px;
     }
 
     .sticker-3d {
-        top: 12px;
+        top: 10px;
         left: -4px;
-        width: 104px;
-        height: 104px;
+        width: 78px;
+        height: 78px;
+    }
+
+    .sticker-ring {
+        display: none;
     }
 
     .sticker-block {
-        width: 84px;
-        height: 84px;
+        top: 50%;
+        width: 66px;
+        height: 66px;
     }
 
     .sticker-badge {
-        font-size: 18px;
+        bottom: -7px;
+        padding: 2px 8px 1px;
+        font-size: 15px;
     }
 
     .site-3d-controls {
