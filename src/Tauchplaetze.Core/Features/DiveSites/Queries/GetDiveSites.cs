@@ -9,7 +9,7 @@ namespace Tauchplaetze.Core.Features.DiveSites.Queries;
 /// <summary>Alle öffentlichen Plätze, optional nur eines Gewässers, mit dem Index von heute. Sortiert nach Gewässer und Name.</summary>
 public record GetDiveSitesQuery(string Culture, string? WaterBodySlug = null);
 
-/// <summary>Ein Platz im Verzeichnis und auf der Karte. <see cref="NoticeToday"/>: der schwerste heute gültige Hinweis. <see cref="Symbols"/>: Story 006.</summary>
+/// <summary>Ein Platz im Verzeichnis und auf der Karte. <see cref="NoticeToday"/>: der schwerste heute gültige Hinweis.</summary>
 public record DiveSiteListItem(
     string Slug,
     string Name,
@@ -72,9 +72,7 @@ internal class GetDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 r.DataLevel,
                 r.Index,
                 restrictions[r.Id].WorstOn(today),
-                SiteSymbolRules.Of(new SiteSymbolFacts(
-                    restrictions[r.Id].WorstOn(today), r.DifficultyRating, r.MaxDepth, r.WallRating, r.WrecksRating, r.Features,
-                    r.Water.WaterBodyType, r.Water.Elevation, sources.ProjectsOf(r.Id), sources.PlacesOf(r.Id)))))
+                sources.For(r.Id, restrictions[r.Id].WorstOn(today), r.DifficultyRating, r.MaxDepth, r.WallRating, r.WrecksRating, r.Features, r.Water.WaterBodyType, r.Water.Elevation)))
             .OrderBy(s => s.WaterBodyName, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo(query.Culture), true))
             .ThenBy(s => s.Name, StringComparer.Create(System.Globalization.CultureInfo.GetCultureInfo(query.Culture), true))
             .ToList();

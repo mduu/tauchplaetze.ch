@@ -7,7 +7,6 @@ using Tauchplaetze.Core.CrossCutting.Geo;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
-using Tauchplaetze.Core.Features.Susv;
 using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.DiveSites.Queries;
@@ -138,7 +137,8 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 dbContext.DailyForecasts.Where(f => f.DiveSiteId == d.Id && f.Date == today).Select(f => f.DiveIndex).FirstOrDefault(),
                 d.OtherNames))
             .ToListAsync(ct);
-        rows = [.. rows.Select(r => r with { NoticeToday = restrictions[r.Id].WorstOn(today), Projects = sources.ProjectsOf(r.Id), Places = sources.PlacesOf(r.Id) })];
+        rows = [.. rows.Select(r => r with { NoticeToday = restrictions[r.Id].WorstOn(today) })];
+        rows = [.. rows.Select(r => r with { Symbols = sources.For(r.Id, r.NoticeToday, r.Difficulty, r.MaxDepth, r.Wall, r.Wrecks, r.Features, r.WaterType, r.Elevation) })];
         var otherNames = rows.ToDictionary(r => r.Slug, r => OtherNameJson.Read(r.OtherNames, logger));
 
         var hasLocation = query is { Latitude: not null, Longitude: not null };
@@ -190,62 +190,41 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 m.Traits,
                 m.Distance is { } km ? Math.Round(km, 1) : null,
                 otherNames[m.Row.Slug],
-                SymbolsOf(m.Row)))],
+                m.Row.Symbols))],
             matches.Count,
             page,
             pageCount,
             sort,
             [.. matches.Select(m => new DiveSiteListItem(
                 m.Row.Slug, m.Row.Name, m.Row.Municipality, m.Row.WaterSlug, WaterName(m.Row, query.Culture), m.Row.WaterType,
-                m.Row.Latitude, m.Row.Longitude, m.Row.ContentLevel, m.Row.DataLevel, m.Row.Index, m.Row.NoticeToday, SymbolsOf(m.Row)))],
+                m.Row.Latitude, m.Row.Longitude, m.Row.ContentLevel, m.Row.DataLevel, m.Row.Index, m.Row.NoticeToday))],
             rows.Count,
             rows.Select(r => r.WaterSlug).Distinct().Count(),
             waterName);
     }
 
+    /// <remarks>Steilwand, Wrack, Ausbildung, Fluss und Inklusion kommen aus den Symbolen, damit Filter und Kachel dieselbe Regel haben.</remarks>
     private static IReadOnlyList<SiteTrait> TraitsOf(Row row)
     {
+        var items = row.Symbols.Items;
         var traits = new List<SiteTrait>();
-        if (row.Wall >= 3)
-        {
-            traits.Add(SiteTrait.Wall);
-        }
-
-        if (row.Wrecks >= 3)
-        {
-            traits.Add(SiteTrait.Wreck);
-        }
-
-        if (row.Difficulty is <= 2)
-        {
-            traits.Add(SiteTrait.Beginner);
-        }
-
-        if (row.Features.HasFlag(DiveSiteFeatures.Training))
-        {
-            traits.Add(SiteTrait.Training);
-        }
-
-        if (row.WaterType == WaterBodyType.River || row.Features.HasFlag(DiveSiteFeatures.River))
-        {
-            traits.Add(SiteTrait.River);
-        }
-
-        if (row.Features.HasFlag(DiveSiteFeatures.Cave))
-        {
-            traits.Add(SiteTrait.Cave);
-        }
-
-        if (row.Projects.Contains(SusvTopic.InclusiveSite))
-        {
-            traits.Add(SiteTrait.Inclusive);
-        }
-
+        Add(traits, SiteTrait.Wall, items.Contains(SiteSymbol.Wall));
+        Add(traits, SiteTrait.Wreck, items.Contains(SiteSymbol.Wreck));
+        Add(traits, SiteTrait.Beginner, row.Symbols.Difficulty == DifficultyBand.Beginner);
+        Add(traits, SiteTrait.Training, items.Contains(SiteSymbol.Training));
+        Add(traits, SiteTrait.River, items.Contains(SiteSymbol.River));
+        Add(traits, SiteTrait.Cave, row.Features.HasFlag(DiveSiteFeatures.Cave));
+        Add(traits, SiteTrait.Inclusive, items.Contains(SiteSymbol.Inclusive));
         return traits;
     }
 
-    private static SiteSymbols SymbolsOf(Row row) => SiteSymbolRules.Of(new SiteSymbolFacts(
-        row.NoticeToday, row.Difficulty, row.MaxDepth, row.Wall, row.Wrecks, row.Features, row.WaterType, row.Elevation, row.Projects, row.Places));
+    private static void Add(List<SiteTrait> traits, SiteTrait trait, bool applies)
+    {
+        if (applies)
+        {
+            traits.Add(trait);
+        }
+    }
 
     private static string WaterName(Row row, string culture) => WaterBodyNames.In(culture, row.NameDe, row.NameEn, row.NameFr, row.NameIt);
 
@@ -275,9 +254,7 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
     {
         public NoticeKind? NoticeToday { get; init; }
 
-        public IReadOnlySet<SusvTopic> Projects { get; init; } = new HashSet<SusvTopic>();
-
-        public IReadOnlySet<EntryPointKind> Places { get; init; } = new HashSet<EntryPointKind>();
+        public SiteSymbols Symbols { get; init; } = SiteSymbols.None;
 
         public double Latitude => Location.Y;
 

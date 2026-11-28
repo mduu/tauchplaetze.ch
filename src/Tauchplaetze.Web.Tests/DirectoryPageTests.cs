@@ -41,9 +41,10 @@ public class DirectoryPageTests : IClassFixture<WebApp>
         var text = VisibleText.Of(html);
         Assert.Contains(count, text);
         Assert.Contains("Riff Williams", text);
-        Assert.Contains(wall, html);
-        Assert.Contains("data-symbol=\"notice-closure\"", html);
-        Assert.Contains("data-symbol=\"depth\"", html);
+        var hits = html[html.IndexOf("class=\"site-list\"", StringComparison.Ordinal)..];
+        Assert.Contains(wall, hits);
+        Assert.Contains("data-symbol=\"notice-closure\"", hits);
+        Assert.Contains("data-symbol=\"depth\"", hits);
         Assert.Contains("data-symbol-legend", html);
         Assert.Contains(results, text);
         Assert.Contains("type=\"search\" name=\"q\"", html);

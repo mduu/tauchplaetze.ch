@@ -14,8 +14,8 @@
                 {
                     <span class="label">@L[$"DataLevel_{level}"]</span>
                 }
-                <SiteSymbolBar Symbols="site.SymbolList" />
             </div>
+            <div class="site-symbols-slot"><SiteSymbolBar Symbols="site.SymbolList" /></div>
             <div class="index-today" data-index-band="@ForecastFormat.IndexBand(site.DiveIndexToday)" title="@L["Index_Today"]">
                 @(site.DiveIndexToday is { } index ? ForecastFormat.Number(index) : "–")
             </div>

@@ -67,10 +67,6 @@
                         <p class="eyebrow signal">@BestPickLabel</p>
                         <h2 id="best-pick-name">@top.Name</h2>
                         <p class="where">@Where(top)</p>
-                        @if (top.MountainLakeElevation is { } topElevation)
-                        {
-                            <p class="mountain-lake" data-mountain-lake>@L["MountainLake", topElevation]</p>
-                        }
                         <SiteSymbolBar Symbols="top.SymbolList" />
                     </div>
                     <div class="index" data-index-band="@ForecastFormat.IndexBand(top.DiveIndex)">@ForecastFormat.Number(top.DiveIndex)</div>
@@ -230,9 +226,11 @@
         @<li class="@(site.MoreList.Count > 0 ? "has-more" : null)">
             <span class="rank">@rank</span>
             <div class="ranking-site">
-                <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
+                <div class="ranking-head">
+                    <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
+                    <SiteSymbolBar Symbols="site.SymbolList" />
+                </div>
                 <span class="where">@Where(site)</span>
-                <SiteSymbolBar Symbols="site.SymbolList" />
                 <span class="bar" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)" style="width: @(FormattableString.Invariant($"{Math.Clamp(site.DiveIndex * 10, 10, 100):0}%"))"></span>
                 @if (site.Reasons.Count > 0)
                 {

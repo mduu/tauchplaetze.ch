@@ -324,11 +324,9 @@
   <data name="Shipping_Attribution" xml:space="preserve"><value>Landing stages: öV-Haltestellen Bundesamt für Verkehr BAV · Routes and harbours: © OpenStreetMap contributors</value></data>
   <data name="Symbols_Label" xml:space="preserve"><value>Facilities and features</value></data>
   <data name="Symbols_Legend" xml:space="preserve"><value>What do the symbols mean?</value></data>
-  <data name="Symbol_Notice_Closure" xml:space="preserve"><value>Closed today</value></data>
-  <data name="Symbol_Notice_Warning" xml:space="preserve"><value>Warning today</value></data>
-  <data name="Symbol_Difficulty_Easy" xml:space="preserve"><value>Easy</value></data>
-  <data name="Symbol_Difficulty_Medium" xml:space="preserve"><value>Medium</value></data>
-  <data name="Symbol_Difficulty_Hard" xml:space="preserve"><value>Difficult</value></data>
+  <data name="Symbol_Difficulty_Beginner" xml:space="preserve"><value>Beginner</value></data>
+  <data name="Symbol_Difficulty_Advanced" xml:space="preserve"><value>Advanced</value></data>
+  <data name="Symbol_Difficulty_Expert" xml:space="preserve"><value>Experienced</value></data>
   <data name="Symbol_Difficulty_Title" xml:space="preserve"><value>Difficulty: {0}</value></data>
   <data name="Symbol_Depth" xml:space="preserve"><value>{0} m</value></data>
   <data name="Symbol_Depth_Title" xml:space="preserve"><value>Maximum depth {0} m</value></data>

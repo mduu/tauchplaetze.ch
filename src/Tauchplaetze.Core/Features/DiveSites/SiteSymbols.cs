@@ -29,18 +29,18 @@ public enum SiteSymbol
     MountainLake,
 }
 
-/// <summary>Schwierigkeit als Stufe: leicht (Bewertung 1 und 2), mittel (3), schwer (4 und 5).</summary>
+/// <summary>Schwierigkeit als Stufe (`ubiquitous-language.md`): Einsteiger (Bewertung 1 und 2), Fortgeschrittene (3), Erfahrene (4 und 5).</summary>
 public enum DifficultyBand
 {
-    Easy = 1,
+    Beginner = 1,
 
-    Medium = 2,
+    Advanced = 2,
 
-    Hard = 3,
+    Expert = 3,
 }
 
 /// <summary>
-/// Was ein Platz bietet, für jede Kachel gleich (Story 006): Sperrung oder Warnung heute, Schwierigkeit, maximale Tiefe, dann die übrigen Symbole.
+/// Was ein Platz bietet, für jede Kachel gleich (Story 006): Sperrung oder Warnung am Tag der Liste, Schwierigkeit, maximale Tiefe, dann die übrigen Symbole.
 /// Ein fehlendes Symbol heisst «unbekannt», nie «nein».
 /// </summary>
 public record SiteSymbols(NoticeKind? Notice, DifficultyBand? Difficulty, int? MaxDepth, int? MountainLakeElevation, IReadOnlyList<SiteSymbol> Items)
@@ -91,9 +91,9 @@ internal static class SiteSymbolRules
 
     private static DifficultyBand? Band(byte? difficulty) => difficulty switch
     {
-        1 or 2 => DifficultyBand.Easy,
-        3 => DifficultyBand.Medium,
-        4 or 5 => DifficultyBand.Hard,
+        1 or 2 => DifficultyBand.Beginner,
+        3 => DifficultyBand.Advanced,
+        4 or 5 => DifficultyBand.Expert,
         _ => null,
     };
 
@@ -127,6 +127,10 @@ internal sealed class SiteSymbolSources(ILookup<Guid, SusvTopic> projects, ILook
 
         return new SiteSymbolSources(projects.ToLookup(p => p.DiveSiteId, p => p.Topic), places.ToLookup(p => p.DiveSiteId, p => p.Kind));
     }
+
+    /// <summary>Die Symbole eines Platzes aus seinen Spalten und den geladenen Projekten und Orten.</summary>
+    public SiteSymbols For(Guid siteId, NoticeKind? notice, byte? difficulty, int? maxDepth, byte? wall, byte? wrecks, DiveSiteFeatures features, WaterBodyType type, int? elevation) =>
+        SiteSymbolRules.Of(new SiteSymbolFacts(notice, difficulty, maxDepth, wall, wrecks, features, type, elevation, ProjectsOf(siteId), PlacesOf(siteId)));
 
     public IReadOnlySet<SusvTopic> ProjectsOf(Guid siteId) => projects[siteId].ToHashSet();
 

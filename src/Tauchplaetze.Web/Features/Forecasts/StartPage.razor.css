@@ -365,19 +365,7 @@
     border-top: 0;
 }
 
-.mountain-lake {
-    margin: 4px 0 0;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: var(--color-primary);
-}
-
-.ranking-site .mountain-lake {
-    margin: 0;
-}
-
-.water-more {
+.ranking-site .water-more {
     margin-top: 6px;
     font-size: 13px;
 }
@@ -429,4 +417,16 @@
 .ranking li.has-more > .rank,
 .ranking li.has-more > .index-small {
     margin-top: 14px;
+}
+
+.ranking-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ranking-head ::deep .site-symbols {
+    margin: 0;
 }

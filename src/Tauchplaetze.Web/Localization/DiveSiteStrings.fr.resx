@@ -324,18 +324,16 @@
   <data name="Shipping_Attribution" xml:space="preserve"><value>Débarcadères : öV-Haltestellen Bundesamt für Verkehr BAV · Lignes et ports : © contributeurs OpenStreetMap</value></data>
   <data name="Symbols_Label" xml:space="preserve"><value>Équipements et caractéristiques</value></data>
   <data name="Symbols_Legend" xml:space="preserve"><value>Que signifient les symboles ?</value></data>
-  <data name="Symbol_Notice_Closure" xml:space="preserve"><value>Fermé aujourd’hui</value></data>
-  <data name="Symbol_Notice_Warning" xml:space="preserve"><value>Avertissement aujourd’hui</value></data>
-  <data name="Symbol_Difficulty_Easy" xml:space="preserve"><value>Facile</value></data>
-  <data name="Symbol_Difficulty_Medium" xml:space="preserve"><value>Moyen</value></data>
-  <data name="Symbol_Difficulty_Hard" xml:space="preserve"><value>Difficile</value></data>
+  <data name="Symbol_Difficulty_Beginner" xml:space="preserve"><value>Débutant</value></data>
+  <data name="Symbol_Difficulty_Advanced" xml:space="preserve"><value>Avancé</value></data>
+  <data name="Symbol_Difficulty_Expert" xml:space="preserve"><value>Expérimenté</value></data>
   <data name="Symbol_Difficulty_Title" xml:space="preserve"><value>Difficulté : {0}</value></data>
   <data name="Symbol_Depth" xml:space="preserve"><value>{0} m</value></data>
   <data name="Symbol_Depth_Title" xml:space="preserve"><value>Profondeur maximale {0} m</value></data>
   <data name="Symbol_Defibrillator" xml:space="preserve"><value>Défibrillateur (DAE)</value></data>
   <data name="Symbol_Toilet" xml:space="preserve"><value>Toilettes</value></data>
   <data name="Symbol_Parking" xml:space="preserve"><value>Parking</value></data>
-  <data name="Symbol_FlagHolder" xml:space="preserve"><value>Support de drapeau</value></data>
+  <data name="Symbol_FlagHolder" xml:space="preserve"><value>Support de pavillon</value></data>
   <data name="Symbol_Inclusive" xml:space="preserve"><value>Inclusion</value></data>
   <data name="Symbol_Training" xml:space="preserve"><value>Formation</value></data>
   <data name="Symbol_Wall" xml:space="preserve"><value>Tombant</value></data>

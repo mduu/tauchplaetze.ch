@@ -28,15 +28,15 @@
     color: var(--color-notice-warning);
 }
 
-.site-symbol[data-band="easy"] {
+.site-symbol[data-band="beginner"] {
     color: var(--color-difficulty-easy);
 }
 
-.site-symbol[data-band="medium"] {
+.site-symbol[data-band="advanced"] {
     color: var(--color-difficulty-medium);
 }
 
-.site-symbol[data-band="hard"] {
+.site-symbol[data-band="expert"] {
     color: var(--color-difficulty-hard);
 }
 

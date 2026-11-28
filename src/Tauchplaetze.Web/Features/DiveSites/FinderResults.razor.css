@@ -65,3 +65,47 @@
     color: var(--color-text-subtle);
     font-size: 14px;
 }
+
+.site-main {
+    flex: 1;
+}
+
+.site-symbols-slot {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 45%;
+}
+
+.site-symbols-slot ::deep .site-symbols {
+    justify-content: flex-end;
+    margin: 0;
+}
+
+@media (max-width: 560px) {
+    .site-list li {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "main side"
+            "symbols side";
+        row-gap: 6px;
+    }
+
+    .site-main {
+        grid-area: main;
+    }
+
+    .site-symbols-slot {
+        grid-area: symbols;
+        justify-content: flex-start;
+        max-width: none;
+    }
+
+    .site-symbols-slot ::deep .site-symbols {
+        justify-content: flex-start;
+    }
+
+    .site-side {
+        grid-area: side;
+    }
+}

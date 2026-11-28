@@ -14,7 +14,7 @@ Ein Symbol erscheint nur, wenn die Daten es belegen. Fehlt es, heisst das «unbe
 
 | # | Symbol | Bedeutung | Quelle |
 |---|---|---|---|
-| 1 | Sperrung oder Warnung heute | Am Platz gilt heute ein Hinweis | Hinweise der Redaktion und Einschränkungen des SUSV (`dive-site.md`, «Hinweise»). Ersetzt das heutige Warnzeichen der Listen. |
+| 1 | Sperrung oder Warnung | Am Platz gilt am Tag der Liste ein Hinweis (heute, in der Rangliste der gewählte Tag), Tooltip «Gesperrt» oder «Warnung» | Hinweise der Redaktion und Einschränkungen des SUSV (`dive-site.md`, «Hinweise»). Ersetzt das heutige Warnzeichen der Listen. |
 | 2 | Schwierigkeit | leicht (1–2), mittel (3), schwer (4–5) | Bewertung `DifficultyRating` |
 | 3 | Tiefe | maximale Tiefe als Zahl («42 m») | `MaxDepth` |
 | 4 | Defibrillator (AED) | Gerät am Platz | bestätigter Eintrag `Defibrillator` des SUSV |
@@ -35,10 +35,10 @@ Ein Symbol erscheint nur, wenn die Daten es belegen. Fehlt es, heisst das «unbe
 
 | Stelle | Darstellung |
 |---|---|
-| Platzseite, Hero | Die Symbolleiste gross, mit Text neben jedem Symbol. Sie ersetzt die Tags «Bergsee» und «Inklusion». |
-| Verzeichnis (Finder), Treffer | Symbole ohne Text, unter Name und Gewässer. Ersetzt die heutigen Tags der Eigenschaften. |
+| Platzseite, Hero | Die Symbolleiste gross, mit Text neben jedem Symbol. Sie ersetzt die Tags «Bergsee» und «Inklusion». Der Bergsee nennt seine Höhe im Hero als Text, in den Listen im Tooltip. |
+| Verzeichnis (Finder), Treffer | Symbole ohne Text, in der Zeile des Namens rechtsbündig links vom Index (Entscheid Marc, 28.11.2026; schmal unter Name und Gewässer). Ersetzt die heutigen Tags der Eigenschaften. |
 | Gewässerseite, Liste der Plätze | wie im Verzeichnis |
-| Startseite, «Beste Wahl» und Rangliste | wie im Verzeichnis |
+| Startseite, «Beste Wahl» und Rangliste | wie im Verzeichnis; in der Rangliste rechtsbündig in der Zeile des Namens. «Beste Wahl» zeigt den Bergsee nur noch als Symbol |
 
 Die Eigenschaften des SUSV auf der Platzseite (Story 004, `SusvFeatures`) bleiben. Sie tragen den Link zum SUSV. Ihre Symbole sind der Anfang dieser Leiste.
 
@@ -70,7 +70,7 @@ Marc hat die Vorschläge am 28.11.2026 übernommen:
 
 | Frage | Entscheid |
 |---|---|
-| Schwierigkeit: ein Symbol mit drei Stufen oder drei Symbole? | Ein Symbol (Flosse) mit 1, 2 oder 3 gefüllten Punkten, Farbe der Stufe |
+| Schwierigkeit: ein Symbol mit drei Stufen oder drei Symbole? | Ein Symbol mit 1, 2 oder 3 gefüllten Punkten in der Farbe der Stufe (Einsteiger, Fortgeschrittene, Erfahrene). In den Listen nur die Punkte mit Tooltip, im Hero mit Flosse und Text (Entscheid Marc, 28.11.2026: die Flosse ist klein nicht erkennbar) |
 | Tiefe als Zahl auf der Kachel? | Ja, als kurzer Text «42 m» |
 | Ersetzt die Leiste die Tags der Eigenschaften im Verzeichnis ganz? | Ja. Auch das Warnzeichen «Gesperrt» der Listen entfällt, die Leiste zeigt es als erstes Symbol |
 | Toilette aus einem Ort «Toilette» der Redaktion oder nur vom SUSV? | Beides |

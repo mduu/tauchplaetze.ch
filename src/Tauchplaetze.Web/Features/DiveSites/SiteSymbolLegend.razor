@@ -4,16 +4,16 @@
 <details class="symbol-legend" data-symbol-legend>
     <summary>@L["Symbols_Legend"]</summary>
     <ul>
-        <li><SiteSymbolBar Symbols="Sample(NoticeKind.Closure, null, null)" /><span>@L["Symbol_Notice_Closure"]</span></li>
-        <li><SiteSymbolBar Symbols="Sample(NoticeKind.Warning, null, null)" /><span>@L["Symbol_Notice_Warning"]</span></li>
+        <li><SiteSymbolBar Decorative="true" Symbols="Sample(NoticeKind.Closure, null, null)" /><span>@L["Notice_Closure"]</span></li>
+        <li><SiteSymbolBar Decorative="true" Symbols="Sample(NoticeKind.Warning, null, null)" /><span>@L["Notice_Warning"]</span></li>
         @foreach (var band in Enum.GetValues<DifficultyBand>())
         {
-            <li><SiteSymbolBar Symbols="Sample(null, band, null)" /><span>@L["Symbol_Difficulty_Title", L[$"Symbol_Difficulty_{band}"]]</span></li>
+            <li><SiteSymbolBar Decorative="true" Symbols="Sample(null, band, null)" /><span>@L["Symbol_Difficulty_Title", L[$"Symbol_Difficulty_{band}"]]</span></li>
         }
-        <li><SiteSymbolBar Symbols="Sample(null, null, 42)" /><span>@L["Symbol_Depth_Title", 42]</span></li>
+        <li><SiteSymbolBar Decorative="true" Symbols="Sample(null, null, 42)" /><span>@L["Symbol_Depth_Title", 42]</span></li>
         @foreach (var symbol in Enum.GetValues<SiteSymbol>())
         {
-            <li><SiteSymbolBar Symbols="new SiteSymbols(null, null, null, null, [symbol])" /><span>@L[$"Symbol_{symbol}"]</span></li>
+            <li><SiteSymbolBar Decorative="true" Symbols="new SiteSymbols(null, null, null, null, [symbol])" /><span>@L[$"Symbol_{symbol}"]</span></li>
         }
     </ul>
 </details>

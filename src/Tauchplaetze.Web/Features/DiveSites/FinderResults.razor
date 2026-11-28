@@ -14,8 +14,8 @@
                     <span class="other-names"><span class="visually-hidden">@L["Site_OtherNames", ""]</span>@string.Join(" · ", site.OtherNameList)</span>
                 }
                 <span class="where">@Where(site)</span>
-                <SiteSymbolBar Symbols="site.SymbolList" />
             </div>
+            <div class="site-symbols-slot"><SiteSymbolBar Symbols="site.SymbolList" /></div>
             <div class="site-side">
                 <div class="index-today" data-index-band="@ForecastFormat.IndexBand(site.DiveIndexToday)" title="@L["Index_Today"]">
                     @(site.DiveIndexToday is { } index ? ForecastFormat.Number(index) : "–")

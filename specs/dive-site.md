@@ -177,7 +177,7 @@ Jedes Bild eines Platzes gehört zu genau einem Abschnitt (`MediaItem.Section`):
 
 Reihenfolge der Abschnitte siehe `ux.md`. Kurz:
 
-1. Hero mit Tags (aus Bewertungen und `Features`).
+1. Hero mit der Symbolleiste (`stories/006-symbole-der-plaetze.md`).
 2. Gültige Hinweise und Einschränkungen des SUSV als Banner, schwerster zuerst. Die übrigen Einträge des SUSV stehen im Abschnitt ihres Themas (`stories/004-susv-projekte-nach-thema.md`).
 3. Tauchbedingungen und Prognose.
 4. Bewertungen als kompakter Block (nur bewertete Skalen).

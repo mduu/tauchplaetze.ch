@@ -4,33 +4,41 @@
 
 @if (!Symbols.IsEmpty)
 {
-    <ul class="site-symbols" data-size="@(Large ? "large" : "small")" aria-label="@L["Symbols_Label"]" data-site-symbols>
+    <ul class="site-symbols" data-size="@(Large ? "large" : "small")" aria-label="@(Decorative ? null : L["Symbols_Label"].Value)" aria-hidden="@(Decorative ? "true" : null)" data-site-symbols="@(Decorative ? null : "")">
         @if (Symbols.Notice is { } notice)
         {
-            @Item($"notice-{notice.ToString().ToLowerInvariant()}", L[$"Symbol_Notice_{notice}"], NoticeIcon(notice))
+            @Item($"notice-{notice.ToString().ToLowerInvariant()}", L[$"Notice_{notice}"], NoticeIcon(notice))
         }
         @if (Symbols.Difficulty is { } difficulty)
         {
-            <li class="site-symbol" data-symbol="difficulty" data-band="@difficulty.ToString().ToLowerInvariant()" title="@L["Symbol_Difficulty_Title", L[$"Symbol_Difficulty_{difficulty}"]]">
-                <svg width="30" height="20" viewBox="0 0 36 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 3h5l1.5 9 3.5 8H4.5l1.5-8z" />
-                    @for (var dot = 1; dot <= 3; dot++)
-                    {
-                        <circle cx="@(21 + (dot - 1) * 6)" cy="12" r="2.2" fill="@(dot <= (int)difficulty ? "currentColor" : "none")" />
-                    }
-                </svg>
-                <span class="@TextClass">@L[$"Symbol_Difficulty_{difficulty}"]</span>
+            var text = L["Symbol_Difficulty_Title", L[$"Symbol_Difficulty_{difficulty}"]].Value;
+            <li class="site-symbol" data-symbol="difficulty" data-band="@difficulty.ToString().ToLowerInvariant()" title="@Title(text)">
+                @if (Large)
+                {
+                    <svg width="30" height="20" viewBox="0 0 36 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 3h5l1.5 9 3.5 8H4.5l1.5-8z" />
+                        @Dots((int)difficulty, 21)
+                    </svg>
+                    <span class="site-symbol-text">@L[$"Symbol_Difficulty_{difficulty}"]</span>
+                }
+                else
+                {
+                    <svg width="26" height="10" viewBox="0 0 26 10" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+                        @Dots((int)difficulty, 4, 5, 9, 3.4)
+                    </svg>
+                    @Hidden(text)
+                }
             </li>
         }
         @if (Symbols.MaxDepth is { } depth)
         {
-            <li class="site-symbol depth" data-symbol="depth" title="@L["Symbol_Depth_Title", depth]">
-                <span aria-hidden="true">@L["Symbol_Depth", depth]</span><span class="visually-hidden">@L["Symbol_Depth_Title", depth]</span>
+            <li class="site-symbol depth" data-symbol="depth" title="@Title(L["Symbol_Depth_Title", depth])">
+                <span aria-hidden="true">@L["Symbol_Depth", depth]</span>@Hidden(L["Symbol_Depth_Title", depth])
             </li>
         }
         @foreach (var symbol in Symbols.Items)
         {
-            @Item(symbol.ToString(), Text(symbol), Icon(symbol))
+            @Item(symbol.ToString().ToLowerInvariant(), Text(symbol), Icon(symbol))
         }
     </ul>
 }
@@ -43,24 +51,42 @@
     [Parameter]
     public bool Large { get; set; }
 
-    private string TextClass => Large ? "site-symbol-text" : "visually-hidden";
+    /// <summary>Nur das Bild, ohne Text und ohne Liste für Screenreader, für die Legende, die den Text daneben zeigt.</summary>
+    [Parameter]
+    public bool Decorative { get; set; }
 
-    private string Text(SiteSymbol symbol) => symbol == SiteSymbol.MountainLake && Large && Symbols.MountainLakeElevation is { } elevation
+    private string? Title(string text) => Decorative ? null : text;
+
+    private RenderFragment? Hidden(string text) => Decorative ? null : @<span class="visually-hidden">@text</span>;
+
+    private string Text(SiteSymbol symbol) => symbol == SiteSymbol.MountainLake && Symbols.MountainLakeElevation is { } elevation
         ? Shared["MountainLake", elevation]
         : L[$"Symbol_{symbol}"];
 
     private RenderFragment Item(string name, string text, RenderFragment icon) =>
-        @<li class="site-symbol" data-symbol="@name" title="@text">
+        @<li class="site-symbol" data-symbol="@name" title="@Title(text)">
             <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">@icon</svg>
-            <span class="@TextClass">@text</span>
+            @if (Large)
+            {
+                <span class="site-symbol-text">@text</span>
+            }
+            else
+            {
+                @Hidden(text)
+            }
         </li>;
+
+    private static RenderFragment Dots(int filled, double first, double y = 12, double step = 6, double radius = 2.2) =>
+        @<text>@for (var dot = 1; dot <= 3; dot++)
+        {
+            <circle cx="@((first + (dot - 1) * step).ToString(CultureInfo.InvariantCulture))" cy="@y.ToString(CultureInfo.InvariantCulture)" r="@radius.ToString(CultureInfo.InvariantCulture)" fill="@(dot <= filled ? "currentColor" : "none")" />
+        }</text>;
 
     private static RenderFragment NoticeIcon(NoticeKind kind) => kind == NoticeKind.Closure
         ? @<g><circle cx="12" cy="12" r="9" /><path d="M7.5 12h9" /></g>
         : @<g><path d="M12 3.5 21 19.5H3z" /><path d="M12 10v4.5" /><path d="M12 17.2v.1" /></g>;
 
-    /// <summary>Linien-Symbole im Stil der Wettersymbole (`design-system.md`, `SiteSymbolBar`).</summary>
-    public static RenderFragment Icon(SiteSymbol symbol) => symbol switch
+    private static RenderFragment Icon(SiteSymbol symbol) => symbol switch
     {
         SiteSymbol.Defibrillator =>
             @<g><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z" /><path d="M12.8 9.5l-2 3h2.6l-2 3" /></g>,

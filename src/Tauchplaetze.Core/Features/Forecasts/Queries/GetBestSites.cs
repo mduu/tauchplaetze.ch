@@ -67,7 +67,6 @@ public record RankedSite(
     bool ThermoclineUndetermined = false,
     SiteSymbols? Symbols = null)
 {
-    /// <summary>Symbole des Platzes (Story 006).</summary>
     public SiteSymbols SymbolList => Symbols ?? SiteSymbols.None;
 
     /// <summary>Den Querschnitt mit Temperaturen gibt es nur im See.</summary>
@@ -148,9 +147,8 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 t.r.Water.WaterBodyType,
                 MountainLakes.Elevation(t.r.Water.WaterBodyType, t.r.Water.Elevation),
                 ThermoclineUndetermined: t.Thermocline.Undetermined,
-                Symbols: SiteSymbolRules.Of(new SiteSymbolFacts(
-                    restrictions[t.r.Id].WorstOn(date), t.r.DifficultyRating, t.r.MaxDepth, t.r.WallRating, t.r.WrecksRating, t.r.Features,
-                    t.r.Water.WaterBodyType, t.r.Water.Elevation, sources.ProjectsOf(t.r.Id), sources.PlacesOf(t.r.Id))))))
+                Symbols: sources.For(t.r.Id, restrictions[t.r.Id].WorstOn(date), t.r.DifficultyRating, t.r.MaxDepth, t.r.WallRating, t.r.WrecksRating, t.r.Features,
+                    t.r.Water.WaterBodyType, t.r.Water.Elevation))))
             .OrderByDescending(s => RankingRules.Score(s.Site.DiveIndex, s.Site.DistanceKm))
             .ThenByDescending(s => s.Site.DiveIndex)
             .ThenBy(s => s.Site.Name, StringComparer.Ordinal)

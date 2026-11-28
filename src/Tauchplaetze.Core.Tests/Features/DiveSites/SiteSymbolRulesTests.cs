@@ -7,13 +7,13 @@ namespace Tauchplaetze.Core.Tests.Features.DiveSites;
 public class SiteSymbolRulesTests
 {
     [Theory]
-    [InlineData((byte)1, DifficultyBand.Easy)]
-    [InlineData((byte)2, DifficultyBand.Easy)]
-    [InlineData((byte)3, DifficultyBand.Medium)]
-    [InlineData((byte)4, DifficultyBand.Hard)]
-    [InlineData((byte)5, DifficultyBand.Hard)]
+    [InlineData((byte)1, DifficultyBand.Beginner)]
+    [InlineData((byte)2, DifficultyBand.Beginner)]
+    [InlineData((byte)3, DifficultyBand.Advanced)]
+    [InlineData((byte)4, DifficultyBand.Expert)]
+    [InlineData((byte)5, DifficultyBand.Expert)]
     [InlineData(null, null)]
-    public void Die_Schwierigkeit_wird_zu_leicht_mittel_oder_schwer_ohne_Bewertung_fehlt_sie(byte? rating, DifficultyBand? expected)
+    public void Die_Schwierigkeit_wird_zu_Einsteiger_Fortgeschrittene_oder_Erfahrene_ohne_Bewertung_fehlt_sie(byte? rating, DifficultyBand? expected)
     {
         // Arrange
         var facts = Facts() with { Difficulty = rating };
@@ -80,13 +80,13 @@ public class SiteSymbolRulesTests
     }
 
     [Theory]
-    [InlineData((byte)2, (byte)2, WaterBodyType.Lake, 699, false)]
-    [InlineData((byte)3, (byte)3, WaterBodyType.Lake, 700, true)]
-    [InlineData(null, null, WaterBodyType.River, 900, false)]
-    public void Steilwand_und_Wrack_ab_Bewertung_3_Bergsee_nur_bei_Seen_ab_700_m(byte? wall, byte? wrecks, WaterBodyType type, int elevation, bool expected)
+    [InlineData((byte)2, false)]
+    [InlineData((byte)3, true)]
+    [InlineData(null, false)]
+    public void Steilwand_und_Wrack_ab_Bewertung_3(byte? rating, bool expected)
     {
         // Arrange
-        var facts = Facts() with { Wall = wall, Wrecks = wrecks, WaterBodyType = type, Elevation = elevation };
+        var facts = Facts() with { Wall = rating, Wrecks = rating };
 
         // Act
         var symbols = SiteSymbolRules.Of(facts);
@@ -94,7 +94,23 @@ public class SiteSymbolRulesTests
         // Assert
         Assert.Equal(expected, symbols.Items.Contains(SiteSymbol.Wall));
         Assert.Equal(expected, symbols.Items.Contains(SiteSymbol.Wreck));
-        Assert.Equal(expected, symbols.Items.Contains(SiteSymbol.MountainLake));
+    }
+
+    [Theory]
+    [InlineData(WaterBodyType.Lake, 699, false, false)]
+    [InlineData(WaterBodyType.Lake, 700, true, false)]
+    [InlineData(WaterBodyType.River, 900, false, true)]
+    public void Bergsee_nur_bei_Seen_ab_700_m_ein_Fluss_ist_ein_Fluss(WaterBodyType type, int elevation, bool mountainLake, bool river)
+    {
+        // Arrange
+        var facts = Facts() with { WaterBodyType = type, Elevation = elevation };
+
+        // Act
+        var symbols = SiteSymbolRules.Of(facts);
+
+        // Assert
+        Assert.Equal(mountainLake, symbols.Items.Contains(SiteSymbol.MountainLake));
+        Assert.Equal(river, symbols.Items.Contains(SiteSymbol.River));
     }
 
     [Fact]

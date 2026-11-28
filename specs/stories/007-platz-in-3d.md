@@ -95,7 +95,7 @@ Zusammen rund ein Arbeitstag mit zwei bis drei Runden Feedback. Den grössten Te
 3. Objekte mit Tiefe stehen in ihrer Tiefe. Objekte ohne Tiefe liegen auf dem Grund und zeigen die Tiefe aus dem Gelände mit «≈» in Orange.
 4. Die Route ist als fliessende Spur erkennbar. Ein Taucher folgt ihr, mit Blasen bis zur Oberfläche.
 5. Tiefe des Tauchers und Tiefenprofil wandern mit.
-6. Der Block dreht frei, auch von unten. Drehen, Verschieben, Zoomen und die Ansichten gehen mit Maus, Touch und Tastatur.
+6. Der Block dreht frei, auch von unten. Drehen, Verschieben, Zoomen und die Ansichten gehen mit Maus und Touch. Mit der Tastatur: Tab erreicht den Block und die Knöpfe, Pfeiltasten drehen, Plus und Minus zoomen, die Ansichten sind Knöpfe.
 7. Das Land zeigt das Luftbild.
 8. Mit «weniger Bewegung» bleibt alles still.
 9. Die Platzseite lädt ohne Klick kein zusätzliches Skript.
@@ -115,4 +115,4 @@ Zusammen rund ein Arbeitstag mit zwei bis drei Runden Feedback. Den grössten Te
 
 ## Abhängigkeiten
 
-Baut auf der Tauchskizze und den Tiefenlinien auf (`dive-site.md`, «Tauchskizze»). Unabhängig von den Stories 001 bis 006.
+Baut auf der Tauchskizze und den Tiefenlinien auf (`dive-site.md`, «Tauchskizze»). Mit dem Symbol «3D» in den Listen auch auf Story 006, sonst unabhängig von den Stories 001 bis 006.

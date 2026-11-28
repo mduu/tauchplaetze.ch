@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.RegularExpressions;
+using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
 
@@ -106,7 +107,7 @@ public class StartPageTests : IClassFixture<WebApp>
         // Arrange
         var ranking = app.BestSites.Ranking;
         var more = new RankedSite("dritter-platz", "Dritter Platz", "Zug", "Zugersee", 5.9m, 2, null, null, null, null, 3, [], null);
-        app.BestSites.Ranking = [ranking[0] with { MountainLakeElevation = 1796 }, ranking[1] with { More = [more] }];
+        app.BestSites.Ranking = [ranking[0] with { MountainLakeElevation = 1796, Symbols = new SiteSymbols(null, null, null, 1796, [SiteSymbol.MountainLake]) }, ranking[1] with { More = [more] }];
         using var browser = app.Browser();
 
         // Act

@@ -20,7 +20,7 @@ Die Features sind nach Phasen gruppiert. Die Phasen stehen in `roadmap.md`. Der 
 - Liste aller Plätze, filterbar nach See, Schwierigkeit und Zugang.
 - Karte mit allen Plätzen (Leaflet mit swisstopo-Kacheln, siehe `data-sources.md`).
 - Tauchplatzseite:
-  - Hero mit Foto oder Unterwasser-Illustration, Name, See, Tags.
+  - Hero mit Foto oder Unterwasser-Illustration, Name, See, Symbole (Story 006).
   - Tauchbedingungen heute: Index, Temperaturprofil mit Sprungschicht, Sicht-Indikator, Wind, Algen.
   - 5-Tage-Verlauf des Index.
   - Bewertungen 1–5: Schwierigkeit, Steilwand, UW-Leben, Wracks und Gegenstände, Strömung, Umgebung (siehe `dive-site.md`).

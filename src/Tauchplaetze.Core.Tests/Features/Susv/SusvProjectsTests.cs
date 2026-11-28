@@ -59,6 +59,29 @@ public class SusvProjectsTests(SqlServer sql) : SqlTest(sql)
         Assert.Contains(SiteTrait.Inclusive, found.Traits);
     }
 
+    [SqlFact]
+    public async Task Die_Listen_zeigen_Symbole_nur_fuer_bestaetigte_Projekte_und_Orte_an_Land()
+    {
+        // Arrange
+        var site = await Prepare();
+        await Sql.Arrange(db =>
+        {
+            Add(db, site, 1, SusvTopic.Defibrillator, SusvReviewStatus.Confirmed);
+            Add(db, site, 2, SusvTopic.MobileToilet, SusvReviewStatus.Pending);
+            db.DiveSiteEntryPoints.Add(new DiveSiteEntryPoint { Id = Guid.CreateVersion7(), DiveSiteId = site, Kind = EntryPointKind.Parking, Location = GeoPoints.Create(47.285, 8.609) });
+            db.DiveSiteEntryPoints.Add(new DiveSiteEntryPoint { Id = Guid.CreateVersion7(), DiveSiteId = site, Kind = EntryPointKind.EntryAndExit, Location = GeoPoints.Create(47.285, 8.608), SortOrder = 1 });
+            return Task.CompletedTask;
+        });
+
+        // Act
+        var list = await Query<GetDiveSitesQuery, IReadOnlyList<DiveSiteListItem>>(new GetDiveSitesQuery("de"));
+        var found = await Query<FindDiveSitesQuery, FoundDiveSites>(new FindDiveSitesQuery("de"));
+
+        // Assert
+        Assert.Equal([SiteSymbol.Defibrillator, SiteSymbol.Parking], Assert.Single(list).SymbolList.Items);
+        Assert.Equal([SiteSymbol.Defibrillator, SiteSymbol.Parking], Assert.Single(found.Sites).SymbolList.Items);
+    }
+
     private async Task<Guid> Prepare()
     {
         await Command<SeedWaterBodiesCommand, SeedWaterBodiesResult>(new SeedWaterBodiesCommand());
