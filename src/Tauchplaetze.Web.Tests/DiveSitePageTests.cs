@@ -170,6 +170,23 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.DoesNotContain("data-shipping-note", other);
     }
 
+    [Fact]
+    public async Task Ein_Platz_mit_Hoehenraster_hat_den_Sticker_3D_ein_Platz_ohne_nicht()
+    {
+        // Arrange
+        using var browser = app.Browser();
+
+        // Act
+        var lake = await browser.GetStringAsync("/de/tauchplaetze/" + Slug, TestContext.Current.CancellationToken);
+        var river = await browser.GetStringAsync("/de/tauchplaetze/" + River, TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Contains("data-3d-stage", lake);
+        Assert.Matches("data-terrain=\"terrain/[0-9_]+(\\.[a-z0-9]+)?\\.bin\"", lake);
+        Assert.Contains("Riff Williams in 3D ansehen", lake);
+        Assert.DoesNotContain("data-3d-stage", river);
+    }
+
     [Theory]
     [InlineData("/de/tauchplaetze/", "Dieser Platz ist erst im Verzeichnis.")]
     [InlineData("/en/dive-sites/", "This site is only in the directory so far.")]

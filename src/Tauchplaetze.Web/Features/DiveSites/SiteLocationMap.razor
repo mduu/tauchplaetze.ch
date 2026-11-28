@@ -4,15 +4,63 @@
 @using Tauchplaetze.Core.Features.Shipping.Queries
 @using Tauchplaetze.Core.Features.WaterBodies
 @inject IStringLocalizer<DiveSiteStrings> L
+@inject SiteTerrainCatalog TerrainCatalog
 
 <section class="page-section" aria-labelledby="location">
     <h2 id="location" class="location-title">@Title</h2>
-    <div class="location-map" data-map data-here="@Here" data-points="@Points" data-max-zoom="18" data-single-zoom="17" data-padding="24"
-         data-layer-map="@L["Map_Layer_Map"]" data-layer-grey="@L["Map_Layer_Grey"]" data-layer-photo="@L["Map_Layer_Photo"]"
-         data-contours="@(Site.WaterBodyType == WaterBodyType.Lake ? "auto" : null)" data-layer-contours="@L["Map_Layer_Contours"]"
-         data-sketch="@SketchJson" data-sketch-kinds="@SketchKinds" data-layer-sketch="@L["Map_Layer_Sketch"]"
-         data-shipping="@ShippingJson" data-layer-shipping="@L["Map_Layer_Shipping"]" data-shipping-attribution="@(Shipping.Features.Count > 0 ? L["Shipping_Attribution"].Value : null)"
-         role="region" aria-label="@L["Location_Map_Label", Site.Name]"></div>
+    @if (Terrain is { } terrain)
+    {
+        <div class="location-stage" data-3d-stage data-mode="map" data-terrain="@Assets[terrain.File]" data-e="@terrain.East" data-n="@terrain.North"
+             data-points="@terrain.Points" data-cell="@Invariant(terrain.Cell)" data-three="@Assets["lib/three/three.min.js"]" data-orbit="@Assets["lib/three/OrbitControls.js"]"
+             data-entries="@EntriesJson" data-texts="@TextsJson">
+            @MapDiv
+            <button type="button" class="sticker-3d" data-3d-open hidden aria-label="@L["Site3d_Open", Site.Name]">
+                <span class="sticker-face">
+                    <svg class="sticker-ring" viewBox="0 0 124 124" aria-hidden="true">
+                        <defs><path id="sticker-3d-arc" d="M18 62a44 44 0 0 1 88 0" /></defs>
+                        <text><textPath href="#sticker-3d-arc" startOffset="50%" text-anchor="middle">@L["Site3d_Sticker_Sub"]</textPath></text>
+                    </svg>
+                    @StickerBlock
+                </span>
+                <span class="sticker-badge" aria-hidden="true">@L["Site3d_Sticker"]</span>
+            </button>
+            <div class="site-3d" data-3d-viewer>
+                <canvas role="img" aria-label="@L["Site3d_Label", Site.Name]"></canvas>
+                <div class="site-3d-labels" data-3d-labels></div>
+                <div class="site-3d-hud" data-3d-hud hidden>
+                    <span class="hud-label">@L["Site3d_Diver"]</span>
+                    <span class="hud-depth"><span data-3d-depth>0.0</span> <small>m</small></span>
+                    <span class="hud-meta" data-3d-meta></span>
+                </div>
+                <div class="site-3d-controls" role="toolbar" aria-label="@L["Site3d_Views"]">
+                    <button type="button" data-3d-close class="back">@L["Site3d_Back"]</button>
+                    <button type="button" data-3d-play data-route-only aria-pressed="false">@L["Site3d_Play"]</button>
+                    <button type="button" data-view="oblique" aria-pressed="true">@L["Site3d_View_Oblique"]</button>
+                    <button type="button" data-view="wall" aria-pressed="false">@L["Site3d_View_Wall"]</button>
+                    <button type="button" data-view="top" aria-pressed="false">@L["Site3d_View_Top"]</button>
+                    <button type="button" data-3d-spin aria-pressed="false" class="with-icon">@RotateIcon(18)@L["Site3d_Spin"]</button>
+                </div>
+                <div class="site-3d-hint" data-3d-hint aria-hidden="true">@RotateIcon(30)<span class="hint-mouse">@L["Site3d_Hint"]</span><span class="hint-touch">@L["Site3d_HintTouch"]</span></div>
+                <div class="site-3d-legend">
+                    <span><span class="scale" aria-hidden="true"></span>@L["Site3d_Legend_Depth"]</span>
+                    <span data-route-only><span class="swatch route"></span>@L["Site3d_Legend_Route"]</span>
+                    <span><span class="swatch object"></span>@L["Site3d_Legend_Object"]</span>
+                    <span><span class="swatch estimated"></span>@L["Site3d_Legend_Estimated"]</span>
+                    <span class="attribution">@L["Site3d_Attribution"]</span>
+                </div>
+                <p class="site-3d-status" data-3d-status role="status" hidden>@L["Site3d_Loading"]</p>
+            </div>
+            <p class="site-3d-source">@L["Site3d_Attribution"]</p>
+            <div class="site-3d-profile" data-3d-profile hidden>
+                <div class="profile-head"><span class="tile-label">@L["Site3d_Profile"]</span><span class="profile-meta" data-3d-profile-meta></span></div>
+                <svg viewBox="0 0 1000 150" preserveAspectRatio="none" role="img" aria-label="@L["Site3d_Profile"]"></svg>
+            </div>
+        </div>
+    }
+    else
+    {
+        @MapDiv
+    }
     @if (Site.SketchList.Count > 0)
     {
         <p class="sketch-note">@L["Sketch_NotForNavigation"]</p>
@@ -78,6 +126,41 @@
 </section>
 
 @code {
+    private RenderFragment MapDiv => @<text><div class="location-map" data-map data-here="@Here" data-points="@Points" data-max-zoom="18" data-single-zoom="17" data-padding="24"
+         data-layer-map="@L["Map_Layer_Map"]" data-layer-grey="@L["Map_Layer_Grey"]" data-layer-photo="@L["Map_Layer_Photo"]"
+         data-contours="@(Site.WaterBodyType == WaterBodyType.Lake ? "auto" : null)" data-layer-contours="@L["Map_Layer_Contours"]"
+         data-sketch="@SketchJson" data-sketch-kinds="@SketchKinds" data-layer-sketch="@L["Map_Layer_Sketch"]"
+         data-shipping="@ShippingJson" data-layer-shipping="@L["Map_Layer_Shipping"]" data-shipping-attribution="@(Shipping.Features.Count > 0 ? L["Shipping_Attribution"].Value : null)"
+         role="region" aria-label="@L["Location_Map_Label", Site.Name]"></div></text>;
+
+    private static RenderFragment RotateIcon(int size) => @<svg class="rot-icon" width="@size" height="@size" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5.2" /><ellipse cx="12" cy="12" rx="5.2" ry="2.1" /><path d="M3.6 9.2A9 9 0 0 1 9.2 3.6M9.2 3.6 6.6 3.4M9.2 3.6 8.4 6M20.4 14.8a9 9 0 0 1-5.6 5.6M14.8 20.4l2.6.2M14.8 20.4l.8-2.4M14.8 3.6a9 9 0 0 1 5.6 5.6M20.4 9.2l.2-2.6M20.4 9.2l-2.4-.8M9.2 20.4a9 9 0 0 1-5.6-5.6M3.6 14.8l-.2 2.6M3.6 14.8l2.4.8" /></svg>;
+
+    private SiteTerrain? Terrain => TerrainCatalog.Find(Site.Latitude, Site.Longitude);
+
+    private string EntriesJson
+    {
+        get
+        {
+            var water = Site.EntryPoints.Where(e => e.Kind.IsWaterAccess()).Select(e => new { lat = e.Latitude, lng = e.Longitude, name = e.Name }).ToList();
+            return JsonSerializer.Serialize(water.Count > 0 ? water : [new { lat = Site.Latitude, lng = Site.Longitude, name = (string?)Site.Name }]);
+        }
+    }
+
+    private string TextsJson => JsonSerializer.Serialize(new
+    {
+        pause = L["Site3d_Pause"].Value,
+        play = L["Site3d_Play"].Value,
+        progress = L["Site3d_Progress"].Value,
+        profileMeta = L["Site3d_Profile_Meta"].Value,
+        depth = L["Site3d_Depth"].Value,
+        entry = L["Site3d_Entry"].Value,
+        estimatedTitle = L["Site3d_Estimated_Title"].Value,
+        failed = L["Site3d_Failed"].Value,
+        loading = L["Site3d_Loading"].Value,
+    });
+
+    private static string Invariant(double value) => value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
     private string SketchJson => JsonSerializer.Serialize(Site.SketchList.Select((f, i) => new
     {
         id = i,
@@ -124,4 +207,29 @@
         kind = L[$"EntryPoint_{e.Kind}"].Value,
         type = e.Kind.IsWaterAccess() ? "entry" : e.Kind.ToString().ToLowerInvariant(),
     }));
+
+    private static readonly RenderFragment StickerBlock =
+        @<svg class="sticker-block" viewBox="0 0 100 100" aria-hidden="true">
+            <defs>
+                <clipPath id="sticker-3d-top"><path d="M50 30 86 48 50 66 14 48Z" /></clipPath>
+                <linearGradient id="sticker-3d-left" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B5A58" /><stop offset="1" stop-color="#0A2627" /></linearGradient>
+                <linearGradient id="sticker-3d-right" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#123F3F" /><stop offset="1" stop-color="#071B1C" /></linearGradient>
+            </defs>
+            <path d="M14 48 50 66 50 88 14 70Z" fill="url(#sticker-3d-left)" />
+            <path d="M50 66 86 48 86 70 50 88Z" fill="url(#sticker-3d-right)" />
+            <path class="strata" d="M14 56 50 74 86 56M14 63 50 81 86 63" />
+            <g clip-path="url(#sticker-3d-top)">
+                <path d="M50 30 86 48 50 66 14 48Z" fill="#3FB5AB" />
+                <ellipse class="contour" cx="60" cy="53" rx="34" ry="17" fill="#2C938D" />
+                <ellipse class="contour" cx="62" cy="55" rx="25" ry="12.5" fill="#1F7471" />
+                <ellipse class="contour" cx="64" cy="57" rx="16" ry="8" fill="#155756" />
+                <ellipse class="contour" cx="66" cy="58.5" rx="8" ry="4" fill="#0C3A3B" />
+                <path class="route" d="M28 47C36 44 44 52 52 51s10 5 14 6" />
+                <circle cx="66" cy="57" r="2.2" fill="var(--color-signal)" />
+            </g>
+            <path class="water-wall" d="M50 20 86 38 86 48 50 66 14 48 14 38Z" />
+            <path class="water" d="M50 20 86 38 50 56 14 38Z" />
+            <path class="edges" d="M14 38V70L50 88 86 70V38M50 56V88" />
+            <g class="bubbles"><circle cx="66" cy="50" r="1.3" /><circle cx="68" cy="44" r="1" /><circle cx="65.5" cy="39" r=".8" /></g>
+        </svg>;
 }

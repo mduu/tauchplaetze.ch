@@ -1,6 +1,6 @@
 # Story 007: Der Platz in 3D
 
-**Status:** Entwurf (28.11.2026), Vorschau gebaut, Entscheide offen (siehe unten).
+**Status:** umgesetzt am 28.11.2026, noch nicht deployt.
 
 ## Ziel
 
@@ -13,15 +13,16 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
 ## Sticker
 
 - Nur an Plätzen mit Gelände (siehe «Daten»). Ohne Gelände kein Sticker und keine 3D-Ansicht.
-- Oben rechts an der Kachel «Lage und Einstiege», leicht schräg, ragt über den Rand. Holografischer Schimmer, weisser Rand, Ecke wie abgezogen. Text «3D» gross, darunter klein «Platz erkunden».
+- Oben links an der Kachel «Lage und Einstiege» (die Ebenenauswahl bleibt allein oben rechts), leicht schräg, ragt über den Rand. Rund, in den Farben der App: dunkle Fläche mit Rand in Cyan, oben dem Rand entlang «Platz erkunden», in der Mitte ein kleiner Block wie in der 3D-Ansicht mit laufender Route und Blasen, unten die Pille «3D» über dem Rand (Entscheid Marc, 28.11.2026: der holografische Schimmer passte nicht zum Rest der App, das Motiv selbst soll 3D vermitteln).
 - Ein Klick öffnet die 3D-Ansicht an der Stelle der Karte. Ein zweiter Knopf «Karte» führt zurück.
-- Mit `prefers-reduced-motion` steht der Schimmer still.
+- Mit `prefers-reduced-motion` stehen Route und Blasen still.
 
 ## 3D-Ansicht
 
-- **Block:** Der Platz als Ausschnitt von rund 180 × 180 m um Einstieg und Route. Seitenwände aus Gestein, darüber die Wasserwand halb durchsichtig, oben die Wasseroberfläche mit leichtem Glitzern. Das Land am Ufer hat seine echte Höhe und trägt das Luftbild von swisstopo (SWISSIMAGE): Hang, Strasse, Parkplatz und Bäume sind erkennbar (Entscheid Marc, 28.11.2026).
+- **Block:** Der Platz als Ausschnitt von 240 × 240 m um die Koordinate des Platzes. Seitenwände aus Gestein, darüber die Wasserwand halb durchsichtig, oben die Wasseroberfläche mit leichtem Glitzern. Das Land am Ufer hat seine echte Höhe und trägt das Luftbild von swisstopo (SWISSIMAGE): Hang, Strasse, Parkplatz und Bäume sind erkennbar (Entscheid Marc, 28.11.2026).
 - **Gelände:** Farbe nach Tiefe, von Türkis im Flachen zu fast Schwarz in der Tiefe (Tokens der Seegrafik). Im Flachen spielen Lichtmuster (Caustics), sie verblassen mit der Tiefe. Steile Flächen sind dunkler.
 - **Tiefenlinien:** im Gelände gezeichnet, alle 5 m, jede zehnte Linie heller. Gleiche Werte wie die Ebene «Tiefenlinien» der Karte. An den Linien steht dezent in Blau die Tiefe («25m»), an zwei Stellen des Blocks, auf einem halb durchsichtigen dunklen Schild (Entscheid Marc, 28.11.2026).
+- **Einstiege:** Jeder Einstieg ins Wasser trägt die Taucherflagge «Alpha» (weiss am Mast, blau mit Schwalbenschwanz), quer zum Ufer gestellt, mit Etikett. Liegt die Koordinate im Wasser, steht die Flagge am nächsten Ufer in höchstens 40 m; ohne Ufer in der Nähe schwimmt sie auf einer Boje (Entscheid Marc, 28.11.2026: die Flagge schwebte über dem Wasser und war nicht die Alpha-Flagge).
 - **Objekte der Skizze** (`SiteSketch`): Jede Art hat eine eigene einfache Form, etwa Boot, Stamm, Skulptur, Gefahr mit Netz. Über jedem Objekt steht ein Etikett mit Name und Tiefe, verbunden mit einer feinen Linie.
   - Mit Tiefe: Das Objekt steht in dieser Tiefe. Die Tiefe erscheint in Cyan.
   - **Ohne Tiefe:** Das Objekt liegt auf dem Grund. Die Tiefe kommt aus dem Gelände und erscheint in Orange mit «≈» (Tooltip «Tiefe aus dem Gelände»).
@@ -34,8 +35,8 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
   - auf dem Grund ein schwacher Schatten der Route.
 - **Taucher:** Eine Figur, die als Mensch erkennbar ist (Entscheid Marc, 28.11.2026: keine Form, die an eine Bombe erinnert): Rumpf mit Jacket, Flasche auf dem Rücken in `--color-signal`, Kopf mit Maske und Atemregler, Arme am Körper, Beine mit Knien und breiten Flossen in `--color-signal`. Sie bewegt sich mit gleichmässigem Tempo entlang der Route. Die Beine schlagen im Wechsel, Ober- und Unterschenkel leicht versetzt. Ein Ring auf dem Grund unter dem Taucher pulsiert. Alle 3 bis 4 Sekunden steigt ein Schwall Blasen auf, dazwischen einzelne Blasen. Die Blasen wachsen beim Aufsteigen leicht und hinterlassen an der Oberfläche kleine Ringe.
 - **Anzeige:** oben links die Tiefe des Tauchers und die Strecke («72 von 284 m Route»). Unter dem Block das Tiefenprofil der Route mit einer Marke, die mit dem Taucher wandert.
-- **Bedienung:** frei drehbar, auch von unten (Entscheid Marc, 28.11.2026). Ziehen dreht, rechte Maustaste oder zwei Finger verschieben, Scrollen oder zwei Finger zoomen. Knöpfe «Pause» und «Abspielen», «Drehen» (der Block kreist langsam), Ansichten «Schräg», «Wand» (frontal auf die steilste Stelle bei der Route, unter der Oberfläche) und «Von oben». Der Wechsel zwischen den Ansichten ist ein kurzer Kameraflug. Die Ansicht «Schräg» ist nah am Platz, die vordere Ecke des Blocks darf angeschnitten sein (Entscheid Marc, 28.11.2026).
-- **Symbol für freies Drehen:** eine Kugel mit gebogenen Pfeilen in vier Richtungen. Es steht auf dem Knopf «Drehen» und als Hinweis «Ziehen dreht frei» unten rechts im Block. Der Hinweis verschwindet beim ersten Ziehen. Mit «weniger Bewegung» steht das Symbol still.
+- **Bedienung:** frei drehbar, auch von unten (Entscheid Marc, 28.11.2026). Mit der Maus: Ziehen dreht, rechte Maustaste verschiebt, Ctrl/⌘ und Mausrad zoomen; das Mausrad allein scrollt die Seite. Auf Touch: zwei Finger drehen und zoomen, ein Finger scrollt die Seite (Entscheid Marc, 28.11.2026: die Ansicht füllt die Breite und darf das Scrollen nicht abfangen). Knöpfe «Pause» und «Abspielen», «Drehen» (der Block kreist langsam), Ansichten «Schräg», «Wand» (frontal auf die steilste Stelle bei der Route, unter der Oberfläche) und «Von oben». Der Wechsel zwischen den Ansichten ist ein kurzer Kameraflug. Die Ansicht «Schräg» ist nah am Platz, die vordere Ecke des Blocks darf angeschnitten sein (Entscheid Marc, 28.11.2026).
+- **Symbol für freies Drehen:** eine Kugel mit gebogenen Pfeilen in vier Richtungen. Es steht auf dem Knopf «Drehen» und im Hinweis unten rechts im Block (Maus: «Ziehen dreht · Ctrl/⌘ + Mausrad zoomt», Touch: «Mit zwei Fingern drehen und zoomen»). Der Hinweis verschwindet beim ersten Ziehen und leuchtet kurz auf, wenn jemand ohne Ctrl/⌘ scrollt. Mit «weniger Bewegung» steht das Symbol still.
 - **Legende:** Tiefenskala, Route, Objekt mit Tiefe, Tiefe aus Gelände. Quellenangabe «swissBATHY3D, swissALTI3D, SWISSIMAGE © swisstopo» und «Skizze, nicht zur Navigation».
 - **Ohne Route:** Gelände und Objekte ohne Taucher, ohne Profil.
 - **Weniger Bewegung** (`prefers-reduced-motion`): keine Animation, der Taucher steht an einer festen Stelle, keine Blasen, kein Kameraflug.
@@ -43,7 +44,8 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
 
 ## Daten
 
-- **Gelände:** aus dem 1-m-Raster von swissBATHY3D (`data-sources.md`, «Tiefenlinien»), nicht aus den Tiefenlinien. Das Skript `tools/bathymetry` erzeugt pro Platz ein Raster: 2 m Zellen, Tiefe in Dezimetern als `Int16`, rund 90 × 90 Zellen, zusammen rund 16 KB. Ablage wie die Tiefenlinien als statische Datei bei der App (`wwwroot/bathymetry/{see}/sites/{platz}.bin`), mit Ursprung, Zellgrösse und Seehöhe im Index.
+- **Bibliothek:** three.js r147 (globaler Build `three.min.js` und `OrbitControls.js` aus `examples/js`, MIT-Lizenz) unter `wwwroot/lib/three`. Ab r148 gibt es `examples/js` nicht mehr; ein Upgrade braucht ES-Module.
+- **Gelände:** aus dem 1-m-Raster von swissBATHY3D (`data-sources.md`, «Tiefenlinien»), nicht aus den Tiefenlinien. Das Skript `tools/bathymetry` erzeugt pro Platz ein Raster: 2 m Abstand, Höhe in Dezimetern als `Int16`, 121 × 121 Punkte, rund 29 KB. Ablage als statische Datei bei der App (`wwwroot/terrain/{e}_{n}.bin` mit `index.json`, `data-sources.md`, «Höhenraster für die 3D-Ansicht»).
 - **Land:** aus dem Höhenmodell swissALTI3D (STAC `ch.swisstopo.swissalti3d`, 2 m, gleiche Höhenbasis wie swissBATHY3D), im selben Raster wie der Seegrund (Entscheid Marc, 28.11.2026). Nullpunkt ist die Seehöhe aus dem Index: darüber Land, darunter Seegrund. Die Uferlinie ergibt sich daraus, wo das Land die Seehöhe erreicht. Das Skript lädt nur die Kacheln um die Plätze. swissALTI3D ist der nackte Boden: Bäume und Häuser zeigt nur das Luftbild.
 - **Luftbild:** SWISSIMAGE als Kacheln von swisstopo (WMTS), wie die Ebene «Luftbild» der Karte. Der Browser lädt die Kacheln, die Seite selbst ruft swisstopo nicht ab.
 - **Skizze und Route:** aus der veröffentlichten Version (`DiveSite.Sketch`), dieselben Daten wie die Ebene «Skizze» der Karte. Kein neues Feld.
@@ -55,7 +57,7 @@ Kein fertiges 3D-Modell pro Platz. Vorbereitet werden nur die Daten, die Szene b
 
 | Teil | Wann | Wo |
 |---|---|---|
-| Höhenraster (Seegrund und Land, rund 90 × 90 Zellen zu 2 m, `Int16` in Dezimetern, rund 16 KB) | einmal pro Platz, neu nur bei neuem Platz oder verschobener Koordinate | Skript, Ablage wie die Tiefenlinien |
+| Höhenraster (Seegrund und Land, 121 × 121 Punkte zu 2 m, `Int16` in Dezimetern, rund 29 KB) | einmal pro Platz, neu nur bei neuem Platz oder verschobener Koordinate | Skript, Ablage in `wwwroot/terrain` |
 | Luftbild | beim Öffnen | Kacheln von swisstopo (WMTS), lädt der Browser wie die Ebene «Luftbild» |
 | Skizze, Objekte, Route | beim Öffnen | aus der veröffentlichten Version, wie die Ebene «Skizze». Eine geänderte Skizze braucht keine neue Vorbereitung |
 | Tiefe aus dem Gelände, Glättung der Route, Netz, Animation | beim Öffnen | im Browser |
@@ -70,14 +72,14 @@ Schätzung für die Umsetzung mit Claude Code (28.11.2026). Die Vorschau enthäl
 
 | Schritt | Claude Code | Marc |
 |---|---|---|
-| Skript: Raster aus swissBATHY3D (lokal schon im Cache) und swissALTI3D, Index, Ablage | 1 bis 2 h, dazu rund 30 bis 60 min Download der Kacheln um rund 370 Plätze | – |
+| Skript: Raster aus swissBATHY3D (lokal schon im Cache) und swissALTI3D, Index, Ablage | 1 bis 2 h, dazu rund 30 bis 60 min Download der Kacheln um rund 370 Plätze (umgesetzt: 236 Plätze mit 232 Rastern) | – |
 | 3D-Ansicht: Skript aus der Vorschau, three.js bei der App, Laden erst beim Klick, Sticker auf der Karte | 2 bis 3 h | – |
 | Texte in vier Sprachen, Tests (Raster lesen, Tiefe aus dem Gelände), Specs, Echolot | 1 bis 2 h | – |
 | Ansehen auf Handy und Desktop, Wünsche zur Optik, zweite Runde | 1 bis 2 h | 1 bis 2 h |
 
 Zusammen rund ein Arbeitstag mit zwei bis drei Runden Feedback. Den grössten Teil der Zeit braucht das Ansehen und Abstimmen der Optik auf echten Geräten.
 
-- Risiko Handy: schwache Grafik. Das Netz hat rund 10 000 Dreiecke, das ist wenig. Die Ansicht rendert nur, solange sie sichtbar ist.
+- Risiko Handy: schwache Grafik. Das Netz hat rund 29 000 Dreiecke (121 × 121 Punkte), das ist wenig. Die Ansicht rendert nur, solange sie sichtbar ist.
 - Risiko Grösse: three.js lädt erst beim Klick, rund 150 KB komprimiert, bei der App abgelegt.
 - Kosten im Betrieb: keine. Die Raster sind statisch, die Luftbilder lädt der Browser bei swisstopo.
 
@@ -102,16 +104,23 @@ Zusammen rund ein Arbeitstag mit zwei bis drei Runden Feedback. Den grössten Te
 10. Alle Texte in vier Sprachen.
 11. Das Echolot hat einen Eintrag in den Neuigkeiten.
 
-## Offene Entscheide
+## Entscheide
+
+| Frage | Entscheid |
+|---|---|
+| Land am Ufer aus swissALTI3D oder vereinfacht? | swissALTI3D (Entscheid Marc, 28.11.2026) |
+| Land hinter einem steilen Hang abschneiden? | Nein. Bei Fischbalme steigt der Hang auf gut 50 m und verdeckt die Wand nicht |
+| Überhöhung der Tiefe? | Keine, echte Proportionen |
+| Taucher als Figur oder als leuchtender Punkt? | Figur, als Mensch erkennbar (Entscheid Marc, 28.11.2026) |
+| Neue Plätze: Raster beim Erfassen oder mit dem Skript? | Skript, wie bei den Tiefenlinien |
+
+Noch offen, nicht umgesetzt:
 
 | Frage | Vorschlag |
 |---|---|
-| Land hinter einem steilen Hang abschneiden (z.B. 30 m über dem See)? | Nein, solange der Hang die Wand nicht verdeckt. In der Vorschau steigt das Land bei Fischbalme auf gut 50 m |
-| Überhöhung der Tiefe? | Keine, echte Proportionen. Höchstens als Schalter |
-| Ansicht im Platz der Karte oder als Vollbild? | Im Platz der Karte, dazu ein Knopf «Vollbild» |
-| Taucher als Figur oder als leuchtender Punkt? | Figur wie in der Vorschau |
-| Sticker auch in Listen (Story 006, Symbol «3D»)? | Ja, als Symbol ohne Schimmer |
-| Neue Plätze: Raster beim Erfassen oder mit dem Skript nachziehen? | Skript, wie bei den Tiefenlinien. Später ein Job |
+| Knopf «Vollbild»? | Ja, als Ergänzung zur Ansicht an der Stelle der Karte |
+| Symbol «3D» in den Listen (Story 006)? | Ja, als Symbol |
+| Raster für Plätze, die nur in Prod angelegt werden? | Später ein Job, der aus Prod liest |
 
 ## Abhängigkeiten
 

@@ -3,6 +3,27 @@
     "date": "2026-11-28",
     "texts": {
       "de": {
+        "title": "Tauchplätze in 3D",
+        "text": "An vielen Seeplätzen klebt auf der Karte ein Sticker «3D». Er zeigt den Platz als Block im See: Seegrund, Ufer mit Luftbild, die Objekte der Skizze und die Route mit einem Taucher."
+      },
+      "en": {
+        "title": "Dive sites in 3D",
+        "text": "At many lake sites a «3D» sticker sits on the map. It shows the site as a block in the lake: lake bed, shore with aerial photo, the objects of the sketch and the route with a diver."
+      },
+      "fr": {
+        "title": "Sites de plongée en 3D",
+        "text": "Sur de nombreux sites lacustres, un autocollant « 3D » est collé sur la carte. Il montre le site comme un bloc dans le lac : fond, rive avec photo aérienne, objets du croquis et parcours avec un plongeur."
+      },
+      "it": {
+        "title": "Siti d’immersione in 3D",
+        "text": "In molti siti lacustri, sulla mappa c’è un adesivo «3D». Mostra il sito come un blocco nel lago: fondale, riva con foto aerea, oggetti dello schizzo e percorso con un sub."
+      }
+    }
+  },
+  {
+    "date": "2026-11-28",
+    "texts": {
+      "de": {
         "title": "Symbole zeigen, was ein Platz bietet",
         "text": "Jeder Platz zeigt in den Listen und oben auf seiner Seite kleine Symbole: Schwierigkeit, Tiefe, Defibrillator, Toilette, Parkplatz, Steilwand und mehr. Im Verzeichnis erklärt eine Legende alle Symbole."
       },

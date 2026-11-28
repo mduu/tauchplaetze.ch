@@ -340,4 +340,32 @@
   <data name="Symbol_Wreck" xml:space="preserve"><value>Épave</value></data>
   <data name="Symbol_River" xml:space="preserve"><value>Rivière</value></data>
   <data name="Symbol_MountainLake" xml:space="preserve"><value>Lac de montagne</value></data>
+  <data name="Site3d_Sticker" xml:space="preserve"><value>3D</value></data>
+  <data name="Site3d_Sticker_Sub" xml:space="preserve"><value>Explorer le site</value></data>
+  <data name="Site3d_Open" xml:space="preserve"><value>Voir {0} en 3D</value></data>
+  <data name="Site3d_Label" xml:space="preserve"><value>Vue 3D de {0}. Glisser pour tourner, bouton droit pour déplacer, Ctrl/⌘ + molette pour zoomer, deux doigts sur écran tactile. Au clavier : touches fléchées.</value></data>
+  <data name="Site3d_Views" xml:space="preserve"><value>Vue</value></data>
+  <data name="Site3d_Back" xml:space="preserve"><value>Carte</value></data>
+  <data name="Site3d_Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="Site3d_Play" xml:space="preserve"><value>Lecture</value></data>
+  <data name="Site3d_View_Oblique" xml:space="preserve"><value>Oblique</value></data>
+  <data name="Site3d_View_Wall" xml:space="preserve"><value>Tombant</value></data>
+  <data name="Site3d_View_Top" xml:space="preserve"><value>Vue de dessus</value></data>
+  <data name="Site3d_Spin" xml:space="preserve"><value>Tourner</value></data>
+  <data name="Site3d_HintTouch" xml:space="preserve"><value>Deux doigts pour tourner et zoomer</value></data>
+  <data name="Site3d_Hint" xml:space="preserve"><value>Glisser pour tourner · Ctrl/⌘ + molette pour zoomer</value></data>
+  <data name="Site3d_Diver" xml:space="preserve"><value>Plongeur</value></data>
+  <data name="Site3d_Progress" xml:space="preserve"><value>{0} sur {1} m de parcours</value></data>
+  <data name="Site3d_Profile" xml:space="preserve"><value>Profil de profondeur du parcours</value></data>
+  <data name="Site3d_Profile_Meta" xml:space="preserve"><value>{0} m de distance · point le plus profond {1} m</value></data>
+  <data name="Site3d_Depth" xml:space="preserve"><value>{0}m</value></data>
+  <data name="Site3d_Entry" xml:space="preserve"><value>Entrée</value></data>
+  <data name="Site3d_Estimated_Title" xml:space="preserve"><value>Profondeur tirée du terrain</value></data>
+  <data name="Site3d_Legend_Depth" xml:space="preserve"><value>Profondeur</value></data>
+  <data name="Site3d_Legend_Route" xml:space="preserve"><value>Parcours</value></data>
+  <data name="Site3d_Legend_Object" xml:space="preserve"><value>Objet avec profondeur</value></data>
+  <data name="Site3d_Legend_Estimated" xml:space="preserve"><value>Profondeur du terrain</value></data>
+  <data name="Site3d_Attribution" xml:space="preserve"><value>swissBATHY3D, swissALTI3D, SWISSIMAGE © swisstopo · Croquis, pas pour la navigation</value></data>
+  <data name="Site3d_Loading" xml:space="preserve"><value>Chargement de la vue 3D …</value></data>
+  <data name="Site3d_Failed" xml:space="preserve"><value>La vue 3D n’a pas pu être chargée.</value></data>
 </root>
