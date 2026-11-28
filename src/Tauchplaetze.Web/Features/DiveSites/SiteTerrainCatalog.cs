@@ -9,12 +9,13 @@ public record SiteTerrain(string File, int East, int North, int Points, double C
 /// <summary>
 /// Die Höhenraster der Plätze als statische Dateien (`wwwroot/terrain`, erzeugt von `tools/bathymetry/terrain.cs`).
 /// Ein Raster gehört zu einem Platz, wenn dessen Koordinate höchstens <see cref="MaxDistanceMetres"/> von der Koordinate beim Erzeugen liegt.
+/// Ein fehlender oder kaputter Index schaltet die 3D-Ansicht aus (mit Warnung im Log), ohne die Platzseite scheitern zu lassen.
 /// </summary>
 public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrainCatalog> logger)
 {
     private const double MaxDistanceMetres = 60;
 
-    private readonly Lazy<Index> index = new(() => Load(webRoot, logger));
+    private readonly Lazy<TerrainIndex> index = new(() => Load(webRoot, logger));
 
     public SiteTerrain? Find(double latitude, double longitude)
     {
@@ -35,47 +36,46 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
         return Math.Sqrt(dx * dx + dy * dy);
     }
 
-    /// <remarks>Ein fehlender oder kaputter Index schaltet die 3D-Ansicht aus, ohne die Platzseite scheitern zu lassen.</remarks>
-    private static Index Load(IFileProvider webRoot, ILogger logger)
+    private static TerrainIndex Load(IFileProvider webRoot, ILogger logger)
     {
         var file = webRoot.GetFileInfo("terrain/index.json");
         if (!file.Exists)
         {
             logger.LogWarning("Terrain index is missing. The 3D view is off.");
-            return Index.Empty;
+            return TerrainIndex.Empty;
         }
 
         try
         {
             using var stream = file.CreateReadStream();
-            var index = JsonSerializer.Deserialize<Index>(stream, JsonSerializerOptions.Web);
-            if (index is not { Sites: not null, Points: > 1, CellSize: > 0 })
+            var loaded = JsonSerializer.Deserialize<TerrainIndex>(stream, JsonSerializerOptions.Web);
+            if (loaded is not { Sites: not null, Points: > 1, CellSize: > 0 })
             {
                 logger.LogWarning("Terrain index has no valid grid. The 3D view is off.");
-                return Index.Empty;
+                return TerrainIndex.Empty;
             }
 
-            var usable = index.Sites.Where(IsUsable).ToList();
-            if (usable.Count < index.Sites.Count)
+            var usable = loaded.Sites.Where(IsUsable).ToList();
+            if (usable.Count < loaded.Sites.Count)
             {
-                logger.LogWarning("Terrain index has {Unusable} unusable entries. They are ignored.", index.Sites.Count - usable.Count);
+                logger.LogWarning("Terrain index has {Unusable} unusable entries. They are ignored.", loaded.Sites.Count - usable.Count);
             }
 
-            return index with { Sites = usable };
+            return loaded with { Sites = usable };
         }
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Terrain index is unreadable. The 3D view is off.");
-            return Index.Empty;
+            return TerrainIndex.Empty;
         }
     }
 
     private static bool IsUsable(Entry? entry) =>
         entry is { File.Length: > 0 } && double.IsFinite(entry.Lat) && double.IsFinite(entry.Lng);
 
-    private sealed record Index(int Points, double CellSize, IReadOnlyList<Entry> Sites)
+    private sealed record TerrainIndex(int Points, double CellSize, IReadOnlyList<Entry> Sites)
     {
-        public static readonly Index Empty = new(0, 0, []);
+        public static readonly TerrainIndex Empty = new(0, 0, []);
     }
 
     private sealed record Entry(double Lat, double Lng, int E, int N, string? File);

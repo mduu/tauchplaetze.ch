@@ -343,7 +343,7 @@
   <data name="Site3d_Sticker" xml:space="preserve"><value>3D</value></data>
   <data name="Site3d_Sticker_Sub" xml:space="preserve"><value>Explore the site</value></data>
   <data name="Site3d_Open" xml:space="preserve"><value>View {0} in 3D</value></data>
-  <data name="Site3d_Label" xml:space="preserve"><value>3D view of {0}. Drag to rotate, right mouse button to pan, scroll to zoom. With the keyboard: arrow keys.</value></data>
+  <data name="Site3d_Label" xml:space="preserve"><value>3D view of {0}. Drag to rotate, right mouse button to pan, Ctrl/⌘ + scroll to zoom, two fingers on touch. With the keyboard: arrow keys.</value></data>
   <data name="Site3d_Views" xml:space="preserve"><value>View</value></data>
   <data name="Site3d_Back" xml:space="preserve"><value>Map</value></data>
   <data name="Site3d_Pause" xml:space="preserve"><value>Pause</value></data>

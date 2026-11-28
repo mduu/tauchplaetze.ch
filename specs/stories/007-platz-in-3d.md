@@ -57,7 +57,7 @@ Kein fertiges 3D-Modell pro Platz. Vorbereitet werden nur die Daten, die Szene b
 
 | Teil | Wann | Wo |
 |---|---|---|
-| Höhenraster (Seegrund und Land, rund 90 × 90 Zellen zu 2 m, `Int16` in Dezimetern, rund 16 KB) | einmal pro Platz, neu nur bei neuem Platz oder verschobener Koordinate | Skript, Ablage wie die Tiefenlinien |
+| Höhenraster (Seegrund und Land, 121 × 121 Punkte zu 2 m, `Int16` in Dezimetern, rund 29 KB) | einmal pro Platz, neu nur bei neuem Platz oder verschobener Koordinate | Skript, Ablage in `wwwroot/terrain` |
 | Luftbild | beim Öffnen | Kacheln von swisstopo (WMTS), lädt der Browser wie die Ebene «Luftbild» |
 | Skizze, Objekte, Route | beim Öffnen | aus der veröffentlichten Version, wie die Ebene «Skizze». Eine geänderte Skizze braucht keine neue Vorbereitung |
 | Tiefe aus dem Gelände, Glättung der Route, Netz, Animation | beim Öffnen | im Browser |
@@ -72,14 +72,14 @@ Schätzung für die Umsetzung mit Claude Code (28.11.2026). Die Vorschau enthäl
 
 | Schritt | Claude Code | Marc |
 |---|---|---|
-| Skript: Raster aus swissBATHY3D (lokal schon im Cache) und swissALTI3D, Index, Ablage | 1 bis 2 h, dazu rund 30 bis 60 min Download der Kacheln um rund 370 Plätze | – |
+| Skript: Raster aus swissBATHY3D (lokal schon im Cache) und swissALTI3D, Index, Ablage | 1 bis 2 h, dazu rund 30 bis 60 min Download der Kacheln um rund 370 Plätze (umgesetzt: 236 Plätze mit 232 Rastern) | – |
 | 3D-Ansicht: Skript aus der Vorschau, three.js bei der App, Laden erst beim Klick, Sticker auf der Karte | 2 bis 3 h | – |
 | Texte in vier Sprachen, Tests (Raster lesen, Tiefe aus dem Gelände), Specs, Echolot | 1 bis 2 h | – |
 | Ansehen auf Handy und Desktop, Wünsche zur Optik, zweite Runde | 1 bis 2 h | 1 bis 2 h |
 
 Zusammen rund ein Arbeitstag mit zwei bis drei Runden Feedback. Den grössten Teil der Zeit braucht das Ansehen und Abstimmen der Optik auf echten Geräten.
 
-- Risiko Handy: schwache Grafik. Das Netz hat rund 10 000 Dreiecke, das ist wenig. Die Ansicht rendert nur, solange sie sichtbar ist.
+- Risiko Handy: schwache Grafik. Das Netz hat rund 29 000 Dreiecke (121 × 121 Punkte), das ist wenig. Die Ansicht rendert nur, solange sie sichtbar ist.
 - Risiko Grösse: three.js lädt erst beim Klick, rund 150 KB komprimiert, bei der App abgelegt.
 - Kosten im Betrieb: keine. Die Raster sind statisch, die Luftbilder lädt der Browser bei swisstopo.
 
@@ -119,7 +119,7 @@ Noch offen, nicht umgesetzt:
 | Frage | Vorschlag |
 |---|---|
 | Knopf «Vollbild»? | Ja, als Ergänzung zur Ansicht an der Stelle der Karte |
-| Symbol «3D» in den Listen (Story 006)? | Ja, als Symbol ohne Schimmer |
+| Symbol «3D» in den Listen (Story 006)? | Ja, als Symbol |
 | Raster für Plätze, die nur in Prod angelegt werden? | Später ein Job, der aus Prod liest |
 
 ## Abhängigkeiten

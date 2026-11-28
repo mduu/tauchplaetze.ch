@@ -5,6 +5,7 @@
 
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let libraries = null;
+  const views = new Set();
 
   function loadScript(src) {
     return new Promise(function (resolve, reject) {
@@ -71,6 +72,12 @@
 
   function format(text, values) {
     return text.replace(/\{(\d+)\}/g, function (_, i) { return values[i]; });
+  }
+
+  function setText(element, value) {
+    if (element.textContent !== value) {
+      element.textContent = value;
+    }
   }
 
   function escapeHtml(text) {
@@ -160,7 +167,8 @@
     }).catch(function () { return null; });
   }
 
-  function build(stage, heights, aerial) {
+  /** Baut die Szene. Was schon steht, kommt in `created`, damit ein Fehler beim Aufbau nichts liegen lässt. */
+  function build(stage, heights, aerial, created) {
     const THREE = window.THREE;
     const text = JSON.parse(stage.dataset.texts);
     const map = stage.querySelector('[data-map]');
@@ -228,6 +236,7 @@
     canvas.style.touchAction = 'pan-y';
     canvas.tabIndex = 0;
     canvas.addEventListener('wheel', zoomOnlyWithModifier, { capture: true });
+    created.renderer = renderer; created.controls = controls; created.wheel = zoomOnlyWithModifier;
 
     const uniforms = {
       uTime: { value: 0 },
@@ -726,7 +735,6 @@
     btnSpin.onclick = function () { controls.autoRotate = !controls.autoRotate; btnSpin.setAttribute('aria-pressed', String(controls.autoRotate)); };
     const hint = viewer.querySelector('[data-3d-hint]');
     let nudgeTimer = 0;
-    /** Ohne Ctrl oder ⌘ scrollt das Mausrad die Seite (Entscheid Marc, 28.11.2026). */
     function zoomOnlyWithModifier(event) {
       if (!event.ctrlKey && !event.metaKey) {
         event.stopImmediatePropagation();
@@ -755,6 +763,7 @@
 
     let visible = true;
     const intersection = new IntersectionObserver(function (items) { visible = items[0].isIntersecting; });
+    created.observers = [resizeObserver, intersection];
     intersection.observe(viewer);
 
     let last = performance.now(), breath = 0, stopped = false, running = false;
@@ -798,7 +807,7 @@
       requestAnimationFrame(frame);
     }
 
-    function dispose() {
+    function dispose(releaseContext) {
       stopped = true;
       resizeObserver.disconnect();
       intersection.disconnect();
@@ -812,6 +821,7 @@
       });
       if (uniforms.uSat.value) { uniforms.uSat.value.dispose(); }
       renderer.dispose();
+      if (releaseContext) { renderer.forceContextLoss(); }
       labelsEl.replaceChildren();
       profile.querySelector('svg').replaceChildren();
       viewer.querySelectorAll('[data-view]').forEach(function (b) { b.onclick = null; });
@@ -848,8 +858,8 @@
         else if (Math.random() < dt * 3) { emitBubbles(v3.copy(p).add(mouth).addScaledVector(tg, 2.0), 1); }
         if (Math.random() < dt * 40) { emitWake(v3.copy(p).addScaledVector(tg, -3.5)); }
       }
-      hudDepth.innerHTML = (-p.y).toFixed(1) + ' <small>m</small>';
-      hudMeta.textContent = format(text.progress, [Math.round(u * route.length), Math.round(route.length)]);
+      setText(hudDepth, (-p.y).toFixed(1));
+      setText(hudMeta, format(text.progress, [Math.round(u * route.length), Math.round(route.length)]));
       const mx = u * 1000; profileMarker.setAttribute('x1', mx); profileMarker.setAttribute('x2', mx);
       profileDot.setAttribute('cx', mx); profileDot.setAttribute('cy', py(-p.y));
     }
@@ -913,6 +923,7 @@
       return;
     }
     state.built = true;
+    const created = {};
     status.textContent = JSON.parse(stage.dataset.texts).loading;
     status.hidden = false;
     try {
@@ -922,26 +933,43 @@
       if (stage.__site3d !== state) {
         return;
       }
-      const view = build(stage, results[1], results[2]);
+      const view = build(stage, results[1], results[2], created);
       state.dispose = view.dispose;
       state.resume = view.resume;
       status.hidden = true;
     } catch (e) {
+      discard(stage, created);
       state.built = false;
       status.textContent = JSON.parse(stage.dataset.texts).failed;
       console.error('3D view failed', e);
     }
   }
 
+  function discard(stage, created) {
+    (created.observers || []).forEach(function (observer) { observer.disconnect(); });
+    if (created.controls) { created.controls.dispose(); }
+    if (created.wheel) { stage.querySelector('canvas').removeEventListener('wheel', created.wheel, { capture: true }); }
+    if (created.renderer) { created.renderer.dispose(); }
+  }
+
   // Der Zustand hängt am Element. Nach Enhanced Navigation (auch auf denselben Platz: Tag, Sprache) baut die Ansicht neu auf,
   // weil Blazor Etiketten, HUD und Profil an das HTML des Servers angleicht. Bibliothek und Raster kommen dann aus dem Cache.
+  // Ansichten, deren Element Blazor entfernt hat, geben ihren WebGL-Kontext sofort frei; ihr Canvas kommt nicht wieder.
   function init() {
+    views.forEach(function (state) {
+      if (!state.stage.isConnected) {
+        state.dispose(true);
+        views.delete(state);
+      }
+    });
     document.querySelectorAll('[data-3d-stage]').forEach(function (stage) {
       if (stage.__site3d) {
         stage.__site3d.dispose();
+        views.delete(stage.__site3d);
       }
-      const state = { built: false, webGl: webGlAvailable(), dispose: function () {}, resume: function () {} };
+      const state = { stage: stage, built: false, webGl: webGlAvailable(), dispose: function () {}, resume: function () {} };
       stage.__site3d = state;
+      views.add(state);
       stage.dataset.mode = 'map';
       if (!state.webGl) {
         return;

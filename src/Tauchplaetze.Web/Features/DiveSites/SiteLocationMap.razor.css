@@ -311,7 +311,7 @@
     display: block;
     width: 100%;
     height: clamp(420px, 68vh, 640px);
-    touch-action: none;
+    touch-action: pan-y;
 }
 
 .site-3d canvas:focus-visible {

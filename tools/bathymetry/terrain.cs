@@ -19,6 +19,8 @@ var root = FindRepositoryRoot();
 var cacheDir = Path.Combine(root, "tools", "bathymetry", "out");
 var altiDir = Path.Combine(cacheDir, "alti");
 var outDir = Path.Combine(root, "src", "Tauchplaetze.Web", "wwwroot", "terrain");
+// Die App ordnet im Umkreis von 60 m zu, darum teilen nahe Plätze ein Raster.
+const int SharedRasterMetres = 20;
 var onlyLake = Option("--lake");
 Directory.CreateDirectory(altiDir);
 Directory.CreateDirectory(outDir);
@@ -34,8 +36,6 @@ foreach (var (lake, info) in bathymetry)
 }
 
 var seed = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(root, "src", "Tauchplaetze.Core", "Features", "Editorial", "Seed", "dive-sites.json")))!.AsArray();
-// Plätze, deren Ausschnitte höchstens so weit auseinander liegen, teilen ein Raster (die App ordnet im Umkreis von 60 m zu).
-const int SharedRasterMetres = 20;
 var blocks = new List<Block>();
 foreach (var site in seed)
 {
@@ -74,7 +74,7 @@ foreach (var group in blocks.GroupBy(b => b.Lake))
     Console.WriteLine($"{group.Key}: Seegrund für {group.Count()} Plätze gelesen");
 }
 
-foreach (var tile in blocks.Where(b => !skippedLakes.Contains(b.Lake)).SelectMany(b => b.Tiles()).Distinct().OrderBy(t => t))
+foreach (var tile in blocks.Where(b => b.HasLake && !skippedLakes.Contains(b.Lake)).SelectMany(b => b.Tiles()).Distinct().OrderBy(t => t))
 {
     var path = await AltiTile(tile.E, tile.N);
     if (path is null)

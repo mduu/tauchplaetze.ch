@@ -343,7 +343,7 @@
   <data name="Site3d_Sticker" xml:space="preserve"><value>3D</value></data>
   <data name="Site3d_Sticker_Sub" xml:space="preserve"><value>Esplora il sito</value></data>
   <data name="Site3d_Open" xml:space="preserve"><value>Vedi {0} in 3D</value></data>
-  <data name="Site3d_Label" xml:space="preserve"><value>Vista 3D di {0}. Trascina per ruotare, tasto destro per spostare, rotella per lo zoom. Con la tastiera: tasti freccia.</value></data>
+  <data name="Site3d_Label" xml:space="preserve"><value>Vista 3D di {0}. Trascina per ruotare, tasto destro per spostare, Ctrl/⌘ + rotella per lo zoom, due dita sul touch. Con la tastiera: tasti freccia.</value></data>
   <data name="Site3d_Views" xml:space="preserve"><value>Vista</value></data>
   <data name="Site3d_Back" xml:space="preserve"><value>Mappa</value></data>
   <data name="Site3d_Pause" xml:space="preserve"><value>Pausa</value></data>

@@ -343,7 +343,7 @@
   <data name="Site3d_Sticker" xml:space="preserve"><value>3D</value></data>
   <data name="Site3d_Sticker_Sub" xml:space="preserve"><value>Platz erkunden</value></data>
   <data name="Site3d_Open" xml:space="preserve"><value>{0} in 3D ansehen</value></data>
-  <data name="Site3d_Label" xml:space="preserve"><value>3D-Ansicht von {0}. Ziehen dreht, rechte Maustaste verschiebt, Scrollen zoomt. Mit der Tastatur: Pfeiltasten.</value></data>
+  <data name="Site3d_Label" xml:space="preserve"><value>3D-Ansicht von {0}. Ziehen dreht, rechte Maustaste verschiebt, Ctrl/⌘ + Mausrad zoomt, auf Touch zwei Finger. Mit der Tastatur: Pfeiltasten.</value></data>
   <data name="Site3d_Views" xml:space="preserve"><value>Ansicht</value></data>
   <data name="Site3d_Back" xml:space="preserve"><value>Karte</value></data>
   <data name="Site3d_Pause" xml:space="preserve"><value>Pause</value></data>
