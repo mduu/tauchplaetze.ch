@@ -232,8 +232,7 @@
     controls.enablePan = true; controls.screenSpacePanning = true;
     controls.rotateSpeed = 0.9; controls.autoRotateSpeed = 0.6;
     controls.listenToKeyEvents(canvas);
-    controls.touches = { ONE: null, TWO: THREE.TOUCH.DOLLY_ROTATE };
-    canvas.style.touchAction = 'pan-y';
+    controls.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
     canvas.tabIndex = 0;
     canvas.addEventListener('wheel', zoomOnlyWithModifier, { capture: true });
     created.renderer = renderer; created.controls = controls; created.wheel = zoomOnlyWithModifier;

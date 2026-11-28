@@ -343,7 +343,7 @@
   <data name="Site3d_Sticker" xml:space="preserve"><value>3D</value></data>
   <data name="Site3d_Sticker_Sub" xml:space="preserve"><value>Explore the site</value></data>
   <data name="Site3d_Open" xml:space="preserve"><value>View {0} in 3D</value></data>
-  <data name="Site3d_Label" xml:space="preserve"><value>3D view of {0}. Drag to rotate, right mouse button to pan, Ctrl/⌘ + scroll to zoom, two fingers on touch. With the keyboard: arrow keys.</value></data>
+  <data name="Site3d_Label" xml:space="preserve"><value>3D view of {0}. Drag to rotate, right mouse button to pan, Ctrl/⌘ + scroll to zoom, on touch one finger rotates, two fingers zoom and pan. With the keyboard: arrow keys.</value></data>
   <data name="Site3d_Views" xml:space="preserve"><value>View</value></data>
   <data name="Site3d_Back" xml:space="preserve"><value>Map</value></data>
   <data name="Site3d_Pause" xml:space="preserve"><value>Pause</value></data>
@@ -352,7 +352,7 @@
   <data name="Site3d_View_Wall" xml:space="preserve"><value>Wall</value></data>
   <data name="Site3d_View_Top" xml:space="preserve"><value>From above</value></data>
   <data name="Site3d_Spin" xml:space="preserve"><value>Rotate</value></data>
-  <data name="Site3d_HintTouch" xml:space="preserve"><value>Use two fingers to rotate and zoom</value></data>
+  <data name="Site3d_HintTouch" xml:space="preserve"><value>One finger rotates, two fingers zoom</value></data>
   <data name="Site3d_Hint" xml:space="preserve"><value>Drag to rotate · Ctrl/⌘ + scroll to zoom</value></data>
   <data name="Site3d_Diver" xml:space="preserve"><value>Diver</value></data>
   <data name="Site3d_Progress" xml:space="preserve"><value>{0} of {1} m route</value></data>

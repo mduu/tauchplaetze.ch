@@ -343,7 +343,7 @@
   <data name="Site3d_Sticker" xml:space="preserve"><value>3D</value></data>
   <data name="Site3d_Sticker_Sub" xml:space="preserve"><value>Platz erkunden</value></data>
   <data name="Site3d_Open" xml:space="preserve"><value>{0} in 3D ansehen</value></data>
-  <data name="Site3d_Label" xml:space="preserve"><value>3D-Ansicht von {0}. Ziehen dreht, rechte Maustaste verschiebt, Ctrl/⌘ + Mausrad zoomt, auf Touch zwei Finger. Mit der Tastatur: Pfeiltasten.</value></data>
+  <data name="Site3d_Label" xml:space="preserve"><value>3D-Ansicht von {0}. Ziehen dreht, rechte Maustaste verschiebt, Ctrl/⌘ + Mausrad zoomt, auf Touch dreht ein Finger, zwei Finger zoomen und verschieben. Mit der Tastatur: Pfeiltasten.</value></data>
   <data name="Site3d_Views" xml:space="preserve"><value>Ansicht</value></data>
   <data name="Site3d_Back" xml:space="preserve"><value>Karte</value></data>
   <data name="Site3d_Pause" xml:space="preserve"><value>Pause</value></data>
@@ -352,7 +352,7 @@
   <data name="Site3d_View_Wall" xml:space="preserve"><value>Wand</value></data>
   <data name="Site3d_View_Top" xml:space="preserve"><value>Von oben</value></data>
   <data name="Site3d_Spin" xml:space="preserve"><value>Drehen</value></data>
-  <data name="Site3d_HintTouch" xml:space="preserve"><value>Mit zwei Fingern drehen und zoomen</value></data>
+  <data name="Site3d_HintTouch" xml:space="preserve"><value>Ein Finger dreht, zwei Finger zoomen</value></data>
   <data name="Site3d_Hint" xml:space="preserve"><value>Ziehen dreht · Ctrl/⌘ + Mausrad zoomt</value></data>
   <data name="Site3d_Diver" xml:space="preserve"><value>Taucher</value></data>
   <data name="Site3d_Progress" xml:space="preserve"><value>{0} von {1} m Route</value></data>

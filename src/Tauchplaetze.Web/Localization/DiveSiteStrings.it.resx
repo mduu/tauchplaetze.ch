@@ -343,7 +343,7 @@
   <data name="Site3d_Sticker" xml:space="preserve"><value>3D</value></data>
   <data name="Site3d_Sticker_Sub" xml:space="preserve"><value>Esplora il sito</value></data>
   <data name="Site3d_Open" xml:space="preserve"><value>Vedi {0} in 3D</value></data>
-  <data name="Site3d_Label" xml:space="preserve"><value>Vista 3D di {0}. Trascina per ruotare, tasto destro per spostare, Ctrl/⌘ + rotella per lo zoom, due dita sul touch. Con la tastiera: tasti freccia.</value></data>
+  <data name="Site3d_Label" xml:space="preserve"><value>Vista 3D di {0}. Trascina per ruotare, tasto destro per spostare, Ctrl/⌘ + rotella per lo zoom, sul touch un dito ruota, due dita per zoom e spostamento. Con la tastiera: tasti freccia.</value></data>
   <data name="Site3d_Views" xml:space="preserve"><value>Vista</value></data>
   <data name="Site3d_Back" xml:space="preserve"><value>Mappa</value></data>
   <data name="Site3d_Pause" xml:space="preserve"><value>Pausa</value></data>
@@ -352,7 +352,7 @@
   <data name="Site3d_View_Wall" xml:space="preserve"><value>Parete</value></data>
   <data name="Site3d_View_Top" xml:space="preserve"><value>Dall’alto</value></data>
   <data name="Site3d_Spin" xml:space="preserve"><value>Ruota</value></data>
-  <data name="Site3d_HintTouch" xml:space="preserve"><value>Usa due dita per ruotare e zoomare</value></data>
+  <data name="Site3d_HintTouch" xml:space="preserve"><value>Un dito per ruotare, due per lo zoom</value></data>
   <data name="Site3d_Hint" xml:space="preserve"><value>Trascina per ruotare · Ctrl/⌘ + rotella per lo zoom</value></data>
   <data name="Site3d_Diver" xml:space="preserve"><value>Sub</value></data>
   <data name="Site3d_Progress" xml:space="preserve"><value>{0} di {1} m di percorso</value></data>

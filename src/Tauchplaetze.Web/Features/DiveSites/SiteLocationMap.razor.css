@@ -311,7 +311,7 @@
     display: block;
     width: 100%;
     height: clamp(420px, 68vh, 640px);
-    touch-action: pan-y;
+    touch-action: none;
 }
 
 .site-3d canvas:focus-visible {
@@ -659,6 +659,10 @@
 
     .site-3d-legend {
         display: none;
+    }
+
+    .site-3d canvas {
+        height: clamp(360px, 58vh, 520px);
     }
 
     .site-3d-hint {
