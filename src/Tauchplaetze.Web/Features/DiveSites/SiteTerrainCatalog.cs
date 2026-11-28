@@ -12,8 +12,6 @@ public record SiteTerrain(string File, int East, int North, int Points, double C
 /// </summary>
 public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrainCatalog> logger)
 {
-    public const double Cell = 2;
-
     private const double MaxDistanceMetres = 60;
 
     private readonly Lazy<Index> index = new(() => Load(webRoot, logger));
@@ -22,7 +20,7 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
     public SiteTerrain? Find(double latitude, double longitude)
     {
         var data = index.Value;
-        var best = data.Sites!
+        var best = data.Sites
             .Select(s => (Site: s, Metres: Metres(latitude, longitude, s.Lat, s.Lng)))
             .Where(s => s.Metres <= MaxDistanceMetres)
             .OrderBy(s => s.Metres)
@@ -51,7 +49,9 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
         {
             using var stream = file.CreateReadStream();
             var index = JsonSerializer.Deserialize<Index>(stream, JsonSerializerOptions.Web);
-            return index is { Sites: not null, Points: > 1, CellSize: > 0 } ? index : Index.Empty;
+            return index is { Sites: not null, Points: > 1, CellSize: > 0 }
+                ? index with { Sites = [.. index.Sites.Where(IsUsable)] }
+                : Index.Empty;
         }
         catch (Exception ex)
         {
@@ -60,10 +60,13 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
         }
     }
 
-    private sealed record Index(int Points, double CellSize, IReadOnlyList<Entry>? Sites)
+    private static bool IsUsable(Entry? entry) =>
+        entry is { File.Length: > 0 } && double.IsFinite(entry.Lat) && double.IsFinite(entry.Lng);
+
+    private sealed record Index(int Points, double CellSize, IReadOnlyList<Entry> Sites)
     {
-        public static readonly Index Empty = new(0, Cell, []);
+        public static readonly Index Empty = new(0, 0, []);
     }
 
-    private sealed record Entry(double Lat, double Lng, int E, int N, string File);
+    private sealed record Entry(double Lat, double Lng, int E, int N, string? File);
 }

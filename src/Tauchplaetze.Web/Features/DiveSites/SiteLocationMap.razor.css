@@ -128,7 +128,7 @@
     position: relative;
 }
 
-.location-stage ::deep .leaflet-top.leaflet-left {
+.location-stage:has(.sticker-3d:not([hidden])) ::deep .leaflet-top.leaflet-left {
     top: 146px;
 }
 
@@ -185,8 +185,8 @@
     overflow: hidden;
     border: 2px solid var(--color-primary);
     border-radius: 50%;
-    background: radial-gradient(80% 80% at 35% 25%, #134A4A 0%, var(--color-surface-raised) 65%);
-    box-shadow: 0 0 24px rgb(127 227 214 / 0.3), inset 0 0 0 5px var(--color-surface-raised), inset 0 0 0 6px rgb(127 227 214 / 0.25);
+    background: radial-gradient(80% 80% at 35% 25%, var(--color-lake-epilimnion) 0%, var(--color-surface-raised) 65%);
+    box-shadow: 0 0 24px color-mix(in srgb, var(--color-primary) 30%, transparent), inset 0 0 0 5px var(--color-surface-raised), inset 0 0 0 6px color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
 .sticker-ring {
@@ -277,8 +277,8 @@
     padding: 3px 11px 2px;
     border-radius: var(--radius-pill);
     background: var(--color-primary);
-    box-shadow: 0 4px 10px rgb(0 0 0 / 0.45), 0 0 14px rgb(127 227 214 / 0.45);
-    color: #062224;
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.45), 0 0 14px color-mix(in srgb, var(--color-primary) 45%, transparent);
+    color: var(--color-bg);
     font-family: var(--font-display);
     font-size: 22px;
     font-weight: 800;
@@ -304,7 +304,7 @@
     overflow: hidden;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
-    background: radial-gradient(120% 90% at 50% 0%, #0F3A3E 0%, var(--color-bg) 70%);
+    background: radial-gradient(120% 90% at 50% 0%, var(--color-lake-epilimnion) 0%, var(--color-bg) 70%);
 }
 
 .site-3d canvas {
@@ -332,7 +332,7 @@
     gap: 7px;
     align-items: center;
     padding: 4px 10px 4px 8px;
-    border: 1px solid rgb(127 227 214 / 0.35);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
     border-radius: var(--radius-pill);
     background: rgb(7 20 23 / 0.82);
     color: var(--color-text);
@@ -432,7 +432,7 @@
 .site-3d-controls button[aria-pressed="true"] {
     border-color: var(--color-primary);
     background: var(--color-primary);
-    color: #062224;
+    color: var(--color-bg);
 }
 
 .site-3d-controls button:focus-visible {
@@ -460,7 +460,7 @@
     gap: 10px;
     align-items: center;
     padding: 8px 14px 8px 10px;
-    border: 1px solid rgb(127 227 214 / 0.35);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 35%, transparent);
     border-radius: var(--radius-pill);
     background: rgb(7 20 23 / 0.7);
     color: var(--color-primary);
@@ -584,12 +584,12 @@
 }
 
 .site-3d-profile ::deep .grid {
-    stroke: rgb(127 227 214 / 0.1);
+    stroke: var(--color-chart-grid);
     vector-effect: non-scaling-stroke;
 }
 
 .site-3d-profile ::deep .area {
-    fill: rgb(127 227 214 / 0.06);
+    fill: color-mix(in srgb, var(--color-primary) 6%, transparent);
 }
 
 .site-3d-profile ::deep .line {
@@ -609,6 +609,10 @@
 }
 
 @media (max-width: 640px) {
+    .location-stage:has(.sticker-3d:not([hidden])) ::deep .leaflet-top.leaflet-left {
+        top: 126px;
+    }
+
     .sticker-3d {
         top: 12px;
         left: -4px;

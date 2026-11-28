@@ -28,7 +28,9 @@ public sealed class SiteTerrainCatalogTests : IDisposable
     [Theory]
     [InlineData("{}")]
     [InlineData("kein json")]
-    public void Ein_kaputter_Index_schaltet_die_3D_Ansicht_aus(string json)
+    [InlineData("""{"points":121,"cellSize":2,"sites":[null]}""")]
+    [InlineData("""{"points":121,"cellSize":2,"sites":[{"lat":46.6879,"lng":7.7441,"e":1,"n":1}]}""")]
+    public void Ein_kaputter_Index_oder_Eintrag_schaltet_die_3D_Ansicht_aus(string json)
     {
         // Arrange
         Write(json);

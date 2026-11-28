@@ -141,8 +141,8 @@
     {
         get
         {
-            var water = Site.EntryPoints.Where(e => e.Kind.IsWaterAccess()).Select(e => new { lat = e.Latitude, lng = e.Longitude, name = e.Name, water = true }).ToList();
-            return JsonSerializer.Serialize(water.Count > 0 ? water : [new { lat = Site.Latitude, lng = Site.Longitude, name = (string?)Site.Name, water = true }]);
+            var water = Site.EntryPoints.Where(e => e.Kind.IsWaterAccess()).Select(e => new { lat = e.Latitude, lng = e.Longitude, name = e.Name }).ToList();
+            return JsonSerializer.Serialize(water.Count > 0 ? water : [new { lat = Site.Latitude, lng = Site.Longitude, name = (string?)Site.Name }]);
         }
     }
 

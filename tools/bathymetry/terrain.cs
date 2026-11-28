@@ -34,6 +34,8 @@ foreach (var (lake, info) in bathymetry)
 }
 
 var seed = JsonNode.Parse(await File.ReadAllTextAsync(Path.Combine(root, "src", "Tauchplaetze.Core", "Features", "Editorial", "Seed", "dive-sites.json")))!.AsArray();
+// Plätze, deren Ausschnitte höchstens so weit auseinander liegen, teilen ein Raster (die App ordnet im Umkreis von 60 m zu).
+const int SharedRasterMetres = 20;
 var blocks = new List<Block>();
 foreach (var site in seed)
 {
@@ -47,7 +49,7 @@ foreach (var site in seed)
 
     var x0 = (int)Math.Round(east / Block.Cell) * Block.Cell - Block.HalfSize;
     var y0 = (int)Math.Round(north / Block.Cell) * Block.Cell - Block.HalfSize;
-    if (blocks.Any(b => b.X0 == x0 && b.Y0 == y0))
+    if (blocks.Any(b => Math.Abs(b.X0 - x0) <= SharedRasterMetres && Math.Abs(b.Y0 - y0) <= SharedRasterMetres))
     {
         continue;
     }
@@ -72,7 +74,7 @@ foreach (var group in blocks.GroupBy(b => b.Lake))
     Console.WriteLine($"{group.Key}: Seegrund für {group.Count()} Plätze gelesen");
 }
 
-foreach (var tile in blocks.SelectMany(b => b.Tiles()).Distinct().OrderBy(t => t))
+foreach (var tile in blocks.Where(b => !skippedLakes.Contains(b.Lake)).SelectMany(b => b.Tiles()).Distinct().OrderBy(t => t))
 {
     var path = await AltiTile(tile.E, tile.N);
     if (path is null)
@@ -107,6 +109,12 @@ foreach (var block in blocks.Where(b => !skippedLakes.Contains(b.Lake)).OrderBy(
     }
 
     var data = block.Encode();
+    if (data is null)
+    {
+        Console.WriteLine($"{block.Name}: Lücken ohne Seegrund und Land im Ausschnitt, ausgelassen");
+        continue;
+    }
+
     if (MinDecimetres(data) > -50)
     {
         Console.WriteLine($"{block.Name}: kaum Seegrund im Ausschnitt, ausgelassen");
@@ -265,8 +273,8 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
         }
     }
 
-    /// <summary>Seegrund, wo swissBATHY3D Werte hat, sonst Land. Lücken füllt der Mittelwert der Nachbarn.</summary>
-    public byte[] Encode()
+    /// <summary>Seegrund, wo swissBATHY3D Werte hat, sonst Land. Lücken füllt der Mittelwert der Nachbarn; bleibt eine Lücke, gibt es kein Raster.</summary>
+    public byte[]? Encode()
     {
         var values = new short[Points * Points];
         for (var i = 0; i < values.Length; i++)
@@ -276,6 +284,11 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
         }
 
         Fill(values);
+        if (values.Contains(short.MinValue))
+        {
+            return null;
+        }
+
         SmoothShore(values);
         var bytes = new byte[values.Length * 2];
         Buffer.BlockCopy(values, 0, bytes, 0, bytes.Length);
@@ -328,7 +341,7 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
 
     private static void Fill(short[] values)
     {
-        for (var pass = 0; pass < Points && values.Contains(short.MinValue); pass++)
+        for (var pass = 0; pass < 2 * Points && values.Contains(short.MinValue); pass++)
         {
             var next = (short[])values.Clone();
             for (var row = 0; row < Points; row++)

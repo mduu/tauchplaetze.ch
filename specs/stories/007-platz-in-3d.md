@@ -44,6 +44,7 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
 
 ## Daten
 
+- **Bibliothek:** three.js r147 (globaler Build `three.min.js` und `OrbitControls.js` aus `examples/js`, MIT-Lizenz) unter `wwwroot/lib/three`. Ab r148 gibt es `examples/js` nicht mehr; ein Upgrade braucht ES-Module.
 - **Gelände:** aus dem 1-m-Raster von swissBATHY3D (`data-sources.md`, «Tiefenlinien»), nicht aus den Tiefenlinien. Das Skript `tools/bathymetry` erzeugt pro Platz ein Raster: 2 m Abstand, Höhe in Dezimetern als `Int16`, 121 × 121 Punkte, rund 29 KB. Ablage als statische Datei bei der App (`wwwroot/terrain/{e}_{n}.bin` mit `index.json`, `data-sources.md`, «Höhenraster für die 3D-Ansicht»).
 - **Land:** aus dem Höhenmodell swissALTI3D (STAC `ch.swisstopo.swissalti3d`, 2 m, gleiche Höhenbasis wie swissBATHY3D), im selben Raster wie der Seegrund (Entscheid Marc, 28.11.2026). Nullpunkt ist die Seehöhe aus dem Index: darüber Land, darunter Seegrund. Die Uferlinie ergibt sich daraus, wo das Land die Seehöhe erreicht. Das Skript lädt nur die Kacheln um die Plätze. swissALTI3D ist der nackte Boden: Bäume und Häuser zeigt nur das Luftbild.
 - **Luftbild:** SWISSIMAGE als Kacheln von swisstopo (WMTS), wie die Ebene «Luftbild» der Karte. Der Browser lädt die Kacheln, die Seite selbst ruft swisstopo nicht ab.
