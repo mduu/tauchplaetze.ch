@@ -154,24 +154,24 @@
 
 .sticker-3d {
     position: absolute;
-    top: -18px;
-    right: -10px;
+    top: -30px;
+    right: -14px;
     z-index: 1100;
-    width: 104px;
-    height: 104px;
+    width: 124px;
+    height: 124px;
     padding: 0;
     border: 0;
-    border-radius: 22px;
+    border-radius: 50%;
     background: transparent;
     cursor: pointer;
     filter: drop-shadow(0 10px 18px rgb(0 0 0 / 0.55));
-    transform: rotate(6deg);
+    transform: rotate(-6deg);
     transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3);
 }
 
 .sticker-3d:hover,
 .sticker-3d:focus-visible {
-    transform: rotate(2deg) scale(1.06);
+    transform: rotate(0deg) scale(1.06);
 }
 
 .sticker-3d:focus-visible {
@@ -182,78 +182,122 @@
 .sticker-face {
     position: absolute;
     inset: 0;
-    display: grid;
-    place-content: center;
     overflow: hidden;
     border: 2px solid var(--color-primary);
-    border-radius: inherit;
-    background: radial-gradient(90% 80% at 30% 20%, #134A4A 0%, var(--color-surface-raised) 70%);
-    box-shadow: 0 0 22px rgb(127 227 214 / 0.28), inset 0 0 0 1px rgb(127 227 214 / 0.12);
-    text-align: center;
+    border-radius: 50%;
+    background: radial-gradient(80% 80% at 35% 25%, #134A4A 0%, var(--color-surface-raised) 65%);
+    box-shadow: 0 0 24px rgb(127 227 214 / 0.3), inset 0 0 0 5px var(--color-surface-raised), inset 0 0 0 6px rgb(127 227 214 / 0.25);
 }
 
-.sticker-face::before {
-    content: "";
-    position: absolute;
-    inset: -30%;
-    background: repeating-radial-gradient(ellipse 60% 45% at 75% 85%, transparent 0 9px, rgb(127 227 214 / 0.16) 9px 10px);
-    animation: contour-drift 9s ease-in-out infinite alternate;
-}
-
-.sticker-face::after {
-    content: "";
+.sticker-ring {
     position: absolute;
     inset: 0;
-    background: linear-gradient(115deg, transparent 35%, rgb(184 242 234 / 0.22) 48%, transparent 60%);
-    background-size: 250% 100%;
-    animation: sheen 4.5s ease-in-out infinite;
+    width: 100%;
+    height: 100%;
 }
 
-.sticker-big {
-    position: relative;
-    z-index: 1;
-    color: var(--color-primary);
-    font-family: var(--font-display);
-    font-size: 42px;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 0.9;
-    text-shadow: 0 0 14px rgb(127 227 214 / 0.45);
-}
-
-.sticker-sub {
-    position: relative;
-    z-index: 1;
-    margin-top: 6px;
-    color: var(--color-text-muted);
+.sticker-ring text {
+    fill: var(--color-text-muted);
     font-family: var(--font-mono);
-    font-size: 9.5px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
+    font-size: 9px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
 }
 
-.sticker-peel {
+.sticker-block {
     position: absolute;
-    right: 0;
-    bottom: 0;
-    z-index: 2;
-    width: 24px;
-    height: 24px;
-    border-radius: 0 0 20px 0;
-    background: linear-gradient(135deg, transparent 50%, var(--color-border-strong) 50%, var(--color-surface) 100%);
-    box-shadow: -2px -2px 4px rgb(0 0 0 / 0.35);
+    top: 60%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    transform: translate(-50%, -50%);
 }
 
-@keyframes contour-drift {
+.sticker-block .strata {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-opacity: 0.18;
+    stroke-width: 0.8;
+}
+
+.sticker-block .contour {
+    stroke: var(--color-bubble);
+    stroke-opacity: 0.6;
+    stroke-width: 0.7;
+}
+
+.sticker-block .route {
+    fill: none;
+    stroke: var(--color-signal);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-dasharray: 3 3;
+    animation: sticker-route 1.6s linear infinite;
+}
+
+.sticker-block .water-wall {
+    fill: var(--color-primary);
+    fill-opacity: 0.07;
+}
+
+.sticker-block .water {
+    fill: var(--color-bubble);
+    fill-opacity: 0.14;
+    stroke: var(--color-primary-hover);
+    stroke-opacity: 0.75;
+    stroke-width: 0.8;
+}
+
+.sticker-block .edges {
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-opacity: 0.55;
+    stroke-width: 0.8;
+}
+
+.sticker-block .bubbles circle {
+    fill: none;
+    stroke: var(--color-bubble);
+    stroke-width: 0.7;
+    transform-box: fill-box;
+    animation: sticker-bubble 2.4s ease-in infinite;
+}
+
+.sticker-block .bubbles circle:nth-child(2) {
+    animation-delay: 0.8s;
+}
+
+.sticker-block .bubbles circle:nth-child(3) {
+    animation-delay: 1.6s;
+}
+
+.sticker-badge {
+    position: absolute;
+    bottom: -9px;
+    left: 50%;
+    padding: 3px 11px 2px;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary);
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.45), 0 0 14px rgb(127 227 214 / 0.45);
+    color: #062224;
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    transform: translateX(-50%);
+}
+
+@keyframes sticker-route {
     to {
-        transform: translate(-6%, -4%) scale(1.05);
+        stroke-dashoffset: -12;
     }
 }
 
-@keyframes sheen {
-    0%, 20% { background-position: 120% 0; }
-    60%, 100% { background-position: -40% 0; }
+@keyframes sticker-bubble {
+    0% { opacity: 0; transform: translateY(6px); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-6px); }
 }
 
 .site-3d {
@@ -567,13 +611,19 @@
 
 @media (max-width: 640px) {
     .sticker-3d {
+        top: -22px;
         right: -4px;
-        width: 86px;
-        height: 86px;
+        width: 104px;
+        height: 104px;
     }
 
-    .sticker-big {
-        font-size: 34px;
+    .sticker-block {
+        width: 84px;
+        height: 84px;
+    }
+
+    .sticker-badge {
+        font-size: 18px;
     }
 
     .site-3d-controls {
@@ -600,8 +650,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .sticker-face::before,
-    .sticker-face::after,
+    .sticker-block .route,
+    .sticker-block .bubbles circle,
     .site-3d-hint .rot-icon {
         animation: none;
     }
