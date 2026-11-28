@@ -1,5 +1,26 @@
 [
   {
+    "date": "2026-11-28",
+    "texts": {
+      "de": {
+        "title": "Symbole zeigen, was ein Platz bietet",
+        "text": "Jeder Platz zeigt in den Listen und oben auf seiner Seite kleine Symbole: Schwierigkeit, Tiefe, Defibrillator, Toilette, Parkplatz, Steilwand und mehr. Im Verzeichnis erklärt eine Legende alle Symbole."
+      },
+      "en": {
+        "title": "Symbols show what a site offers",
+        "text": "Every site now shows small symbols in the lists and at the top of its page: difficulty, depth, defibrillator, toilet, parking, wall and more. In the directory a legend explains all symbols."
+      },
+      "fr": {
+        "title": "Des symboles montrent ce qu’offre un site",
+        "text": "Chaque site affiche désormais de petits symboles dans les listes et en haut de sa page : difficulté, profondeur, défibrillateur, toilettes, parking, tombant et plus encore. Dans l’annuaire, une légende explique tous les symboles."
+      },
+      "it": {
+        "title": "Simboli mostrano cosa offre un sito",
+        "text": "Ogni sito mostra ora piccoli simboli negli elenchi e in cima alla sua pagina: difficoltà, profondità, defibrillatore, toilette, parcheggio, parete e altro. Nell’elenco una legenda spiega tutti i simboli."
+      }
+    }
+  },
+  {
     "date": "2026-11-27",
     "texts": {
       "de": {

@@ -1,4 +1,5 @@
 using System.Net;
+using Tauchplaetze.Core.Features.DiveSites;
 using Tauchplaetze.Core.Features.DiveSites.Queries;
 using Tauchplaetze.Core.Features.WaterBodies;
 using Tauchplaetze.Core.Features.WaterBodies.Queries;
@@ -18,16 +19,17 @@ public class DirectoryPageTests : IClassFixture<WebApp>
             : [];
         app.WaterBody.Answer = query => query.Slug == "zuerichsee" ? new WaterBodyDetails(1, "zuerichsee", "Zürichsee", WaterBodyType.Lake, 47.26, 8.68) : null;
         app.Finder.Answer = query => new FoundDiveSites(
-            [new FoundDiveSite("riff-williams-herrliberg", "Riff Williams", "Herrliberg", "ZH", "Zürichsee", 47.2849, 8.6085, 6.5m, null, 30, [SiteTrait.Wall], null)],
+            [new FoundDiveSite("riff-williams-herrliberg", "Riff Williams", "Herrliberg", "ZH", "Zürichsee", 47.2849, 8.6085, 6.5m, null, 30, [SiteTrait.Wall], null,
+                Symbols: new SiteSymbols(NoticeKind.Closure, null, 30, null, [SiteSymbol.Wall]))],
             31, query.Page, 2, SiteSort.Index,
             [new DiveSiteListItem("riff-williams-herrliberg", "Riff Williams", "Herrliberg", "zuerichsee", "Zürichsee", WaterBodyType.Lake, 47.2849, 8.6085, 0, 3, 6.5m)],
             318, 80, query.WaterBodySlug == "rhein" ? "Rhein" : null);
     }
 
     [Theory]
-    [InlineData("/de/tauchplaetze", "318 Plätze an 80 Gewässern.", "Steilwand · bis 30 m", "31 Treffer")]
-    [InlineData("/fr/sites-de-plongee", "318 sites dans 80 lacs et rivières.", "Tombant · jusqu'à 30 m", "31 résultats")]
-    public async Task Das_Verzeichnis_zeigt_Suche_Eigenschaften_Treffer_und_Karte_mit_Gruppen(string path, string count, string tags, string results)
+    [InlineData("/de/tauchplaetze", "318 Plätze an 80 Gewässern.", "title=\"Steilwand\"", "31 Treffer")]
+    [InlineData("/fr/sites-de-plongee", "318 sites dans 80 lacs et rivières.", "title=\"Tombant\"", "31 résultats")]
+    public async Task Das_Verzeichnis_zeigt_Suche_Eigenschaften_Treffer_mit_Symbolen_Legende_und_Karte_mit_Gruppen(string path, string count, string wall, string results)
     {
         // Arrange
         using var browser = app.Browser();
@@ -39,7 +41,10 @@ public class DirectoryPageTests : IClassFixture<WebApp>
         var text = VisibleText.Of(html);
         Assert.Contains(count, text);
         Assert.Contains("Riff Williams", text);
-        Assert.Contains(tags, text);
+        Assert.Contains(wall, html);
+        Assert.Contains("data-symbol=\"notice-closure\"", html);
+        Assert.Contains("data-symbol=\"depth\"", html);
+        Assert.Contains("data-symbol-legend", html);
         Assert.Contains(results, text);
         Assert.Contains("type=\"search\" name=\"q\"", html);
         Assert.Contains("data-cluster=\"true\"", html);

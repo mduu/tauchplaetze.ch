@@ -1,6 +1,6 @@
 # Story 006: Symbole der Plätze
 
-**Status:** Entwurf (27.11.2026), Entscheide offen (siehe unten).
+**Status:** umgesetzt (28.11.2026), noch nicht deployt.
 
 ## Ziel
 
@@ -39,7 +39,6 @@ Ein Symbol erscheint nur, wenn die Daten es belegen. Fehlt es, heisst das «unbe
 | Verzeichnis (Finder), Treffer | Symbole ohne Text, unter Name und Gewässer. Ersetzt die heutigen Tags der Eigenschaften. |
 | Gewässerseite, Liste der Plätze | wie im Verzeichnis |
 | Startseite, «Beste Wahl» und Rangliste | wie im Verzeichnis |
-| Karte (Popup eines Platzes) | wie im Verzeichnis |
 
 Die Eigenschaften des SUSV auf der Platzseite (Story 004, `SusvFeatures`) bleiben. Sie tragen den Link zum SUSV. Ihre Symbole sind der Anfang dieser Leiste.
 
@@ -49,11 +48,11 @@ Die Eigenschaften des SUSV auf der Platzseite (Story 004, `SusvFeatures`) bleibe
 - Farbe: neutral in `--color-text-muted`. Sperrung und Warnung in ihrer Farbe (`--color-notice-closure`, `--color-notice-warning`), Schwierigkeit in der Farbe der Stufe.
 - Jedes Symbol hat einen Text für Screenreader und einen Tooltip («Defibrillator (AED) am Platz»). Die Leiste ist eine Liste (`ul`) mit `aria-label` «Ausstattung und Eigenschaften».
 - **Legende:** im Verzeichnis unter den Filtern, aufklappbar («Was bedeuten die Symbole?»).
-- Komponente `SiteSymbols` in `design-system.md`.
+- Komponenten `SiteSymbolBar` und `SiteSymbolLegend` in `design-system.md`.
 
 ## Daten
 
-Der Core liefert pro Platz eine Liste der zutreffenden Symbole (`SiteSymbol`, Enum in der festen Reihenfolge). Die Regel steht an einer Stelle und gilt für alle Listen. Die Queries der Listen lesen dafür die Orte (`DiveSiteEntryPoints`) und die Projekte des SUSV mit, wie die Hinweise in Story 003 (`SiteRestrictions`).
+Der Core liefert pro Platz `SiteSymbols`: Hinweis von heute (nur Sperrung oder Warnung), Schwierigkeit als Stufe (`DifficultyBand`), maximale Tiefe, Höhe des Bergsees und die übrigen Symbole (`SiteSymbol`, Enum in der festen Reihenfolge). Die Regel steht an einer Stelle (`SiteSymbolRules`) und gilt für Verzeichnis, Gewässerseite, Rangliste und Hero. Die Listen laden dafür die Orte (`DiveSiteEntryPoints`) und die bestätigten Projekte des SUSV aller Plätze auf einmal (`SiteSymbolSources`), wie die Hinweise in Story 003 (`SiteRestrictions`).
 
 ## Akzeptanzkriterien
 
@@ -65,14 +64,18 @@ Der Core liefert pro Platz eine Liste der zutreffenden Symbole (`SiteSymbol`, En
 6. Die Ausbaustufe eines Platzes ändert sich nicht.
 7. Das Echolot hat einen Eintrag in den Neuigkeiten.
 
-## Offene Entscheide
+## Entscheide
 
-| Frage | Vorschlag |
+Marc hat die Vorschläge am 28.11.2026 übernommen:
+
+| Frage | Entscheid |
 |---|---|
-| Schwierigkeit: ein Symbol mit drei Stufen oder drei Symbole? | Ein Symbol (Flossen) mit 1, 2 oder 3 gefüllten Punkten, Farbe der Stufe |
-| Tiefe als Zahl auf der Kachel? | Ja, als kurzer Text «42 m» statt Symbol |
-| Ersetzt die Leiste die Tags der Eigenschaften im Verzeichnis ganz? | Ja, sonst steht dasselbe doppelt |
+| Schwierigkeit: ein Symbol mit drei Stufen oder drei Symbole? | Ein Symbol (Flosse) mit 1, 2 oder 3 gefüllten Punkten, Farbe der Stufe |
+| Tiefe als Zahl auf der Kachel? | Ja, als kurzer Text «42 m» |
+| Ersetzt die Leiste die Tags der Eigenschaften im Verzeichnis ganz? | Ja. Auch das Warnzeichen «Gesperrt» der Listen entfällt, die Leiste zeigt es als erstes Symbol |
 | Toilette aus einem Ort «Toilette» der Redaktion oder nur vom SUSV? | Beides |
+
+Die Karte hat keine Popups, nur Beschriftungen mit Name und Index. Sie zeigt keine Symbole, sonst wird sie unruhig.
 
 ## Abhängigkeiten
 

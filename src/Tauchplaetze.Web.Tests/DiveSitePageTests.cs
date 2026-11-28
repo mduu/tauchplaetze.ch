@@ -95,7 +95,8 @@ public class DiveSitePageTests : IClassFixture<WebApp>
                 new SiteSusvProject(SusvTopic.MobileToilet, "https://susv.ch/de/wc/"),
                 new SiteSusvProject(SusvTopic.SupportProject, "https://susv.ch/de/projekt/"),
                 new SiteSusvProject(SusvTopic.InclusiveSite, "https://susv.ch/de/inklusion/"),
-            ])));
+            ],
+            Symbols: new SiteSymbols(null, DifficultyBand.Medium, 40, 1200, [SiteSymbol.Defibrillator, SiteSymbol.Inclusive, SiteSymbol.MountainLake]))));
         app.Forecasts.Add(SusvSiteId, new SiteForecast([Day(18, 8.4m, [ReasonCode.CalmLake]), Day(19, 6.2m, [ReasonCode.Windy])], DateTimeOffset.UtcNow, Hours(new DateTime(2030, 1, 7))));
         app.DiveSites.Add("alter-name", new DiveSiteLookup.Moved(Slug));
         app.DiveSites.Add("archiviert", new DiveSiteLookup.Gone());
@@ -141,7 +142,9 @@ public class DiveSitePageTests : IClassFixture<WebApp>
         Assert.Contains("Site amélioré", footerText);
         Assert.Contains("Site inclusif", footerText);
         Assert.Contains("href=\"https://susv.ch/de/wc/\"", footer);
-        Assert.Contains("data-inclusive", html);
+        var hero = html[..html.IndexOf("id=\"conditions\"", StringComparison.Ordinal)];
+        Assert.Contains("data-symbol=\"Inclusive\"", hero);
+        Assert.Contains("Lac de montagne · 1200 m", VisibleText.Of(hero));
         Assert.Equal(2, System.Text.RegularExpressions.Regex.Matches(html, "data-susv-topic=\"Defibrillator\"").Count);
         Assert.Contains("Toilettes mobiles sur le site", VisibleText.Of(html));
         Assert.Contains("data-text=\"facilities\"", html);

@@ -206,7 +206,6 @@
   <data name="Finder_Page" xml:space="preserve"><value>Seite {0} von {1}</value></data>
   <data name="Finder_Previous" xml:space="preserve"><value>Zurück</value></data>
   <data name="Finder_Next" xml:space="preserve"><value>Weiter</value></data>
-  <data name="Finder_Depth" xml:space="preserve"><value>bis {0} m</value></data>
   <data name="Directory_Empty" xml:space="preserve"><value>Noch keine Tauchplätze.</value></data>
   <data name="DirectoryOnly_Write" xml:space="preserve"><value>Schreib uns.</value></data>
   <data name="Site_OtherNames" xml:space="preserve"><value>auch bekannt als {0}</value></data>
@@ -323,4 +322,24 @@
   <data name="Shipping_Link" xml:space="preserve"><value>Tauchen und Schifffahrt</value></data>
   <data name="Shipping_NotBinding" xml:space="preserve"><value>Orientierung, nicht rechtsverbindlich.</value></data>
   <data name="Shipping_Attribution" xml:space="preserve"><value>Schiffstationen: öV-Haltestellen Bundesamt für Verkehr BAV · Fahrlinien und Häfen: © OpenStreetMap-Mitwirkende</value></data>
+  <data name="Symbols_Label" xml:space="preserve"><value>Ausstattung und Eigenschaften</value></data>
+  <data name="Symbols_Legend" xml:space="preserve"><value>Was bedeuten die Symbole?</value></data>
+  <data name="Symbol_Notice_Closure" xml:space="preserve"><value>Heute gesperrt</value></data>
+  <data name="Symbol_Notice_Warning" xml:space="preserve"><value>Heute Warnung</value></data>
+  <data name="Symbol_Difficulty_Easy" xml:space="preserve"><value>Leicht</value></data>
+  <data name="Symbol_Difficulty_Medium" xml:space="preserve"><value>Mittel</value></data>
+  <data name="Symbol_Difficulty_Hard" xml:space="preserve"><value>Schwer</value></data>
+  <data name="Symbol_Difficulty_Title" xml:space="preserve"><value>Schwierigkeit: {0}</value></data>
+  <data name="Symbol_Depth" xml:space="preserve"><value>{0} m</value></data>
+  <data name="Symbol_Depth_Title" xml:space="preserve"><value>Maximale Tiefe {0} m</value></data>
+  <data name="Symbol_Defibrillator" xml:space="preserve"><value>Defibrillator (AED)</value></data>
+  <data name="Symbol_Toilet" xml:space="preserve"><value>Toilette</value></data>
+  <data name="Symbol_Parking" xml:space="preserve"><value>Parkplatz</value></data>
+  <data name="Symbol_FlagHolder" xml:space="preserve"><value>Flaggenhalter</value></data>
+  <data name="Symbol_Inclusive" xml:space="preserve"><value>Inklusion</value></data>
+  <data name="Symbol_Training" xml:space="preserve"><value>Ausbildung</value></data>
+  <data name="Symbol_Wall" xml:space="preserve"><value>Steilwand</value></data>
+  <data name="Symbol_Wreck" xml:space="preserve"><value>Wrack</value></data>
+  <data name="Symbol_River" xml:space="preserve"><value>Fluss</value></data>
+  <data name="Symbol_MountainLake" xml:space="preserve"><value>Bergsee</value></data>
 </root>

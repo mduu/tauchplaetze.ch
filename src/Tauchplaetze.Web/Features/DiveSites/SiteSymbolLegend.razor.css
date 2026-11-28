@@ -1,0 +1,33 @@
+.symbol-legend {
+    margin: 4px 0 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.symbol-legend summary {
+    cursor: pointer;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    color: var(--color-primary);
+}
+
+.symbol-legend ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 4px 20px;
+    margin: 0 0 8px;
+    padding: 0;
+    list-style: none;
+}
+
+.symbol-legend li {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.symbol-legend li ::deep .site-symbols {
+    margin: 0;
+    min-width: 44px;
+}

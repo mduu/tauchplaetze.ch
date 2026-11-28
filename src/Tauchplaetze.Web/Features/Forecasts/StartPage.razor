@@ -4,6 +4,7 @@
 @using Tauchplaetze.Core.Features.Forecasts
 @using Tauchplaetze.Core.Features.Forecasts.Queries
 @using Tauchplaetze.Core.Features.WaterBodies
+@using Tauchplaetze.Web.Features.DiveSites
 @inject Microsoft.Extensions.Options.IOptions<Tauchplaetze.Core.CrossCutting.Mail.PublicSiteOptions> Site
 @inject IStringLocalizer<SharedStrings> L
 @inject IStringLocalizer<ForecastStrings> F
@@ -70,6 +71,7 @@
                         {
                             <p class="mountain-lake" data-mountain-lake>@L["MountainLake", topElevation]</p>
                         }
+                        <SiteSymbolBar Symbols="top.SymbolList" />
                     </div>
                     <div class="index" data-index-band="@ForecastFormat.IndexBand(top.DiveIndex)">@ForecastFormat.Number(top.DiveIndex)</div>
                 </div>
@@ -229,8 +231,8 @@
             <span class="rank">@rank</span>
             <div class="ranking-site">
                 <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
-                <span class="where">@Where(site)@if (site.MountainLakeElevation is { } elevation)
-                {<span class="mountain-lake" data-mountain-lake> · @L["MountainLake", elevation]</span>}</span>
+                <span class="where">@Where(site)</span>
+                <SiteSymbolBar Symbols="site.SymbolList" />
                 <span class="bar" data-index-band="@ForecastFormat.IndexBand(site.DiveIndex)" style="width: @(FormattableString.Invariant($"{Math.Clamp(site.DiveIndex * 10, 10, 100):0}%"))"></span>
                 @if (site.Reasons.Count > 0)
                 {

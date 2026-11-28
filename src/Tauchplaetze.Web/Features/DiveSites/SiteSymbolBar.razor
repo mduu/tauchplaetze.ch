@@ -1,0 +1,87 @@
+@using Tauchplaetze.Core.Features.DiveSites
+@inject IStringLocalizer<DiveSiteStrings> L
+@inject IStringLocalizer<SharedStrings> Shared
+
+@if (!Symbols.IsEmpty)
+{
+    <ul class="site-symbols" data-size="@(Large ? "large" : "small")" aria-label="@L["Symbols_Label"]" data-site-symbols>
+        @if (Symbols.Notice is { } notice)
+        {
+            @Item($"notice-{notice.ToString().ToLowerInvariant()}", L[$"Symbol_Notice_{notice}"], NoticeIcon(notice))
+        }
+        @if (Symbols.Difficulty is { } difficulty)
+        {
+            <li class="site-symbol" data-symbol="difficulty" data-band="@difficulty.ToString().ToLowerInvariant()" title="@L["Symbol_Difficulty_Title", L[$"Symbol_Difficulty_{difficulty}"]]">
+                <svg width="30" height="20" viewBox="0 0 36 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 3h5l1.5 9 3.5 8H4.5l1.5-8z" />
+                    @for (var dot = 1; dot <= 3; dot++)
+                    {
+                        <circle cx="@(21 + (dot - 1) * 6)" cy="12" r="2.2" fill="@(dot <= (int)difficulty ? "currentColor" : "none")" />
+                    }
+                </svg>
+                <span class="@TextClass">@L[$"Symbol_Difficulty_{difficulty}"]</span>
+            </li>
+        }
+        @if (Symbols.MaxDepth is { } depth)
+        {
+            <li class="site-symbol depth" data-symbol="depth" title="@L["Symbol_Depth_Title", depth]">
+                <span aria-hidden="true">@L["Symbol_Depth", depth]</span><span class="visually-hidden">@L["Symbol_Depth_Title", depth]</span>
+            </li>
+        }
+        @foreach (var symbol in Symbols.Items)
+        {
+            @Item(symbol.ToString(), Text(symbol), Icon(symbol))
+        }
+    </ul>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public SiteSymbols Symbols { get; set; } = SiteSymbols.None;
+
+    /// <summary>Gross mit Text neben jedem Symbol (Hero der Platzseite). Sonst nur Symbole mit Tooltip.</summary>
+    [Parameter]
+    public bool Large { get; set; }
+
+    private string TextClass => Large ? "site-symbol-text" : "visually-hidden";
+
+    private string Text(SiteSymbol symbol) => symbol == SiteSymbol.MountainLake && Large && Symbols.MountainLakeElevation is { } elevation
+        ? Shared["MountainLake", elevation]
+        : L[$"Symbol_{symbol}"];
+
+    private RenderFragment Item(string name, string text, RenderFragment icon) =>
+        @<li class="site-symbol" data-symbol="@name" title="@text">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">@icon</svg>
+            <span class="@TextClass">@text</span>
+        </li>;
+
+    private static RenderFragment NoticeIcon(NoticeKind kind) => kind == NoticeKind.Closure
+        ? @<g><circle cx="12" cy="12" r="9" /><path d="M7.5 12h9" /></g>
+        : @<g><path d="M12 3.5 21 19.5H3z" /><path d="M12 10v4.5" /><path d="M12 17.2v.1" /></g>;
+
+    /// <summary>Linien-Symbole im Stil der Wettersymbole (`design-system.md`, `SiteSymbolBar`).</summary>
+    public static RenderFragment Icon(SiteSymbol symbol) => symbol switch
+    {
+        SiteSymbol.Defibrillator =>
+            @<g><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z" /><path d="M12.8 9.5l-2 3h2.6l-2 3" /></g>,
+        SiteSymbol.Toilet =>
+            @<g><rect x="3.5" y="4.5" width="17" height="15" rx="2" /><path d="M6.5 9l1.3 6 1.4-4.5 1.4 4.5 1.3-6" /><path d="M17.5 9.6a2.6 2.6 0 1 0 0 4.8" /></g>,
+        SiteSymbol.Parking =>
+            @<g><rect x="3.5" y="3.5" width="17" height="17" rx="3" /><path d="M10 17V7h3.2a3 3 0 0 1 0 6H10" /></g>,
+        SiteSymbol.FlagHolder =>
+            @<g><path d="M6 21V3" /><path d="M6 4h12l-4 4.5 4 4.5H6" /></g>,
+        SiteSymbol.Inclusive =>
+            @<g><circle cx="11" cy="4.5" r="1.6" /><path d="M11 8v5.5h5l2.5 5" /><path d="M8.5 10.8a5.2 5.2 0 1 0 7 6.7" /></g>,
+        SiteSymbol.Training =>
+            @<g><path d="M2.5 9 12 4.5 21.5 9 12 13.5z" /><path d="M6.5 11v5c3 2.2 8 2.2 11 0v-5" /><path d="M21.5 9v5" /></g>,
+        SiteSymbol.Wall =>
+            @<g><path d="M4 3.5h6v17h10" /><path d="M10 8h-3M10 12.5H7M10 17H7" /><path d="M13.5 9.5c1.4-.9 2.8-.9 4.2 0" /></g>,
+        SiteSymbol.Wreck =>
+            @<g><path d="M3 14.5 6 20h12l3-5.5z" /><path d="M11 14.5V5l6 6.5h-6" /></g>,
+        SiteSymbol.River =>
+            @<g><path d="M3 7c3-2 6 2 9 0s6-2 9 0" /><path d="M3 12c3-2 6 2 9 0s6-2 9 0" /><path d="M3 17c3-2 6 2 9 0s6-2 9 0" /></g>,
+        SiteSymbol.MountainLake =>
+            @<g><path d="m2.5 16.5 6-9 4 5.5 3-4 6 7.5" /><path d="M3 20.5c2-1.2 4 1.2 6 0s4-1.2 6 0 4 1.2 6 0" /></g>,
+        _ => @<circle cx="12" cy="12" r="4" />,
+    };
+}

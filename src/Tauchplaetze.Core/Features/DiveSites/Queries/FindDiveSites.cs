@@ -7,9 +7,8 @@ using Tauchplaetze.Core.CrossCutting.Geo;
 using Tauchplaetze.Core.CrossCutting.Time;
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Data;
-using Tauchplaetze.Core.Features.WaterBodies;
-
 using Tauchplaetze.Core.Features.Susv;
+using Tauchplaetze.Core.Features.WaterBodies;
 
 namespace Tauchplaetze.Core.Features.DiveSites.Queries;
 
@@ -83,7 +82,7 @@ public record FoundDiveSites(
     int WaterBodyCount,
     string? WaterBodyName);
 
-/// <summary>Ein Treffer mit Index heute, schwerstem Hinweis von heute, Eigenschaften und Distanz (nur mit Standort).</summary>
+/// <summary>Ein Treffer mit Index heute, schwerstem Hinweis von heute, Eigenschaften, Symbolen (Story 006) und Distanz (nur mit Standort).</summary>
 public record FoundDiveSite(
     string Slug,
     string Name,
@@ -97,8 +96,11 @@ public record FoundDiveSite(
     int? MaxDepth,
     IReadOnlyList<SiteTrait> Traits,
     double? DistanceKm,
-    IReadOnlyList<string>? OtherNames = null)
+    IReadOnlyList<string>? OtherNames = null,
+    SiteSymbols? Symbols = null)
 {
+    public SiteSymbols SymbolList => Symbols ?? SiteSymbols.None;
+
     public IReadOnlyList<string> OtherNameList => OtherNames ?? [];
 }
 
@@ -108,11 +110,7 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
     {
         var today = SwissTime.Today(time);
         var restrictions = await SiteRestrictions.Load(dbContext, ct);
-        var inclusive = (await dbContext.SusvEntries
-            .Where(SusvRules.ShownProject)
-            .Where(e => e.Topic == SusvTopic.InclusiveSite)
-            .SelectMany(e => e.Sites.Select(s => s.DiveSiteId))
-            .ToListAsync(ct)).ToHashSet();
+        var sources = await SiteSymbolSources.Load(dbContext, ct);
         var rows = await dbContext.DiveSites
             .AsNoTracking()
             .Where(d => d.Status == DiveSiteStatus.Published)
@@ -136,10 +134,11 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 d.WaterBody.NameFr,
                 d.WaterBody.NameIt,
                 d.WaterBody.WaterBodyType,
+                d.WaterBody.Elevation,
                 dbContext.DailyForecasts.Where(f => f.DiveSiteId == d.Id && f.Date == today).Select(f => f.DiveIndex).FirstOrDefault(),
                 d.OtherNames))
             .ToListAsync(ct);
-        rows = [.. rows.Select(r => r with { NoticeToday = restrictions[r.Id].WorstOn(today), Inclusive = inclusive.Contains(r.Id) })];
+        rows = [.. rows.Select(r => r with { NoticeToday = restrictions[r.Id].WorstOn(today), Projects = sources.ProjectsOf(r.Id), Places = sources.PlacesOf(r.Id) })];
         var otherNames = rows.ToDictionary(r => r.Slug, r => OtherNameJson.Read(r.OtherNames, logger));
 
         var hasLocation = query is { Latitude: not null, Longitude: not null };
@@ -190,14 +189,15 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
                 m.Row.MaxDepth,
                 m.Traits,
                 m.Distance is { } km ? Math.Round(km, 1) : null,
-                otherNames[m.Row.Slug]))],
+                otherNames[m.Row.Slug],
+                SymbolsOf(m.Row)))],
             matches.Count,
             page,
             pageCount,
             sort,
             [.. matches.Select(m => new DiveSiteListItem(
                 m.Row.Slug, m.Row.Name, m.Row.Municipality, m.Row.WaterSlug, WaterName(m.Row, query.Culture), m.Row.WaterType,
-                m.Row.Latitude, m.Row.Longitude, m.Row.ContentLevel, m.Row.DataLevel, m.Row.Index, m.Row.NoticeToday))],
+                m.Row.Latitude, m.Row.Longitude, m.Row.ContentLevel, m.Row.DataLevel, m.Row.Index, m.Row.NoticeToday, SymbolsOf(m.Row)))],
             rows.Count,
             rows.Select(r => r.WaterSlug).Distinct().Count(),
             waterName);
@@ -236,13 +236,16 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
             traits.Add(SiteTrait.Cave);
         }
 
-        if (row.Inclusive)
+        if (row.Projects.Contains(SusvTopic.InclusiveSite))
         {
             traits.Add(SiteTrait.Inclusive);
         }
 
         return traits;
     }
+
+    private static SiteSymbols SymbolsOf(Row row) => SiteSymbolRules.Of(new SiteSymbolFacts(
+        row.NoticeToday, row.Difficulty, row.MaxDepth, row.Wall, row.Wrecks, row.Features, row.WaterType, row.Elevation, row.Projects, row.Places));
 
     private static string WaterName(Row row, string culture) => WaterBodyNames.In(culture, row.NameDe, row.NameEn, row.NameFr, row.NameIt);
 
@@ -266,12 +269,15 @@ internal class FindDiveSitesHandler(TauchplaetzeDbContext dbContext, TimeProvide
         string? NameFr,
         string? NameIt,
         WaterBodyType WaterType,
+        int? Elevation,
         decimal? Index,
         string? OtherNames)
     {
         public NoticeKind? NoticeToday { get; init; }
 
-        public bool Inclusive { get; init; }
+        public IReadOnlySet<SusvTopic> Projects { get; init; } = new HashSet<SusvTopic>();
+
+        public IReadOnlySet<EntryPointKind> Places { get; init; } = new HashSet<EntryPointKind>();
 
         public double Latitude => Location.Y;
 

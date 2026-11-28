@@ -37,6 +37,8 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 d.HeroMediaId,
                 d.OtherNames,
                 d.HasDivingBan,
+                d.MaxDepth,
+                d.Features,
                 Ratings = new SiteRatings(d.DifficultyRating, d.WallRating, d.MarineLifeRating, d.WrecksRating, d.CurrentRating, d.SurroundingsRating),
                 WaterBody = new { d.WaterBody!.Slug, d.WaterBody.NameDe, d.WaterBody.NameEn, d.WaterBody.NameFr, d.WaterBody.NameIt, d.WaterBody.WaterBodyType, d.WaterBody.Elevation },
             })
@@ -44,6 +46,8 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
 
         var today = SwissTime.Today(time);
         var notices = site?.Status == DiveSiteStatus.Published ? await Notices(site.Id, query.Culture, today, ct) : [];
+        var entryPoints = site?.Status == DiveSiteStatus.Published ? await EntryPoints(site.Id, query.Culture, ct) : [];
+        var susvProjects = site?.Status == DiveSiteStatus.Published ? await SusvProjects(site.Id, query.Culture, ct) : [];
         return site?.Status switch
         {
             DiveSiteStatus.Published => new DiveSiteLookup.Found(new DiveSiteDetails(
@@ -60,7 +64,7 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 site.ContentLevel,
                 site.UpdatedAt,
                 notices,
-                await EntryPoints(site.Id, query.Culture, ct),
+                entryPoints,
                 site.Ratings,
                 Sketch(site.Sketch, query.Culture),
                 await Photos(site.Id, query.Culture, ct),
@@ -70,7 +74,12 @@ internal class GetDiveSiteHandler(TauchplaetzeDbContext dbContext, IMediaStore m
                 site.HasDivingBan,
                 MountainLakes.Elevation(site.WaterBody.WaterBodyType, site.WaterBody.Elevation),
                 ClosedDays(notices, today),
-                await SusvProjects(site.Id, query.Culture, ct))),
+                susvProjects,
+                SiteSymbolRules.Of(new SiteSymbolFacts(
+                    notices.Where(n => n.Timing == NoticeTiming.Today).Select(n => (NoticeKind?)n.Kind).Max(),
+                    site.Ratings.Difficulty, site.MaxDepth, site.Ratings.Wall, site.Ratings.Wrecks, site.Features,
+                    site.WaterBody.WaterBodyType, site.WaterBody.Elevation,
+                    susvProjects.Select(p => p.Topic).ToHashSet(), entryPoints.Select(e => e.Kind).ToHashSet())))),
             DiveSiteStatus.Archived => new DiveSiteLookup.Gone(),
             DiveSiteStatus.Draft => new DiveSiteLookup.NotFound(),
             _ => await FollowRedirect(query.Slug, ct),

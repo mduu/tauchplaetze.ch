@@ -10,14 +10,11 @@
             <div>
                 <a href="@PublicRoutes.DiveSite(Language, site.Slug)">@site.Name</a>
                 <span class="where">@string.Join(" · ", new[] { site.Municipality, site.WaterBodyName }.OfType<string>())</span>
-                @if (site.NoticeToday is NoticeKind.Closure or NoticeKind.Warning)
-                {
-                    <span class="notice-badge" data-notice-kind="@site.NoticeToday.ToString()!.ToLowerInvariant()">@L[$"Notice_{site.NoticeToday}"]</span>
-                }
                 @if (site.DataLevel is { } level)
                 {
                     <span class="label">@L[$"DataLevel_{level}"]</span>
                 }
+                <SiteSymbolBar Symbols="site.SymbolList" />
             </div>
             <div class="index-today" data-index-band="@ForecastFormat.IndexBand(site.DiveIndexToday)" title="@L["Index_Today"]">
                 @(site.DiveIndexToday is { } index ? ForecastFormat.Number(index) : "–")

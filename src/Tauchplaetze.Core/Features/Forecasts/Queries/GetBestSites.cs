@@ -64,8 +64,12 @@ public record RankedSite(
     WaterBodyType WaterBodyType = WaterBodyType.Lake,
     int? MountainLakeElevation = null,
     IReadOnlyList<RankedSite>? More = null,
-    bool ThermoclineUndetermined = false)
+    bool ThermoclineUndetermined = false,
+    SiteSymbols? Symbols = null)
 {
+    /// <summary>Symbole des Platzes (Story 006).</summary>
+    public SiteSymbols SymbolList => Symbols ?? SiteSymbols.None;
+
     /// <summary>Den Querschnitt mit Temperaturen gibt es nur im See.</summary>
     public bool HasDepthProfile => WaterBodyType != WaterBodyType.River;
 
@@ -85,6 +89,7 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
         var days = Enumerable.Range(0, ForecastSources.ForecastDays).Select(today.AddDays).ToList();
         var date = query.Date is { } wanted && days.Contains(wanted) ? wanted : today;
         var restrictions = await SiteRestrictions.Load(dbContext, ct);
+        var sources = await SiteSymbolSources.Load(dbContext, ct);
         var closed = restrictions.Where(r => r.IsClosedOn(date)).Select(r => r.Key).ToList();
         var origin = query.Area is { } area ? GeoPoints.Create(area.Latitude, area.Longitude) : null;
 
@@ -102,6 +107,12 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
         var rows = await forecasts
             .Select(x => new
             {
+                x.d.Id,
+                x.d.DifficultyRating,
+                x.d.MaxDepth,
+                x.d.WallRating,
+                x.d.WrecksRating,
+                x.d.Features,
                 x.d.WaterBodyId,
                 x.d.Slug,
                 x.d.Name,
@@ -136,7 +147,10 @@ internal class GetBestSitesHandler(TauchplaetzeDbContext dbContext, TimeProvider
                 origin is null ? null : Math.Round(Distance.Km(origin, t.r.Location), 0),
                 t.r.Water.WaterBodyType,
                 MountainLakes.Elevation(t.r.Water.WaterBodyType, t.r.Water.Elevation),
-                ThermoclineUndetermined: t.Thermocline.Undetermined)))
+                ThermoclineUndetermined: t.Thermocline.Undetermined,
+                Symbols: SiteSymbolRules.Of(new SiteSymbolFacts(
+                    restrictions[t.r.Id].WorstOn(date), t.r.DifficultyRating, t.r.MaxDepth, t.r.WallRating, t.r.WrecksRating, t.r.Features,
+                    t.r.Water.WaterBodyType, t.r.Water.Elevation, sources.ProjectsOf(t.r.Id), sources.PlacesOf(t.r.Id))))))
             .OrderByDescending(s => RankingRules.Score(s.Site.DiveIndex, s.Site.DistanceKm))
             .ThenByDescending(s => s.Site.DiveIndex)
             .ThenBy(s => s.Site.Name, StringComparer.Ordinal)

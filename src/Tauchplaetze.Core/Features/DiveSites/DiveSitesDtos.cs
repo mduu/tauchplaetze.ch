@@ -45,8 +45,12 @@ public record DiveSiteDetails(
     bool HasDivingBan = false,
     int? MountainLakeElevation = null,
     IReadOnlyList<DateOnly>? ClosedDays = null,
-    IReadOnlyList<SiteSusvProject>? SusvProjects = null)
+    IReadOnlyList<SiteSusvProject>? SusvProjects = null,
+    SiteSymbols? Symbols = null)
 {
+    /// <summary>Symbole des Platzes für den Hero (Story 006).</summary>
+    public SiteSymbols SymbolList => Symbols ?? SiteSymbols.None;
+
     /// <summary>Bestätigte Projekte des SUSV an diesem Platz (Story 004). Sie ändern die Ausbaustufe nicht.</summary>
     public IReadOnlyList<SiteSusvProject> SusvProjectList => SusvProjects ?? [];
 

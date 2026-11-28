@@ -52,14 +52,7 @@
             {
                 <p class="other-names">@L["Site_OtherNames", string.Join(", ", site.OtherNameList)]</p>
             }
-            @if (site.MountainLakeElevation is { } elevation)
-            {
-                <p class="mountain-lake" data-mountain-lake>@Shared["MountainLake", elevation]</p>
-            }
-            @if (site.SusvProject(SusvTopic.InclusiveSite) is not null)
-            {
-                <p class="hero-tag" data-inclusive>@L["Trait_Inclusive"]</p>
-            }
+            <SiteSymbolBar Symbols="site.SymbolList" Large="true" />
         </UnderwaterHero>
 
         @if (Saved is "vorschlag" or "online")
