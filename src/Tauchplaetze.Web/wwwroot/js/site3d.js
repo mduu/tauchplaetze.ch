@@ -472,15 +472,51 @@
     function addEntries() {
       entries.filter(function (e) { return e.water; }).forEach(function (entry) {
         const p = local(entry.lat, entry.lng);
-        const y = Math.max(heightAt(p[0], p[1]), 0.4);
+        const shore = heightAt(p[0], p[1]) >= 0 ? p : nearestShore(p[0], p[1], 40);
         const g = new THREE.Group();
-        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 7, 8), hullMat); pole.position.y = 3.5; g.add(pole);
-        const flag = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 2.4), new THREE.MeshBasicMaterial({ color: 0xE5322D, side: THREE.DoubleSide })); flag.position.set(1.8, 5.8, 0); g.add(flag);
-        const bar = new THREE.Mesh(new THREE.PlaneGeometry(3.7, 0.5), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })); bar.position.set(1.8, 5.8, 0.01); bar.rotation.z = -0.55; g.add(bar);
-        g.position.copy(toWorld(p[0], p[1], y));
+        let top;
+        if (shore) {
+          const y = heightAt(shore[0], shore[1]);
+          const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 9, 8), hullMat); pole.position.y = 4.5; g.add(pole);
+          g.add(alphaFlag(8.6, 1.6));
+          g.position.copy(toWorld(shore[0], shore[1], y));
+          top = toWorld(shore[0], shore[1], y + 12);
+        } else {
+          const buoy = new THREE.Mesh(new THREE.SphereGeometry(0.9, 16, 10), signalMat); buoy.scale.y = 0.7; g.add(buoy);
+          const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 3.6, 8), hullMat); pole.position.y = 1.8; g.add(pole);
+          g.add(alphaFlag(3, 0.55));
+          g.position.copy(toWorld(p[0], p[1], 0));
+          top = toWorld(p[0], p[1], 5.5);
+        }
+        g.rotation.y = Math.atan2(along[1], along[0]);
         scene.add(g);
-        addLabel(toWorld(p[0], p[1], y + 9), '<span class="dot" style="background:#7FE3D6"></span>' + escapeHtml(entry.name || text.entry));
+        addLabel(top, '<span class="dot" style="background:#7FE3D6"></span>' + escapeHtml(entry.name || text.entry));
       });
+    }
+
+    /** Taucherflagge «Alpha»: weiss am Mast, blau mit Schwalbenschwanz. */
+    function alphaFlag(top, scale) {
+      const k = scale || 1, w = 3.6 * k, h = 2.4 * k;
+      const flag = new THREE.Group();
+      const white = new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(w / 2, 0), new THREE.Vector2(w / 2, h), new THREE.Vector2(0, h)]);
+      const blue = new THREE.Shape([new THREE.Vector2(w / 2, 0), new THREE.Vector2(w, 0), new THREE.Vector2(w * 0.75, h / 2), new THREE.Vector2(w, h), new THREE.Vector2(w / 2, h)]);
+      flag.add(new THREE.Mesh(new THREE.ShapeGeometry(white), new THREE.MeshBasicMaterial({ color: 0xF4F7F6, side: THREE.DoubleSide })));
+      flag.add(new THREE.Mesh(new THREE.ShapeGeometry(blue), new THREE.MeshBasicMaterial({ color: 0x1E4FA3, side: THREE.DoubleSide })));
+      flag.position.set(0.2, top - h, 0);
+      return flag;
+    }
+
+    function nearestShore(x, y, radius) {
+      let best = null, bestDistance = radius;
+      for (let dy = -radius; dy <= radius; dy += CELL) {
+        for (let dx = -radius; dx <= radius; dx += CELL) {
+          const distance = Math.hypot(dx, dy);
+          if (distance <= bestDistance && Math.abs(x + dx) <= HALF && Math.abs(y + dy) <= HALF && heightAt(x + dx, y + dy) >= 0.3) {
+            best = [x + dx, y + dy]; bestDistance = distance;
+          }
+        }
+      }
+      return best;
     }
 
     const route = routeAlongGround();
