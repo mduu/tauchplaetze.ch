@@ -96,6 +96,7 @@
   }
 
   const AERIAL_TIMEOUT_MS = 8000;
+  const AERIAL_FALLBACK = '#5C6B52';
 
   // Luftbild: Kacheln von swisstopo (Web Mercator, Zoom 18), umgerechnet auf das Raster in LV95.
   function loadAerial(origin, size, pixels) {
@@ -117,6 +118,8 @@
     mosaic.width = (tx2 - tx1 + 1) * 256;
     mosaic.height = (ty2 - ty1 + 1) * 256;
     const mctx = mosaic.getContext('2d');
+    mctx.fillStyle = AERIAL_FALLBACK;
+    mctx.fillRect(0, 0, mosaic.width, mosaic.height);
     const loads = [];
     for (let tx = tx1; tx <= tx2; tx++) {
       for (let ty = ty1; ty <= ty2; ty++) {
@@ -131,7 +134,7 @@
       }
     }
     return Promise.all(loads).then(function (results) {
-      if (!results.every(Boolean)) {
+      if (!results.some(Boolean)) {
         return null;
       }
       const source = mctx.getImageData(0, 0, mosaic.width, mosaic.height).data;
@@ -221,7 +224,10 @@
     controls.enablePan = true; controls.screenSpacePanning = true;
     controls.rotateSpeed = 0.9; controls.autoRotateSpeed = 0.6;
     controls.listenToKeyEvents(canvas);
+    controls.touches = { ONE: null, TWO: THREE.TOUCH.DOLLY_ROTATE };
+    canvas.style.touchAction = 'pan-y';
     canvas.tabIndex = 0;
+    canvas.addEventListener('wheel', zoomOnlyWithModifier, { capture: true });
 
     const uniforms = {
       uTime: { value: 0 },
@@ -450,7 +456,7 @@
           scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([toWorld(p[0], p[1], y + 1), top]),
             new THREE.LineBasicMaterial({ color: estimated ? 0xFF9A4D : 0x7FE3D6, transparent: true, opacity: 0.7 })));
           const depth = ground < 0 || feature.depth != null
-            ? (estimated ? '<i class="est" title="' + escapeHtml(text.estimatedTitle) + '">≈ ' + Math.round(-ground) + ' m</i>' : '<i>' + feature.depth + ' m</i>')
+            ? (estimated ? '<i class="est" title="' + escapeHtml(text.estimatedTitle) + '">≈ ' + Math.round(-ground) + ' m</i>' : '<i>' + escapeHtml(feature.depth) + ' m</i>')
             : '';
           const dot = feature.kind === 'Danger' || estimated ? '#FF9A4D' : '#7FE3D6';
           addLabel(top, '<span class="dot" style="background:' + dot + '"></span>' + escapeHtml(label(feature)) + depth);
@@ -548,7 +554,8 @@
       return null;
     }
 
-    let routeMat = null, arrows = null, ARROWS = 26, diver = null, legs = [], halo = null;
+    const ARROWS = 26;
+    let routeMat = null, arrows = null, diver = null, legs = [], halo = null;
     const v3 = new THREE.Vector3(), dummy = new THREE.Object3D(), ahead = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0), mouth = new THREE.Vector3(0, 0.7, 0);
     if (route) {
       addRouteTrail();
@@ -574,7 +581,6 @@
       scene.add(arrows);
     }
 
-    /** Rumpf mit Jacket und Flasche, Kopf mit Maske, Arme am Körper, Beine mit Knie und Flossen. */
     function addDiver() {
       diver = new THREE.Group();
       const suit = new THREE.MeshStandardMaterial({ color: 0x1B2E33, roughness: 0.55, emissive: 0x060c0d });
@@ -719,6 +725,20 @@
     const btnSpin = viewer.querySelector('[data-3d-spin]');
     btnSpin.onclick = function () { controls.autoRotate = !controls.autoRotate; btnSpin.setAttribute('aria-pressed', String(controls.autoRotate)); };
     const hint = viewer.querySelector('[data-3d-hint]');
+    let nudgeTimer = 0;
+    /** Ohne Ctrl oder ⌘ scrollt das Mausrad die Seite (Entscheid Marc, 28.11.2026). */
+    function zoomOnlyWithModifier(event) {
+      if (!event.ctrlKey && !event.metaKey) {
+        event.stopImmediatePropagation();
+        nudgeHint();
+      }
+    }
+    function nudgeHint() {
+      hint.classList.remove('gone');
+      hint.classList.add('nudge');
+      clearTimeout(nudgeTimer);
+      nudgeTimer = setTimeout(function () { hint.classList.remove('nudge'); }, 1600);
+    }
     canvas.onpointerdown = function () { hint.classList.add('gone'); canvas.onpointerdown = null; };
 
     function resize() {
@@ -737,16 +757,20 @@
     const intersection = new IntersectionObserver(function (items) { visible = items[0].isIntersecting; });
     intersection.observe(viewer);
 
-    let last = performance.now(), breath = 0, stopped = false;
+    let last = performance.now(), breath = 0, stopped = false, running = false;
     function frame(now) {
       if (stopped) { return; }
       if (!document.body.contains(canvas)) {
         dispose();
         return;
       }
+      if (stage.dataset.mode !== '3d') {
+        running = false;
+        return;
+      }
       requestAnimationFrame(frame);
       const dt = Math.max(0, Math.min(0.05, (now - last) / 1000)); last = now;
-      if (!visible || document.hidden || stage.dataset.mode !== '3d') { return; }
+      if (!visible || document.hidden) { return; }
       if (!reduceMotion) { uniforms.uTime.value += dt; }
       if (fly) {
         fly.t = Math.min(1, fly.t + dt / 1.4);
@@ -764,8 +788,15 @@
       placeLabels();
       renderer.render(scene, camera);
     }
-    requestAnimationFrame(frame);
-    return dispose;
+    resume();
+    return { dispose: dispose, resume: resume };
+
+    function resume() {
+      if (running || stopped) { return; }
+      running = true;
+      last = performance.now();
+      requestAnimationFrame(frame);
+    }
 
     function dispose() {
       stopped = true;
@@ -784,7 +815,8 @@
       labelsEl.replaceChildren();
       profile.querySelector('svg').replaceChildren();
       viewer.querySelectorAll('[data-view]').forEach(function (b) { b.onclick = null; });
-      btnPlay.onclick = null; btnSpin.onclick = null; canvas.onpointerdown = null;
+      btnPlay.onclick = null; btnSpin.onclick = null; canvas.onpointerdown = null; canvas.removeEventListener('wheel', zoomOnlyWithModifier, { capture: true });
+      clearTimeout(nudgeTimer);
     }
 
     function updateRoute(now, dt) {
@@ -835,21 +867,21 @@
           if (Math.random() < 0.25) { const m = ripples[rippleNext]; rippleNext = (rippleNext + 1) % ripples.length; m.position.set(bubbles.positions[k * 3], 0.05, bubbles.positions[k * 3 + 2]); m.userData.t = 0; }
           bubbles.life[k] = -1;
         }
-    }
-    for (let k = 0; k < wake.max; k++) {
-      if (wake.life[k] < 0) { continue; }
-      wake.life[k] += dt / 1.8; wake.positions[k * 3 + 1] += dt * 0.4;
-      if (wake.life[k] >= 1) { wake.life[k] = -1; }
-    }
-    ['position', 'life', 'size'].forEach(function (a) { if (bubbles.geo.attributes[a]) { bubbles.geo.attributes[a].needsUpdate = true; } });
-    wake.geo.attributes.position.needsUpdate = true; wake.geo.attributes.life.needsUpdate = true;
-    ripples.forEach(function (m) {
-      if (m.userData.t < 0) { return; }
-      m.userData.t += dt;
-      const t = m.userData.t / 1.6;
-      m.scale.setScalar(1 + t * 4); m.material.opacity = Math.max(0, 0.6 * (1 - t));
-      if (t >= 1) { m.userData.t = -1; m.material.opacity = 0; }
-    });
+      }
+      for (let k = 0; k < wake.max; k++) {
+        if (wake.life[k] < 0) { continue; }
+        wake.life[k] += dt / 1.8; wake.positions[k * 3 + 1] += dt * 0.4;
+        if (wake.life[k] >= 1) { wake.life[k] = -1; }
+      }
+      ['position', 'life', 'size'].forEach(function (a) { if (bubbles.geo.attributes[a]) { bubbles.geo.attributes[a].needsUpdate = true; } });
+      wake.geo.attributes.position.needsUpdate = true; wake.geo.attributes.life.needsUpdate = true;
+      ripples.forEach(function (m) {
+        if (m.userData.t < 0) { return; }
+        m.userData.t += dt;
+        const t = m.userData.t / 1.6;
+        m.scale.setScalar(1 + t * 4); m.material.opacity = Math.max(0, 0.6 * (1 - t));
+        if (t >= 1) { m.userData.t = -1; m.material.opacity = 0; }
+      });
     }
 
     /** Etiketten auf den Bildschirm projizieren, verdeckte ausblenden. */
@@ -877,6 +909,7 @@
     const status = stage.querySelector('[data-3d-status]');
     stage.dataset.mode = '3d';
     if (state.built) {
+      state.resume();
       return;
     }
     state.built = true;
@@ -889,7 +922,9 @@
       if (stage.__site3d !== state) {
         return;
       }
-      state.dispose = build(stage, results[1], results[2]);
+      const view = build(stage, results[1], results[2]);
+      state.dispose = view.dispose;
+      state.resume = view.resume;
       status.hidden = true;
     } catch (e) {
       state.built = false;
@@ -905,7 +940,7 @@
       if (stage.__site3d) {
         stage.__site3d.dispose();
       }
-      const state = { built: false, webGl: webGlAvailable(), dispose: function () {} };
+      const state = { built: false, webGl: webGlAvailable(), dispose: function () {}, resume: function () {} };
       stage.__site3d = state;
       stage.dataset.mode = 'map';
       if (!state.webGl) {

@@ -479,6 +479,25 @@
     opacity: 0;
 }
 
+.site-3d-hint.nudge {
+    opacity: 1;
+    border-color: var(--color-primary);
+}
+
+.site-3d-hint .hint-touch {
+    display: none;
+}
+
+@media (pointer: coarse) {
+    .site-3d-hint .hint-mouse {
+        display: none;
+    }
+
+    .site-3d-hint .hint-touch {
+        display: inline;
+    }
+}
+
 .site-3d-hint .rot-icon {
     animation: rot 5s ease-in-out infinite;
 }
@@ -638,9 +657,23 @@
         max-width: none;
     }
 
-    .site-3d-hint,
     .site-3d-legend {
         display: none;
+    }
+
+    .site-3d-hint {
+        top: 14px;
+        right: 14px;
+        bottom: auto;
+        max-width: 48%;
+        padding: 6px 12px 6px 8px;
+        font-size: 12px;
+        line-height: 1.3;
+    }
+
+    .site-3d-hint .rot-icon {
+        width: 22px;
+        height: 22px;
     }
 
     .location-stage[data-mode="3d"] .site-3d-source {

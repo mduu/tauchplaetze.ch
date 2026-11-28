@@ -352,7 +352,8 @@
   <data name="Site3d_View_Wall" xml:space="preserve"><value>Wall</value></data>
   <data name="Site3d_View_Top" xml:space="preserve"><value>From above</value></data>
   <data name="Site3d_Spin" xml:space="preserve"><value>Rotate</value></data>
-  <data name="Site3d_Hint" xml:space="preserve"><value>Drag to rotate freely</value></data>
+  <data name="Site3d_HintTouch" xml:space="preserve"><value>Use two fingers to rotate and zoom</value></data>
+  <data name="Site3d_Hint" xml:space="preserve"><value>Drag to rotate · Ctrl/⌘ + scroll to zoom</value></data>
   <data name="Site3d_Diver" xml:space="preserve"><value>Diver</value></data>
   <data name="Site3d_Progress" xml:space="preserve"><value>{0} of {1} m route</value></data>
   <data name="Site3d_Profile" xml:space="preserve"><value>Depth profile of the route</value></data>

@@ -49,7 +49,7 @@ foreach (var site in seed)
 
     var x0 = (int)Math.Round(east / Block.Cell) * Block.Cell - Block.HalfSize;
     var y0 = (int)Math.Round(north / Block.Cell) * Block.Cell - Block.HalfSize;
-    if (blocks.Any(b => Math.Abs(b.X0 - x0) <= SharedRasterMetres && Math.Abs(b.Y0 - y0) <= SharedRasterMetres))
+    if (blocks.Any(b => b.X0 == x0 && b.Y0 == y0))
     {
         continue;
     }
@@ -90,7 +90,7 @@ var indexPath = Path.Combine(outDir, "index.json");
 List<JsonNode?> previous = File.Exists(indexPath)
     ? JsonNode.Parse(await File.ReadAllTextAsync(indexPath))!["sites"]!.AsArray()
         .Where(e => (string?)e!["lake"] is { } lake && (skippedLakes.Contains(lake) || (onlyLake is not null && lake != onlyLake)))
-        .Select(e => e!.DeepClone()).ToList()
+        .Select(e => (JsonNode?)e!.DeepClone()).ToList()
     : [];
 var index = new JsonObject
 {
@@ -100,6 +100,7 @@ var index = new JsonObject
     ["format"] = "Int16 little-endian, Dezimeter über (+) oder unter (-) der Seehöhe, Zeile für Zeile von Süden nach Norden, je von Westen nach Osten",
 };
 var sites = new JsonArray([.. previous]);
+var written = new List<Block>();
 var bytes = 0L;
 foreach (var block in blocks.Where(b => !skippedLakes.Contains(b.Lake)).OrderBy(b => b.Lake).ThenBy(b => b.Name, StringComparer.Ordinal))
 {
@@ -121,6 +122,12 @@ foreach (var block in blocks.Where(b => !skippedLakes.Contains(b.Lake)).OrderBy(
         continue;
     }
 
+    if (written.Any(b => Math.Abs(b.X0 - block.X0) <= SharedRasterMetres && Math.Abs(b.Y0 - block.Y0) <= SharedRasterMetres))
+    {
+        continue;
+    }
+
+    written.Add(block);
     var name = $"{block.X0}_{block.Y0}.bin";
     await File.WriteAllBytesAsync(Path.Combine(outDir, name), data);
     bytes += data.Length;
@@ -221,6 +228,7 @@ static async Task<string> Curl(string[] arguments)
 sealed class Block(string name, string lake, double latitude, double longitude, int x0, int y0, double surface)
 {
     public const int Cell = 2;
+    private const int MaxFillPasses = 3;
     public const int HalfSize = 120;
     public const int Points = HalfSize * 2 / Cell + 1;
     public const int Size = HalfSize * 2;
@@ -339,9 +347,10 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
         }
     }
 
+    /// <summary>Schliesst nur schmale Lücken zwischen den Punkten der beiden Quellen. Grössere Flächen ohne Daten bleiben leer.</summary>
     private static void Fill(short[] values)
     {
-        for (var pass = 0; pass < 2 * Points && values.Contains(short.MinValue); pass++)
+        for (var pass = 0; pass < MaxFillPasses && values.Contains(short.MinValue); pass++)
         {
             var next = (short[])values.Clone();
             for (var row = 0; row < Points; row++)
@@ -372,6 +381,9 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
 
 static class Grids
 {
+    /// <summary>Werte darunter sind Füllwerte, kein Seegrund (der tiefste Seegrund der Schweiz liegt rund 180 m unter Meer).</summary>
+    private const double ImpossibleHeight = -1000;
+
     /// <summary>Liest die ESRI-ASCII-Kacheln eines Sees, aber nur die, die einen Ausschnitt berühren.</summary>
     public static void ReadAsciiZip(string zipPath, IReadOnlyList<Block> blocks, Action<Block, (double, double, double), double> add)
     {
@@ -420,7 +432,7 @@ static class Grids
                     var east = left + (col + 0.5) * size;
                     col++;
                     var value = double.Parse(token, CultureInfo.InvariantCulture);
-                    if (value == noData || value < -100)
+                    if (value == noData || value < ImpossibleHeight)
                     {
                         continue;
                     }

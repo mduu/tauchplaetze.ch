@@ -352,7 +352,8 @@
   <data name="Site3d_View_Wall" xml:space="preserve"><value>Wand</value></data>
   <data name="Site3d_View_Top" xml:space="preserve"><value>Von oben</value></data>
   <data name="Site3d_Spin" xml:space="preserve"><value>Drehen</value></data>
-  <data name="Site3d_Hint" xml:space="preserve"><value>Ziehen dreht frei</value></data>
+  <data name="Site3d_HintTouch" xml:space="preserve"><value>Mit zwei Fingern drehen und zoomen</value></data>
+  <data name="Site3d_Hint" xml:space="preserve"><value>Ziehen dreht · Ctrl/⌘ + Mausrad zoomt</value></data>
   <data name="Site3d_Diver" xml:space="preserve"><value>Taucher</value></data>
   <data name="Site3d_Progress" xml:space="preserve"><value>{0} von {1} m Route</value></data>
   <data name="Site3d_Profile" xml:space="preserve"><value>Tiefenprofil der Route</value></data>

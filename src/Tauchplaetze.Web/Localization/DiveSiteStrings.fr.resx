@@ -352,7 +352,8 @@
   <data name="Site3d_View_Wall" xml:space="preserve"><value>Tombant</value></data>
   <data name="Site3d_View_Top" xml:space="preserve"><value>Vue de dessus</value></data>
   <data name="Site3d_Spin" xml:space="preserve"><value>Tourner</value></data>
-  <data name="Site3d_Hint" xml:space="preserve"><value>Glisser pour tourner librement</value></data>
+  <data name="Site3d_HintTouch" xml:space="preserve"><value>Deux doigts pour tourner et zoomer</value></data>
+  <data name="Site3d_Hint" xml:space="preserve"><value>Glisser pour tourner · Ctrl/⌘ + molette pour zoomer</value></data>
   <data name="Site3d_Diver" xml:space="preserve"><value>Plongeur</value></data>
   <data name="Site3d_Progress" xml:space="preserve"><value>{0} sur {1} m de parcours</value></data>
   <data name="Site3d_Profile" xml:space="preserve"><value>Profil de profondeur du parcours</value></data>

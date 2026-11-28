@@ -352,7 +352,8 @@
   <data name="Site3d_View_Wall" xml:space="preserve"><value>Parete</value></data>
   <data name="Site3d_View_Top" xml:space="preserve"><value>Dall’alto</value></data>
   <data name="Site3d_Spin" xml:space="preserve"><value>Ruota</value></data>
-  <data name="Site3d_Hint" xml:space="preserve"><value>Trascina per ruotare liberamente</value></data>
+  <data name="Site3d_HintTouch" xml:space="preserve"><value>Usa due dita per ruotare e zoomare</value></data>
+  <data name="Site3d_Hint" xml:space="preserve"><value>Trascina per ruotare · Ctrl/⌘ + rotella per lo zoom</value></data>
   <data name="Site3d_Diver" xml:space="preserve"><value>Sub</value></data>
   <data name="Site3d_Progress" xml:space="preserve"><value>{0} di {1} m di percorso</value></data>
   <data name="Site3d_Profile" xml:space="preserve"><value>Profilo di profondità del percorso</value></data>

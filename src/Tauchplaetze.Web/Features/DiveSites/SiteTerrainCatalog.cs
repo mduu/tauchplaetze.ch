@@ -16,7 +16,6 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
 
     private readonly Lazy<Index> index = new(() => Load(webRoot, logger));
 
-    /// <summary>Das Raster zum Platz an dieser Koordinate, sonst <c>null</c>.</summary>
     public SiteTerrain? Find(double latitude, double longitude)
     {
         var data = index.Value;
@@ -42,6 +41,7 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
         var file = webRoot.GetFileInfo("terrain/index.json");
         if (!file.Exists)
         {
+            logger.LogWarning("Terrain index is missing. The 3D view is off.");
             return Index.Empty;
         }
 
@@ -49,9 +49,19 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
         {
             using var stream = file.CreateReadStream();
             var index = JsonSerializer.Deserialize<Index>(stream, JsonSerializerOptions.Web);
-            return index is { Sites: not null, Points: > 1, CellSize: > 0 }
-                ? index with { Sites = [.. index.Sites.Where(IsUsable)] }
-                : Index.Empty;
+            if (index is not { Sites: not null, Points: > 1, CellSize: > 0 })
+            {
+                logger.LogWarning("Terrain index has no valid grid. The 3D view is off.");
+                return Index.Empty;
+            }
+
+            var usable = index.Sites.Where(IsUsable).ToList();
+            if (usable.Count < index.Sites.Count)
+            {
+                logger.LogWarning("Terrain index has {Unusable} unusable entries. They are ignored.", index.Sites.Count - usable.Count);
+            }
+
+            return index with { Sites = usable };
         }
         catch (Exception ex)
         {
