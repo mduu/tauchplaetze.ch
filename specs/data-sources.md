@@ -233,20 +233,20 @@ Das Skript `tools/bathymetry/contours.cs` rechnet einmalig Tiefenlinien. Die App
 - **Neu rechnen:** nur, wenn swisstopo neue Daten liefert. Der Stand ist pro See verschieden (2014 bis 2026) und steht in `index.json`.
 - **Grösse:** 22 Seen, 1671 Kacheln, zusammen 10 MB (gzip rund 3 MB). Die grössten: Bodensee 2.2 MB, Genfersee 1.6 MB, Vierwaldstättersee 1.4 MB.
 
+- Damit ist offener Punkt #11 (Kartenkacheln) entschieden: swisstopo.
+- Google Maps und Apple Karten sind nur Links für die Route (`google.com/maps/dir/?api=1&destination=…`, `maps.apple.com/?daddr=…`). Kein API-Key, keine Kosten. Erst der Klick schickt die Koordinate an den Anbieter.
+
 ### Höhenraster für die 3D-Ansicht (swissBATHY3D, swissALTI3D)
 
 Das Skript `tools/bathymetry/terrain.cs` rechnet einmalig pro Platz ein Höhenraster für die 3D-Ansicht (`stories/007-platz-in-3d.md`). Die App lädt nur die fertigen Dateien.
 
 - **Quellen:** Seegrund aus swissBATHY3D (dieselben ZIP wie die Tiefenlinien, 1 m). Land aus swissALTI3D (STAC `ch.swisstopo.swissalti3d`, XYZ mit 2 m, die neueste Kachel pro km). Beide in LN02, OGD, Quellenangabe «© swisstopo».
-- **Plätze:** aus `dive-sites.json` (Seed), nur an Seen mit swissBATHY3D. Ein Platz, den die Redaktion später anlegt, bekommt sein Raster mit dem nächsten Lauf.
+- **Plätze:** nur aus `dive-sites.json` (Seed), nur an Seen mit swissBATHY3D und mit mindestens 5 m Seegrund im Ausschnitt (236 Plätze, 28.11.2026). Ein Platz, den die Redaktion nur in Prod anlegt, hat kein Raster, bis er im Seed steht. Wer einen Platz um mehr als 60 m verschiebt, rechnet das Raster neu.
 - **Ausschnitt:** 240 × 240 m um die Koordinate des Platzes, Punkte alle 2 m (121 × 121). Wo swissBATHY3D Werte hat, gilt der Seegrund, sonst das Land. Lücken füllt der Mittelwert der Nachbarn.
-- **Ausgabe:** `wwwroot/terrain/{e}_{n}.bin` (`Int16`, Dezimeter über oder unter der Seehöhe aus dem Index der Tiefenlinien, Zeilen von Süden nach Norden, je von Westen nach Osten; `e`, `n` = Ecke im Südwesten in LV95) und `wwwroot/terrain/index.json` mit Koordinate des Platzes, Ecke und Datei. Rund 29 KB pro Platz.
+- **Ausgabe:** `wwwroot/terrain/{e}_{n}.bin` (`Int16`, Dezimeter über oder unter der Seehöhe aus dem Index der Tiefenlinien, Zeilen von Süden nach Norden, je von Westen nach Osten; `e`, `n` = Ecke im Südwesten in LV95) und `wwwroot/terrain/index.json` mit Koordinate des Platzes, See, Ecke und Datei. `--lake` rechnet nur einen See und behält die übrigen Einträge. Ein voller Lauf löscht Raster ohne Eintrag. Am Ufer glättet das Skript die Stufe zwischen swissBATHY3D (endet rund 1 m unter dem Spiegel) und swissALTI3D. Rund 29 KB pro Platz.
 - **Zuordnung:** Die Seite nimmt das Raster, dessen Platz höchstens 60 m von der Koordinate des Platzes liegt (`SiteTerrainCatalog`). Ohne Raster gibt es keinen Sticker und keine 3D-Ansicht.
 - **Abrufe:** höchstens 2 Anfragen pro Sekunde an STAC und Download, `User-Agent` mit Kontakt. Cache in `tools/bathymetry/out/alti/` (nicht im Git).
 - **Luftbild:** SWISSIMAGE als Kacheln von swisstopo (WMTS, Web Mercator, Zoom 18), lädt der Browser erst beim Öffnen der 3D-Ansicht, wie die Ebene «Luftbild» der Karte.
-
-- Damit ist offener Punkt #11 (Kartenkacheln) entschieden: swisstopo.
-- Google Maps und Apple Karten sind nur Links für die Route (`google.com/maps/dir/?api=1&destination=…`, `maps.apple.com/?daddr=…`). Kein API-Key, keine Kosten. Erst der Klick schickt die Koordinate an den Anbieter.
 
 ## OpenStreetMap
 

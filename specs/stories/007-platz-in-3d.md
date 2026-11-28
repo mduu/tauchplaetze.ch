@@ -1,6 +1,6 @@
 # Story 007: Der Platz in 3D
 
-**Status:** umgesetzt im Branch `feature/007-platz-in-3d` (28.11.2026), nicht gemergt. Marc testet lokal.
+**Status:** umgesetzt am 28.11.2026, noch nicht deployt.
 
 ## Ziel
 

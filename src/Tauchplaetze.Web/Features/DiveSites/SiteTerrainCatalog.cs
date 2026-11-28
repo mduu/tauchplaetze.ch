@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.FileProviders;
 
 namespace Tauchplaetze.Web.Features.DiveSites;
 
@@ -9,19 +10,19 @@ public record SiteTerrain(string File, int East, int North, int Points, double C
 /// Die Höhenraster der Plätze als statische Dateien (`wwwroot/terrain`, erzeugt von `tools/bathymetry/terrain.cs`).
 /// Ein Raster gehört zu einem Platz, wenn dessen Koordinate höchstens <see cref="MaxDistanceMetres"/> von der Koordinate beim Erzeugen liegt.
 /// </summary>
-public sealed class SiteTerrainCatalog(IWebHostEnvironment environment, ILogger<SiteTerrainCatalog> logger)
+public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrainCatalog> logger)
 {
     public const double Cell = 2;
 
     private const double MaxDistanceMetres = 60;
 
-    private readonly Lazy<Index> index = new(() => Load(environment, logger));
+    private readonly Lazy<Index> index = new(() => Load(webRoot, logger));
 
     /// <summary>Das Raster zum Platz an dieser Koordinate, sonst <c>null</c>.</summary>
     public SiteTerrain? Find(double latitude, double longitude)
     {
         var data = index.Value;
-        var best = data.Sites
+        var best = (data.Sites ?? [])
             .Select(s => (Site: s, Metres: Metres(latitude, longitude, s.Lat, s.Lng)))
             .Where(s => s.Metres <= MaxDistanceMetres)
             .OrderBy(s => s.Metres)
@@ -37,27 +38,32 @@ public sealed class SiteTerrainCatalog(IWebHostEnvironment environment, ILogger<
         return Math.Sqrt(dx * dx + dy * dy);
     }
 
-    private static Index Load(IWebHostEnvironment environment, ILogger logger)
+    /// <remarks>Ein fehlender oder kaputter Index schaltet die 3D-Ansicht aus, ohne die Platzseite scheitern zu lassen.</remarks>
+    private static Index Load(IFileProvider webRoot, ILogger logger)
     {
-        var file = environment.WebRootFileProvider.GetFileInfo("terrain/index.json");
+        var file = webRoot.GetFileInfo("terrain/index.json");
         if (!file.Exists)
         {
-            return new Index(0, Cell, []);
+            return Index.Empty;
         }
 
         try
         {
             using var stream = file.CreateReadStream();
-            return JsonSerializer.Deserialize<Index>(stream, JsonSerializerOptions.Web) ?? new Index(0, Cell, []);
+            var index = JsonSerializer.Deserialize<Index>(stream, JsonSerializerOptions.Web);
+            return index is { Sites: not null } ? index : Index.Empty;
         }
-        catch (JsonException ex)
+        catch (Exception ex) when (ex is JsonException or IOException)
         {
             logger.LogWarning(ex, "Terrain index is unreadable. The 3D view is off.");
-            return new Index(0, Cell, []);
+            return Index.Empty;
         }
     }
 
-    private sealed record Index(int Points, double CellSize, IReadOnlyList<Entry> Sites);
+    private sealed record Index(int Points, double CellSize, IReadOnlyList<Entry>? Sites)
+    {
+        public static readonly Index Empty = new(0, Cell, []);
+    }
 
     private sealed record Entry(double Lat, double Lng, int E, int N, string File);
 }

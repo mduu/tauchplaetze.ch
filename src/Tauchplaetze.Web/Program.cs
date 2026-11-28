@@ -38,7 +38,7 @@ builder.Services.Configure<BathymetryOptions>(options =>
 builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(ForecastSchedule.Section));
 builder.Services.Configure<JobOptions>(builder.Configuration.GetSection(JobOptions.Section));
 builder.Services.AddSingleton<StartupGrace>();
-builder.Services.AddSingleton<SiteTerrainCatalog>();
+builder.Services.AddSingleton(services => new SiteTerrainCatalog(builder.Environment.WebRootFileProvider, services.GetRequiredService<ILogger<SiteTerrainCatalog>>()));
 builder.Services.AddHostedService<ForecastWorker>();
 builder.Services.AddHostedService<DischargeWorker>();
 builder.Services.AddHostedService<LakeLevelWorker>();

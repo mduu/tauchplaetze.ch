@@ -14,10 +14,6 @@ using System.Text.Json.Nodes;
 
 const string AltiStac = "https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissalti3d/items";
 const string UserAgent = "tauchplaetze.ch terrain (https://tauchplaetze.ch)";
-const int Cell = 2;
-const int HalfSize = 120;
-const int Points = HalfSize * 2 / Cell + 1;
-const short NoData = short.MinValue;
 
 var root = FindRepositoryRoot();
 var cacheDir = Path.Combine(root, "tools", "bathymetry", "out");
@@ -49,8 +45,8 @@ foreach (var site in seed)
         continue;
     }
 
-    var x0 = (int)Math.Round(east / Cell) * Cell - HalfSize;
-    var y0 = (int)Math.Round(north / Cell) * Cell - HalfSize;
+    var x0 = (int)Math.Round(east / Block.Cell) * Block.Cell - Block.HalfSize;
+    var y0 = (int)Math.Round(north / Block.Cell) * Block.Cell - Block.HalfSize;
     if (blocks.Any(b => b.X0 == x0 && b.Y0 == y0))
     {
         continue;
@@ -86,14 +82,18 @@ foreach (var tile in blocks.SelectMany(b => b.Tiles()).Distinct().OrderBy(t => t
     Grids.ReadXyzZip(path, touching);
 }
 
+var indexPath = Path.Combine(outDir, "index.json");
+List<JsonNode?> previous = onlyLake is not null && File.Exists(indexPath)
+    ? JsonNode.Parse(await File.ReadAllTextAsync(indexPath))!["sites"]!.AsArray().Where(e => (string?)e!["lake"] != onlyLake).Select(e => e!.DeepClone()).ToList()
+    : [];
 var index = new JsonObject
 {
     ["source"] = "swissBATHY3D, swissALTI3D, © swisstopo",
-    ["cellSize"] = Cell,
-    ["points"] = Points,
+    ["cellSize"] = Block.Cell,
+    ["points"] = Block.Points,
     ["format"] = "Int16 little-endian, Dezimeter über (+) oder unter (-) der Seehöhe, Zeile für Zeile von Süden nach Norden, je von Westen nach Osten",
 };
-var sites = new JsonArray();
+var sites = new JsonArray([.. previous]);
 var bytes = 0L;
 foreach (var block in blocks.OrderBy(b => b.Lake).ThenBy(b => b.Name, StringComparer.Ordinal))
 {
@@ -119,12 +119,19 @@ foreach (var block in blocks.OrderBy(b => b.Lake).ThenBy(b => b.Name, StringComp
         ["e"] = block.X0,
         ["n"] = block.Y0,
         ["surface"] = block.Surface,
+        ["lake"] = block.Lake,
         ["file"] = name,
     });
 }
 
 index["sites"] = sites;
-await File.WriteAllTextAsync(Path.Combine(outDir, "index.json"), index.ToJsonString() + "\n");
+await File.WriteAllTextAsync(indexPath, index.ToJsonString() + "\n");
+var listed = sites.Select(e => (string)e!["file"]!).ToHashSet();
+foreach (var stale in Directory.GetFiles(outDir, "*.bin").Where(f => !listed.Contains(Path.GetFileName(f))))
+{
+    File.Delete(stale);
+}
+
 Console.WriteLine($"{sites.Count} Raster, {bytes / 1024.0 / 1024.0:0.0} MB");
 return;
 
@@ -200,8 +207,10 @@ static async Task<string> Curl(string[] arguments)
 /// <summary>Der Ausschnitt eines Platzes: Punkte im Abstand von <c>Cell</c> Metern ab der Ecke <c>X0</c>, <c>Y0</c> (LV95, Südwesten).</summary>
 sealed class Block(string name, string lake, double latitude, double longitude, int x0, int y0, double surface)
 {
-    private const int Cell = 2;
-    private const int Points = 121;
+    public const int Cell = 2;
+    public const int HalfSize = 120;
+    public const int Points = HalfSize * 2 / Cell + 1;
+    public const int Size = HalfSize * 2;
 
     private readonly float[] lakeSum = new float[Points * Points];
     private readonly short[] lakeCount = new short[Points * Points];
@@ -260,6 +269,7 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
         }
 
         Fill(values);
+        SmoothShore(values);
         var bytes = new byte[values.Length * 2];
         Buffer.BlockCopy(values, 0, bytes, 0, bytes.Length);
         return bytes;
@@ -270,6 +280,33 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
         var col = (int)Math.Round((east - x0) / Cell);
         var row = (int)Math.Round((north - y0) / Cell);
         return col is >= 0 and < Points && row is >= 0 and < Points ? row * Points + col : null;
+    }
+
+    /// <summary>
+    /// Glättet den Übergang zwischen Seegrund und Land: swissBATHY3D endet rund einen Meter unter dem Wasserspiegel, swissALTI3D zeigt dort den Spiegel.
+    /// Ohne Glättung entsteht am Ufer eine gezackte Stufe.
+    /// </summary>
+    private static void SmoothShore(short[] values)
+    {
+        for (var pass = 0; pass < 3; pass++)
+        {
+            var next = (short[])values.Clone();
+            for (var row = 1; row < Points - 1; row++)
+            {
+                for (var col = 1; col < Points - 1; col++)
+                {
+                    var i = row * Points + col;
+                    if (values[i] is < -40 or > 30)
+                    {
+                        continue;
+                    }
+
+                    next[i] = (short)((values[i] * 4 + values[i - 1] + values[i + 1] + values[i - Points] + values[i + Points]) / 8);
+                }
+            }
+
+            Array.Copy(next, values, values.Length);
+        }
     }
 
     private static void Fill(short[] values)
@@ -326,7 +363,7 @@ static class Grids
             var bottom = header["yllcorner"];
             var top = bottom + rows * size;
             var noData = header["nodata_value"];
-            var touching = blocks.Where(b => b.X0 <= left + cols * size && b.X0 + 240 >= left && b.Y0 <= top && b.Y0 + 240 >= bottom).ToList();
+            var touching = blocks.Where(b => b.X0 <= left + cols * size && b.X0 + Block.Size >= left && b.Y0 <= top && b.Y0 + Block.Size >= bottom).ToList();
             if (touching.Count == 0)
             {
                 continue;
@@ -336,7 +373,7 @@ static class Grids
             {
                 var line = reader.ReadLine()!.AsSpan();
                 var north = top - (row + 0.5) * size;
-                if (!touching.Any(b => north >= b.Y0 - 2 && north <= b.Y0 + 242))
+                if (!touching.Any(b => north >= b.Y0 - Block.Cell && north <= b.Y0 + Block.Size + Block.Cell))
                 {
                     continue;
                 }
