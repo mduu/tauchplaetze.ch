@@ -13,9 +13,9 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
 ## Sticker
 
 - Nur an Plätzen mit Gelände (siehe «Daten»). Ohne Gelände kein Sticker und keine 3D-Ansicht.
-- Oben rechts an der Kachel «Lage und Einstiege», leicht schräg, ragt über den Rand. Holografischer Schimmer, weisser Rand, Ecke wie abgezogen. Text «3D» gross, darunter klein «Platz erkunden».
+- Oben rechts an der Kachel «Lage und Einstiege», leicht schräg, ragt über den Rand. In den Farben der App: dunkle Fläche, Rand und «3D» in Cyan, Tiefenlinien als Muster, Ecke wie abgezogen (Entscheid Marc, 28.11.2026: der holografische Schimmer passte nicht zum Rest der App). Text «3D» gross, darunter klein «Platz erkunden».
 - Ein Klick öffnet die 3D-Ansicht an der Stelle der Karte. Ein zweiter Knopf «Karte» führt zurück.
-- Mit `prefers-reduced-motion` steht der Schimmer still.
+- Mit `prefers-reduced-motion` stehen Muster und Glanz still.
 
 ## 3D-Ansicht
 
