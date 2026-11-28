@@ -1,6 +1,6 @@
 # Story 007: Der Platz in 3D
 
-**Status:** umgesetzt am 28.11.2026, noch nicht deployt.
+**Status:** ✅ erledigt, deployt am 28.11.2026.
 
 ## Ziel
 
