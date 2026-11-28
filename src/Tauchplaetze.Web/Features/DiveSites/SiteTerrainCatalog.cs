@@ -3,7 +3,7 @@ using Microsoft.Extensions.FileProviders;
 
 namespace Tauchplaetze.Web.Features.DiveSites;
 
-/// <summary>Ein Höhenraster für die 3D-Ansicht (Story 007): Datei und Ecke im Südwesten (LV95), Punkte im Abstand <see cref="SiteTerrainCatalog.Cell"/>.</summary>
+/// <summary>Ein Höhenraster für die 3D-Ansicht (Story 007): Datei, Ecke im Südwesten (LV95), Zahl der Punkte pro Seite und ihr Abstand in Metern.</summary>
 public record SiteTerrain(string File, int East, int North, int Points, double Cell);
 
 /// <summary>
@@ -22,7 +22,7 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
     public SiteTerrain? Find(double latitude, double longitude)
     {
         var data = index.Value;
-        var best = (data.Sites ?? [])
+        var best = data.Sites!
             .Select(s => (Site: s, Metres: Metres(latitude, longitude, s.Lat, s.Lng)))
             .Where(s => s.Metres <= MaxDistanceMetres)
             .OrderBy(s => s.Metres)
@@ -51,9 +51,9 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
         {
             using var stream = file.CreateReadStream();
             var index = JsonSerializer.Deserialize<Index>(stream, JsonSerializerOptions.Web);
-            return index is { Sites: not null } ? index : Index.Empty;
+            return index is { Sites: not null, Points: > 1, CellSize: > 0 } ? index : Index.Empty;
         }
-        catch (Exception ex) when (ex is JsonException or IOException)
+        catch (Exception ex)
         {
             logger.LogWarning(ex, "Terrain index is unreadable. The 3D view is off.");
             return Index.Empty;

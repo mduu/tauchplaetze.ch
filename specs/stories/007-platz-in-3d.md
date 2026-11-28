@@ -19,7 +19,7 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
 
 ## 3D-Ansicht
 
-- **Block:** Der Platz als Ausschnitt von rund 180 × 180 m um Einstieg und Route. Seitenwände aus Gestein, darüber die Wasserwand halb durchsichtig, oben die Wasseroberfläche mit leichtem Glitzern. Das Land am Ufer hat seine echte Höhe und trägt das Luftbild von swisstopo (SWISSIMAGE): Hang, Strasse, Parkplatz und Bäume sind erkennbar (Entscheid Marc, 28.11.2026).
+- **Block:** Der Platz als Ausschnitt von 240 × 240 m um die Koordinate des Platzes. Seitenwände aus Gestein, darüber die Wasserwand halb durchsichtig, oben die Wasseroberfläche mit leichtem Glitzern. Das Land am Ufer hat seine echte Höhe und trägt das Luftbild von swisstopo (SWISSIMAGE): Hang, Strasse, Parkplatz und Bäume sind erkennbar (Entscheid Marc, 28.11.2026).
 - **Gelände:** Farbe nach Tiefe, von Türkis im Flachen zu fast Schwarz in der Tiefe (Tokens der Seegrafik). Im Flachen spielen Lichtmuster (Caustics), sie verblassen mit der Tiefe. Steile Flächen sind dunkler.
 - **Tiefenlinien:** im Gelände gezeichnet, alle 5 m, jede zehnte Linie heller. Gleiche Werte wie die Ebene «Tiefenlinien» der Karte. An den Linien steht dezent in Blau die Tiefe («25m»), an zwei Stellen des Blocks, auf einem halb durchsichtigen dunklen Schild (Entscheid Marc, 28.11.2026).
 - **Objekte der Skizze** (`SiteSketch`): Jede Art hat eine eigene einfache Form, etwa Boot, Stamm, Skulptur, Gefahr mit Netz. Über jedem Objekt steht ein Etikett mit Name und Tiefe, verbunden mit einer feinen Linie.
@@ -43,7 +43,7 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
 
 ## Daten
 
-- **Gelände:** aus dem 1-m-Raster von swissBATHY3D (`data-sources.md`, «Tiefenlinien»), nicht aus den Tiefenlinien. Das Skript `tools/bathymetry` erzeugt pro Platz ein Raster: 2 m Zellen, Tiefe in Dezimetern als `Int16`, rund 90 × 90 Zellen, zusammen rund 16 KB. Ablage wie die Tiefenlinien als statische Datei bei der App (`wwwroot/bathymetry/{see}/sites/{platz}.bin`), mit Ursprung, Zellgrösse und Seehöhe im Index.
+- **Gelände:** aus dem 1-m-Raster von swissBATHY3D (`data-sources.md`, «Tiefenlinien»), nicht aus den Tiefenlinien. Das Skript `tools/bathymetry` erzeugt pro Platz ein Raster: 2 m Abstand, Höhe in Dezimetern als `Int16`, 121 × 121 Punkte, rund 29 KB. Ablage als statische Datei bei der App (`wwwroot/terrain/{e}_{n}.bin` mit `index.json`, `data-sources.md`, «Höhenraster für die 3D-Ansicht»).
 - **Land:** aus dem Höhenmodell swissALTI3D (STAC `ch.swisstopo.swissalti3d`, 2 m, gleiche Höhenbasis wie swissBATHY3D), im selben Raster wie der Seegrund (Entscheid Marc, 28.11.2026). Nullpunkt ist die Seehöhe aus dem Index: darüber Land, darunter Seegrund. Die Uferlinie ergibt sich daraus, wo das Land die Seehöhe erreicht. Das Skript lädt nur die Kacheln um die Plätze. swissALTI3D ist der nackte Boden: Bäume und Häuser zeigt nur das Luftbild.
 - **Luftbild:** SWISSIMAGE als Kacheln von swisstopo (WMTS), wie die Ebene «Luftbild» der Karte. Der Browser lädt die Kacheln, die Seite selbst ruft swisstopo nicht ab.
 - **Skizze und Route:** aus der veröffentlichten Version (`DiveSite.Sketch`), dieselben Daten wie die Ebene «Skizze» der Karte. Kein neues Feld.
@@ -102,16 +102,23 @@ Zusammen rund ein Arbeitstag mit zwei bis drei Runden Feedback. Den grössten Te
 10. Alle Texte in vier Sprachen.
 11. Das Echolot hat einen Eintrag in den Neuigkeiten.
 
-## Offene Entscheide
+## Entscheide
+
+| Frage | Entscheid |
+|---|---|
+| Land am Ufer aus swissALTI3D oder vereinfacht? | swissALTI3D (Entscheid Marc, 28.11.2026) |
+| Land hinter einem steilen Hang abschneiden? | Nein. Bei Fischbalme steigt der Hang auf gut 50 m und verdeckt die Wand nicht |
+| Überhöhung der Tiefe? | Keine, echte Proportionen |
+| Taucher als Figur oder als leuchtender Punkt? | Figur, als Mensch erkennbar (Entscheid Marc, 28.11.2026) |
+| Neue Plätze: Raster beim Erfassen oder mit dem Skript? | Skript, wie bei den Tiefenlinien |
+
+Noch offen, nicht umgesetzt:
 
 | Frage | Vorschlag |
 |---|---|
-| Land hinter einem steilen Hang abschneiden (z.B. 30 m über dem See)? | Nein, solange der Hang die Wand nicht verdeckt. In der Vorschau steigt das Land bei Fischbalme auf gut 50 m |
-| Überhöhung der Tiefe? | Keine, echte Proportionen. Höchstens als Schalter |
-| Ansicht im Platz der Karte oder als Vollbild? | Im Platz der Karte, dazu ein Knopf «Vollbild» |
-| Taucher als Figur oder als leuchtender Punkt? | Figur wie in der Vorschau |
-| Sticker auch in Listen (Story 006, Symbol «3D»)? | Ja, als Symbol ohne Schimmer |
-| Neue Plätze: Raster beim Erfassen oder mit dem Skript nachziehen? | Skript, wie bei den Tiefenlinien. Später ein Job |
+| Knopf «Vollbild»? | Ja, als Ergänzung zur Ansicht an der Stelle der Karte |
+| Symbol «3D» in den Listen (Story 006)? | Ja, als Symbol ohne Schimmer |
+| Raster für Plätze, die nur in Prod angelegt werden? | Später ein Job, der aus Prod liest |
 
 ## Abhängigkeiten
 

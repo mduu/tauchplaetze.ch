@@ -12,14 +12,14 @@
     {
         <div class="location-stage" data-3d-stage data-mode="map" data-terrain="@Assets[terrain.File]" data-e="@terrain.East" data-n="@terrain.North"
              data-points="@terrain.Points" data-cell="@Invariant(terrain.Cell)" data-three="@Assets["lib/three/three.min.js"]" data-orbit="@Assets["lib/three/OrbitControls.js"]"
-             data-sketch="@SketchJson" data-kinds="@SketchKinds" data-entries="@EntriesJson" data-texts="@TextsJson">
+             data-entries="@EntriesJson" data-texts="@TextsJson">
             @MapDiv
             <button type="button" class="sticker-3d" data-3d-open hidden aria-label="@L["Site3d_Open", Site.Name]">
                 <span class="sticker-face"><span class="sticker-big">@L["Site3d_Sticker"]</span><span class="sticker-sub">@L["Site3d_Sticker_Sub"]</span></span>
                 <span class="sticker-peel"></span>
             </button>
             <div class="site-3d" data-3d-viewer>
-                <canvas aria-label="@L["Site3d_Label", Site.Name]"></canvas>
+                <canvas role="img" aria-label="@L["Site3d_Label", Site.Name]"></canvas>
                 <div class="site-3d-labels" data-3d-labels></div>
                 <div class="site-3d-hud" data-3d-hud hidden>
                     <span class="hud-label">@L["Site3d_Diver"]</span>

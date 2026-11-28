@@ -33,6 +33,15 @@
     return libraries;
   }
 
+  let webGl = null;
+
+  function webGlAvailable() {
+    if (webGl === null) {
+      webGl = hasWebGl();
+    }
+    return webGl;
+  }
+
   function hasWebGl() {
     try {
       const canvas = document.createElement('canvas');
@@ -75,6 +84,10 @@
     }
     const buffer = await response.arrayBuffer();
     const raw = new Int16Array(buffer);
+    const points = parseInt(stage.dataset.points, 10);
+    if (raw.length !== points * points) {
+      throw new Error('terrain size ' + raw.length);
+    }
     const heights = new Float32Array(raw.length);
     for (let i = 0; i < raw.length; i++) {
       heights[i] = raw[i] / 10;
@@ -144,8 +157,9 @@
   function build(stage, heights, aerial) {
     const THREE = window.THREE;
     const text = JSON.parse(stage.dataset.texts);
-    const kinds = JSON.parse(stage.dataset.kinds || '{}');
-    const sketch = JSON.parse(stage.dataset.sketch || '[]');
+    const map = stage.querySelector('[data-map]');
+    const kinds = JSON.parse(map.dataset.sketchKinds || '{}');
+    const sketch = JSON.parse(map.dataset.sketch || '[]');
     const entries = JSON.parse(stage.dataset.entries || '[]');
     const N = parseInt(stage.dataset.points, 10);
     const CELL = parseFloat(stage.dataset.cell);
@@ -345,7 +359,7 @@
       el.className = 'lbl' + (cls ? ' ' + cls : '');
       el.innerHTML = html;
       labelsEl.appendChild(el);
-      labelItems.push({ world: world, el: el });
+      labelItems.push({ world: world, el: el, width: 0, height: 0 });
     }
 
     addDepthLabels();
@@ -721,6 +735,15 @@
       stopped = true;
       resizeObserver.disconnect();
       intersection.disconnect();
+      controls.dispose();
+      scene.traverse(function (object) {
+        if (object.geometry) { object.geometry.dispose(); }
+        [].concat(object.material || []).forEach(function (material) {
+          Object.keys(material).forEach(function (key) { if (material[key] && material[key].isTexture) { material[key].dispose(); } });
+          material.dispose();
+        });
+      });
+      if (uniforms.uSat.value) { uniforms.uSat.value.dispose(); }
       renderer.dispose();
       labelsEl.replaceChildren();
     }
@@ -804,7 +827,8 @@
         el.style.left = l.x + 'px';
         el.style.top = l.y + 'px';
         const inView = l.z < 1 && l.x > -40 && l.x < w + 40 && l.y > 0 && l.y < h + 40;
-        const box = { left: l.x - el.offsetWidth / 2, right: l.x + el.offsetWidth / 2, top: l.y - el.offsetHeight, bottom: l.y };
+        if (!l.item.width) { l.item.width = el.offsetWidth; l.item.height = el.offsetHeight; }
+        const box = { left: l.x - l.item.width / 2, right: l.x + l.item.width / 2, top: l.y - l.item.height, bottom: l.y };
         const covered = placed.some(function (b) { return box.left < b.right && box.right > b.left && box.top < b.bottom && box.bottom > b.top; });
         el.style.opacity = inView && !covered ? '1' : '0';
         if (inView && !covered) { placed.push(box); }
@@ -841,15 +865,17 @@
     document.querySelectorAll('[data-3d-stage]').forEach(function (stage) {
       const previous = stage.__site3d;
       if (previous && previous.terrain === stage.dataset.terrain) {
+        stage.querySelector('[data-3d-open]').hidden = !previous.webGl;
+        stage.dataset.mode = 'map';
         return;
       }
       if (previous) {
         previous.dispose();
       }
-      const state = { terrain: stage.dataset.terrain, built: false, dispose: function () {} };
+      const state = { terrain: stage.dataset.terrain, built: false, webGl: webGlAvailable(), dispose: function () {} };
       stage.__site3d = state;
       stage.dataset.mode = 'map';
-      if (!hasWebGl()) {
+      if (!state.webGl) {
         return;
       }
       const sticker = stage.querySelector('[data-3d-open]');

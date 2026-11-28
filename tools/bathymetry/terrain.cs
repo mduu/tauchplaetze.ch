@@ -57,12 +57,14 @@ foreach (var site in seed)
 
 Console.WriteLine($"{blocks.Count} Plätze an Seen mit swissBATHY3D");
 
+var skippedLakes = new HashSet<string>();
 foreach (var group in blocks.GroupBy(b => b.Lake))
 {
     var zipPath = Path.Combine(cacheDir, $"{group.Key}.zip");
     if (!File.Exists(zipPath))
     {
-        Console.WriteLine($"{group.Key}: Raster fehlt im Cache, zuerst contours.cs laufen lassen");
+        Console.WriteLine($"{group.Key}: Raster fehlt im Cache, die bisherigen Raster bleiben. Zuerst contours.cs laufen lassen.");
+        skippedLakes.Add(group.Key);
         continue;
     }
 
@@ -83,8 +85,10 @@ foreach (var tile in blocks.SelectMany(b => b.Tiles()).Distinct().OrderBy(t => t
 }
 
 var indexPath = Path.Combine(outDir, "index.json");
-List<JsonNode?> previous = onlyLake is not null && File.Exists(indexPath)
-    ? JsonNode.Parse(await File.ReadAllTextAsync(indexPath))!["sites"]!.AsArray().Where(e => (string?)e!["lake"] != onlyLake).Select(e => e!.DeepClone()).ToList()
+List<JsonNode?> previous = File.Exists(indexPath)
+    ? JsonNode.Parse(await File.ReadAllTextAsync(indexPath))!["sites"]!.AsArray()
+        .Where(e => (string?)e!["lake"] is { } lake && (skippedLakes.Contains(lake) || (onlyLake is not null && lake != onlyLake)))
+        .Select(e => e!.DeepClone()).ToList()
     : [];
 var index = new JsonObject
 {
@@ -95,7 +99,7 @@ var index = new JsonObject
 };
 var sites = new JsonArray([.. previous]);
 var bytes = 0L;
-foreach (var block in blocks.OrderBy(b => b.Lake).ThenBy(b => b.Name, StringComparer.Ordinal))
+foreach (var block in blocks.Where(b => !skippedLakes.Contains(b.Lake)).OrderBy(b => b.Lake).ThenBy(b => b.Name, StringComparer.Ordinal))
 {
     if (!block.HasLake)
     {
@@ -161,7 +165,8 @@ async Task<string?> AltiTile(int e, int n)
 
     var path = Path.Combine(altiDir, Path.GetFileName(new Uri(href).LocalPath));
     await Task.Delay(600);
-    await Curl(["-s", "--fail", "--max-time", "600", "-o", path, href]);
+    await Curl(["-s", "--fail", "--max-time", "600", "-o", path + ".part", href]);
+    File.Move(path + ".part", path, true);
     Console.WriteLine($"swissALTI3D {e}-{n}: geladen");
     return path;
 }
@@ -214,8 +219,8 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
 
     private readonly float[] lakeSum = new float[Points * Points];
     private readonly short[] lakeCount = new short[Points * Points];
-    private readonly float[] land = new float[Points * Points];
-    private readonly bool[] hasLand = new bool[Points * Points];
+    private readonly float[] landSum = new float[Points * Points];
+    private readonly short[] landCount = new short[Points * Points];
 
     public string Name => name;
     public string Lake => lake;
@@ -242,19 +247,20 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
 
     public void AddLake((double East, double North, double Height) point)
     {
-        if (Index(point.East, point.North) is { } i)
+        foreach (var i in Near(point.East, point.North))
         {
             lakeSum[i] += (float)point.Height;
             lakeCount[i]++;
         }
     }
 
-    public void SetLand(double east, double north, double height)
+    /// <summary>swissALTI3D liegt um 1 m versetzt zu den Punkten des Rasters. Ein Wert zählt darum für alle Punkte, die höchstens 1 m entfernt liegen.</summary>
+    public void AddLand(double east, double north, double height)
     {
-        if (Index(east, north) is { } i)
+        foreach (var i in Near(east, north))
         {
-            land[i] = (float)height;
-            hasLand[i] = true;
+            landSum[i] += (float)height;
+            landCount[i]++;
         }
     }
 
@@ -264,7 +270,7 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
         var values = new short[Points * Points];
         for (var i = 0; i < values.Length; i++)
         {
-            double? height = lakeCount[i] > 0 ? lakeSum[i] / lakeCount[i] : hasLand[i] ? land[i] : null;
+            double? height = lakeCount[i] > 0 ? lakeSum[i] / lakeCount[i] : landCount[i] > 0 ? landSum[i] / landCount[i] : null;
             values[i] = height is { } h ? (short)Math.Clamp(Math.Round((h - surface) * 10), short.MinValue + 1, short.MaxValue) : short.MinValue;
         }
 
@@ -275,11 +281,20 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
         return bytes;
     }
 
-    private int? Index(double east, double north)
+    private IEnumerable<int> Near(double east, double north)
     {
-        var col = (int)Math.Round((east - x0) / Cell);
-        var row = (int)Math.Round((north - y0) / Cell);
-        return col is >= 0 and < Points && row is >= 0 and < Points ? row * Points + col : null;
+        var x = (east - x0) / Cell;
+        var y = (north - y0) / Cell;
+        for (var row = (int)Math.Ceiling(y - 0.5); row <= (int)Math.Floor(y + 0.5); row++)
+        {
+            for (var col = (int)Math.Ceiling(x - 0.5); col <= (int)Math.Floor(x + 0.5); col++)
+            {
+                if (col is >= 0 and < Points && row is >= 0 and < Points)
+                {
+                    yield return row * Points + col;
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -433,7 +448,7 @@ static class Grids
                 {
                     if (block.Contains(east, north))
                     {
-                        block.SetLand(east, north, height);
+                        block.AddLand(east, north, height);
                     }
                 }
             }

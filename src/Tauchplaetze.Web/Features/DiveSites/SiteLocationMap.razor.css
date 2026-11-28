@@ -585,6 +585,7 @@
     .site-3d-controls {
         top: auto;
         right: 14px;
+        bottom: 14px;
         left: 14px;
         justify-content: flex-start;
         max-width: none;
@@ -597,10 +598,6 @@
 
     .location-stage[data-mode="3d"] .site-3d-source {
         display: block;
-    }
-
-    .site-3d-controls {
-        bottom: 14px;
     }
 
     .hud-depth {
