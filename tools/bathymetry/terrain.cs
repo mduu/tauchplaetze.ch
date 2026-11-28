@@ -234,7 +234,7 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
     private const int SmoothPasses = 3;
     private const int ShoreBandBelowDecimetres = -40;
     private const int ShoreBandAboveDecimetres = 30;
-    public const int HalfSize = 120;
+    public const int HalfSize = 200;
     public const int Points = HalfSize * 2 / Cell + 1;
     public const int Size = HalfSize * 2;
 

@@ -180,6 +180,8 @@
     const SIZE = (N - 1) * CELL;
     const origin = { e: parseFloat(stage.dataset.e), n: parseFloat(stage.dataset.n) };
     const HALF = SIZE / 2;
+    /** Die Ansichten sind für einen Block von 240 m gemacht; grössere Blöcke rücken die Kamera entsprechend zurück. */
+    const ZOOM = Math.max(1, SIZE / 240);
     const viewer = stage.querySelector('[data-3d-viewer]');
     const canvas = viewer.querySelector('canvas');
     const labelsEl = viewer.querySelector('[data-3d-labels]');
@@ -227,7 +229,7 @@
     const camera = new THREE.PerspectiveCamera(40, 1, 1, 3000);
     const controls = new THREE.OrbitControls(camera, canvas);
     controls.enableDamping = true; controls.dampingFactor = 0.08;
-    controls.minDistance = 20; controls.maxDistance = 800;
+    controls.minDistance = 20; controls.maxDistance = 800 * ZOOM;
     controls.minPolarAngle = 0; controls.maxPolarAngle = Math.PI;
     controls.enablePan = true; controls.screenSpacePanning = true;
     controls.rotateSpeed = 0.9; controls.autoRotateSpeed = 0.6;
@@ -240,6 +242,7 @@
     const uniforms = {
       uTime: { value: 0 },
       uFog: { value: new THREE.Color('#061519') },
+      uFogDistance: { value: 620 * ZOOM },
       uSat: { value: aerial ? new THREE.CanvasTexture(aerial) : null },
       uHasSat: { value: aerial ? 1 : 0 },
       uHalf: { value: HALF },
@@ -271,7 +274,7 @@
         uniforms: uniforms,
         vertexShader: 'varying vec3 vPos; varying vec3 vNormal; void main() { vPos = position; vNormal = normal; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
         fragmentShader: [
-          'uniform float uTime; uniform vec3 uFog; uniform sampler2D uSat; uniform float uHasSat; uniform float uHalf; uniform float uDeep;',
+          'uniform float uTime; uniform vec3 uFog; uniform float uFogDistance; uniform sampler2D uSat; uniform float uHasSat; uniform float uHalf; uniform float uDeep;',
           'varying vec3 vPos; varying vec3 vNormal;',
           'vec3 ramp(float d) {',
           '  vec3 c0 = vec3(0.62, 0.86, 0.74), c1 = vec3(0.20, 0.58, 0.58), c2 = vec3(0.07, 0.36, 0.42), c3 = vec3(0.03, 0.19, 0.25), c4 = vec3(0.012, 0.07, 0.10);',
@@ -308,7 +311,7 @@
           '    col = mix(col, lineCol, line * (depth > 2.5 ? (0.35 + 0.5 * major) : 0.0));',
           '  }',
           '  float dist = length(cameraPosition - vPos);',
-          '  float fog = 1.0 - exp(-pow(dist / 620.0, 2.0));',
+          '  float fog = 1.0 - exp(-pow(dist / uFogDistance, 2.0));',
           '  gl_FragColor = vec4(mix(col, uFog, fog * 0.6), 1.0);',
           '}'
         ].join('\n'),
@@ -534,56 +537,56 @@
       return best;
     }
 
-    const route = routeAlongGround();
+    const routes = sketch.filter(function (f) { return f.kind === 'Route' && f.points.length > 1; }).map(routeAlongGround);
+    const route = routes[0] || null;
 
-    /** Die Route der Skizze 1.5 bis 2 m über Grund, geglättet, an der Oberfläche höchstens bis 0.3 m. */
-    function routeAlongGround() {
-      const routeFeature = sketch.find(function (f) { return f.kind === 'Route' && f.points.length > 1; });
-      if (routeFeature) {
-        const pts2 = routeFeature.points.map(function (p) { const l = local(p.lat, p.lng); return new THREE.Vector3(l[0], l[1], 0); });
-        const flat = new THREE.CatmullRomCurve3(pts2, false, 'centripetal');
-        const SAMPLES = 400, rough = [];
-        for (let s = 0; s <= SAMPLES; s++) {
-          const p = flat.getPoint(s / SAMPLES);
-          rough.push([p.x, p.y, Math.min(-0.3, heightAt(p.x, p.y) + 1.8)]);
-        }
-        for (let pass = 0; pass < 6; pass++) {
-          for (let s = 1; s < rough.length - 1; s++) { rough[s][2] = (rough[s - 1][2] + rough[s][2] * 2 + rough[s + 1][2]) / 4; }
-        }
-        rough.forEach(function (r) { r[2] = Math.min(r[2], Math.min(-0.3, heightAt(r[0], r[1]) + 1.2)); });
-        const curve = new THREE.CatmullRomCurve3(rough.map(function (r) { return toWorld(r[0], r[1], r[2]); }));
-        let length = 0; const cum = [0];
-        for (let s = 1; s < rough.length; s++) {
-          length += Math.hypot(rough[s][0] - rough[s - 1][0], rough[s][1] - rough[s - 1][1], rough[s][2] - rough[s - 1][2]);
-          cum.push(length);
-        }
-        return { rough: rough, curve: curve, length: length, cum: cum, samples: SAMPLES };
+    /** Eine Route der Skizze 1.5 bis 2 m über Grund, geglättet, an der Oberfläche höchstens bis 0.3 m. */
+    function routeAlongGround(routeFeature) {
+      const pts2 = routeFeature.points.map(function (p) { const l = local(p.lat, p.lng); return new THREE.Vector3(l[0], l[1], 0); });
+      const flat = new THREE.CatmullRomCurve3(pts2, false, 'centripetal');
+      const SAMPLES = 400, rough = [];
+      for (let s = 0; s <= SAMPLES; s++) {
+        const p = flat.getPoint(s / SAMPLES);
+        rough.push([p.x, p.y, Math.min(-0.3, heightAt(p.x, p.y) + 1.8)]);
       }
-      return null;
+      for (let pass = 0; pass < 6; pass++) {
+        for (let s = 1; s < rough.length - 1; s++) { rough[s][2] = (rough[s - 1][2] + rough[s][2] * 2 + rough[s + 1][2]) / 4; }
+      }
+      rough.forEach(function (r) { r[2] = Math.min(r[2], Math.min(-0.3, heightAt(r[0], r[1]) + 1.2)); });
+      const curve = new THREE.CatmullRomCurve3(rough.map(function (r) { return toWorld(r[0], r[1], r[2]); }));
+      let length = 0; const cum = [0];
+      for (let s = 1; s < rough.length; s++) {
+        length += Math.hypot(rough[s][0] - rough[s - 1][0], rough[s][1] - rough[s - 1][1], rough[s][2] - rough[s - 1][2]);
+        cum.push(length);
+      }
+      return { rough: rough, curve: curve, length: length, cum: cum, samples: SAMPLES };
     }
 
     const ARROWS = 26;
     let routeMat = null, arrows = null, diver = null, legs = [], halo = null;
     const v3 = new THREE.Vector3(), dummy = new THREE.Object3D(), ahead = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0), mouth = new THREE.Vector3(0, 0.7, 0);
+    routes.forEach(function (r, index) { addRouteTrail(r, index === 0); });
     if (route) {
-      addRouteTrail();
       addDiver();
     }
 
-    function addRouteTrail() {
-      routeMat = new THREE.ShaderMaterial({
-        uniforms: { uTime: uniforms.uTime, uHead: { value: 0 } }, transparent: true,
+    /** Der Taucher folgt der ersten Route; weitere Routen leuchten gleich, aber ohne Spur hinter dem Taucher. */
+    function addRouteTrail(trail, followed) {
+      const material = new THREE.ShaderMaterial({
+        uniforms: { uTime: uniforms.uTime, uHead: { value: followed ? 0 : -1 } }, transparent: true,
         vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
         fragmentShader: 'uniform float uTime; uniform float uHead; varying vec2 vUv; void main(){ float f = fract(vUv.x * 70.0 - uTime * 2.2); float dash = smoothstep(0.0, 0.15, f) * (1.0 - smoothstep(0.45, 0.6, f)); float trail = vUv.x <= uHead ? exp(-(uHead - vUv.x) * 14.0) : 0.0; vec3 c = mix(vec3(1.0, 0.42, 0.10), vec3(1.0, 0.86, 0.62), trail); gl_FragColor = vec4(min(vec3(1.0), c * (0.75 + dash * 0.35 + trail * 0.5)), 0.85 + dash * 0.15); }'
       });
-      scene.add(new THREE.Mesh(new THREE.TubeGeometry(route.curve, 700, 0.55, 10, false), routeMat));
-      scene.add(new THREE.Mesh(new THREE.TubeGeometry(route.curve, 700, 2.4, 14, false), new THREE.ShaderMaterial({
-        uniforms: { uTime: uniforms.uTime, uHead: routeMat.uniforms.uHead }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+      if (followed) { routeMat = material; }
+      scene.add(new THREE.Mesh(new THREE.TubeGeometry(trail.curve, 700, 0.55, 10, false), material));
+      scene.add(new THREE.Mesh(new THREE.TubeGeometry(trail.curve, 700, 2.4, 14, false), new THREE.ShaderMaterial({
+        uniforms: { uTime: uniforms.uTime, uHead: material.uniforms.uHead }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
         vertexShader: 'varying vec2 vUv; varying vec3 vN; varying vec3 vV; void main(){ vUv = uv; vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }',
         fragmentShader: 'uniform float uTime; uniform float uHead; varying vec2 vUv; varying vec3 vN; varying vec3 vV; void main(){ float rim = pow(abs(dot(vN, vV)), 1.6); float pulse = 0.0; for (int k = 0; k < 3; k++) { float p = fract(uTime * 0.09 + float(k) / 3.0); pulse += exp(-pow((vUv.x - p) * 22.0, 2.0)); } float trail = vUv.x <= uHead ? exp(-(uHead - vUv.x) * 10.0) : 0.0; float a = rim * (0.16 + pulse * 0.55 + trail * 0.8); gl_FragColor = vec4(vec3(1.0, 0.5, 0.18) * a, a); }'
       })));
-      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(route.rough.map(function (r) { return toWorld(r[0], r[1], heightAt(r[0], r[1]) + 0.15); })),
+      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(trail.rough.map(function (r) { return toWorld(r[0], r[1], heightAt(r[0], r[1]) + 0.15); })),
         new THREE.LineBasicMaterial({ color: 0xFF9A4D, transparent: true, opacity: 0.35 })));
+      if (!followed) { return; }
       const arrowGeo = new THREE.ConeGeometry(0.9, 2.4, 3); arrowGeo.rotateX(Math.PI / 2);
       arrows = new THREE.InstancedMesh(arrowGeo, new THREE.MeshBasicMaterial({ color: 0xFFE3C2, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }), ARROWS);
       scene.add(arrows);
@@ -709,8 +712,8 @@
 
     const target = new THREE.Vector3(down[0] * 10, -Math.min(20, maxDepth / 3), -down[1] * 10);
     const cameraViews = {
-      oblique: { pos: new THREE.Vector3(down[0] * 150 - along[0] * 55, 85, -(down[1] * 150 - along[1] * 55)), target: target },
-      wall: { pos: new THREE.Vector3(down[0] * 110, -Math.min(30, maxDepth / 2), -down[1] * 110), target: new THREE.Vector3(-down[0] * 5, -Math.min(22, maxDepth / 3), down[1] * 5) },
+      oblique: { pos: new THREE.Vector3((down[0] * 150 - along[0] * 55) * ZOOM, 85 * ZOOM, -(down[1] * 150 - along[1] * 55) * ZOOM), target: target },
+      wall: { pos: new THREE.Vector3(down[0] * 110 * ZOOM, -Math.min(30, maxDepth / 2), -down[1] * 110 * ZOOM), target: new THREE.Vector3(-down[0] * 5, -Math.min(22, maxDepth / 3), down[1] * 5) },
       top: { pos: new THREE.Vector3(0, SIZE * 1.45, 1), target: new THREE.Vector3(0, -20, 0) }
     };
     let fly = null;

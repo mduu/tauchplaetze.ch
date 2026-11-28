@@ -20,7 +20,7 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
 
 ## 3D-Ansicht
 
-- **Block:** Der Platz als Ausschnitt von 240 × 240 m um die Koordinate des Platzes. Seitenwände aus Gestein, darüber die Wasserwand halb durchsichtig, oben die Wasseroberfläche mit leichtem Glitzern. Das Land am Ufer hat seine echte Höhe und trägt das Luftbild von swisstopo (SWISSIMAGE): Hang, Strasse, Parkplatz und Bäume sind erkennbar (Entscheid Marc, 28.11.2026).
+- **Block:** Der Platz als Ausschnitt von 400 × 400 m um die Koordinate des Platzes (Entscheid Marc, 28.11.2026: mit 240 m reichten Routen in Prod, etwa Terlinden, Baumgärtli und Kleiner Parkplatz, über den Rand). Die Kamera rückt mit der Grösse des Blocks zurück. Seitenwände aus Gestein, darüber die Wasserwand halb durchsichtig, oben die Wasseroberfläche mit leichtem Glitzern. Das Land am Ufer hat seine echte Höhe und trägt das Luftbild von swisstopo (SWISSIMAGE): Hang, Strasse, Parkplatz und Bäume sind erkennbar (Entscheid Marc, 28.11.2026).
 - **Gelände:** Farbe nach Tiefe, von Türkis im Flachen zu fast Schwarz in der Tiefe (Tokens der Seegrafik). Im Flachen spielen Lichtmuster (Caustics), sie verblassen mit der Tiefe. Steile Flächen sind dunkler.
 - **Tiefenlinien:** im Gelände gezeichnet, alle 5 m, jede zehnte Linie heller. Gleiche Werte wie die Ebene «Tiefenlinien» der Karte. An den Linien steht dezent in Blau die Tiefe («25m»), an zwei Stellen des Blocks, auf einem halb durchsichtigen dunklen Schild (Entscheid Marc, 28.11.2026).
 - **Einstiege:** Jeder Einstieg ins Wasser trägt die Taucherflagge «Alpha» (weiss am Mast, blau mit Schwalbenschwanz), quer zum Ufer gestellt, mit Etikett. Liegt die Koordinate im Wasser, steht die Flagge am nächsten Ufer in höchstens 40 m; ohne Ufer in der Nähe schwimmt sie auf einer Boje (Entscheid Marc, 28.11.2026: die Flagge schwebte über dem Wasser und war nicht die Alpha-Flagge).
@@ -28,7 +28,7 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
   - Mit Tiefe: Das Objekt steht in dieser Tiefe. Die Tiefe erscheint in Cyan.
   - **Ohne Tiefe:** Das Objekt liegt auf dem Grund. Die Tiefe kommt aus dem Gelände und erscheint in Orange mit «≈» (Tooltip «Tiefe aus dem Gelände»).
   - Linien (Steilwand, Kante, Leine) und Flächen (Pflanzen, Bojenfeld) liegen auf dem Gelände.
-- **Route:** Die Linie `Route` der Skizze, 1.5 bis 2 m über Grund, geglättet, an der Oberfläche höchstens bis 0.3 m. Darstellung kräftig, damit sie als Route erkennbar ist (Entscheid Marc, 28.11.2026):
+- **Route:** Jede Linie `Route` der Skizze; der Taucher, das Tiefenprofil und die Pfeile folgen der ersten, weitere Routen leuchten gleich (Entscheid Marc, 28.11.2026: Terlinden hat zwei Routen). Jede Route liegt 1.5 bis 2 m über Grund, geglättet, an der Oberfläche höchstens bis 0.3 m. Darstellung kräftig, damit sie als Route erkennbar ist (Entscheid Marc, 28.11.2026):
   - ein Kern in `--color-signal` mit Strichen, die in Richtung der Route fliessen,
   - ein Glühen um den Kern, durch das in Abständen helle Pulse laufen,
   - kleine Pfeile, die der Route entlang wandern,
@@ -46,7 +46,7 @@ Vor der Umsetzung entstand eine Vorschau mit Seegrund, Land und Luftbild von Fis
 ## Daten
 
 - **Bibliothek:** three.js r147 (globaler Build `three.min.js` und `OrbitControls.js` aus `examples/js`, MIT-Lizenz) unter `wwwroot/lib/three`. Ab r148 gibt es `examples/js` nicht mehr; ein Upgrade braucht ES-Module.
-- **Gelände:** aus dem 1-m-Raster von swissBATHY3D (`data-sources.md`, «Tiefenlinien»), nicht aus den Tiefenlinien. Das Skript `tools/bathymetry` erzeugt pro Platz ein Raster: 2 m Abstand, Höhe in Dezimetern als `Int16`, 121 × 121 Punkte, rund 29 KB. Ablage als statische Datei bei der App (`wwwroot/terrain/{e}_{n}.bin` mit `index.json`, `data-sources.md`, «Höhenraster für die 3D-Ansicht»).
+- **Gelände:** aus dem 1-m-Raster von swissBATHY3D (`data-sources.md`, «Tiefenlinien»), nicht aus den Tiefenlinien. Das Skript `tools/bathymetry` erzeugt pro Platz ein Raster: 2 m Abstand, Höhe in Dezimetern als `Int16`, 201 × 201 Punkte, rund 79 KB. Ablage als statische Datei bei der App (`wwwroot/terrain/{e}_{n}.bin` mit `index.json`, `data-sources.md`, «Höhenraster für die 3D-Ansicht»).
 - **Land:** aus dem Höhenmodell swissALTI3D (STAC `ch.swisstopo.swissalti3d`, 2 m, gleiche Höhenbasis wie swissBATHY3D), im selben Raster wie der Seegrund (Entscheid Marc, 28.11.2026). Nullpunkt ist die Seehöhe aus dem Index: darüber Land, darunter Seegrund. Die Uferlinie ergibt sich daraus, wo das Land die Seehöhe erreicht. Das Skript lädt nur die Kacheln um die Plätze. swissALTI3D ist der nackte Boden: Bäume und Häuser zeigt nur das Luftbild.
 - **Luftbild:** SWISSIMAGE als Kacheln von swisstopo (WMTS), wie die Ebene «Luftbild» der Karte. Der Browser lädt die Kacheln, die Seite selbst ruft swisstopo nicht ab.
 - **Skizze und Route:** aus der veröffentlichten Version (`DiveSite.Sketch`), dieselben Daten wie die Ebene «Skizze» der Karte. Kein neues Feld.
@@ -58,7 +58,7 @@ Kein fertiges 3D-Modell pro Platz. Vorbereitet werden nur die Daten, die Szene b
 
 | Teil | Wann | Wo |
 |---|---|---|
-| Höhenraster (Seegrund und Land, 121 × 121 Punkte zu 2 m, `Int16` in Dezimetern, rund 29 KB) | einmal pro Platz, neu nur bei neuem Platz oder verschobener Koordinate | Skript, Ablage in `wwwroot/terrain` |
+| Höhenraster (Seegrund und Land, 201 × 201 Punkte zu 2 m, `Int16` in Dezimetern, rund 79 KB) | einmal pro Platz, neu nur bei neuem Platz oder verschobener Koordinate | Skript, Ablage in `wwwroot/terrain` |
 | Luftbild | beim Öffnen | Kacheln von swisstopo (WMTS), lädt der Browser wie die Ebene «Luftbild» |
 | Skizze, Objekte, Route | beim Öffnen | aus der veröffentlichten Version, wie die Ebene «Skizze». Eine geänderte Skizze braucht keine neue Vorbereitung |
 | Tiefe aus dem Gelände, Glättung der Route, Netz, Animation | beim Öffnen | im Browser |
@@ -73,14 +73,14 @@ Schätzung für die Umsetzung mit Claude Code (28.11.2026). Die Vorschau enthäl
 
 | Schritt | Claude Code | Marc |
 |---|---|---|
-| Skript: Raster aus swissBATHY3D (lokal schon im Cache) und swissALTI3D, Index, Ablage | 1 bis 2 h, dazu rund 30 bis 60 min Download der Kacheln um rund 370 Plätze (umgesetzt: 236 Plätze mit 232 Rastern) | – |
+| Skript: Raster aus swissBATHY3D (lokal schon im Cache) und swissALTI3D, Index, Ablage | 1 bis 2 h, dazu rund 30 bis 60 min Download der Kacheln um rund 370 Plätze (umgesetzt: 239 Plätze mit 235 Rastern) | – |
 | 3D-Ansicht: Skript aus der Vorschau, three.js bei der App, Laden erst beim Klick, Sticker auf der Karte | 2 bis 3 h | – |
 | Texte in vier Sprachen, Tests (Raster lesen, Tiefe aus dem Gelände), Specs, Echolot | 1 bis 2 h | – |
 | Ansehen auf Handy und Desktop, Wünsche zur Optik, zweite Runde | 1 bis 2 h | 1 bis 2 h |
 
 Zusammen rund ein Arbeitstag mit zwei bis drei Runden Feedback. Den grössten Teil der Zeit braucht das Ansehen und Abstimmen der Optik auf echten Geräten.
 
-- Risiko Handy: schwache Grafik. Das Netz hat rund 29 000 Dreiecke (121 × 121 Punkte), das ist wenig. Die Ansicht rendert nur, solange sie sichtbar ist.
+- Risiko Handy: schwache Grafik. Das Netz hat rund 80 000 Dreiecke (201 × 201 Punkte), das geht auch auf dem Handy. Die Ansicht rendert nur, solange sie sichtbar ist.
 - Risiko Grösse: three.js lädt erst beim Klick, rund 150 KB komprimiert, bei der App abgelegt.
 - Kosten im Betrieb: keine. Die Raster sind statisch, die Luftbilder lädt der Browser bei swisstopo.
 
