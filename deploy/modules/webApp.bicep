@@ -8,6 +8,7 @@ param location string
 param planName string
 param name string
 param appInsightsConnectionString string
+param insightsId string
 param workspaceId string
 param sqlConnectionString string
 param blobEndpoint string
@@ -114,6 +115,10 @@ resource site 'Microsoft.Web/sites@2023-12-01' = {
   name: name
   location: location
   kind: 'app,linux'
+  // Verknüpfung mit Application Insights im Portal. Azure setzt das Tag selbst, ohne es hier entfernt jeder Infra-Deploy die Verknüpfung.
+  tags: {
+    'hidden-link: /app-insights-resource-id': insightsId
+  }
   identity: {
     type: 'SystemAssigned'
   }
