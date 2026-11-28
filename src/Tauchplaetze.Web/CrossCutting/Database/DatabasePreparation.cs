@@ -4,6 +4,7 @@ using Tauchplaetze.Core.Features.Editorial.Commands;
 using Tauchplaetze.Core.Features.Operations.Commands;
 using Tauchplaetze.Core.Features.Shipping.Commands;
 using Tauchplaetze.Core.Features.WaterBodies.Commands;
+using Tauchplaetze.Web.CrossCutting.Hosting;
 
 namespace Tauchplaetze.Web.CrossCutting.Database;
 
@@ -41,7 +42,7 @@ internal static class DatabasePreparation
     }
 
     /// <summary>
-    /// Beim Deploy startet App Service die Managed Identity neu. Einige Minuten lang scheitert dann die Anmeldung bei der Datenbank
+    /// Beim Deploy startet App Service den Container der Managed Identity neu, der die Tokens ausgibt. Einige Minuten lang scheitert dann die Anmeldung bei der Datenbank
     /// (Deploy vom 27.11.2026: gut 4 Minuten). Die App wartet so lange, statt abzustürzen und einen zweiten Startzyklus auszulösen.
     /// Die Startfrist von App Service (`WEBSITES_CONTAINER_START_TIME_LIMIT`, 10 Minuten, `deploy/modules/webApp.bicep`) liegt darüber.
     /// </summary>
@@ -53,22 +54,22 @@ internal static class DatabasePreparation
     {
         await using var scope = app.Services.CreateAsyncScope();
         var services = scope.ServiceProvider;
-        await services.GetRequiredService<ICommandHandler<MigrateDatabaseCommand, Unit>>().Handle(new MigrateDatabaseCommand());
-        await services.GetRequiredService<ICommandHandler<SeedWaterBodiesCommand, SeedWaterBodiesResult>>().Handle(new SeedWaterBodiesCommand());
-        await services.GetRequiredService<ICommandHandler<SeedShippingFeaturesCommand, SeedShippingFeaturesResult>>().Handle(new SeedShippingFeaturesCommand());
+        await app.Timed("Migrate", () => services.GetRequiredService<ICommandHandler<MigrateDatabaseCommand, Unit>>().Handle(new MigrateDatabaseCommand()));
+        await app.Timed("SeedWaterBodies", () => services.GetRequiredService<ICommandHandler<SeedWaterBodiesCommand, SeedWaterBodiesResult>>().Handle(new SeedWaterBodiesCommand()));
+        await app.Timed("SeedShipping", () => services.GetRequiredService<ICommandHandler<SeedShippingFeaturesCommand, SeedShippingFeaturesResult>>().Handle(new SeedShippingFeaturesCommand()));
 
         var admins = app.Configuration.GetSection(AdminsSection).Get<List<AdminAccount>>() ?? [];
-        var adminIds = await services.GetRequiredService<ICommandHandler<EnsureAdminsCommand, EnsureAdminsResult>>().Handle(new EnsureAdminsCommand(admins));
+        var adminIds = await app.Timed("EnsureAdmins", () => services.GetRequiredService<ICommandHandler<EnsureAdminsCommand, EnsureAdminsResult>>().Handle(new EnsureAdminsCommand(admins)));
 
         if (adminIds.UserIds is [var editorId, ..])
         {
-            await services.GetRequiredService<ICommandHandler<ImportDiveSitesCommand, ImportDiveSitesResult>>().Handle(new ImportDiveSitesCommand(editorId));
+            await app.Timed("ImportDiveSites", () => services.GetRequiredService<ICommandHandler<ImportDiveSitesCommand, ImportDiveSitesResult>>().Handle(new ImportDiveSitesCommand(editorId)));
         }
         else
         {
             app.Logger.LogWarning("No admin in {Section}. The import of dive sites is skipped.", AdminsSection);
         }
 
-        await services.GetRequiredService<ICommandHandler<BackfillFirstDescribedCommand, BackfillFirstDescribedResult>>().Handle(new BackfillFirstDescribedCommand());
+        await app.Timed("BackfillFirstDescribed", () => services.GetRequiredService<ICommandHandler<BackfillFirstDescribedCommand, BackfillFirstDescribedResult>>().Handle(new BackfillFirstDescribedCommand()));
     }
 }

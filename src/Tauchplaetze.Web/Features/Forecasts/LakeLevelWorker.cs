@@ -1,15 +1,17 @@
 using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.Forecasts.Commands;
+using Tauchplaetze.Web.CrossCutting.Jobs;
 
 namespace Tauchplaetze.Web.Features.Forecasts;
 
-/// <summary>Startet den Command `ImportLakeLevels` beim Start und danach jede Stunde. Enthält keine Fachlogik (ADR-006).</summary>
+/// <summary>Startet den Command `ImportLakeLevels` zwei Minuten nach dem Start und danach jede Stunde. Enthält keine Fachlogik (ADR-006).</summary>
 internal class LakeLevelWorker(IServiceScopeFactory scopes, TimeProvider time, ILogger<LakeLevelWorker> logger) : BackgroundService
 {
     private static readonly TimeSpan Interval = TimeSpan.FromHours(1);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        await StartupGrace.Wait(time, stoppingToken);
         using var timer = new PeriodicTimer(Interval, time);
         do
         {

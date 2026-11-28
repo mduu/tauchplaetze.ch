@@ -3,6 +3,7 @@ using Tauchplaetze.Core.CrossCutting.UseCases;
 using Tauchplaetze.Core.Features.Forecasts;
 using Tauchplaetze.Core.Features.Forecasts.Commands;
 using Tauchplaetze.Core.Features.Forecasts.Queries;
+using Tauchplaetze.Web.CrossCutting.Jobs;
 
 namespace Tauchplaetze.Web.Features.Forecasts;
 
@@ -12,6 +13,7 @@ internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSche
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        await StartupGrace.Wait(time, stoppingToken);
         if (schedule.Value.RunOnStartup && !await RecentRunExists(stoppingToken))
         {
             await Run(stoppingToken);

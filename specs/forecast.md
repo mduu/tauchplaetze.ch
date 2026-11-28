@@ -155,7 +155,7 @@ An Seeplätzen zeigt die Platzseite einen Hinweis, wenn der Pegel ausserhalb des
 - **Einordnung (`LakeLevelRules`):** unter dem 5. Perzentil «sehr tief», über dem 95. Perzentil «sehr hoch», dazwischen kein Hinweis. Dazu muss der Pegel mindestens 30 cm vom Median entfernt sein (Entscheid Marc, 24.11.2026). An regulierten Seen ist der übliche Bereich schmal: Am Zürichsee lagen 14 cm unter dem Median schon ausserhalb, am Einstieg ändert das nichts.
 - **Pegel in der Kachel «Strömung»:** Mit Pegel heisst die Kachel «Strömung und Pegel» (EN «Current and level», FR «Courant et niveau», IT «Corrente e livello»). Links steht die Strömung, kleiner als sonst, rechts eine kleine Grafik (`LakeLevelGauge`): der übliche Stand als gestrichelte Linie mit dem Wort «üblich», der aktuelle Pegel als Wasserlinie, dazu der Abstand in cm («−13 cm», «+21 cm»). «Üblich» ist der Median des Kalendertags. Die Skala zeigt mindestens ±30 cm. Bei einem Hinweis ist die Wasserlinie orange. Unter der Grafik «405.76 m ü. M.» als Beschriftung wie bei den Mini-Diagrammen. Die Kachel zeigt den Pegel immer, auch ohne Hinweis. Keine eigene Kachel (Entscheid Marc, 24.11.2026). Ohne Kachel «Strömung» (See ohne 3D-Modell) steht der Pegel nicht.
 - **Hinweis:** Banner bei den Hinweisen der Platzseite (`ux.md`, Tauchplatzseite), Farbe wie eine Warnung, mit Pegel und Abstand zum Median in cm, darunter Quelle, Station und Messzeit.
-- **Job:** `ImportLakeLevels` jede Stunde (`LakeLevelWorker`, ADR-006), Lock `locks/lake-level`. Ein Call an existenz.ch mit `parameters=height` für alle Pegelstationen. Pro Station und Tag ein Abruf der Statistik, 500 ms zwischen zwei Calls. Fällt das BAFU aus (5xx, Timeout), versucht es der nächste Lauf wieder. Rohdaten unter `forecast-raw/lake-level/{date}/{HHmm}/`.
+- **Job:** `ImportLakeLevels` 2 Minuten nach dem Start und danach jede Stunde (`LakeLevelWorker`, ADR-006), Lock `locks/lake-level`. Ein Call an existenz.ch mit `parameters=height` für alle Pegelstationen. Pro Station und Tag ein Abruf der Statistik, 500 ms zwischen zwei Calls. Fällt das BAFU aus (5xx, Timeout), versucht es der nächste Lauf wieder. Rohdaten unter `forecast-raw/lake-level/{date}/{HHmm}/`.
 - **Speicher:** `LakeLevelReading`. Die Seite liest nur diese Tabelle.
 - Weil der Pegel nicht in den Index fliesst, ändert eine neue Schwelle die `ModelVersion` nicht.
 
@@ -257,7 +257,7 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
 ### Abbruch und Nachholen (31.10.2026, Entscheid Marc)
 
 - **Der Deploy wartet:** `/health/run` meldet `running`, solange ein Lauf auf `Running` steht und jünger als 2 Stunden ist, sonst `idle` (Query `GetForecastRunState`, ohne Details). `deploy.yml` und `infra.yml` warten vor dem Deploy bis zu 45 Minuten darauf (`.github/scripts/wait-for-forecast.sh`). Anlass: Am 24.10.2026 brachen zwei Deploys den Lauf von 13:00 ab; die Plätze nach dem Abbruch behielten die alten Werte.
-- **Nachholen beim Start:** Der Worker prüft beim Start, ob der letzte Lauf von heute (Schweizer Kalendertag) abgebrochen ist (`Aborted`, oder `Running` ohne laufenden Prozess) und danach kein Lauf durchkam. Ist der nächste geplante Lauf mehr als 1 Stunde entfernt, startet er einen Lauf. Der Lock verhindert einen zweiten gleichzeitigen Lauf. Ein abgebrochener Lauf von gestern wird nicht nachgeholt, der nächste geplante Lauf rechnet ohnehin neu.
+- **Nachholen beim Start:** Der Worker prüft 2 Minuten nach dem Start (`StartupGrace`), ob der letzte Lauf von heute (Schweizer Kalendertag) abgebrochen ist (`Aborted`, oder `Running` ohne laufenden Prozess) und danach kein Lauf durchkam. Ist der nächste geplante Lauf mehr als 1 Stunde entfernt, startet er einen Lauf. Der Lock verhindert einen zweiten gleichzeitigen Lauf. Ein abgebrochener Lauf von gestern wird nicht nachgeholt, der nächste geplante Lauf rechnet ohnehin neu.
 - Ein abgebrochener Lauf zählt nicht als letzter Lauf (`GetLastForecastRun`) und nicht als brauchbar für `/health/ready`.
 
 ## Verlauf
@@ -279,7 +279,7 @@ Der Index über Wochen, Monate und Jahre (Entscheid Marc, 19.10.2026). Höchste 
 
 Ein kleiner zweiter Job holt den Abfluss öfter als der Prognose-Lauf. Er ruft nur den Command `ImportDischarge` (`DischargeWorker`, ADR-006).
 
-- **Zeitplan:** beim Start der Web-App und danach alle 30 Minuten.
+- **Zeitplan:** 2 Minuten nach dem Start der Web-App (`StartupGrace`, `infrastructure.md`, «Geduld beim Start») und danach alle 30 Minuten.
 - **Lock:** `locks/discharge`. Hält ein anderer Lauf den Lock, endet der zweite sofort.
 - **Ein Call:** existenz.ch `hydro/daterange` mit allen Stationen der Flussplätze und `parameters=flow,temperature` (rund 15 Stationen). `startdate` ist ein UTC-Tag. Der Call holt ab der letzten gespeicherten Stunde, mindestens die letzten 4 Stunden. Eine neue Station holt 30 Tage nach.
 - **Ablauf:** Stundenmittel schreiben (Upsert, die laufende Stunde mit den Werten bis jetzt, unveränderte Stunden bleiben unberührt), Stunden älter als 30 Tage löschen, pro Station den neuesten Wert mit Wert vor 3 h, Median der 30 Tage und, wo gemessen, die neueste Wassertemperatur schreiben.

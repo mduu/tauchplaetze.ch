@@ -57,8 +57,11 @@ builder.Services.AddHostRedirects(builder.Configuration);
 ReadinessCheck.Register(builder.Services);
 
 var app = builder.Build();
+app.LogPhase("HostBuilt");
+app.LogWhenReady();
 
 await app.PrepareDatabase();
+app.LogPhase("DatabasePrepared");
 
 if (app.Configuration.GetSection(OperatorOptions.Section).Get<OperatorOptions>() is not { IsComplete: true })
 {

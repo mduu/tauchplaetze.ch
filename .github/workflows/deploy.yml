@@ -66,11 +66,12 @@ jobs:
           global-json-file: global.json
 
       # Der Commit landet in der Version der App. /alive nennt ihn im Header X-Build, der Health-Schritt wartet darauf.
+      # ReadyToRun kompiliert den Code schon hier. Der Start auf dem B1-Plan spart so den grössten Teil der JIT-Arbeit (infrastructure.md, «Geduld beim Start»).
       - name: Publish
         if: steps.order.outputs.stale != 'true'
         env:
           BUILD_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
-        run: dotnet publish src/Tauchplaetze.Web/Tauchplaetze.Web.csproj --configuration Release --output ./publish "-p:SourceRevisionId=$BUILD_SHA"
+        run: dotnet publish src/Tauchplaetze.Web/Tauchplaetze.Web.csproj --configuration Release --runtime linux-x64 --no-self-contained -p:PublishReadyToRun=true --output ./publish "-p:SourceRevisionId=$BUILD_SHA"
 
       - uses: azure/login@7184910d9eb2b1c5e48f7073824a90609bb9b6d6 # v2.3.1
         if: steps.order.outputs.stale != 'true'

@@ -105,6 +105,7 @@ module webApp 'modules/webApp.bicep' = {
     planName: names.plan
     name: names.webApp
     appInsightsConnectionString: monitoring.outputs.connectionString
+    workspaceId: monitoring.outputs.workspaceId
     sqlConnectionString: sql.outputs.connectionString
     blobEndpoint: storage.outputs.blobEndpoint
     queueEndpoint: storage.outputs.queueEndpoint
