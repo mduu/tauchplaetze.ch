@@ -194,9 +194,7 @@ resource logs 'Microsoft.Web/sites/config@2023-12-01' = {
   }
 }
 
-// Konsole und Plattform (Container-Start, Container der Managed Identity) in den Workspace. App Insights erhält vor «Now listening»
-// oft nichts. Die Zeilen der Startphasen (StartupTiming) stehen darum in AppServiceConsoleLogs (infrastructure.md, «Geduld beim Start»).
-// Die Konsole schreibt in Prod nur Warnungen und die Startphasen (appsettings.Production.json), sonst füllt der Prognose-Lauf das Tageslimit.
+// Konsole und Plattform in den Workspace: App Insights erhält vor «Now listening» oft nichts (infrastructure.md, «Geduld beim Start»).
 resource diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   scope: site
   name: 'logs-to-workspace'

@@ -277,7 +277,7 @@
         }
     }
 
-    /// <summary>Projekte des SUSV, die den Platz als Ganzes betreffen: Fusszeile der Box «Der Platz» (Entscheid Marc, 27.11.2026).</summary>
+    /// <summary>Projekte des SUSV ausser Einschränkungen: Eigenschaften in der Fusszeile der Box «Der Platz» (Entscheid Marc, 28.11.2026).</summary>
     private static List<SiteSusvProject> FeatureProjects(DiveSiteDetails site) =>
         [.. site.SusvProjectList.Where(p => p.Topic is not SusvTopic.Restriction).OrderBy(p => p.Topic)];
 

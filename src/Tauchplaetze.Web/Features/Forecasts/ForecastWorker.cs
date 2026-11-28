@@ -8,17 +8,22 @@ using Tauchplaetze.Web.CrossCutting.Jobs;
 namespace Tauchplaetze.Web.Features.Forecasts;
 
 /// <summary>Startet den Command `RunForecast` nach Zeitplan. Enthält keine Fachlogik (ADR-006).</summary>
-internal class ForecastWorker(IServiceScopeFactory scopes, IOptions<ForecastSchedule> schedule, TimeProvider time, ILogger<ForecastWorker> logger)
+internal class ForecastWorker(IServiceScopeFactory scopes, StartupGrace grace, IOptions<ForecastSchedule> schedule, TimeProvider time, ILogger<ForecastWorker> logger)
     : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await StartupGrace.Wait(time, stoppingToken);
+        var dueBeforeGrace = schedule.Value.NextRun(time.GetUtcNow());
+        await grace.Wait(stoppingToken);
         if (schedule.Value.RunOnStartup && !await RecentRunExists(stoppingToken))
         {
             await Run(stoppingToken);
         }
         else if (await AbortedRunToResume(stoppingToken))
+        {
+            await Run(stoppingToken);
+        }
+        else if (dueBeforeGrace <= time.GetUtcNow())
         {
             await Run(stoppingToken);
         }

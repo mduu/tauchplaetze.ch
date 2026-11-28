@@ -20,9 +20,18 @@ internal static class StartupTiming
     public static async Task<T> Timed<T>(this WebApplication app, string step, Func<Task<T>> run)
     {
         var started = TimeProvider.System.GetTimestamp();
-        var result = await run();
-        Logger(app).LogInformation("Startup step {Step} took {Duration:F1} s", step, TimeProvider.System.GetElapsedTime(started).TotalSeconds);
-        return result;
+        var succeeded = false;
+        try
+        {
+            var result = await run();
+            succeeded = true;
+            return result;
+        }
+        finally
+        {
+            Logger(app).LogInformation("Startup step {Step} took {Duration:F1} s, succeeded {Succeeded}",
+                step, TimeProvider.System.GetElapsedTime(started).TotalSeconds, succeeded);
+        }
     }
 
     private static ILogger Logger(WebApplication app) => app.Services.GetRequiredService<ILoggerFactory>().CreateLogger(Category);

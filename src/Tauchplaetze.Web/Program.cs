@@ -7,6 +7,7 @@ using Tauchplaetze.Web.CrossCutting.Caching;
 using Tauchplaetze.Web.CrossCutting.Database;
 using Tauchplaetze.Web.CrossCutting.Health;
 using Tauchplaetze.Web.CrossCutting.Hosting;
+using Tauchplaetze.Web.CrossCutting.Jobs;
 using Tauchplaetze.Web.CrossCutting.Localization;
 using Tauchplaetze.Web.CrossCutting.RateLimiting;
 using Tauchplaetze.Web.CrossCutting.Security;
@@ -34,6 +35,8 @@ builder.Services.AddMemoryCache();
 builder.Services.Configure<BathymetryOptions>(options =>
     options.Directory = builder.Environment.WebRootPath is { } webRoot ? Path.Combine(webRoot, "bathymetry") : null);
 builder.Services.Configure<ForecastSchedule>(builder.Configuration.GetSection(ForecastSchedule.Section));
+builder.Services.Configure<JobOptions>(builder.Configuration.GetSection(JobOptions.Section));
+builder.Services.AddSingleton<StartupGrace>();
 builder.Services.AddHostedService<ForecastWorker>();
 builder.Services.AddHostedService<DischargeWorker>();
 builder.Services.AddHostedService<LakeLevelWorker>();

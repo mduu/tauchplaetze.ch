@@ -66,7 +66,7 @@ jobs:
           global-json-file: global.json
 
       # Der Commit landet in der Version der App. /alive nennt ihn im Header X-Build, der Health-Schritt wartet darauf.
-      # ReadyToRun kompiliert den Code schon hier. Der Start auf dem B1-Plan spart so den grössten Teil der JIT-Arbeit (infrastructure.md, «Geduld beim Start»).
+      # ReadyToRun: Der Code wird beim Publish kompiliert, nicht beim Start (infrastructure.md, «Geduld beim Start»).
       - name: Publish
         if: steps.order.outputs.stale != 'true'
         env:

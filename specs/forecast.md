@@ -257,7 +257,7 @@ Der Job läuft als `BackgroundService` im Web-Host (ADR-006). Er ruft nur Handle
 ### Abbruch und Nachholen (31.10.2026, Entscheid Marc)
 
 - **Der Deploy wartet:** `/health/run` meldet `running`, solange ein Lauf auf `Running` steht und jünger als 2 Stunden ist, sonst `idle` (Query `GetForecastRunState`, ohne Details). `deploy.yml` und `infra.yml` warten vor dem Deploy bis zu 45 Minuten darauf (`.github/scripts/wait-for-forecast.sh`). Anlass: Am 24.10.2026 brachen zwei Deploys den Lauf von 13:00 ab; die Plätze nach dem Abbruch behielten die alten Werte.
-- **Nachholen beim Start:** Der Worker prüft 2 Minuten nach dem Start (`StartupGrace`), ob der letzte Lauf von heute (Schweizer Kalendertag) abgebrochen ist (`Aborted`, oder `Running` ohne laufenden Prozess) und danach kein Lauf durchkam. Ist der nächste geplante Lauf mehr als 1 Stunde entfernt, startet er einen Lauf. Der Lock verhindert einen zweiten gleichzeitigen Lauf. Ein abgebrochener Lauf von gestern wird nicht nachgeholt, der nächste geplante Lauf rechnet ohnehin neu.
+- **Nachholen beim Start:** Fällt ein geplanter Lauf in die Pause nach dem Start (`Jobs:StartupGrace`, 2 Minuten), startet er gleich nach der Pause. Der Worker prüft nach der Pause zudem, ob der letzte Lauf von heute (Schweizer Kalendertag) abgebrochen ist (`Aborted`, oder `Running` ohne laufenden Prozess) und danach kein Lauf durchkam. Ist der nächste geplante Lauf mehr als 1 Stunde entfernt, startet er einen Lauf. Der Lock verhindert einen zweiten gleichzeitigen Lauf. Ein abgebrochener Lauf von gestern wird nicht nachgeholt, der nächste geplante Lauf rechnet ohnehin neu.
 - Ein abgebrochener Lauf zählt nicht als letzter Lauf (`GetLastForecastRun`) und nicht als brauchbar für `/health/ready`.
 
 ## Verlauf
@@ -279,7 +279,7 @@ Der Index über Wochen, Monate und Jahre (Entscheid Marc, 19.10.2026). Höchste 
 
 Ein kleiner zweiter Job holt den Abfluss öfter als der Prognose-Lauf. Er ruft nur den Command `ImportDischarge` (`DischargeWorker`, ADR-006).
 
-- **Zeitplan:** 2 Minuten nach dem Start der Web-App (`StartupGrace`, `infrastructure.md`, «Geduld beim Start») und danach alle 30 Minuten.
+- **Zeitplan:** 2 Minuten nach dem Start der Web-App (`Jobs:StartupGrace`, `infrastructure.md`, «Geduld beim Start») und danach alle 30 Minuten.
 - **Lock:** `locks/discharge`. Hält ein anderer Lauf den Lock, endet der zweite sofort.
 - **Ein Call:** existenz.ch `hydro/daterange` mit allen Stationen der Flussplätze und `parameters=flow,temperature` (rund 15 Stationen). `startdate` ist ein UTC-Tag. Der Call holt ab der letzten gespeicherten Stunde, mindestens die letzten 4 Stunden. Eine neue Station holt 30 Tage nach.
 - **Ablauf:** Stundenmittel schreiben (Upsert, die laufende Stunde mit den Werten bis jetzt, unveränderte Stunden bleiben unberührt), Stunden älter als 30 Tage löschen, pro Station den neuesten Wert mit Wert vor 3 h, Median der 30 Tage und, wo gemessen, die neueste Wassertemperatur schreiben.
