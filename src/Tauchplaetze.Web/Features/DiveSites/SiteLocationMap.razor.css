@@ -129,7 +129,7 @@
 }
 
 .location-stage ::deep .leaflet-top.leaflet-right {
-    top: 84px;
+    top: 108px;
 }
 
 .location-stage [hidden] {
@@ -199,8 +199,7 @@
 .sticker-ring text {
     fill: var(--color-text-muted);
     font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.14em;
+    font-size: 10px;
     text-transform: uppercase;
 }
 

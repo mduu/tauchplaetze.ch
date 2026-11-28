@@ -857,6 +857,7 @@
     } catch (e) {
       state.built = false;
       status.textContent = JSON.parse(stage.dataset.texts).failed;
+      console.error('3D view failed', e);
     }
   }
 
