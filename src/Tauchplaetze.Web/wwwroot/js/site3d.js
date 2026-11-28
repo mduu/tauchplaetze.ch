@@ -709,14 +709,14 @@
     }
 
     const target = new THREE.Vector3(down[0] * 10, -Math.min(20, maxDepth / 3), -down[1] * 10);
-    const views = {
+    const cameraViews = {
       oblique: { pos: new THREE.Vector3(down[0] * 150 - along[0] * 55, 85, -(down[1] * 150 - along[1] * 55)), target: target },
       wall: { pos: new THREE.Vector3(down[0] * 110, -Math.min(30, maxDepth / 2), -down[1] * 110), target: new THREE.Vector3(-down[0] * 5, -Math.min(22, maxDepth / 3), down[1] * 5) },
       top: { pos: new THREE.Vector3(0, SIZE * 1.45, 1), target: new THREE.Vector3(0, -20, 0) }
     };
     let fly = null;
     function setView(name, instant) {
-      const base = views[name];
+      const base = cameraViews[name];
       const factor = Math.pow(Math.max(1, 1.3 / (camera.aspect || 1.3)), 0.75);
       const v = { pos: base.target.clone().add(base.pos.clone().sub(base.target).multiplyScalar(factor)), target: base.target };
       viewer.querySelectorAll('[data-view]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.view === name)); });
@@ -930,7 +930,7 @@
       const origin = { e: parseFloat(stage.dataset.e), n: parseFloat(stage.dataset.n) };
       const size = (parseInt(stage.dataset.points, 10) - 1) * parseFloat(stage.dataset.cell);
       const results = await Promise.all([loadLibraries(stage), loadTerrain(stage), loadAerial(origin, size, 768)]);
-      if (stage.__site3d !== state) {
+      if (stage.__site3d !== state || !stage.isConnected) {
         return;
       }
       const view = build(stage, results[1], results[2], created);
@@ -950,11 +950,12 @@
     if (created.controls) { created.controls.dispose(); }
     if (created.wheel) { stage.querySelector('canvas').removeEventListener('wheel', created.wheel, { capture: true }); }
     if (created.renderer) { created.renderer.dispose(); }
+    stage.querySelector('[data-3d-labels]').replaceChildren();
+    stage.querySelector('[data-3d-profile] svg').replaceChildren();
   }
 
-  // Der Zustand hängt am Element. Nach Enhanced Navigation (auch auf denselben Platz: Tag, Sprache) baut die Ansicht neu auf,
-  // weil Blazor Etiketten, HUD und Profil an das HTML des Servers angleicht. Bibliothek und Raster kommen dann aus dem Cache.
-  // Ansichten, deren Element Blazor entfernt hat, geben ihren WebGL-Kontext sofort frei; ihr Canvas kommt nicht wieder.
+  // Enhanced Navigation gleicht Etiketten, HUD und Profil ans HTML des Servers an: darum jedes Mal neu aufbauen.
+  // Entfernte Elemente geben ihren WebGL-Kontext sofort frei.
   function init() {
     views.forEach(function (state) {
       if (!state.stage.isConnected) {

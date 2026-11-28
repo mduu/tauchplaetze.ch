@@ -21,6 +21,8 @@ var altiDir = Path.Combine(cacheDir, "alti");
 var outDir = Path.Combine(root, "src", "Tauchplaetze.Web", "wwwroot", "terrain");
 // Die App ordnet im Umkreis von 60 m zu, darum teilen nahe Plätze ein Raster.
 const int SharedRasterMetres = 20;
+// Ein Platz braucht im Ausschnitt mindestens 5 m Tiefe.
+const int MinDepthDecimetres = 50;
 var onlyLake = Option("--lake");
 Directory.CreateDirectory(altiDir);
 Directory.CreateDirectory(outDir);
@@ -70,7 +72,7 @@ foreach (var group in blocks.GroupBy(b => b.Lake))
         continue;
     }
 
-    Grids.ReadAsciiZip(zipPath, [.. group], (block, point, cellSize) => block.AddLake(point, cellSize));
+    Grids.ReadAsciiZip(zipPath, [.. group]);
     Console.WriteLine($"{group.Key}: Seegrund für {group.Count()} Plätze gelesen");
 }
 
@@ -116,7 +118,7 @@ foreach (var block in blocks.Where(b => !skippedLakes.Contains(b.Lake)).OrderBy(
         continue;
     }
 
-    if (MinDecimetres(data) > -50)
+    if (MinDecimetres(data) > -MinDepthDecimetres)
     {
         Console.WriteLine($"{block.Name}: kaum Seegrund im Ausschnitt, ausgelassen");
         continue;
@@ -229,6 +231,9 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
 {
     public const int Cell = 2;
     private const int MaxFillPasses = 3;
+    private const int SmoothPasses = 3;
+    private const int ShoreBandBelowDecimetres = -40;
+    private const int ShoreBandAboveDecimetres = 30;
     public const int HalfSize = 120;
     public const int Points = HalfSize * 2 / Cell + 1;
     public const int Size = HalfSize * 2;
@@ -326,7 +331,7 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
     /// </summary>
     private static void SmoothShore(short[] values)
     {
-        for (var pass = 0; pass < 3; pass++)
+        for (var pass = 0; pass < SmoothPasses; pass++)
         {
             var next = (short[])values.Clone();
             for (var row = 1; row < Points - 1; row++)
@@ -334,7 +339,7 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
                 for (var col = 1; col < Points - 1; col++)
                 {
                     var i = row * Points + col;
-                    if (values[i] is < -40 or > 30)
+                    if (values[i] is < ShoreBandBelowDecimetres or > ShoreBandAboveDecimetres)
                     {
                         continue;
                     }
@@ -385,7 +390,7 @@ static class Grids
     private const double ImpossibleHeight = -1000;
 
     /// <summary>Liest die ESRI-ASCII-Kacheln eines Sees, aber nur die, die einen Ausschnitt berühren.</summary>
-    public static void ReadAsciiZip(string zipPath, IReadOnlyList<Block> blocks, Action<Block, (double, double, double), double> add)
+    public static void ReadAsciiZip(string zipPath, IReadOnlyList<Block> blocks)
     {
         using var zip = ZipFile.OpenRead(zipPath);
         foreach (var entry in zip.Entries.Where(e => e.Name.EndsWith(".asc", StringComparison.OrdinalIgnoreCase)))
@@ -441,7 +446,7 @@ static class Grids
                     {
                         if (block.Contains(east, north))
                         {
-                            add(block, (east, north, value), size);
+                            block.AddLake((east, north, value), size);
                         }
                     }
                 }
@@ -466,7 +471,7 @@ static class Grids
 
                 var north = double.Parse(parts[1], CultureInfo.InvariantCulture);
                 var height = double.Parse(parts[2], CultureInfo.InvariantCulture);
-                if (height < -100)
+                if (height < ImpossibleHeight)
                 {
                     continue;
                 }

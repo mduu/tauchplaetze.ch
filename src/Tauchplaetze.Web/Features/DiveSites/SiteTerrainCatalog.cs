@@ -3,14 +3,10 @@ using Microsoft.Extensions.FileProviders;
 
 namespace Tauchplaetze.Web.Features.DiveSites;
 
-/// <summary>Ein Höhenraster für die 3D-Ansicht (Story 007): Datei, Ecke im Südwesten (LV95), Zahl der Punkte pro Seite und ihr Abstand in Metern.</summary>
+/// <summary>Höhenraster der 3D-Ansicht (Story 007): Ecke im Südwesten in LV95, Abstand der Punkte in Metern.</summary>
 public record SiteTerrain(string File, int East, int North, int Points, double Cell);
 
-/// <summary>
-/// Die Höhenraster der Plätze als statische Dateien (`wwwroot/terrain`, erzeugt von `tools/bathymetry/terrain.cs`).
-/// Ein Raster gehört zu einem Platz, wenn dessen Koordinate höchstens <see cref="MaxDistanceMetres"/> von der Koordinate beim Erzeugen liegt.
-/// Ein fehlender oder kaputter Index schaltet die 3D-Ansicht aus (mit Warnung im Log), ohne die Platzseite scheitern zu lassen.
-/// </summary>
+/// <summary>Die Höhenraster der Plätze als statische Dateien (`wwwroot/terrain`, erzeugt von `tools/bathymetry/terrain.cs`).</summary>
 public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrainCatalog> logger)
 {
     private const double MaxDistanceMetres = 60;
@@ -55,7 +51,7 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
                 return TerrainIndex.Empty;
             }
 
-            var usable = loaded.Sites.Where(IsUsable).ToList();
+            var usable = loaded.Sites.Where(entry => IsUsable(entry, webRoot)).ToList();
             if (usable.Count < loaded.Sites.Count)
             {
                 logger.LogWarning("Terrain index has {Unusable} unusable entries. They are ignored.", loaded.Sites.Count - usable.Count);
@@ -70,8 +66,11 @@ public sealed class SiteTerrainCatalog(IFileProvider webRoot, ILogger<SiteTerrai
         }
     }
 
-    private static bool IsUsable(Entry? entry) =>
-        entry is { File.Length: > 0 } && double.IsFinite(entry.Lat) && double.IsFinite(entry.Lng);
+    private static bool IsUsable(Entry? entry, IFileProvider webRoot) =>
+        entry is { File.Length: > 0, E: > 0, N: > 0 }
+        && double.IsFinite(entry.Lat)
+        && double.IsFinite(entry.Lng)
+        && webRoot.GetFileInfo($"terrain/{entry.File}").Exists;
 
     private sealed record TerrainIndex(int Points, double CellSize, IReadOnlyList<Entry> Sites)
     {
