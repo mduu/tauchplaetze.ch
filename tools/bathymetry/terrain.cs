@@ -68,7 +68,7 @@ foreach (var group in blocks.GroupBy(b => b.Lake))
         continue;
     }
 
-    Grids.ReadAsciiZip(zipPath, [.. group], (block, height) => block.AddLake(height));
+    Grids.ReadAsciiZip(zipPath, [.. group], (block, point, cellSize) => block.AddLake(point, cellSize));
     Console.WriteLine($"{group.Key}: Seegrund für {group.Count()} Plätze gelesen");
 }
 
@@ -245,9 +245,10 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
         }
     }
 
-    public void AddLake((double East, double North, double Height) point)
+    /// <summary>Ein Wert von swissBATHY3D gilt für alle Punkte in seiner Zelle (1 m, am Bodensee 3 m), mindestens für die Punkte bis 1 m.</summary>
+    public void AddLake((double East, double North, double Height) point, double cellSize)
     {
-        foreach (var i in Near(point.East, point.North))
+        foreach (var i in Near(point.East, point.North, Math.Max(Cell, cellSize) / 2))
         {
             lakeSum[i] += (float)point.Height;
             lakeCount[i]++;
@@ -257,7 +258,7 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
     /// <summary>swissALTI3D liegt um 1 m versetzt zu den Punkten des Rasters. Ein Wert zählt darum für alle Punkte, die höchstens 1 m entfernt liegen.</summary>
     public void AddLand(double east, double north, double height)
     {
-        foreach (var i in Near(east, north))
+        foreach (var i in Near(east, north, Cell / 2))
         {
             landSum[i] += (float)height;
             landCount[i]++;
@@ -281,13 +282,14 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
         return bytes;
     }
 
-    private IEnumerable<int> Near(double east, double north)
+    private IEnumerable<int> Near(double east, double north, double reach)
     {
         var x = (east - x0) / Cell;
         var y = (north - y0) / Cell;
-        for (var row = (int)Math.Ceiling(y - 0.5); row <= (int)Math.Floor(y + 0.5); row++)
+        var r = reach / Cell;
+        for (var row = (int)Math.Ceiling(y - r); row <= (int)Math.Floor(y + r); row++)
         {
-            for (var col = (int)Math.Ceiling(x - 0.5); col <= (int)Math.Floor(x + 0.5); col++)
+            for (var col = (int)Math.Ceiling(x - r); col <= (int)Math.Floor(x + r); col++)
             {
                 if (col is >= 0 and < Points && row is >= 0 and < Points)
                 {
@@ -358,7 +360,7 @@ sealed class Block(string name, string lake, double latitude, double longitude, 
 static class Grids
 {
     /// <summary>Liest die ESRI-ASCII-Kacheln eines Sees, aber nur die, die einen Ausschnitt berühren.</summary>
-    public static void ReadAsciiZip(string zipPath, IReadOnlyList<Block> blocks, Action<Block, (double, double, double)> add)
+    public static void ReadAsciiZip(string zipPath, IReadOnlyList<Block> blocks, Action<Block, (double, double, double), double> add)
     {
         using var zip = ZipFile.OpenRead(zipPath);
         foreach (var entry in zip.Entries.Where(e => e.Name.EndsWith(".asc", StringComparison.OrdinalIgnoreCase)))
@@ -414,7 +416,7 @@ static class Grids
                     {
                         if (block.Contains(east, north))
                         {
-                            add(block, (east, north, value));
+                            add(block, (east, north, value), size);
                         }
                     }
                 }
