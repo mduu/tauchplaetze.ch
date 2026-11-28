@@ -108,11 +108,11 @@
 
         <SiteLocationMap Site="site" Shipping="shipping" />
 
-        @if (site.Ratings?.Rated.Count > 0 || HasSiteTexts(site) || PlaceProjects(site).Count > 0)
+        @if (site.Ratings?.Rated.Count > 0 || HasSiteTexts(site) || FeatureProjects(site).Count > 0)
         {
             <section class="page-section" aria-labelledby="ratings">
                 <h2 id="ratings" class="section-heading">@L["Ratings_Title"]</h2>
-                <SiteRatingsBlock Ratings="site.Ratings" Footer="ProjectsFooter(site)" />
+                <SiteRatingsBlock Ratings="site.Ratings" Footer="FeaturesFooter(site)" />
                 @if (HasSiteTexts(site))
                 {
                     <div class="site-details">
@@ -167,7 +167,7 @@
                     </ul>
                     @if (site.SusvProject(SusvTopic.Defibrillator) is { } defibrillator)
                     {
-                        <SusvLine Project="defibrillator" />
+                        <SusvFeatures Projects="[defibrillator]" />
                     }
                     <p class="emergency-note">@L["Emergency_Dan_Note"] <a href="@L["Emergency_Factsheet_Url"]" rel="noopener" target="_blank" data-emergency-factsheet>@L["Emergency_Factsheet"]</a></p>
                 </div>
@@ -278,14 +278,11 @@
     }
 
     /// <summary>Projekte des SUSV, die den Platz als Ganzes betreffen: Fusszeile der Box «Der Platz» (Entscheid Marc, 27.11.2026).</summary>
-    private static List<SiteSusvProject> PlaceProjects(DiveSiteDetails site) =>
-        [.. site.SusvProjectList.Where(p => p.Topic is SusvTopic.SupportProject or SusvTopic.InclusiveSite)];
+    private static List<SiteSusvProject> FeatureProjects(DiveSiteDetails site) =>
+        [.. site.SusvProjectList.Where(p => p.Topic is not SusvTopic.Restriction).OrderBy(p => p.Topic)];
 
-    private static RenderFragment? ProjectsFooter(DiveSiteDetails site) => PlaceProjects(site) is { Count: > 0 } projects
-        ? @<text>@foreach (var project in projects)
-        {
-            <SusvLine Project="project" />
-        }</text>
+    private static RenderFragment? FeaturesFooter(DiveSiteDetails site) => FeatureProjects(site) is { Count: > 0 } projects
+        ? @<SusvFeatures Projects="projects" />
         : null;
 
     private static RenderFragment? MobileToilet(DiveSiteDetails site) =>

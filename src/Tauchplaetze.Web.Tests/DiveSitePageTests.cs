@@ -123,26 +123,28 @@ public class DiveSitePageTests : IClassFixture<WebApp>
     }
 
     [Fact]
-    public async Task Projekte_des_SUSV_stehen_an_ihrer_Stelle_mit_Link_die_Toilette_auch_ohne_Text_der_Redaktion()
+    public async Task Projekte_des_SUSV_stehen_als_Eigenschaften_in_der_Kachel_des_Platzes_Defibrillator_und_Toilette_zusaetzlich_an_ihrer_Stelle()
     {
         // Arrange
         using var browser = app.Browser();
 
         // Act
         var html = await browser.GetStringAsync("/fr/sites-de-plongee/" + WithSusv, TestContext.Current.CancellationToken);
-        var text = VisibleText.Of(html);
 
         // Assert
-        Assert.Contains("Défibrillateur (DAE) sur le site", text);
-        Assert.Contains("Toilettes mobiles sur le site", text);
-        Assert.Contains("La FSSS a amélioré ce site.", text);
-        Assert.Contains("Site de plongée inclusif", text);
-        Assert.Contains("data-inclusive", html);
-        Assert.Contains("data-text=\"facilities\"", html);
         var footer = html[html.IndexOf("data-ratings-footer", StringComparison.Ordinal)..];
-        Assert.Contains("data-susv-topic=\"SupportProject\"", footer[..footer.IndexOf("</div>", StringComparison.Ordinal)]);
-        Assert.Contains("data-susv-topic=\"InclusiveSite\"", footer);
-        Assert.Contains("href=\"https://susv.ch/de/defi/\"", html);
+        footer = footer[..footer.IndexOf("</ul>", StringComparison.Ordinal)];
+        var footerText = VisibleText.Of(footer);
+        Assert.Contains("Informations de la FSSS", footerText);
+        Assert.Contains("Défibrillateur (DAE)", footerText);
+        Assert.Contains("Toilettes mobiles", footerText);
+        Assert.Contains("Site amélioré", footerText);
+        Assert.Contains("Site inclusif", footerText);
+        Assert.Contains("href=\"https://susv.ch/de/wc/\"", footer);
+        Assert.Contains("data-inclusive", html);
+        Assert.Equal(2, System.Text.RegularExpressions.Regex.Matches(html, "data-susv-topic=\"Defibrillator\"").Count);
+        Assert.Contains("Toilettes mobiles sur le site", VisibleText.Of(html));
+        Assert.Contains("data-text=\"facilities\"", html);
     }
 
     [Fact]

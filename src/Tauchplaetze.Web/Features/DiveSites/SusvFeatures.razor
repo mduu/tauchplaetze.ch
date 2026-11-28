@@ -1,0 +1,46 @@
+@using Tauchplaetze.Core.Features.DiveSites
+@using Tauchplaetze.Core.Features.Susv
+@inject IStringLocalizer<DiveSiteStrings> L
+
+@if (Projects.Count > 0)
+{
+    <div class="susv-features" data-susv-features>
+        <span class="susv-features-source">
+            <img src="@Assets["img/partner/susv-signet.png"]" alt="" width="12" height="16" />
+            <span>@L["Susv_Features_Source"]</span>
+        </span>
+        <ul class="susv-feature-list">
+            @foreach (var project in Projects)
+            {
+                <li>
+                    <a class="susv-feature" href="@project.DetailUrl" target="_blank" rel="noopener" data-susv-topic="@project.Topic"
+                       title="@L[$"Susv_{project.Topic}"]" aria-label="@L[$"Susv_{project.Topic}"] – @L["Susv_SourceLabel"]">
+                        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            @Icon(project.Topic)
+                        </svg>
+                        <span>@L[$"Susv_Feature_{project.Topic}"]</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    /// <summary>Projekte des SUSV als Eigenschaften des Platzes, je mit Symbol und Link auf den Eintrag bei susv.ch (Story 004).</summary>
+    [Parameter, EditorRequired]
+    public IReadOnlyList<SiteSusvProject> Projects { get; set; } = [];
+
+    private static RenderFragment Icon(SusvTopic topic) => topic switch
+    {
+        SusvTopic.Defibrillator =>
+            @<g><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z" /><path d="M12.8 9.5l-2 3h2.6l-2 3" /></g>,
+        SusvTopic.MobileToilet =>
+            @<g><rect x="3.5" y="4.5" width="17" height="15" rx="2" /><path d="M6.5 9l1.3 6 1.4-4.5 1.4 4.5 1.3-6" /><path d="M17.5 9.6a2.6 2.6 0 1 0 0 4.8" /></g>,
+        SusvTopic.SupportProject =>
+            @<path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17l3 3 5.5-5.5a4 4 0 0 0 5.2-5.2l-2.4 2.4-2.3-.5-.5-2.3z" />,
+        SusvTopic.InclusiveSite =>
+            @<g><circle cx="11" cy="4.5" r="1.6" /><path d="M11 8v5.5h5l2.5 5" /><path d="M8.5 10.8a5.2 5.2 0 1 0 7 6.7" /></g>,
+        _ => @<circle cx="12" cy="12" r="4" />,
+    };
+}

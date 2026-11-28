@@ -311,6 +311,11 @@
   <data name="Susv_MobileToilet" xml:space="preserve"><value>Toilettes mobiles sur le site</value></data>
   <data name="Susv_SupportProject" xml:space="preserve"><value>La FSSS a amélioré ce site.</value></data>
   <data name="Susv_InclusiveSite" xml:space="preserve"><value>Site de plongée inclusif : adapté aux plongeurs en situation de handicap.</value></data>
+  <data name="Susv_Features_Source" xml:space="preserve"><value>Informations de la FSSS</value></data>
+  <data name="Susv_Feature_Defibrillator" xml:space="preserve"><value>Défibrillateur (DAE)</value></data>
+  <data name="Susv_Feature_MobileToilet" xml:space="preserve"><value>Toilettes mobiles</value></data>
+  <data name="Susv_Feature_SupportProject" xml:space="preserve"><value>Site amélioré</value></data>
+  <data name="Susv_Feature_InclusiveSite" xml:space="preserve"><value>Site inclusif</value></data>
   <data name="SketchKind_MooringField" xml:space="preserve"><value>Champ de bouées</value></data>
   <data name="Map_Layer_Shipping" xml:space="preserve"><value>Navigation</value></data>
   <data name="Shipping_Line" xml:space="preserve"><value>Des bateaux à horaire circulent près du site. La plongée sportive est interdite aux endroits marqués (art. 77 ONI).</value></data>

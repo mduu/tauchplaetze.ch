@@ -10,14 +10,16 @@ Wunsch des SUSV (November 2026): Die Seite soll vermerken, wo der SUSV einen Pla
 
 ## Themen und ihre Stelle
 
-| Thema | Code | Stelle | Text |
-|---|---|---|---|
-| Defibrillator | `Defibrillator` | Kachel «Notfall» | «Defibrillator (AED) am Platz» |
-| Mobile Toilette | `MobileToilet` | «Restaurants und Toiletten» | «Mobile Toilette am Platz» |
-| Förderprojekt | `SupportProject` | «Der Platz», Fusszeile der Kachel mit den Bewertungen (Entscheid Marc, 27.11.2026) | «Der SUSV hat diesen Platz verbessert.» |
-| Inklusions-Tauchplatz | `InclusiveSite` | Tag im Hero, Filter im Verzeichnis, Fusszeile der Kachel «Der Platz» | «Inklusions-Tauchplatz: geeignet für Tauchende mit Behinderung.» |
+| Thema | Code | Stelle | Eigenschaft | Tooltip |
+|---|---|---|---|---|
+| Defibrillator | `Defibrillator` | «Der Platz» und Kachel «Notfall» | «Defibrillator (AED)» | «Defibrillator (AED) am Platz» |
+| Mobile Toilette | `MobileToilet` | «Der Platz» und «Restaurants und Toiletten» (Satz mit `SusvBadge`, auch ohne Text der Redaktion) | «Mobile Toilette» | «Mobile Toilette am Platz» |
+| Förderprojekt | `SupportProject` | «Der Platz» | «Platz verbessert» | «Der SUSV hat diesen Platz verbessert.» |
+| Inklusions-Tauchplatz | `InclusiveSite` | «Der Platz», Tag im Hero, Filter im Verzeichnis | «Inklusions-Tauchplatz» | «Inklusions-Tauchplatz: geeignet für Tauchende mit Behinderung.» |
 
-- **Feste Texte bei Projekten:** Die Texte der Themen ausser `Restriction` kommen aus den Ressourcen, nicht aus dem Titel der Quelle. Die Titel der Quelle sind für die Karte des SUSV geschrieben, nicht für eine Zeile auf der Platzseite.
+- **Eigenschaften statt Sätze** (Entscheid Marc, 28.11.2026): Die Projekte stehen als Fusszeile der Kachel «Der Platz», je als Chip mit Symbol und kurzem Namen (`SusvFeatures`, `design-system.md`). Vorne steht das Signet des SUSV mit «Angaben des SUSV». Jeder Chip verlinkt die Seite des Eintrags bei susv.ch. «Der Platz» fasst die Eigenschaften des Platzes zusammen. Texte und Karte sind das ausführliche Briefing. Darum dürfen Angaben doppelt stehen: Der Defibrillator steht zusätzlich in der Kachel «Notfall», die mobile Toilette als Satz bei «Restaurants und Toiletten». Vorher standen die Projekte als ganze Sätze an verschiedenen Stellen (Entscheid Marc, 24.11.2026 und 27.11.2026).
+
+- **Feste Texte bei Projekten:** Die Texte der Themen ausser `Restriction` kommen aus den Ressourcen, nicht aus dem Titel der Quelle. Die Titel der Quelle sind für die Karte des SUSV geschrieben, nicht für eine Eigenschaft auf der Platzseite.
 - **Abschnitt ohne anderen Inhalt:** Ein Eintrag zeigt seinen Abschnitt auch, wenn die Redaktion dort nichts erfasst hat.
 - **Karte:** kein Pin. Die Koordinate der Quelle ist die des Platzes, nicht die des Geräts. Den genauen Ort einer Toilette erfasst die Redaktion als Ort (`Toilet`).
 - **Verzeichnis nur:** Hat ein Platz nur Einträge des SUSV, bleibt der Hinweis «Dieser Platz ist erst im Verzeichnis».
@@ -28,9 +30,9 @@ Aufbau der Platzseite: `ux.md`, «Tauchplatzseite», Abschnitte 1, 4, 6 und 7.
 
 ## Akzeptanzkriterien
 
-1. Ein bestätigter Defibrillator steht in der Kachel «Notfall».
-2. Eine bestätigte mobile Toilette steht bei «Restaurants und Toiletten», auch ohne Text der Redaktion.
-3. Förderprojekt und Inklusions-Tauchplatz stehen als Fusszeile in der Kachel «Der Platz», auch ohne Bewertung.
+1. Alle bestätigten Projekte stehen als Eigenschaften in der Fusszeile der Kachel «Der Platz», auch ohne Bewertung.
+2. Ein bestätigter Defibrillator steht zusätzlich in der Kachel «Notfall», eine bestätigte mobile Toilette zusätzlich als Satz bei «Restaurants und Toiletten», auch ohne Text der Redaktion.
+3. Die Eigenschaften tragen das Signet des SUSV und «Angaben des SUSV».
 4. Ein Inklusions-Tauchplatz trägt das Tag «Inklusion» im Hero. Das Verzeichnis filtert danach.
 5. Jeder Eintrag trägt Logo und Link zum SUSV.
 6. Die Ausbaustufe eines Platzes ändert sich durch Einträge des SUSV nicht.

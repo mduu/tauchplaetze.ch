@@ -311,6 +311,11 @@
   <data name="Susv_MobileToilet" xml:space="preserve"><value>Toilette mobile sul sito</value></data>
   <data name="Susv_SupportProject" xml:space="preserve"><value>La FSSS ha migliorato questo sito.</value></data>
   <data name="Susv_InclusiveSite" xml:space="preserve"><value>Sito d’immersione inclusivo: adatto a subacquei con disabilità.</value></data>
+  <data name="Susv_Features_Source" xml:space="preserve"><value>Informazioni della FSSS</value></data>
+  <data name="Susv_Feature_Defibrillator" xml:space="preserve"><value>Defibrillatore (DAE)</value></data>
+  <data name="Susv_Feature_MobileToilet" xml:space="preserve"><value>Toilette mobile</value></data>
+  <data name="Susv_Feature_SupportProject" xml:space="preserve"><value>Sito migliorato</value></data>
+  <data name="Susv_Feature_InclusiveSite" xml:space="preserve"><value>Sito inclusivo</value></data>
   <data name="SketchKind_MooringField" xml:space="preserve"><value>Campo boe</value></data>
   <data name="Map_Layer_Shipping" xml:space="preserve"><value>Navigazione</value></data>
   <data name="Shipping_Line" xml:space="preserve"><value>Vicino al sito circolano battelli di linea. L’immersione sportiva è vietata nei luoghi segnati (art. 77 ONI).</value></data>

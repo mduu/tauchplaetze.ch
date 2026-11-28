@@ -41,7 +41,7 @@ Ein Symbol erscheint nur, wenn die Daten es belegen. Fehlt es, heisst das «unbe
 | Startseite, «Beste Wahl» und Rangliste | wie im Verzeichnis |
 | Karte (Popup eines Platzes) | wie im Verzeichnis |
 
-Die Zeilen des SUSV auf der Platzseite (Story 004) bleiben. Sie tragen den Link zum SUSV.
+Die Eigenschaften des SUSV auf der Platzseite (Story 004, `SusvFeatures`) bleiben. Sie tragen den Link zum SUSV. Ihre Symbole sind der Anfang dieser Leiste.
 
 ## Gestaltung
 

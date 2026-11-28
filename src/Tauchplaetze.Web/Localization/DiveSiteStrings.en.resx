@@ -311,6 +311,11 @@
   <data name="Susv_MobileToilet" xml:space="preserve"><value>Mobile toilet at the site</value></data>
   <data name="Susv_SupportProject" xml:space="preserve"><value>The SUSV has improved this site.</value></data>
   <data name="Susv_InclusiveSite" xml:space="preserve"><value>Inclusive dive site: suitable for divers with a disability.</value></data>
+  <data name="Susv_Features_Source" xml:space="preserve"><value>Information from the SUSV</value></data>
+  <data name="Susv_Feature_Defibrillator" xml:space="preserve"><value>Defibrillator (AED)</value></data>
+  <data name="Susv_Feature_MobileToilet" xml:space="preserve"><value>Mobile toilet</value></data>
+  <data name="Susv_Feature_SupportProject" xml:space="preserve"><value>Site improved</value></data>
+  <data name="Susv_Feature_InclusiveSite" xml:space="preserve"><value>Inclusive dive site</value></data>
   <data name="SketchKind_MooringField" xml:space="preserve"><value>Mooring field</value></data>
   <data name="Map_Layer_Shipping" xml:space="preserve"><value>Shipping</value></data>
   <data name="Shipping_Line" xml:space="preserve"><value>Scheduled boats operate near this site. Recreational diving is prohibited at the marked places (Art. 77 BSV).</value></data>

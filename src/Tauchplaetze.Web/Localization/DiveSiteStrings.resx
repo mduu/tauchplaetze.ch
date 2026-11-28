@@ -311,6 +311,11 @@
   <data name="Susv_MobileToilet" xml:space="preserve"><value>Mobile Toilette am Platz</value></data>
   <data name="Susv_SupportProject" xml:space="preserve"><value>Der SUSV hat diesen Platz verbessert.</value></data>
   <data name="Susv_InclusiveSite" xml:space="preserve"><value>Inklusions-Tauchplatz: geeignet für Tauchende mit Behinderung.</value></data>
+  <data name="Susv_Features_Source" xml:space="preserve"><value>Angaben des SUSV</value></data>
+  <data name="Susv_Feature_Defibrillator" xml:space="preserve"><value>Defibrillator (AED)</value></data>
+  <data name="Susv_Feature_MobileToilet" xml:space="preserve"><value>Mobile Toilette</value></data>
+  <data name="Susv_Feature_SupportProject" xml:space="preserve"><value>Platz verbessert</value></data>
+  <data name="Susv_Feature_InclusiveSite" xml:space="preserve"><value>Inklusions-Tauchplatz</value></data>
   <data name="SketchKind_MooringField" xml:space="preserve"><value>Bojenfeld</value></data>
   <data name="Map_Layer_Shipping" xml:space="preserve"><value>Schifffahrt</value></data>
   <data name="Shipping_Line" xml:space="preserve"><value>Nahe am Platz verkehren Kursschiffe. Sporttauchen ist an den markierten Stellen verboten (Art. 77 BSV).</value></data>
