@@ -128,8 +128,8 @@
     position: relative;
 }
 
-.location-stage ::deep .leaflet-top.leaflet-right {
-    top: 108px;
+.location-stage ::deep .leaflet-top.leaflet-left {
+    top: 146px;
 }
 
 .location-stage [hidden] {
@@ -154,8 +154,8 @@
 
 .sticker-3d {
     position: absolute;
-    top: -30px;
-    right: -14px;
+    top: 12px;
+    left: -14px;
     z-index: 1100;
     width: 124px;
     height: 124px;
@@ -610,8 +610,8 @@
 
 @media (max-width: 640px) {
     .sticker-3d {
-        top: -22px;
-        right: -4px;
+        top: 12px;
+        left: -4px;
         width: 104px;
         height: 104px;
     }
