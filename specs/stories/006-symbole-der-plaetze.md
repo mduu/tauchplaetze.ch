@@ -1,6 +1,6 @@
 # Story 006: Symbole der Plätze
 
-**Status:** umgesetzt (28.11.2026), noch nicht deployt.
+**Status:** ✅ erledigt, deployt am 28.11.2026.
 
 ## Ziel
 

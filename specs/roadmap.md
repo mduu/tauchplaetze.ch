@@ -60,7 +60,7 @@ Ziel: Reaktion der Szene testen. Stand 22.10.2026: ✅ umgesetzt, 🟡 teilweise
 - ✅ Einträge des SUSV (ADR-013, Stories 002 bis 004, deployt am 27.11.2026): Import mit Bestätigung, Einschränkungen im Banner, Projekte nach Thema.
 - ✅ «Tauchen und Schifffahrt» (Story 005, deployt am 27.11.2026): Ebene «Schifffahrt», Bojenfeld in der Skizze, eigene Seite. Wortlaut mit dem SUSV offen.
 - ⏳ Seite «Partner» (Story 001): gebaut, ausgeblendet bis zur Freigabe durch den SUSV.
-- 🟡 Symbole der Plätze (Story 006): umgesetzt am 28.11.2026, noch nicht deployt.
+- ✅ Symbole der Plätze (Story 006, deployt am 28.11.2026): Symbolleiste in Verzeichnis, Gewässerseite, Rangliste und Hero, Legende im Verzeichnis.
 - ⏳ Der Platz in 3D (Story 007): Entwurf mit Vorschau, Entscheide offen.
 - Später möglich: Kommentare unter Plätzen, eventuell nur für registrierte Konten und mit Freigabe (`features.md`).
 - Neue Fotos der Ein- und Ausstiege, nach und nach.
